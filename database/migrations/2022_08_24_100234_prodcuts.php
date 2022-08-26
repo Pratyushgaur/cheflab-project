@@ -20,13 +20,10 @@ class Prodcuts extends Migration
             $table->string('product_name');
             $table->string('product_image');
             $table->enum('created_on',['chef_product','cheflab_product'])->comment('1-active 2-inactive 3-delete');
-            $table->enum('status', ['1', '2', '3'])->default('1')->comment('1-active 2-inactive 3-delete');
-            $table->integer('created_by')->nullable();
+            $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->dateTime('created_at')->useCurrent();
             $table->ipAddress('created_ip_address')->nullable();
-            $table->integer('updated_by')->nullable();
             $table->dateTime('updated_at')->nullable();
-            $table->ipAddress('updated_ip_address')->nullable();
         });
     }
 

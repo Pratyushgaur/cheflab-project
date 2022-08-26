@@ -1,5 +1,5 @@
 <footer class="main-footer">
-    <strong>Copyright &copy;<a href="#">Vikas Rathor</a>.</strong>
+    <strong>Copyright &copy; 2014-2019 <a href="http://adminlte.io/">AdminLTE.io</a>.</strong>
     All rights reserved.
     <div class="float-right d-none d-sm-inline-block">
       <b>Version</b> 3.0.0-rc.3
@@ -13,39 +13,59 @@
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-<!-- jQuery -->
-<script src="{{asset('commonarea/backend/plugins/jquery/jquery.min.js')}}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{asset('commonarea/backend/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button)
-</script>
-<!-- Bootstrap 4 -->
-<script src="{{asset('commonarea/backend/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
-<script src="{{asset('commonarea/backend/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
+<!-- jQuery -->
+
+<script src="{{asset('commonarea/ass/plugins/jquery/jquery.min.js')}}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{asset('commonarea/ass/plugins/jquery-ui/jquery-ui.min.js')}}"></script>
+<!-- jQuery Mapael -->
+<script src="{{asset('commonarea/ass/plugins/jquery-mousewheel/jquery.mousewheel.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/raphael/raphael.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/jquery-mapael/jquery.mapael.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/jquery-mapael/maps/usa_states.min.js')}}"></script>
+<!-- ChartJS -->
+<script src="{{asset('commonarea/ass/plugins/chart.js/Chart.min.js')}}"></script>
+
+<!-- PAGE SCRIPTS -->
+<script src="{{asset('commonarea/ass/dist/js/pages/dashboard2.js')}}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+
+
+<!-- Bootstrap 4 -->
+<script src="{{asset('commonarea/ass/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+<!-- ChartJS -->
+<script src="{{asset('commonarea/ass/plugins/chart.js/Chart.min.js')}}"></script>
+<!-- Sparkline -->
+<script src="{{asset('commonarea/ass/plugins/sparklines/sparkline.js')}}"></script>
+<!-- JQVMap -->
+
+<!-- jQuery Knob Chart -->
+<script src="{{asset('commonarea/ass/plugins/jquery-knob/jquery.knob.min.js')}}"></script>
 <!-- daterangepicker -->
-<script src="{{asset('commonarea/backend/plugins/moment/moment.min.js')}}"></script>
-<script src="{{asset('commonarea/backend/plugins/daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/moment/moment.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- Tempusdominus Bootstrap 4 -->
-<script src="{{asset('commonarea/backend/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js')}}"></script>
 <!-- Summernote -->
-<script src="{{asset('commonarea/backend/plugins/summernote/summernote-bs4.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/summernote/summernote-bs4.min.js')}}"></script>
 <!-- overlayScrollbars -->
-<script src="{{asset('commonarea/backend/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
 <!-- AdminLTE App -->
-<script src="{{asset('commonarea/backend/dist/js/adminlte.js')}}"></script>
+<script src="{{asset('commonarea/ass/dist/js/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('commonarea/backend/dist/js/pages/dashboard.js')}}"></script>
+
 <!-- AdminLTE for demo purposes -->
-<script src="{{asset('commonarea/backend/dist/js/demo.js')}}"></script>
+<script src="{{asset('commonarea/ass/dist/js/demo.js')}}"></script>
+
+
+<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+<!-- this is footer ending -->
+
+@yield('js_section')
+
 </body>
-<script src="{{asset('commonarea/backend/plugins/sweetalert2/sweetalert2.min.js')}}"></script>
-<!-- Toastr -->
-<script src="{{asset('commonarea/backend/plugins/toastr/toastr.min.js')}}"></script>
-<!-- DataTables -->
-<script src="{{asset('commonarea/backend/plugins/datatables/jquery.dataTables.js')}}"></script>
-<script src="{{asset('commonarea/backend/plugins/datatables-bs4/js/dataTables.bootstrap4.js')}}"></script>
-<script src="{{asset('commonarea/backend/plugins/select2/js/select2.full.min.js')}}"></script>
 </html>
