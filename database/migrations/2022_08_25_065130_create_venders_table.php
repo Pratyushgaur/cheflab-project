@@ -18,8 +18,14 @@ class CreateVendersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->enum('vendor_type',['restaurant','chef'])->comment('1-restaurant 2-chef');
+            $table->enum('vendor_type',['restaurant','chef']);
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
+            $table->string('mobile',20)->unique();
+            $table->string('pincode',8)->nullable();
+            $table->text('address')->nullable();
+            $table->string('fassai_lic_no')->nullable();
+            $table->string('image')->nullable();
+            $table->string('licence_image')->nullable();
             $table->decimal('wallet',8,2)->default('0');
             $table->softDeletes();
             $table->timestamps();
