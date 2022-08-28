@@ -96,11 +96,11 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Create New Restaurant </h3>
+                      <h3 class="card-title">Create New Chef </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
-                      <form id="restaurant-form" action="{{route('admin.restourant.store')}}" method="post" enctype="multipart/form-data">
+                      <form id="restaurant-form" action="{{route('admin.chef.store')}}" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                           <div class="card card-default">
                               <div class="card-header">
@@ -111,14 +111,14 @@
                                 <div class="row">
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
-                                        <input type="text" name="Restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Name">
+                                        <label for="exampleInputEmail1">Name of Chef <span class="text-danger">*</span></label>
+                                        <input type="text" name="restourant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control"  id="" placeholder="Enter Restaurant Email">
+                                        <input type="email" name="email" class="form-control"  id="" placeholder="Enter Chef Email">
                                     </div>  
                                   </div>
                                   
@@ -137,22 +137,17 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
-                                        <input type="text" name="address" class="form-control"  id="" placeholder="Enter Restaurant Address">
+                                        <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Address">
                                     </div>  
                                   </div>
-                                  <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
-                                        <input type="text" name="fassai_lic_no" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-4">
+                                  
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
                                         <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
                                     </div>  
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
                                         <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
@@ -176,7 +171,7 @@
                                 <div class="row">
                                   <div class="col-sm-3">
                                         <div>
-                                          <label for="">Restaurant Images</label>
+                                          <label for="">Chef Images</label>
                                         </div>
                                         <div class="image-upload">
                                             <label for="file-input">
@@ -187,20 +182,7 @@
                                             <input id="file-input" type="file" name="image" required/>
                                         </div>        
                                   </div>
-                                  <div class="col-sm-3">
-                                        <div>
-                                          <label for="">FSSAI Registration </label>
-                                        </div>
-                                        <div class="image-upload">
-                                            <label for="file-input2">
-                                                <div class="upload-icon2">
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input2" type="file" name="fassai_image"/>
-                                            
-                                        </div>       
-                                  </div>
+                                  
                                 </div>
                                 <!-- div row -->
                               </div>
@@ -209,7 +191,7 @@
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i> Restaurant  Register </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i> Chef  Register </button>
                           </div>
                       </form>
                       
@@ -256,7 +238,7 @@
     
       $("#restaurant-form").validate({
           rules: {
-              Restaurant_name: {
+              restourant_name: {
                   required: true,
                   maxlength: 20,
               },
@@ -301,7 +283,7 @@
               
           },
           messages: {
-              Restaurant_name: {
+              restourant_name: {
                   required: "Name is required",
                   maxlength: "First name cannot be more than 20 characters"
               },

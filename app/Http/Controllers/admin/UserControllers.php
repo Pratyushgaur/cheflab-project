@@ -18,6 +18,10 @@ class UserControllers extends Controller
     {
         return view('admin/vendors/restourant_create');
     }
+    public function create_chef()
+    {
+        return view('admin/vendors/chef_create');
+    }
     public function get_data_table_of_vendord(Request $request)
     {
         if ($request->ajax()) {
@@ -38,8 +42,12 @@ class UserControllers extends Controller
                 ->addColumn('status', function($data){
                     return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
                 })
+
+                ->addColumn('image',function($data){
+                    return "<img src=".asset('vendors').'/'.$data->image."  width='100%' />";
+                })
                 
-                ->rawColumns(['date','action-js','status'])
+                ->rawColumns(['date','action-js','status','image'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
@@ -88,18 +96,61 @@ class UserControllers extends Controller
         $vendors->address  = $request->address;
         $vendors->fassai_lic_no  = $request->fassai_lic_no;
         if($request->has('image')){
-            $filename = time().'_'.$request->file('image')->getClientOriginalName();
-            $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
-            $vendors->image  = $filePath;
+            $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
+            $request->image->move(public_path('vendors'),$filename);
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+            $vendors->image  = $filename;
         }
         //
-        if($request->has('fassai_image')){
-            $filename = time().'_'.$request->file('fassai_image')->getClientOriginalName();
-            $filePath = $request->file('fassai_image')->storeAs('public/fassai_lic',$filename);  
-            $vendors->licence_image  = $filePath;
-        }
+        // if($request->has('fassai_image')){
+        //     $filename = time().'_'.$request->file('fassai_image')->getClientOriginalName();
+        //     $filePath = $request->file('fassai_image')->storeAs('public/fassai_lic',$filename);  
+        //     $vendors->licence_image  = $filename;
+        // }
         $vendors->save();
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');
+        
+
+    }
+    public function store_chef(Request $request)
+    {
+        $this->validate($request, [
+            'restourant_name' => 'required',
+            'email' => 'required|unique:vendors,email',
+            'pincode' => 'required',
+            'phone' => 'required|unique:vendors,mobile',
+            'address' => 'required',
+
+            'password' => 'required',
+            'confirm_password' => 'required',
+
+        ]);
+        $vendors = new vendors;
+        $vendors->name = $request->restourant_name;
+        $vendors->email = $request->email;
+        $vendors->password = Hash::make($request->password);
+        $vendors->vendor_type = 'restaurant';
+        $vendors->mobile  = $request->phone;
+        $vendors->pincode  = $request->pincode;
+        $vendors->address  = $request->address;
+        if($request->has('image')){
+            $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
+            $request->image->move(public_path('vendors'),$filename);
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+            $vendors->image  = $filename;
+
+            
+
+            
+        }
+        //
+        // if($request->has('fassai_image')){
+        //     $filename = time().'_'.$request->file('fassai_image')->getClientOriginalName();
+        //     $filePath = $request->file('fassai_image')->storeAs('public/fassai_lic',$filename);  
+        //     $vendors->licence_image  = $filename;
+        // }
+        $vendors->save();
+        return redirect()->route('admin.chef.create')->with('message', 'Vendor Registration Successfully');
         
 
     }

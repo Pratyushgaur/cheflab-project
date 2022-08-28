@@ -17,6 +17,7 @@ class Categories extends Migration
             $table->id();
             $table->string('name');
             $table->string('categoryImage');
+            $table->string('position',5);
             $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->timestamps();
         });

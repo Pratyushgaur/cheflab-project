@@ -18,7 +18,7 @@ class isAdminLoginAuth
     public function handle(Request $request, Closure $next)
     {
         if (session()->has('**^&%*$$username**$%#','*$%&%*id**$%#')  && Auth::guard('admin')->user()) {
-             return redirect('dashbord-admin');
+             return redirect()->route('admin.dashboard');
         }else{
               return $next($request);
         }

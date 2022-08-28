@@ -43,15 +43,15 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="{{route('admin.category.create')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
 						  <p>Categories</p>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="{{route('admin.cuisines.create')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>Cuisiness</p>
+						  <p>Cuisines</p>
 						</a>
 					</li>
 					
@@ -98,7 +98,7 @@
 				</a>
 				<ul class="nav nav-treeview">
 				    <li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="{{route('admin.product.create')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
 						  <p>Create Product</p>
 						</a>

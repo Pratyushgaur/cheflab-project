@@ -43,11 +43,13 @@ class Cn_login extends Controller
             if ($request->session()->has('**^&%*$$username**$%#', '*$%&%*id**$%#', '**$%#email**^&%*')) {
                 return redirect('admin/dashbord-admin')->with('message', 'Successfully Logged In!');
             } else {
-                return redirect('admin')->with('error', 'You have entered wrong credentials.. Please try again...');
+                
+                return \Redirect::back()->withErrors(['msg' => 'You have entered wrong credentials.. Please try again...']);
             }
             
         }else{
-            return redirect()->back()->with('error', 'You have entered wrong password.. Please try again...');
+            return \Redirect::back()->withErrors(['msg' => 'You have entered wrong credentials.. Please try again...']);
+            //return redirect()->back()->with('error', 'You have entered wrong password.. Please try again...');
         }
     }
 
