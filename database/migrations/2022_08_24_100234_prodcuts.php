@@ -14,9 +14,10 @@ class Prodcuts extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->unsignedBigInteger('userId');
-            $table->foreign('userId')->references('id')->on('users');
+            //$table->foreign('userId')->references('id')->on('vendors');
+            //$table->foreign('userId')->references('id')->on('vendors')->onDelete('cascade');
             $table->string('product_name');
             $table->string('product_image');
             $table->enum('created_on',['chef_product','cheflab_product'])->comment('1-active 2-inactive 3-delete');
@@ -24,6 +25,7 @@ class Prodcuts extends Migration
             $table->dateTime('created_at')->useCurrent();
             $table->ipAddress('created_ip_address')->nullable();
             $table->dateTime('updated_at')->nullable();
+            //$table->foreign('userId')->references('id')->on('vendors')->onDelete('cascade');
         });
     }
 

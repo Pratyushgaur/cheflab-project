@@ -35,7 +35,7 @@ Route::group(['middleware'=>['isAdmin'],'prefix' =>'admin'], function(){
     Route::get('edit-city/{id}', [App\Http\Controllers\admin\City::class, 'fun_edit_city']);
     // vendor's
     Route::get('vendors', [App\Http\Controllers\admin\UserControllers::class,'index'])->name('admin.vendors.list');
-    Route::get('vendors-datatable', [App\Http\Controllers\admin\UserControllers::class,'get_data_table_of_vendord'])->name('admin.vendors.datatable');
+    Route::get('vendors-datatable', [App\Http\Controllers\admin\UserControllers::class,'get_data_table_of_vendor'])->name('admin.vendors.datatable');
     Route::get('vendors-restourant-create', [App\Http\Controllers\admin\UserControllers::class,'create_restourant'])->name('admin.restourant.create');
     Route::get('vendors-vendors-emailcheck', [App\Http\Controllers\admin\UserControllers::class,'checkEmailExist'])->name('admin.vendor.emailcheck');
     Route::get('vendors-vendors-mobilecheck', [App\Http\Controllers\admin\UserControllers::class,'checkMobileExist'])->name('admin.vendor.mobilecheck');
@@ -57,6 +57,8 @@ Route::group(['middleware'=>['isAdmin'],'prefix' =>'admin'], function(){
     Route::get('edit-cuisines/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'fun_edit_category']);
     // product routes
     Route::get('products', [App\Http\Controllers\admin\ProductController::class,'index'])->name('admin.product.create');
+    Route::get('vendor/products/create/{id}', [App\Http\Controllers\admin\ProductController::class,'index'])->name('admin.vendor.product.create');
+    
 });
 
 //Route::get('city', [App\Http\Controllers\admin\Cn_master_city::class,'index'])->name('city');

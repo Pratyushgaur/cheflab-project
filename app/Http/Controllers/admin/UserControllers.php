@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\vendors;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -11,7 +12,6 @@ class UserControllers extends Controller
 {
     
     public function index(){
-        
         return view('admin/vendors/list');
     }
     public function create_restourant()
@@ -22,7 +22,7 @@ class UserControllers extends Controller
     {
         return view('admin/vendors/chef_create');
     }
-    public function get_data_table_of_vendord(Request $request)
+    public function get_data_table_of_vendor(Request $request)
     {
         if ($request->ajax()) {
             
@@ -30,7 +30,21 @@ class UserControllers extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<ul class="navbar-nav">
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Action
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item text-info" href="#"><i class="fas fa-edit"></i> Edit</a>
+                                        <a class="dropdown-item text-danger" href="#"><i class="fa fa-trash"></i> Delete</a>
+                                        <a class="dropdown-item text-danger" href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add Product</a>
+                                        
+                                   
+                                    </div>
+                                </li>
+                            </ul>';
+                    //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
                     return $btn;
                 })
                 
@@ -41,10 +55,11 @@ class UserControllers extends Controller
 
                 ->addColumn('status', function($data){
                     return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
+                    return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
                 })
 
                 ->addColumn('image',function($data){
-                    return "<img src=".asset('vendors').'/'.$data->image."  width='100%' />";
+                    return "<img src=".asset('vendors').'/'.$data->image."  style='width: 50px;' />";
                 })
                 
                 ->rawColumns(['date','action-js','status','image'])
@@ -76,37 +91,44 @@ class UserControllers extends Controller
     public function store_restourant(Request $request)
     {
         $this->validate($request, [
-            'restourant_name' => 'required',
+            'restaurant_name' => 'required',
             'email' => 'required|unique:vendors,email',
             'pincode' => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'address' => 'required',
-            'fassai_lic_no' => 'required',
+            'fssai_lic_no' => 'required',
             'password' => 'required',
             'confirm_password' => 'required',
+            'vendor_commission' => 'required',
 
         ]);
         $vendors = new vendors;
-        $vendors->name = $request->restourant_name;
+        $vendors->name = $request->restaurant_name;
         $vendors->email = $request->email;
         $vendors->password = Hash::make($request->password);
         $vendors->vendor_type = 'restaurant';
         $vendors->mobile  = $request->phone;
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
-        $vendors->fassai_lic_no  = $request->fassai_lic_no;
+        $vendors->fssai_lic_no  = $request->fssai_lic_no;
+        $vendors->commission  = $request->vendor_commission;
+        
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
-           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $vendors->image  = $filename;
         }
-        //
-        // if($request->has('fassai_image')){
-        //     $filename = time().'_'.$request->file('fassai_image')->getClientOriginalName();
-        //     $filePath = $request->file('fassai_image')->storeAs('public/fassai_lic',$filename);  
-        //     $vendors->licence_image  = $filename;
-        // }
+        if($request->has('fassai_image')){
+            $filename = time().'-document-'.rand(100,999).'.'.$request->fassai_image->extension();
+            $request->fassai_image->move(public_path('vendor-documents'),$filename);
+            $vendors->licence_image  = $filename;
+        }
+        if($request->has('other_document')){
+            $filename = time().'-other-document-'.rand(100,999).'.'.$request->other_document->extension();
+            $request->other_document->move(public_path('vendor-documents'),$filename);
+            $vendors->other_document_image  = $filename;
+            $vendors->other_document  = $request->other_document_name;
+        }
         $vendors->save();
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');
         
@@ -120,16 +142,16 @@ class UserControllers extends Controller
             'pincode' => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'address' => 'required',
-
             'password' => 'required',
             'confirm_password' => 'required',
+            'vendor_commission' => 'required',
 
         ]);
         $vendors = new vendors;
         $vendors->name = $request->restourant_name;
         $vendors->email = $request->email;
         $vendors->password = Hash::make($request->password);
-        $vendors->vendor_type = 'restaurant';
+        $vendors->vendor_type = 'chef';
         $vendors->mobile  = $request->phone;
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
@@ -138,10 +160,17 @@ class UserControllers extends Controller
             $request->image->move(public_path('vendors'),$filename);
            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $vendors->image  = $filename;
-
-            
-
-            
+        }
+        if($request->has('fassai_image')){
+            $filename = time().'-document-'.rand(100,999).'.'.$request->fassai_image->extension();
+            $request->fassai_image->move(public_path('vendor-documents'),$filename);
+            $vendors->licence_image  = $filename;
+        }
+        if($request->has('other_document')){
+            $filename = time().'-other-document-'.rand(100,999).'.'.$request->other_document->extension();
+            $request->other_document->move(public_path('vendor-documents'),$filename);
+            $vendors->other_document_image  = $filename;
+            $vendors->other_document  = $request->other_document_name;
         }
         //
         // if($request->has('fassai_image')){
@@ -153,5 +182,30 @@ class UserControllers extends Controller
         return redirect()->route('admin.chef.create')->with('message', 'Vendor Registration Successfully');
         
 
+    }
+
+    public function tetsapi(Request $request)
+    {
+        $user= User::where('email', $request->email)->first();
+        // print_r($data);
+            if (!$user ||  $request->password !=$user->password) {
+                return response([
+                    'message' => ['These credentials do not match our records.']
+                ], 404);
+            }
+        
+             $token = $user->createToken('my-app-token')->plainTextToken;
+        
+            $response = [
+                'user' => $user,
+                'token' => $token
+            ];
+        
+             return response($response, 201);
+    }
+
+    public function getData(Request $request)
+    {
+         return response($request->user(), 201);
     }
 }

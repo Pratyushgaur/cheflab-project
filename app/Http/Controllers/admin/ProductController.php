@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 use App\Models\Product_master;
+use App\Models\Catogory_master;
+use App\Models\Cuisines;
+
+use App\Models\vendors;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -9,8 +14,25 @@ use DataTables;
 class ProductController extends Controller
 {
     
-    public function index(){
+    public function index($encrypt_id){
+       
+        try {
+            $id =  Crypt::decryptString($encrypt_id);  
+            $vendor = vendors::findOrFail($id);
+            $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
+            $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         
+            if($vendor->vendor_type == 'restaurant'){
+                return view('admin/product/create_restaurant_product',compact('vendor','categories','cuisines'));
+            }elseif($vendor->vendor_type == 'chef'){
+                return view('admin/category/edit',compact('vendor'));
+            }else{
+                return 'Wrong Route';
+            }
+            
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        } 
         return view('admin/product/createproduct');
     }
     public function addProduct(Request $request)

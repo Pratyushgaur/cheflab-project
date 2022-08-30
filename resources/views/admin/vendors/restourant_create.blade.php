@@ -77,6 +77,36 @@
             border-radius: 18px;
             margin:0px;
         }
+        /*  */
+        .upload-icon3{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+        
+        .upload-icon3 img{
+            width: 100px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+        
+        .upload-icon3.has-img3{
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+        
+        .upload-icon3.has-img3 img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
       </style>
       @endsection
       <!-- Content Wrapper. Contains page content -->
@@ -108,11 +138,18 @@
 
                               </div>
                               <div class="card-body">
+                                <div class="error">
+                                    @if($errors->any())
+                                      {{ implode('', $errors->all('message')) }}
+                                    @endif
+                                </div>
+                             
                                 <div class="row">
+                                  
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
-                                        <input type="text" name="Restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Name">
+                                        <input type="text" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Name">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
@@ -140,22 +177,28 @@
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Restaurant Address">
                                     </div>  
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
-                                        <input type="text" name="fassai_lic_no" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        <input type="text" name="fssai_lic_no" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
                                     </div>  
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
                                         <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
                                     </div>  
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
                                         <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Vendor Commission Persentage<span class="text-danger">*</span></label>
+                                        <input type="text" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>  
                                   </div>
                                   
@@ -201,6 +244,23 @@
                                             
                                         </div>       
                                   </div>
+                                  <div class="col-sm-3">
+                                        <div>
+                                          <label for="">Other Document </label>
+                                          
+                                        </div>
+                                        <div class="image-upload">
+                                          
+                                            <label for="file-input3">
+                                                <div class="upload-icon3">
+                                                    <img class="icon3" src="{{asset('add-image.png')}}">
+                                                </div>
+                                            </label>
+                                            <input id="file-input3" type="file" name="other_document"/>
+                                            
+                                        </div>   
+                                        <input type="text" name="other_document_name" class="form-control" placeholder="Document Name">    
+                                  </div>
                                 </div>
                                 <!-- div row -->
                               </div>
@@ -209,7 +269,7 @@
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i> Restaurant  Register </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Register Restaurant </button>
                           </div>
                       </form>
                       
@@ -258,7 +318,7 @@
           rules: {
               Restaurant_name: {
                   required: true,
-                  maxlength: 20,
+                  maxlength: 25,
               },
               email: {
                   required: true,
@@ -284,7 +344,7 @@
                   maxlength: 6,
                   number: true
               },
-              fassai_lic_no: {
+              fssai_lic_no: {
                 required: true,
               },
               password:{
@@ -297,6 +357,10 @@
                  required: true,
                  equalTo : '[name="password"]'
               },
+              vendor_commission:{
+                required:true,
+                number: true
+              }
               
               
           },
@@ -339,6 +403,10 @@
       $('#file-input2').change( function(event) {
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
+      });
+      $('#file-input3').change( function(event) {
+          $("img.icon3").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon3").parents('.upload-icon3').addClass('has-img3');
       });
   });
  </script>

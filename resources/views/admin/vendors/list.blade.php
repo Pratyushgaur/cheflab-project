@@ -62,10 +62,10 @@
 
 
 @section('js_section')
-<script type="text/javascript">
-    $(".s_meun").removeClass("active");
-    $(".city_cityadmin").addClass("active");
-    $(".city_menu").addClass("active");
+<script>
+  $("input[data-bootstrap-switch]").each(function(){
+    $(this).bootstrapSwitch('state', $(this).prop('checked'));
+  })
 </script>
 
 <script type="text/javascript">

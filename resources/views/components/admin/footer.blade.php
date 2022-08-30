@@ -63,6 +63,12 @@
 
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
 
+<script src="{{asset('commonarea/ass')}}/dist/js/adminlte.min.js"></script>
+<script src="{{asset('commonarea/ass')}}/plugins/dropzone/min/dropzone.min.js"></script>
+<script src="{{asset('commonarea/ass')}}/plugins/bs-stepper/js/bs-stepper.min.js"></script>
+<script src="{{asset('commonarea/ass')}}/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
+<script src="{{asset('commonarea/ass')}}/plugins/inputmask/jquery.inputmask.min.js"></script>
+
 <!-- this is footer ending -->
 
 @yield('js_section')

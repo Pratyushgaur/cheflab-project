@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::group(['middleware' => 'auth:sanctum'], function(){
+    Route::post('getData',[App\Http\Controllers\admin\UserControllers::class,'getData']);
 });
+
+Route::post('test',[App\Http\Controllers\admin\UserControllers::class,'tetsapi']);

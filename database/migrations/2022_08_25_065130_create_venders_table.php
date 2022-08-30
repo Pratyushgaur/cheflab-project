@@ -23,10 +23,13 @@ class CreateVendersTable extends Migration
             $table->string('mobile',20)->unique();
             $table->string('pincode',8)->nullable();
             $table->text('address')->nullable();
-            $table->string('fassai_lic_no')->nullable();
+            $table->string('fssai_lic_no')->nullable();
+            $table->string('other_document')->nullable();
+            $table->string('other_document_image')->nullable();
             $table->string('image')->nullable();
             $table->string('licence_image')->nullable();
             $table->decimal('wallet',8,2)->default('0');
+            $table->string('commission',10)->default('0');
             $table->softDeletes();
             $table->timestamps();
         });
