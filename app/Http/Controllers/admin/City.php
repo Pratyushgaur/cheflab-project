@@ -55,14 +55,10 @@ class City extends Controller
                 }else{
                     $City_master = City_master::find($txtpkey);
                     $City_master->updated_at   = date('Y-m-d h:i:s');
-                    $City_master->updated_by   = session()->get('*$%&%*id**$%#');
-                    $City_master->updated_ip_address   = $request->ip();
                 }
             }else{
                 $msg = "Added";
                 $City_master->created_at   = date('Y-m-d h:i:s');
-                $City_master->created_by   = session()->get('*$%&%*id**$%#');
-                $City_master->created_ip_address   = $request->ip();
             }           
             $City_master->city_name   = $request->city_name;
             $City_master->save();
@@ -89,7 +85,8 @@ class City extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this City" flash="City"  data-action-url="' . route('admin.city.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 
@@ -152,6 +149,25 @@ class City extends Controller
             return redirect('city')->with('error', 'something went wrong');
         }
 
+    }
+    public function soft_delete(Request $request)
+    {
+        try {
+            $id =  Crypt::decryptString($request->id);
+            $data = City_master::findOrFail($id);
+            if ($data ) {
+                $data->delete();
+                return \Response::json(['error' => false,'success' => true , 'message' => 'City Deleted Successfully'], 200);
+            }else{
+                return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
+            } 
+            
+            
+            
+        } catch (DecryptException $e) {
+            //return redirect('city')->with('error', 'something went wrong');
+            return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
+        }
     }
 
 }

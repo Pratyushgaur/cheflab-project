@@ -116,18 +116,18 @@
 							</div>
 							<div class="card-body">
 							  <div class="form-group">
-                  <label for="category_name">Category Name</label>
+                  <label for="category_name">Category Name <span class="text-danger">*</span></label>
                   <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Category Name">
                   <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
                 </div>
                 <div class="form-group">
-                  <label for="category_name">Position</label>
+                  <label for="category_name">Position <span class="text-danger">*</span></label>
                   <input type="number" id="position" name="position" value="{{!empty($class_name[0]->position) ? $class_name[0]->position : ''}}" class="form-control" placeholder="Position ">
                   <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
                 </div>
                 <div class="form-group">
                       <div>
-                        <label for="">Images</label>
+                        <label for="">Images <span class="text-danger">*</span></label>
                       </div>
                       <div class="image-upload">
                           <label for="file-input">
@@ -218,12 +218,25 @@
             position: {
                 required: true,
                 number: true,
+            },
+            categoryImage:{
+              required: true,
+              
+              fileType: {types: ["jpeg", "png", "jpg"]},
             }
+
         },
         messages: {
             name: {
                 required: "Name is required",
                 maxlength: "First name cannot be more than 20 characters"
+            },
+            name: {
+                required: "Position is required"
+            },
+            categoryImage:{
+              required:"Image is required",
+              fileType:"Imag fileTypee is Not allow.",
             }
             
         }

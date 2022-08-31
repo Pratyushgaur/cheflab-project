@@ -45,13 +45,13 @@
 					<li class="nav-item">
 						<a href="{{route('admin.category.create')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>Categories</p>
+						  <p>Food Categories</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{route('admin.cuisines.create')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>Cuisines</p>
+						  <p>Cuisines Categories</p>
 						</a>
 					</li>
 					
@@ -100,7 +100,7 @@
 				    <li class="nav-item">
 						<a href="{{route('admin.product.create')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>Create Product</p>
+						  <p>Create CheflabProduct</p>
 						</a>
 					</li>
 					<li class="nav-item">

@@ -68,10 +68,70 @@
 <script src="{{asset('commonarea/ass')}}/plugins/bs-stepper/js/bs-stepper.min.js"></script>
 <script src="{{asset('commonarea/ass')}}/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <script src="{{asset('commonarea/ass')}}/plugins/inputmask/jquery.inputmask.min.js"></script>
+<!-- sweatalert -->
+<!-- <script src="{{asset('commonarea/ass')}}/plugins/sweetalert2/sweetalert2.min.js"></script> -->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- sweatalert -->
 
 <!-- this is footer ending -->
 
 @yield('js_section')
+
+<!-- delete records -->
+<script>
+  $(document).ready(function(){
+    
+    $(document).on('click','.delete-record',function(){
+      
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: $(this).attr('data-alert-message'),
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+              var id = $(this).attr('data-id');
+              var action = $(this).attr('data-action-url');
+              var table = $(this).attr('data-table');
+              //
+              $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+              $.ajax({
+                  url: action,
+                  type: 'POST',
+                  // dataType: "JSON",
+                  data: {
+                      "id": id,
+                  },
+                  success: function (response)
+                  {
+                      //console.log();
+                      if (response.success == true) {
+                        Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                        $('#example').DataTable().ajax.reload();
+                      } else {
+                        Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
+                      }
+                  },
+                  error: function(xhr) {
+                  console.log(xhr.responseText); 
+                  
+                }
+              });
+
+            }
+        })
+    })
+  })
+</script>
 
 </body>
 </html>

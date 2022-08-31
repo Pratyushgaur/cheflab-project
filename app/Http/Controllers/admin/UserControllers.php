@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\vendors;
 use App\Models\User;
+use App\Models\Catogory_master;
+use App\Models\Cuisines;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -27,6 +30,9 @@ class UserControllers extends Controller
         if ($request->ajax()) {
             
             $data = vendors::latest()->get();
+            if($request->rolename != ''){
+               $data =  $data->where('vendor_type','=',$request->rolename);
+            }
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
@@ -38,10 +44,15 @@ class UserControllers extends Controller
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item text-info" href="#"><i class="fas fa-edit"></i> Edit</a>
                                         <a class="dropdown-item text-danger" href="#"><i class="fa fa-trash"></i> Delete</a>
-                                        <a class="dropdown-item text-danger" href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add Product</a>
+                                        <a class="dropdown-item text-info" href="'.route('admin.vendor.view',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View More</a>';
+                                        
+                                        if($data->vendor_type == 'chef'){
+                                            $btn .= '<a class="dropdown-item text-danger" href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';    
+                                        }
+                                        
                                         
                                    
-                                    </div>
+                                    $btn .= '</div>
                                 </li>
                             </ul>';
                     //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
@@ -117,6 +128,8 @@ class UserControllers extends Controller
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
             $vendors->image  = $filename;
+        }else{
+            $vendors->image  = 'default_restourant_image.jpg';
         }
         if($request->has('fassai_image')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->fassai_image->extension();
@@ -160,6 +173,8 @@ class UserControllers extends Controller
             $request->image->move(public_path('vendors'),$filename);
            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $vendors->image  = $filename;
+        }else{
+            $vendors->image  = 'default_chef_image.jpg';
         }
         if($request->has('fassai_image')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->fassai_image->extension();
@@ -183,7 +198,14 @@ class UserControllers extends Controller
         
 
     }
-
+    public function view_vendor($encrypt_id)
+    {
+        $id =  Crypt::decryptString($encrypt_id);
+        $vendor = vendors::findOrFail($id);
+        $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
+        $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
+        return view('admin/vendors/view-vendor',compact('vendor','categories','cuisines'));
+    }
     public function tetsapi(Request $request)
     {
         $user= User::where('email', $request->email)->first();
@@ -208,4 +230,6 @@ class UserControllers extends Controller
     {
          return response($request->user(), 201);
     }
+
+    
 }

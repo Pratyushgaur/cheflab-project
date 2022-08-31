@@ -15,13 +15,35 @@
           <section class="content">
             <div class="container-fluid">
               <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-primary card-outline">
+                      <div class="card-header">
+                          <div class="row">
+                            <div class="col-md-2">
+                                <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
+                                  <option value="">Filter By Role</option>
+                                  <option value="restaurant">Restaurant</option>
+                                  <option value="chef">Chef</option>
+                                </select>
+                            </div>
+                            <div class="col-md-10">
+                                <a href="{{route('admin.restourant.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create New Restaurant</a>
+                                <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style=" color:#fff;"> <i class="fa fa-user"> </i> Create New Chef</a>
+                                <!-- <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style=" color:#fff;"><i class="fa fa-search"> </i> Filter</a> -->
+                            </div>
+                          </div>
+                          
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
                       <h3 class="card-title">Listing of Registered Restaurant And Chef </h3>
-                      <a href="{{route('admin.restourant.create')}}" class="pull-right btn btn-sm btn-success " style="margin-left:100px; color:#fff;">Create New Restaurant</a>
-                      <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style="margin-left:100px; color:#fff;">Create New Chef</a>
+                      
                       
                     </div>
                     <div class="card-body pad table-responsive">
@@ -73,7 +95,13 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.vendors.datatable') }}",
+        //ajax: "{{ route('admin.vendors.datatable') }}",
+        ajax:{
+            url:"{{ route('admin.vendors.datatable') }}",
+            data: function (d) {
+                d.rolename = $('#filter-by-role').val()
+            }
+        },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},

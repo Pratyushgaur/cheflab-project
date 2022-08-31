@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Categories extends Migration
+class CreateMobileOtpTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class Categories extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('mobile_otp', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('categoryImage');
-            $table->string('position',5);
-            $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
-            $table->softDeletes();
+            $table->string('mobile_number');
+            $table->string('otp');
+            
+            $table->enum('status', ['0', '1'])->default('0')->comment('1-generated 1-verified');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            
         });
     }
 
@@ -33,6 +31,6 @@ class Categories extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('mobile_otp');
     }
 }

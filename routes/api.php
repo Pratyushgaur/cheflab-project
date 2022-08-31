@@ -21,4 +21,6 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getData',[App\Http\Controllers\admin\UserControllers::class,'getData']);
 });
 
-Route::post('test',[App\Http\Controllers\admin\UserControllers::class,'tetsapi']);
+Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
+Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::class,'register_verify_otp']);
+Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
