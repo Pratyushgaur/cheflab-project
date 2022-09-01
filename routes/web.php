@@ -30,9 +30,11 @@ Route::group(['middleware'=>['isAdmin'],'prefix' =>'admin'], function(){
     Route::get('dashbord-admin', [App\Http\Controllers\admin\Dashboard::class,'index'])->name('admin.dashboard');
     Route::get('city', [App\Http\Controllers\admin\City::class,'index'])->name('city');
     Route::post('city-action', [App\Http\Controllers\admin\City::class,'cityAction'])->name('city.action');
+    Route::post('city-update', [App\Http\Controllers\admin\City::class,'update'])->name('city.update');
     Route::get('city-datatable', [App\Http\Controllers\admin\City::class, 'get_data_table_of_city'])->name('city.getDataTable');
-    Route::post('check-duplicate-city', [App\Http\Controllers\admin\City::class,'check_duplicate_city']);
-    Route::get('edit-city/{id}', [App\Http\Controllers\admin\City::class, 'fun_edit_city']);
+    Route::get('check-duplicate-city', [App\Http\Controllers\admin\City::class,'check_duplicate_city'])->name('check-duplicate-city');
+    Route::get('check-edit-duplicate-city/{id}', [App\Http\Controllers\admin\City::class,'check_edit_duplicate_city'])->name('check-edit-duplicate-city');
+    Route::get('edit-city/{id}', [App\Http\Controllers\admin\City::class, 'fun_edit_city'])->name('fun_edit_city');
     Route::post('city/delete', [App\Http\Controllers\admin\City::class, 'soft_delete'])->name('admin.city.ajax.delete');
     // vendor's
     Route::get('vendors', [App\Http\Controllers\admin\UserControllers::class,'index'])->name('admin.vendors.list');
@@ -58,6 +60,7 @@ Route::group(['middleware'=>['isAdmin'],'prefix' =>'admin'], function(){
     Route::post('cuisines', [App\Http\Controllers\admin\CuisinesController::class,'store_cuisines'])->name('admin.cuisines.store');
     Route::get('cuisines-datatable', [App\Http\Controllers\admin\CuisinesController::class,'get_data_table_of_cuisines'])->name('admin.cuisines.datatable');
     Route::get('edit-cuisines/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'fun_edit_category']);
+    Route::post('cuisines/delete', [App\Http\Controllers\admin\CuisinesController::class, 'soft_delete'])->name('admin.cuisines.ajax.delete');
     // product routes
     Route::get('products', [App\Http\Controllers\admin\ProductController::class,'index'])->name('admin.product.create');
     Route::get('vendor/products/create/{id}', [App\Http\Controllers\admin\ProductController::class,'index'])->name('admin.vendor.product.create');

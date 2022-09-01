@@ -14,7 +14,7 @@
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create City</li>
+              <li class="breadcrumb-item active">Edit City</li>
             </ol>
           </div>
         </div>
@@ -26,11 +26,11 @@
 		<div class="row">
 			
 				<div class="col-md-4">
-		<form method="post" id="cityForm" action="{{ route('city.action') }}">
+		<form method="post" id="cityForm" action="{{ route('city.update') }}">
               @csrf
 						<div class="card card-primary">
 							<div class="card-header">
-							  <h3 class="card-title">Add CIty</h3>
+							  <h3 class="card-title">Edit CIty</h3>
 
 							  <div class="card-tools">
 								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -40,8 +40,9 @@
 							<div class="card-body">
 							  <div class="form-group">
 								<label for="city_name">City</label>
-								<input type="text" id="city_name" name="city_name" class="form-control" placeholder="City Name">
-								<input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($city_data[0]->id) ? $city_data[0]->id : ''}}">
+								<input type="text" id="city_name" value="{{$city_data->city_name}}" name="city_name" class="form-control" placeholder="City Name">
+                                <input type="hidden" id="id" value="{{$city_data->id}}" name="id" class="form-control" placeholder="City Name">
+								<input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($city_data->id) ? $city_data->id : ''}}">
 							  </div>
 							</div>
 							<!-- /.card-body -->
@@ -69,7 +70,7 @@
                   <tr>
                     <th>Sr.no</th>
                     <th>City Name</th>
-					<th>Created at</th>
+                    <th>Created at</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -99,6 +100,8 @@
 
 
 @section('js_section')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
     $(".city_cityadmin").addClass("active");
@@ -118,6 +121,22 @@
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
+    $("#cityForm").validate({
+          rules: {
+            city_name: {
+                  required: true,
+                  maxlength: 25,
+                  remote: '{{route("check-edit-duplicate-city",$city_data->id)}}',
+              }
+              
+          },
+          messages: {
+              city_name:{
+                remote:"City Name Already Exist"
+              }
+              
+          }
+      });
   // });
 
   function reload_table() {

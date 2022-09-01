@@ -50,7 +50,8 @@ class CuisinesController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. url("admin/edit-category") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('categories') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'. url("admin/edit-category") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  
+                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Cuisines" flash="Category"  data-action-url="' . route('admin.cuisines.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 
@@ -72,5 +73,24 @@ class CuisinesController extends Controller
                 ->make(true);
         }
 
+    }
+    public function soft_delete(Request $request)
+    {
+        try {
+            $id =  Crypt::decryptString($request->id);
+            $data = Cuisines::findOrFail($id);
+            if ($data ) {
+                $data->delete();
+                return \Response::json(['error' => false,'success' => true , 'message' => 'Category Deleted Successfully'], 200);
+            }else{
+                return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
+            } 
+            
+            
+            
+        } catch (DecryptException $e) {
+            //return redirect('city')->with('error', 'something went wrong');
+            return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
+        }
     }
 }

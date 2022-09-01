@@ -20,7 +20,7 @@ class City extends Controller
     {
         $data= City_master::all();
         $class_name ='City';
-        return view('admin/city',compact('class_name'));
+        return view('admin/city/city',compact('class_name'));
        // return view('admin/city',compact('class_name'),['members'=>$data]);
     }
 
@@ -85,7 +85,7 @@ class City extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
+                    $btn = '<a href="'. route("fun_edit_city",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
                             <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this City" flash="City"  data-action-url="' . route('admin.city.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
@@ -104,50 +104,36 @@ class City extends Controller
     }
 
 
-    public function check_duplicate_city(Request $request)
+    public function check_duplicate_city(Request $request ,$id=null)
     {
-        if ($request->ajax()) {
-            try {
-                $id = $request->txtpkey;
-                if (!empty($id)) {
-                    $id =   Crypt::decryptString($request->txtpkey);
-                    $city_data = City_master::where('id','<>', $id)->where('city_name', $request->city_name)->where('status', '<>', 3)->get();
-                } else {
-                    $city_data = City_master::where('city_name', $request->city_name)->where('status', '<>', 3)->get();
-                }
-                
-                if (!empty($city_data[0])) {
-                    echo "false";
-                } else {
-                    echo "true";
-                }
-            } catch (DecryptException $e) {
-                return redirect('city')->with('error', 'something went wrong');
-            }
-        }else{
-            exit('No direct script access allowed');
+        if (City_master::where('city_name','=',$request->city_name)->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
         }
-
     }
+    public function check_edit_duplicate_city(Request $request,$id)
+    {
+        $city = City_master::where('city_name','=',$request->city_name);
+        $city = $city->where('id','!=',$id);
+        if ($city->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
+        }
+    }
+    
 
     public function fun_edit_city($encrypt_id)
     {
         try {
-            
-            $id =  Crypt::decryptString($encrypt_id);
-            $city_data = DB::table(Config::get('constants.MANGAO_CITY_MASTER').'  as MCM')->where('MCM.status', '<>', 3)->where('MCM.id', '=', $id)->select('MCM.city_name', 'MCM.id')->get();
-
-            $city_data[0]->id = Crypt::encryptString($city_data[0]->id);
-            $class_name ='Cn_master_city';
-           
-            if(!empty($city_data[0])){
-                return view('admin/city-cityadmin/city_master',compact('class_name','city_data'));
-            }else{
-               return redirect('city')->with('error', 'something went wrong');
-            }
-        } catch (DecryptException $e) {
-            return redirect('city')->with('error', 'something went wrong');
-        }
+            $id =  Crypt::decryptString($encrypt_id);  
+            $city_data = City_master::findOrFail($id);
+           // dd($city_data);
+            return view('admin/city/editcity',compact('city_data'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        } 
 
     }
     public function soft_delete(Request $request)
@@ -169,5 +155,14 @@ class City extends Controller
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
     }
+
+    public function update(Request $request){
+        // return $request->input();die;
+         $data = City_master::find($request->id);
+         $data->city_name=$request->city_name;
+         $data->save();
+         $msg = "City Update";
+         return redirect()->route('city')->with('message', 'City '. $msg);
+     }
 
 }
