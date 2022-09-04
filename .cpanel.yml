@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/rootweb10/public_html/Chelab_full_project
+    - /bin/cp * $DEPLOYPATH
