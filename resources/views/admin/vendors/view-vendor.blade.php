@@ -15,7 +15,7 @@
                   <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                       <li class="breadcrumb-item"><a href="#">Home</a></li>
-                      <li class="breadcrumb-item active">User Profile</li>
+                      <li class="breadcrumb-item active">Chef Profile</li>
                     </ol>
                   </div>
                 </div>
@@ -60,10 +60,17 @@
                           <li class="list-group-item ">
                             <b>Commission</b> <a class="float-right">{{$vendor->commission}}%</a>
                           </li>
+                          @if($vendor->vendor_type == 'chef')
+                          
+                          <li class="list-group-item ">
+                          <a href="{{ route('admin.cherf.product',\Crypt::encryptString($vendor->id)) }}" class="btn btn-primary btn-rounded btn-block"><b>Add New Product</b></a>
+                          <a href="{{ route('admin.cherf.videolink',\Crypt::encryptString($vendor->id)) }}" class="btn btn-primary btn-block"><b>Add Video Link</b></a>    
+                          </li>
+                          
+                          @endif
+                          
+                          
                         </ul>
-                        @if($vendor->vendor_type == 'chef')
-                        <a href="#" class="btn btn-primary btn-block"><b>Add New Product</b></a>
-                        @endif
                         
                       </div>
                       <!-- /.card-body -->
@@ -95,8 +102,9 @@
                       <div class="card-header p-2">
                         <ul class="nav nav-pills">
                           <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Product List</a></li>
-                          <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Add New Product</a></li>
-                          <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Order's</a></li>
+                          <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Video List</a></li>
+                          <li class="nav-item"><a class="nav-link" href="#settingslink" data-toggle="tab">Order's</a></li>
+                          
                         </ul>
                       </div><!-- /.card-header -->
                       <div class="card-body">
@@ -108,10 +116,9 @@
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
                                     <th >Product Name</th>
-                                    <th  >Product Price</th>
-                                    <th  >Customizable</th>
-                                    <th> Status</th>
                                     <th> Image</th>
+                                    <th  >Product Price</th>
+                                    <th  >Type</th>
                                     <th  >created at</th>
                                     <th  >Action</th>
                                   </tr>
@@ -124,141 +131,26 @@
                               <input type="hidden"  name="userId" value="{{\Crypt::encryptString($vendor->id)}}">
                               @csrf
                             <div class="card card-default">
-                              <div class="card-header">
-                                    <h3 class="card-title">Product Information</h3>
-                              </div>
-                              <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Name of Product</label>
-                                          <input type="text" name="product_name" class="form-control" data-rule-required="true" id="exampleInputEmail1" placeholder="Enter Product Name">
-                                        
-                                      </div>  
-                                    </div>
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Cuisines</label>
-                                          <select class="form-control select2" name="category" style="width: 100%;">
-                                                @foreach($cuisines as $k =>$value)
-                                                  <option value="{{$value->id}}">{{$value->name}}</option>
-                                                @endforeach
-                                          </select>
-                                      </div>  
-                                    </div>
-
-
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                        <label>Categories</label>
-                                        <select class="form-control select2" style="width: 100%;">
-                                          @foreach($categories as $k =>$value)
-                                          <option value="{{$value->id}}">{{$value->name}}</option>
-                                          @endforeach
-                                        </select>
-                                      </div>
-                                    </div>
-                                    
-                                    
-
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Product Description</label>
-                                          <textarea class="form-control" name="dis" ></textarea>
-                                      </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                      <div class="form-group">
-                                        
-                                          <label for="exampleInputEmail1">Product Type</label><br>
-                                          
-                                          <div class="form-group clearfix">
-                                            <div class="icheck-success d-inline">
-                                              <input type="radio" id="veg" name="type" value="veg" checked>
-                                              <label for="veg">Veg</label>
-                                            </div>
-                                            <div class="icheck-danger d-inline">
-                                              <input type="radio" id="non_veg" name="type" value="non_veg">
-                                              <label for="non_veg">Non Veg</label>
-                                            </div>
-                                            <div class="icheck-warning d-inline">
-                                              <input type="radio" id="eggs" name="type" value="eggs">
-                                              <label for="eggs">Eggs</label>
-                                            </div>
-                                            
-                                          </div>
-                                      </div>  
-                                    </div>
-                                    <div class="col-md-3">
-                                      <div class="form-group">
-                                          <label for="">Product Price</label>
-                                          <input type="text" name="product_price" class="form-control"  id="product_owner" placeholder="Product Price">
-                                      </div>
-                                    </div>
-
-                                    <div class="col-md-3">
-                                      <div class="form-group">
-                                          <label for="">Customizable Availablity</label>
-
-                                          
-                                          <select name="customizable" id="customizable" class="form-control">
-                                            <option value="false">No</option>
-                                            <option value="true">Yes</option>
-                                          </select>
-                                      </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                      <div class="form-group">
-                                          <label for="">Addons </label>
-                                          <select name="customizable" id="" class="form-control">
-                                            <option value="false">No</option>
-                                            <option value="true">Yes</option>
-                                          </select>
-                                      </div>
-                                    </div>
-
-                                
-                                  </div>
-
-                                    
-                                </div>
-                                <div class="custmization-block" style="display:none">
-                                  <div class="row">
-                                    <div class="col-md-12">
-                                        <h3>Add More Variant</h3>
-                                    </div>
-                                  </div>
-                                  <div class="row">
-                                    <div class="col-md-4">
-                                        <input type="text" class="form-control variant_name"  placeholder="Enter Variant Name">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <input type="text" class="form-control price" placeholder="Enter Price">
-                                    </div>
-                                    <div class="col-md-2">
-                                        <button type="submit" class="btn btn-primary add">Add This Variant</button>
-                                    </div>
-                                  </div>
-                                  <br>
-                                  <div class="variant-container"> 
-                                  </div>
-                                  
-                                </div>
-                                
-                                
-
-                              </div>
-                              <div class="card-footer">
-                                  <button type="submit" class="btn btn-primary">Save</button>
-                              </div>
-                            </div>
+                            <table id="example1" class="table1 table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                            <thead>
+                                  <tr role="row">
+                                    <th  class="text-center">Sr No.</th>
+                                    <th > Title</th>
+                                    <th> Sub Title</th>
+                                    <th  >Link</th>
+                                    <th  >created at</th>
+                                    <th  >Action</th>
+                                  </tr>
+                            </thead>
+                            
+                        </table>
                             
                           </div>
                           <!-- /.tab-pane -->
 
-                          <div class="tab-pane" id="settings">
+                          <div class="tab-pane" id="settingslink">
                             <form class="form-horizontal">
+                             
                             
                             </form>
                           </div>
@@ -287,29 +179,22 @@
 @section('js_section')
 
 <script type="text/javascript">
-  // $(function () {
-    // let table = $('#example').dataTable({
-    //     processing: true,
-    //     serverSide: true,
-    //     //ajax: "{{ route('admin.vendors.datatable') }}",
-    //     ajax:{
-    //         url:"{{ route('admin.vendors.datatable') }}",
-    //         data: function (d) {
-    //             d.rolename = $('#filter-by-role').val()
-    //         }
-    //     },
-    //     columns: [
-    //         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-    //         {data: 'name', name: 'name'},
-    //         {data: 'email', name: 'email'},
-    //         {data: 'vendor_type', name: 'vendor_type'},
-    //         {data: 'status', name: 'status',orderable: false, searchable: false},
-    //         {data: 'image', name: 'image',orderable: false, searchable: false},
-    //         {data: 'wallet', name: 'wallet'},
-    //         {data: 'date', name: 'created_at'},
-    //         {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-    //     ]
-    // });
+  //$(function () {
+     let table = $('#example').dataTable({
+         processing: true,
+         serverSide: true,
+         ajax: "{{ route('admin.chef.productlists',$vendor->id)}}",
+         columns: [
+             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+             {data: 'product_name', name: 'product_name',orderable: false, searchable: false},
+             {data: 'product_image', name: 'product_image'},
+             {data: 'product_price', name: 'product_price'},
+            {data: 'type', name: 'type'},
+            {data: 'date', name: 'created_at'},
+             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+         ]
+     });
+    
     $('#customizable').change(function(){
         if ($(this).val() == 'true') {
           $('.custmization-block').show();
@@ -334,4 +219,23 @@
    }
 
  </script>
+ <script type="text/javascript">
+    let table1 = $('#example1').dataTable({
+         processing: true,
+         serverSide: true,
+         ajax: "{{ route('admin.cherf.video.link',\Crypt::encryptString($vendor->id))}}",
+      //   {{ route('admin.cherf.videolink',\Crypt::encryptString($vendor->id)) }}
+         columns: [
+             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+             {data: 'title', name: 'title',orderable: false, searchable: false},
+             {data: 'sub_title', name: 'sub_title'},
+             {data: 'link', name: 'link'},
+             {data: 'date', name: 'created_at'},
+             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+         ]
+    });
+     function reload_table() {
+      table1.DataTable().ajax.reload(null, false);
+    }
+  </script>
 @endsection

@@ -103,6 +103,9 @@
 		<div class="row">
 			
 				<div class="col-md-4">
+        @if($errors->any())
+            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+        @endif
         <form id="restaurant-form" action="{{route('admin.cuisines.store')}}" method="post" enctype="multipart/form-data">
           @csrf
           <div class="card card-primary">
@@ -135,7 +138,7 @@
                                   <img class="icon" src="{{asset('add-image.png')}}">
                               </div>
                           </label>
-                          <input id="file-input" type="file" name="categoryImage" required/>
+                          <input id="file-input" type="file" name="cuisinesImage" required/>
                       </div>      
                 </div>
 							</div>
@@ -214,16 +217,26 @@
             name: {
                 required: true,
                 maxlength: 20,
+                remote: '{{route("check-duplicate-cuisines")}}',
             },
             position: {
                 required: true,
                 number: true,
+            },
+            cuisinesImage:{
+              required: true,
+              image: true,
             }
         },
         messages: {
             name: {
-                required: "Name is required",
-                maxlength: "First name cannot be more than 20 characters"
+                remote:"This Cuisines Name Already Exist"
+            },
+            position:{
+                remote:"Image Required"
+            },
+            cuisinesImage:{
+                remote:"Image Required"
             }
             
         }

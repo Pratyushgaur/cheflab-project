@@ -55,7 +55,7 @@ return [
         ],
         'vendor' => [
             'driver' => 'session',
-            'provider' => 'vendors',
+            'provider' => 'vendors_user',
         ],
 
         
@@ -97,9 +97,9 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Md_city_admin::class,
         ],
-        'vendors' => [
+        'vendors_user' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Md_city_admin_vendor::class,
+            'model' => App\Models\Vendors::class,
         ],
         
     ],

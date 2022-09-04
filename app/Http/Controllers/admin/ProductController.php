@@ -136,6 +136,27 @@ class ProductController extends Controller
         $data->save();
         return redirect('admin/product-list');
     }
+    public function soft_delete(Request $request)
+    {
+        try {
+            $id =  Crypt::decryptString($request->id);
+            $data = Product_master::findOrFail($id);
+            if ($data ) {
+                $data->delete();
+                return \Response::json(['error' => false,'success' => true , 'message' => 'Product Deleted Successfully'], 200);
+            }else{
+                return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
+            } 
+            
+            
+            
+        } catch (DecryptException $e) {
+            //return redirect('city')->with('error', 'something went wrong');
+            return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
+        }
+    }
+
+    //
     
     
 

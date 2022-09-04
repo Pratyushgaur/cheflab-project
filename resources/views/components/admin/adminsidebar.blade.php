@@ -87,31 +87,13 @@
 					</li>
 				</ul>
 			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
-				  
+			
+			<li class="nav-item">
+				<a href="{{route('admin.product.cheflabProduct')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
-				  <p>
-					 Product Management
-					<i class="fas fa-angle-left right"></i>
-				  </p>
+				  <p>Product Management</p>
 				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="{{route('admin.product.create')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>Create CheflabProduct</p>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Product</p>
-						</a>
-					</li>
-					
-				</ul>
-			</li>
+			</li>  
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  

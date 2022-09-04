@@ -71,6 +71,7 @@
 <!-- sweatalert -->
 <!-- <script src="{{asset('commonarea/ass')}}/plugins/sweetalert2/sweetalert2.min.js"></script> -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="{{asset('commonarea/ass')}}/plugins/toastr/toastr.min.js"></script>
 
 <!-- sweatalert -->
 
@@ -130,8 +131,23 @@
             }
         })
     })
+    
+    
   })
 </script>
+@if (\Session::has('message'))
+    <script>
+       $(document).ready(function(){
+          $(document).Toasts('create', {
+            class: 'bg-success',
+            title: 'Success',
+            subtitle: '',
+            body: '<?php echo  \Session::get('message'); ?>'
+          })
+       });
+    </script>                
+    
+@endif
 
 </body>
 </html>

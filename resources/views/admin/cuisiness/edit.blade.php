@@ -1,7 +1,84 @@
 @extends('admin.layouts.layoute')
 @section('content')
-
-
+@section('page-style')
+<style>
+        label.error {
+            color: #dc3545;
+            font-size: 14px;
+        }
+        .image-upload{
+            display:inline-block;
+            margin-right:15px;
+            position:relative;
+        }
+        .image-upload > input
+        {
+            display: none;
+        }
+        .upload-icon{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+        
+        
+        
+        .upload-icon img{
+          width: 100px;
+          height: 100px;
+          margin:19px;
+          cursor: pointer;
+        }
+        
+        
+        .upload-icon.has-img {
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+        
+        .upload-icon.has-img img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
+        /*  */
+        .upload-icon2{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+        
+        .upload-icon2 img{
+            width: 100px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+        
+        .upload-icon2.has-img2{
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+        
+        .upload-icon2.has-img2 img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
+      </style>
+@endsection
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -9,12 +86,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create Category</h1>
+            <h1>Create Cuisines</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create Category</li>
+              <li class="breadcrumb-item active">Create Cuisines</li>
             </ol>
           </div>
         </div>
@@ -26,11 +103,11 @@
 		<div class="row">
 			
 				<div class="col-md-4">
-        <form id="restaurant-form" action="" method="post" enctype="multipart/form-data">
-          @csrf	
+        <form id="restaurant-form" action="{{route('admin.cuisines.update')}}" method="post" enctype="multipart/form-data">
+          @csrf
           <div class="card card-primary">
 							<div class="card-header">
-							  <h3 class="card-title">General</h3>
+							  <h3 class="card-title">Create</h3>
 
 							  <div class="card-tools">
 								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -39,22 +116,29 @@
 							</div>
 							<div class="card-body">
 							  <div class="form-group">
-                    <label for="category_name">Category Name</label>
-                    <input type="text" id="name" value="{{$city_data->name}}" name="name" class="form-control" placeholder="Category Name">
-							  </div>
+                  <label for="category_name">Cuisines Name</label>
+                  <input type="text" id="name" name="name" value="{{$city_data->name}}" class="form-control" placeholder="Cuisines Name">
+                  <input type="hidden" name="id" id="id" value="{{$city_data->id}}">
+                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{$city_data->id}}">
+                </div>
                 <div class="form-group">
-                    <div>
-                        <label for="">Category Images</label>
-                    </div>
-                    <div class="image-upload">
-                        <label for="file-input">
-                            <div class="upload-icon">
-                                <img class="icon" src="{{asset('categories').'/'.$city_data->categoryImage}}"  style="width:75px;height:50px;">
-                            </div>
-                        </label>
-                        <input id="file-input" type="file" name="categoryImage" required/>
-                        <input type="hidden" name="admin_image_old" id="admin_image_old" value="{{ !empty($categoryImage[0]->categoryImage) ? $category_data[0]->categoryImage : '' }}" class="form-control">
-                    </div>        
+                  <label for="category_name">Position</label>
+                  <input type="number" id="position" name="position" value="{{$city_data->position}}" class="form-control" placeholder="Position ">
+                  
+                </div>
+                <div class="form-group">
+                      <div>
+                        <label for="">Cuisines Images</label>
+                      </div>
+                      <div class="image-upload">
+                          <label for="file-input">
+                              <div class="upload-icon">
+                                  <img class="icon" src="{{ asset('cuisines'.'/'.$city_data->cuisinesImage ) }}">
+                                  
+                              </div>
+                          </label>
+                          <input id="file-input" type="file" name="cuisinesImage" required/>
+                      </div>      
                 </div>
 							</div>
 							<!-- /.card-body -->
@@ -68,7 +152,7 @@
 				</div>
 				<div class="card card-info col-md-8">
             <div class="card-header">
-              <h3 class="card-title">Files</h3>
+              <h3 class="card-title">List</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -80,7 +164,8 @@
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Vendor Name</th>
+                                    <th >Cuisines Name</th>
+                                    <th >Position</th>
                                     <th  >Image</th>
                                   
                                     <th  >Action</th>
@@ -107,6 +192,16 @@
 
 
 @section('js_section')
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+
+
+
+
+
+    
+
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
     $(".city_cityadmin").addClass("active");
@@ -121,14 +216,26 @@
             name: {
                 required: true,
                 maxlength: 20,
+                remote: '{{route("check-edit_duplicate-cuisines",$city_data->id)}}',
+            },
+            position: {
+              required: true,
+              number: true,
+            },
+            cuisinesImage:{
+              required: true,
+              image: true,
             }
-            
-            
         },
         messages: {
             name: {
-                required: "Name is required",
-                maxlength: "First name cannot be more than 20 characters"
+              remote:"Cuisines Name Already Exist"
+            },
+            position:{
+                remote:"Image Required"
+            },
+            cuisinesImage:{
+                remote:"Image Required"
             }
             
         }
@@ -143,17 +250,19 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
+   });
 </script>
 <script type="text/javascript">
   // $(function () {
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.category.datatable') }}",
+        ajax: "{{ route('admin.cuisines.datatable') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},
-            {data: 'categoryImage', name: 'categoryImage'},
+            {data: 'position', name: 'position'},
+            {data: 'cuisinesImage', name: 'cuisinesImage'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

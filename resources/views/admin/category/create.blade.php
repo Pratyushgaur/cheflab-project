@@ -2,6 +2,7 @@
 @section('content')
 @section('page-style')
 <style>
+    
         label.error {
             color: #dc3545;
             font-size: 14px;
@@ -180,7 +181,7 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
+ 
   <!-- /.content-wrapper -->
 
   <!-- /.content-wrapper -->
@@ -190,69 +191,14 @@
 
 
 @section('js_section')
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-
-
-
-
-
-    
-
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
     $(".city_cityadmin").addClass("active");
     $(".city_menu").addClass("active");
 </script>
 
-<script>
-   $(document).ready(function() {
-    
-    $("#restaurant-form").validate({
-        rules: {
-            name: {
-                required: true,
-                maxlength: 20,
-            },
-            position: {
-                required: true,
-                number: true,
-            },
-            categoryImage:{
-              required: true,
-              
-              fileType: {types: ["jpeg", "png", "jpg"]},
-            }
-
-        },
-        messages: {
-            name: {
-                required: "Name is required",
-                maxlength: "First name cannot be more than 20 characters"
-            },
-            name: {
-                required: "Position is required"
-            },
-            categoryImage:{
-              required:"Image is required",
-              fileType:"Imag fileTypee is Not allow.",
-            }
-            
-        }
-    });
-
-
-    $('#file-input').change( function(event) {
-          $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon").parents('.upload-icon').addClass('has-img');
-      });
-      $('#file-input2').change( function(event) {
-          $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon2").parents('.upload-icon2').addClass('has-img2');
-      });
-   });
-</script>
 <script type="text/javascript">
   // $(function () {
     let table = $('#example').dataTable({
@@ -261,14 +207,51 @@
         ajax: "{{ route('admin.category.datatable') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
+            {data: 'name', name: 'city_name'},
             {data: 'position', name: 'position'},
             {data: 'categoryImage', name: 'categoryImage'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
-  // });
-
+    $("#restaurant-form").validate({
+      rules: {
+            name: {
+                required: true,
+                maxlength: 20,
+                remote: '{{route("check-duplicate-category")}}',
+            },
+            position: {
+                required: true,
+                number: true,
+            },
+            categoryImage:{
+              required: true,
+              image: true,
+            }
+        },
+        messages: {
+            name: {
+                remote:"Category  Already Exist",
+            },
+            position:{
+                remote:"Image Required",
+            },
+            categoryImage:{
+                remote:"Image Required"
+            }
+            
+        }
+      });
+      $('#file-input').change( function(event) {
+          $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon").parents('.upload-icon').addClass('has-img');
+      });
+      $('#file-input2').change( function(event) {
+          $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon2").parents('.upload-icon2').addClass('has-img2');
+      });
+  
+      
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }

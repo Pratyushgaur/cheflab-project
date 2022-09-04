@@ -26,6 +26,11 @@
                     </div>
                     <div class="card-body pad table-responsive">
                       <form id="product-form" method="POST" enctype='multipart/form-data' action="{{ url('admin/product-action') }}">
+                      @if ($errors->any())
+                          @foreach ($errors->all() as $error)
+                              <div class="alert alert-danger">{{$error}}</div>
+                          @endforeach
+                      @endif
                         <input type="hidden"  name="userId" value="{{\Crypt::encryptString($vendor->id)}}">
                           @csrf
                         <div class="card card-default">

@@ -103,6 +103,42 @@ class Category extends Controller
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
     }
-    
-   
+    public function check_duplicate_category(Request $request ,$id=null)
+    {
+        if (Catogory_master::where('name','=',$request->name)->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
+        }
+    }
+    public function check_edit_duplicate_category(Request $request,$id)
+    {
+        $city = Catogory_master::where('name','=',$request->name);
+        $city = $city->where('id','!=',$id);
+        if ($city->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
+        }
+    }
+    public function update(Request $request){
+        //return $request->input();die;
+        $this->validate($request, [
+           'name' => 'required',
+           'position' => 'required',
+       ]);
+       $catogory = Catogory_master::find($request->id);
+       $catogory->name = $request->name;
+       if($request->has('categoryImage')){
+           $filename = time().'-categoryImage-'.rand(100,999).'.'.$request->categoryImage->extension();
+           $request->categoryImage->move(public_path('categories'),$filename);
+          // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+           $catogory->categoryImage  = $filename;
+       }
+       $catogory->position  = $request->position;;
+       
+       $catogory->save();
+       return redirect()->route('admin.category.store')->with('message', 'Category Registration Successfully');
+       
+    }  
 }

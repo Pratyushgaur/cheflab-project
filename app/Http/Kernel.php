@@ -49,6 +49,13 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\isAdmin::class,
         ],
 
+        'isVendor' => [
+            \App\Http\Middleware\isVendor::class,
+        ],
+        'isRestaurant' => [
+            \App\Http\Middleware\isRestaurant::class,
+        ],
+
     ];
 
     /**
@@ -69,5 +76,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isadminloginAuth' => \App\Http\Middleware\isAdminLoginAuth::class,
+        'isVendorloginAuth' => \App\Http\Middleware\isVendorLoginAuth::class
     ];
 }

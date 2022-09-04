@@ -132,7 +132,7 @@
                   required: true,
                   maxlength: 25,
                   remote: '{{route("check-duplicate-city")}}',
-              }
+              },
               
           },
           messages: {

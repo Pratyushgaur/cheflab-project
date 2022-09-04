@@ -24,14 +24,14 @@ class CuisinesController extends Controller
      // return $request->input();die;
         $this->validate($request, [
             'name' => 'required',
-            'categoryImage' => 'required',
+            'cuisinesImage' => 'required',
             'position' => 'required',
         ]);
         $catogory = new Cuisines;
         $catogory->name = $request->name;
-        if($request->has('categoryImage')){
-            $filename = time().'-categoryImage-'.rand(100,999).'.'.$request->categoryImage->extension();
-            $request->categoryImage->move(public_path('cuisines'),$filename);
+        if($request->has('cuisinesImage')){
+            $filename = time().'-cuisinesImage-'.rand(100,999).'.'.$request->cuisinesImage->extension();
+            $request->cuisinesImage->move(public_path('cuisines'),$filename);
            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $catogory->cuisinesImage  = $filename;
         }
@@ -50,8 +50,8 @@ class CuisinesController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. url("admin/edit-category") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  
-                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Cuisines" flash="Category"  data-action-url="' . route('admin.cuisines.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'. route("admin.cuisines.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this City" flash="City"  data-action-url="' . route('admin.city.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 
@@ -74,6 +74,34 @@ class CuisinesController extends Controller
         }
 
     }
+    public function fun_edit_cuisines($encrypt_id){
+        try {
+            $id =  Crypt::decryptString($encrypt_id);  
+            $city_data = Cuisines::findOrFail($id);
+           // dd($city_data);
+            return view('admin/cuisiness/edit',compact('city_data'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        } 
+    }
+    public function update(Request $request){
+        //return $request->input();die;
+        
+       $catogory = Cuisines::find($request->id);
+      // dd($catogory);
+       $catogory->name = $request->name;
+       if($request->has('cuisinesImage')){
+           $filename = time().'-cuisinesImage-'.rand(100,999).'.'.$request->cuisinesImage->extension();
+           $request->cuisinesImage->move(public_path('cuisines'),$filename);
+          // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+           $catogory->cuisinesImage  = $filename;
+       }
+       $catogory->position  = $request->position;;
+       
+       $catogory->save();
+       return redirect()->route('admin.cuisines.create')->with('message', 'Cuisines Update Successfully');
+       
+    }  
     public function soft_delete(Request $request)
     {
         try {
@@ -91,6 +119,24 @@ class CuisinesController extends Controller
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
+        }
+    }
+    public function check_duplicate_cuisines(Request $request ,$id=null)
+    {
+        if (Cuisines::where('name','=',$request->name)->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
+        }
+    }
+    public function check_edit_duplicate_cuisines(Request $request,$id)
+    {
+        $city = Cuisines::where('name','=',$request->name);
+        $city = $city->where('id','!=',$id);
+        if ($city->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
         }
     }
 }
