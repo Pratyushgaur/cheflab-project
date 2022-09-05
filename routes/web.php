@@ -123,6 +123,10 @@ Route::group(['middleware'=>['isVendor'],'prefix' =>'vendor'], function(){
         Route::get('menus/create', [App\Http\Controllers\vendor\restaurant\MenuController::class,'create'])->name('restaurant.menu.create');
         Route::post('menus/create', [App\Http\Controllers\vendor\restaurant\MenuController::class,'store'])->name('restaurant.menu.store');
         Route::get('menus/datatable/list', [App\Http\Controllers\vendor\restaurant\MenuController::class,'getData'])->name('restaurant.menu.datatable');
+        Route::get('menus/edit/{id}', [App\Http\Controllers\vendor\restaurant\MenuController::class,'menu_edit'])->name('restaurant.menu.edit');
+        Route::post('menus/update', [App\Http\Controllers\vendor\restaurant\MenuController::class,'update'])->name('restaurant.menu.update');
+        Route::get('menus/duplicate_menu', [App\Http\Controllers\vendor\restaurant\MenuController::class,'check_duplicate_menu'])->name('restaurant.menu.check_duplicate');
+        Route::get('menus/edit/duplicate_menu/{id}', [App\Http\Controllers\vendor\restaurant\MenuController::class,'check_edit_duplicate_menu'])->name('restaurant.menu.check_duplicate.edit');
         //vendor product
         Route::get('product', [App\Http\Controllers\vendor\restaurant\ProductController::class,'index'])->name('restaurant.product.list');
         Route::get('product/create', [App\Http\Controllers\vendor\restaurant\ProductController::class,'create'])->name('restaurant.product.create');
