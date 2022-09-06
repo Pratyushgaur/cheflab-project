@@ -172,7 +172,29 @@ class AppController extends Controller
                     ], 401);
                 }
                 //
-                $product =  \App\Models\Product_master::where('id','=',$request->product_id)->select()->get();
+                $product =  \App\Models\Product_master::where('id','=',$request->product_id)->select('variants','addons','customizable')->first();
+                if ($product->customizable == 'true') {
+                    $options = unserialize($product->variants);
+                    if ($product->addons == null) {
+                        $data = ['options'=>$options,'addons'=>$product->addons];
+                    } else {
+                        $data = ['options'=>$options,'addons'=>unserialize($product->addons)];
+                    }
+                    return response()->json([
+                        'status' => true,
+                        'message'=>'Data Get Successfully',
+                        'response'=>$data
+        
+                    ], 200);
+                    
+                } else {
+                    return response()->json([
+                        'status' => false,
+                        'error'=>'Custmization not available'
+                        
+                    ], 401);
+                }
+                
                     
                 //
                 return response()->json([
