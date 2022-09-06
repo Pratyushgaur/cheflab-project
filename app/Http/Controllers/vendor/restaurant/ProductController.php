@@ -58,18 +58,19 @@ class ProductController extends Controller
             if($request->custimization == 'true'){
                 $data = [];
                 foreach($request->variant_name as $k =>$v){
-                    $data[] = array('varint_name' =>$v ,'price' =>$request->price[$k]);
+                    $data[] = array('variant_name' =>$v ,'price' =>$request->price[$k]);
                 }
-                $request->variants = serialize($data);
+                $product->variants = serialize($data);
             }
             if(!empty($request->addons)){
-                $request->variants = implode(',',$request->addons);
+                $product->addons = implode(',',$request->addons);
             }
             if($request->has('product_image')){
                 $filename = time().'-restaurant-product-'.rand(100,999).'.'.$request->product_image->extension();
                 $request->product_image->move(public_path('products'),$filename);
                 $product->product_image  = $filename;
             }
+            $product->product_for = '3';
             $product->save();
             return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
         } catch (\Exception $th) {

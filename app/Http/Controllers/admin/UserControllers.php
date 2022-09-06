@@ -20,7 +20,8 @@ class UserControllers extends Controller
     }
     public function create_restourant()
     {
-        return view('admin/vendors/restourant_create');
+        $categories = Catogory_master::where('is_active','=','1')->get();
+        return view('admin/vendors/restourant_create',compact('categories'));
     }
     public function create_chef()
     {
@@ -131,6 +132,7 @@ class UserControllers extends Controller
             'password' => 'required',
             'confirm_password' => 'required',
             'vendor_commission' => 'required',
+            'categories' => 'required',
 
         ]);
         $vendors = new vendors;
@@ -143,6 +145,8 @@ class UserControllers extends Controller
         $vendors->address  = $request->address;
         $vendors->fssai_lic_no  = $request->fssai_lic_no;
         $vendors->commission  = $request->vendor_commission;
+        
+        $vendors->deal_categories  = implode(',',$request->categories);
         
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();

@@ -107,6 +107,9 @@
             border-radius: 18px;
             margin:0px;
         }
+        .select2-selection__choice{
+          background:#007bff !important;
+        }
       </style>
       @endsection
       <!-- Content Wrapper. Contains page content -->
@@ -159,16 +162,26 @@
                                     </div>  
                                   </div>
                                   
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Deal Categories <span class="text-danger">*</span></label>
+                                        <select name="categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                            @foreach($categories as $k =>$v)
+                                            <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                          </select>
                                     </div>  
                                   </div>
                                   <div class="col-md-12">
@@ -313,6 +326,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    $('.select2').select2();
     
       $("#restaurant-form").validate({
           rules: {
@@ -360,6 +374,9 @@
               vendor_commission:{
                 required:true,
                 number: true
+              },
+              'categories[]':{
+                required:true
               }
               
               
@@ -391,6 +408,9 @@
               },
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
+              },
+              'categories[]':{
+                required:"Select Deals categories"
               }
               
           }

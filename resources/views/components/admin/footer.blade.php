@@ -72,6 +72,7 @@
 <!-- <script src="{{asset('commonarea/ass')}}/plugins/sweetalert2/sweetalert2.min.js"></script> -->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{asset('commonarea/ass')}}/plugins/toastr/toastr.min.js"></script>
+<script src="{{asset('commonarea/ass')}}/plugins/select2/js/select2.full.min.js"></script>
 
 <!-- sweatalert -->
 

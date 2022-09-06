@@ -18,7 +18,16 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    Route::post('getData',[App\Http\Controllers\api\LoginApiController::class,'getData']);
+    // master 
+    Route::get('getCategories',[App\Http\Controllers\api\AppMasterController::class,'getCategories']);
+    Route::get('getCuisines',[App\Http\Controllers\api\AppMasterController::class,'getCuisines']);
+    //
+    // restaurant home page api
+    Route::get('home',[App\Http\Controllers\api\AppController::class,'restaurantHomePage']);
+    Route::post('getRestaurantByCategory',[App\Http\Controllers\api\AppController::class,'getRestaurantByCategory']);
+    Route::post('getRestaurantDetailPage',[App\Http\Controllers\api\AppController::class,'getRestaurantDetailPage']);
+    Route::post('browse-menu',[App\Http\Controllers\api\AppController::class,'getRestaurantBrowsemenu']);
+    Route::post('custmizable-data',[App\Http\Controllers\api\AppController::class,'getRestaurantCustmizeProductData']);
     
 });
 
