@@ -10,7 +10,7 @@
               <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
               <li class="breadcrumb-item"><a href="#">Menus</a></li>
               <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Menu Catalogue</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Create Menu Catalogue</li>
+              <li class="breadcrumb-item active" aria-current="page">Edit Menu Catalogue</li>
               
 
             </ol>
@@ -19,10 +19,10 @@
         <div class="col-xl-6 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
-              <h6>Create New  Menu</h6>
+              <h6>Edit  Menu</h6>
             </div>
             <div class="ms-panel-body">
-              <form class=" clearfix " id="menu-form" action="{{route('restaurant.menu.store')}}"  method="post">
+              <form class=" clearfix " id="menu-form" action="{{route('restaurant.menu.update')}}"  method="post">
                 @csrf
                 
                 @if ($errors->any())
@@ -34,8 +34,9 @@
                   <div class="col-xl-12 col-md-12 mb-3">
                     <label for="validationCustom10">Name of Menu</label>
                     <div class="input-group">
-                      <input type="text" class="form-control" name="name" value="{{old('name')}}" id="validationCustom03" placeholder="Enter Menu Name " >
-                    </div>
+                      <input type="text" value="{{$menu_data->menuName}}" class="form-control" name="name"  id="validationCustom03" placeholder="Enter Menu Name " >
+                      <input type="hidden" value="{{$menu_data->id}}" name="id">
+                    </div><br>
                     @error('name')
                       <p class="text-danger">
                           {{ $message }}
@@ -65,7 +66,7 @@
             name: {
                   required: true,
                   maxlength: 25,
-                  remote: '{{route("restaurant.menu.check_duplicate")}}',
+                  remote: '{{route("restaurant.menu.check_duplicate.edit",$menu_data->id)}}',
               },
               
           },

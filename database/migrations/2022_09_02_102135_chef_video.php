@@ -23,7 +23,7 @@ class ChefVideo extends Migration
             $table->string('link');
             $table->dateTime('created_at')->useCurrent();
             $table->softDeletes();
-            //$table->timestamps();
+            
         });
     }
 
