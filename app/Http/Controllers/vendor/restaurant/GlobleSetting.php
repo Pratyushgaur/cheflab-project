@@ -22,15 +22,16 @@ class GlobleSetting extends Controller
     }
     public function store(Request $request)
     {
-        
-        $VendorTime = new Order_time;
-        $VendorTime->day_no = $request->day_no;
-        $VendorTime->start_time = $request->start_time;
-        $VendorTime->end_time = $request->end_time;
-        $VendorTime->available = $request->available;
-        $VendorTime->vendor_id = \Auth::guard('vendor')->user()->id;
-        $VendorTime->save();
-        return redirect()->route('restaurant.menu.list')->with('success', 'Menu Created Successfully');
-        
+      /*  $day_no = $request->day_no;
+        $start_time = $request->start_time;
+        $end_time= $request->end_time;
+        $available= $request->available;
+        $vendor_id = \Auth::guard('vendor')->user()->id;  
+        for($i=0;$i<7;$i++){
+           $post =  array("day_no"=>$day_no[$i],"start_time"=>$start_time[$i],"end_time"=>$end_time[$i],"available"=>$available[$i],"vendor_id"=>$vendor_id);
+           Order_time::insert($post);
+        }*/
+       return redirect()->route('restaurant.globleseting.ordertime')->with('success', 'Time Created Successfully');
+       
     }
 }

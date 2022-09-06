@@ -31,7 +31,7 @@
                       <label>Day</label>
                       <div class="input-group">
                         <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="0" name="day_no[]"><i class="ms-checkbox-check"></i>
+                        <input type="checkbox" value="0" name="day_no1"><i class="ms-checkbox-check"></i>
                         </label> <span> Sun </span>
                       </div>
                     </div>
@@ -48,11 +48,11 @@
                       </div>
                     </div>
                     <div class="col-md-3 mb-4">
-                        <label>available[]</label>
+                        <label>available</label>
                         <div class="input-group">
                             <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available[]</option>
-                                <option value="1">available[]</option>
+                                <option value="0">Not available</option>
+                                <option value="1">available</option>
                             </select>
                         </div>
                     </div>
