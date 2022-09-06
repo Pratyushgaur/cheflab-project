@@ -136,9 +136,13 @@ Route::group(['middleware'=>['isVendor'],'prefix' =>'vendor'], function(){
         Route::get('product/addon/datatable', [App\Http\Controllers\vendor\restaurant\ProductController::class,'getAddonData'])->name('restaurant.product.addon.datatable');
         Route::get('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class,'createAddon'])->name('restaurant.product.addon.create');
         Route::post('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class,'storeAddon'])->name('restaurant.product.addon.store');
-
-
-        
+        //vendor order linst
+        Route::get('order', [App\Http\Controllers\vendor\restaurant\OrderController::class,'index'])->name('restaurant.order.list');
+        Route::get('order/datatable/list', [App\Http\Controllers\vendor\restaurant\OrderController::class,'getData'])->name('order.datatable');
+        // vendor globle setting
+        Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'index'])->name('restaurant.globleseting');
+        Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'order_time'])->name('restaurant.globleseting.ordertime');
+        Route::post('globle/createtime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'store'])->name('restaurant.ordertime.store');
     });
     // restaurant route
     

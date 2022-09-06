@@ -106,7 +106,7 @@ class MenuController extends Controller
             $data = VendorMenus::findOrFail($id);
             if ($data ) {
                 $data->delete();
-                return \Response::json(['error' => false,'success' => true , 'message' => 'Menu Deleted Successfully'], 200);
+                return \Response::json(['error' => false,'success' => true , 'message' => 'City Deleted Successfully'], 200);
             }else{
                 return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
             } 

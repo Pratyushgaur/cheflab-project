@@ -40,9 +40,8 @@
         <a href="#" class="has-chevron" data-toggle="collapse" data-target="#orders" aria-expanded="false" aria-controls="orders"> <span><i class="nav-icon fa fa-shopping-basket fs-16"></i>Orders</span>
         </a>
         <ul id="orders" class="collapse " aria-labelledby="product" data-parent="#side-nav-accordion">
-          <li> <a href="" class="">Menu Catalogue</a>
-          </li>
-          <li> <a href="" class="">Add Catalogue</a>
+          <li>
+             <a href="{{route('restaurant.order.list')}}" class="">Order List</a>
           </li>
         </ul>
       </li>
@@ -70,7 +69,7 @@
         <a href="#" class="has-chevron " data-toggle="collapse" data-target="#setting" aria-expanded="false" aria-controls="setting"> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
         </a>
         <ul id="setting" class="collapse " aria-labelledby="setting" data-parent="#side-nav-accordion">
-          <li> <a href="" class="">Menu Catalogue</a>
+          <li> <a href="{{route('restaurant.globleseting')}}" class="">Globel Setting</a>
           </li>
           <li> <a href="" class="">Add Catalogue</a>
           </li>
