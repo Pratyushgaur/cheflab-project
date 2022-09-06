@@ -4,7 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+// this is vikas testing
 class AppMasterController extends Controller
 {
     public function getCategories()
