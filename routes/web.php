@@ -160,6 +160,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'index'])->name('restaurant.globleseting');
         Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'order_time'])->name('restaurant.globleseting.ordertime');
         Route::post('globle/createtime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'store'])->name('restaurant.ordertime.store');
+        Route::post('offline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_offline'])->name('restaurant.set_offline');
+        Route::post('online', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_online'])->name('restaurant.set_online');
         //coupon 
         Route::get('coupon', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'index'])->name('restaurant.coupon.list');
         Route::get('coupon-list', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'get_data_table_of_coupon'])->name('restaurant.coupon.data');
