@@ -31,20 +31,18 @@
                     @endforeach
                 @endif
                 <div class="form-row">
-                  <div class="col-xl-12 col-md-12 mb-3">
-                    <label for="validationCustom10">Name of Menu</label>
-                    <div class="input-group">
-                      <input type="text" class="form-control" name="name" value="{{old('name')}}" id="validationCustom03" placeholder="Enter Menu Name " >
-                    </div>
-                    @error('name')
-                      <p class="text-danger">
-                          {{ $message }}
-                      </p>
-                    @enderror
+                    <div class="col-xl-12 col-md-12 mb-3">
+                      <label for="validationCustom10">Name of Menu</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" name="name" value="{{old('name')}}" id="validationCustom03" placeholder="Enter Menu Name " >
+                        </div>
+                            @error('name')
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
+                            @enderror
+                     </div>
                   </div>
-                    
-                  
-                </div>
                 <button class="btn btn-primary float-right" type="submit">Submit</button>
               </form>
             </div>

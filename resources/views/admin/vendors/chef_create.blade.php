@@ -152,16 +152,26 @@
                                     </div>  
                                   </div>
                                   
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Speciality</label>
+                                        <select class="form-control select2" name="speciality" style="width: 100%;">
+                                            @foreach($cuisines as $k =>$value)
+                                              <option value="{{$value->id}}">{{$value->name}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>  
                                   </div>
                                   <div class="col-md-12">
@@ -339,6 +349,9 @@
                   number: true
               },
               fassai_lic_no: {
+                required: true,
+              },
+              speciality: {
                 required: true,
               },
               password:{

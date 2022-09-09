@@ -57,7 +57,10 @@ return [
             'driver' => 'session',
             'provider' => 'vendors_user',
         ],
-
+        'chef' => [
+            'driver' => 'session',
+            'provider' => 'chef_user',
+        ],
         
     ],
 
@@ -98,6 +101,10 @@ return [
             'model' => App\Models\Md_city_admin::class,
         ],
         'vendors_user' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Vendors::class,
+        ],
+        'chef_user' => [
             'driver' => 'eloquent',
             'model' => App\Models\Vendors::class,
         ],

@@ -25,8 +25,8 @@ class UserControllers extends Controller
     }
     public function create_chef()
     {
-
-        return view('admin/vendors/chef_create');
+        $cuisines = Cuisines::where('is_active','=','1')->get();
+        return view('admin/vendors/chef_create',compact('cuisines'));
     }
     public function get_data_table_of_vendor(Request $request)
     {
@@ -86,7 +86,7 @@ class UserControllers extends Controller
 
     }
 
-    public function checkEmailExist(Request $request,$id=null)
+    public function checkEmailExist(Request $request)
     {   
         if (vendors::where('email','=',$request->email)->exists()) {
             return \Response::json(false);
@@ -126,6 +126,7 @@ class UserControllers extends Controller
             'restaurant_name' => 'required',
             'email' => 'required|unique:vendors,email',
             'pincode' => 'required',
+            'speciality' => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'address' => 'required',
             'fssai_lic_no' => 'required',
@@ -166,6 +167,11 @@ class UserControllers extends Controller
             $vendors->other_document_image  = $filename;
             $vendors->other_document  = $request->other_document_name;
         }
+        if($request->has('banner_image')){
+            $filename = time().'-banner-'.rand(100,999).'.'.$request->banner_image->extension();
+            $request->banner_image->move(public_path('vendor-banner'),$filename);
+            $vendors->banner_image  = $filename;
+        }
         $vendors->save();
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');
         
@@ -173,11 +179,13 @@ class UserControllers extends Controller
     }
     public function store_chef(Request $request)
     {
+       // return $request->input();die;
         $this->validate($request, [
             'restourant_name' => 'required',
             'email' => 'required|unique:vendors,email',
             'pincode' => 'required',
             'phone' => 'required|unique:vendors,mobile',
+            'speciality' => 'required',
             'address' => 'required',
             'password' => 'required',
             'confirm_password' => 'required',
@@ -190,6 +198,7 @@ class UserControllers extends Controller
         $vendors->password = Hash::make($request->password);
         $vendors->vendor_type = 'chef';
         $vendors->mobile  = $request->phone;
+        $vendors->speciality  = $request->speciality;
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
         if($request->has('image')){
@@ -254,7 +263,11 @@ class UserControllers extends Controller
             $vendors->other_document_image  = $filename;
             $vendors->other_document  = $request->other_document_name;
         }
-
+        if($request->has('banner_image')){
+            $filename = time().'-banner-'.rand(100,999).'.'.$request->banner_image->extension();
+            $request->banner_image->move(public_path('vendor-banner'),$filename);
+            $vendors->banner_image  = $filename;
+        }
         $vendors->save();
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
         

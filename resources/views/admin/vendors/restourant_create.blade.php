@@ -107,6 +107,40 @@
             border-radius: 18px;
             margin:0px;
         }
+        
+
+
+
+
+        .upload-icon4{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+        
+        .upload-icon4 img{
+            width: 100px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+        
+        .upload-icon4.has-img4{
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+        
+        .upload-icon4.has-img4 img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
         .select2-selection__choice{
           background:#007bff !important;
         }
@@ -274,6 +308,23 @@
                                         </div>   
                                         <input type="text" name="other_document_name" class="form-control" placeholder="Document Name">    
                                   </div>
+                                  <div class="col-sm-3">
+                                        <div>
+                                          <label for="">Banner Image </label>
+                                          
+                                        </div>
+                                        <div class="image-upload">
+                                          
+                                            <label for="file-input4">
+                                                <div class="upload-icon4">
+                                                    <img class="icon4" src="{{asset('add-image.png')}}">
+                                                </div>
+                                            </label>
+                                            <input id="file-input4" type="file" name="banner_image"/>
+                                            
+                                        </div>   
+                                        
+                                  </div>
                                 </div>
                                 <!-- div row -->
                               </div>
@@ -427,6 +478,10 @@
       $('#file-input3').change( function(event) {
           $("img.icon3").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon3").parents('.upload-icon3').addClass('has-img3');
+      });
+      $('#file-input4').change( function(event) {
+          $("img.icon4").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon4").parents('.upload-icon4').addClass('has-img4');
       });
   });
  </script>

@@ -28,6 +28,8 @@ class CreateVendersTable extends Migration
             $table->string('other_document')->nullable();
             $table->string('other_document_image')->nullable();
             $table->string('image')->nullable();
+            $table->string('banner_image')->nullable();
+            $table->string('speciality');
             $table->string('licence_image')->nullable();
             $table->decimal('wallet',8,2)->default('0');
             $table->string('commission',10)->default('0');
