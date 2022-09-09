@@ -194,15 +194,46 @@ class AppController extends Controller
                         
                     ], 401);
                 }
-                
-                    
+            } catch (\Throwable $th) {
+                return response()->json([
+                    'status' => false,
+                    'error' => $th->getMessage()
+                ], 500);
+            }
+        }
+        public function getRestaurantSearchData(Request $request)
+        {
+            try {
+                $validateUser = Validator::make($request->all(), 
+                [
+                    'keyword' => 'required',
+                    'search_for' => 'required',
+                    'offset' => 'required|numeric',
+                ]);
+                if($validateUser->fails()){
+                    $error = $validateUser->errors();
+                    return response()->json([
+                        'status' => false,
+                        'error'=>$validateUser->errors()->all()
+                        
+                    ], 401);
+                }
                 //
+                if ($request->search_for == 'restaurant') {
+                   $data =  \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'vendor_ratings','review_count')->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                } elseif($request->search_for == 'dishes') {
+                   $data =  \App\Models\Product_master::where(['products.status'=>'1','product_for'=>'3'])->join('vendors','products.userId','=','vendors.id')->select('products.product_name',\DB::raw('CONCAT("'.asset('products').'/", product_image) AS image','vendors.name as restaurantName'),'product_price','type')->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                }else{
+                    $data = [];
+                }
+                
                 return response()->json([
                     'status' => true,
                     'message'=>'Data Get Successfully',
-                    'response'=>$category
+                    'response'=>$data
     
                 ], 200);
+                
             } catch (\Throwable $th) {
                 return response()->json([
                     'status' => false,
