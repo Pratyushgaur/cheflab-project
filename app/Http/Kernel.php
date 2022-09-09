@@ -55,6 +55,9 @@ class Kernel extends HttpKernel
         'isRestaurant' => [
             \App\Http\Middleware\isRestaurant::class,
         ],
+        'IsVendorDoneSettingsMiddleware' => [
+            \App\Http\Middleware\IsVendorDoneSettingsMiddleware::class,
+        ],
 
     ];
 

@@ -68,9 +68,13 @@
       <li class="menu-item ">
         <a href="{{route('restaurant.globleseting')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
         </a>
+        <ul id="setting" class="collapse " aria-labelledby="setting" data-parent="#side-nav-accordion">
+          <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Globel Setting</a>
+          </li>
+          <li> <a href="" class="">Add Catalogue</a>
+          </li>
+        </ul>
       </li>
-
-      
       
 
       <!-- /Dashboard -->
