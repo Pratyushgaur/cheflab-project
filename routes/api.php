@@ -28,6 +28,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getRestaurantDetailPage',[App\Http\Controllers\api\AppController::class,'getRestaurantDetailPage']);
     Route::post('browse-menu',[App\Http\Controllers\api\AppController::class,'getRestaurantBrowsemenu']);
     Route::post('custmizable-data',[App\Http\Controllers\api\AppController::class,'getRestaurantCustmizeProductData']);
+    Route::post('search-data',[App\Http\Controllers\api\AppController::class,'getRestaurantSearchData']);
     
 });
 

@@ -8,11 +8,11 @@
         </div>
         <div class="col-xl-3 col-lg-6 col-md-6">
           <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <span class="ms-chart-label bg-black"><i class="material-icons">arrow_upward</i> 3.2%</span>
+            <!-- <span class="ms-chart-label bg-black"><i class="material-icons">arrow_upward</i> 3.2%</span> -->
             <div class="ms-card-body media">
               <div class="media-body">
-                <span class="black-text"><strong>Sells Graph</strong></span>
-                <h2>$8,451</h2>
+                <span class="black-text"><strong>Today Order's</strong></span>
+                <h2>8,451</h2>
               </div>
             </div>
             <canvas id="line-chart"></canvas>
@@ -20,10 +20,10 @@
         </div>
         <div class="col-xl-3 col-lg-6 col-md-6">
           <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <span class="ms-chart-label bg-red"><i class="material-icons">arrow_downward</i> 4.5%</span>
+            <!-- <span class="ms-chart-label bg-red"><i class="material-icons">arrow_downward</i> 4.5%</span> -->
             <div class="ms-card-body media">
               <div class="media-body">
-                <span class="black-text"><strong>Total Visitors</strong></span>
+                <span class="black-text"><strong>Total Order's</strong></span>
                 <h2>3,973</h2>
               </div>
             </div>
@@ -32,11 +32,11 @@
         </div>
         <div class="col-xl-3 col-lg-6 col-md-6">
           <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <span class="ms-chart-label bg-black"><i class="material-icons">arrow_upward</i> 12.5%</span>
+            <!-- <span class="ms-chart-label bg-black"><i class="material-icons">arrow_upward</i> 12.5%</span> -->
             <div class="ms-card-body media">
               <div class="media-body">
-                <span class="black-text"><strong>New Users</strong></span>
-                <h2>7,333</h2>
+                <span class="black-text"><strong>Today Revenue</strong></span>
+                <h2> <i class="fas fa-rupee-sign" ></i>  7,333</h2>
               </div>
             </div>
             <canvas id="line-chart-3"></canvas>
@@ -44,18 +44,18 @@
         </div>
         <div class="col-xl-3 col-lg-6 col-md-6">
           <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <span class="ms-chart-label bg-red"><i class="material-icons">arrow_upward</i> 9.5%</span>
+            <!-- <span class="ms-chart-label bg-red"><i class="material-icons">arrow_upward</i> 9.5%</span> -->
             <div class="ms-card-body media">
               <div class="media-body">
-                <span class="black-text"><strong>Total Orders</strong></span>
-                <h2>48,973</h2>
+                <span class="black-text"><strong>Total Revenue</strong></span>
+                <h2> <i class="fas fa-rupee-sign" ></i>  7,333</h2>
               </div>
             </div>
             <canvas id="line-chart-4"></canvas>
           </div>
         </div>
         <!-- Recent Orders Requested -->
-        <div class="col-xl-6 col-md-12">
+        <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel">
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
@@ -86,16 +86,8 @@
                       <td>$14.59</td>
                       <td>789393819</td>
                     </tr>
-                    <tr>
-                      <td class="ms-table-f-w"> <img src="{{asset('frontend')}}/assets/img/costic/cereals.jpg" alt="people"> Multigrain Hot Cereal </td>
-                      <td>$25.22</td>
-                      <td>137893137</td>
-                    </tr>
-                    <tr>
-                      <td class="ms-table-f-w"> <img src="{{asset('frontend')}}/assets/img/costic/egg-sandwich.jpg" alt="people"> Fried Egg Sandwich </td>
-                      <td>$11.23</td>
-                      <td>235193138</td>
-                    </tr>
+
+                    
 
                   </tbody>
                 </table>
@@ -141,12 +133,12 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- Food Orders -->
         <div class="col-md-12">
           <div class="ms-panel">
             <div class="ms-panel-header">
-              <h6>Trending Orders</h6>
+              <h6>Top Products</h6>
             </div>
             <div class="ms-panel-body">
               <div class="row">
@@ -158,13 +150,13 @@
                     </div>
                     <div class="ms-card-body">
                       <div class="ms-card-heading-title">
-                        <h6>Meat Stew</h6>
+                        <h6>Meat Stew </h6>
                         <span class="green-text"><strong>$25.00</strong></span>
                       </div>
 
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">15</span></p>
-                        <p>Income <span class="red-text">$175</span></p>
+                        
                       </div>
                     </div>
                   </div>
@@ -182,7 +174,7 @@
 
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">75</span></p>
-                        <p>Income <span class="red-text">$275</span></p>
+                        
                       </div>
                     </div>
                   </div>
@@ -200,7 +192,7 @@
 
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">85</span></p>
-                        <p>Income <span class="red-text">$575</span></p>
+                        
                       </div>
                     </div>
                   </div>
@@ -217,7 +209,7 @@
                       </div>
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">175</span></p>
-                        <p>Income <span class="red-text">$775</span></p>
+                        
                       </div>
                     </div>
                   </div>
@@ -240,34 +232,82 @@
 
             </div>
             <div class="ms-panel-body pt-0">
-              <div class="d-flex justify-content-between ms-graph-meta">
-                <ul class="ms-list-flex mt-3 mb-5">
-                  <li>
-                    <span>Total Orders</span>
-                    <h3 class="ms-count">703,49</h3>
-                  </li>
-                  <li>
-                    <span>New Orders</span>
-                    <h3 class="ms-count">95,038</h3>
-                  </li>
-                  <li>
-                    <span>Repeat Orders</span>
-                    <h3 class="ms-count">28,387</h3>
-                  </li>
-                  <li>
-                    <span>Cancel Orders</span>
-                    <h3 class="ms-count">260</h3>
-                  </li>
-                </ul>
+            <div class="table-responsive">
+                <table class="table table-hover thead-primary">
+                  <thead>
+                    <tr>
+                      <th scope="col">Order ID</th>
+                      <th scope="col">Order Name</th>
+                      <th scope="col">Customer Name</th>
+                      <th scope="col">Location</th>
+                      <th scope="col">Order Status</th>
+                      <th scope="col">Delivered Time</th>
+                      <th scope="col">Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>French Fries</td>
+                      <td>Jhon Leo</td>
+                      <td>New Town</td>
+                      <td><span class="badge badge-primary">Pending</span>
+                      </td>
+                      <td>10:05</td>
+                      <td>$10</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Mango Pie</td>
+                      <td>Kristien</td>
+                      <td>Old Town</td>
+                      <td><span class="badge badge-dark">Cancelled</span>
+                      </td>
+                      <td>14:05</td>
+                      <td>$9</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>FrieD Egg Sandwich</td>
+                      <td>Jack Suit</td>
+                      <td>Oxford Street</td>
+                      <td><span class="badge badge-success">Delivered</span>
+                      </td>
+                      <td>12:05</td>
+                      <td>$19</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td>Lemon Yogurt Parfait</td>
+                      <td>Alesdro Guitto</td>
+                      <td>Church hill</td>
+                      <td><span class="badge badge-success">Delivered</span>
+                      </td>
+                      <td>12:05</td>
+                      <td>$18</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td>Spicy Grill Sandwich</td>
+                      <td>Jacob Sahwny</td>
+                      <td>palace Road</td>
+                      <td><span class="badge badge-success">Delivered</span>
+                      </td>
+                      <td>12:05</td>
+                      <td>$21</td>
+                    </tr>
+                    
+                  </tbody>
+                </table>
               </div>
-              <canvas id="youtube-subscribers"></canvas>
+              <!-- <canvas id="youtube-subscribers"></canvas> -->
             </div>
           </div>
         </div>
 
         <!-- Favourite Products -->
         <div class="col-xl-5 col-md-12">
-          <div class="ms-panel ms-widget ms-crypto-widget">
+          <!-- <div class="ms-panel ms-widget ms-crypto-widget">
             <div class="ms-panel-header">
               <h6>Favourite charts</h6>
             </div>
@@ -513,12 +553,38 @@
               </div>
 
             </div>
-          </div>
+          </div> -->
           <!-- Favourite Products -->
           <!-- Total Earnings -->
           <div class="ms-panel">
-            <div class="ms-panel-header">
-              <h6>Total Earnings</h6>
+            
+            <div class="ms-panel-body p-0">
+              <div class="ms-quick-stats">
+                <div class="ms-stats-grid">
+                  <i class="fa fa-star"></i>
+                  <p class="ms-text-dark">$8,033</p>
+                  <span>Today</span>
+                </div>
+                <div class="ms-stats-grid">
+                  <i class="fa fa-university"></i>
+                  <p class="ms-text-dark">$3,039</p>
+                  <span>Yesterday</span>
+                </div>
+              </div>
+            </div>
+            <div class="ms-panel-body p-0">
+              <div class="ms-quick-stats">
+                <div class="ms-stats-grid">
+                  <i class="fa fa-star"></i>
+                  <p class="ms-text-dark">$8,033</p>
+                  <span>Today</span>
+                </div>
+                <div class="ms-stats-grid">
+                  <i class="fa fa-university"></i>
+                  <p class="ms-text-dark">$3,039</p>
+                  <span>Yesterday</span>
+                </div>
+              </div>
             </div>
             <div class="ms-panel-body p-0">
               <div class="ms-quick-stats">
@@ -537,94 +603,7 @@
           </div>
         </div>
         <!-- Total Earnings -->
-        <!-- Recent Placed Orders< -->
-        <div class="col-12">
-          <div class="ms-panel">
-            <div class="ms-panel-header">
-              <h6>Recently Placed Orders</h6>
-            </div>
-            <div class="ms-panel-body">
-              <div class="table-responsive">
-                <table class="table table-hover thead-primary">
-                  <thead>
-                    <tr>
-                      <th scope="col">Order ID</th>
-                      <th scope="col">Order Name</th>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Location</th>
-                      <th scope="col">Order Status</th>
-                      <th scope="col">Delivered Time</th>
-                      <th scope="col">Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th scope="row">1</th>
-                      <td>French Fries</td>
-                      <td>Jhon Leo</td>
-                      <td>New Town</td>
-                      <td><span class="badge badge-primary">Pending</span>
-                      </td>
-                      <td>10:05</td>
-                      <td>$10</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Mango Pie</td>
-                      <td>Kristien</td>
-                      <td>Old Town</td>
-                      <td><span class="badge badge-dark">Cancelled</span>
-                      </td>
-                      <td>14:05</td>
-                      <td>$9</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>FrieD Egg Sandwich</td>
-                      <td>Jack Suit</td>
-                      <td>Oxford Street</td>
-                      <td><span class="badge badge-success">Delivered</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$19</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">4</th>
-                      <td>Lemon Yogurt Parfait</td>
-                      <td>Alesdro Guitto</td>
-                      <td>Church hill</td>
-                      <td><span class="badge badge-success">Delivered</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$18</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">5</th>
-                      <td>Spicy Grill Sandwich</td>
-                      <td>Jacob Sahwny</td>
-                      <td>palace Road</td>
-                      <td><span class="badge badge-success">Delivered</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$21</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">6</th>
-                      <td>Chicken Sandwich</td>
-                      <td>Peter Gill</td>
-                      <td>Street 21</td>
-                      <td><span class="badge badge-primary">Pending</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$15</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Recent Orders< -->
+        
 
         <div class="col-md-12">
           <div class="ms-panel">
@@ -678,19 +657,19 @@
                         <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
                         <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
                       </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nunc velit, dictum eget nulla a, sollicitudin rhoncus orci. Vivamus nec commodo turpis.</p>
+                      
                     </div>
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-1.jpg" alt="card_img">
                     </div>
-                    <div class="ms-card-footer text-disabled d-flex">
+                    <!-- <div class="ms-card-footer text-disabled d-flex">
                       <div class="ms-card-options">
                         <i class="material-icons">favorite</i> 982
                       </div>
                       <div class="ms-card-options">
                         <i class="material-icons">comment</i> 785
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6">
@@ -737,19 +716,19 @@
                         <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
                         <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
                       </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nunc velit, dictum eget nulla a, sollicitudin rhoncus orci. Vivamus nec commodo turpis.</p>
+                      
                     </div>
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
                     </div>
-                    <div class="ms-card-footer text-disabled d-flex">
+                    <!-- <div class="ms-card-footer text-disabled d-flex">
                       <div class="ms-card-options">
                         <i class="material-icons">favorite</i> 982
                       </div>
                       <div class="ms-card-options">
                         <i class="material-icons">comment</i> 785
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6">
@@ -796,19 +775,19 @@
                         <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
                         <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
                       </ul>
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nunc velit, dictum eget nulla a, sollicitudin rhoncus orci. Vivamus nec commodo turpis.</p>
+                      
                     </div>
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-3.jpg" alt="card_img">
                     </div>
-                    <div class="ms-card-footer text-disabled d-flex">
+                    <!-- <div class="ms-card-footer text-disabled d-flex">
                       <div class="ms-card-options">
                         <i class="material-icons">favorite</i> 982
                       </div>
                       <div class="ms-card-options">
                         <i class="material-icons">comment</i> 785
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -817,7 +796,7 @@
         </div>
 
         <!-- Recent Support Tickets -->
-        <div class="col-xl-6 col-md-12">
+        <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
@@ -895,10 +874,10 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div> -->
         <!-- Recent Support Tickets -->
         <!-- client chat -->
-        <div class="col-xl-6 col-md-12">
+        <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel ms-panel-fh ms-widget ms-chat-conversations">
             <div class="ms-panel-header">
               <div class="ms-chat-header justify-content-between">
@@ -976,7 +955,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       <!-- client chat -->
       </div>
     </div>
