@@ -12,210 +12,262 @@
             </ol>
           </nav>
         </div>
-        <div class="col-md-12">
+
+        @include('vendor.restaurant.globleseting.setting_menu')
+
+        <div class="col-md-9">
           <div class="ms-panel">
             <div class="ms-panel-header">
               <h6>Order Time Setting</h6>
             </div>
             <div class="ms-panel-body">
-              <form class=" clearfix " id="menu-form" action="{{route('restaurant.ordertime.store')}}"  method="post">
+              <form class="validation-fill clearfix " id="menu-form" action="{{route('restaurant.ordertime.store')}}"  method="post">
                     @csrf
-                    
-                    @if ($errors->any())
-                        @foreach  ($errors->all() as $error)
-                            <div class="alert alert-danger">{{$error}}</div>
-                        @endforeach
-                    @endif  
+
+                    @include('vendor.restaurant.alertMsg')
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
-                      <label>Day</label>
+                      <h6>Day</h6>
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="0" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Sun </span>
+                         <span> Sun </span>
                       </div>
                     </div>
+
                     <div class="col-md-3 mb-4">
-                      <label>Starting Time</label>
+                      <h6>Starting Time</h6>
                       <div class="input-group">
-                        <input  type="time" class="form-control" name="start_time[]" >
-                      </div>
+                        <input  type="time" class="form-control" name="start_time[0]" <?=(isset($VendorOrderTime[0]['start_time'])) ?  'value="'.$VendorOrderTime[0]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
-                      <label>End Time</label>
+                      <h6>End Time</h6>
                       <div class="input-group">
-                        <input type="time" class="form-control" name="end_time[]">
+                        <input type="time" class="form-control" name="end_time[0]" <?=(isset($VendorOrderTime[0]['end_time'])) ?  'value="'.$VendorOrderTime[0]['end_time'].'"' : ''?>>
                       </div>
                     </div>
+
                     <div class="col-md-3 mb-4">
-                        <label>available[]</label>
+                        <h6>available</h6>
                         <div class="input-group">
-                            <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available[]</option>
-                                <option value="1">available[]</option>
+                            <select class="form-control" id="validationCustom16" name="available[0]">
+                              <option value="1" @if (@$VendorOrderTime[0]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[0]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+                            @if ($errors->has('available.0'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.0') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="1" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Mon </span>
+                        <span> Mon </span>
                       </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+
+                      <div class="input-group">
+                        <input  type="time" class="form-control" name="start_time[1]" <?=(isset($VendorOrderTime[1]['start_time'])) ?  'value="'.$VendorOrderTime[1]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
+
                       <div class="input-group">
-                        <input  type="time" class="form-control" name="start_time[]">
+                        <input type="time" class="form-control" name="end_time[1]" <?=(isset($VendorOrderTime[1]['end_time'])) ?  'value="'.$VendorOrderTime[1]['end_time'].'"' : ''?>>
                       </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                      <div class="input-group">
-                        <input type="time" class="form-control" name="end_time[]">
-                      </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="input-group">
-                            <select class="form-control"  name="available[]">
-                                <option value="0">Not available</option>
-                                <option value="1">available</option>
+                            <select class="form-control" id="validationCustom16" name="available[1]">
+                              <option value="1" @if (@$VendorOrderTime[1]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[1]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+
+                            @if ($errors->has('available.1'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.1') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="2" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Tus </span>
+                        <span> Tus </span>
                       </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+
+                      <div class="input-group">
+                        <input  type="time" class="form-control" name="start_time[2]" <?=(isset($VendorOrderTime[2]['start_time'])) ?  'value="'.$VendorOrderTime[2]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
+
                       <div class="input-group">
-                        <input  type="time" class="form-control" placeholder="Last name" name="start_time[]">
+                        <input type="time" class="form-control" name="end_time[2]" <?=(isset($VendorOrderTime[2]['end_time'])) ?  'value="'.$VendorOrderTime[2]['end_time'].'"' : ''?>>
                       </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                      <div class="input-group">
-                        <input type="time" class="form-control" placeholder="Last name" name="end_time[]">
-                      </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="input-group">
-                            <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available</option>
-                                <option value="1">available</option>
+                            <select class="form-control" id="validationCustom16" name="available[2]">
+                              <option value="1" @if (@$VendorOrderTime[2]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[2]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+
+                            @if ($errors->has('available.2'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.2') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="3" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Wed </span>
+                        <span> Wed </span>
                       </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+
+                      <div class="input-group">
+                        <input  type="time" class="form-control" name="start_time[3]" <?=(isset($VendorOrderTime[3]['start_time'])) ?  'value="'.$VendorOrderTime[3]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
+
                       <div class="input-group">
-                        <input  type="time" class="form-control" placeholder="Last name" name="start_time[]">
+                        <input type="time" class="form-control" name="end_time[3]" <?=(isset($VendorOrderTime[3]['end_time'])) ?  'value="'.$VendorOrderTime[3]['end_time'].'"' : ''?>>
                       </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                      <div class="input-group">
-                        <input type="time" class="form-control" placeholder="Last name" name="end_time[]">
-                      </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="input-group">
-                            <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available</option>
-                                <option value="1">available</option>
+                            <select class="form-control" id="validationCustom16" name="available[3]">
+                              <option value="1" @if (@$VendorOrderTime[3]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[3]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+
+                            @if ($errors->has('available.3'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.3') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="4" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Thus </span>
+                         <span> Thus </span>
                       </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+
+                      <div class="input-group">
+                        <input  type="time" class="form-control" name="start_time[4]" <?=(isset($VendorOrderTime[4]['start_time'])) ?  'value="'.$VendorOrderTime[4]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
+
                       <div class="input-group">
-                        <input  type="time" class="form-control" placeholder="Last name" name="start_time[]">
+                        <input type="time" class="form-control" name="end_time[4]" <?=(isset($VendorOrderTime[4]['end_time'])) ?  'value="'.$VendorOrderTime[4]['end_time'].'"' : ''?>>
                       </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                      <div class="input-group">
-                        <input type="time" class="form-control" placeholder="Last name" name="end_time[]">
-                      </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="input-group">
-                            <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available</option>
-                                <option value="1">available</option>
+                            <select class="form-control" id="validationCustom16" name="available[4]">
+                              <option value="1" @if (@$VendorOrderTime[4]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[4]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+
+                            @if ($errors->has('available.4'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.4') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="5" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Fri </span>
+                         <span> Fri </span>
                       </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+
+                      <div class="input-group">
+                        <input  type="time" class="form-control" name="start_time[5]" <?=(isset($VendorOrderTime[5]['start_time'])) ?  'value="'.$VendorOrderTime[5]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
+
                       <div class="input-group">
-                        <input  type="time" class="form-control" placeholder="Last name" name="start_time[]">
+                        <input type="time" class="form-control" name="end_time[5]" <?=(isset($VendorOrderTime[5]['end_time'])) ?  'value="'.$VendorOrderTime[5]['end_time'].'"' : ''?>>
                       </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                      <div class="input-group">
-                        <input type="time" class="form-control" placeholder="Last name" name="end_time[]">
-                      </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="input-group">
-                            <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available</option>
-                                <option value="1">available</option>
+                            <select class="form-control" id="validationCustom16" name="available[5]">
+                              <option value="1" @if (@$VendorOrderTime[5]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[5]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+
+                            @if ($errors->has('available.5'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.5') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-3 mb-4">
                       <div class="input-group">
-                        <label class="ms-checkbox-wrap">
-                        <input type="checkbox" value="6" name="day_no[]"><i class="ms-checkbox-check"></i>
-                        </label> <span> Sat </span>
+                         <span> Sat </span>
                       </div>
+                    </div>
+
+                    <div class="col-md-3 mb-4">
+
+                      <div class="input-group">
+                        <input  type="time" class="form-control" name="start_time[6]" <?=(isset($VendorOrderTime[6]['start_time'])) ?  'value="'.$VendorOrderTime[6]['start_time'].'"' : ''?>>
+                     </div>
                     </div>
                     <div class="col-md-3 mb-4">
+
                       <div class="input-group">
-                        <input  type="time" class="form-control" placeholder="Last name" name="start_time[]">
+                        <input type="time" class="form-control" name="end_time[6]" <?=(isset($VendorOrderTime[6]['end_time'])) ?  'value="'.$VendorOrderTime[6]['end_time'].'"' : ''?>>
                       </div>
                     </div>
-                    <div class="col-md-3 mb-4">
-                      <div class="input-group">
-                        <input type="time" class="form-control" placeholder="Last name" name="end_time[]">
-                      </div>
-                    </div>
+
                     <div class="col-md-3 mb-4">
                         <div class="input-group">
-                            <select class="form-control" id="validationCustom16" name="available[]">
-                                <option value="0">Not available</option>
-                                <option value="1">available</option>
+                            <select class="form-control" id="validationCustom16" name="available[6]">
+                              <option value="1" @if (@$VendorOrderTime[6]['available'] == "1") {{ 'selected' }} @endif>Available</option>
+                              <option value="0" @if (@$VendorOrderTime[6]['available'] == "0") {{ 'selected' }} @endif>Not available</option>
                             </select>
+
+                            @if ($errors->has('available.6'))
+                            <span class="ms-text-danger">
+                                <strong>{{ $errors->first('available.6') }}</strong>
+                            </span>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -227,9 +279,9 @@
           </div>
         </div>
 
- 
 
-        
+
+
       </div>
     </div>
 

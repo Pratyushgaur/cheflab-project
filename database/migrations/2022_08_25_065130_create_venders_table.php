@@ -32,7 +32,7 @@ class CreateVendersTable extends Migration
             $table->decimal('wallet',8,2)->default('0');
             $table->string('commission',10)->default('0');
             $table->float('vendor_ratings',2,1)->default('0.0');
-            $table->intiger('review_count')->default('0');
+            $table->integer('review_count')->default('0');
             $table->enum('vendor_food_type',['1','2','3'])->default('1')->comment('1=veg,2=eggs,3=non veg');
             $table->softDeletes();
             $table->timestamps();

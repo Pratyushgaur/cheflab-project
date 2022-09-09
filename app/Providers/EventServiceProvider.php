@@ -7,7 +7,10 @@ use App\Events\AdminLoginHistoryEvent;
 use App\Listeners\AdminLoginHistoryListener;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Event;
+use App\Listeners\IsAllSettingsDoneListener;
+use App\Events\IsAllSettingDoneEvent;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,7 +25,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         AdminLoginHistoryEvent::class =>[
             AdminLoginHistoryListener::class,
-        ]
+        ],
+        IsAllSettingDoneEvent::class => [
+            IsAllSettingsDoneListener::class,
+        ],
 
     ];
 

@@ -69,7 +69,7 @@
         <a href="#" class="has-chevron " data-toggle="collapse" data-target="#setting" aria-expanded="false" aria-controls="setting"> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
         </a>
         <ul id="setting" class="collapse " aria-labelledby="setting" data-parent="#side-nav-accordion">
-          <li> <a href="{{route('restaurant.globleseting')}}" class="">Globel Setting</a>
+          <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Globel Setting</a>
           </li>
           <li> <a href="" class="">Add Catalogue</a>
           </li>
