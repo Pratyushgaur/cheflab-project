@@ -18,6 +18,8 @@ class CreateVendersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('dob');
+            $table->string('experience');
             $table->boolean('is_online')->default(1);            
             $table->enum('vendor_type',['restaurant','chef']);
             $table->string('deal_categories',255);

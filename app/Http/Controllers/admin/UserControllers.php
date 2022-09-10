@@ -25,8 +25,9 @@ class UserControllers extends Controller
     }
     public function create_chef()
     {
+        $categories = Catogory_master::where('is_active','=','1')->get();
         $cuisines = Cuisines::where('is_active','=','1')->get();
-        return view('admin/vendors/chef_create',compact('cuisines'));
+        return view('admin/vendors/chef_create',compact('cuisines','categories'));
     }
     public function get_data_table_of_vendor(Request $request)
     {
@@ -184,22 +185,29 @@ class UserControllers extends Controller
             'email' => 'required|unique:vendors,email',
             'pincode' => 'required',
             'phone' => 'required|unique:vendors,mobile',
-            'speciality' => 'required',
+            'experience' => 'required',
+            'dob' => 'required',
+            'deal_categories' => 'required',
+            'deal_cuisines' => 'required',
             'address' => 'required',
             'password' => 'required',
             'confirm_password' => 'required',
             'vendor_commission' => 'required',
-
         ]);
         $vendors = new vendors;
         $vendors->name = $request->restourant_name;
         $vendors->email = $request->email;
+        $vendors->dob = $request->dob;
+        $vendors->experience = $request->experience;
+        $vendors->deal_categories  = implode(',',$request->deal_categories);
+        $vendors->deal_cuisines  = implode(',',$request->deal_cuisines);
         $vendors->password = Hash::make($request->password);
         $vendors->vendor_type = 'chef';
         $vendors->mobile  = $request->phone;
-        $vendors->speciality  = $request->speciality;
+        $vendors->speciality  = implode(',',$request->speciality);
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
+       
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
