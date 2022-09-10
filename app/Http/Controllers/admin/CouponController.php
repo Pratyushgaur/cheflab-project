@@ -24,24 +24,38 @@ class CouponController extends Controller
     public function store_coupon(Request $request){
        // return  $request->input();die;
         $this->validate($request, [
+            'name' => 'required',
             'code' => 'required',
             'discount_type' => 'required',
             'discount' => 'required',
-            'maximum_order_value' => 'required',
-            'minimum_order_value' => 'required',
-            'expires_coupon' => 'required',
+            'maxim_dis_amount' => 'required',
+            'minimum_order_amount' => 'required',
+            'promo_redeem_count' => 'required',
+            'promocode_use' => 'required',
+            'create_by' => 'required',
+            'coupon_type' => 'required',
+            'from' => 'required',
+            'to' => 'required',
+            'discription' => 'required',
         ]);
         $coupon = new Coupon;
+        $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
-      //  $coupon->vendor_type = 'restaurant';
         $coupon->discount  = $request->discount;
         $coupon->discription  = $request->discription;
-        $coupon->type  = $request->type;
-        $coupon->maximum_order_value  = $request->maximum_order_value;
-        $coupon->minimum_order_value  = $request->minimum_order_value;
-        $coupon->type  = $request->type;
-        $coupon->expires_coupon  = $request->expires_coupon;
+        $coupon->coupon_type  = $request->coupon_type;
+        $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
+        $coupon->minimum_order_amount  = $request->minimum_order_amount;
+        $coupon->create_by  = $request->create_by;
+        $coupon->from  = $request->from;
+        $coupon->to  = $request->to;
+        if($request->has('image')){
+            $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
+            $request->image->move(public_path('coupon-admin'),$filename);
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+            $coupon->image  = $filename;
+        }
         $coupon->save();
         return redirect()->route('admin.coupon.list')->with('message', 'Coupon Create Successfully');
     }
@@ -91,6 +105,17 @@ class CouponController extends Controller
         } else {
             return \Response::json(true);
         }
+    }
+    public function upercase(Request $request)
+    {
+        $value = $request->code;
+        if(ctype_lower($value)){
+            return \Response::json(false);
+        }else{
+            return \Response::json(true);
+        }
+        
+        //return strtoupper($value);
     }
     public function checkCouponUpdate(Request $request,$id){
         $code = Coupon::where('code','=',$request->code);

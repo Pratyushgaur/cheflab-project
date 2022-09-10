@@ -21,7 +21,7 @@ class isChefRestaurant
        }else{
            Auth::logout();
            Session::flush();
-            return redirect()->route('chef.login')->with('error','You can not access This Route');
+           return redirect()->route('chef.login')->with('error','You can not access This Route');
        }
     }
 }
