@@ -18,8 +18,8 @@ class CreateVendersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('dob');
-            $table->string('experience');
+            $table->date('dob')->nullable();
+            $table->string('experience')->nullable();
             $table->boolean('is_online')->default(1);            
             $table->enum('vendor_type',['restaurant','chef']);
             $table->string('deal_categories',255);
@@ -41,6 +41,7 @@ class CreateVendersTable extends Migration
             $table->integer('review_count')->default('0');
             $table->enum('vendor_food_type',['1','2','3'])->default('1')->comment('1=veg,2=eggs,3=non veg');
             $table->boolean('is_all_setting_done')->default(0)->comment('1=when vendor opning time setting and all other essential things done');
+            $table->text('bio')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

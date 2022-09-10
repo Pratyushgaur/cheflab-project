@@ -23,6 +23,6 @@ class IsVendorDoneSettingsMiddleware
         if ($isOpningTimeDone)
             return $next($request);
         else
-            return redirect()->route('restaurant.globleseting.ordertime')->withErrors(['msg' => 'Please complet all settings']);
+            return redirect()->route('restaurant.globleseting.ordertime')->withErrors(['msg' => 'Complete Your Setup for get Order']);
     }
 }

@@ -23,8 +23,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('admin-logout', function () {
-    Auth::logout();
     
+    Auth::guard('admin')->logout();
     //Session::flush();
     return  redirect('admin');
 })->name('admin.logout');

@@ -207,7 +207,7 @@ class UserControllers extends Controller
         $vendors->speciality  = implode(',',$request->speciality);
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
-       
+        $vendors->bio  = $request->bio;
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
@@ -457,6 +457,7 @@ class UserControllers extends Controller
         $product->dis  = $request->dis;
         $product->product_price  = $request->product_price;
         $product->product_for  = 2;
+        
 
         if($request->customizable == 'true'){
             $data = [];

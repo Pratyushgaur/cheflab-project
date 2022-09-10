@@ -163,7 +163,7 @@
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Cooking Exp <span class="text-danger">*</span></label>
-                                        <input type="number" name="experience" class="form-control"  id="" placeholder="Enter Chef Email">
+                                        <input type="number" name="experience" class="form-control"  id="" placeholder="Enter Cooking Experence ">
                                     </div>  
                                   </div>
                                   <div class="col-md-3">
@@ -191,14 +191,14 @@
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
-                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
                                             @foreach($cuisines as $k =>$v)
                                             <option value="{{$v->id}}">{{$v->name}}</option>
                                             @endforeach
                                           </select>
                                     </div>  
                                   </div>
-                                  <div class="col-md-12">
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Speciality <span class="text-danger">*</span></label>
                                           <select name="speciality[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
@@ -208,7 +208,7 @@
                                             </select>
                                       </div> 
                                   </div>
-                                  <div class="col-md-12">
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Address">
@@ -298,6 +298,27 @@
                                         </div>   
                                         <input type="text" name="other_document_name" class="form-control" placeholder="Document Name">    
                                   </div>
+                                  
+                                </div>
+                                <!-- div row -->
+                              </div>
+                              
+                              
+                          </div>
+                          <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">About  Information</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <div class="form-group">
+                                          <label for="exampleInputEmail1">Bio</label>
+                                          <textarea name="bio" rows="10" col="10" class="form-control" ></textarea>
+                                      </div>         
+                                  </div>
+                                  
+                                  
                                   
                                 </div>
                                 <!-- div row -->
