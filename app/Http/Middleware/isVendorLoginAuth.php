@@ -16,7 +16,8 @@ class isVendorLoginAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        if (session()->has('*$%&%*id**$%#')  && Auth::guard('vendor')->user()) {
+        
+        if (Auth::guard('vendor')->check()) {
             if (Auth::guard('vendor')->user()->vendor_type == 'restaurant') {
                 return redirect()->route('restaurant.dashboard'); 
             } elseif(Auth::guard('vendor')->user()->vendor_type == 'cehf') {

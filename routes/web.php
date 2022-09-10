@@ -24,7 +24,8 @@ Route::get('/', function () {
 });
 Route::get('admin-logout', function () {
     Auth::logout();
-    Session::flush();
+    
+    //Session::flush();
     return  redirect('admin');
 })->name('admin.logout');
 Route::view('admin', 'admin/login-2')->name('admin.login')->middleware('isadminloginAuth');
@@ -119,13 +120,11 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('coupon-update', [App\Http\Controllers\admin\CouponController::class,'update'])->name('admin.coupon.update');
     Route::post('coupon-delete', [App\Http\Controllers\admin\CouponController::class,'soft_delete'])->name('admin.coupon.delete');
 });
-
-// vendor route
+//////////////////////////////////////vendor route ///////////////////////////////////////////////////////////////////////////////////////////////////
 Route::view('vendor/login', 'vendor/login')->name('vendor.login')->middleware(isVendorLoginAuth::class);
 Route::post('check-login-on-vendor', [App\Http\Controllers\vendor\LoginController::class, 'login'])->name('action.vendor.login');
 Route::get('vendor-logout', function () {
-    Auth::logout();
-    Session::flush();
+    Auth::guard('vendor')->logout();
     return  redirect()->route('vendor.login');
 })->name('vendor.logout');
 // vendor auth route
@@ -175,15 +174,12 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
     }); 
    
 });
- // chef route
-    // vendor route
-    Route::view('chef/login','chef/login')->name('chef.login')->middleware(isChefLoginAuth::class);
-    Route::post('check-login-on-chef',[App\Http\Controllers\chef\LoginController::class,'login'])->name('action.chef.login');
+    // chef route
     Route::get('chef-logout',function(){
         Auth::logout();
-        Session::flush();
+        //Session::flush();
         return  redirect()->route('chef.login');
-    })->name('vendor.logout');
+    })->name('chef.logout');
     Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
         // restaurant route
         Route::group(['prefix' =>'chef','middleware' => 'isChefRestaurant'], function(){
