@@ -9,6 +9,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('chef.dashboard');
+        return view('vendor.chef.dashboard');
     }
 }
