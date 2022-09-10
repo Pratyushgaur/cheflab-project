@@ -176,9 +176,9 @@
                               </div>
                               <div class="card-body">
                                 <div class="error">
-                                    @if($errors->any())
-                                      {{ implode('', $errors->all('message')) }}
-                                    @endif
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
                                 </div>
                              
                                 <div class="row">

@@ -23,13 +23,19 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::get('getCuisines',[App\Http\Controllers\api\AppMasterController::class,'getCuisines']);
     //
     // restaurant home page api
+
     Route::get('home',[App\Http\Controllers\api\AppController::class,'restaurantHomePage']);
     Route::post('getRestaurantByCategory',[App\Http\Controllers\api\AppController::class,'getRestaurantByCategory']);
     Route::post('getRestaurantDetailPage',[App\Http\Controllers\api\AppController::class,'getRestaurantDetailPage']);
     Route::post('browse-menu',[App\Http\Controllers\api\AppController::class,'getRestaurantBrowsemenu']);
     Route::post('custmizable-data',[App\Http\Controllers\api\AppController::class,'getRestaurantCustmizeProductData']);
     Route::post('search-data',[App\Http\Controllers\api\AppController::class,'getRestaurantSearchData']);
+
     // chef home page api
+    Route::get('chef-home',[App\Http\Controllers\api\AppController::class,'chefHomePage']);
+    Route::post('getChefByCategory',[App\Http\Controllers\api\AppController::class,'getChefByCategory']);
+    Route::post('getChefDetailPage',[App\Http\Controllers\api\AppController::class,'getChefDetailPage']);
+    Route::post('getChefProfile',[App\Http\Controllers\api\AppController::class,'getChefProfile']);
    
 
 });
@@ -40,7 +46,4 @@ Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiControlle
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
 // chef 
-Route::get('chef-home',[App\Http\Controllers\api\ChefController::class,'chefHomePage']);
-Route::post('getChefByCategory',[App\Http\Controllers\api\ChefController::class,'getChefByCategory']);
-Route::post('getChefDetailPage',[App\Http\Controllers\api\ChefController::class,'getChefDetailPage']);
-Route::post('getChefProfile',[App\Http\Controllers\api\ChefController::class,'getChefProfile']);
+
