@@ -218,7 +218,7 @@
                                           <label for="">Customizable Availablity</label>
 
                                           
-                                          <select name="customizable" id="customizable" class="form-control">
+                                          <select name="customizable" id="customizable" name="customizable" class="form-control">
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
                                           </select>
@@ -378,7 +378,7 @@
       })
       $('.add').click(function(){
         if ($('.variant_name').val() !='' && $('.price').val() !='') {
-          var html = '<div class="row"><div class="col-md-4" style="text-align:center"><span>'+$('.variant_name').val()+'</span></div><div class="col-md-2"><span>'+$('.price').val()+'</span></div><div class="col-md-2"><button class="btn btn-danger "><i class="fa fa-trash"></i></button></div></div><input type="hidden" name="variant_name[]" value="'+$('.variant_name').val()+'"><input type="hidden" name="variant_price[]" value="'+$('.price').val()+'"><br>';  
+          var html = '<div class="row"><div class="col-md-4" style="text-align:center"><span>'+$('.variant_name').val()+'</span></div><div class="col-md-2"><span>'+$('.price').val()+'</span></div><div class="col-md-2"><button type="button" class="btn btn-danger "><i class="fa fa-trash"></i></button></div></div><input type="hidden" name="variant_name[]" value="'+$('.variant_name').val()+'"><input type="hidden" name="variant_price[]" value="'+$('.price').val()+'"><br>';  
           $('.variant-container').append(html);
         }else{
           return false;

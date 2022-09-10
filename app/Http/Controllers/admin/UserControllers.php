@@ -448,6 +448,7 @@ class UserControllers extends Controller
         $product->category  = $request->category;
         $product->dis  = $request->dis;
         $product->product_price  = $request->product_price;
+        $product->product_for  = 2;
 
         if($request->customizable == 'true'){
             $data = [];
