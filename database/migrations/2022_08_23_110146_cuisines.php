@@ -20,7 +20,8 @@ class Cuisines extends Migration
             $table->string('position',5);
             $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->softDeletes();
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

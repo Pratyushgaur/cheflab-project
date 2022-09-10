@@ -126,7 +126,6 @@ class UserControllers extends Controller
             'restaurant_name' => 'required',
             'email' => 'required|unique:vendors,email',
             'pincode' => 'required',
-            'speciality' => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'address' => 'required',
             'fssai_lic_no' => 'required',
