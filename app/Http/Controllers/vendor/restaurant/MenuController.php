@@ -37,7 +37,7 @@ class MenuController extends Controller
     {
         if ($request->ajax()) {
             
-            $data = VendorMenus::latest()->get();
+            $data = VendorMenus::latest()->where('vendor_id','=',\Auth::guard('vendor')->user()->id)->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
