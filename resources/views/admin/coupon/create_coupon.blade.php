@@ -142,6 +142,7 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Name<span class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
+                                        <input type="hidden" name="create_by" value="admin" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
@@ -168,8 +169,8 @@
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Descriptio <span class="text-danger">*</span></label>
-                                        <input type="text" name="discription" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                        <label for="exampleInputEmail1">Description <span class="text-danger">*</span></label>
+                                        <input type="text" name="discription" class="form-control"  id="" placeholder="Description...">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
@@ -205,18 +206,9 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Promo Code Valid For First X Order * <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="promocode_use" style="width: 100%;">
-                                          <option value="1">1</option>
-                                          <option value="2">2</option>
-                                          <option value="3">3</option>
-                                        </select>
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Create By * <span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="create_by" style="width: 100%;">
-                                          <option value="admin">admin</option>
-                                          <option value="vendor">vendor</option>
+                                          <option value="1">Day</option>
+                                          <option value="2">Month</option>
+                                          <option value="3">Week</option>
                                         </select>
                                     </div>  
                                   </div>
@@ -322,6 +314,7 @@
               },
               code: {
                   required: true,
+                  remote: '{{route("admin.coupon.upercase")}}',
                   remote: '{{route("admin.coupon.upercase")}}',
               },
               discount_type: {
