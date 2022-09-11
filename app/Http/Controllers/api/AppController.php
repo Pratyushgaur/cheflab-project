@@ -13,7 +13,7 @@ class AppController extends Controller
         {
             try {
 
-                $vendors = \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image','rating'))->orderBy('id','desc')->get();
+                $vendors = \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image','rating'))->orderBy('id','desc')->get();
                 $products = \App\Models\Product_master::where(['products.status'=>'1','product_for'=>'3'])->join('vendors','products.userId','=','vendors.id')->select('products.product_name','product_price','customizable',\DB::raw('CONCAT("'.asset('products').'/", product_image) AS image','vendors.name as restaurantName'))->orderBy('products.id','desc')->get();
 
                 return response()->json([
@@ -47,7 +47,7 @@ class AppController extends Controller
                 }
                 //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
                 $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'vendor_ratings','vendor_food_type','deal_categories','id');
-                $data = $data->where(['vendors.status'=>'1','vendor_type'=>'restaurant'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
+                $data = $data->where(['vendors.status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
                 
                 $data = $data->get();
                 date_default_timezone_set('Asia/Kolkata');
@@ -220,7 +220,7 @@ class AppController extends Controller
                 }
                 //
                 if ($request->search_for == 'restaurant') {
-                   $data =  \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'vendor_ratings','review_count')->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                   $data =  \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'vendor_ratings','review_count')->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
                 } elseif($request->search_for == 'dishes') {
                    $data =  \App\Models\Product_master::where(['products.status'=>'1','product_for'=>'3'])->join('vendors','products.userId','=','vendors.id')->select('products.product_name',\DB::raw('CONCAT("'.asset('products').'/", product_image) AS image','vendors.name as restaurantName'),'product_price','type')->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
                 }else{
@@ -246,7 +246,7 @@ class AppController extends Controller
     public function chefHomePage()
     {
         try {
-            $vendors = \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'chef'])->select('name','vendor_ratings','review_count',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image','rating'),\DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"),'experience'    )->orderBy('id','desc')->get();
+            $vendors = \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'chef','is_all_setting_done' =>'1'])->select('name','vendor_ratings','review_count',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image','rating'),\DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"),'experience'    )->orderBy('id','desc')->get();
             $products = \App\Models\Product_master::where(['products.status'=>'1','product_for'=>'2'])->join('vendors','products.userId','=','vendors.id')->select('products.product_name','product_price','customizable',\DB::raw('CONCAT("'.asset('products').'/", product_image) AS image','vendors.name as restaurantName'))->orderBy('products.id','desc')->get();
             return response()->json([
                 'status' => true,
@@ -278,7 +278,7 @@ class AppController extends Controller
                 }
                 //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
                 $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),\DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"),'vendor_ratings','speciality','deal_categories','id','experience');
-                $data = $data->where(['vendors.status'=>'1','vendor_type'=>'chef'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
+                $data = $data->where(['vendors.status'=>'1','vendor_type'=>'chef','is_all_setting_done' =>'1'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
                 
                 $data = $data->get();
                 date_default_timezone_set('Asia/Kolkata');
