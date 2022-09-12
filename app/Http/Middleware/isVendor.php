@@ -20,8 +20,9 @@ class isVendor
         if (session()->has('*$%&%*id**$%#')  && Auth::guard('vendor')->user()) {
              return $next($request);
         }else{
-            Auth::logout();
-            Session::flush();
+           
+            Auth::guard('vendor')->logout();
+            //Session::flush();
              return redirect()->route('vendor.login');
         }
     }

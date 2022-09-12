@@ -30,7 +30,7 @@
 
 </head>
 
-<body class="ms-body ms-aside-left-open ms-primary-theme ms-has-quickbar">
+<body class="ms-body @if(!isset($hideSidebar)) ms-aside-left-open @endif ms-primary-theme @if(!isset($hideSidebar))  ms-has-quickbar @endif ">
   <!-- Preloader -->
   <div id="preloader-wrap">
     <div class="spinner spinner-8">
@@ -49,6 +49,6 @@
     </div>
   </div>
   <!-- Overlays -->
-  <div class="ms-aside-overlay ms-overlay-left ms-toggler" data-target="#ms-side-nav" data-toggle="slideLeft"></div>
+  <div class="ms-aside-overlay ms-overlay-left ms-toggler " data-target="#ms-side-nav" data-toggle="slideLeft"></div>
   <div class="ms-aside-overlay ms-overlay-right ms-toggler" data-target="#ms-recent-activity" data-toggle="slideRight"></div>
   <!-- Sidebar Navigation Left -->

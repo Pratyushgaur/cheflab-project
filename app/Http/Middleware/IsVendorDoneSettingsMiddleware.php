@@ -17,12 +17,15 @@ class IsVendorDoneSettingsMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-
+        
         $isOpningTimeDone = VendorOrderTime::where('vendor_id', session('*$%&%*id**$%#'))->count();
+        
         // dd($isOpningTimeDone);
         if ($isOpningTimeDone)
             return $next($request);
         else
-            return redirect()->route('restaurant.globleseting.ordertime')->withErrors(['msg' => 'Complete Your Setup for get Order']);
+            //return redirect()->route('restaurant.globleseting.ordertime')->withErrors(['msg' => 'Complete Your Setup for get Order']);
+           
+            return redirect()->route('restaurant.require.ordertime')->withErrors(['msg' => 'Complete Your Setup for get Order']);
     }
 }

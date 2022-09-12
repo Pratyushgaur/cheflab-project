@@ -19,7 +19,6 @@ class VendorCoupon extends Controller
         return view('vendor.restaurant.coupon.list');
     }
     public function create_coupon(){
-      // $categories = Catogory_master::where('is_active','=','1')->get();
         return view('vendor.restaurant.coupon.create_coupon');
     }
     public function store_coupon(Request $request){
