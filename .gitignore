@@ -11,3 +11,12 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 composer.json
+.idea/vcs.xml
+.idea/php.xml
+.idea/modules.xml
+.idea/deployment.xml
+.idea/misc.xml
+.idea/cheflab-project.iml
+.idea/.gitignore
+.gitignore
+.gitignore

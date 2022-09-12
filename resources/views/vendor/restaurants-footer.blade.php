@@ -445,8 +445,9 @@
   <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  
+
 </body>
+@stack('scripts')
 @yield('page-js');
 
 <!-- Mirrored from metropolitanhost.com/themes/themeforest/html/costic/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Aug 2022 10:37:51 GMT -->

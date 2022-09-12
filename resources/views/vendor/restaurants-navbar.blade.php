@@ -19,13 +19,26 @@
 
         <ul class="ms-nav-list ms-inline mb-0" id="ms-nav-options">
             <li class="ms-nav-item ms-search-form pb-0 py-0">
+                <form id="restaurent-status-form" action="" method="POST">
+                    @csrf
+
+                    <div class="ms-form-group my-0 mb-0 has-icon fs-14">
+                        <label > Rastaurant Status </label>
+                        <label class="ms-switch right"> <input name="restaurent_status" id="restaurent_status" onchange='change_rest_ststus()'
+                                type="checkbox" @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
+                            <span class="ms-switch-slider round"></span> </label>
+
+                    </div>
+
+                </form>
 
 
-                @if (Auth::guard('vendor')->user()->is_online == 1)
+
+                {{-- @if (Auth::guard('vendor')->user()->is_online == 1)
                     <div class="ms-form-group my-0 mb-0 has-icon fs-14">
                         <label class="ms-switch right"><input onchange="$('#set-offline-form').submit();"
                                 type="checkbox" checked> <span class="ms-switch-slider round"></span> </label>
-                                Your rastaurent is online
+                        Your rastaurent is online
                     </div>
 
 
@@ -38,14 +51,14 @@
                     <div class="ms-form-group my-0 mb-0 has-icon fs-14">
                         <label class="ms-switch right"><input onchange="$('#set-online-form').submit();"
                                 type="checkbox"> <span class="ms-switch-slider round"></span></label>
-                                Your rastaurent is offline
+                        Your rastaurent is offline
                     </div>
 
                     <form id="set-online-form" action="{{ route('restaurant.set_online') }}" method="POST"
                         class="d-none">
                         @csrf
                     </form>
-                @endif
+                @endif --}}
 
             </li>
 
@@ -199,3 +212,26 @@
     @yield('main-content')
 
 </main>
+
+
+@push('scripts')
+    <script>
+        function change_rest_ststus() {
+            $.ajax({
+                url: '{{ route('restaurant.restaurent_status') }}',
+                type: 'post',
+                cache: false,
+                data: $('#restaurent-status-form').serialize(),
+                success: function(data) {
+                    if (data.msg != '')
+                        alert(data.msg);
+                    else
+                        alert('Somethin went wrong');
+                },
+                error: function(xhr, textStatus, thrownError) {
+                    alert('Somethin went wrong');
+                }
+            });
+        }
+    </script>
+@endpush
