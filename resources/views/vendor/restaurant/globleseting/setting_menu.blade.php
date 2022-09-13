@@ -14,7 +14,8 @@
 
             <div id="collapseOne" class="collapse show" data-parent="#accordionExample1">
               <div class="card-body">
-              <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Order Time Setting</a>
+              <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Order Time Setting</a></li>
+              <li> <a href="{{route('restaurant.globleseting.vendor_location')}}" class="">Restaurant Location</a></li>
               </div>
             </div>
           </div>
@@ -35,5 +36,5 @@
       </div>
 
     </div>
-  
+
   </div>
