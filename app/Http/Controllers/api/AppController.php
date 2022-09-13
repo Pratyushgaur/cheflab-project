@@ -8,12 +8,47 @@ use Validator;
 use Carbon\Carbon;
 class AppController extends Controller
 {
+
+    public function getProductDetail(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), 
+                [
+                    'product_id' => 'required|numeric'
+                ]);
+                if($validateUser->fails()){
+                    $error = $validateUser->errors();
+                    return response()->json([
+                        'status' => false,
+                        'error'=>$validateUser->errors()->all()
+                        
+                    ], 401);
+                }
+            $product = \App\Models\Product_master::where(['products.id'=>$request->product_id]);
+            $product = $product->join('cuisines','products.cuisines','=','cuisines.id');
+            $product = $product->select('products.product_name','product_price','customizable',\DB::raw('CONCAT("'.asset('products').'/", product_image) AS image'),'cuisines.name as cuisinesName','dis as description')->first();
+            
+
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$product
+
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
     //restaurant page
         public function restaurantHomePage()
         {
             try {
 
-                $vendors = \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image','rating'))->orderBy('id','desc')->get();
+                $vendors = \App\Models\Vendors::where(['status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'vendor_ratings',\DB::raw('CONCAT("'.asset('vendor-banner').'/", banner_image) AS banner'))->orderBy('id','desc')->get();
                 $products = \App\Models\Product_master::where(['products.status'=>'1','product_for'=>'3'])->join('vendors','products.userId','=','vendors.id')->select('products.product_name','product_price','customizable',\DB::raw('CONCAT("'.asset('products').'/", product_image) AS image','vendors.name as restaurantName'))->orderBy('products.id','desc')->get();
 
                 return response()->json([
@@ -46,7 +81,7 @@ class AppController extends Controller
                     ], 401);
                 }
                 //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-                $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'vendor_ratings','vendor_food_type','deal_categories','id');
+                $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),\DB::raw('CONCAT("'.asset('vendor-banner').'/", banner_image) AS banner'),'vendor_ratings','vendor_food_type','deal_categories','id','fssai_lic_no');
                 $data = $data->where(['vendors.status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
                 
                 $data = $data->get();
@@ -277,7 +312,7 @@ class AppController extends Controller
                     ], 401);
                 }
                 //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-                $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),\DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"),'vendor_ratings','speciality','deal_categories','id','experience');
+                $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),\DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"),'vendor_ratings','speciality','deal_categories','id','experience','fssai_lic_no');
                 $data = $data->where(['vendors.status'=>'1','vendor_type'=>'chef','is_all_setting_done' =>'1'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
                 
                 $data = $data->get();

@@ -21,6 +21,7 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     // master 
     Route::get('getCategories',[App\Http\Controllers\api\AppMasterController::class,'getCategories']);
     Route::get('getCuisines',[App\Http\Controllers\api\AppMasterController::class,'getCuisines']);
+    Route::post('getProductDetail',[App\Http\Controllers\api\AppController::class,'getProductDetail']);
     //
     // restaurant home page api
 
@@ -36,7 +37,8 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getChefByCategory',[App\Http\Controllers\api\AppController::class,'getChefByCategory']);
     Route::post('getChefDetailPage',[App\Http\Controllers\api\AppController::class,'getChefDetailPage']);
     Route::post('getChefProfile',[App\Http\Controllers\api\AppController::class,'getChefProfile']);
-   
+   //
+
 
 });
 
