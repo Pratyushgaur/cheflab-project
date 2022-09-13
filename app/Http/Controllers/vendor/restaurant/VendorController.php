@@ -20,4 +20,10 @@ class VendorController extends Controller
         return redirect()->back()->with('success', 'Now your Restauran is online.');
         
     }
+    public function requireOrderTime()
+    {  
+         
+        $hideSidebar = true;
+        return view('vendor.restaurant.globleseting.require_ordertime',compact('hideSidebar'));
+    }
 }

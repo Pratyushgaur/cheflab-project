@@ -462,19 +462,19 @@ class UserControllers extends Controller
         if($request->customizable == 'true'){
             $data = [];
             foreach($request->variant_name as $k =>$v){
-                $data[] = array('varint_name' =>$v ,'price' =>$request->variant_price[$k]);
+                $data[] = array('variant_name' =>$v ,'price' =>$request->variant_price[$k]);
             }
             $request->variants = serialize($data);
         }
         $product->type  = $request->type;
         $product->customizable  = $request->customizable;
         if($request->has('product_image')){
-            $filename = time().'-chef-product-'.rand(100,999).'.'.$request->product_image->extension();
+            $filename = time().'-cheflab-product-'.rand(100,999).'.'.$request->product_image->extension();
             $request->product_image->move(public_path('products'),$filename);
             $product->product_image  = $filename;
         }
         $product->save();
-        return redirect()->route('admin.vendor.view',Crypt::encryptString($request->userId_))->with('message', 'Chef Product  Registration Successfully');
+        return redirect()->route('admin.vendor.view',Crypt::encryptString($request->userId_))->with('message', 'Cheflab Product  Registration Successfully');
         
     }
     public function tetsapi(Request $request)

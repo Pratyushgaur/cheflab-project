@@ -158,6 +158,83 @@ class ProductController extends Controller
 
     //
     
-    
+    public function cheflabProduct()
+    {
+        return view('admin.product.cheflab-product-list');
+    }
+    public function createChefLabProduct()
+    {
+        $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
+        $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
+        return view('admin.product.create_cheflab_product',compact('categories','cuisines'));
+    }
 
+    public function storeChefLabProduct(Request $request){
+        //  return $request->input();die;
+          $this->validate($request, [
+              'product_name' => 'required',
+              'dis' => 'required',
+              'product_price' => 'required',
+              'product_image' => 'required',
+          ]);
+          $product = new Product_master;
+          $product->product_name = $request->product_name;
+          $product->userId = $request->userId_;
+          $product->cuisines = $request->cuisines;
+          $product->category  = $request->category;
+          $product->dis  = $request->dis;
+          $product->product_price  = $request->product_price;
+          $product->product_for  = 1;
+          
+          
+          if($request->customizable == 'true'){
+              $data = [];
+              foreach($request->variant_name as $k =>$v){
+                  $data[] = array('variant_name' =>$v ,'price' =>$request->variant_price[$k]);
+              }
+             
+              $request->variants = serialize($data);
+          }
+          $product->type  = $request->type;
+          $product->customizable  = $request->customizable;
+          if($request->has('product_image')){
+              $filename = time().'-chef-product-'.rand(100,999).'.'.$request->product_image->extension();
+              $request->product_image->move(public_path('products'),$filename);
+              $product->product_image  = $filename;
+          }
+          $product->save();
+          return redirect()->route('admin.product.cheflabProduct')->with('message', 'Chef Product  Registration Successfully');
+          
+      }
+    public function cheflab_product_list(Request $request){
+        
+       // dd($user);
+          if ($request->ajax()) {
+            $data = Product_master::select('id','product_name','product_image','product_price','type','created_at');
+            $data = $data->where('product_for','=','1');
+            $data = $data->get();
+            
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
+                            <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+                
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+                ->addColumn('product_image',function($data){
+                    return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
+                })
+                
+                
+                ->rawColumns(['date'])
+                ->rawColumns(['action-js','product_image']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+        
+    }
 }

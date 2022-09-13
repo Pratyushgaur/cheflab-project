@@ -19,8 +19,8 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Listing of Product </h3>
-                      <a href="" class="pull-right btn btn-sm btn-success " style="margin-left:100px; color:#fff;">Create New Product</a>
+                      <h3 class="card-title">Official Cheflab  Product Listing</h3>
+                      <a href="{{route('admin.product.cheflabProduct.create')}}" class="pull-right btn btn-sm btn-success " style="margin-left:100px; color:#fff;">Create New Product</a>
                      
                       
                     </div>
@@ -72,11 +72,16 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ url('product-list.getProduct') }}",
+     
+        ajax: "{{ route('admin.product.cheflabProduct.list')}}",
+    
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'city_name', name: 'city_name'},
-            {data: 'date', name: 'date'},
+            {data: 'product_name', name: 'product_name'},
+            {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
+            {data: 'type', name: 'type'},
+            {data: 'product_price', name: 'product_price'},
+            {data: 'date', name: 'created_at'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

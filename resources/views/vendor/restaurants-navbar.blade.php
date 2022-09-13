@@ -1,22 +1,28 @@
 <main class="body-content">
     <!-- Navigation Bar -->
-
+    
     <nav class="navbar ms-navbar">
-        <div class="ms-aside-toggler ms-toggler pl-0" data-target="#ms-side-nav" data-toggle="slideLeft"> <span
-                class="ms-toggler-bar bg-primary"></span>
+        
+        <div class="ms-aside-toggler ms-toggler pl-0" data-target="#ms-side-nav" data-toggle="slideLeft"> 
+            @if(!isset($hideSidebar))
             <span class="ms-toggler-bar bg-primary"></span>
             <span class="ms-toggler-bar bg-primary"></span>
+            <span class="ms-toggler-bar bg-primary"></span>
+            @endif
         </div>
+        
+        
+        
         <div class="logo-sn logo-sm ms-d-block-sm">
             <a class="pl-0 ml-0 text-center navbar-brand mr-0" href="index.html"><img
-                    src="{{ asset('frontend') }}/assets/img/costic/costic-logo-84x41.png" alt="logo"> </a>
+                    src="{{asset('commonarea')}}/logo.png   " style="height: 70px;" alt="logo"> </a>
         </div>
 
 
 
 
 
-
+        @if(!isset($hideSidebar))
         <ul class="ms-nav-list ms-inline mb-0" id="ms-nav-options">
             <li class="ms-nav-item ms-search-form pb-0 py-0">
 
@@ -190,12 +196,16 @@
                 </ul>
             </li>
         </ul>
+        
         <div class="ms-toggler ms-d-block-sm pr-0 ms-nav-toggler" data-toggle="slideDown"
             data-target="#ms-nav-options"> <span class="ms-toggler-bar bg-primary"></span>
             <span class="ms-toggler-bar bg-primary"></span>
             <span class="ms-toggler-bar bg-primary"></span>
         </div>
+        @endif
     </nav>
+    
+    
     @yield('main-content')
 
 </main>
