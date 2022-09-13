@@ -224,7 +224,7 @@
                         <div class="col-md-8 mb-3">
                           <label for="validationCustom23">Select Product Addons (Optional)</label>
                           <div class="input-group">
-                            <select class="form-control select2 addons-select" name="addons" multiple="true" id="validationCustom23">
+                            <select class="form-control select2 addons-select" name="addons[]" multiple="true" id="validationCustom23">
                               
                                 @foreach($addons as $k =>$value)
                                   <option value="{{$value->id}}">{{$value->addon}} -Rs {{$value->price}}</option>

@@ -25,12 +25,12 @@ class VendorController extends Controller
 
         if ($request->restaurent_status == 'on'){
             vendors::where('id', Auth::guard('vendor')->user()->id)->update(['is_online' => 1]);
-            $data=['status'=>'success','msg'=>'Now your restaurant is online'];
+            $data=['status'=>'success','msg'=>'Now your restaurant is online','rest_status'=>'on'];
         }
 
         else{
             vendors::where('id', Auth::guard('vendor')->user()->id)->update(['is_online' => 0]);
-            $data=['status'=>'success','msg'=>'Now your restaurant is offline'];
+            $data=['status'=>'success','msg'=>'Now your restaurant is offline','rest_status'=>'off'];
         }
             return response()->json($data, 200);
 

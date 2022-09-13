@@ -25,8 +25,9 @@ class UserControllers extends Controller
     }
     public function create_chef()
     {
-
-        return view('admin/vendors/chef_create');
+        $categories = Catogory_master::where('is_active','=','1')->get();
+        $cuisines = Cuisines::where('is_active','=','1')->get();
+        return view('admin/vendors/chef_create',compact('cuisines','categories'));
     }
     public function get_data_table_of_vendor(Request $request)
     {
@@ -86,7 +87,7 @@ class UserControllers extends Controller
 
     }
 
-    public function checkEmailExist(Request $request,$id=null)
+    public function checkEmailExist(Request $request)
     {   
         if (vendors::where('email','=',$request->email)->exists()) {
             return \Response::json(false);
@@ -166,6 +167,11 @@ class UserControllers extends Controller
             $vendors->other_document_image  = $filename;
             $vendors->other_document  = $request->other_document_name;
         }
+        if($request->has('banner_image')){
+            $filename = time().'-banner-'.rand(100,999).'.'.$request->banner_image->extension();
+            $request->banner_image->move(public_path('vendor-banner'),$filename);
+            $vendors->banner_image  = $filename;
+        }
         $vendors->save();
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');
         
@@ -173,25 +179,35 @@ class UserControllers extends Controller
     }
     public function store_chef(Request $request)
     {
+       // return $request->input();die;
         $this->validate($request, [
             'restourant_name' => 'required',
             'email' => 'required|unique:vendors,email',
             'pincode' => 'required',
             'phone' => 'required|unique:vendors,mobile',
+            'experience' => 'required',
+            'dob' => 'required',
+            'deal_categories' => 'required',
+            'deal_cuisines' => 'required',
             'address' => 'required',
             'password' => 'required',
             'confirm_password' => 'required',
             'vendor_commission' => 'required',
-
         ]);
         $vendors = new vendors;
         $vendors->name = $request->restourant_name;
         $vendors->email = $request->email;
+        $vendors->dob = $request->dob;
+        $vendors->experience = $request->experience;
+        $vendors->deal_categories  = implode(',',$request->deal_categories);
+        $vendors->deal_cuisines  = implode(',',$request->deal_cuisines);
         $vendors->password = Hash::make($request->password);
         $vendors->vendor_type = 'chef';
         $vendors->mobile  = $request->phone;
+        $vendors->speciality  = implode(',',$request->speciality);
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
+        $vendors->bio  = $request->bio;
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
@@ -254,7 +270,11 @@ class UserControllers extends Controller
             $vendors->other_document_image  = $filename;
             $vendors->other_document  = $request->other_document_name;
         }
-
+        if($request->has('banner_image')){
+            $filename = time().'-banner-'.rand(100,999).'.'.$request->banner_image->extension();
+            $request->banner_image->move(public_path('vendor-banner'),$filename);
+            $vendors->banner_image  = $filename;
+        }
         $vendors->save();
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
         
@@ -436,23 +456,25 @@ class UserControllers extends Controller
         $product->category  = $request->category;
         $product->dis  = $request->dis;
         $product->product_price  = $request->product_price;
+        $product->product_for  = 2;
+        
 
         if($request->customizable == 'true'){
             $data = [];
             foreach($request->variant_name as $k =>$v){
-                $data[] = array('varint_name' =>$v ,'price' =>$request->variant_price[$k]);
+                $data[] = array('variant_name' =>$v ,'price' =>$request->variant_price[$k]);
             }
             $request->variants = serialize($data);
         }
         $product->type  = $request->type;
         $product->customizable  = $request->customizable;
         if($request->has('product_image')){
-            $filename = time().'-chef-product-'.rand(100,999).'.'.$request->product_image->extension();
+            $filename = time().'-cheflab-product-'.rand(100,999).'.'.$request->product_image->extension();
             $request->product_image->move(public_path('products'),$filename);
             $product->product_image  = $filename;
         }
         $product->save();
-        return redirect()->route('admin.vendor.view',Crypt::encryptString($request->userId_))->with('message', 'Chef Product  Registration Successfully');
+        return redirect()->route('admin.vendor.view',Crypt::encryptString($request->userId_))->with('message', 'Cheflab Product  Registration Successfully');
         
     }
     public function tetsapi(Request $request)

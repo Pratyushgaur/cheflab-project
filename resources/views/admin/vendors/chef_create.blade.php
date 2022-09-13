@@ -107,6 +107,9 @@
             border-radius: 18px;
             margin:0px;
         }
+        .select2-selection__choice{
+          background:#007bff !important;
+        }
       </style>
       @endsection
       <!-- Content Wrapper. Contains page content -->
@@ -139,32 +142,73 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Chef <span class="text-danger">*</span></label>
                                         <input type="text" name="restourant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Chef Email">
                                     </div>  
                                   </div>
-                                  
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">DOB <span class="text-danger">*</span></label>
+                                        <input type="date" name="dob" class="form-control"  id="" placeholder="Enter Chef Email">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Cooking Exp <span class="text-danger">*</span></label>
+                                        <input type="number" name="experience" class="form-control"  id="" placeholder="Enter Cooking Experence ">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>  
                                   </div>
-                                  <div class="col-md-12">
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                          <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
+                                          <select name="deal_categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                              @foreach($categories as $k =>$v)
+                                              <option value="{{$v->id}}">{{$v->name}}</option>
+                                              @endforeach
+                                            </select>
+                                      </div> 
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
+                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
+                                            @foreach($cuisines as $k =>$v)
+                                            <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                          </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                          <label for="exampleInputEmail1">Speciality <span class="text-danger">*</span></label>
+                                          <select name="speciality[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                              @foreach($cuisines as $k =>$v)
+                                              <option value="{{$v->id}}">{{$v->name}}</option>
+                                              @endforeach
+                                            </select>
+                                      </div> 
+                                  </div>
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Address">
@@ -261,6 +305,27 @@
                               
                               
                           </div>
+                          <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">About  Information</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-sm-12">
+                                    <div class="form-group">
+                                          <label for="exampleInputEmail1">Bio</label>
+                                          <textarea name="bio" rows="10" col="10" class="form-control" ></textarea>
+                                      </div>         
+                                  </div>
+                                  
+                                  
+                                  
+                                </div>
+                                <!-- div row -->
+                              </div>
+                              
+                              
+                          </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
                             <button class="btn btn-success" ><i class="fa fa-save"></i>Register Chef </button>
@@ -307,12 +372,24 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    
+    $('.select2').select2();
       $("#restaurant-form").validate({
           rules: {
               restourant_name: {
                   required: true,
                   maxlength: 20,
+              },
+              dob: {
+                  required: true,
+              },
+              experience: {
+                  required: true,
+              },
+              deal_categories: {
+                  required: true,
+              },
+              deal_cuisines: {
+                  required: true,
               },
               email: {
                   required: true,
@@ -354,6 +431,11 @@
               vendor_commission:{
                 required:true,
                 number: true
+              },'deal_categories[]':{
+                required:true,
+              },
+              'deal_cuisines[]':{
+                required:true,
               }
               
               
@@ -385,6 +467,12 @@
               },
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
+              },
+              'deal_categories[]':{
+                required:"Select Deals categories"
+              },
+              'deal_cuisines[]':{
+                required:"Select Deals cuisines"
               }
               
           }

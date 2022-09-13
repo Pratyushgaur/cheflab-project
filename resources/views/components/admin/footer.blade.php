@@ -146,6 +146,8 @@
             body: '<?php echo  \Session::get('message'); ?>'
           })
        });
+       //Date picker
+     
     </script>                
     
 @endif

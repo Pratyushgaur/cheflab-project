@@ -436,6 +436,11 @@
   </script>
   <script src="{{asset('frontend')}}/assets/js/datatables.min.js">
   </script>
+
+<script src="{{asset('frontend')}}/assets/js/sweetalert2.min.js">
+</script>
+<script src="{{asset('frontend')}}/assets/js/sweet-alerts.js">
+</script>
   <!-- <script src="{{asset('frontend')}}/assets/js/data-tables.js"> -->
   </script>
   <!-- Page Specific Scripts Finish -->

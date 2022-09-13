@@ -47,14 +47,8 @@
       </li>
 
       <li class="menu-item">
-        <a href="#" class="has-chevron" data-toggle="collapse" data-target="#coupon" aria-expanded="false" aria-controls="coupon"> <span><i class="nav-icon fa fa-gift fs-16"></i>Coupons</span>
+        <a href="{{route('restaurant.coupon.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Coupons</span>
         </a>
-        <ul id="coupon" class="collapse " aria-labelledby="coupon" data-parent="#side-nav-accordion">
-          <li> <a href="" class="">Menu Catalogue</a>
-          </li>
-          <li> <a href="" class="">Add Catalogue</a>
-          </li>
-        </ul>
       </li>
       <hr>
       <li class="menu-item ">
@@ -65,8 +59,8 @@
         <a href="" class=""> <span><i class="fas fa-rupee-sign fs-16 "></i>Payment</span>
         </a>
       </li>
-      <li class="menu-item">
-        <a href="#" class="has-chevron " data-toggle="collapse" data-target="#setting" aria-expanded="false" aria-controls="setting"> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
+      <li class="menu-item ">
+        <a href="{{route('restaurant.globleseting')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
         </a>
         <ul id="setting" class="collapse " aria-labelledby="setting" data-parent="#side-nav-accordion">
           <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Globel Setting</a>
