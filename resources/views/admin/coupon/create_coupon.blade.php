@@ -138,20 +138,20 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Name<span class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
                                         <input type="hidden" name="create_by" value="admin" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Code<span class="text-danger">*</span></label>
-                                        <input type="text" name="code" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Code">
+                                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="code" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Code">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Discount Type <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="discount_type" style="width: 100%;">
@@ -161,31 +161,26 @@
                                     </div>  
                                   </div>
                                   
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Discount <span class="text-danger">*</span></label>
                                         <input type="text" name="discount" class="form-control"  id="" placeholder="Discount">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Description <span class="text-danger">*</span></label>
-                                        <input type="text" name="discription" class="form-control"  id="" placeholder="Description...">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-6">
+                                 
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                       <label for="exampleInputEmail1">Maximum Discount Amount *</label>
                                       <input type="text" name="maxim_dis_amount" class="form-control"  id="" placeholder="Maximum Discount Amount *">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Minimum Order Amount * <span class="text-danger">*</span></label>
                                         <input type="text" name="minimum_order_amount" class="form-control"  id="" placeholder="Minimum Order Amount *">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Promo Code Redeem Count <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="promo_redeem_count" style="width: 100%;">
@@ -202,9 +197,9 @@
                                         </select>
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Promo Code Valid For First X Order * <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">To In * <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="promocode_use" style="width: 100%;">
                                           <option value="1">Day</option>
                                           <option value="2">Month</option>
@@ -212,7 +207,7 @@
                                         </select>
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <!--<div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Type * <span class="text-danger">*</span></label>
                                         <select class="form-control select2" name="coupon_type" style="width: 100%;">
@@ -220,7 +215,7 @@
                                           <option value="product">product</option>
                                         </select>
                                     </div>  
-                                  </div>
+                                  </div>-->
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>From:</label>
@@ -243,6 +238,12 @@
                                                 </div>
                                         </div>
                                     </div>
+                                    <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Description <span class="text-danger">*</span></label>
+                                        <input type="text" name="discription" class="form-control"  id="" placeholder="Description...">
+                                    </div>  
+                                  </div>
                                     <div class="col-md-6">
                                       <div class="form-group">
                                             <div>
@@ -314,8 +315,7 @@
               },
               code: {
                   required: true,
-                  remote: '{{route("admin.coupon.upercase")}}',
-                  remote: '{{route("admin.coupon.upercase")}}',
+                  remote: '{{route("admin.coupon.couponcheck")}}',
               },
               discount_type: {
                   required: true,
@@ -339,9 +339,6 @@
               promocode_use: {
                 required: true,
               },
-              create_by: {
-                required: true,
-              },
               coupon_type: {
                 required: true,
               },
@@ -361,15 +358,14 @@
               },
               code: {
                   required: "Coupon code is required",
-                 // remote:"Give Upore Case Value",
-                  remote:"ALL CHARACTOR ARE UPPERCASE",
+                  remote: "Coupon code is already Taken"
               },
               discount_type: {
                   required: "Please Select Discount Type",
               },
               discount: {
                   required: "Discount is required",
-                  number: "Pincode must be an number"
+                  number: "Discount must be an number"
               },
               maxim_dis_amount: {
                   required: "Maximum Value is required",
@@ -385,9 +381,7 @@
               promocode_use: {
                 required: "Promo Redeem Code is required",
               },
-              create_by: {
-                required: "Created By is required",
-              },
+             
               coupon_type: {
                 required: "Coupon Type is required",
               },

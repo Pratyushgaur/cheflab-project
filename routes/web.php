@@ -120,6 +120,12 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('coupon-edit/{id}', [App\Http\Controllers\admin\CouponController::class,'fun_edit_coupon'])->name('admin.coupon.edit');
     Route::post('coupon-update', [App\Http\Controllers\admin\CouponController::class,'update'])->name('admin.coupon.update');
     Route::post('coupon-delete', [App\Http\Controllers\admin\CouponController::class,'soft_delete'])->name('admin.coupon.delete');
+    // Banner Promotion
+    Route::get('banner-promotion', [App\Http\Controllers\admin\BannerController::class, 'index'])->name('admin.banner.createbanner');
+    Route::get('banner-list', [App\Http\Controllers\admin\BannerController::class,'get_data_table_of_slote'])->name('admin.slot.data');
+    Route::post('banner-store', [App\Http\Controllers\admin\BannerController::class,'store_banner'])->name('admin.banner.store');
+    Route::get('banner-chek', [App\Http\Controllers\admin\BannerController::class,'check_duplicate_slotename'])->name('admin.banner.slotcheck');
+    Route::get('banner-chektime', [App\Http\Controllers\admin\BannerController::class,'checktime'])->name('admin.banner.slotchecktime');
 });
 //////////////////////////////////////vendor route ///////////////////////////////////////////////////////////////////////////////////////////////////
 Route::view('vendor/login', 'vendor/login')->name('vendor.login')->middleware(isVendorLoginAuth::class);
@@ -168,6 +174,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('coupon-create', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'create_coupon'])->name('restaurant.coupon.create');
         Route::post('coupon-store', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'store_coupon'])->name('restaurant.coupon.store');
         Route::get('coupon-couponcheck', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'checkCoupon'])->name('restaurant.coupon.couponcheck');
+        Route::get('coupon-couponname', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'checkCuponname'])->name('restaurant.coupon.couponDate');
         Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'checkCouponUpdate'])->name('restaurant.coupon.couponcheckedit');
         Route::get('coupon-edit/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'fun_edit_coupon'])->name('restaurant.coupon.edit');
         Route::post('coupon-update', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'update'])->name('restaurant.coupon.update');
@@ -176,13 +183,13 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
    
 });
     // chef route
-    //Route::view('vendor/login', 'vendor/login')->name('chef.login')->middleware(isVendorLoginAuth::class);
+   
     Route::get('chef-logout',function(){
         Auth::logout();
         //Session::flush();
         return  redirect()->route('vendor.login');
     })->name('chef.logout');
-    Route::view('vendor/login', 'vendor/login')->name('chef.login')->middleware(isChefLoginAuth::class);
+   // Route::view('vendor/login', 'vendor/login')->name('chef.login')->middleware(isChefLoginAuth::class);
     Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
         // restaurant route
             Route::group(['prefix' =>'chef','middleware' => 'isChefRestaurant'], function(){

@@ -46,4 +46,6 @@ Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiControlle
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
 // chef 
+Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
+
 

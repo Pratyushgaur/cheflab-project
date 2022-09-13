@@ -32,8 +32,8 @@ class CouponController extends Controller
             'minimum_order_amount' => 'required',
             'promo_redeem_count' => 'required',
             'promocode_use' => 'required',
-            'create_by' => 'required',
-            'coupon_type' => 'required',
+          //  'create_by' => 'required',
+          //  'coupon_type' => 'required',
             'from' => 'required',
             'to' => 'required',
             'discription' => 'required',
@@ -44,7 +44,7 @@ class CouponController extends Controller
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
         $coupon->discription  = $request->discription;
-        $coupon->coupon_type  = $request->coupon_type;
+       // $coupon->coupon_type  = $request->coupon_type;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
         $coupon->create_by  = $request->create_by;
@@ -77,13 +77,22 @@ class CouponController extends Controller
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
-
+                ->addColumn('discount_type', function($data){
+                    if ($data->discount_type) {
+                        $btn = '<i class="fa fa-percent" aria-hidden="true"></i>';
+                    } else {
+                        $btn = '<i class="fas fa-rupee-sign"></i>';
+                    }
+                    
+                    
+                    return $btn;
+                })
                 ->addColumn('status', function($data){
                     return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
                 })
                
-                ->rawColumns(['date','action-js','status'])
-                ->rawColumns(['action-js'])
+                ->rawColumns(['date','action-js','status','discount_type'])
+                ->rawColumns(['action-js','discount_type','status'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
@@ -101,7 +110,20 @@ class CouponController extends Controller
     }
     public  function checkCoupon(Request $request ,$id=null){
         if (Coupon::where('code','=',$request->code)->exists()) {
-            return \Response::json(false);
+            $data =Coupon::where('code','=',$request->code)->select('id','to')->get();
+            $date = today()->format('Y-m-d');
+           // echo $date;die;
+            foreach($data as $k =>$v){
+             //  echo $v->to;die;
+               if($v->to > $date){
+                  return \Response::json(false);
+                   
+                }else{
+                    return \Response::json(true);
+                }
+            }
+            
+           // return \Response::json(false);
         } else {
             return \Response::json(true);
         }

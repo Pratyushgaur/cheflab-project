@@ -31,6 +31,7 @@ class CreateCouponsTable extends Migration
             $table->string('from');
             $table->string('to');
             $table->string('discription');
+            $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
