@@ -377,7 +377,7 @@
           rules: {
               restourant_name: {
                   required: true,
-                  maxlength: 20,
+                  maxlength: 40,
               },
               dob: {
                   required: true,
@@ -443,7 +443,7 @@
           messages: {
               restourant_name: {
                   required: "Name is required",
-                  maxlength: "First name cannot be more than 20 characters"
+                  maxlength: "First name cannot be more than 40 characters"
               },
               email: {
                   required: "Please Enter Email",

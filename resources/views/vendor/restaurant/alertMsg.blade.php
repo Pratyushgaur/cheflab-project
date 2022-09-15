@@ -20,10 +20,10 @@
 
 
 @push('scripts')
-<style>
-    #toast-container>div{
-        opacity: 3 !important;
-    }
+    <style>
+        #toast-container>div{
+            opacity: 3 !important;
+        }
     </style>
 
 

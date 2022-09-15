@@ -140,7 +140,7 @@
                     <span class="dis_error text-danger"></span>
                     
                   </div>
-                  <div class="col-md-12 mb-3">
+                  <div class="col-md-12 mb-3" @if(Auth::guard('vendor')->user()->vendor_food_type == '1') style="display:none;" @endif>
                     <label for="validationCustom12">Item Type</label>
                         <div class="col-md-6">
                           <ul class="ms-list ms-list-display">
@@ -238,7 +238,7 @@
                   </div>
                   <div class="col-md-6 mb-3">
                         <div>
-                          <label for="">Prodect Images</label>
+                          <label for="">Product Images</label>
                         </div>
                         <div class="image-upload">
                             <label for="file-input">
