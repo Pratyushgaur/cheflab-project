@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 Route::group(['middleware' => 'auth:sanctum'], function(){
-    // master 
+    // master
     Route::get('getCategories',[App\Http\Controllers\api\AppMasterController::class,'getCategories']);
     Route::get('getCuisines',[App\Http\Controllers\api\AppMasterController::class,'getCuisines']);
     //
@@ -36,14 +36,17 @@ Route::group(['middleware' => 'auth:sanctum'], function(){
     Route::post('getChefByCategory',[App\Http\Controllers\api\AppController::class,'getChefByCategory']);
     Route::post('getChefDetailPage',[App\Http\Controllers\api\AppController::class,'getChefDetailPage']);
     Route::post('getChefProfile',[App\Http\Controllers\api\AppController::class,'getChefProfile']);
-   
+
 
 });
+
+    //add-to-cart
+    Route::post('add-to-cart',[App\Http\Controllers\api\AppController::class,'add_to_cart']);
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
 Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::class,'register_verify_otp']);
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
-// chef 
+// chef
 
