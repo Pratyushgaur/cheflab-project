@@ -92,7 +92,7 @@
 
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[2]" data-item-id='2'
-                id="satrt_time_2"
+                id="start_time_2"
                 <?= isset($VendorOrderTime[2]['start_time']) ? 'value="' . $VendorOrderTime[2]['start_time'] . '"' : '' ?>>
         </div>
     </div>
@@ -133,7 +133,7 @@
 
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[3]" data-item-id='3'
-                id="satrt_time_3"
+                id="start_time_3"
                 <?= isset($VendorOrderTime[3]['start_time']) ? 'value="' . $VendorOrderTime[3]['start_time'] . '"' : '' ?>>
         </div>
     </div>

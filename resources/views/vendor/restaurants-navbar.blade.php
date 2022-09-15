@@ -25,7 +25,7 @@
         @if (!isset($hideSidebar))
             <ul class="ms-nav-list ms-inline mb-0" id="ms-nav-options">
                 <li class="ms-nav-item ms-search-form pb-0 py-0">
-                    <form id="restaurent-status-form" action="" method="POST">
+                    {{-- <form id="restaurent-status-form" action="" method="POST">
                         @csrf
 
                         <div class="ms-form-group my-0 mb-0 has-icon fs-14">
@@ -37,35 +37,7 @@
 
                         </div>
 
-                    </form>
-
-
-
-                    {{-- @if (Auth::guard('vendor')->user()->is_online == 1)
-                    <div class="ms-form-group my-0 mb-0 has-icon fs-14">
-                        <label class="ms-switch right"><input onchange="$('#set-offline-form').submit();"
-                                type="checkbox" checked> <span class="ms-switch-slider round"></span> </label>
-                        Your rastaurent is online
-                    </div>
-
-
-                    <form id="set-offline-form" action="{{ route('restaurant.set_offline') }}" method="POST"
-                        class="d-none">
-                        @csrf
-                    </form>
-                @endif
-                @if (Auth::guard('vendor')->user()->is_online == 0)
-                    <div class="ms-form-group my-0 mb-0 has-icon fs-14">
-                        <label class="ms-switch right"><input onchange="$('#set-online-form').submit();"
-                                type="checkbox"> <span class="ms-switch-slider round"></span></label>
-                        Your rastaurent is offline
-                    </div>
-
-                    <form id="set-online-form" action="{{ route('restaurant.set_online') }}" method="POST"
-                        class="d-none">
-                        @csrf
-                    </form>
-                @endif --}}
+                    </form> --}}
 
                 </li>
 
@@ -188,23 +160,23 @@
                         </li>
                         <li class="dropdown-divider"></li>
                         <li class="ms-dropdown-list">
+                            <a class="media fs-14 p-2" >
+                                <span><i class="flaticon-gear mr-2"></i> Status</span>
+                                <label class="ms-switch right" style="float: right">
+                                    <input name="restaurent_status" id="restaurent_status" type="checkbox"
+                                        value="1" onchange='change_rest_ststus()'
+                                        @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
+                                    <span class="ms-switch-slider"></span> </label>
 
-                            <form id="restaurent-status-form" action="" method="POST">
-                                @csrf
-                                <input type="hidden"
-                                    value="
-                            @if (Auth::guard('vendor')->user()->is_online == 1)
-                            on
-                            @else off @endif"
-                                    name="restaurent_status" id="restaurent_status">
-                            </form>
-                            <a class="media fs-14 p-2" href="#" onclick="rest_status()"> <span><i
-                                        class="fa fa-circle"></i> Online</span>
+
                             </a>
+
 
                             <a class="media fs-14 p-2" href="pages/prebuilt-pages/user-profile.html"> <span><i
                                         class="flaticon-user mr-2"></i> Profile</span>
                             </a>
+
+
                             <a class="media fs-14 p-2" href="pages/apps/email.html"> <span><i
                                         class="flaticon-mail mr-2"></i> Inbox</span> <span
                                     class="badge badge-pill badge-info">3</span>
@@ -214,6 +186,7 @@
                             </a>
                         </li>
                         <li class="dropdown-divider"></li>
+
                         <li class="dropdown-menu-footer">
                             <a class="media fs-14 p-2" href="pages/prebuilt-pages/lock-screen.html"> <span><i
                                         class="flaticon-security mr-2"></i> Lock</span>
@@ -243,6 +216,50 @@
 </main>
 
 
+
+{{-- Restaurant online off line Model form start --}}
+
+<div class="modal fade" id="modal-10" tabindex="-1" role="dialog" aria-labelledby="modal-10">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title has-icon ms-icon-round "><i class="flaticon-share bg-primary text-white"></i>
+                    Restaurant Status</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <form id="restaurent-offline-form" method="POST" {{-- action="{{ route('restaurant.set_offline') }}" --}}>
+                @csrf
+
+                <div class="modal-body">
+                    <p><code>Restaurant Offline : </code> Rastaurant will not show in mobile app and you will not able
+                        to
+                        get orders during offline. </p>
+
+                    <label>
+                        <input type="radio" name="offline_till" value="1" checked>
+                        The next working day , restaurant goes online. </label>
+                    <br>
+                    <label><input type="radio" name="offline_till" value="2">
+                        Manually, i will set it online. </label>
+
+                    <input type="hidden" name="ma" value="1">
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary shadow-none" onclick="submit_offline()">Go
+                        Offline</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Restaurant online off line Model form End --}}
+
+
+
 @push('scripts')
     <script>
         // function rest_status() {
@@ -270,15 +287,63 @@
         // }
 
         function change_rest_ststus() {
+            // alert($("#restaurent_status").prop("checked"));
+            if (!$("#restaurent_status").prop("checked")) {
+                $('#modal-10').modal('show');
+            } else {
+                $.ajax({
+                    url: '{{ route('restaurant.restaurent_status') }}',
+                    type: 'post',
+                    cache: false,
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        restaurent_status: 'on'
+                    },
+                    success: function(data) {
+
+                        if (data.msg != '') {
+                            $("#restaurent_status").val(data.rest_status);
+                            // toastr.success(data.msg, 'Success');
+                            Swal.fire({
+                                // position: 'top-end',
+                                type: 'success',
+                                title: data.msg,
+                                showConfirmButton: true,
+                                timer: 15000
+                            });
+                        } else
+                            toastr.info('Somethin went wrong', 'Info');
+
+                    },
+                    error: function(xhr, textStatus, thrownError) {
+                        toastr.info('Somethin went wrong', 'Info');
+                    }
+                });
+            }
+        }
+
+        function submit_offline() {
+
             $.ajax({
-                url: '{{ route('restaurant.restaurent_status') }}',
+                url: '{{ route('restaurant.set_offline') }}',
                 type: 'post',
                 cache: false,
-                data: $('#restaurent-status-form').serialize(),
+                data: $('#restaurent-offline-form').serialize(),
                 success: function(data) {
-                    if (data.msg != '')
-                        alert(data.msg);
-                    else
+
+                    if (data.msg != '') {
+                        $("#restaurent_status").val(data.rest_status);
+
+                        // toastr.success(data.msg, 'Success');
+                        Swal.fire({
+                            // position: 'top-end',
+                            type: 'success',
+                            title: data.msg,
+                            showConfirmButton: true,
+                            timer: 15000
+                        });
+                        $('#modal-10').modal('hide');
+                    } else
                         alert('Somethin went wrong');
                 },
                 error: function(xhr, textStatus, thrownError) {
@@ -286,5 +351,37 @@
                 }
             });
         }
+
+        //on modal close
+        $('#modal-10').on('hidden.bs.modal', function() {
+            // do something…
+            $.ajax({
+                url: '{{ route('restaurant.restaurent_get_status') }}',
+                type: 'get',
+                cache: false,
+                success: function(data) {
+                    if (data.rest_status == 1) {
+                        $("#restaurent_status").prop("checked", 'cheked');
+                    } else
+                        $("#restaurent_status").prop("checked", false);
+                },
+                error: function(xhr, textStatus, thrownError) {
+                    toastr.info('Somethin went wrong', 'Info');
+                }
+            });
+        });
+    </script>
+
+
+
+{{-- restaurant offline msg on top bar  --}}
+    <script>
+        $('#message-box').addClass('show').delay(15000000).queue(function() {
+            $(this).removeClass('show').dequeue();
+        });
+        $("#close_msg_bar").click(function() {
+            $('#message-box').removeClass('show').dequeue();
+
+        });
     </script>
 @endpush
