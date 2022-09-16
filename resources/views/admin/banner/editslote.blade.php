@@ -87,12 +87,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Edit Admin Banner Slote</h1>
+            <h1>Create Admin Banner Slote</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Edit Banner</li>
+              <li class="breadcrumb-item active">Create Banner</li>
             </ol>
           </div>
         </div>
@@ -103,7 +103,7 @@
     <section class="content">
 		<div class="row">
 			
-				<!--<div class="col-md-4">
+				<div class="col-md-4">
         <form id="banner-form" action="{{route('admin.banner.store')}}" method="post" enctype="multipart/form-data">
           @csrf
           <div class="card card-primary">
@@ -140,15 +140,15 @@
                   <div class="form-group" id="games">
                   </div>
 							</div>
-						
+							<!-- /.card-body -->
 						</div>
 						<div>
 						
 						  <input type="submit" value="Save Changes" class="btn btn-success float-right">
 						</div>
 					</form>
-				   
-				</div>-->
+				  <!-- /.card -->
+				</div>
 				<div class="card card-info col-md-8">
             <div class="card-header">
               <h3 class="card-title">List</h3>
@@ -164,7 +164,7 @@
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
                                     <th >Slot Name</th>
-                                    <th >Price</th>
+                                    <th >Slote Date</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -205,8 +205,8 @@
         ajax: "{{route('admin.slot.data')}}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'price', name: 'price'},
+            {data: 'name', name: 'city_name'},
+            {data: 'slote_date', name: 'slote_date'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

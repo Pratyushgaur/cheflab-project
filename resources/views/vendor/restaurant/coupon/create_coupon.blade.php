@@ -135,37 +135,7 @@
                         <span class="minimum_order_amount_error text-danger"></span>   
                      </div> 
                    
-                     <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">Promo Code Redeem Count</label>
-                        <div class="input-group">
-                        <select class="form-control" name="promo_redeem_count" style="width: 100%;">
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                          <option value="6">6</option>
-                          <option value="7">7</option>
-                          <option value="8">8</option>
-                          <option value="9">9</option>
-                          <option value="10">10</option>
-                        </select>
-                        
-                        </div>
-                          
-                     </div>
-                   
-                     <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">To In</label>
-                        <div class="input-group">
-                            <select class="form-control select2" name="promocode_use" style="width: 100%;">
-                              <option value="1">Day</option>
-                              <option value="2">Month</option>
-                              <option value="3">Week</option>
-                            </select>
-                        </div>
-                            
-                     </div> 
+                      
                     
                      <!--<div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Coupon Type</label>
@@ -206,7 +176,6 @@
                         </div>
                            
                      </div>
-                  
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">To</label>
                         <div class="input-group">
@@ -218,21 +187,47 @@
                         </div>
                            
                      </div>
-                    
-                     <div class="col-md-3 mb-3">
-                        <div>
-                          <label for="">Images</label>
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Redeem Count (How Much time a user can redeem this coupon)</label>
+                        <div class="input-group">
+                        <select class="form-control" name="promo_redeem_count" style="width: 100%;">
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                        </select>
+                        
                         </div>
-                        <div class="image-upload">
-                            <label for="file-input">
-                                <div class="upload-icon">
-                                    <img class="icon" src="{{asset('add-image.png')}}">
-                                </div>
-                            </label>
-                            <input id="file-input" type="file" name="image" required>
-                        </div>       
-                  </div> 
-                  <div class="col-xl-3 col-md-12 mb-3">
+                          
+                     </div>
+                   
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Validity(Once a day/week/month or Lifetime)</label>
+                        <div class="input-group">
+                            <select class="form-control select2" name="promocode_use" style="width: 100%;">
+                            <option value="1">Once a Day</option>
+                            <option value="2">Once a Week</option>
+                            <option value="3">Once a Month</option>
+                            <option value="4">Lifetime</option>
+                            </select>
+                        </div>
+                            
+                     </div>
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Valid For First X User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <div class="input-group">
+                        <input type="text" name="coupon_valid_x_user" class="form-control"  id="" placeholder="Coupon Valid For First X User">
+                        
+                        </div>
+                        <span class="minimum_order_amount_error text-danger"></span>   
+                     </div> 
+                     <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Discription</label>
                         <div class="input-group">
                         <textarea type="text" name="discription" class="form-control"  id="" placeholder="Discription"></textarea>

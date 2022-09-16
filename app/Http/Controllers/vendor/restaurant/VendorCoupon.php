@@ -47,17 +47,14 @@ class VendorCoupon extends Controller
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
         $coupon->discription  = $request->discription;
+        $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
+        $coupon->promo_redeem_count  = $request->promo_redeem_count;
         $coupon->vendor_id = Auth::guard('vendor')->user()->id;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
         $coupon->create_by  = $request->create_by;
         $coupon->from  = $request->from;
         $coupon->to  = $request->to;
-        if($request->has('image')){
-            $filename = time().'-restaurant-product-'.rand(100,999).'.'.$request->image->extension();
-            $request->image->move(public_path('coupon-vendor'),$filename);
-            $coupon->image  = $filename;
-        }
         $coupon->save();
          return redirect()->route('restaurant.coupon.list')->with('message', 'Coupon Create Successfully');
      }
@@ -176,22 +173,20 @@ class VendorCoupon extends Controller
             'to' => 'required',
             'discription' => 'required',
         ]);
+        $coupon = Coupon::find($request->id);
         $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
         $coupon->discription  = $request->discription;
+        $coupon->promo_redeem_count  = $request->promo_redeem_count;
+        $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->vendor_id = Auth::guard('vendor')->user()->id;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
         $coupon->create_by  = $request->create_by;
         $coupon->from  = $request->from;
         $coupon->to  = $request->to;
-        if($request->has('image')){
-            $filename = time().'-restaurant-product-'.rand(100,999).'.'.$request->image->extension();
-            $request->image->move(public_path('coupon-vendor'),$filename);
-            $coupon->image  = $filename;
-        }
         $coupon->save();
          return redirect()->route('restaurant.coupon.list')->with('message', 'Coupon Create Successfully');
     }

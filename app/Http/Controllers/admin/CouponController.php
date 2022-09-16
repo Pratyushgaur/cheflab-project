@@ -44,7 +44,8 @@ class CouponController extends Controller
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
         $coupon->discription  = $request->discription;
-       // $coupon->coupon_type  = $request->coupon_type;
+        $coupon->show_in  = $request->show_in;
+        $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
         $coupon->create_by  = $request->create_by;

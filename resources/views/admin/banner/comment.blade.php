@@ -87,12 +87,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Edit Admin Banner Slote</h1>
+            <h1>Vendor Reject Reason </h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Edit Banner</li>
+              <li class="breadcrumb-item active">Reject Banner</li>
             </ol>
           </div>
         </div>
@@ -103,12 +103,12 @@
     <section class="content">
 		<div class="row">
 			
-				<!--<div class="col-md-4">
-        <form id="banner-form" action="{{route('admin.banner.store')}}" method="post" enctype="multipart/form-data">
+				<div class="col-md-4">
+        <form id="banner-form" action="{{route('admin.banner.commentstore')}}" method="post" enctype="multipart/form-data">
           @csrf
           <div class="card card-primary">
 							<div class="card-header">
-							  <h3 class="card-title">Add Banner Time Slot*</h3>
+							  <h3 class="card-title">Add Comment Slot*</h3>
 
 							  <div class="card-tools">
 								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -117,29 +117,11 @@
 							</div>
 							<div class="card-body">
 							    <div class="form-group">
-                        <label for="category_name">Slot Name <span class="text-danger">*</span></label>
-                      <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Slot Name">
-                      <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
-                  </div>
-                  <div class="form-group">
-                        <label for="category_name">Slot Date <span class="text-danger">*</span></label>
-                      <input type="date" id="name" name="slote_date"  class="form-control" placeholder="Slot Name">
-                      
-                  </div>
-                  <div class="form-group">
-                      <label for="category_name">Max. No. Of Banner <span class="text-danger">*</span></label>
-                      <select class="form-control select2" name="max_no_banner" style="width: 100%;" id="timeSlote">
-                          <option selected="selected">Select Number</option>
-                          <option value="1">1</option>
-                          <option value="2">2</option>
-                          <option value="3">3</option>
-                          <option value="4">4</option>
-                          <option value="5">5</option>
-                      </select>
-                  </div>
-                  <div class="form-group" id="games">
-                  </div>
-							</div>
+                                    <label for="category_name">Comment <span class="text-danger">*</span></label>
+                                    <input type="hidden" id="slot_id" name="slot_id" value="{{$comment->slot_id}}" class="form-control" placeholder="Slot Name">
+                                    <textarea  class="form-control" name="comment" placeholder="Slot Cooment"></textarea>
+                                </div>
+                			</div>
 						
 						</div>
 						<div>
@@ -148,8 +130,8 @@
 						</div>
 					</form>
 				   
-				</div>-->
-				<div class="card card-info col-md-8">
+				</div>
+				<!--<div class="card card-info col-md-8">
             <div class="card-header">
               <h3 class="card-title">List</h3>
 
@@ -171,9 +153,9 @@
                             
                         </table>
                     </div>
-            <!-- /.card-body -->
+               
           </div>
-          <!-- /.card -->
+          /.card -->
 		</div>
     </section>
     <!-- /.content -->

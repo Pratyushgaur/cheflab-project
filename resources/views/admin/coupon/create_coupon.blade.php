@@ -180,33 +180,7 @@
                                         <input type="text" name="minimum_order_amount" class="form-control"  id="" placeholder="Minimum Order Amount *">
                                     </div>  
                                   </div>
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Promo Code Redeem Count <span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="promo_redeem_count" style="width: 100%;">
-                                          <option value="1">1</option>
-                                          <option value="2">2</option>
-                                          <option value="3">3</option>
-                                          <option value="4">4</option>
-                                          <option value="5">5</option>
-                                          <option value="6">6</option>
-                                          <option value="7">7</option>
-                                          <option value="8">8</option>
-                                          <option value="9">9</option>
-                                          <option value="10">10</option>
-                                        </select>
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">To In * <span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="promocode_use" style="width: 100%;">
-                                          <option value="1">Day</option>
-                                          <option value="2">Month</option>
-                                          <option value="3">Week</option>
-                                        </select>
-                                    </div>  
-                                  </div>
+                                  
                                   <!--<div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Type * <span class="text-danger">*</span></label>
@@ -216,7 +190,21 @@
                                         </select>
                                     </div>  
                                   </div>-->
-                                    <div class="col-md-6">
+                                  <div class="col-md-3">
+                                   <div class="form-check" style="margin-top:40px;">
+                                        <input class="form-check-input" name="show_in" type="checkbox" value="1" id="flexCheckDefault">
+                                        <label for="flexCheckDefault">
+                                            Show In Customer App
+                                        </label>
+                                    </div> 
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Coupon Valid For First X User <span class="text-danger">*</span></label>
+                                        <input type="text"  name="coupon_valid_x_user" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Valid For First X User ">
+                                    </div>  
+                                  </div>
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>From:</label>
                                                 <div class="input-group date" id="reservationdate" data-target-input="nearest">
@@ -227,7 +215,7 @@
                                                 </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label>To:</label>
                                                 <div class="input-group date" id="reservationdate1" data-target-input="nearest">
@@ -242,6 +230,34 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Description <span class="text-danger">*</span></label>
                                         <input type="text" name="discription" class="form-control"  id="" placeholder="Description...">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Redeem Count (How Much time a user can redeem this coupon)<span class="text-danger">*</span></label>
+                                        <select class="form-control select2" name="promo_redeem_count" style="width: 100%;">
+                                          <option value="1">1</option>
+                                          <option value="2">2</option>
+                                          <option value="3">3</option>
+                                          <option value="4">4</option>
+                                          <option value="5">5</option>
+                                          <option value="6">6</option>
+                                          <option value="7">7</option>
+                                          <option value="8">8</option>
+                                          <option value="9">9</option>
+                                          <option value="10">10</option>
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Coupon Validity(Once a day/week/month or Lifetime)<span class="text-danger">*</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                        <select class="form-control select2" name="promocode_use" style="width: 100%;">
+                                          <option value="1">Once a Day</option>
+                                          <option value="2">Once a Week</option>
+                                          <option value="3">Once a Month</option>
+                                          <option value="4">Lifetime</option>
+                                        </select>
                                     </div>  
                                   </div>
                                     <div class="col-md-6">

@@ -76,7 +76,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('category', [App\Http\Controllers\admin\Category::class, 'index'])->name('admin.category.create');
     Route::post('category', [App\Http\Controllers\admin\Category::class, 'store_catogory'])->name('admin.category.store');
     Route::get('category-datatable', [App\Http\Controllers\admin\Category::class, 'get_data_table_of_category'])->name('admin.category.datatable');
-    Route::get('edit-category/{id}', [App\Http\Controllers\admin\Category::class, 'fun_edit_category']);
+    Route::get('edit-category/{id}', [App\Http\Controllers\admin\Category::class, 'fun_edit_category'])->name('admin.category.edit');;
     Route::post('category/delete', [App\Http\Controllers\admin\Category::class, 'soft_delete'])->name('admin.category.ajax.delete');
     Route::post('category-update', [App\Http\Controllers\admin\Category::class, 'update'])->name('admin.category.update');
     Route::get('check-duplicate-category', [App\Http\Controllers\admin\Category::class, 'check_duplicate_category'])->name('check-duplicate-category');
@@ -126,12 +126,16 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Banner Promotion
     Route::get('banner-promotion', [App\Http\Controllers\admin\BannerController::class, 'index'])->name('admin.banner.createbanner');
     Route::get('banner-list', [App\Http\Controllers\admin\BannerController::class,'get_data_table_of_slote'])->name('admin.slot.data');
+    Route::get('banner-slot-edit/{id}', [App\Http\Controllers\admin\BannerController::class, 'fun_edit_slot'])->name('admin.slote.edit');
     Route::post('banner-store', [App\Http\Controllers\admin\BannerController::class,'store_banner'])->name('admin.banner.store');
     Route::get('banner-chek', [App\Http\Controllers\admin\BannerController::class,'check_duplicate_slotename'])->name('admin.banner.slotcheck');
     Route::get('banner-chektime', [App\Http\Controllers\admin\BannerController::class,'checktime'])->name('admin.banner.slotchecktime');
-
-    
-    
+    Route::get('banner-slot-list', [App\Http\Controllers\admin\BannerController::class, 'slot_book_list'])->name('admin.slotebook.list');
+    Route::get('banner-slot-data', [App\Http\Controllers\admin\BannerController::class, 'get_list_slotbook'])->name('admin.slotebook.data');
+    Route::get('banner-slot-active/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'active'])->name('admin.slot.active');
+    Route::get('banner-slot-reject/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'reject'])->name('admin.slot.reject');
+    Route::get('banner-slot-comment/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'comment'])->name('admin.slot.comment');
+    Route::post('banner-commentstore', [App\Http\Controllers\admin\BannerController::class,'commentstore'])->name('admin.banner.commentstore');
 
 });
 //////////////////////////////////////vendor route ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +192,13 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('coupon-edit/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'fun_edit_coupon'])->name('restaurant.coupon.edit');
         Route::post('coupon-update', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'update'])->name('restaurant.coupon.update');
         Route::post('coupon-delete', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'soft_delete'])->name('restaurant.coupon.delete');
+        //promotion management
+        Route::get('on-screen-notification', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'index'])->name('restaurant.promotion.list');
+        Route::get('on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'create_promotion'])->name('restaurant.promotion.create');
+        Route::post('on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'store_slot'])->name('restaurant.slot.store');
+        Route::get('on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'selctvalue'])->name('restaurant.slot.data');
+        Route::get('on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'get_list_slotbook'])->name('restaurant.slot.list');
+        Route::get('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
     }); 
    
 });
@@ -219,5 +230,6 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('coupon-edit/{id}', [App\Http\Controllers\chef\VendorCoupon::class,'fun_edit_coupon'])->name('chef.coupon.edit');
             Route::post('coupon-update', [App\Http\Controllers\chef\VendorCoupon::class,'update'])->name('chef.coupon.update');
             Route::post('coupon-delete', [App\Http\Controllers\chef\VendorCoupon::class,'soft_delete'])->name('chef.coupon.delete');
+           
         });
     });

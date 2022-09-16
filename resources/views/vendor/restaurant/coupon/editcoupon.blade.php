@@ -73,7 +73,7 @@
               <h6>Create New  Coupon</h6>
             </div>
             <div class="ms-panel-body">
-              <form class=" clearfix " id="coupon-form" action="{{route('restaurant.coupon.store')}}"  method="post" enctype="multipart/form-data">
+              <form class=" clearfix " id="coupon-form" action="{{route('restaurant.coupon.update')}}"  method="post" enctype="multipart/form-data">
                 @csrf
                 
                 @if ($errors->any())
@@ -159,9 +159,30 @@
                             @enderror
                      </div> 
                      <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">Promo Code Redeem Count</label>
+                      <label for="validationCustom10">From</label>
                         <div class="input-group">
-                        <select class="form-control select2" name="promo_redeem_count" style="width: 100%;">
+                        <div class="input-group date" id="reservationdate1" data-target-input="nearest">
+                              <input type="date" value="{{$coupon->from}}" name="from" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                        </div>
+                        <span class="from_error text-danger"></span>
+                        </div>
+                           
+                     </div>
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">To</label>
+                        <div class="input-group">
+                        <div class="input-group date" id="reservationdate1" data-target-input="nearest">
+                            <input type="date" name="to" value="{{$coupon->to}}" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            
+                        </div>
+                        <span class="to_error text-danger"></span>
+                        </div>
+                           
+                     </div>
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Redeem Count (How Much time a user can redeem this coupon)</label>
+                        <div class="input-group">
+                        <select class="form-control" name="promo_redeem_count" style="width: 100%;">
                           <option value="{{$coupon->promo_redeem_count}}">{{$coupon->promo_redeem_count}}</option>
                           <option value="1">1</option>
                           <option value="2">2</option>
@@ -176,87 +197,42 @@
                         </select>
                         
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                          
                      </div>
-                     <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">To In</label>
+                   
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Validity(Once a day/week/month or Lifetime)</label>
                         <div class="input-group">
                             <select class="form-control select2" name="promocode_use" style="width: 100%;">
-                              <option value="{{$coupon->promocode_use}}">{{$coupon->promocode_use}}</option>
-                              <option value="1">Day</option>
-                              <option value="2">Month</option>
-                              <option value="3">Week</option>
+                            <option value="{{$coupon->promocode_use}}">{{$coupon->promocode_use}}</option>
+                            <option value="1">Once a Day</option>
+                            <option value="2">Once a Week</option>
+                            <option value="3">Once a Month</option>
+                            <option value="4">Lifetime</option>
                             </select>
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
-                     </div> 
-                     <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">From</label>
-                        <div class="input-group">
-                        <div class="input-group date" id="reservationdate1" data-target-input="nearest">
-                              <input type="date" value="{{$coupon->from}}" name="from" class="form-control datetimepicker-input" data-target="#reservationdate"/>
-                        </div>
-                        </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
-                     </div> 
-                     <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">To</label>
-                        <div class="input-group">
-                        <div class="input-group date" id="reservationdate1" data-target-input="nearest">
-                            <input type="date" name="to" value="{{$coupon->to}}" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                             
-                        </div>
-                        </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
                      </div>
-                     <div class="col-md-3 mb-3">
-                        <div>
-                          <label for="">Images</label>
-                        </div>
-                        <div class="image-upload">
-                            <label for="file-input">
-                                <div class="upload-icon">
-                                    @if($coupon->image == null)
-                                    <img class="icon3" src="{{asset('add-image.png')}}">
-                                    @else
-                                    <img class="icon3" src="{{ asset('coupon-vendor'.'/'.$coupon->image ) }}">
-                                    @endif
-                                </div>
-                            </label>
-                            <input id="file-input" type="file" name="image" required>
-                        </div>       
-                  </div> 
-                  <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">Discription</label>
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Valid For First X User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <div class="input-group">
-                        <input type="text" name="discription" value="{{$coupon->discription}}" class="form-control"  id="" placeholder="Discription">
+                        <input type="text" value="{{$coupon->coupon_valid_x_user}}" name="coupon_valid_x_user" class="form-control"  id="" placeholder="Coupon Valid For First X User">
                         
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                        <span class="minimum_order_amount_error text-danger"></span>   
+                     </div> 
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Discription</label>
+                        <div class="input-group">
+                        <textarea type="text" value="{{$coupon->discription}}" name="discription" class="form-control"  id="" placeholder="Discription">{{$coupon->discription}}</textarea>
+                        
+                        </div>
+                        <span class="discription_error text-danger"></span> 
                      </div> 
 
 
                   </div>
+                
                 <button class="btn btn-primary float-right" type="submit">Submit</button>
               </form>
             </div>

@@ -133,6 +133,12 @@
 						  <i class="far fa-circle nav-icon"></i>
 						  <p>Banner Promotion</p>
 						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.slotebook.list')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Slot List</p>
+						</a>
 					</li>	
 				</ul>
 			</li>
