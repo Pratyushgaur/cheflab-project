@@ -35,7 +35,18 @@ class IsAllSettingsDoneListener
         $exist= VendorOrderTime::where('vendor_id', Auth::guard('vendor')->user()->id)->exists();
         //check other settingd
 
-        if($exist)
+        // check vendor location
+        $exist_location= vendors::where('id', Auth::guard('vendor')->user()->id)
+        ->whereNotNull('lat')
+        ->whereNotNull('long')
+        ->exists();
+        //
+        $bannerAndLogo = vendors::where('id', Auth::guard('vendor')->user()->id)
+            ->whereNotNull('banner_image')
+            ->WhereNotNull('image')
+            ->exists();
+
+        if($exist && $exist_location && $bannerAndLogo)
         {
             vendors::where('id',Auth::guard('vendor')->user()->id)->update(['is_all_setting_done'=>1]);
         }

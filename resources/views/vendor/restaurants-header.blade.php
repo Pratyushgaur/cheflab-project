@@ -28,9 +28,34 @@
   <!-- select 2 -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+{{-- msg bar shows on top --}}
+  <style>#message-box {
+    width: 100%;
+    background-color: #FFA339;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    font-size: 15px;
+    color: #35220C;
+    position: absolute;
+    top: 0;
+    z-index: 50;
+    font-weight: bold;
+    transform: translateY(-100%);
+    transition: transform .6s;
+    opacity: 0.7;
+  }
+
+  #message-box.show {
+    transform: none;
+  }
+    </style>
+ @yield('page-css')
+
 </head>
 
 <body class="ms-body @if(!isset($hideSidebar)) ms-aside-left-open @endif ms-primary-theme @if(!isset($hideSidebar))  ms-has-quickbar @endif ">
+
   <!-- Preloader -->
   <div id="preloader-wrap">
     <div class="spinner spinner-8">
@@ -52,3 +77,9 @@
   <div class="ms-aside-overlay ms-overlay-left ms-toggler " data-target="#ms-side-nav" data-toggle="slideLeft"></div>
   <div class="ms-aside-overlay ms-overlay-right ms-toggler" data-target="#ms-recent-activity" data-toggle="slideRight"></div>
   <!-- Sidebar Navigation Left -->
+
+{{-- restaurant offline msg on top bar  --}}
+    @if (!Auth::guard('vendor')->user()->is_online)
+    <div id='message-box'>Now your restaurant is offline,you will not able to get orders from mobile app.<a href="#" style="float: right;    margin-right: 18px;" id="close_msg_bar">X</a></div>
+    @endif
+   

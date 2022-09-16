@@ -21,7 +21,8 @@ class UserControllers extends Controller
     public function create_restourant()
     {
         $categories = Catogory_master::where('is_active','=','1')->get();
-        return view('admin/vendors/restourant_create',compact('categories'));
+        $cuisines = Cuisines::where('is_active','=','1')->get();
+        return view('admin/vendors/restourant_create',compact('categories','cuisines'));
     }
     public function create_chef()
     {
@@ -134,6 +135,7 @@ class UserControllers extends Controller
             'confirm_password' => 'required',
             'vendor_commission' => 'required',
             'categories' => 'required',
+            'deal_cuisines' => 'required',
 
         ]);
         $vendors = new vendors;
@@ -146,15 +148,17 @@ class UserControllers extends Controller
         $vendors->address  = $request->address;
         $vendors->fssai_lic_no  = $request->fssai_lic_no;
         $vendors->commission  = $request->vendor_commission;
+        $vendors->vendor_food_type  = $request->type;
         
         $vendors->deal_categories  = implode(',',$request->categories);
+        $vendors->deal_cuisines  = implode(',',$request->deal_cuisines);
         
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
             $vendors->image  = $filename;
         }else{
-            $vendors->image  = 'default_restourant_image.jpg';
+            //$vendors->image  = 'default_restourant_image.jpg';
         }
         if($request->has('fassai_image')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->fassai_image->extension();
@@ -170,7 +174,8 @@ class UserControllers extends Controller
         if($request->has('banner_image')){
             $filename = time().'-banner-'.rand(100,999).'.'.$request->banner_image->extension();
             $request->banner_image->move(public_path('vendor-banner'),$filename);
-            $vendors->banner_image  = $filename;
+            $files[] = $filename;
+            $vendors->banner_image  = json_encode($files);
         }
         $vendors->save();
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');

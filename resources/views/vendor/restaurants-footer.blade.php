@@ -436,8 +436,13 @@
   </script>
   <script src="{{asset('frontend')}}/assets/js/datatables.min.js">
   </script>
-  <!-- <script src="{{asset('frontend')}}/assets/js/data-tables.js"> -->
-  </script>
+
+<script src="{{asset('frontend')}}/assets/js/sweetalert2.min.js">
+</script>
+<script src="{{asset('frontend')}}/assets/js/sweet-alerts.js">
+</script>
+  <!-- <script src="{{asset('frontend')}}/assets/js/data-tables.js">
+  </script> -->
   <!-- Page Specific Scripts Finish -->
   <!-- Costic core JavaScript -->
   <script src="{{asset('frontend')}}/assets/js/framework.js"></script>
@@ -445,9 +450,28 @@
   <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  
+<style>
+  #toast-container>div{
+    opacity: 3 !important;
+}
+</style>
+
+
+<link href="{{ asset('frontend') }}/assets/css/toastr.min.css" rel="stylesheet">
+
+<script src="{{ asset('frontend') }}/assets/js/toastr.min.js"></script>
+
+
+
+<link href="{{ asset('frontend') }}/assets/css/sweetalert2.min.css" rel="stylesheet">
+<!-- Page Specific Scripts Start -->
+<script src="{{ asset('frontend') }}/assets/js/promise.min.js">
+</script>
+<script src="{{ asset('frontend') }}/assets/js/sweetalert2.min.js">
+  @stack('scripts')
+  @yield('page-js');
 </body>
-@yield('page-js');
+
 
 <!-- Mirrored from metropolitanhost.com/themes/themeforest/html/costic/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Aug 2022 10:37:51 GMT -->
 </html>

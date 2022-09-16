@@ -23,7 +23,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::get('admin-logout', function () {
-    
+
     Auth::guard('admin')->logout();
     //Session::flush();
     return  redirect('admin');
@@ -149,10 +149,10 @@ Route::get('vendor-logout', function () {
 // vendor auth route
 Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
     // restaurant route
-    Route::group(['prefix' => 'restaurant', 'middleware' => 'isRestaurant'], function () {
-
+    Route::group(['prefix' => 'restaurant', 'middleware' => ['isRestaurant']], function () {
         Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
             Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
+
             Route::get('menus', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'index'])->name('restaurant.menu.list');
             Route::get('menus/create', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'create'])->name('restaurant.menu.create');
             Route::post('menus/create', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'store'])->name('restaurant.menu.store');
@@ -173,34 +173,54 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             //vendor order linst
             Route::get('order', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
             Route::get('order/datatable/list', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'getData'])->name('order.datatable');
+
+            //coupon
+            Route::get('coupon', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'index'])->name('restaurant.coupon.list');
+            Route::get('coupon-list', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'get_data_table_of_coupon'])->name('restaurant.coupon.data');
+            Route::get('coupon-create', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'create_coupon'])->name('restaurant.coupon.create');
+            Route::post('coupon-store', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'store_coupon'])->name('restaurant.coupon.store');
+            Route::get('coupon-couponcheck', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'checkCoupon'])->name('restaurant.coupon.couponcheck');
+            Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'checkCouponUpdate'])->name('restaurant.coupon.couponcheckedit');
+            Route::get('coupon-edit/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'fun_edit_coupon'])->name('restaurant.coupon.edit');
+            Route::post('coupon-update', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'update'])->name('restaurant.coupon.update');
+            Route::post('coupon-delete', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'soft_delete'])->name('restaurant.coupon.delete');
+            Route::post('restaurent_status', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'restaurent_status'])->name('restaurant.restaurent_status');
+
+            // vendor globle setting
+            Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_time'])->name('restaurant.globleseting.ordertime');
+            Route::post('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store'])->name('restaurant.ordertime.store');
+            Route::post('offline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_offline'])->name('restaurant.set_offline');
+            Route::post('online', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_online'])->name('restaurant.set_online');
+            Route::get('isonline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'restaurent_get_status'])->name('restaurant.restaurent_get_status');
+
+            //vendor location
+            Route::get('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'vendor_location'])->name('restaurant.globleseting.vendor_location');
+            Route::post('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.save_vendor_location');
+            //promotion management
+            Route::get('on-screen-notification', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'index'])->name('restaurant.promotion.list');
+            Route::get('on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'create_promotion'])->name('restaurant.promotion.create');
+            Route::post('on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'store_slot'])->name('restaurant.slot.store');
+            Route::get('on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'selctvalue'])->name('restaurant.slot.data');
+            Route::get('on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'get_list_slotbook'])->name('restaurant.slot.list');
+            Route::get('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
         });
-        // vendor globle setting
-        Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'index'])->name('restaurant.globleseting');
-        Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'order_time'])->name('restaurant.globleseting.ordertime');
-        Route::post('globle/createtime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class,'store'])->name('restaurant.ordertime.store');
-        Route::post('offline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_offline'])->name('restaurant.set_offline');
-        Route::post('online', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_online'])->name('restaurant.set_online');
-        Route::get('globle/require/ordertime',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'requireOrderTime'])->name('restaurant.require.ordertime');
-        //coupon 
-        Route::get('coupon', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'index'])->name('restaurant.coupon.list');
-        Route::get('coupon-list', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'get_data_table_of_coupon'])->name('restaurant.coupon.data');
-        Route::get('coupon-create', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'create_coupon'])->name('restaurant.coupon.create');
-        Route::post('coupon-store', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'store_coupon'])->name('restaurant.coupon.store');
-        Route::get('coupon-couponcheck', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'checkCoupon'])->name('restaurant.coupon.couponcheck');
-        Route::get('coupon-couponname', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'checkCuponname'])->name('restaurant.coupon.couponDate');
-        Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'checkCouponUpdate'])->name('restaurant.coupon.couponcheckedit');
-        Route::get('coupon-edit/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'fun_edit_coupon'])->name('restaurant.coupon.edit');
-        Route::post('coupon-update', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'update'])->name('restaurant.coupon.update');
-        Route::post('coupon-delete', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'soft_delete'])->name('restaurant.coupon.delete');
-        //promotion management
-        Route::get('on-screen-notification', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'index'])->name('restaurant.promotion.list');
-        Route::get('on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'create_promotion'])->name('restaurant.promotion.create');
-        Route::post('on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'store_slot'])->name('restaurant.slot.store');
-        Route::get('on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'selctvalue'])->name('restaurant.slot.data');
-        Route::get('on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'get_list_slotbook'])->name('restaurant.slot.list');
-        Route::get('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
-    }); 
-   
+        Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
+
+
+        //first time setting
+        Route::get('globle/require/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'requireOrderTime'])->name('restaurant.require.ordertime');
+        Route::post('globle/createtime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store'])->name('restaurant.ordertime.first_store');
+
+
+        //first time vendor location save
+        Route::get('globle/require/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_location'])->name('restaurant.globleseting.frist_vendor_location');
+        Route::post('globle/require/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.frist_save_vendor_location');
+        
+        // first time Banner or logo setup
+        Route::get('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_Logo'])->name('restaurant.globleseting.first_vendor_logo');
+        Route::post('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_Logo'])->name('restaurant.globleseting.save_vendor_logo');
+
+    });
 });
     // chef route
    

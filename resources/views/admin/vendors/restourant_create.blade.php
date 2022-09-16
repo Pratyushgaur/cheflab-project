@@ -208,9 +208,9 @@
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Deal Categories <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
                                         <select name="categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
                                             @foreach($categories as $k =>$v)
                                             <option value="{{$v->id}}">{{$v->name}}</option>
@@ -218,12 +218,41 @@
                                           </select>
                                     </div>  
                                   </div>
-                                  <div class="col-md-12">
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
+                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
+                                            @foreach($cuisines as $k =>$v)
+                                            <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                          </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Restaurant Address">
                                     </div>  
                                   </div>
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+                                        
+                                          <label for="exampleInputEmail1">Vendor Food Type</label><br>
+                                          
+                                          <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                              <input type="radio" id="veg" name="type" value="1" checked>
+                                              <label for="veg">Veg</label>
+                                            </div>
+                                            <div class="icheck-danger d-inline">
+                                              <input type="radio" id="non_veg" name="type" value="3">
+                                              <label for="non_veg">Veg + Non Veg</label>
+                                            </div>
+                                            
+                                            
+                                          </div>
+                                      </div>  
+                                    </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
@@ -383,7 +412,7 @@
           rules: {
               Restaurant_name: {
                   required: true,
-                  maxlength: 25,
+                  maxlength: 40,
               },
               email: {
                   required: true,
@@ -428,6 +457,9 @@
               },
               'categories[]':{
                 required:true
+              },
+              'deal_cuisines[]':{
+                required:true
               }
               
               
@@ -435,7 +467,7 @@
           messages: {
               Restaurant_name: {
                   required: "Name is required",
-                  maxlength: "First name cannot be more than 20 characters"
+                  maxlength: "First name cannot be more than 40 characters"
               },
               email: {
                   required: "Please Enter Email",
@@ -462,7 +494,11 @@
               },
               'categories[]':{
                 required:"Select Deals categories"
+              },
+              'deal_cuisines[]':{
+                required:"Select Deals Cuisines"
               }
+              
               
           }
       });
