@@ -72,6 +72,7 @@ class AppController extends Controller
                 ], 500);
             }
         }
+        
         public function getRestaurantByCategory(Request $request)
         {
             try {
@@ -88,12 +89,19 @@ class AppController extends Controller
                     ], 401);
                 }
                 //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-                $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),\DB::raw('CONCAT("'.asset('vendor-banner').'/", banner_image) AS banner'),'vendor_ratings','vendor_food_type','deal_categories','id','fssai_lic_no');
+                $data = \App\Models\Vendors::select('name',\DB::raw('CONCAT("'.asset('vendors').'/", image) AS image'),'banner_image','vendor_ratings','vendor_food_type','deal_categories','id','fssai_lic_no');
                 $data = $data->where(['vendors.status'=>'1','vendor_type'=>'restaurant','is_all_setting_done' =>'1'])->whereRaw('FIND_IN_SET("'.$request->category_id.'",deal_categories)');
                 
                 $data = $data->get();
                 date_default_timezone_set('Asia/Kolkata');
+                $baseurl =  \URL::to('vendor-banner/').'/';
                 foreach ($data as $key => $value) {
+                    
+                    $banners =  json_decode($value->banner_image);
+                     $urlbanners = array_map(function($banner) {
+                        return \URL::to('vendor-banner/').'/'.$banner;
+                    }, $banners);
+                    
                     $category =  \App\Models\Catogory_master::whereIn('id',explode(',',$value->deal_categories))->pluck('name');
                     $timeSchedule =  \App\Models\VendorOrderTime::where(['vendor_id'=>$value->id,'day_no'=>Carbon::now()->dayOfWeek])->first();
                     if ($timeSchedule->available) {
@@ -107,6 +115,8 @@ class AppController extends Controller
                     }
                     $data[$key]->categories = $category;
                     $data[$key]->is_like = true;
+                    $data[$key]->imageUrl = $baseurl;
+                    $data[$key]->banner_image = $urlbanners;
                     
                 }
                 return response()->json([
