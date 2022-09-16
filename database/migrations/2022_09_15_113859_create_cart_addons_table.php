@@ -13,14 +13,17 @@ class CreateCartAddonsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cart_addons', function (Blueprint $table) {
+        Schema::create('cart_product_addons', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('cart_product_id');
+            // $table->foreign('cart_product_id')->references('id')->on('products');
 
-            $table->unsignedBigInteger('cart_id');
-            $table->foreign('cart_id')->references('id')->on('carts');
 
             $table->unsignedBigInteger('addon_id');
             $table->foreign('addon_id')->references('id')->on('addons');
+
+            // $table->unsignedBigInteger('cart_id');
+            // $table->foreign('cart_id')->references('id')->on('carts');
 
 
 
@@ -37,6 +40,6 @@ class CreateCartAddonsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cart_addons');
+        Schema::dropIfExists('cart_product_addons');
     }
 }
