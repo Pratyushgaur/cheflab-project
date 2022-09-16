@@ -11,6 +11,7 @@ use App\Models\Order_time;
 use App\Models\VendorOrderTime;
 use App\Models\vendors;
 use App\Rules\VendorOrderTimeRule;
+use Illuminate\Support\Str;
 use DataTables;
 use Config;
 use Illuminate\Support\Facades\Auth;
@@ -176,5 +177,70 @@ class GlobleSetting extends Controller
             return redirect()->route('restaurant.dashboard')->with('success', 'Settings update Successfully');
         else
             return redirect()->back()->with('success', 'Settings update Successfully');
+    }
+    public function first_vendor_Logo()
+    {
+        $hideSidebar = true;
+        $Vendor = [];
+        $Vendor = vendors::where('id', Auth::guard('vendor')->user()->id)->first();
+
+        return view('vendor.restaurant.globleseting.require_logo_banner', compact('Vendor', 'hideSidebar'));
+    }
+    public function save_vendor_Logo(Request $request){
+        $this->validate($request, [
+            'logo' => 'required',
+            'banner' => 'required'
+        ]);
+        //dd($request->all());
+        // $ex =   explode(';',$request->logo);
+        // $extainsion =  explode('/',$ex[0]);
+        
+        // //
+        // $image = $request->input('logo');  // your base64 encoded
+        // $image = str_replace('data:image/png;base64,', '', $image);
+        // $image = str_replace(' ', '+', $image);
+        // $imageName = 'logo-'.Str::random(10).'.'.$extainsion[1];
+        //  $path = public_path('vendors').'/' . $imageName;
+        //  //\File::put(public_path('vendors') . $imageName, base64_decode($image));
+        //  //\Image::make(file_get_contents($request->logo))->save($path);     
+        //  $request->logo->move(public_path('vendor'),$filename);
+        // logo generate
+
+        $img = $request->logo;
+        $folderPath = "vendors/"; //path location
+        
+        $image_parts = explode(";base64,", $img);
+        $image_type_aux = explode("image/", $image_parts[0]);
+        $image_type = $image_type_aux[1];
+        $image_base64 = base64_decode($image_parts[1]);
+        $name = 'logo-'.Str::random(10).uniqid();
+        $file = $folderPath .$name. '.'.$image_type;
+        file_put_contents($file, $image_base64);
+        vendors::where('id', Auth::guard('vendor')->user()->id)->update(['image'=>$name.'.'.$image_type]);
+
+        if (!empty($request->banner)){
+            $json = [];
+            foreach($request->banner as $k =>$img){
+                $folderPath = "vendor-banner/"; //path location
+                
+                $image_parts = explode(";base64,", $img);
+                $image_type_aux = explode("image/", $image_parts[0]);
+                $image_type = $image_type_aux[1];
+                $image_base64 = base64_decode($image_parts[1]);
+                $name = 'banner-'.Str::random(10).uniqid();
+                $file = $folderPath .$name. '.'.$image_type;
+                file_put_contents($file, $image_base64);
+                $json[] = $name.'.'.$image_type;
+            }
+            vendors::where('id', Auth::guard('vendor')->user()->id)->update(['banner_image'=>json_encode($json)]);
+        }
+
+        event(new IsAllSettingDoneEvent());
+        return redirect()->route('restaurant.dashboard')->with('success', 'Settings update Successfully');
+
+
+        
+      
+        
     }
 }

@@ -12,7 +12,7 @@
                     </ol>
                 </nav>
             </div> --}}
-
+            <div class="col-xl-3"></div>
             <div class="col-xl-6 col-md-6">
                 <div class="ms-panel ms-panel-fh">
                     <div class="ms-panel-header">
@@ -24,9 +24,18 @@
                             <div class="col-md-12">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb breadcrumb-arrow has-gap has-bg">
-                                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i>
-                                                Restaurant Timing</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Location</li>
+                                        <li class="breadcrumb-item">
+                                            <a href="#">
+                                                Restaurant Timing
+                                            </a>
+                                        </li>
+                                        <li class="breadcrumb-item">
+                                            <a href="#">
+                                                Location
+                                            </a>
+                                        </li>
+                                        
+                                        <li class="breadcrumb-item active">Logo And Banner</li>
                                     </ol>
                                 </nav>
 
@@ -56,7 +65,7 @@
                                             <div class="input-group">
                                                 <input id="address-latitude" type="text" class="form-control" placeholder="Latitude"
                                                     step="" name="lat"
-                                                    value="" readonly><br>
+                                                    value="" readonly required><br>
                                                 @if ($errors->has('lat'))
                                                     <span class="ms-text-danger">
                                                         <strong>{{ $errors->first('lat') }}</strong>
@@ -69,7 +78,7 @@
                                             <div class="input-group">
                                                 <input id="address-longitude" type="text" class="form-control" placeholder="Latitude"
                                                     step="" name="long"
-                                                    value="" readonly><br>
+                                                    value="" readonly required><br>
                                                 @if ($errors->has('long'))
                                                     <span class="ms-text-danger">
                                                         <strong>{{ $errors->first('long') }}</strong>
@@ -100,107 +109,13 @@
 
 
             </div>
+            <div class="col-xl-3"></div>
         </div>
     @endsection
     @section('page-js')
     <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize&language=en&region=GB" async defer></script>
     <script>
-        // function initialize() {
-
-        //     $('form').on('keyup keypress', function(e) {
-        //         var keyCode = e.keyCode || e.which;
-        //         if (keyCode === 13) {
-        //             e.preventDefault();
-        //             return false;
-        //         }
-        //     });
-        //     const locationInputs = document.getElementsByClassName("map-input");
-
-        //     const autocompletes = [];
-        //     const geocoder = new google.maps.Geocoder;
-        //     for (let i = 0; i < locationInputs.length; i++) {
-
-        //         const input = locationInputs[i];
-        //         const fieldKey = input.id.replace("-input", "");
-        //         const isEdit = document.getElementById(fieldKey + "-latitude").value != '' && document.getElementById(fieldKey + "-longitude").value != '';
-
-        //         const latitude = parseFloat(document.getElementById(fieldKey + "-latitude").value) || 51.5073509;
-        //         const longitude = parseFloat(document.getElementById(fieldKey + "-longitude").value) || -0.12775829999998223;
-
-        //         const map = new google.maps.Map(document.getElementById(fieldKey + '-map'), {
-        //             center: {
-        //                 lat: latitude,
-        //                 lng: longitude
-        //             },
-        //             zoom: 13
-        //         });
-        //         const marker = new google.maps.Marker({
-        //             map: map,
-        //             position: {
-        //                 lat: latitude,
-        //                 lng: longitude
-        //             },
-        //         });
-
-        //         marker.setVisible(isEdit);
-
-        //         const autocomplete = new google.maps.places.Autocomplete(input);
-        //         autocomplete.key = fieldKey;
-        //         autocompletes.push({
-        //             input: input,
-        //             map: map,
-        //             marker: marker,
-        //             autocomplete: autocomplete
-        //         });
-        //     }
-
-        //     for (let i = 0; i < autocompletes.length; i++) {
-        //         const input = autocompletes[i].input;
-        //         const autocomplete = autocompletes[i].autocomplete;
-        //         const map = autocompletes[i].map;
-        //         const marker = autocompletes[i].marker;
-
-        //         google.maps.event.addListener(autocomplete, 'place_changed', function() {
-        //             marker.setVisible(false);
-        //             const place = autocomplete.getPlace();
-
-        //             geocoder.geocode({
-        //                 'placeId': place.place_id
-        //             }, function(results, status) {
-        //                 if (status === google.maps.GeocoderStatus.OK) {
-        //                     const lat = results[0].geometry.location.lat();
-        //                     const lng = results[0].geometry.location.lng();
-        //                     setLocationCoordinates(autocomplete.key, lat, lng);
-        //                 }
-        //             });
-
-        //             if (!place.geometry) {
-        //                 window.alert("No details available for input: '" + place.name + "'");
-        //                 input.value = "";
-        //                 return;
-        //             }
-
-        //             if (place.geometry.viewport) {
-        //                 map.fitBounds(place.geometry.viewport);
-        //             } else {
-        //                 map.setCenter(place.geometry.location);
-        //                 map.setZoom(17);
-        //             }
-        //             marker.setPosition(place.geometry.location);
-        //             marker.setVisible(true);
-
-        //         });
-                
-
-        //     }
-        // }
-        // function setLocationCoordinates(key, lat, lng) {
-        //     const latitudeField = document.getElementById(key + "-" + "latitude");
-        //     const longitudeField = document.getElementById(key + "-" + "longitude");
-        //     latitudeField.value = lat;
-        //     longitudeField.value = lng;
-        // }
-
+        
         function initialize(){
             var map = new google.maps.Map(document.getElementById('address-map'),{
                 center:{

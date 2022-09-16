@@ -135,7 +135,7 @@ Route::get('vendor-logout', function () {
 // vendor auth route
 Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
     // restaurant route
-    Route::group(['prefix' => 'restaurant', 'middleware' => 'isRestaurant'], function () {
+    Route::group(['prefix' => 'restaurant', 'middleware' => ['isRestaurant']], function () {
         Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
             Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 
@@ -177,6 +177,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store'])->name('restaurant.ordertime.store');
             Route::post('offline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_offline'])->name('restaurant.set_offline');
             Route::post('online', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_online'])->name('restaurant.set_online');
+            Route::get('isonline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'restaurent_get_status'])->name('restaurant.restaurent_get_status');
 
             //vendor location
             Route::get('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'vendor_location'])->name('restaurant.globleseting.vendor_location');
@@ -193,6 +194,11 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         //first time vendor location save
         Route::get('globle/require/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_location'])->name('restaurant.globleseting.frist_vendor_location');
         Route::post('globle/require/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.frist_save_vendor_location');
+        
+        // first time Banner or logo setup
+        Route::get('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_Logo'])->name('restaurant.globleseting.first_vendor_logo');
+        Route::post('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_Logo'])->name('restaurant.globleseting.save_vendor_logo');
+
     });
 });
 // chef route

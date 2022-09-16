@@ -12,7 +12,7 @@
                     </ol>
                 </nav>
             </div> --}}
-
+            <div class="col-xl-3"></div>
             <div class="col-xl-6 col-md-6 ">
                 <div class="ms-panel ms-panel-fh">
                     <div class="ms-panel-header">
@@ -24,9 +24,11 @@
                             <div class="col-md-12">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb breadcrumb-arrow has-gap has-bg">
-                                        <li class="breadcrumb-item active" aria-current="page"><a href="#"><i
-                                                    class="material-icons">home</i> Restaurant Timing</a></li>
-                                        <li class="breadcrumb-item active">Location</li>
+                                        
+                                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i>
+                                                Restaurant Timing</a></li>
+                                        <li class="breadcrumb-item active" aria-current="page">Location</li>
+                                        <li class="breadcrumb-item active">Logo And Banner</li>
                                     </ol>
                                 </nav>
 
@@ -60,7 +62,7 @@
                 </div>
             </div>
 
-
+            <div class="col-xl-3"></div>
 
 
 
