@@ -22,7 +22,7 @@ class isChef
         }else{
             Auth::logout();
             Session::flush();
-             return redirect()->route('chef.login');
+             return redirect()->route('vendor.login');
         }
     }
 }

@@ -1,6 +1,57 @@
 @extends('vendor.restaurants-layout')
 @section('main-content')
-
+<style>
+      .select2-selection__choice{
+        background:#ff0018;
+      }
+      .select2-selection__choice__display{
+        color:#fff;
+      }
+      .select2-container--default .select2-selection--multiple .select2-selection__choice{
+        background-color:#ff0018;
+      }
+      .image-upload{
+            display:inline-block;
+            margin-right:15px;
+            position:relative;
+        }
+        .image-upload > input
+        {
+            display: none;
+        }
+        .upload-icon{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+        
+        
+        
+        .upload-icon img{
+          width: 100px;
+          height: 100px;
+          margin:19px;
+          cursor: pointer;
+        }
+        
+        
+        .upload-icon.has-img {
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+        
+        .upload-icon.has-img img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
+    </style>
     <div class="ms-content-wrapper">
       <div class="row">
 
@@ -9,8 +60,8 @@
             <ol class="breadcrumb pl-0">
               <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
               <li class="breadcrumb-item"><a href="#">Coupon</a></li>
-              <li class="breadcrumb-item" aria-current="page"><a href="">Coupoan</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Edit Coupon</li>
+              <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Menu Catalogue</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Create Coupon</li>
               
 
             </ol>
@@ -19,10 +70,10 @@
         <div class="col-xl-12 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
-              <h6>Edit Coupon</h6>
+              <h6>Create New  Coupon</h6>
             </div>
             <div class="ms-panel-body">
-              <form class=" clearfix " id="menu-form" action="{{route('restaurant.coupon.update')}}"  method="post">
+              <form class=" clearfix " id="coupon-form" action="{{route('restaurant.coupon.update')}}"  method="post" enctype="multipart/form-data">
                 @csrf
                 
                 @if ($errors->any())
@@ -31,110 +82,157 @@
                     @endforeach
                 @endif
                 <div class="form-row">
-                   <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Name of Menu</label>
+                    <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Name</label>
                         <div class="input-group">
-                             <input type="text" class="form-control" value="{{$coupon->code}}" name="code"  id="validationCustom03" placeholder="Enter Menu Name " >
-                             <input type="hidden" name="id" value="{{$coupon->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Code">
-                        </div>
-                            @error('code')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                            @enderror
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Discount Type</label>
-                        <div class="input-group">
-                            <select class="form-control select2" name="discount_type" style="width: 100%;">
-                                <option value="{{$coupon->discount_type}}">{{$coupon->discount_type}}</option>
-                                <option value="percent">Percent</option>
-                                <option value="amount">Amount</option>
-                            </select>
-                        </div>
-                            @error('discount_type')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                            @enderror
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Discount</label>
-                        <div class="input-group">
-                             <input type="text" value="{{$coupon->discount}}" class="form-control" name="discount"  id="validationCustom03" placeholder="Enter Coupon Discription " >
-                        </div>
-                            @error('discount')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                            @enderror
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Descriptio</label>
-                        <div class="input-group">
-                        <input type="text" value="{{$coupon->discription}}" class="form-control" name="discription"  id="validationCustom03" placeholder="Discription " >
+                        <input type="text" name="name" class="form-control" value="{{$coupon->name}}"  id="exampleInputEmail1" placeholder="Coupon Name">
+                        <input type="hidden" name="id" value="{{$coupon->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
+                        <input type="hidden" name="create_by" value="vendor" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
                         </div>
                             @error('name')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
                             @enderror
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Maximum Ammount</label>
+                     </div>
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Code</label>
                         <div class="input-group">
-                             <input type="text" class="form-control" value="{{$coupon->maximum_order_value}}" name="maximum_order_value"  placeholder="Enter Maximum Ammount" >
-                        </div>
-                            @error('maximum_order_value')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                            @enderror
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Minimum Ammount</label>
-                        <div class="input-group">
-                        <input type="text" class="form-control" name="minimum_order_value" value="{{$coupon->minimum_order_value}}"  placeholder="Enter Minimum Ammount " >
+                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="code" value="{{$coupon->code}}" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Code">
+                        
                         </div>
                             @error('name')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
                             @enderror
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Coupon Type</label>
+                     </div>
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Discount Type</label>
                         <div class="input-group">
-                            <select class="form-control select2" name="type" style="width: 100%;">
-                                <option value="{{$coupon->type}}">{{$coupon->type}}</option>
-                                <option value="1">publish</option>
-                                <option value="0">secret</option>
+                        <select class="form-control select2" name="discount_type" style="width: 100%;">
+                         <option value="{{$coupon->discount_type}}">{{$coupon->discount_type}}</option>
+                          <option value="1">Percent</option>
+                          <option value="0">Amount</option>
+                        </select>
+                        </div>
+                            @error('name')
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
+                            @enderror
+                     </div>
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Discount</label>
+                        <div class="input-group">
+                        <input type="text" name="discount" value="{{$coupon->discount}}" class="form-control"  id="" placeholder="Discount">
+                        
+                        </div>
+                            @error('name')
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
+                            @enderror
+                     </div>
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Maximum Discount Amount</label>
+                        <div class="input-group">
+                        <input type="text" name="maxim_dis_amount" class="form-control" value="{{$coupon->maxim_dis_amount}}"  id="" placeholder="Maximum Discount Amount *">
+                        
+                        </div>
+                            @error('name')
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
+                            @enderror
+                     </div> 
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Minimum Order Amount</label>
+                        <div class="input-group">
+                        <input type="text" name="minimum_order_amount" class="form-control" value="{{$coupon->minimum_order_amount}}"  id="" placeholder="Maximum Discount Amount *">
+                        
+                        </div>
+                            @error('name')
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
+                            @enderror
+                     </div> 
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">From</label>
+                        <div class="input-group">
+                        <div class="input-group date" id="reservationdate1" data-target-input="nearest">
+                              <input type="date" value="{{$coupon->from}}" name="from" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                        </div>
+                        <span class="from_error text-danger"></span>
+                        </div>
+                           
+                     </div>
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">To</label>
+                        <div class="input-group">
+                        <div class="input-group date" id="reservationdate1" data-target-input="nearest">
+                            <input type="date" name="to" value="{{$coupon->to}}" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            
+                        </div>
+                        <span class="to_error text-danger"></span>
+                        </div>
+                           
+                     </div>
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Redeem Count (How Much time a user can redeem this coupon)</label>
+                        <div class="input-group">
+                        <select class="form-control" name="promo_redeem_count" style="width: 100%;">
+                          <option value="{{$coupon->promo_redeem_count}}">{{$coupon->promo_redeem_count}}</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                        </select>
+                        
+                        </div>
+                          
+                     </div>
+                   
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Validity(Once a day/week/month or Lifetime)</label>
+                        <div class="input-group">
+                            <select class="form-control select2" name="promocode_use" style="width: 100%;">
+                            <option value="{{$coupon->promocode_use}}">{{$coupon->promocode_use}}</option>
+                            <option value="1">Once a Day</option>
+                            <option value="2">Once a Week</option>
+                            <option value="3">Once a Month</option>
+                            <option value="4">Lifetime</option>
                             </select>
                         </div>
-                            @error('type')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                            @enderror
-                    </div>
-                    <div class="col-xl-6 col-md-6 mb-3">
-                        <label for="validationCustom10">Expires Coupon</label>
+                            
+                     </div>
+                     <div class="col-xl-4 col-md-12 mb-3">
+                      <label for="validationCustom10">Coupon Valid For First X User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <div class="input-group">
-                            <input type="date" value="{{$coupon->expires_coupon}}" id="birthday" class="form-control" name="expires_coupon">
+                        <input type="text" value="{{$coupon->coupon_valid_x_user}}" name="coupon_valid_x_user" class="form-control"  id="" placeholder="Coupon Valid For First X User">
+                        
                         </div>
-                            @error('expires_coupon')
-                            <p class="text-danger">
-                                {{ $message }}
-                            </p>
-                            @enderror
-                    </div>
-                </div>
+                        <span class="minimum_order_amount_error text-danger"></span>   
+                     </div> 
+                     <div class="col-xl-3 col-md-12 mb-3">
+                      <label for="validationCustom10">Discription</label>
+                        <div class="input-group">
+                        <textarea type="text" value="{{$coupon->discription}}" name="discription" class="form-control"  id="" placeholder="Discription">{{$coupon->discription}}</textarea>
+                        
+                        </div>
+                        <span class="discription_error text-danger"></span> 
+                     </div> 
+
+
+                  </div>
+                
                 <button class="btn btn-primary float-right" type="submit">Submit</button>
               </form>
             </div>
@@ -150,11 +248,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 <script type="text/javascript">
-     $("#menu-form").validate({
-        rules: {
+     $("#coupon-form").validate({
+      rules: {
+             name: {
+                  required: true,
+              },
               code: {
                   required: true,
-                  remote: '{{route("restaurant.coupon.couponcheckedit",$coupon->id)}}',
+                 // remote: '{{route("admin.coupon.upercase")}}',
               },
               discount_type: {
                   required: true,
@@ -163,55 +264,95 @@
                   required: true,
                   number: true,
               },
-              discription: {
-                  required: true,
+              maxim_dis_amount: {
+                required: true,
+                number: true,
               },
-              type: {
+              minimum_order_amount: {
+                required: true,
+                number: true,
+              },
+              promo_redeem_count: {
                   required: true,
                 
               },
-              maximum_order_value: {
+              promocode_use: {
                 required: true,
-                number: true,
               },
-              minimum_order_value: {
+              coupon_type: {
                 required: true,
-                number: true,
               },
-              expires_coupon: {
+              from: {
+                required: true,
+              },
+              to: {
+                required: true,
+              },
+              discription: {
                 required: true,
               }
         },
           messages: {
+            name: {
+                  required: "Coupon Name is required",
+              },
               code: {
                   required: "Coupon code is required",
-                  remote:"This Coupon is Already has been Taken",
+                 // remote:"Give Upore Case Value",
+                 // remote:"ALL CHARACTOR ARE UPPERCASE",
               },
               discount_type: {
                   required: "Please Select Discount Type",
-                  maxlength: "Email cannot be more than 30 characters",
-                  email: "Email must be a valid email address",
-                  remote:"This Email is Already has been Taken"
               },
               discount: {
                   required: "Discount is required",
-                  number: "Pincode must be an number"
+                  number: "Discount must be an number"
               },
-              maximum_order_value: {
+              maxim_dis_amount: {
                   required: "Maximum Value is required",
                   number: "Pincode must be an number"
               },
-              minimum_order_value:{
+              minimum_order_amount:{
                 required: "Maximum Value is required",
                   number: "Minimum Value must be an number"
               },
-              expires_coupon: {
-                required: "Expire  Date is required",
-              }
-              
+              promo_redeem_count: {
+                required: "Promo Redeem Code is required",
+              },
+              promocode_use: {
+                required: "Promo Redeem Code is required",
+              },
+             
+              coupon_type: {
+                required: "Coupon Type is required",
+              },
+              from: {
+                required: "Date is required",
+              },
+              to: {
+                required: "Date is required",
+              },
               
           }
     });
+    $('#file-input').change( function(event) {
+          $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon").parents('.upload-icon').addClass('has-img');
+      });
+    $('#row_dim').hide(); 
+    $('#type').change(function(){
+        if($('#type').val() == 'product') {
+            $('#row_dim').show(); 
+        } else {
+            $('#row_dim').hide(); 
+        } 
+    });
+    $('#reservationdate').datetimepicker({
+          format: 'L'
+      });
+      $('#reservationdate1').datetimepicker({
+          format: 'L'
+      });
 </script>
 <script>
   (function($) {

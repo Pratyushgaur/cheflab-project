@@ -35,7 +35,11 @@
           
         </ul>
       </li>
-
+    
+      <li class="menu-item">
+        <a href="{{route('restaurant.promotion.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Promotion</span>
+        </a>
+      </li>
       <li class="menu-item">
         <a href="#" class="has-chevron" data-toggle="collapse" data-target="#orders" aria-expanded="false" aria-controls="orders"> <span><i class="nav-icon fa fa-shopping-basket fs-16"></i>Orders</span>
         </a>

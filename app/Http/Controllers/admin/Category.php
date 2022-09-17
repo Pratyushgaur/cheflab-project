@@ -49,8 +49,8 @@ class Category extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="#" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  
-                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="Category"  data-action-url="" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'. route("admin.category.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  
+                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City"  data-action-url="' . route('admin.category.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 

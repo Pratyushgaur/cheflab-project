@@ -15,46 +15,22 @@
           <section class="content">
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-12">
-                  <div class="card card-primary card-outline">
-                      <div class="card-header">
-                          <div class="row">
-                            <!--<div class="col-md-2">
-                                <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
-                                  <option value="">Filter By Role</option>
-                                  <option value="restaurant">Restaurant</option>
-                                  <option value="chef">Chef</option>
-                                </select>
-                            </div>-->
-                            <div class="col-md-10">
-                                <a href="{{route('admin.coupon.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create Coupon</a>
-                            </div>
-                          </div>
-                          
-                      </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Listing of Registered Restaurant And Chef </h3>
-                      
-                      
-                    </div>
+                      <h3 class="card-title">Listing of Slot Booking </h3>
+                   </div>
                     <div class="card-body pad table-responsive">
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Name</th>
-                                    <th >Code</th>
-                                    <th  >Discount Type</th>
-                                    <th  >Discount</th>
-                                    <th> Type</th>
-                                    <th> Expires At</th>
+                                    <th >Slot Name</th>
+                                    <th  >Slot</th>
+                                    <th  >Image</th>
+                                    <th  >Date</th>
+                                    <th> Status</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -92,15 +68,20 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.coupon.data') }}",
+        //ajax: "{{ route('admin.vendors.datatable') }}",
+        ajax:{
+            url:"{{ route('admin.slotebook.data') }}",
+            data: function (d) {
+                d.rolename = $('#filter-by-role').val()
+            }
+        },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'code', name: 'code'},
-            {data: 'discount_type', name: 'discount_type'},
-            {data: 'discount', name: 'discount'},
-            {data: 'status', name: 'status'},
-            {data: 'to', name: 'to'},
+            {data: 'restaurantName', name: 'restaurantName'},
+            {data: 'banner', name: 'banner'},
+            {data: 'slot_image', name: 'slot_image',orderable: false, searchable: false},
+            {data: 'date', name: 'date'},
+            {data: 'slot_status', name: 'slot_status'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

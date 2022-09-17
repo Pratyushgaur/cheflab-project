@@ -46,11 +46,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
 });
 
+Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
+Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::class,'register_verify_otp']);
+Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
+Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
+Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
+// chef 
+Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
+Route::get('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
+Route::get('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
 
 
-Route::post('register-send-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_send_otp']);
-Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_verify_otp']);
-Route::post('register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user']);
-Route::post('login-otp-send', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp']);
-Route::post('login-otp-verify', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp']);
-// chef

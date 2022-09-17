@@ -121,6 +121,30 @@
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  
+				  <i class="far fa-circle nav-icon"></i>
+				  <p>
+					 Slote Promotion Management
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+				    <li class="nav-item">
+						<a href="{{route('admin.banner.createbanner')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Banner Promotion</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.slotebook.list')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Slot List</p>
+						</a>
+					</li>	
+				</ul>
+			</li>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+				  
 				  <i class="far fa-bell nav-icon"></i>
 				  <p>
 					 Notification
