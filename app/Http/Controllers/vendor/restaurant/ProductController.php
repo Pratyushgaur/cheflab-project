@@ -9,6 +9,7 @@ use App\Models\Cuisines;
 use App\Models\Addons;
 use App\Models\VendorMenus;
 use App\Models\Product_master;
+use App\Models\Variant;
 
 
 use Illuminate\Support\Facades\Crypt;
@@ -55,13 +56,7 @@ class ProductController extends Controller
             $product->type  = $request->product_type;
             $product->product_price  = $request->item_price;
             $product->customizable  = $request->custimization;
-            if($request->custimization == 'true'){
-                $data = [];
-                foreach($request->variant_name as $k =>$v){
-                    $data[] = array('variant_name' =>$v ,'price' =>$request->price[$k]);
-                }
-                $product->variants = serialize($data);
-            }
+            
             if(!empty($request->addons)){
                 $product->addons = implode(',',$request->addons);
             }
@@ -72,6 +67,12 @@ class ProductController extends Controller
             }
             $product->product_for = '3';
             $product->save();
+            if($request->custimization == 'true'){
+                
+                foreach($request->variant_name as $k =>$v){
+                    Variant::create(['product_id'=>$product->id,'variant_name'=>$v,'variant_price'=>$request->price[$k]]);
+                }
+            }
             return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
         } catch (\Exception $th) {
             return $th->getMessage();
