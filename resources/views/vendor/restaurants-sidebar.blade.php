@@ -37,7 +37,7 @@
       </li>
     
       <li class="menu-item">
-        <a href="{{route('restaurant.promotion.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Promotion</span>
+        <a href="{{route('restaurant.promotion.list')}}"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
         </a>
       </li>
       <li class="menu-item">
