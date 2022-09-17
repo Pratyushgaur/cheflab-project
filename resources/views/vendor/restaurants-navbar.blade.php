@@ -239,7 +239,7 @@
 
                     <label>
                         <input type="radio" name="offline_till" value="1" checked>
-                        The next working day , restaurant goes online. </label>
+                        The next working day , automatically restaurant goes online. </label>
                     <br>
                     <label><input type="radio" name="offline_till" value="2">
                         Manually, i will set it online. </label>
@@ -311,6 +311,7 @@
                                 showConfirmButton: true,
                                 timer: 15000
                             });
+                            $('#message-box').removeClass('show').dequeue();
                         } else
                             toastr.info('Somethin went wrong', 'Info');
 

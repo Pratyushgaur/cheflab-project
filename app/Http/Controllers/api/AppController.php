@@ -10,6 +10,8 @@ use App\Models\CartProductVariant;
 use App\Models\Catogory_master;
 use App\Models\Chef_video;
 use App\Models\Product_master;
+use App\Models\User;
+use App\Models\Variant;
 use App\Models\VendorMenus;
 use App\Models\VendorOrderTime;
 use App\Models\Vendors;
@@ -240,14 +242,22 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            $product = Product_master::where('id', '=', $request->product_id)->select('variants', 'addons', 'customizable')->first();
-            if ($product->customizable == 'true') {
+            $product = Product_master::where('id', '=', $request->product_id)->select('addons', 'customizable')->first();
+
+            if (@$product->customizable == 'true') {
                 $options = unserialize($product->variants);
                 if ($product->addons == null) {
-                    $data = ['options' => $options, 'addons' => $product->addons];
+                    $data = ['addons' => $product->addons];
                 } else {
-                    $data = ['options' => $options, 'addons' => @unserialize($product->addons)];
+                    $data = [ 'addons' => @unserialize($product->addons)];
                 }
+
+                $v = Variant::select('variant_name','variant_price')->where('product_id', $request->product_id)->get();
+                // dd($v->toArray());
+                if (isset($v))
+                    $data['options'] = $v->toArray();
+
+                    // dd($product);
                 return response()->json([
                     'status' => true,
                     'message' => 'Data Get Successfully',
@@ -579,6 +589,17 @@ class AppController extends Controller
 
             \DB::enableQueryLog();
             $cart_id = $request->cart_id;
+
+            $e = Cart::where('id', $cart_id)->exists();
+            if (!$e)
+                return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
+
+            $wallet_amount = 0;
+            $u = User::select('wallet_amount')->find($request->user_id);
+            if (isset($u->wallet_amount))
+                $wallet_amount = $u->wallet_amount;
+
+
             $pro = \App\Models\Product_master::where('status', 1)
                 ->whereIn(
                     "products.id",
@@ -590,11 +611,10 @@ class AppController extends Controller
 
             if ($pro != null)
                 $pro = $pro->toArray();
+
             //SELECT * FROM `cart_product_variants`
             //LEFT JOIN cart_products on cart_products.id=cart_product_variants.cart_product_id
             //where cart_id=7
-
-
             $variants = \App\Models\CartProductVariant::select('*')
                 ->where('cart_products.cart_id', $cart_id)
                 ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
@@ -612,7 +632,8 @@ class AppController extends Controller
 
 
                 if ($product['addons'] != '') {
-                    $pro[$k]['addons'] = @\App\Models\Addons::select('addon_id', 'addon', 'price', 'addon_qty')
+                    $pro[$k]['addons'] = @\App\Models\Addons::select(DB::raw('distinct addons.id,addon_id, addon, price, addon_qty'))
+                        // select('addon_id', 'addon', 'price', 'addon_qty')
                         ->whereIn('addons.id', explode(',', $product['addons']))
                         ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
                         ->get()->toArray();
@@ -630,11 +651,10 @@ class AppController extends Controller
                     }
                 }
             }
+            // dd($pro);
             //    dd(\DB::getQueryLog ());
-            //            dd($pro);
-            //    dd($cart);
 
-            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $pro]], 200);
+            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $pro, 'wallet_amount' => $wallet_amount]], 200);
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }

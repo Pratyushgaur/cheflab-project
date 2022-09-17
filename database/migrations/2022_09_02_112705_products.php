@@ -27,13 +27,13 @@ class Products extends Migration
             $table->enum('type',['veg','non_veg','eggs']);
             $table->decimal('product_price', 10,2);
             $table->string('customizable',20);
-            $table->text('variants')->nullable();
+            // $table->text('variants')->nullable();
             $table->text('addons')->nullable();
             $table->enum('product_for',['1','2','3'])->comment('1-cheflab 2-chef 3-restaurant');
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-       
+
             //$table->foreign('userId')->references('id')->on('vendors')->onDelete('cascade');
         });
     }
