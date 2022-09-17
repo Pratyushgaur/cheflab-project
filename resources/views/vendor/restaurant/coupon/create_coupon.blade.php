@@ -258,7 +258,6 @@
       rules: {
              name: {
                   required: true,
-                //  remote: '{{route("restaurant.coupon.couponDate")}}',
               },
               code: {
                   required: true,

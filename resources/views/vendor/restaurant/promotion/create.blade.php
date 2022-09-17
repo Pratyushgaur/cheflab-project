@@ -84,7 +84,7 @@
                     <div class="col-xl-12 col-md-12 mb-3">
                       <label for="validationCustom10">Date</label>
                         <div class="input-group">
-                        <input type="date" name="date" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
+                        <input type="date" name="date" class="form-control" min="2022-09-16" max="2022-09-22"  id="dateid" placeholder="Coupon Name">
                       
                         </div>
                         <span class="date_error text-danger"></span>
@@ -100,8 +100,7 @@
                                 <option value="{{$value->price}}">{{$value->id}}</option>
                                 @endif
                             @endforeach
-                     
-                      </select>
+                        </select>
                         </div>
                         <span class="banner_error text-danger"></span>
                      </div>
@@ -147,7 +146,7 @@
       rules: {
              date: {
                   required: true,
-                  remote: '{{route("restaurant.slot.checkdate")}}', 
+                //  remote: '{{route("restaurant.slot.checkdate")}}', 
               },
               banner: {
                   required: true,
@@ -191,7 +190,26 @@
             $('#row_dim').hide(); 
         } 
     });
-   
+    $('#dateid').change(function(){
+      var id = this.value;
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          type: "POST",
+          url: '{{route("restaurant.slot.checkdate")}}', // This is what I have updated
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: { 
+            "_token": "{{ csrf_token() }}",
+            "id":id }
+            success: function(response){
+              toastr.error('Your Allradiy Book This date place chenge sate', 'Alert');
+            }
+      });
+
+    });
 </script>
 <script>
   (function($) {

@@ -202,7 +202,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'store_slot'])->name('restaurant.slot.store');
             Route::get('on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'selctvalue'])->name('restaurant.slot.data');
             Route::get('on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'get_list_slotbook'])->name('restaurant.slot.list');
-            Route::get('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
+            Route::post('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
 

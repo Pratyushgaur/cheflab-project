@@ -52,5 +52,7 @@ Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
 // chef 
 Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
+Route::get('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
+Route::get('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
 
 

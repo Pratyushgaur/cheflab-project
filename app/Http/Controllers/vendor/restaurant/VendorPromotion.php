@@ -93,9 +93,11 @@ class VendorPromotion extends Controller
                 ->make(true);
         }
     }
-    public function checkdate(Request $request ,$id=null){
-        if (SloteBook::where('date','=',$request->date)->exists()) {
+    public function checkdate(Request $request){
+        $date = $request->id;
+        if (SloteBook::where('date','=',$date)->exists()) {
             return \Response::json(false);
+          // return redirect()->route('restaurant.promotion.create')->with('message', 'SlotBook');
         } else {
             return \Response::json(true);
         }
