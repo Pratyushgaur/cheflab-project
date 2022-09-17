@@ -16,54 +16,6 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/test', function () {
-    \DB::enableQueryLog();
-    $cart_id = 7;
-    $pro = \App\Models\Product_master::where('status', 1)
-        ->whereIn("products.id",
-            function ($query) use ($cart_id) {
-                $query->select('product_id')->from('cart_products')->where('cart_id', $cart_id);
-            }
-        )
-        ->with('product_variants')
-        ->get();
-
-    if ($pro != null)
-        $pro = $pro->toArray();
-//SELECT * FROM `cart_product_variants`
-//LEFT JOIN cart_products on cart_products.id=cart_product_variants.cart_product_id
-//where cart_id=7
-
-
-
-    $variants = \App\Models\CartProductVariant::select('*')
-        ->where('cart_products.cart_id', $cart_id)
-        ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
-        ->pluck('variant_qty', 'variant_id');
-    if($variants!=null)
-        $variants=$variants->toArray();
-
-    foreach ($pro as $k => $product) {
-        if ($product['addons'] != '') {
-            $pro[$k]['addons'] = @\App\Models\Addons::select('addon_id', 'addon', 'price', 'addon_qty')
-                ->whereIn('addons.id', explode(',', $product['addons']))
-                ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
-                ->get()->toArray();
-        }
-        if (count($product['product_variants']) > 0) {
-
-            foreach ($product['product_variants'] as $k1 => $product_variants) {
-                if (isset($variants[$product_variants['id']]))
-                    $pro[$k]['product_variants'][$k1]['variant_qty'] = $variants[$product_variants['id']];
-                else
-                    $pro[$k]['product_variants'][$k1]['variant_qty'] = 0;
-            }
-        }
-    }
-//    dd(\DB::getQueryLog ());
-    dd($pro);
-//    dd($cart);
-});
 Route::get('/', function () {
     return view('welcome');
 });

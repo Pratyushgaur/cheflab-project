@@ -23,34 +23,32 @@ class VendorController extends Controller
             $day[5] = 'friday';
             $day[6] = 'saturday';
             $resum_date = '';
-            // dd($request->all());
-            // dd(Carbon::now()->dayOfWeek);
             $timeSchedule =  \App\Models\VendorOrderTime::where([
                 'vendor_id' => Auth::guard('vendor')->user()->id,
                 'available' => 1,
             ])->orderBy('day_no')->pluck('start_time', 'day_no')->toArray(); //Array key will be day_no
-            // dd(array_key_last($timeSchedule));
-            // print_r($timeSchedule);
-            if (array_key_last($timeSchedule) > Carbon::now()->dayOfWeek) {
-                for ($i = (Carbon::now()->dayOfWeek + 1); $i <= 6; $i++)
-                    if (isset($timeSchedule[$i])) {
-                        $resum_date = date('Y-m-d H:i:s', strtotime("next " . $day[$i]));
-                    }
-            } else {
-                $day_no = array_key_first($timeSchedule);
-                $resum_date = date('Y-m-d H:i:s', strtotime("next " . $day[$day_no]));
+            if (!$timeSchedule)
+                $msg = 'Now your Restaurant is offline.';
+            else {
+                if (array_key_last($timeSchedule) > Carbon::now()->dayOfWeek) {
+                    for ($i = (Carbon::now()->dayOfWeek + 1); $i <= 6; $i++)
+                        if (isset($timeSchedule[$i])) {
+                            $resum_date = date('Y-m-d H:i:s', strtotime("next " . $day[$i]));
+                        }
+                } else {
+                    $day_no = array_key_first($timeSchedule);
+                    $resum_date = date('Y-m-d H:i:s', strtotime("next " . $day[$day_no]));
+                }
+
+                $vendor_offline = new VendorOffline();
+                $vendor_offline->vendor_id = Auth::guard('vendor')->user()->id;
+                $vendor_offline->offline_time = now();
+                $vendor_offline->resume_date = $resum_date;
+                $vendor_offline->is_action_taken = 0;
+
+                $vendor_offline->save();
+                $msg = 'Now your Restaurant is offline. It will be automatically goes online  on ' . date('d M Y', strtotime($resum_date));
             }
-            // dd($timeSchedule);
-
-            $vendor_offline=new VendorOffline();
-            $vendor_offline->vendor_id=Auth::guard('vendor')->user()->id;
-            $vendor_offline->offline_time=now();
-            $vendor_offline->resume_date=$resum_date;
-            $vendor_offline->is_action_taken=0;
-
-            $vendor_offline->save();
-
-            $msg = 'Now your Restaurant is offline. It will be automatically goes online  on ' . date('d M Y', strtotime($resum_date));
         } else
             $msg = 'Now your Restaurant is offline.';
         vendors::where('id', Auth::guard('vendor')->user()->id)->update(['is_online' => 0]);
