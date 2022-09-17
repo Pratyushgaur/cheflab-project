@@ -1,11 +1,9 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\isVendorLoginAuth;
-use Illuminate\Contracts\Session\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
-use App\Http\Middleware\isChefLoginAuth;
 //use Auth;
 
 /*
@@ -18,7 +16,54 @@ use App\Http\Middleware\isChefLoginAuth;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/test', function () {
+    \DB::enableQueryLog();
+    $cart_id = 7;
+    $pro = \App\Models\Product_master::where('status', 1)
+        ->whereIn("products.id",
+            function ($query) use ($cart_id) {
+                $query->select('product_id')->from('cart_products')->where('cart_id', $cart_id);
+            }
+        )
+        ->with('product_variants')
+        ->get();
 
+    if ($pro != null)
+        $pro = $pro->toArray();
+//SELECT * FROM `cart_product_variants`
+//LEFT JOIN cart_products on cart_products.id=cart_product_variants.cart_product_id
+//where cart_id=7
+
+
+
+    $variants = \App\Models\CartProductVariant::select('*')
+        ->where('cart_products.cart_id', $cart_id)
+        ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
+        ->pluck('variant_qty', 'variant_id');
+    if($variants!=null)
+        $variants=$variants->toArray();
+
+    foreach ($pro as $k => $product) {
+        if ($product['addons'] != '') {
+            $pro[$k]['addons'] = @\App\Models\Addons::select('addon_id', 'addon', 'price', 'addon_qty')
+                ->whereIn('addons.id', explode(',', $product['addons']))
+                ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
+                ->get()->toArray();
+        }
+        if (count($product['product_variants']) > 0) {
+
+            foreach ($product['product_variants'] as $k1 => $product_variants) {
+                if (isset($variants[$product_variants['id']]))
+                    $pro[$k]['product_variants'][$k1]['variant_qty'] = $variants[$product_variants['id']];
+                else
+                    $pro[$k]['product_variants'][$k1]['variant_qty'] = 0;
+            }
+        }
+    }
+//    dd(\DB::getQueryLog ());
+    dd($pro);
+//    dd($cart);
+});
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,7 +71,7 @@ Route::get('admin-logout', function () {
 
     Auth::guard('admin')->logout();
     //Session::flush();
-    return  redirect('admin');
+    return redirect('admin');
 })->name('admin.logout');
 Route::view('admin', 'admin/login-2')->name('admin.login')->middleware('isadminloginAuth');
 Route::post('check-login-for-admin', [App\Http\Controllers\admin\Cn_login::class, 'admin_login']);
@@ -130,7 +175,7 @@ Route::view('vendor/login', 'vendor/login')->name('vendor.login')->middleware(is
 Route::post('check-login-on-vendor', [App\Http\Controllers\vendor\LoginController::class, 'login'])->name('action.vendor.login');
 Route::get('vendor-logout', function () {
     Auth::guard('vendor')->logout();
-    return  redirect()->route('vendor.login');
+    return redirect()->route('vendor.login');
 })->name('vendor.logout');
 // vendor auth route
 Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
@@ -194,7 +239,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         //first time vendor location save
         Route::get('globle/require/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_location'])->name('restaurant.globleseting.frist_vendor_location');
         Route::post('globle/require/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.frist_save_vendor_location');
-        
+
         // first time Banner or logo setup
         Route::get('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_Logo'])->name('restaurant.globleseting.first_vendor_logo');
         Route::post('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_Logo'])->name('restaurant.globleseting.save_vendor_logo');
@@ -205,7 +250,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 //Route::view('vendor/login', 'vendor/login')->name('chef.login')->middleware(isVendorLoginAuth::class);
 Route::get('chef-logout', function () {
     Auth::logout();
-    return  redirect()->route('vendor.login');
+    return redirect()->route('vendor.login');
 })->name('chef.logout');
 
 Route::group(['middleware' => ['isChef'], 'prefix' => 'chef'], function () {

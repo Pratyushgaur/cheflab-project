@@ -3,15 +3,23 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Addons;
 use App\Models\Cart;
 use App\Models\CartProduct;
 use App\Models\CartProductAddon;
 use App\Models\CartProductVariant;
-use Illuminate\Http\Request;
-use Validator;
+use App\Models\Catogory_master;
+use App\Models\Chef_video;
+use App\Models\Product_master;
+use App\Models\VendorMenus;
+use App\Models\VendorOrderTime;
+use App\Models\Vendors;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PDOException;
+use Throwable;
+use URL;
+use Validator;
 
 class AppController extends Controller
 {
@@ -33,7 +41,7 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $product = \App\Models\Product_master::where(['products.id' => $request->product_id]);
+            $product = Product_master::where(['products.id' => $request->product_id]);
             $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
             $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description')->first();
 
@@ -44,20 +52,21 @@ class AppController extends Controller
                 'response' => $product
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     //restaurant page
     public function restaurantHomePage()
     {
         try {
 
-            $vendors = \App\Models\Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', \DB::raw('CONCAT("' . asset('vendor-banner') . '/", banner_image) AS banner'))->orderBy('id', 'desc')->get();
-            $products = \App\Models\Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'))->orderBy('products.id', 'desc')->get();
+            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', \DB::raw('CONCAT("' . asset('vendor-banner') . '/", banner_image) AS banner'))->orderBy('id', 'desc')->get();
+            $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'))->orderBy('products.id', 'desc')->get();
 
             return response()->json([
                 'status' => true,
@@ -65,7 +74,7 @@ class AppController extends Controller
                 'response' => ['vendors' => $vendors, 'products' => $products]
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
@@ -91,21 +100,21 @@ class AppController extends Controller
                 ], 401);
             }
             //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-            $data = \App\Models\Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'banner_image', 'vendor_ratings', 'vendor_food_type', 'deal_categories', 'id', 'fssai_lic_no');
+            $data = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'banner_image', 'vendor_ratings', 'vendor_food_type', 'deal_categories', 'id', 'fssai_lic_no');
             $data = $data->where(['vendors.status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)');
 
             $data = $data->get();
             date_default_timezone_set('Asia/Kolkata');
-            $baseurl =  \URL::to('vendor-banner/') . '/';
+            $baseurl = URL::to('vendor-banner/') . '/';
             foreach ($data as $key => $value) {
 
-                $banners =  json_decode($value->banner_image);
+                $banners = json_decode($value->banner_image);
                 $urlbanners = array_map(function ($banner) {
-                    return \URL::to('vendor-banner/') . '/' . $banner;
+                    return URL::to('vendor-banner/') . '/' . $banner;
                 }, $banners);
 
-                $category =  \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
-                $timeSchedule =  \App\Models\VendorOrderTime::where(['vendor_id' => $value->id, 'day_no' => Carbon::now()->dayOfWeek])->first();
+                $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $timeSchedule = VendorOrderTime::where(['vendor_id' => $value->id, 'day_no' => Carbon::now()->dayOfWeek])->first();
                 if ($timeSchedule->available) {
                     if (strtotime(date('H:i:s')) >= strtotime($timeSchedule->start_time) && strtotime(date('H:i:s')) <= strtotime($timeSchedule->end_time)) {
                         $data[$key]->isClosed = false;
@@ -126,7 +135,7 @@ class AppController extends Controller
                 'response' => $data
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
@@ -151,9 +160,9 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $category = \App\Models\VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
-            foreach ($category as  $key => $value) {
-                $product = \App\Models\Product_master::where(['products.status' => '1', 'product_for' => '3']);
+            $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
+            foreach ($category as $key => $value) {
+                $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
                 $product = $product->join('categories', 'products.category', '=', 'categories.id');
                 $product = $product->where('menu_id', '=', $value->id);
                 $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'));
@@ -166,13 +175,14 @@ class AppController extends Controller
                 'response' => $category
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     public function getRestaurantBrowsemenu(Request $request)
     {
         try {
@@ -191,7 +201,7 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            $category = \App\Models\VendorMenus::query()
+            $category = VendorMenus::query()
                 ->select('menuName', \DB::raw('count(*) as count'))
                 ->join('products as c', 'vendor_menus.id', 'c.menu_id')
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
@@ -204,13 +214,14 @@ class AppController extends Controller
                 'response' => $category
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     public function getRestaurantCustmizeProductData(Request $request)
     {
         try {
@@ -229,13 +240,13 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            $product =  \App\Models\Product_master::where('id', '=', $request->product_id)->select('variants', 'addons', 'customizable')->first();
+            $product = Product_master::where('id', '=', $request->product_id)->select('variants', 'addons', 'customizable')->first();
             if ($product->customizable == 'true') {
                 $options = unserialize($product->variants);
                 if ($product->addons == null) {
                     $data = ['options' => $options, 'addons' => $product->addons];
                 } else {
-                    $data = ['options' => $options, 'addons' => unserialize($product->addons)];
+                    $data = ['options' => $options, 'addons' => @unserialize($product->addons)];
                 }
                 return response()->json([
                     'status' => true,
@@ -250,13 +261,14 @@ class AppController extends Controller
 
                 ], 401);
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     public function getRestaurantSearchData(Request $request)
     {
         try {
@@ -278,9 +290,9 @@ class AppController extends Controller
             }
             //
             if ($request->search_for == 'restaurant') {
-                $data =  \App\Models\Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
             } elseif ($request->search_for == 'dishes') {
-                $data =  \App\Models\Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'), 'product_price', 'type')->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                $data = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'), 'product_price', 'type')->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
             } else {
                 $data = [];
             }
@@ -291,7 +303,7 @@ class AppController extends Controller
                 'response' => $data
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
@@ -303,21 +315,22 @@ class AppController extends Controller
     public function chefHomePage()
     {
         try {
-            $vendors = \App\Models\Vendors::where(['status' => '1', 'vendor_type' => 'chef', 'is_all_setting_done' => '1'])->select('name', 'vendor_ratings', 'review_count', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image', 'rating'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'experience')->orderBy('id', 'desc')->get();
-            $products = \App\Models\Product_master::where(['products.status' => '1', 'product_for' => '2'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'))->orderBy('products.id', 'desc')->get();
+            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'chef', 'is_all_setting_done' => '1'])->select('name', 'vendor_ratings', 'review_count', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image', 'rating'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'experience')->orderBy('id', 'desc')->get();
+            $products = Product_master::where(['products.status' => '1', 'product_for' => '2'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'))->orderBy('products.id', 'desc')->get();
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
                 'response' => ['vendors' => $vendors, 'products' => $products]
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     public function getChefByCategory(Request $request)
     {
         try {
@@ -336,14 +349,14 @@ class AppController extends Controller
                 ], 401);
             }
             //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-            $data = \App\Models\Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'id', 'experience', 'fssai_lic_no');
+            $data = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'id', 'experience', 'fssai_lic_no');
             $data = $data->where(['vendors.status' => '1', 'vendor_type' => 'chef', 'is_all_setting_done' => '1'])->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)');
 
             $data = $data->get();
             date_default_timezone_set('Asia/Kolkata');
             foreach ($data as $key => $value) {
-                $category =  \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
-                $timeSchedule =  \App\Models\VendorOrderTime::where(['vendor_id' => $value->id, 'day_no' => Carbon::now()->dayOfWeek])->first();
+                $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $timeSchedule = VendorOrderTime::where(['vendor_id' => $value->id, 'day_no' => Carbon::now()->dayOfWeek])->first();
 
                 if ($timeSchedule->available) {
                     if (strtotime(date('H:i:s')) >= strtotime($timeSchedule->start_time) && strtotime(date('H:i:s')) <= strtotime($timeSchedule->end_time)) {
@@ -363,13 +376,14 @@ class AppController extends Controller
                 'response' => $data
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     public function getChefDetailPage(Request $request)
     {
         try {
@@ -387,7 +401,7 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $category = \App\Models\Product_master::where(['userId' => $request->vendor_id])->select('product_name', 'id', 'product_image', 'type', 'category', 'cuisines', 'product_price', 'customizable')->get();
+            $category = Product_master::where(['userId' => $request->vendor_id])->select('product_name', 'id', 'product_image', 'type', 'category', 'cuisines', 'product_price', 'customizable')->get();
 
             return response()->json([
                 'status' => true,
@@ -395,13 +409,14 @@ class AppController extends Controller
                 'response' => $category
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
             ], 500);
         }
     }
+
     public function getChefProfile(Request $request)
     {
         try {
@@ -420,16 +435,16 @@ class AppController extends Controller
                 ], 401);
             }
 
-            $vendors = \App\Models\Vendors::where('id', '=', $request->vendor_id)->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'id', 'experience', 'fssai_lic_no')->first();
+            $vendors = Vendors::where('id', '=', $request->vendor_id)->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'id', 'experience', 'fssai_lic_no')->first();
             $vendors->bio = 'I am here to entice your taste-buds! #enticeyourtastebuds  Boring recipes can make you sad, so always try to make  some interesting cuisine.  We will feel ill if we spend too much time out of the kitchen.  Chefs know that cooking is not their job but the calling  of life. A chef has the common drive of spreading happiness';
-            $videos = \App\Models\Chef_video::where('userId', '=', $request->vendor_id)->get();
+            $videos = Chef_video::where('userId', '=', $request->vendor_id)->get();
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
                 'response' => ['profile' => $vendors, 'videos' => $videos]
 
             ], 200);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
@@ -502,17 +517,15 @@ class AppController extends Controller
                 // $cart_obj->addons()->saveMany($addons);
 
 
-
-
                 DB::commit();
 
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
                 return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
@@ -531,18 +544,98 @@ class AppController extends Controller
                 DB::beginTransaction();
                 // database queries here
 
-                $cart_obj = Cart::where('user_id', $request->user_id)->first();
-                $cart_obj->delete();
-
+                $cart_objs = Cart::where('user_id', $request->user_id)->get();
+                foreach ($cart_objs as $k => $cart_obj) {
+                    $cart_obj->cart_product_variants()->delete();
+                    $cart_obj->cart_product_addons()->delete();
+                    $cart_obj->products()->delete();
+                    $cart_obj->delete();
+                }
                 DB::commit();
-
-                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
-            } catch (\PDOException $e) {
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully'], 200);
+            } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
                 return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
             }
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
+            return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
+        }
+    }
+
+
+    public function view_cart(Request $request)
+    {
+        //        dd($request->all());
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'user_id' => 'required|numeric',
+                'cart_id' => 'required|numeric'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+
+            \DB::enableQueryLog();
+            $cart_id = $request->cart_id;
+            $pro = \App\Models\Product_master::where('status', 1)
+                ->whereIn(
+                    "products.id",
+                    function ($query) use ($cart_id) {
+                        $query->select('product_id')->from('cart_products')->where('cart_id', $cart_id);
+                    }
+                )
+                ->with(['product_variants', 'cuisines'])->get();
+
+            if ($pro != null)
+                $pro = $pro->toArray();
+            //SELECT * FROM `cart_product_variants`
+            //LEFT JOIN cart_products on cart_products.id=cart_product_variants.cart_product_id
+            //where cart_id=7
+
+
+            $variants = \App\Models\CartProductVariant::select('*')
+                ->where('cart_products.cart_id', $cart_id)
+                ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
+                ->pluck('variant_qty', 'variant_id');
+            if ($variants != null)
+                $variants = $variants->toArray();
+
+            foreach ($pro as $k => $product) {
+                unset($pro[$k]['variants']);
+                unset($pro[$k]['created_at']);
+                unset($pro[$k]['updated_at']);
+                unset($pro[$k]['deleted_at']);
+                $pro[$k]['cuisines'] = $product['cuisines']['name'];
+                $pro[$k]['product_image'] = asset('products') . '/' . $product['product_image'];
+
+
+                if ($product['addons'] != '') {
+                    $pro[$k]['addons'] = @\App\Models\Addons::select('addon_id', 'addon', 'price', 'addon_qty')
+                        ->whereIn('addons.id', explode(',', $product['addons']))
+                        ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
+                        ->get()->toArray();
+                }
+                if (count($product['product_variants']) > 0) {
+                    foreach ($product['product_variants'] as $k1 => $product_variants) {
+                        unset($pro[$k]['product_variants'][$k1]['deleted_at']);
+                        unset($pro[$k]['product_variants'][$k1]['created_at']);
+                        unset($pro[$k]['product_variants'][$k1]['updated_at']);
+
+                        if (isset($variants[$product_variants['id']]))
+                            $pro[$k]['product_variants'][$k1]['variant_qty'] = $variants[$product_variants['id']];
+                        else
+                            $pro[$k]['product_variants'][$k1]['variant_qty'] = 0;
+                    }
+                }
+            }
+            //    dd(\DB::getQueryLog ());
+            //            dd($pro);
+            //    dd($cart);
+
+            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $pro]], 200);
+        } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }

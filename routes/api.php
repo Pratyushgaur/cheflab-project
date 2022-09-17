@@ -40,11 +40,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //
 
 
-
+    //add-to-cart
+    Route::post('add-to-cart', [App\Http\Controllers\api\AppController::class, 'add_to_cart']);
+    Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
+    Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
 });
-//add-to-cart
-Route::post('add-to-cart', [App\Http\Controllers\api\AppController::class, 'add_to_cart']);
-Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
+
+
 
 Route::post('register-send-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_send_otp']);
 Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_verify_otp']);
