@@ -10,7 +10,7 @@ class AppMasterController extends Controller
     public function getCategories()
     {
         try {
-            $data = \App\Models\Catogory_master::where(['is_active'=>'1'])->select('categories.name',\DB::raw('CONCAT("'.asset('categories').'/", categoryImage) AS image'))->orderBy('position','ASC')->get();
+            $data = \App\Models\Catogory_master::where(['is_active'=>'1'])->select('categories.name',\DB::raw('CONCAT("'.asset('categories').'/", categoryImage) AS image'),'id')->orderBy('position','ASC')->get();
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -30,7 +30,7 @@ class AppMasterController extends Controller
     public function getCuisines()
     {
         try {
-            $data = \App\Models\Cuisines::where(['is_active'=>'1'])->select('cuisines.name',\DB::raw('CONCAT("'.asset('cuisines').'/", cuisinesImage) AS image'))->orderBy('position','ASC')->get();
+            $data = \App\Models\Cuisines::where(['is_active'=>'1'])->select('cuisines.name',\DB::raw('CONCAT("'.asset('cuisines').'/", cuisinesImage) AS image'),'id')->orderBy('position','ASC')->get();
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
