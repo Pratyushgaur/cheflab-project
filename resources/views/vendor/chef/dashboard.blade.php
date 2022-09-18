@@ -4,7 +4,7 @@
     <div class="ms-content-wrapper">
       <div class="row">
         <div class="col-md-12">
-          <h1 class="db-header-title">Welcome, {{ucfirst(Auth::guard('chef')->user()->name)}}</h1>
+          <h1 class="db-header-title">Welcome, {{ucfirst(Auth::guard('vendor')->user()->name)}}</h1>
         </div>
         <div class="col-xl-3 col-lg-6 col-md-6">
           <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
