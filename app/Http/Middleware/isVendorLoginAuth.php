@@ -20,11 +20,11 @@ class isVendorLoginAuth
         if (Auth::guard('vendor')->check()) {
             if (Auth::guard('vendor')->user()->vendor_type == 'restaurant') {
                 return redirect()->route('restaurant.dashboard'); 
-            } elseif(Auth::guard('vendor')->user()->vendor_type == 'cehf') {
+            } elseif(Auth::guard('vendor')->user()->vendor_type == 'chef') {
                return redirect()->route('chef.dashboard');
             }
             
-            return redirect()->route('vendor.dashboard');
+            //return redirect()->route('vendor.dashboard');
 
        }else{
            

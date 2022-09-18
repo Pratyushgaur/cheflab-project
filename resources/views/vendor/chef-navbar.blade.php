@@ -94,7 +94,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
               <li class="dropdown-menu-header">
-                <h6 class="dropdown-header ms-inline m-0"><span class="text-disabled">Welcome, {{ucfirst(Auth::guard('chef')->user()->chef_type)}}</span></h6>
+                <h6 class="dropdown-header ms-inline m-0"><span class="text-disabled">Welcome, {{ucfirst(Auth::guard('vendor')->user()->vendor_type)}}</span></h6>
               </li>
               <li class="dropdown-divider"></li>
               <li class="ms-dropdown-list">
