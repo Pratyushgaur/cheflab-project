@@ -3,12 +3,17 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Addons;
 use App\Models\Cart;
 use App\Models\CartProduct;
 use App\Models\CartProductAddon;
 use App\Models\CartProductVariant;
 use App\Models\Catogory_master;
 use App\Models\Chef_video;
+use App\Models\Order;
+use App\Models\OrderProduct;
+use App\Models\OrderProductAddon;
+use App\Models\OrderProductVariant;
 use App\Models\Product_master;
 use App\Models\User;
 use App\Models\Variant;
@@ -249,15 +254,15 @@ class AppController extends Controller
                 if ($product->addons == null) {
                     $data = ['addons' => $product->addons];
                 } else {
-                    $data = [ 'addons' => @unserialize($product->addons)];
+                    $data = ['addons' => @unserialize($product->addons)];
                 }
 
-                $v = Variant::select('variant_name','variant_price')->where('product_id', $request->product_id)->get();
+                $v = Variant::select('variant_name', 'variant_price')->where('product_id', $request->product_id)->get();
                 // dd($v->toArray());
                 if (isset($v))
                     $data['options'] = $v->toArray();
 
-                    // dd($product);
+                // dd($product);
                 return response()->json([
                     'status' => true,
                     'message' => 'Data Get Successfully',
@@ -600,11 +605,11 @@ class AppController extends Controller
                 $wallet_amount = $u->wallet_amount;
 
 
-            $pro = \App\Models\Product_master::where('status', 1)
+            $pro = Product_master::select('products.*')->where('status', 1)
                 ->whereIn(
                     "products.id",
                     function ($query) use ($cart_id) {
-                        $query->select('product_id')->from('cart_products')->where('cart_id', $cart_id);
+                        $query->select('product_id as product_id')->from('cart_products')->where('cart_id', $cart_id);
                     }
                 )
                 ->with(['product_variants', 'cuisines'])->get();
@@ -615,7 +620,7 @@ class AppController extends Controller
             //SELECT * FROM `cart_product_variants`
             //LEFT JOIN cart_products on cart_products.id=cart_product_variants.cart_product_id
             //where cart_id=7
-            $variants = \App\Models\CartProductVariant::select('*')
+            $variants = CartProductVariant::select('*')
                 ->where('cart_products.cart_id', $cart_id)
                 ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
                 ->pluck('variant_qty', 'variant_id');
@@ -632,7 +637,7 @@ class AppController extends Controller
 
 
                 if ($product['addons'] != '') {
-                    $pro[$k]['addons'] = @\App\Models\Addons::select(DB::raw('distinct addons.id,addon_id, addon, price, addon_qty'))
+                    $pro[$k]['addons'] = @Addons::select(DB::raw('distinct addons.id,addon_id, addon, price, addon_qty'))
                         // select('addon_id', 'addon', 'price', 'addon_qty')
                         ->whereIn('addons.id', explode(',', $product['addons']))
                         ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
@@ -659,4 +664,208 @@ class AppController extends Controller
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
+
+    public function update_cart(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'cart_id' => 'required|numeric',
+                    'user_id' => 'required|numeric',
+                    'vendor_id' => 'required|numeric',
+                    'products.*.product_id' => 'required|numeric',
+                    'products.*.product_qty' => 'required|numeric',
+                    'products.*.variants.*.variant_id' => 'numeric|nullable',
+                    'products.*.variants.*.variant_qty' => 'string|nullable',
+                    'products.*.addons.*.addon_id' => 'numeric|nullable',
+                    'products.*.addons.*.addon_qty' => 'string|nullable',
+
+                    // 'addons.*.id' => 'numeric|nullable',
+                    // 'addons.*.addon_qty' => "numeric|nullable"
+                ]
+
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            global $cart_id;
+            try {
+                \DB::enableQueryLog();
+                DB::beginTransaction();
+                // database queries here
+
+                $cart_obj = Cart::find($request->cart_id);
+                if (!$cart_obj) {
+                    return response()->json(['status' => false, 'error' => 'Cart not found'], 401);
+                }
+
+                $cart_obj->user_id = $request->user_id;
+                $cart_obj->vendor_id = $request->vendor_id;
+                $cart_obj->saveOrFail();
+                $cart_id = $cart_obj->id;
+                foreach ($request->products as $k => $p) {
+                    $cart_products = CartProduct::where('product_id', $p['product_id'])->where('cart_id', $cart_id)->first();
+
+
+                    if (!$cart_products)
+                        $cart_products = new CartProduct($p);
+                    else {
+                        $cart_products->product_id = $p['product_id'];
+                        $cart_products->product_qty = $p['product_qty'];
+                    }
+
+                    $cart_obj->products()->save($cart_products);
+//                dd($cart_products);
+                    $cart_products_id[] = $cart_products->id;
+                    if (isset($p['variants'])) {
+                        foreach ($p['variants'] as $k => $v) {
+                            $CartProductVariant = CartProductVariant::where('cart_product_id', $cart_products->id)->where('variant_id', $v['variant_id'])->first();
+
+                            if (!$CartProductVariant) {
+                                $CartProductVariant = new CartProductVariant();
+                                $CartProductVariant->cart_product_id = $cart_products->id;
+                                $CartProductVariant->variant_id = $v['variant_id'];
+                            }
+                            $CartProductVariant->variant_qty = $v['variant_qty'];
+                            $CartProductVariant->save();
+                            $cart_products_variant_id[] = $CartProductVariant->id;
+                        }
+                        $cart_obj->cart_product_variants()->whereNotIn('cart_product_variants.id', $cart_products_variant_id)->delete();
+                    }
+                    if (isset($p['addons']) && $p['addons'] != '')
+                        foreach ($p['addons'] as $k => $a) {
+                            $CartProductAddon = CartProductAddon::where('cart_product_id', $cart_products->id)->where('addon_id', $a['addon_id'])->first();
+                            if (!$CartProductAddon) {
+                                $CartProductAddon = new CartProductAddon();
+                                $CartProductAddon->cart_product_id = $cart_products->id;
+                                $CartProductAddon->addon_id = $a['addon_id'];
+                            }
+                            $CartProductAddon->addon_qty = $a['addon_qty'];
+                            $CartProductAddon->save();
+                            $cart_products_addons_id[] = $CartProductAddon->id;
+                        }
+                    $cart_obj->cart_product_addons()->whereNotIn('cart_product_addons.id', $cart_products_addons_id)->delete();
+                }
+//            dd($cart_products_id);
+                $cart_obj->products()->whereNotIn('id', $cart_products_id)->delete();
+//            dd(\DB::getQueryLog());
+                DB::commit();
+
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
+            } catch (PDOException $e) {
+                // Woopsy
+                DB::rollBack();
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
+            }
+        } catch (Throwable $th) {
+            return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
+        }
+    }
+
+
+    public function create_order(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric',
+                    'vendor_id' => 'required|numeric',
+                    'user_id' => 'required|numeric',
+                    'customer_name' => 'required|string',
+                    'delivery_address' => 'required|string',
+                    'total_amount' => 'required|numeric',
+                    'gross_amount' => 'required|numeric',
+                    'net_amount' => 'required|numeric',
+                    'discount_amount' => 'required|numeric',
+                    'coupon_id' => 'nullable|numeric',
+                    'payment_type' => 'nullable|string',
+                    'payment_status' => 'nullable|string',
+                    'transaction_id' => 'nullable|string',
+                    'payment_string' => 'nullable|string',
+
+                    'products.*.product_id' => 'required|numeric',
+                    'products.*.product_qty' => 'required|numeric',
+                    'products.*.product_name' => 'required|string',
+
+                    'products.*.variants.*.variant_id' => 'numeric|nullable',
+                    'products.*.variants.*.variant_qty' => 'numeric|nullable',
+                    'products.*.variants.*.variant_price' => 'numeric|nullable',
+                    'products.*.variants.*.variant_name' => 'string|nullable',
+
+                    'products.*.addons.*.addon_id' => 'numeric|nullable',
+                    'products.*.addons.*.addon_qty' => 'numeric|nullable',
+                    'products.*.addons.*.addon_price' => 'numeric|nullable',
+                    'products.*.addons.*.addon_name' => 'string|nullable',
+                ]
+
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            global $cart_id;
+            try {
+                DB::beginTransaction();
+                // database queries here
+                $data = $request->all();
+                if (is_array($request->payment_string))
+                    $data['payment_string'] = serialize($request->payment_string);
+
+                $Order = new Order($request->all());
+                $Order->saveOrFail();
+                $order_id = $Order->id;
+                foreach ($request->products as $k => $p) {
+                    $order_products = new OrderProduct($p);
+                    $Order->products()->save($order_products);
+                    if (isset($p['variants']))
+                        foreach ($p['variants'] as $k => $v) {
+                            $orderProductVariant = new OrderProductVariant($v);
+                            $order_products->order_product_variants()->save($orderProductVariant);
+//                            dd($order_products);
+
+//                            $CartProductVariant->cart_product_id = $cart_products->id;
+//                            $CartProductVariant->variant_id = $v['variant_id'];
+//                            $CartProductVariant->variant_qty = $v['variant_qty'];
+//                            $CartProductVariant->save();
+                        }
+
+                    if (isset($p['addons']))
+                        foreach ($p['addons'] as $k => $a) {
+                            $OrderProductAddon = new OrderProductAddon($a);
+                            $order_products->order_product_addons()->save($OrderProductAddon);
+//                            $CartProductAddon->cart_product_id = $cart_products->id;
+//                            $CartProductAddon->addon_id = $a['addon_id'];
+//                            $CartProductAddon->addon_qty = $a['addon_qty'];
+//                            $CartProductAddon->save();
+                        }
+                }
+
+
+                // if (isset($request->addons))
+                //     foreach ($request->addons as $k => $a) {
+                //         $addons[] = new CartAddon($a);
+                //     }
+                // $cart_obj->addons()->saveMany($addons);
+
+
+                DB::commit();
+
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
+            } catch (PDOException $e) {
+                // Woopsy
+                DB::rollBack();
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
+            }
+        } catch (Throwable $th) {
+            return response()->json(['status' => False,
+                'error' => $th->getMessage(),
+                'error_trace' => $th->getTrace()
+            ], 500);
+        }
+    }
+
+
 }

@@ -22,7 +22,7 @@ class CreateCartProductsTable extends Migration
             $table->unsignedBigInteger('product_id');
             // $table->foreign('product_id')->references('id')->on('products');
 
-            $table->integer('product_qty');
+            $table->integer('product_qty')->comment('If orderd variant product,then there will be sum of all orderd variant of particular product');
             $table->timestamps();
         });
     }

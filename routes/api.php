@@ -44,6 +44,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('add-to-cart', [App\Http\Controllers\api\AppController::class, 'add_to_cart']);
     Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
     Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
+    Route::post('update-cart', [App\Http\Controllers\api\AppController::class, 'update_cart']);
+    Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
 });
 
 

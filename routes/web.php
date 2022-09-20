@@ -1,7 +1,12 @@
 <?php
 
 use App\Http\Middleware\isVendorLoginAuth;
+use App\Models\Cart;
+use App\Models\CartProduct;
+use App\Models\CartProductAddon;
+use App\Models\CartProductVariant;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 //use Auth;
@@ -16,6 +21,71 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/test',function (){
+
+    \DB::enableQueryLog();
+    DB::beginTransaction();
+    // database queries here
+
+//                $cart_obj = new Cart($request->all());
+    $cart_obj = Cart::find($request->cart_id);
+    if (!$cart_obj) {
+        return response()->json(['status' => false, 'error' => 'Cart not found'], 401);
+    }
+
+    $cart_obj->user_id = $request->user_id;
+    $cart_obj->vendor_id = $request->vendor_id;
+    $cart_obj->saveOrFail();
+    $cart_id = $cart_obj->id;
+    foreach ($request->products as $k => $p) {
+//
+        if (isset($p['id']) && $p['id'] != '')
+        {
+            $cart_products = CartProduct::find($p['id']);
+            $cart_products->product_id=$p['product_id'];
+            $cart_products->product_qty=$p['product_qty'];
+        }
+        else{
+            dd($p);
+            $cart_products = new CartProduct($p);
+            dd($cart_products);
+        }
+
+        $cart_obj->products()->save($cart_products);
+        $cart_products_id[] = $cart_obj->id;
+        if (isset($p['variants'])) {
+            foreach ($p['variants'] as $k => $v) {
+                if (isset($v['id']) && $v['id'] != '')
+                    $CartProductVariant = CartProductVariant::find($v['id']);
+                else
+                    $CartProductVariant = new CartProductVariant();
+
+                $CartProductVariant->cart_product_id = $cart_products->id;
+                $CartProductVariant->variant_id = $v['variant_id'];
+                $CartProductVariant->variant_qty = $v['variant_qty'];
+                $CartProductVariant->save();
+                $cart_products_variant_id[] = $CartProductVariant->id;
+            }
+            $cart_obj->cart_product_variants()->whereNotIn('cart_product_variants.id', $cart_products_variant_id)->delete();
+        }
+        if (isset($p['addons']) && $p['addons'] != '')
+            foreach ($p['addons'] as $k => $a) {
+                if (isset($a['id']))
+                    $CartProductAddon = CartProductAddon::find($a['id']);
+                else
+                    $CartProductAddon = new CartProductAddon();
+                $CartProductAddon->cart_product_id = $cart_products->id;
+                $CartProductAddon->addon_id = $a['addon_id'];
+                $CartProductAddon->addon_qty = $a['addon_qty'];
+                $CartProductAddon->save();
+                $cart_products_addons_id[] = $CartProductAddon->id;
+            }
+        $cart_obj->cart_product_addons()->whereNotIn('cart_product_addons.id', $cart_products_addons_id)->delete();
+    }
+
+    $cart_obj->products()->whereNotIn('id', $cart_products_id)->delete();
+    dd(\DB::getQueryLog ());
+});
 Route::get('/', function () {
     return view('welcome');
 });
