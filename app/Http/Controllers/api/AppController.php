@@ -118,7 +118,7 @@ class AppController extends Controller
                 ], 401);
             }
             //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-            $data = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'banner_image', 'vendor_ratings', 'vendor_food_type', 'deal_categories', 'id', 'fssai_lic_no');
+            $data = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'banner_image', 'vendor_ratings', 'vendor_food_type', 'deal_categories', 'id', 'fssai_lic_no','table_service');
             $data = $data->where(['vendors.status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)');
 
             $data = $data->get();
@@ -178,7 +178,7 @@ class AppController extends Controller
                 ], 401);
             }
             //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
-            $data = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'banner_image', 'vendor_ratings', 'vendor_food_type', 'deal_categories', 'id', 'fssai_lic_no');
+            $data = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'banner_image', 'vendor_ratings', 'vendor_food_type', 'deal_categories', 'id', 'fssai_lic_no','table_service');
             $data = $data->where(['vendors.status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
 
             $data = $data->get();
