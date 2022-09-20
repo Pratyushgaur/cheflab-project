@@ -31,6 +31,7 @@ class Products extends Migration
             $table->text('addons')->nullable();
             $table->enum('product_for',['1','2','3'])->comment('1-cheflab 2-chef 3-restaurant');
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
+            $table->enum('product_activation', ['1', '2'])->default('2')->comment('1-active 2-pending 3-reject');
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
        

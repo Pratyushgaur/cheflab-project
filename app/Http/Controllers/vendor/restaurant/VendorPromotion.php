@@ -23,27 +23,6 @@ class VendorPromotion extends Controller
         $slot =SloteMaster::where('status','=','1')->select('id','price')->get();
         return view('vendor.restaurant.promotion.create',compact('slot'));
     }
-    /*public function create_promotion(){
-       $vendor_id =  Auth::guard('vendor')->user()->id;
-       $slot = SloteBook::where('vendor_id',$vendor_id)->where('slot_status','=','0')->select('id','date')->get();
-       // dd($slot);  // @if($vendor->product_image == null)      if(is_null($slot)
-       if(sizeof($slot)){
-        return redirect()->route('restaurant.promotion.list')->with('message', 'Your Slot is Pending you can not Creat new Slot');
-       }else{
-    //    echo 'ok';die;
-            $slot =SloteMaster::where('status','=','1')->select('id','price')->get();
-            return view('vendor.restaurant.promotion.create',compact('slot'));
-           /* if($slot == null){
-                $slot =SloteMaster::where('status','=','1')->select('id','price')->get();
-                return view('vendor.restaurant.promotion.create',compact('slot'));
-            }else{
-                $slot =SloteMaster::where('status','=','1')->select('id','price')->get();
-                return view('vendor.restaurant.promotion.create',compact('slot'));
-            }
-       }
-        
-        
-    }*/
     public function selctvalue(Request $request){
      //  return  $request->input();die;
         $id =  $request->banner;
@@ -61,7 +40,9 @@ class VendorPromotion extends Controller
         ]);
         $slot = new SloteBook;
         $slot->date = $request->date;
-        $slot->id = $request->banner;
+        $slot->id = $request->id;
+        $slot->price = $request->price;
+        $slot->banner = $request->banner;
         $slot->vendor_id = Auth::guard('vendor')->user()->id;
         $slot->banner = $request->banner;
         if($request->has('slot_image')){
@@ -82,7 +63,7 @@ class VendorPromotion extends Controller
                 ->addIndexColumn()
                 
                 ->addColumn('slot_status', function($data){
-                    return $status_class = (!empty($data->slot_status)) && ($data->slot_status == 0) ? '<button class="btn btn-sm btn-success">Active</button>' : '<a  href="'.route('admin.slot.active',Crypt::encryptString($data->slot_id)).'" class="btn btn-sm btn-danger">Pending</a>'; 
+                    return $status_class = (!empty($data->slot_status)) && ($data->slot_status == 0) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-primary">Pending</span>'; 
                     return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
                 })
                 ->addColumn('slot_image',function($data){
@@ -95,6 +76,36 @@ class VendorPromotion extends Controller
     }
     public function checkdate(Request $request){
         $date = $request->id;
+        $vendor_id = Auth::guard('vendor')->user()->id;
+       // var_dump($date);die;
+        if (SloteBook::where('date','=',$date)->where('vendor_id','=',$vendor_id)->exists()) {
+            return \Response::json(false);
+          // return redirect()->route('restaurant.promotion.create')->with('message', 'SlotBook');
+        }elseif(SloteBook::where('date','=',$date)->exists()){
+            $wordlist =  \App\Models\SloteBook::where('date', '=', $date)->get();
+            
+            foreach($wordlist as $k =>$v){
+               // $data[] = array('variant_name' =>$v ,'price' =>$request->price[$k]);
+               
+               $slot =SloteMaster::where('id','!=',$v['id'])->select('id','price','slot_name')->get();
+               return \Response::json($slot);
+
+            }
+           // $wordCount = $wordlist->count();
+           
+        }else{
+            $slot =SloteMaster::where('status','=','1')->select('id','price','slot_name')->get();
+            return \Response::json($slot);
+        }
+    }
+    public function getPrice(Request $request){
+        $id = $request->id;
+        $slot =SloteMaster::where('id','=',$id)->select('id','price')->get();
+        return \Response::json($slot);
+    }
+    public function getslot(Request $request){
+        $date = $request->id;
+       // var_dump($date);die;
         if (SloteBook::where('date','=',$date)->exists()) {
             return \Response::json(false);
           // return redirect()->route('restaurant.promotion.create')->with('message', 'SlotBook');

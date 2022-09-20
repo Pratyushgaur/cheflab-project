@@ -1,4 +1,4 @@
-@extends('chef.chef-layout')
+@extends('vendor.restaurants-layout')
 @section('main-content')
 
     <div class="ms-content-wrapper">
@@ -22,7 +22,7 @@
                 <div class="align-self-center align-left">
                   <h6>Coupon List</h6>
                 </div>
-                <a href="{{route('chef.coupon.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create New</a>
+                <a href="{{route('restaurant.coupon.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create New</a>
               </div>
             </div>
             <div class="ms-panel-body">
@@ -31,10 +31,13 @@
                     <thead>
                       <tr>
                         <th scope="col">#</th>
+                        <th scope="col">Code Name</th>
                         <th scope="col">Code</th>
                         <th scope="col">Discount Type</th>
                         <th scope="col">Discount</th>
-                        <th scope="col">Expire At</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
@@ -64,11 +67,13 @@
         ajax: "{{ route('chef.coupon.data') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'name', name: 'name'},
             {data: 'code', name: 'code'},
             {data: 'discount_type', name: 'discount_type'},
             {data: 'discount', name: 'discount'},
-            {data: 'expires_coupon', name: 'expires_coupon'},
-          
+            {data: 'status', name: 'status'},
+            {data: 'from', name: 'from'},
+            {data: 'to', name: 'to'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

@@ -54,5 +54,6 @@ Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::cla
 Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
 Route::get('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
 Route::get('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
+Route::get('procode-coupon-apply',[App\Http\Controllers\api\CouponController::class,'couponApply']);
 
 

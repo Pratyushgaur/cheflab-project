@@ -23,6 +23,9 @@
           border-style: dotted;
           border-radius: 18px;
         }
+        
+        
+        
         .upload-icon img{
           width: 100px;
           height: 100px;
@@ -84,12 +87,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create Category</h1>
+            <h1>Edit Admin Banner Slote</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create Category</li>
+              <li class="breadcrumb-item active">Edit Banner</li>
             </ol>
           </div>
         </div>
@@ -100,12 +103,12 @@
     <section class="content">
 		<div class="row">
 			
-				<div class="col-md-4">
-        <form id="restaurant-form" action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
+		<div class="col-md-4">
+        <form id="banner-form" action="{{route('admin.vendorstore.store')}}" method="post" enctype="multipart/form-data">
           @csrf
           <div class="card card-primary">
 							<div class="card-header">
-							  <h3 class="card-title">Create</h3>
+							  <h3 class="card-title">Add Banner Time Slot*</h3>
 
 							  <div class="card-tools">
 								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -113,38 +116,31 @@
 							  </div>
 							</div>
 							<div class="card-body">
-							  <div class="form-group">
-                  <label for="category_name">Category Name <span class="text-danger">*</span></label>
-                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Category Name">
-                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
-                </div>
-                <div class="form-group">
-                  <label for="category_name">Position <span class="text-danger">*</span></label>
-                  <input type="number" id="position" name="position" value="{{!empty($class_name[0]->position) ? $class_name[0]->position : ''}}" class="form-control" placeholder="Position ">
-                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
-                </div>
-                <div class="form-group">
-                      <div>
-                        <label for="">Images <span class="text-danger">*</span></label>
-                      </div>
-                      <div class="image-upload">
-                          <label for="file-input">
-                              <div class="upload-icon">
-                                  <img class="icon" src="{{asset('add-image.png')}}">
-                              </div>
-                          </label>
-                          <input id="file-input" type="file" name="categoryImage" required/>
-                      </div>      
-                </div>
+							    <div class="form-group">
+                        <label for="category_name">Store Name <span class="text-danger">*</span></label>
+                      <input type="text" id="name" name="slot_name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Slot Name">
+                      <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                  </div>
+                  <div class="form-group">
+                        <label for="category_name">Store Price <span class="text-danger">*</span></label>
+                      <input type="text" id="name" name="price"  class="form-control" placeholder="Slot Name">
+                      
+                  </div>
+                  <div class="form-group">
+                      <label for="category_name">Store Position <span class="text-danger">*</span></label>
+                      <input type="number" id="position" name="position" value="{{!empty($class_name[0]->position) ? $class_name[0]->position : ''}}" class="form-control" placeholder="Position ">
+                  </div>
+                  <div class="form-group" id="games">
+                  </div>
 							</div>
-							<!-- /.card-body -->
+						
 						</div>
 						<div>
 						
 						  <input type="submit" value="Save Changes" class="btn btn-success float-right">
 						</div>
 					</form>
-				  <!-- /.card -->
+				   
 				</div>
 				<div class="card card-info col-md-8">
             <div class="card-header">
@@ -160,10 +156,10 @@
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Category Name</th>
+                                    <th >Slot Name</th>
+                                    <th >Price</th>
                                     <th >Position</th>
-                                    <th  >Image</th>
-                                  
+                                    <th >Status</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -201,40 +197,40 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.category.datatable') }}",
+        ajax: "{{route('admin.vendorstore.data')}}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'city_name'},
+            {data: 'slot_name', name: 'slot_name'},
+            {data: 'price', name: 'price'},
             {data: 'position', name: 'position'},
-            {data: 'categoryImage', name: 'categoryImage'},
+            {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
-    $("#restaurant-form").validate({
+    $("#banner-form").validate({
       rules: {
-            name: {
+            slot_name: {
                 required: true,
                 maxlength: 20,
-                remote: '{{route("check-duplicate-category")}}',
+                //remote: '{{route("admin.banner.slotcheck")}}',
             },
-            position: {
+            price: {
                 required: true,
                 number: true,
             },
-            categoryImage:{
+            position:{
               required: true,
-              image: true,
             }
         },
         messages: {
-            name: {
-                remote:"Category  Already Exist",
+            slot_name: {
+                remote:"Name  is Required",
+            },
+            proc_terminate:{
+                remote:"Date is  Required",
             },
             position:{
-                remote:"Position Required",
-            },
-            categoryImage:{
-                remote:"Image Required"
+                remote:"Select Max Banner Required",
             }
             
         }
@@ -247,8 +243,24 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
-  
-      
+       //Timepicker
+    $('#timepicker').datetimepicker({
+      format: 'LT'
+    });
+    $('#timepicker1').datetimepicker({
+      format: 'LT'
+    });
+    $("#timeSlote").change(function() {
+        var value = +$(this).val();
+        value *= 1;
+        var nr = 0;
+        var elem = $('#games').empty();
+     
+        while (nr < value) {
+            elem.append($('<label for="category_name"> Banner priority amount <span class="text-danger">*</span></label><input type="text" id="name" name="banner[]" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Slot Name"><br>',{name : "whateverNameYouWant"}));
+            nr++;
+        }
+        }); 
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }

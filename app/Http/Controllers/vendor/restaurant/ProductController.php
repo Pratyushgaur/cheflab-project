@@ -104,18 +104,29 @@ class ProductController extends Controller
                     $btn = '<i class="fas fa-rupee-sign"></i>'.$data->product_price.'';
                     return $btn;
                 })
-                ->addColumn('status', function($data){
+                ->addColumn('product_activation', function($data){
+                    //return $status_class = (!empty($data->status)) && ($data->status == 1) &&  ($data->status == 2) && ($data->status == 3)?  '<span class="badge badge-success">Active</span>' : '<span class="badge badge-primary">Pending</span>'; 
+                    if($data->product_activation == 1){
+                        return '<span class="badge badge-success">Active</span>';
+                    }elseif($data->product_activation == 1){
+                        return '<span class="badge badge-primary">Pending</span>';
+                    }else{
+                        return '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_rejoin . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-default">Reject</span></a>';
+                        
+                    }
+                })
+                ->addColumn('status', function ($data) {
                     if ($data->status) {
                         $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round"></span></label>';
                     } else {
                         $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round"></span></label>';
                     }
-                    
-                    
+
+
                     return $btn;
                 })
-                ->rawColumns(['date','action-js','product_name','product_price','status'])
-                ->rawColumns(['action-js','product_name','product_price','status'])
+                ->rawColumns(['date','action-js','product_name','product_price','status','product_activation'])
+                ->rawColumns(['action-js','product_name','product_price','status','product_activation'])
                 ->make(true);
         }
     }
@@ -162,7 +173,7 @@ class ProductController extends Controller
             return redirect()->route('restaurant.product.addon')->with('message', 'Addon Create Successfully.');
     }
 
-
+    
 
 
 
