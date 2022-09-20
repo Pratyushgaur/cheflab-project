@@ -27,7 +27,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::get('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage']);
     Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory']);
+    Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
+    Route::post('getRestaurantDetailByFoodtype', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailByFoodtype']);
     Route::post('browse-menu', [App\Http\Controllers\api\AppController::class, 'getRestaurantBrowsemenu']);
     Route::post('custmizable-data', [App\Http\Controllers\api\AppController::class, 'getRestaurantCustmizeProductData']);
     Route::post('search-data', [App\Http\Controllers\api\AppController::class, 'getRestaurantSearchData']);
@@ -44,6 +46,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('add-to-cart', [App\Http\Controllers\api\AppController::class, 'add_to_cart']);
     Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
     Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
+     
+    // like dislike
+    Route::post('like-vendor', [App\Http\Controllers\api\AppController::class, 'add_to_like_vendor']);
+    Route::post('like-product', [App\Http\Controllers\api\AppController::class, 'add_to_like_product']);
+    Route::post('dislike-product', [App\Http\Controllers\api\AppController::class, 'deleteLikeProduct']);
+    Route::post('dislike-vendor', [App\Http\Controllers\api\AppController::class, 'deleteLikeVendor']);
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
