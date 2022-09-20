@@ -386,9 +386,7 @@
               item_price:{
                 required:"Please Give The Price of Product",
                 number:"Price Should be in Number"
-              }
-              
-              
+              }   
           },
           errorPlacement: function (error, element) {
               var name = $(element).attr("name");

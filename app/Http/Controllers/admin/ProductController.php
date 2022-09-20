@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\Product_master;
 use App\Models\Catogory_master;
+use App\Models\Variant;
 use App\Models\Cuisines;
 
 use App\Models\vendors;
@@ -186,15 +187,6 @@ class ProductController extends Controller
           $product->product_price  = $request->product_price;
           $product->product_for  = 1;
           
-          
-          if($request->customizable == 'true'){
-              $data = [];
-              foreach($request->variant_name as $k =>$v){
-                  $data[] = array('variant_name' =>$v ,'price' =>$request->variant_price[$k]);
-              }
-             
-              $request->variants = serialize($data);
-          }
           $product->type  = $request->type;
           $product->customizable  = $request->customizable;
           if($request->has('product_image')){
@@ -203,6 +195,14 @@ class ProductController extends Controller
               $product->product_image  = $filename;
           }
           $product->save();
+          //
+         if($request->customizable == 'true'){
+            foreach($request->variant_name as $k =>$v){
+                Variant::create(['product_id'=>$product->id,'variant_name'=>$v,'variant_price'=>$request->variant_price[$k]]);
+            }
+            
+                
+        }
           return redirect()->route('admin.product.cheflabProduct')->with('message', 'Chef Product  Registration Successfully');
           
       }

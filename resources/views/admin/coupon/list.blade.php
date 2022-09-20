@@ -49,6 +49,7 @@
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
+                                    <th >Name</th>
                                     <th >Code</th>
                                     <th  >Discount Type</th>
                                     <th  >Discount</th>
@@ -94,11 +95,12 @@
         ajax: "{{ route('admin.coupon.data') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'name', name: 'name'},
             {data: 'code', name: 'code'},
             {data: 'discount_type', name: 'discount_type'},
             {data: 'discount', name: 'discount'},
-            {data: 'type', name: 'type'},
-            {data: 'expires_coupon', name: 'expires_coupon'},
+            {data: 'status', name: 'status'},
+            {data: 'to', name: 'to'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
