@@ -46,6 +46,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('add-to-cart', [App\Http\Controllers\api\AppController::class, 'add_to_cart']);
     Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
     Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
+    Route::post('update-cart', [App\Http\Controllers\api\AppController::class, 'update_cart']);
      
     // like dislike
     Route::post('like-vendor', [App\Http\Controllers\api\AppController::class, 'add_to_like_vendor']);
@@ -60,7 +61,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('procode-coupon-apply',[App\Http\Controllers\api\CouponController::class,'couponApply']);
 
 
-
+    // order
+    Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
