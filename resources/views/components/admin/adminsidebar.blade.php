@@ -94,12 +94,24 @@
 				  <p>Product Management</p>
 				</a>
 			</li>  
-			<li class="nav-item">
-				<a href="{{route('admin.vendor.pendigProduct')}}" class="nav-link">
-				  <i class="far fa-circle nav-icon"></i>
-				  <p>Vendor Product</p>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+				<i class="fa fa-star"></i>
+				  <p>
+					 Review
+					<i class="fas fa-angle-left right"></i>
+				  </p>
 				</a>
-			</li>  
+				<ul class="nav nav-treeview">
+					<li class="nav-item">
+						<a href="{{route('admin.vendor.pendigProduct')}}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>Vendor Product</p>
+						</a>
+					</li>
+				</ul>
+			</li>
+			 
 			<li class="nav-item">
 				<a href="{{route('admin.coupon.list')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>

@@ -34,7 +34,6 @@
                         <th scope="col">Code Name</th>
                         <th scope="col">Code</th>
                         <th scope="col">Discount Type</th>
-                        <th scope="col">Discount</th>
                         <th scope="col">Status</th>
                         <th scope="col">From</th>
                         <th scope="col">To</th>
@@ -70,7 +69,6 @@
             {data: 'name', name: 'name'},
             {data: 'code', name: 'code'},
             {data: 'discount_type', name: 'discount_type'},
-            {data: 'discount', name: 'discount'},
             {data: 'status', name: 'status'},
             {data: 'from', name: 'from'},
             {data: 'to', name: 'to'},

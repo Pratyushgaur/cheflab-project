@@ -48,48 +48,24 @@
             </div>
           </div>
         </div>
-          
-        <div class="modal fade" id="modal-default">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Product Reject Rejoin</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <form id="restaurant-form" action="{{route('admin.product.reject')}}" method="post" enctype="multipart/form-data">
-                          @if ($errors->any())
-                              @foreach ($errors->all() as $error)
-                                  <div class="alert alert-danger">{{$error}}</div>
-                              @endforeach
-                          @endif
-                          @csrf
-                            
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Rejoin</label>
-                                          <div id="price"></div>
-                                          <textarea type="text" name="comment_rejoin" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
-                                         
-                                        </div>  
-                                    </div>
-                                </div>
-                            </div>
-  
-                            <button class="btn btn-primary float-right" type="submit">Submit</button>
-                      </form>
-                  </div>
-                  
+        <div class="modal fade" id="modal-8" tabindex="-1" role="dialog" aria-labelledby="modal-8">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+
+                <div class="modal-header bg-primary">
+                  <h3 class="modal-title has-icon text-white"><i class="flaticon-alert"></i> Reject Rejoin </h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
-                <!-- /.modal-content -->
+
+                <div class="modal-body">
+                    <div id="price"></div> 
+                </div>
+
+                
+
               </div>
-              <!-- /.modal-dialog -->
             </div>
-            <!-- /.modal -->
+          </div> 
         
 
       </div>
@@ -110,7 +86,7 @@
             {data: 'product_price', name: 'product_price'},
             {data: 'categoryName', name: 'categoryName'},
             {data: 'status', name: 'status'},
-            {data: 'product_activation', name: 'product_activation'},
+            {data: 'admin_review', name: 'admin_review'},
             {data: 'date', name: 'date'},
           
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
@@ -118,9 +94,56 @@
     });
   })(jQuery);
   $(document).on('click', '.openModal', function () {
-        var id = $(this).data('comment_rejoin');
-        alert(id);
-       // $('#price').append("<input type='hidden' name='id' value="+id+">");
-    });
+        var id = $(this).data('id');
+        $('#price').append("<p>'."+id+".'</p>");
+  });
+  $(document).on('click', '.offproduct', function () {
+       var id = $(this).data('id');
+       $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          type: "POST",
+          url: '{{route("restaurant.product.inactive")}}', // This is what I have updated
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: { 
+            "_token": "{{ csrf_token() }}",
+            "id":id },
+            success: function(response){
+              toastr.error('Product Inactive Successfully', 'Alert');
+              
+            }
+      });
+  });
+
+</script>
+<script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the image and insert it inside the modal - use its "alt" text as a caption
+var img = document.getElementById('myImg');
+var modalImg = document.getElementById("img01");
+var captionText = document.getElementById("caption");
+img.onclick = function(){
+    modal.style.display = "block";
+    modalImg.src = this.src;
+    modalImg.alt = this.alt;
+    captionText.innerHTML = this.alt;
+}
+
+
+// When the user clicks on <span> (x), close the modal
+modal.onclick = function() {
+    img01.className += " out";
+    setTimeout(function() {
+       modal.style.display = "none";
+       img01.className = "modal-content";
+     }, 400);
+    
+ }    
+    
 </script>
 @endsection

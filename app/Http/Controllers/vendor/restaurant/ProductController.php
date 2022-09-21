@@ -93,7 +93,9 @@ class ProductController extends Controller
                     return $btn;
                 })
                 ->addColumn('product_name', function($data){
-                    $btn = '<img src="'.asset('products').'/'.$data->product_image.'" style="width:50px; height:30px;"> '.$data->product_name.'';
+                    $btn = ' <img src="'.asset('products').'/'.$data->product_image.'" data-pretty="prettyPhoto" style="width:50px; height:30px;" alt="Trolltunga, Norway"> <div id="myModal" class="modal">
+                    <img class="modal-content" id="img01">
+                  </div>'.$data->product_name.'';
                     return $btn;
                 })
                 ->addColumn('date', function($data){
@@ -104,33 +106,43 @@ class ProductController extends Controller
                     $btn = '<i class="fas fa-rupee-sign"></i>'.$data->product_price.'';
                     return $btn;
                 })
-                ->addColumn('product_activation', function($data){
-                    //return $status_class = (!empty($data->status)) && ($data->status == 1) &&  ($data->status == 2) && ($data->status == 3)?  '<span class="badge badge-success">Active</span>' : '<span class="badge badge-primary">Pending</span>'; 
-                    if($data->product_activation == 1){
-                        return '<span class="badge badge-success">Active</span>';
-                    }elseif($data->product_activation == 1){
-                        return '<span class="badge badge-primary">Pending</span>';
-                    }else{
-                        return '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_rejoin . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-default">Reject</span></a>';
-                        
-                    }
-                })
+                ->addColumn('admin_review', function($data){
+                    //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
+                    
+                       if($data->status == 1){
+                           return '<span class="badge badge-success">Active</span>';
+                       }elseif($data->status == 2){
+                           return '<span class="badge badge-primary">Pending</span>';
+                       }elseif($data->status == 0){
+                           return '<span class="badge badge-primary">Inactive</span>';
+                       }else{
+                        return '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_rejoin . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
+                       }
+                   })
                 ->addColumn('status', function ($data) {
-                    if ($data->status) {
-                        $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round"></span></label>';
-                    } else {
-                        $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round"></span></label>';
+                    if ($data->status == 1) {
+                        $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $data->id . '"></span></label>';
+                    } elseif($data->status == 2) {
+                        $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round"></span></label>';
                     }
 
 
                     return $btn;
                 })
-                ->rawColumns(['date','action-js','product_name','product_price','status','product_activation'])
-                ->rawColumns(['action-js','product_name','product_price','status','product_activation'])
+                ->rawColumns(['date','action-js','product_name','product_price','status','admin_review'])
+                ->rawColumns(['action-js','product_name','product_price','status','admin_review'])
                 ->make(true);
         }
     }
-
+    public function inActive(Request $request){
+        $id = $request->id;
+        $product = Product_master::find($id);
+        $product->status = 0;
+        $product->save();
+       // $update = \DB::table('products') ->where('id', $id) ->limit(1) ->update( [ 'status' => 0 ]); 
+       // return redirect()->route('admin.slotebook.list')->with('message', 'Slote Active Successfully');
+       return \Response::json($product);
+    }
     public function getAddonData(Request $request)
     {
         $data = Addons::where('vendorId','=',Auth::guard('vendor')->user()->id)->get();

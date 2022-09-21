@@ -254,18 +254,84 @@ class ProductController extends Controller
     }
     public function getPendingList(Request $request){
         if ($request->ajax()) {
-            $data = Product_master::where('product_activation','=','2')->select('id','product_name','product_image','product_price','type','created_at')->get();
+            
+            $data = Product_master::latest()->get();
+            if($request->rolename != ''){
+               $data =  $data->where('status','=',$request->rolename);
+            }
+            return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action-js', function($data){
+                $btn = '<ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Action
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    
+                                    
+                                    <a class="dropdown-item text-info" href="#"><i class="fas fa-edit"></i> Edit</a>
+                                    <a class="dropdown-item text-info" href="'.route('admin.vendor.product',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View Product</a>
+                                    <a class="dropdown-item text-danger" href="javascript:void(0);" data-id="" data-alert-message="Are You Sure to Delete this Vendor" data-action-url="' . route('admin.vendors.ajax.delete') . '" ><i class="fas fa-trash"></i> Delete</a>';
+                                    
+                                    /*if($data->vendor_type == 'chef'){
+                                        $btn .= '<a class="dropdown-item text-danger" href="'.route('admin.chefproduct.view',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';    
+                                    }*/
+                                    
+                                    
+                               
+                                $btn .= '</div>
+                            </li>
+                        </ul>';
+                //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
+                return $btn;
+            })
+            
+            ->addColumn('date', function($data){
+                $date_with_format = date('d M Y',strtotime($data->created_at));
+                return $date_with_format;
+            })
+            ->addColumn('product_image',function($data){
+                return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
+            })
+            
+            
+            ->rawColumns(['date'])
+            ->rawColumns(['action-js','product_image']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+            ->make(true);
+        }
+    }
+    public function view_product($encrypt_id){
+        $id =  Crypt::decryptString($encrypt_id);
+        $product = Product_master::findOrFail($id);
+        $vendor = vendors::findOrFail($product->userId);
+        return view('admin/product/view-vendor',compact('vendor','product'));
+    }
+    public function venderProduct(Request $request,$id){
+        $user = $request->id;
+        if ($request->ajax()) {
+            $data = Product_master::where('userId','=',$user)->select('id','product_name','category','product_image','status','product_price','type','created_at')->get();
           
             
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.vendor.productactive",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs">Accept</a>
-                            <a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-danger btn-xs openModal" data-toggle="modal" data-target="#modal-default">
-                                Rejecct
-                            </button>
-                            <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
-                    return $btn;
+                    $btn = '
+                    <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>
+                    <a href="'. route("admin.vendor.productactive",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs">Accept</a> 
+                    ';
+                            if($data->status == 2){
+                                $btn .= '<a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-danger btn-xs openModal" data-toggle="modal" data-target="#modal-default">
+                                Reject
+                            </a>
+                            
+                            
+                            
+                            '
+                            
+                            ;    
+                            }
+                             return $btn;
                 })
                 
                 ->addColumn('date', function($data){
@@ -276,9 +342,21 @@ class ProductController extends Controller
                     return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
                 })
                 
-                
-                ->rawColumns(['date'])
-                ->rawColumns(['action-js','product_image']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->addColumn('status', function($data){
+                 //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
+                 
+                    if($data->status == 1){
+                        return '<span class="badge badge-success">Active</span>';
+                    }elseif($data->status == 2){
+                        return '<span class="badge badge-primary">Pending</span>';
+                    }elseif($data->status == 0){
+                        return '<span class="badge badge-primary">Inactive</span>';
+                    }else{
+                        return '<span class="badge badge-primary">Reject</span>';
+                    }
+                })
+                ->rawColumns(['date','status'])
+                ->rawColumns(['action-js','product_image','status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
         

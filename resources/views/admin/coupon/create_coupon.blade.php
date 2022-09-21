@@ -229,7 +229,7 @@
                                     <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Description <span class="text-danger">*</span></label>
-                                        <input type="text" name="discription" class="form-control"  id="" placeholder="Description...">
+                                        <input type="text" name="description" class="form-control"  id="" placeholder="Description...">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">

@@ -36,17 +36,16 @@ class VendorCoupon extends Controller
             'minimum_order_amount' => 'required',
             'promo_redeem_count' => 'required',
             'promocode_use' => 'required',
-         //   'coupon_type' => 'required',
             'from' => 'required',
             'to' => 'required',
-            'discription' => 'required',
+            'description' => 'required',
         ]);
         $coupon = new Coupon;
         $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
-        $coupon->discription  = $request->discription;
+        $coupon->description  = $request->description;
         $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->promo_redeem_count  = $request->promo_redeem_count;
         $coupon->vendor_id = Auth::guard('vendor')->user()->id;
@@ -89,15 +88,15 @@ class VendorCoupon extends Controller
                 })
                 ->addColumn('discount_type', function($data){
                     if ($data->discount_type) {
-                        $btn = '<i class="fa fa-percent" aria-hidden="true"></i>';
+                        $btn = ''.$data->discount.'<i class="fa fa-percent fa-sm"></i>';
                     } else {
-                        $btn = '<i class="fas fa-rupee-sign"></i>';
-                    }
-                    
-                    
+                        $btn = ''.$data->discount.'<i class="fas fa-rupee-sign"></i>';
+                    }    
                     return $btn;
                 })
-               
+              
+
+
                 ->rawColumns(['date','action-js','status','discount_type'])
                 ->rawColumns(['action-js','status','discount_type'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -171,14 +170,14 @@ class VendorCoupon extends Controller
          //   'coupon_type' => 'required',
             'from' => 'required',
             'to' => 'required',
-            'discription' => 'required',
+            'description' => 'required',
         ]);
         $coupon = Coupon::find($request->id);
         $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
-        $coupon->discription  = $request->discription;
+        $coupon->description  = $request->description;
         $coupon->promo_redeem_count  = $request->promo_redeem_count;
         $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->vendor_id = Auth::guard('vendor')->user()->id;

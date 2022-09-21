@@ -25,7 +25,7 @@ class CouponController extends Controller
                     ], 401);
                 }
                 $date = today()->format('Y-m-d');
-                $coupon =  \App\Models\Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('id','name','discount_type','coupon_valid_x_user','discription')->get();
+                $coupon =  \App\Models\Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('id','name','discount_type','coupon_valid_x_user','description')->get();
                 return response()->json([
                     'status' => true,
                     'message'=>'Data Get Successfully',
@@ -75,7 +75,7 @@ class CouponController extends Controller
                 ], 401);
             }
                 $date = today()->format('Y-m-d');
-                $coupon =  \App\Models\Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','id','from','to','code','discount_type','discount','maxim_dis_amount','minimum_order_amount','promo_redeem_count','promocode_use','coupon_valid_x_user','discription')->get();
+                $coupon =  \App\Models\Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','id','from','to','code','discount_type','discount','maxim_dis_amount','minimum_order_amount','promo_redeem_count','promocode_use','coupon_valid_x_user','description')->get();
                 return response()->json([
                     'status' => true,
                     'message'=>'Data Get Successfully',
@@ -105,9 +105,9 @@ class CouponController extends Controller
                 ], 401);
             }
             $date = today()->format('Y-m-d');
-            $vendor_coupon =  \App\Models\Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','discription')->get();
-          //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','discription')->get();
-            $admin_coupon = \App\Models\Coupon::where(['create_by' => 'admin'])->select('name','code','discount_type','coupon_valid_x_user','discription',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'))->get();
+            $vendor_coupon =  \App\Models\Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
+          //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
+            $admin_coupon = \App\Models\Coupon::where(['create_by' => 'admin'])->select('name','code','discount_type','coupon_valid_x_user','description',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'))->get();
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -135,7 +135,7 @@ class CouponController extends Controller
                 ], 401);
             }
             $date = today()->format('Y-m-d');
-            $vendor_coupon =  \App\Models\Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','discription','promocode_use','promo_redeem_count','from')->get();
+            $vendor_coupon =  \App\Models\Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','description','promocode_use','promo_redeem_count','from')->get();
             $coupon =  \App\Models\CouponHistory::where('coupon_id', '=', $request->id)->get();
             $wordCount = $coupon->count();
            

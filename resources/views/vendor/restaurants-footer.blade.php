@@ -448,7 +448,7 @@
   <script src="{{asset('frontend')}}/assets/js/framework.js"></script>
   <!-- Settings -->
   <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
-
+  <script src="{{asset('frontend')}}/assets/js/jquery.prettyPhoto.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
   #toast-container>div{

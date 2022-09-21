@@ -172,7 +172,7 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Descriptio <span class="text-danger">*</span></label>
-                                        <input type="text" name="discription" value="{{$coupon->discription}}" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                        <input type="text" name="description" value="{{$coupon->description}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
@@ -270,7 +270,7 @@
                   required: true,
                   number: true,
               },
-              discription: {
+              description: {
                   required: true,
               },
               type: {
