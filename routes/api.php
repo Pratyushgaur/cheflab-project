@@ -25,7 +25,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //
     // restaurant home page api
 
-    Route::get('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage']);
+    Route::post('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage']);
     Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory']);
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('search-data', [App\Http\Controllers\api\AppController::class, 'getRestaurantSearchData']);
 
     // chef home page api
-    Route::get('chef-home', [App\Http\Controllers\api\AppController::class, 'chefHomePage']);
+    Route::post('chef-home', [App\Http\Controllers\api\AppController::class, 'chefHomePage']);
     Route::post('getChefByCategory', [App\Http\Controllers\api\AppController::class, 'getChefByCategory']);
     Route::post('getChefDetailPage', [App\Http\Controllers\api\AppController::class, 'getChefDetailPage']);
     Route::post('getChefProfile', [App\Http\Controllers\api\AppController::class, 'getChefProfile']);
@@ -55,10 +55,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('dislike-vendor', [App\Http\Controllers\api\AppController::class, 'deleteLikeVendor']);
      
     // coupon
-    Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
-    Route::get('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
-    Route::get('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
-    Route::get('procode-coupon-apply',[App\Http\Controllers\api\CouponController::class,'couponApply']);
+    Route::post('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
+    Route::post('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
+    Route::post('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
+    Route::post('procode-coupon-apply',[App\Http\Controllers\api\CouponController::class,'couponApply']);
 
 
     // order
