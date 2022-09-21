@@ -52,6 +52,15 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('like-product', [App\Http\Controllers\api\AppController::class, 'add_to_like_product']);
     Route::post('dislike-product', [App\Http\Controllers\api\AppController::class, 'deleteLikeProduct']);
     Route::post('dislike-vendor', [App\Http\Controllers\api\AppController::class, 'deleteLikeVendor']);
+     
+    // coupon
+    Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
+    Route::get('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
+    Route::get('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
+    Route::get('procode-coupon-apply',[App\Http\Controllers\api\CouponController::class,'couponApply']);
+
+
+
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
@@ -59,9 +68,4 @@ Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
-// chef 
-Route::get('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
-Route::get('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
-Route::get('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
-
 

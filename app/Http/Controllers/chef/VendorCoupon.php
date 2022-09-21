@@ -16,11 +16,11 @@ class VendorCoupon extends Controller
 {
     public function index()
     {
-        return view('chef.coupon.list');
+        return view('vendor.chef.coupon.list');
     }
     public function create_coupon(){
       // $categories = Catogory_master::where('is_active','=','1')->get();
-        return view('chef.coupon.create_coupon');
+        return view('vendor.chef.coupon.create_coupon');
     }
     public function store_coupon(Request $request){
         // return  $request->input();die;
@@ -83,7 +83,7 @@ class VendorCoupon extends Controller
             $id =  Crypt::decryptString($encrypt_id);  
             $coupon = Coupon::findOrFail($id);
            // dd($city_data);
-            return view('chef.coupon.editcoupon',compact('coupon'));
+            return view('vendor.chef.coupon.editcoupon',compact('coupon'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         }

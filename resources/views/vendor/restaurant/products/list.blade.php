@@ -35,6 +35,7 @@
                         <th scope="col">Product Price</th>
                         <th scope="col">Category</th>
                         <th scope="col">Status</th>
+                        <th scope="col">Admin Review</th>
                         <th scope="col">Created at</th>
                         <th scope="col">Action</th>
                       </tr>
@@ -48,7 +49,47 @@
           </div>
         </div>
           
-
+        <div class="modal fade" id="modal-default">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Product Reject Rejoin</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <form id="restaurant-form" action="{{route('admin.product.reject')}}" method="post" enctype="multipart/form-data">
+                          @if ($errors->any())
+                              @foreach ($errors->all() as $error)
+                                  <div class="alert alert-danger">{{$error}}</div>
+                              @endforeach
+                          @endif
+                          @csrf
+                            
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                          <label for="exampleInputEmail1">Rejoin</label>
+                                          <div id="price"></div>
+                                          <textarea type="text" name="comment_rejoin" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
+                                         
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+  
+                            <button class="btn btn-primary float-right" type="submit">Submit</button>
+                      </form>
+                  </div>
+                  
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
         
 
       </div>
@@ -69,11 +110,17 @@
             {data: 'product_price', name: 'product_price'},
             {data: 'categoryName', name: 'categoryName'},
             {data: 'status', name: 'status'},
+            {data: 'product_activation', name: 'product_activation'},
             {data: 'date', name: 'date'},
           
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
   })(jQuery);
+  $(document).on('click', '.openModal', function () {
+        var id = $(this).data('comment_rejoin');
+        alert(id);
+       // $('#price').append("<input type='hidden' name='id' value="+id+">");
+    });
 </script>
 @endsection

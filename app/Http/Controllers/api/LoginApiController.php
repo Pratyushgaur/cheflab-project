@@ -145,7 +145,7 @@ class LoginApiController extends Controller
                 return response()->json([
                     'status' => true,
                     'message'=>'User Registration Successfully',
-                    'token'=>$token
+                    'token'=>array('name' =>$user->name,'email'=>$user->email,'mobile'=>$user->mobile_number,'user_id'=>$user->id,'token'=>$token)
                 ], 200);
 
             }else{
@@ -223,12 +223,12 @@ class LoginApiController extends Controller
             $insertedOtp = Mobileotp::where(['mobile_number' =>$request->mobile_number])->first();
             if($insertedOtp->otp == $request->otp){
                 Mobileotp::where(['mobile_number' =>$request->mobile_number])->update(['status' =>'1']);
-                $user = User::where('mobile_number','=',$request->mobile_number)->select('id','name')->first();
+                $user = User::where('mobile_number','=',$request->mobile_number)->select('id','name','mobile_number','email')->first();
                 $token = $user->createToken('cheflab-app-token')->plainTextToken;
                 return response()->json([
                     'status' => true,
                     'message'=>'User Login Successfully',
-                    'token'=>$token
+                    'token'=>array('name' =>$user->name,'email'=>$user->email,'mobile'=>$user->mobile_number,'user_id'=>$user->id,'token'=>$token)
                 ], 200);
             }else{
                 return response()->json([
