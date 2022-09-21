@@ -119,7 +119,7 @@ class AppController extends Controller
             //$data['lng'] = 74.8866346;
             $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
             $userid = request()->user()->id;
-            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings','id','lat','long' )->selectRaw("ROUND({$select},1) AS distance")->orderBy('id', 'desc')->get();
+            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings','id','lat','long','deal_categories' )->selectRaw("ROUND({$select},1) AS distance")->orderBy('id', 'desc')->get();
             $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'vendors.name as restaurantName','products.id')->orderBy('products.id', 'desc')->get();
             foreach ($vendors as $key => $value) {
                 if(UserVendorLike::where(['user_id'=>$userid,'vendor_id' =>$value['id']])->exists   ()){
@@ -128,7 +128,8 @@ class AppController extends Controller
                     $vendors[$key]['is_like'] = false;
                 }
                 //$vendors[$key]['distance']  = $this->calculateDistanceBetweenTwoAddresses($value->lat, $value->long, 24.4637223, 74.8866346);
-
+                $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $vendors[$key]->categories = $category;
             }
             foreach ($products as $key => $value) {
                 if(UserProductLike::where(['user_id'=>$userid,'product_id' =>$value['id']])->exists()){
