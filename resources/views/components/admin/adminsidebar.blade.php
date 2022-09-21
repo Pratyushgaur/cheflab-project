@@ -95,6 +95,12 @@
 				</a>
 			</li>  
 			<li class="nav-item">
+				<a href="{{route('admin.vendor.pendigProduct')}}" class="nav-link">
+				  <i class="far fa-circle nav-icon"></i>
+				  <p>Vendor Product</p>
+				</a>
+			</li>  
+			<li class="nav-item">
 				<a href="{{route('admin.coupon.list')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
 				  <p>Coupon Management</p>
@@ -132,6 +138,12 @@
 						<a href="{{route('admin.banner.createbanner')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
 						  <p>Banner Promotion</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.vendor.store')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Vendor Store Promotion</p>
 						</a>
 					</li>
 					<li class="nav-item">

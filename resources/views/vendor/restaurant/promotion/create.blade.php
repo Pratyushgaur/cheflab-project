@@ -60,7 +60,7 @@
             <ol class="breadcrumb pl-0">
               <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
               <li class="breadcrumb-item"><a href="#">Promotion</a></li>
-              <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Create Promotion</a></li>
+              <li class="breadcrumb-item" aria-current="page"><a href="#">Create Promotion</a></li>
               
 
             </ol>
@@ -92,18 +92,15 @@
                      <div class="col-xl-12 col-md-12 mb-3">
                       <label for="validationCustom10">Select Place</label>
                         <div class="input-group">
-                        <select class="form-control" name="banner" id="validationCustom22"  >
-                            @foreach($slot as $k =>$value)
-                                @if($value->id == null)
-                                    <option>Not Avelable on this date</option>
-                                    @else
-                                <option value="{{$value->price}}">{{$value->id}}</option>
-                                @endif
-                            @endforeach
+                        <select class="form-control" name="banner" id="validationCustom22">
+                            
                         </select>
                         </div>
                         <span class="banner_error text-danger"></span>
+                        <div id="price">
+                        </div>
                      </div>
+                     
                      <div class="col-md-6 mb-3">
                           <div>
                             <label for="">Images</label>
@@ -122,13 +119,13 @@
 
                         
                       </div>
-
+                      <button class="btn btn-primary float-right" type="submit">Submit</button>
+                   </form>
                  </div>    
                     
                      
                      
-                <button class="btn btn-primary float-right" type="submit">Submit</button>
-              </form>
+               
             </div>
           </div>
         </div>
@@ -203,12 +200,50 @@
           headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
           data: { 
             "_token": "{{ csrf_token() }}",
-            "id":id }
+            "id":id },
             success: function(response){
-              toastr.error('Your Allradiy Book This date place chenge sate', 'Alert');
+              var resp = JSON.stringify(response);
+           //   console.log(resp);
+             var len = resp;
+          //   console.log(len);
+             if(len == 'false'){
+                toastr.error('Your Allradiy Book This date place chenge sate', 'Alert');
+              }else{
+                var uh = JSON.stringify(response);
+                console.log(uh);
+                var obj = JSON.parse(uh);
+                  for(i=0; i<uh.length; i++) {
+                      $('#validationCustom22').append("<option value="+obj[i].slot_name+">"+obj[i].slot_name+"</option>");                      
+                  }
+              }
+             
             }
       });
 
+    });
+    $('#validationCustom22').change(function(){
+      var id = this.value;
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          type: "POST",
+          url: '{{route("restaurant.slot.getPrice")}}', // This is what I have updated
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: { 
+            "_token": "{{ csrf_token() }}",
+            "id":id },
+            success: function(response){
+              var uh = JSON.stringify(response);
+              var obj = JSON.parse(uh);
+              for(i=0; i<uh.length; i++) {
+                $('#price').append("<p class='text-danger' name='id' value="+obj[i].id+">Banner Rs.. "+obj[i].price+"</p>","<input type='hidden' name='price' value="+obj[i].price+">","<input type='hidden' name='id' value="+obj[i].id+">");
+              }
+              
+            }
+      });
     });
 </script>
 <script>

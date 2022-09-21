@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use DataTables; 
 use Illuminate\Support\Facades\Hash;
+use App\Rules\VendorOrderTimeRule;
 class UserControllers extends Controller
 {
     
@@ -185,7 +186,7 @@ class UserControllers extends Controller
     }
     public function store_chef(Request $request)
     {
-       // return $request->input();die;
+        return $request->input();die;
         $this->validate($request, [
             'restourant_name' => 'required',
             'email' => 'required|unique:vendors,email',
@@ -199,6 +200,9 @@ class UserControllers extends Controller
             'password' => 'required',
             'confirm_password' => 'required',
             'vendor_commission' => 'required',
+            'start_time.*' => 'nullable|date_format:H:i',
+            'end_time.*' => 'nullable|date_format:H:i',
+            'available.*' =>  ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],
         ]);
         $vendors = new vendors;
         $vendors->name = $request->restourant_name;
@@ -235,6 +239,26 @@ class UserControllers extends Controller
         }
 
         $vendors->save();
+        //
+        foreach ($request->start_time as $key => $val) {
+            if ($request->available[$key] == 1)
+                $data[] = [
+                    'vendor_id' => $vendors->id,
+                    'day_no' => $key,
+                    'start_time' => $request->start_time[$key],
+                    'end_time' => $request->end_time[$key],
+                    'available' => $request->available[$key],
+                ];
+            else
+                $data[] = [
+                    'vendor_id' => $vendors->id,
+                    'day_no' => $key,
+                    'start_time' => null,
+                    'end_time' => null,
+                    'available' => 0,
+                ];
+        }
+
         return redirect()->route('admin.chef.create')->with('message', 'Vendor Registration Successfully');
         
 

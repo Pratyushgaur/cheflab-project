@@ -35,7 +35,6 @@
           
         </ul>
       </li>
-    
       <li class="menu-item">
         <a href="{{route('restaurant.promotion.list')}}"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
         </a>

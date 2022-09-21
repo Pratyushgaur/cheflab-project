@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 
@@ -19,6 +20,7 @@ class vendors extends Authenticatable
     }
 
     public function is_avaliavle($vendor_id){
+        date_default_timezone_set(config('app.timezone'));
         $v=Vendors::find($vendor_id);
         if(!$v->is_online)
             return ['offline'];
@@ -28,6 +30,7 @@ class vendors extends Authenticatable
             ->where('start_time','<=',date('H:i:s'))
             ->where('end_time','>',date('H:i:s'))
             ->exists();
+            // ->toSql();
 
 
     }

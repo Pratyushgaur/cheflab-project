@@ -237,4 +237,55 @@ class ProductController extends Controller
         }
         
     }
+    public function vendorProductList(Request $request){
+        return view('admin/product/pendinglist');
+    }
+    public function rejectProduct(Request $request){
+      //  return $request->input();die;
+        $this->validate($request, [
+            'comment_rejoin' => 'required',
+        ]);
+        $id = $request->id;
+        $product = Product_master::find($id);
+        $product->comment_rejoin = $request->comment_rejoin;
+        $product->product_activation = 3;
+        $product->save();
+        return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Reject Successfully');
+    }
+    public function getPendingList(Request $request){
+        if ($request->ajax()) {
+            $data = Product_master::where('product_activation','=','2')->select('id','product_name','product_image','product_price','type','created_at')->get();
+          
+            
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="'. route("admin.vendor.productactive",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs">Accept</a>
+                            <a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-danger btn-xs openModal" data-toggle="modal" data-target="#modal-default">
+                                Rejecct
+                            </button>
+                            <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+                
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+                ->addColumn('product_image',function($data){
+                    return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
+                })
+                
+                
+                ->rawColumns(['date'])
+                ->rawColumns(['action-js','product_image']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+        
+    }
+    public function activeProduct($encrypt_id){
+        $id =  Crypt::decryptString($encrypt_id);
+         $update = \DB::table('products') ->where('id', $id) ->limit(1) ->update( ['product_activation' => 1 ]); 
+         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
+    }
 }

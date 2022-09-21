@@ -23,12 +23,12 @@ class CreateOrders extends Migration
             $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
             $table->float('gross_amount', 8, 2)->comment('after tax deduction ');
             $table->float('net_amount', 8, 2)->comment('after discount and other deduction, this amount will payed  by customer');
-            $table->float('discount_amount', 6, 2);
-            $table->unsignedBigInteger('coupon_id')->default(null);
+            $table->float('discount_amount', 6, 2)->default(0);
+            $table->unsignedBigInteger('coupon_id')->nullable()->default(null);
             $table->enum('payment_type',['COD','GPay'])->default('COD');
             $table->enum('payment_status',['paid','pending'])->default('pending');
-            $table->text('transaction_id')->default(null);
-            $table->text('payment_string')->default(null)->comment('payment gatway return json string');
+            $table->text('transaction_id')->nullable()->default(null);
+            $table->text('payment_string')->nullable()->default(null)->comment('payment gatway return json string');
 
 
             $table->timestamp('created_at')->useCurrent();
