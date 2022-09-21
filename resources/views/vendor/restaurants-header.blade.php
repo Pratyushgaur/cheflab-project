@@ -27,6 +27,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">
   <!-- select 2 -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('frontend') }}/assets/css/toastr.min.css" rel="stylesheet">
 
 {{-- msg bar shows on top --}}
   <style>#message-box {
@@ -82,4 +83,3 @@
     @if (!Auth::guard('vendor')->user()->is_online)
     <div id='message-box'>Now your restaurant is offline,you will not able to get orders from mobile app.<a href="#" style="float: right;    margin-right: 18px;" id="close_msg_bar">X</a></div>
     @endif
-   

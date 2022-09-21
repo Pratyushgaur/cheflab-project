@@ -457,17 +457,15 @@
 </style>
 
 
-<link href="{{ asset('frontend') }}/assets/css/toastr.min.css" rel="stylesheet">
-
-<script src="{{ asset('frontend') }}/assets/js/toastr.min.js"></script>
-
-
 
 <link href="{{ asset('frontend') }}/assets/css/sweetalert2.min.css" rel="stylesheet">
 <!-- Page Specific Scripts Start -->
 <script src="{{ asset('frontend') }}/assets/js/promise.min.js">
 </script>
-<script src="{{ asset('frontend') }}/assets/js/sweetalert2.min.js">
+<script src="{{ asset('frontend') }}/assets/js/sweetalert2.min.js"></script>
+
+  <!-- Page Specific Scripts Start -->
+  <script src="{{ asset('frontend') }}/assets/js/toastr.min.js"></script>
   @stack('scripts')
   @yield('page-js');
 </body>

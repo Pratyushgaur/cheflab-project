@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\OrderCreateEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Addons;
 use App\Models\Cart;
@@ -812,7 +813,7 @@ class AppController extends Controller
         try {
             $validateUser = Validator::make($request->all(), [
                 'user_id' => 'required|numeric',
-                'cart_id' => 'required|numeric'
+//                'cart_id' => 'required|numeric'
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
@@ -820,7 +821,10 @@ class AppController extends Controller
             }
 
             \DB::enableQueryLog();
-            $cart_id = $request->cart_id;
+            $cart_users=Cart::where('user_id',$request->user_id)->first();
+            if(!isset($cart_users->id))
+                return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
+            $cart_id = $cart_users->id;
 
             $e = Cart::where('id', $cart_id)->exists();
             if (!$e)
@@ -1096,6 +1100,8 @@ class AppController extends Controller
             try {
                 DB::beginTransaction();
                 // database queries here
+                if (Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
                 $data = $request->all();
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);
@@ -1121,6 +1127,7 @@ class AppController extends Controller
 
                 DB::commit();
 
+                event(new OrderCreateEvent($order_id, $request->user_id, $request->vendor_id));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy
