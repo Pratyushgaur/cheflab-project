@@ -10,18 +10,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderCreate
+class OrderCreateEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $order_id,$user_id,$vendor_id;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($order_id,$user_id,$vendor_id)
     {
-        //
+        $this->order_id=$order_id;
+        $this->user_id=$user_id;
+        $this->vendor_id=$vendor_id;
     }
 
     /**

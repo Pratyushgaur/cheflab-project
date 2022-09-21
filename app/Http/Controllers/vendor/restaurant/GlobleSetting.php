@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use DataTables;
 use Config;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class GlobleSetting extends Controller
 {
@@ -37,7 +38,7 @@ class GlobleSetting extends Controller
     public function order_time()
     {
         $VendorOrderTime = [];
-        $order_time = VendorOrderTime::where('vendor_id', Auth::guard('vendor')->user()->id)->get();
+        $order_time = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
         foreach ($order_time as $v)
             $VendorOrderTime[$v->day_no] = $v->toArray();
         // dd($VendorOrderTime);
@@ -47,7 +48,7 @@ class GlobleSetting extends Controller
     {
 
         // dd($request->routeIs('restaurant.ordertime.first_store'));
-        // dd(Auth::guard('vendor')->user()->id);
+        // dd($request->all());
         $request->validate([
             'start_time.*' => 'nullable|date_format:H:i',
             'end_time.*' => 'nullable|date_format:H:i',
@@ -59,8 +60,8 @@ class GlobleSetting extends Controller
                 $data[] = [
                     'vendor_id' => Auth::guard('vendor')->user()->id,
                     'day_no' => $key,
-                    'start_time' => $request->start_time[$key],
-                    'end_time' => $request->end_time[$key],
+                    'start_time' => date('H:i:s',strtotime($request->start_time[$key])),
+                    'end_time' => date('H:i:s',strtotime($request->end_time[$key])),
                     'available' => $request->available[$key],
                 ];
             else
@@ -85,9 +86,9 @@ class GlobleSetting extends Controller
             Order_time::insert($data);
             event(new IsAllSettingDoneEvent());
         }
-
+//dd($request->routeIs('restaurant.ordertime.first_store'));
         if ($request->routeIs('restaurant.ordertime.first_store')) //if first time save setting
-            return redirect()->route('restaurant.globleseting.ordertime')->with('success', 'Settings update Successfully');
+            return redirect()->route('restaurant.dashboard')->with('poup_success', 'Your Restaurant timing update Successfully');
         else
             return redirect()->route('restaurant.globleseting.ordertime')->with('success', 'Settings update Successfully');
     }
@@ -174,7 +175,7 @@ class GlobleSetting extends Controller
         ]);
         event(new IsAllSettingDoneEvent());
         if ($request->routeIs('restaurant.globleseting.frist_save_vendor_location')) //if first time save setting
-            return redirect()->route('restaurant.dashboard')->with('success', 'Settings update Successfully');
+            return redirect()->route('restaurant.dashboard')->with('poup_success', 'Settings update Successfully');
         else
             return redirect()->back()->with('success', 'Settings update Successfully');
     }
@@ -194,7 +195,7 @@ class GlobleSetting extends Controller
         //dd($request->all());
         // $ex =   explode(';',$request->logo);
         // $extainsion =  explode('/',$ex[0]);
-        
+
         // //
         // $image = $request->input('logo');  // your base64 encoded
         // $image = str_replace('data:image/png;base64,', '', $image);
@@ -202,13 +203,13 @@ class GlobleSetting extends Controller
         // $imageName = 'logo-'.Str::random(10).'.'.$extainsion[1];
         //  $path = public_path('vendors').'/' . $imageName;
         //  //\File::put(public_path('vendors') . $imageName, base64_decode($image));
-        //  //\Image::make(file_get_contents($request->logo))->save($path);     
+        //  //\Image::make(file_get_contents($request->logo))->save($path);
         //  $request->logo->move(public_path('vendor'),$filename);
         // logo generate
 
         $img = $request->logo;
         $folderPath = "vendors/"; //path location
-        
+
         $image_parts = explode(";base64,", $img);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type = $image_type_aux[1];
@@ -222,7 +223,7 @@ class GlobleSetting extends Controller
             $json = [];
             foreach($request->banner as $k =>$img){
                 $folderPath = "vendor-banner/"; //path location
-                
+
                 $image_parts = explode(";base64,", $img);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type = $image_type_aux[1];
@@ -236,11 +237,11 @@ class GlobleSetting extends Controller
         }
 
         event(new IsAllSettingDoneEvent());
-        return redirect()->route('restaurant.dashboard')->with('success', 'Settings update Successfully');
+        return redirect()->route('restaurant.dashboard')->with('poup_success', 'Settings update Successfully');
 
 
-        
-      
-        
+
+
+
     }
 }

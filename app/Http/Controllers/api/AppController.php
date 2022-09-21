@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\OrderCreateEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Addons;
 use App\Models\Cart;
@@ -169,10 +170,10 @@ class AppController extends Controller
             }
             $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
             foreach ($category as $key => $value) {
-                $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
-                $product = $product->join('categories', 'products.category', '=', 'categories.id');
-                $product = $product->where('menu_id', '=', $value->id);
-                $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'));
+                $product = Product_master::where(['products.status' => '1', 'product_for' => '3'])
+                 ->join('categories', 'products.category', '=', 'categories.id')
+                 ->where('menu_id', '=', $value->id)
+                ->select('products.id as product_id','products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'));
                 $product = $product->get();
                 $category[$key]->products = $product;
             }
@@ -585,7 +586,7 @@ class AppController extends Controller
         try {
             $validateUser = Validator::make($request->all(), [
                 'user_id' => 'required|numeric',
-                'cart_id' => 'required|numeric'
+//                'cart_id' => 'required|numeric'
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
@@ -593,7 +594,10 @@ class AppController extends Controller
             }
 
             \DB::enableQueryLog();
-            $cart_id = $request->cart_id;
+            $cart_users=Cart::where('user_id',$request->user_id)->first();
+            if(!isset($cart_users->id))
+                return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
+            $cart_id = $cart_users->id;
 
             $e = Cart::where('id', $cart_id)->exists();
             if (!$e)
@@ -810,6 +814,8 @@ class AppController extends Controller
             try {
                 DB::beginTransaction();
                 // database queries here
+                if (Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
                 $data = $request->all();
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);
@@ -824,35 +830,18 @@ class AppController extends Controller
                         foreach ($p['variants'] as $k => $v) {
                             $orderProductVariant = new OrderProductVariant($v);
                             $order_products->order_product_variants()->save($orderProductVariant);
-//                            dd($order_products);
-
-//                            $CartProductVariant->cart_product_id = $cart_products->id;
-//                            $CartProductVariant->variant_id = $v['variant_id'];
-//                            $CartProductVariant->variant_qty = $v['variant_qty'];
-//                            $CartProductVariant->save();
                         }
 
                     if (isset($p['addons']))
                         foreach ($p['addons'] as $k => $a) {
                             $OrderProductAddon = new OrderProductAddon($a);
                             $order_products->order_product_addons()->save($OrderProductAddon);
-//                            $CartProductAddon->cart_product_id = $cart_products->id;
-//                            $CartProductAddon->addon_id = $a['addon_id'];
-//                            $CartProductAddon->addon_qty = $a['addon_qty'];
-//                            $CartProductAddon->save();
                         }
                 }
 
-
-                // if (isset($request->addons))
-                //     foreach ($request->addons as $k => $a) {
-                //         $addons[] = new CartAddon($a);
-                //     }
-                // $cart_obj->addons()->saveMany($addons);
-
-
                 DB::commit();
 
+                event(new OrderCreateEvent($order_id, $request->user_id, $request->vendor_id));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy

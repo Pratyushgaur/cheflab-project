@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\OrderCreateEvent;
+use App\Listeners\OrderSendNotificationListener;
 use Illuminate\Auth\Events\Registered;
 use App\Events\AdminLoginHistoryEvent;
 use App\Listeners\AdminLoginHistoryListener;
@@ -29,6 +31,9 @@ class EventServiceProvider extends ServiceProvider
         IsAllSettingDoneEvent::class => [
             IsAllSettingsDoneListener::class,
         ],
+        OrderCreateEvent::class => [
+            OrderSendNotificationListener::class,
+        ],
 
     ];
 
@@ -39,6 +44,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
+
     }
 }
