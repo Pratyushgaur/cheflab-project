@@ -20,7 +20,7 @@ class vendors extends Authenticatable
     }
 
     public function is_avaliavle($vendor_id){
-        date_default_timezone_set(config('app.timezone'));
+//        date_default_timezone_set(config('app.timezone'));
         $v=Vendors::find($vendor_id);
         if(!$v->is_online)
             return ['offline'];

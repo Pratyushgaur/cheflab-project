@@ -19,6 +19,10 @@ class CreateOrders extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('customer_name');
             $table->text('delivery_address')->comment('this addres also have deliver to customer name');
+            $table->float('lat',8,6);
+            $table->float('long',8,6);
+            $table->string('pincode')->nullable()->default(null);
+            $table->string('city')->nullable()->default(null);
             $table->enum('order_status',['pending','cancelled_by_customer','cancelled_by_vendor','completed','accept','payment_pending'])->default('pending');
             $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
             $table->float('gross_amount', 8, 2)->comment('after tax deduction ');

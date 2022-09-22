@@ -1056,7 +1056,7 @@ class AppController extends Controller
 
     public function create_order(Request $request)
     {
-        date_default_timezone_set(config('app.timezone'));
+//        date_default_timezone_set(config('app.timezone'));
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -1066,6 +1066,11 @@ class AppController extends Controller
                     'user_id' => 'required|numeric',
                     'customer_name' => 'required|string',
                     'delivery_address' => 'required|string',
+                    'city' => 'required|string',
+                    'pincode' => 'required|string',
+                    'lat' => 'required|string',
+                    'long' => 'required|string',
+
                     'total_amount' => 'required|numeric',
                     'gross_amount' => 'required|numeric',
                     'net_amount' => 'required|numeric',

@@ -445,7 +445,13 @@
   <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-  
+
+
+  // Using the PubNub CDN, add the SDK to your web application.
+
+<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.29.9.js"></script>
+
+// If you're using the PubNub Node.js SDK, use the command `npm install pubnub`
 </body>
 @yield('page-js');
 
