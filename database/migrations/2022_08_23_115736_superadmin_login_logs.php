@@ -13,7 +13,7 @@ class SuperadminLoginLogs extends Migration
      */
     public function up()
     {
-        Schema::create('superAdminLoginLogs', function (Blueprint $table) {
+        Schema::create('superadminloginlogs', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('ipAddress');
             $table->dateTime('created_at')->useCurrent();
