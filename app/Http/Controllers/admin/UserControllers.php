@@ -8,6 +8,7 @@ use App\Models\Cuisines;
 use App\Models\Product_master;
 use App\Models\Chef_video;
 use App\Models\Variant;
+use App\Models\Order_time;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -203,6 +204,8 @@ class UserControllers extends Controller
             'start_time.*' => 'nullable|date_format:H:i',
             'end_time.*' => 'nullable|date_format:H:i',
             'available.*' =>  ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],
+            'lat' => 'required',
+            'long' => 'required',
         ]);
         $vendors = new vendors;
         $vendors->name = $request->restourant_name;
@@ -218,6 +221,9 @@ class UserControllers extends Controller
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
         $vendors->bio  = $request->bio;
+        $vendor->is_all_setting_done= 1;
+        $vendor->lat= $request->lat;
+        $vendor->long= $request->long;
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
@@ -258,6 +264,8 @@ class UserControllers extends Controller
                     'available' => 0,
                 ];
         }
+        Order_time::insert($data);
+        
 
         return redirect()->route('admin.chef.create')->with('message', 'Vendor Registration Successfully');
         
