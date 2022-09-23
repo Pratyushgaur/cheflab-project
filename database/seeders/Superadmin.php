@@ -3,11 +3,10 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\facades\DB;
 use Illuminate\Support\str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
-
+use DB;
 class Superadmin extends Seeder
 {
     /**
