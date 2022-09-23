@@ -37,7 +37,7 @@ class UserControllers extends Controller
     {
         if ($request->ajax()) {
             
-            $data = vendors::latest()->get();
+            $data = Vendors::latest()->get();
             if($request->rolename != ''){
                $data =  $data->where('vendor_type','=',$request->rolename);
             }
