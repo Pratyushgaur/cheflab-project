@@ -732,6 +732,11 @@ class AppController extends Controller
             try {
                 DB::beginTransaction();
                 // database queries here
+                $is_exist=Cart::where('user_id',$request->user_id)->first();
+                if(isset($is_exist->id)){
+                    $error ='Another Cart is already exist.So that you can not create new one';
+                    return response()->json(['status' => false, 'error' => $error], 401);
+                }
 
                 $cart_obj = new Cart($request->all());
                 $cart_obj->user_id = $request->user_id;
@@ -1105,7 +1110,7 @@ class AppController extends Controller
             try {
                 DB::beginTransaction();
                 if (!Vendors::is_avaliavle($request->vendor_id))
-                    return response()->json(['status' => False, 'error' => date('H:i:s')."Vendor not available" ], 500);
+                    return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
                 $data = $request->all();
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);

@@ -212,6 +212,14 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
             Route::post('on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getPrice'])->name('restaurant.slot.getPrice');
             Route::get('on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getslot'])->name('restaurant.slot.checkslot');
+
+            //dine out
+            Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'index'])->name('restaurant.dineout.index');
+            Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update'])->name('restaurant.dineout.update');
+            Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'vendor_table_setting'])->name('restaurant.dineout.vendor_table_setting');
+            Route::post('dine-out-setting/active', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_setting'])->name('restaurant.dineout.dine_out_setting');
+
+
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
 
