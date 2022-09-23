@@ -80,21 +80,21 @@ class AppController extends Controller
     function calculateDistanceBetweenTwoAddresses($lat1, $lng1, $lat2, $lng2){
         $lat1 = deg2rad($lat1);
         $lng1 = deg2rad($lng1);
-    
+
         $lat2 = deg2rad($lat2);
         $lng2 = deg2rad($lng2);
-    
+
         $delta_lat = $lat2 - $lat1;
         $delta_lng = $lng2 - $lng1;
-    
+
         $hav_lat = (sin($delta_lat / 2))**2;
         $hav_lng = (sin($delta_lng / 2))**2;
-    
+
         $distance = 2 * asin(sqrt($hav_lat + cos($lat1) * cos($lat2) * $hav_lng));
-    
+
         $distance = 3959*$distance;
         // If you want calculate the distance in miles instead of kilometers, replace 6371 with 3959.
-    
+
         return $distance;
     }
     //restaurant page
@@ -160,7 +160,7 @@ class AppController extends Controller
                     'category_id' => 'required|numeric',
                     'lat' => 'required|numeric',
                     'lng' => 'required|numeric',
-                    
+
                 ]
             );
             if ($validateUser->fails()) {
@@ -307,11 +307,11 @@ class AppController extends Controller
                 $product = $product->where('menu_id', '=', $value->id);
                 $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'type','products.id as product_id','product_rating','categories.name as categoryName',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
                 $product = $product->get();
-                
+
                 //
                 $category[$key]->products = $product;
             }
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
@@ -360,13 +360,13 @@ class AppController extends Controller
                 if($product->exists()){
                     $product = $product->get();
                     $data[$dk] = array('menuName'=>$value->menuName,'id' =>$value->id ,'products' => $product);
-                    
+
                     $dk++;
                 }
-                
-                
+
+
             }
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
@@ -606,8 +606,8 @@ class AppController extends Controller
                 } else {
                     $data[$key]->isClosed = true;
                 }
-                //$data[$key]->categories = $category;
-                
+                $data[$key]->categories = $category;
+                $data[$key]->is_like = true;
             }
             return response()->json([
                 'status' => true,
@@ -682,9 +682,9 @@ class AppController extends Controller
             }
 
             $vendors = Vendors::where(['id'=>$request->vendor_id,'vendor_type'=>'chef']);
-           
+
             $vendors = $vendors->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'id', 'experience', 'fssai_lic_no','bio')->first();
-            
+
             $cuisines = Cuisines::whereIn('id', explode(',', $vendors->speciality))->pluck('name');
             $vendors->speciality = $cuisines;
             $videos = Chef_video::where('userId', '=', $request->vendor_id)->get();
@@ -731,6 +731,11 @@ class AppController extends Controller
             try {
                 DB::beginTransaction();
                 // database queries here
+                $is_exist=Cart::where('user_id',$request->user_id)->first();
+                if(isset($is_exist->id)){
+                    $error ='Another Cart is already exist.So that you can not create new one';
+                    return response()->json(['status' => false, 'error' => $error], 401);
+                }
 
                 $cart_obj = new Cart($request->all());
                 $cart_obj->user_id = $request->user_id;
@@ -811,8 +816,8 @@ class AppController extends Controller
         //        dd($request->all());
         try {
             $validateUser = Validator::make($request->all(), [
-                'user_id' => 'required|numeric',
-//                'cart_id' => 'required|numeric'
+                'user_id' => 'required|numeric'
+
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
@@ -915,7 +920,7 @@ class AppController extends Controller
 
             ], 200);
 
-            
+
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -938,10 +943,7 @@ class AppController extends Controller
                     'products.*.variants.*.variant_qty' => 'string|nullable',
                     'products.*.addons.*.addon_id' => 'numeric|nullable',
                     'products.*.addons.*.addon_qty' => 'string|nullable',
-
-                    // 'addons.*.id' => 'numeric|nullable',
-                    // 'addons.*.addon_qty' => "numeric|nullable"
-                ]
+           ]
 
             );
             if ($validateUser->fails()) {
@@ -975,7 +977,6 @@ class AppController extends Controller
                     }
 
                     $cart_obj->products()->save($cart_products);
-            //                dd($cart_products);
                     $cart_products_id[] = $cart_products->id;
                     if (isset($p['variants'])) {
                         foreach ($p['variants'] as $k => $v) {
@@ -1006,9 +1007,9 @@ class AppController extends Controller
                         }
                     $cart_obj->cart_product_addons()->whereNotIn('cart_product_addons.id', $cart_products_addons_id)->delete();
                 }
-//            dd($cart_products_id);
+
                 $cart_obj->products()->whereNotIn('id', $cart_products_id)->delete();
-//            dd(\DB::getQueryLog());
+
                 DB::commit();
 
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
@@ -1021,8 +1022,7 @@ class AppController extends Controller
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
-            
-    //
+
     public function add_to_like_product(Request $request)
     {
         try {
@@ -1047,7 +1047,7 @@ class AppController extends Controller
 
             ], 200);
 
-            
+
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -1055,11 +1055,12 @@ class AppController extends Controller
             ], 500);
         }
     }
-            
+
 
 
     public function create_order(Request $request)
     {
+//        date_default_timezone_set(config('app.timezone'));
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -1069,6 +1070,11 @@ class AppController extends Controller
                     'user_id' => 'required|numeric',
                     'customer_name' => 'required|string',
                     'delivery_address' => 'required|string',
+                    'city' => 'required|string',
+                    'pincode' => 'required|string',
+                    'lat' => 'required|string',
+                    'long' => 'required|string',
+
                     'total_amount' => 'required|numeric',
                     'gross_amount' => 'required|numeric',
                     'net_amount' => 'required|numeric',
@@ -1095,11 +1101,14 @@ class AppController extends Controller
                 ]
 
             );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
             global $cart_id;
             try {
                 DB::beginTransaction();
-                // database queries here
-                if (Vendors::is_avaliavle($request->vendor_id))
+                if (!Vendors::is_avaliavle($request->vendor_id))
                     return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
                 $data = $request->all();
                 if (is_array($request->payment_string))
@@ -1140,8 +1149,8 @@ class AppController extends Controller
             ], 500);
         }
     }
-            
-            
+
+
     public function deleteLikeProduct(Request $request)
     {
         try {
@@ -1166,7 +1175,7 @@ class AppController extends Controller
 
             ], 200);
 
-            
+
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -1198,7 +1207,7 @@ class AppController extends Controller
 
             ], 200);
 
-            
+
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,

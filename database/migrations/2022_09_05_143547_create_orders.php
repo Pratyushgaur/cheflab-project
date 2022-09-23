@@ -19,16 +19,20 @@ class CreateOrders extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('customer_name');
             $table->text('delivery_address')->comment('this addres also have deliver to customer name');
+            $table->float('lat',8,6);
+            $table->float('long',8,6);
+            $table->string('pincode')->nullable()->default(null);
+            $table->string('city')->nullable()->default(null);
             $table->enum('order_status',['pending','cancelled_by_customer','cancelled_by_vendor','completed','accept','payment_pending'])->default('pending');
             $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
             $table->float('gross_amount', 8, 2)->comment('after tax deduction ');
             $table->float('net_amount', 8, 2)->comment('after discount and other deduction, this amount will payed  by customer');
-            $table->float('discount_amount', 6, 2);
-            $table->unsignedBigInteger('coupon_id')->default(null);
+            $table->float('discount_amount', 6, 2)->default(0);
+            $table->unsignedBigInteger('coupon_id')->nullable()->default(null);
             $table->enum('payment_type',['COD','GPay'])->default('COD');
             $table->enum('payment_status',['paid','pending'])->default('pending');
-            $table->text('transaction_id')->default(null);
-            $table->text('payment_string')->default(null)->comment('payment gatway return json string');
+            $table->text('transaction_id')->nullable()->default(null);
+            $table->text('payment_string')->nullable()->default(null)->comment('payment gatway return json string');
 
 
             $table->timestamp('created_at')->useCurrent();

@@ -1,17 +1,8 @@
 <?php
 
 use App\Http\Middleware\isVendorLoginAuth;
-use App\Models\vendors;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
-
-
-//use PubNub\PubNub;
-//use PubNub\Enums\PNStatusCategory;
-//use PubNub\Callbacks\SubscribeCallback;
-//use PubNub\PNConfiguration;
 
 //use Auth;
 
@@ -25,14 +16,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/test', function () {
-    $vendor_id=1;
-    \DB::enableQueryLog();
-
-//    dd(\DB::getQueryLog ());
-});
-
-
+Route::get('/test',function (){ });
 Route::get('/', function () {
     return view('welcome');
 });
@@ -127,23 +111,23 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('delivery-boy-update', [App\Http\Controllers\admin\Deliveryboy::class, 'update'])->name('admin.deliverboy.update');
     Route::post('delivery-boy/delete', [App\Http\Controllers\admin\Deliveryboy::class, 'soft_delete'])->name('admin.deliverboy.ajax.delete');
     //Coupons
-    Route::get('coupon', [App\Http\Controllers\admin\CouponController::class, 'index'])->name('admin.coupon.list');
-    Route::get('coupon-list', [App\Http\Controllers\admin\CouponController::class, 'get_data_table_of_coupon'])->name('admin.coupon.data');
-    Route::get('coupon-create', [App\Http\Controllers\admin\CouponController::class, 'create_coupon'])->name('admin.coupon.create');
-    Route::post('coupon-store', [App\Http\Controllers\admin\CouponController::class, 'store_coupon'])->name('admin.coupon.store');
-    Route::get('coupon-couponcheck', [App\Http\Controllers\admin\CouponController::class, 'checkCoupon'])->name('admin.coupon.couponcheck');
-    Route::get('coupon-upercase', [App\Http\Controllers\admin\CouponController::class, 'upercase'])->name('admin.coupon.upercase');
-    Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\admin\CouponController::class, 'checkCouponUpdate'])->name('admin.coupon.couponcheckedit');
-    Route::get('coupon-edit/{id}', [App\Http\Controllers\admin\CouponController::class, 'fun_edit_coupon'])->name('admin.coupon.edit');
-    Route::post('coupon-update', [App\Http\Controllers\admin\CouponController::class, 'update'])->name('admin.coupon.update');
-    Route::post('coupon-delete', [App\Http\Controllers\admin\CouponController::class, 'soft_delete'])->name('admin.coupon.delete');
+    Route::get('coupon', [App\Http\Controllers\admin\CouponController::class,'index'])->name('admin.coupon.list');
+    Route::get('coupon-list', [App\Http\Controllers\admin\CouponController::class,'get_data_table_of_coupon'])->name('admin.coupon.data');
+    Route::get('coupon-create', [App\Http\Controllers\admin\CouponController::class,'create_coupon'])->name('admin.coupon.create');
+    Route::post('coupon-store', [App\Http\Controllers\admin\CouponController::class,'store_coupon'])->name('admin.coupon.store');
+    Route::get('coupon-couponcheck', [App\Http\Controllers\admin\CouponController::class,'checkCoupon'])->name('admin.coupon.couponcheck');
+    Route::get('coupon-upercase', [App\Http\Controllers\admin\CouponController::class,'upercase'])->name('admin.coupon.upercase');
+    Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\admin\CouponController::class,'checkCouponUpdate'])->name('admin.coupon.couponcheckedit');
+    Route::get('coupon-edit/{id}', [App\Http\Controllers\admin\CouponController::class,'fun_edit_coupon'])->name('admin.coupon.edit');
+    Route::post('coupon-update', [App\Http\Controllers\admin\CouponController::class,'update'])->name('admin.coupon.update');
+    Route::post('coupon-delete', [App\Http\Controllers\admin\CouponController::class,'soft_delete'])->name('admin.coupon.delete');
     // Banner Promotion
     Route::get('banner-promotion', [App\Http\Controllers\admin\BannerController::class, 'index'])->name('admin.banner.createbanner');
-    Route::get('banner-list', [App\Http\Controllers\admin\BannerController::class, 'get_data_table_of_slote'])->name('admin.slot.data');
+    Route::get('banner-list', [App\Http\Controllers\admin\BannerController::class,'get_data_table_of_slote'])->name('admin.slot.data');
     Route::get('banner-slot-edit/{id}', [App\Http\Controllers\admin\BannerController::class, 'fun_edit_slot'])->name('admin.slote.edit');
-    Route::post('banner-store', [App\Http\Controllers\admin\BannerController::class, 'store_banner'])->name('admin.banner.store');
-    Route::get('banner-chek', [App\Http\Controllers\admin\BannerController::class, 'check_duplicate_slotename'])->name('admin.banner.slotcheck');
-    Route::get('banner-chektime', [App\Http\Controllers\admin\BannerController::class, 'checktime'])->name('admin.banner.slotchecktime');
+    Route::post('banner-store', [App\Http\Controllers\admin\BannerController::class,'store_banner'])->name('admin.banner.store');
+    Route::get('banner-chek', [App\Http\Controllers\admin\BannerController::class,'check_duplicate_slotename'])->name('admin.banner.slotcheck');
+    Route::get('banner-chektime', [App\Http\Controllers\admin\BannerController::class,'checktime'])->name('admin.banner.slotchecktime');
     Route::get('banner-slot-list', [App\Http\Controllers\admin\BannerController::class, 'slot_book_list'])->name('admin.slotebook.list');
     Route::get('banner-slot-data', [App\Http\Controllers\admin\BannerController::class, 'get_list_slotbook'])->name('admin.slotebook.data');
     Route::get('banner-slot-active/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'active'])->name('admin.slot.active');
@@ -235,6 +219,14 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
             Route::post('on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getPrice'])->name('restaurant.slot.getPrice');
             Route::get('on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getslot'])->name('restaurant.slot.checkslot');
+
+            //dine out
+            Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'index'])->name('restaurant.dineout.index');
+            Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update'])->name('restaurant.dineout.update');
+            Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'vendor_table_setting'])->name('restaurant.dineout.vendor_table_setting');
+            Route::post('dine-out-setting/active', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_setting'])->name('restaurant.dineout.dine_out_setting');
+
+
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
 
@@ -254,41 +246,41 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
     });
 });
-// chef route
-
-Route::get('chef-logout', function () {
-    Auth::logout();
-    return redirect()->route('vendor.login');
-})->name('chef.logout');
-
-Route::group(['middleware' => ['isChef'], 'prefix' => 'chef'], function () {
     // chef route
-    Route::group(['middleware' => 'isChefRestaurant'], function () {
-        Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
-            Route::get('dashbord', [App\Http\Controllers\chef\DashboardController::class, 'index'])->name('chef.dashboard');
-            //chef order linst
-            Route::get('order', [App\Http\Controllers\chef\OrderController::class, 'index'])->name('order.list');
-            Route::get('order/datatable/list', [App\Http\Controllers\chef\OrderController::class, 'getData'])->name('order.datatable');
-            //coupon
-            Route::get('coupon', [App\Http\Controllers\chef\VendorCoupon::class, 'index'])->name('chef.coupon.list');
-            Route::get('coupon-list', [App\Http\Controllers\chef\VendorCoupon::class, 'get_data_table_of_coupon'])->name('chef.coupon.data');
-            Route::get('coupon-create', [App\Http\Controllers\chef\VendorCoupon::class, 'create_coupon'])->name('chef.coupon.create');
-            Route::post('coupon-store', [App\Http\Controllers\chef\VendorCoupon::class, 'store_coupon'])->name('chef.coupon.store');
-            Route::get('coupon-couponcheck', [App\Http\Controllers\chef\VendorCoupon::class, 'checkCoupon'])->name('chef.coupon.couponcheck');
-            Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\chef\VendorCoupon::class, 'checkCouponUpdate'])->name('chef.coupon.couponcheckedit');
-            Route::get('coupon-edit/{id}', [App\Http\Controllers\chef\VendorCoupon::class, 'fun_edit_coupon'])->name('chef.coupon.edit');
-            Route::post('coupon-update', [App\Http\Controllers\chef\VendorCoupon::class, 'update'])->name('chef.coupon.update');
-            Route::post('coupon-delete', [App\Http\Controllers\chef\VendorCoupon::class, 'soft_delete'])->name('chef.coupon.delete');
+
+    Route::get('chef-logout',function(){
+        Auth::logout();
+        return  redirect()->route('vendor.login');
+    })->name('chef.logout');
+
+    Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
+        // chef route
+        Route::group(['middleware' => 'isChefRestaurant'], function(){
+            Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
+                Route::get('dashbord', [App\Http\Controllers\chef\DashboardController::class,'index'])->name('chef.dashboard');
+                //chef order linst
+                Route::get('order', [App\Http\Controllers\chef\OrderController::class,'index'])->name('order.list');
+                Route::get('order/datatable/list', [App\Http\Controllers\chef\OrderController::class,'getData'])->name('order.datatable');
+                //coupon
+                Route::get('coupon', [App\Http\Controllers\chef\VendorCoupon::class,'index'])->name('chef.coupon.list');
+                Route::get('coupon-list', [App\Http\Controllers\chef\VendorCoupon::class,'get_data_table_of_coupon'])->name('chef.coupon.data');
+                Route::get('coupon-create', [App\Http\Controllers\chef\VendorCoupon::class,'create_coupon'])->name('chef.coupon.create');
+                Route::post('coupon-store', [App\Http\Controllers\chef\VendorCoupon::class,'store_coupon'])->name('chef.coupon.store');
+                Route::get('coupon-couponcheck', [App\Http\Controllers\chef\VendorCoupon::class,'checkCoupon'])->name('chef.coupon.couponcheck');
+                Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\chef\VendorCoupon::class,'checkCouponUpdate'])->name('chef.coupon.couponcheckedit');
+                Route::get('coupon-edit/{id}', [App\Http\Controllers\chef\VendorCoupon::class,'fun_edit_coupon'])->name('chef.coupon.edit');
+                Route::post('coupon-update', [App\Http\Controllers\chef\VendorCoupon::class,'update'])->name('chef.coupon.update');
+                Route::post('coupon-delete', [App\Http\Controllers\chef\VendorCoupon::class,'soft_delete'])->name('chef.coupon.delete');
+            });
+
+
+            Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class,'index'])->name('chef.globleseting');
+            Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class,'order_time'])->name('chef.globleseting.ordertime');
+            Route::post('globle/createtime', [App\Http\Controllers\chef\GlobleSetting::class,'store'])->name('chef.ordertime.store');
+            //
+            Route::get('globle/require/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'requireOrderTime'])->name('chef.require.ordertime');
+            Route::post('globle/createtime', [App\Http\Controllers\vendor\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.first_store');
+
+
         });
-
-
-        Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class, 'index'])->name('chef.globleseting');
-        Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'order_time'])->name('chef.globleseting.ordertime');
-        Route::post('globle/createtime', [App\Http\Controllers\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.store');
-        //
-        Route::get('globle/require/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'requireOrderTime'])->name('chef.require.ordertime');
-        Route::post('globle/createtime', [App\Http\Controllers\vendor\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.first_store');
-
-
     });
-});

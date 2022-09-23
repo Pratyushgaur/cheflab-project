@@ -52,6 +52,7 @@
   #message-box.show {
     transform: none;
   }
+      .ms-text-danger{width: 100%;}
     </style>
  @yield('page-css')
 
