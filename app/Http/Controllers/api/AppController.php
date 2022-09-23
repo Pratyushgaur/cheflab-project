@@ -441,16 +441,17 @@ class AppController extends Controller
             }
             //
             $product = Product_master::where('id', '=', $request->product_id)->select('addons', 'customizable')->first();
-
+            
             if (@$product->customizable == 'true') {
                 $options = unserialize($product->variants);
                 if ($product->addons == null) {
-                    $data = ['addons' => $product->addons];
+                    $data = ['addons' => []];
                 } else {
-                    $data = ['addons' => @unserialize($product->addons)];
+                    $addon = Addons::whereIn('id',explode(',',$product->addons))->select('id','addon','price')->get()->toArray();
+                    $data = ['addons' => $addon];
                 }
 
-                $v = Variant::select('variant_name', 'variant_price')->where('product_id', $request->product_id)->get();
+                $v = Variant::select('variant_name', 'variant_price','id')->where('product_id', $request->product_id)->get();
                 // dd($v->toArray());
                 if (isset($v))
                     $data['options'] = $v->toArray();

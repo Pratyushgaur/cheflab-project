@@ -43,7 +43,47 @@
                 
               </div>
             </div>
-
+            <div class="modal fade" id="modal-default">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Product Reject Rejoin</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                      <form id="restaurant-form" action="{{route('admin.slot.reject')}}" method="post" enctype="multipart/form-data">
+                          @if ($errors->any())
+                              @foreach ($errors->all() as $error)
+                                  <div class="alert alert-danger">{{$error}}</div>
+                              @endforeach
+                          @endif
+                          @csrf
+                            
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                      <div class="form-group">
+                                          <label for="exampleInputEmail1">Rejoin</label>
+                                          <div id="price"></div>
+                                          <textarea type="text" name="comment_rejoin" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
+                                         
+                                        </div>  
+                                    </div>
+                                </div>
+                            </div>
+  
+                            <button class="btn btn-primary float-right" type="submit">Submit</button>
+                      </form>
+                  </div>
+                  
+                </div>
+                <!-- /.modal-content -->
+              </div>
+              <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
           
           </section>
           <!-- /.content -->
@@ -57,6 +97,8 @@
 
 
 @section('js_section')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 <script>
   $("input[data-bootstrap-switch]").each(function(){
     $(this).bootstrapSwitch('state', $(this).prop('checked'));
@@ -86,7 +128,24 @@
         ]
     });
   // });
-
+  $("#restaurant-form").validate({
+      rules: {
+        comment_rejoin: {
+                  required: true,
+                //  remote: '{{route("restaurant.slot.checkdate")}}', 
+              },
+              
+        },
+          messages: {
+            comment_rejoin: {
+                  required: "Comment is required"
+              },
+          }
+    });
+    $(document).on('click', '.openModal', function () {
+        var slot_id = $(this).data('id');
+        $('#price').append("<input type='hidden' name='slot_id' value="+slot_id+">");
+    });
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }

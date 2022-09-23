@@ -16,11 +16,11 @@ class VendorPromotion extends Controller
     
     public function index(){
 
-        return view('admin/vendors/store/list');
+        return view('admin/promotion/app-blog');
     }
     public function store(Request $request){
         $this->validate($request, [
-            'slot_name' => 'required',
+            'position' => 'required',
             'price' => 'required',
             'position' => 'required',
         ]);

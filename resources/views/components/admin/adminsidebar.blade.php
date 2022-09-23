@@ -94,12 +94,24 @@
 				  <p>Product Management</p>
 				</a>
 			</li>  
-			<li class="nav-item">
-				<a href="{{route('admin.vendor.pendigProduct')}}" class="nav-link">
-				  <i class="far fa-circle nav-icon"></i>
-				  <p>Vendor Product</p>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+				<i class="nav-icon fa fa-star"></i>
+				  <p>
+					 Review
+					<i class="fas fa-angle-left right"></i>
+				  </p>
 				</a>
-			</li>  
+				<ul class="nav nav-treeview">
+					<li class="nav-item">
+						<a href="{{route('admin.vendor.pendigProduct')}}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>Vendor Product</p>
+						</a>
+					</li>
+				</ul>
+			</li>
+			 
 			<li class="nav-item">
 				<a href="{{route('admin.coupon.list')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
@@ -109,7 +121,7 @@
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  
-				  <i class="far fa-circle nav-icon"></i>
+				  <i class="far fa-circle nav-icon "></i>
 				  <p>
 					 Order Management
 					<i class="fas fa-angle-left right"></i>
@@ -127,31 +139,32 @@
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  
-				  <i class="far fa-circle nav-icon"></i>
+				  <i class="fa fa-bullhorn  nav-icon"></i>
 				  <p>
-					 Slote Promotion Management
+				  	Promotion Management 
 					<i class="fas fa-angle-left right"></i>
 				  </p>
 				</a>
 				<ul class="nav nav-treeview">
-				    <li class="nav-item">
+					<li class="nav-item">
 						<a href="{{route('admin.banner.createbanner')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>Banner Promotion</p>
+						<i class="far fa-circle nav-icon"></i>
+						<p>Banner Promotion</p>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{route('admin.vendor.store')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>Vendor Store Promotion</p>
+						<a href="{{route('admin.application.blog')}}" class="nav-link">
+						<i class="far fa-circle nav-icon"></i>
+						<p>Application Blog</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{route('admin.slotebook.list')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>Slot List</p>
+						<i class="far fa-circle nav-icon"></i>
+						<p>Slot List</p>
 						</a>
-					</li>	
+					</li>
+						
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">
@@ -190,42 +203,8 @@
 					</li>	
 				</ul>
 			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
-				  
-				  <i class="far fa-user nav-icon"></i>
-				  <p>
-					 Content Management
-					<i class="fas fa-angle-left right"></i>
-				  </p>
-				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
-						</a>
-					</li>	
-				</ul>
-			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
-				  
-				  <i class="far fa-bell nav-icon"></i>
-				  <p>
-				  	Promotion Management 
-					<i class="fas fa-angle-left right"></i>
-				  </p>
-				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
-						</a>
-					</li>	
-				</ul>
-			</li>
+			
+			
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  
@@ -262,7 +241,24 @@
 					</li>	
 				</ul>
 			</li>
-			
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+				  
+				  <i class="far fa-user nav-icon"></i>
+				  <p>
+					 Content Management
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+				    <li class="nav-item">
+						<a href="#" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>All Orders</p>
+						</a>
+					</li>	
+				</ul>
+			</li>
 			<li class="nav-item">
 				<a href="{{route('admin.logout')}}" class="nav-link">
 				  <i class="nav-icon fas fa-power-off"></i>

@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Validator;
 use Carbon\Carbon;
+use App\Models\Coupon;
+use App\Models\CouponHistory;
+
 // this is vikas testing
 class CouponController extends Controller
 {
@@ -25,7 +28,7 @@ class CouponController extends Controller
                     ], 401);
                 }
                 $date = today()->format('Y-m-d');
-                $coupon =  \App\Models\Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('id','name','discount_type','coupon_valid_x_user','discription')->get();
+                $coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('*')->get();
                 return response()->json([
                     'status' => true,
                     'message'=>'Data Get Successfully',
@@ -59,7 +62,7 @@ class CouponController extends Controller
                 ], 401);
             }
                 $date = today()->format('Y-m-d');
-                $coupon =  \App\Models\Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','id','from','to','code','discount_type','discount','maxim_dis_amount','minimum_order_amount','promo_redeem_count','promocode_use','coupon_valid_x_user','discription')->get();
+                $coupon =  Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','id','from','to','code','discount_type','discount','maxim_dis_amount','minimum_order_amount','promo_redeem_count','promocode_use','coupon_valid_x_user','description')->get();
                 return response()->json([
                     'status' => true,
                     'message'=>'Data Get Successfully',
@@ -89,17 +92,20 @@ class CouponController extends Controller
                 ], 401);
             }
             $date = today()->format('Y-m-d');
-            $vendor_coupon =  \App\Models\Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','discription')->get();
-          //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','discription')->get();
-            $admin_coupon = \App\Models\Coupon::where(['create_by' => 'admin'])->select('name','code','discount_type','coupon_valid_x_user','discription',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'))->get();
+            $vendor_coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
+          //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
+            $admin_coupon = Coupon::where(['create_by' => 'admin'])->select('name','code','discount_type','coupon_valid_x_user','description',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'))->get();
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
-                'response'=>$vendor_coupon, $admin_coupon 
+                'response'=>array('vendor'=>$vendor_coupon,'admin'=>$admin_coupon)  
 
             ], 200);
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
         }
     }
     public function couponApply(Request $request){
@@ -107,8 +113,9 @@ class CouponController extends Controller
             $validateUser = Validator::make(
                 $request->all(),
                 [
-                    'id' => 'required|numeric'
+                    'code' => 'required'
                 ]
+                
             );
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
@@ -118,104 +125,74 @@ class CouponController extends Controller
 
                 ], 401);
             }
-            $date = today()->format('Y-m-d');
-            $vendor_coupon =  \App\Models\Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','discription','promocode_use','promo_redeem_count','from')->get();
-            $coupon =  \App\Models\CouponHistory::where('coupon_id', '=', $request->id)->get();
-            $wordCount = $coupon->count();
-           
-            foreach($vendor_coupon as $k){
-                $userid =  \App\Models\CouponHistory::where('user_Id', '=', $request->user_Id)->where('code', '=', $k['code'])->get();
-                $coutuser = $userid->count();
-                if($k['coupon_valid_x_user'] == $wordCount){
-                    return response()->json([
-                        'status' => false,
-                        'message'=>'Coupon is validity exp',
-                    ], 401);   
-                }else{
+            date_default_timezone_set('Asia/Kolkata');
+            //check code is valid or not
+             $coupon =  Coupon::where('code','=',strtoupper($request->code));
+             if($coupon->exists()){
+                $coupon = $coupon->first();
+                if(Carbon::now()->between(Carbon::createFromFormat('Y-m-d', $coupon->from), Carbon::createFromFormat('Y-m-d', $coupon->to)->addDay())){
+                    // check coupon use Limit
+                    if(CouponHistory::where('coupon_id','=',$coupon->id)->count() < $coupon->coupon_valid_x_user){
+                        // check redom count
+                        
+                        if($coupon->promocode_use != 4){
+                            if($coupon->promocode_use == 1){
+                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->format('Y-m-d'))->whereDate('created_at', '<=', today()->format('Y-m-d'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
+                                $msg = 'You Can Use This Coupon Only '.$coupon->promo_redeem_count.' times in a day';
+                            }
+                            if($coupon->promocode_use == 2){ // week
+                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->subDays(7)->format('Y-m-d'))->whereDate('created_at', '<=', today()->format('Y-m-d'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
+                                $msg = 'You Can Use This Coupon Only '.$coupon->promo_redeem_count.' times in a Week';
+                            }
+                            if($coupon->promocode_use == 3){ // Month
+                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->subDays(7)->format('Y-m-d'))->whereDate('created_at', '<=', today()->format('Y-m-d'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
+                                $msg = 'You Can Use This Coupon Only '.$coupon->promo_redeem_count.' times in a Month';
+                            }
+                            //check edom count qual to use
+                            if($count >= $coupon->promo_redeem_count){
+                                return response()->json([
+                                    'status' => false,
+                                    'error' => $msg
                     
-                    $day = 1;
-                    $week = 2;
-                    $month = 3;
-                    $lifetime = 4;
-                    //echo $k['promocode_use'];die;
-                    if($k['promocode_use'] == $day){
-                       
-                        $date = today()->format('Y-m-d');
-                       $user  = \App\Models\CouponHistory::where('coupon_id', '=', $request->id)->where('user_Id', '=', $request->user_Id)->get();
-                       $cont = $user->count();
-                       if($k['promo_redeem_count'] == $cont){
-                            return response()->json([
-                                'status' => false,
-                                'message'=>'You are allready use this coupon',
-                                'response'=>$cont
-            
-                            ], 401);
-                       }else{
-                            return response()->json([
-                                'status' => true,
-                                'message'=>'Data Get Successfully',
-                                'response'=>$vendor_coupon
-            
-                            ], 200);
-                       }
+                                ], 401);
+                            }
                             
-                    }elseif($k['promocode_use'] == $week){
-                        $d1 = $k['from'];
-                        $d2 = $date = today()->format('Y-m-d');
-                        $interval = $d1->diff($d2);
-                        $days = $interval->format('%a');
-             
-                       // $days = $interval->format('%a');
-                        if($interval == 14){
-                            return response()->json([
-                                'status' => false,
-                                'message'=>'You are allready use this coupon',
-                                'response'=>$cont
-            
-                            ], 401);
-                        }else{
-                            return response()->json([
-                                'status' => true,
-                                'message'=>'Data Get Successfully',
-                                'response'=>$vendor_coupon
-            
-                            ], 200);
                         }
-
-                    }elseif($k['promocode_use'] == $month){
-                        $d1 = $k['from'];
-                        $d2 = $date = today()->format('Y-m-d');
-                        $interval = $d1->diffInDays($d2);
-                       // $days = $interval->format('%a');
-                        if($interval == 30){
-                            return response()->json([
-                                'status' => false,
-                                'message'=>'You are allready use this coupon',
-                                'response'=>$cont
-            
-                            ], 401);
-                        }else{
-                            return response()->json([
-                                'status' => true,
-                                'message'=>'Data Get Successfully',
-                                'response'=>$vendor_coupon
-            
-                            ], 200);
-                        }
-                    }elseif($k['promocode_use'] == $lifetime){
                         return response()->json([
                             'status' => true,
                             'message'=>'Data Get Successfully',
-                            'response'=>$vendor_coupon
+                            'response'=>$coupon
         
                         ], 200);
+                    }else{
+                        return response()->json([
+                            'status' => false,
+                            'error' => 'Coupon Use Limit is Full'
+            
+                        ], 401);
                     }
-                    
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'error' => 'Coupon Is Expired'
+        
+                    ], 401);
                 }
+
                 
-            }
+             }else{
+                return response()->json([
+                    'status' => false,
+                    'error' => 'Invalid Coupon Code .Try Onther One'
+    
+                ], 401);
+             }
+            
         } catch (\Throwable $th) {
-            //throw $th;
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
         }
     }
 }

@@ -69,43 +69,39 @@ class BannerController extends Controller
     }
     public function slot_book_list(){
         return view('admin/banner/list');
-        /*if ($request->ajax()) {
-            
-            $data = SloteMaster::latest()->get();
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action-js', function($data){
-                    $btn = '<a href="#" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>';
-                    return $btn;
-                })
-                ->addColumn('status', function($data){
-                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
-                })
-               
-                ->rawColumns(['date','action-js','status'])
-                ->rawColumns(['action-js']) 
-                //'. route("admin.slote.edit",Crypt::encryptString($data->id)) .'
-                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
-               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
-                ->make(true);
-        }*/
     }
+    public function rejectProduct(Request $request){
+        //  return $request->input();die;
+          $this->validate($request, [
+              'comment_rejoin' => 'required',
+          ]);
+          $slot_id = $request->slot_id;
+          $product = SloteBook::find($slot_id);
+          $product->comment_rejoin = $request->comment_rejoin;
+          $product->product_activation = 3;
+          $product->save();
+          return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Reject Successfully');
+      }
     public function get_list_slotbook(Request $request){
         if ($request->ajax()) {
             
           //  $data = SloteBook::latest()->get();
-            $data = \App\Models\SloteBook::where(['slotbooking_table.slot_status'=>'0'])->join('vendors','slotbooking_table.vendor_id','=','vendors.id')->select('slotbooking_table.banner','slot_id','date','slot_image','slot_status','vendors.name as restaurantName')->get();  
+            $data = \App\Models\SloteBook::where(['slotbooking_table.slot_status'=>'0'])->join('vendors','slotbooking_table.vendor_id','=','vendors.id')->orderby('date','DESC')->select('slotbooking_table.banner','slot_id','date','slot_image','slot_status','vendors.name as restaurantName')->get();  
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '
-                    <a href="'.route('admin.slot.comment',Crypt::encryptString($data->slot_id)).'" class="edit btn btn-warning btn-xs">Comment</a>
-                    <a href="'.route('admin.slot.reject',Crypt::encryptString($data->slot_id)).'" class="edit btn btn-warning btn-xs">Reject</a>
+                    <a  href="'.route('admin.slot.active',Crypt::encryptString($data->slot_id)).'" class="btn btn-xs btn-success">Accept</a>
+                    <a href="javascript:void(0)" data-id="' . $data->slot_id . '" class="btn btn-warning btn-xs openModal" data-toggle="modal" data-target="#modal-default">
+                        Reject
+                    </a>
+
+                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>
                     ';
                     return $btn;
                 })
                 ->addColumn('slot_status', function($data){
-                    return $status_class = (!empty($data->slot_status)) && ($data->slot_status == 0) ? '<button class="btn btn-xs btn-success">Active</button>' : '<a  href="'.route('admin.slot.active',Crypt::encryptString($data->slot_id)).'" class="btn btn-xs btn-danger">Pending</a>'; 
+                    return $status_class = (!empty($data->slot_status)) && ($data->slot_status == 0) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-warning">Pending</button>'; 
                     return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
                 })
 
