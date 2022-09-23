@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use App\Models\vendors;
+use App\Models\Vendors;
 use App\Models\User;
 use App\Models\Catogory_master;
 use App\Models\Cuisines;
@@ -93,14 +93,14 @@ class UserControllers extends Controller
 
     public function checkEmailExist(Request $request)
     {   
-        if (vendors::where('email','=',$request->email)->exists()) {
+        if (Vendors::where('email','=',$request->email)->exists()) {
             return \Response::json(false);
         } else {
             return \Response::json(true);
         }
     }
     public function checkEmailExistUpdate(Request $request,$id){
-       $email = vendors::where('email','=',$request->email);
+       $email = Vendors::where('email','=',$request->email);
         $email = $email->where('id','!=',$id);
         if ($email->exists()) {
             return \Response::json(false);
@@ -110,14 +110,14 @@ class UserControllers extends Controller
     }
     public function checkMobileExist(Request $request,$id=null)
     {
-        if (vendors::where('mobile','=',$request->phone)->exists()) {
+        if (Vendors::where('mobile','=',$request->phone)->exists()) {
             return \Response::json(false);
         } else {
             return \Response::json(true);
         }
     }
     public function checkMobileExistUpdate(Request $request,$id){
-        $mobile = vendors::where('mobile','=',$request->phone);
+        $mobile = Vendors::where('mobile','=',$request->phone);
         $mobile = $mobile->where('id','!=',$id);
         if ($mobile->exists()) {
             return \Response::json(false);
@@ -279,7 +279,7 @@ class UserControllers extends Controller
         'address' => 'required',
         'vendor_commission' => 'required',
       ]);
-        $vendors = vendors::find($request->id);
+        $vendors = Vendors::find($request->id);
        // dd($vendors);
         $vendors->name = $request->restourant_name;
         $vendors->id = $request->id;
@@ -330,7 +330,7 @@ class UserControllers extends Controller
         $vendors->sub_title  = $request->sub_title;
         $vendors->link  = $request->link;
         $vendors->save();
-        $vendor = vendors::findOrFail($request->userId);
+        $vendor = Vendors::findOrFail($request->userId);
         return redirect()->route('admin.vendor.view',Crypt::encryptString($vendor->id))->with('message', 'Video Add Successfully');
     }
     public function updateVideo(Request $request){
@@ -346,13 +346,13 @@ class UserControllers extends Controller
         $vendors->sub_title  = $request->sub_title;
         $vendors->link  = $request->link;
         $vendors->save();
-        $vendor = vendors::findOrFail($request->userId);
+        $vendor = Vendors::findOrFail($request->userId);
         return redirect()->route('admin.vendor.view',Crypt::encryptString($vendor->id))->with('message', 'Vide Update Successfully');
     }
     public function view_vendor($encrypt_id)
     {
         $id =  Crypt::decryptString($encrypt_id);
-        $vendor = vendors::findOrFail($id);
+        $vendor = Vendors::findOrFail($id);
         $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         return view('admin/vendors/view-vendor',compact('vendor','categories','cuisines'));
@@ -434,7 +434,7 @@ class UserControllers extends Controller
     }
     public function view_chefproduct($encrypt_id){
         $id =  Crypt::decryptString($encrypt_id);
-        $vendor = vendors::findOrFail($id);
+        $vendor = Vendors::findOrFail($id);
         $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         return view('admin/vendors/chef_product',compact('vendor','categories','cuisines'));
@@ -451,7 +451,7 @@ class UserControllers extends Controller
     public function chef_edit($encrypt_id){
         try {
             $id =  Crypt::decryptString($encrypt_id);  
-            $vendor = vendors::findOrFail($id);
+            $vendor = Vendors::findOrFail($id);
             return view('admin/vendors/editvender',compact('vendor'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
@@ -467,14 +467,14 @@ class UserControllers extends Controller
     public function chef_product($encrypt_id){
        // echo 'ok';die;
         $id =  Crypt::decryptString($encrypt_id);
-        $vendor = vendors::findOrFail($id);
+        $vendor = Vendors::findOrFail($id);
         $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         return view('admin/vendors/chef-create-prodect',compact('vendor','categories','cuisines')); 
     }
     public function chef_videolink($encrypt_id){
         $id =  Crypt::decryptString($encrypt_id);
-        $vendor = vendors::findOrFail($id);
+        $vendor = Vendors::findOrFail($id);
         $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         return view('admin/vendors/chef-video-link',compact('vendor','categories','cuisines')); 
@@ -521,7 +521,7 @@ class UserControllers extends Controller
     {
         try {
             $id =  Crypt::decryptString($request->id);
-            $data = vendors::findOrFail($id);
+            $data = Vendors::findOrFail($id);
             if ($data ) {
                 $data->delete();
                 return \Response::json(['error' => false,'success' => true , 'message' => 'Vendor Deleted Successfully'], 200);
