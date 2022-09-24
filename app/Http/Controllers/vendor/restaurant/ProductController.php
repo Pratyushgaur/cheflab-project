@@ -41,7 +41,7 @@ class ProductController extends Controller
             'product_name' => 'required',
             'dis' => 'required',
             'item_price' => 'required|integer',
-            'product_image' => 'required|mimes:jpeg,png,jpg|max:5120',
+            'product_image' => 'required',
             'cuisines' => 'required',
             'category' => 'required',
             'menu_id' => 'required',
