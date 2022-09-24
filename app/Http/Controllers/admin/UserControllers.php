@@ -221,9 +221,9 @@ class UserControllers extends Controller
         $vendors->pincode  = $request->pincode;
         $vendors->address  = $request->address;
         $vendors->bio  = $request->bio;
-        $vendor->is_all_setting_done= 1;
-        $vendor->lat= $request->lat;
-        $vendor->long= $request->long;
+        $vendors->is_all_setting_done= 1;
+        $vendors->lat= $request->lat;
+        $vendors->long= $request->long;
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
