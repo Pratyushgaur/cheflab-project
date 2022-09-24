@@ -33,7 +33,7 @@ class Products extends Migration
             $table->enum('product_for',['1','2','3',])->comment('1-cheflab 2-chef 3-restaurant');
             $table->enum('status', ['1', '0','2','3'])->default('2')->comment('1-active 0-inactive 2-pending 3-reject');
            // $table->enum('product_activation', ['1', '2','3'])->default('2')->comment('1-active 2-pending 3-reject');
-            $table->string(' comment_rejoin');
+            $table->string('comment_rejoin')->nullable();
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
 
