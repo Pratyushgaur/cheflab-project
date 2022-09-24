@@ -70,7 +70,7 @@ class ProductController extends Controller
                 $product->addons = implode(',', $request->addons);
             }
             if ($request->has('product_image')) {
-                $filename = time() . '-restaurant-product-' . rand(100, 999) . '.' . $request->product_image->extension();
+                $filename = time() . '-restaurant-product-' . rand(100, 999) . '.' . $request->file('product_image')->clientExtension();
                 $request->product_image->move(public_path('products'), $filename);
                 $product->product_image  = $filename;
             }

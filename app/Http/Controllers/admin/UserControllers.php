@@ -141,7 +141,7 @@ class UserControllers extends Controller
             'deal_cuisines' => 'required',
 
         ]);
-        $vendors = new vendors;
+        $vendors = new Vendors;
         $vendors->name = $request->restaurant_name;
         $vendors->email = $request->email;
         $vendors->password = Hash::make($request->password);
@@ -207,7 +207,7 @@ class UserControllers extends Controller
             'lat' => 'required',
             'long' => 'required',
         ]);
-        $vendors = new vendors;
+        $vendors = new Vendors;
         $vendors->name = $request->restourant_name;
         $vendors->email = $request->email;
         $vendors->dob = $request->dob;
@@ -480,7 +480,7 @@ class UserControllers extends Controller
         return view('admin/vendors/chef-video-link',compact('vendor','categories','cuisines')); 
     }
     public function store_chef_product(Request $request){
-      //  return $request->input();die;
+      
         $this->validate($request, [
             'product_name' => 'required',
             'dis' => 'required',
@@ -500,11 +500,13 @@ class UserControllers extends Controller
        
         $product->type  = $request->type;
         $product->customizable  = $request->customizable;
+        
         if($request->has('product_image')){
-            $filename = time().'-cheflab-product-'.rand(100,999).'.'.$request->product_image->extension();
+            $filename = time().'-cheflab-product-'.rand(100,999).'.'.$request->file('product_image')->clientExtension();
             $request->product_image->move(public_path('products'),$filename);
             $product->product_image  = $filename;
         }
+        
         $product->save();
         if($request->customizable == 'true'){
             foreach($request->variant_name as $k =>$v){
