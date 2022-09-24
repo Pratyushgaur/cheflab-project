@@ -24,6 +24,8 @@ use App\Models\Vendors;
 use App\Models\UserProductLike;
 use App\Models\UserVendorLike;
 use App\Models\Cuisines;
+use App\Models\Coupon;
+
 
 
 use Carbon\Carbon;
@@ -297,6 +299,8 @@ class AppController extends Controller
                 ], 401);
             }
             $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
+            $date = today()->format('Y-m-d');
+            $coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('*')->get();
             foreach ($category as $key => $value) {
                 $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
                 $product = $product->join('categories', 'products.category', '=', 'categories.id');
@@ -315,7 +319,7 @@ class AppController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
-                'response' => $category
+                'response' => array('products'=>$category,'coupons'=>$coupon)
 
             ], 200);
         } catch (Throwable $th) {
