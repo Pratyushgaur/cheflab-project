@@ -35,9 +35,22 @@
           
         </ul>
       </li>
+      
       <li class="menu-item">
-        <a href="{{route('restaurant.promotion.list')}}"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
+        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/promotion*') ? 'active' : '' }}" data-toggle="collapse" data-target="#promotion" aria-expanded="false" aria-controls="promotion"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
         </a>
+        <ul id="promotion" class="collapse {{ request()->is('vendor/restaurant/promotion*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
+          <li>
+             <a href="{{route('restaurant.promotion.list')}}" class="{{ Request::routeIs('restaurant.promotion.list') ? 'active' : '' }} {{ Request::routeIs('restaurant.promotion.create') ? 'active' : '' }}">Banner Promotion</a>
+          </li>
+          <li>
+             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>
+          </li>
+          <li>
+             <a href="{{route('restaurant.promotion.list')}}" class="">Product Promotion</a>
+          </li>
+          
+        </ul>
       </li>
       <li class="menu-item">
         <a href="#" class="has-chevron" data-toggle="collapse" data-target="#orders" aria-expanded="false" aria-controls="orders"> <span><i class="nav-icon fa fa-shopping-basket fs-16"></i>Orders</span>

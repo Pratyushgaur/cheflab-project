@@ -113,4 +113,12 @@ class VendorPromotion extends Controller
             return \Response::json(true);
         }
     }
+    public function shop_promotion(Request  $request)
+    {
+        return view('vendor.restaurant.promotion.shop_promotion');
+    }
+    public function crate_shop_promotion()
+    {
+        return view('vendor.restaurant.promotion.create_shop_promotion');
+    }
 }

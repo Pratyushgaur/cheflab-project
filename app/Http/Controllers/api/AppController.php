@@ -598,7 +598,7 @@ class AppController extends Controller
             $data = $data->get();
             date_default_timezone_set('Asia/Kolkata');
             foreach ($data as $key => $value) {
-                //$category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $timeSchedule = VendorOrderTime::where(['vendor_id' => $value->chef_id, 'day_no' => Carbon::now()->dayOfWeek])->first();
 
                 if ($timeSchedule->available) {

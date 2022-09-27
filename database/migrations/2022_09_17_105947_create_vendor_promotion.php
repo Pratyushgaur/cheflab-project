@@ -13,12 +13,12 @@ class CreateVendorPromotion extends Migration
      */
     public function up()
     {
-        Schema::create('vendor_promotion', function (Blueprint $table) {
+        Schema::create('app_promotion_blogs', function (Blueprint $table) {
             $table->id();
-            $table->string('slot_name');
-            $table->string('price');
-            $table->string('position',5);
-            $table->enum('status', ['1', '0'])->default('0')->comment('1-active  0-inactive');
+            $table->string('name');
+            $table->enum('app_position',['1','2'])->default(1)->comment('1=restaurant,2=chef');
+            $table->enum('blog_type',['1','2'])->default(1)->comment('1=vendor,2=product');
+            $table->enum('status', ['1', '0'])->default('1')->comment('1-active  0-inactive');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -31,6 +31,6 @@ class CreateVendorPromotion extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vendor_promotion');
+        Schema::dropIfExists('app_promotion_blogs');
     }
 }

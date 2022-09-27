@@ -4,7 +4,7 @@ namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Http\Controllers\Controller;
 use App\Models\TableService;
-use App\Models\vendors;
+use App\Models\Vendors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -81,13 +81,13 @@ class DineoutController extends Controller
     {
         if (isset($request->vendor_table_service) && $request->vendor_table_service == 1) {
             $msg = 'Dine-out enable for your restaurant.';
-            $data = 1;
+            $data = '1';
         } else {
             $msg = 'Dine-out disable for your restaurant.';
-            $data = 0;
+            $data = '0';
         }
-
-        $vendor = vendors::find(Auth::guard('vendor')->user()->id);
+        
+        $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
 
         $vendor->table_service = $data;
         $vendor->save();
