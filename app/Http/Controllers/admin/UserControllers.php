@@ -7,11 +7,13 @@ use App\Models\Catogory_master;
 use App\Models\Cuisines;
 use App\Models\Product_master;
 use App\Models\Chef_video;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
 use DataTables; 
 use Illuminate\Support\Facades\Hash;
+use App\Rules\VendorOrderTimeRule;
 class UserControllers extends Controller
 {
     
@@ -184,7 +186,7 @@ class UserControllers extends Controller
     }
     public function store_chef(Request $request)
     {
-       // return $request->input();die;
+        return $request->input();die;
         $this->validate($request, [
             'restourant_name' => 'required',
             'email' => 'required|unique:vendors,email',
@@ -198,6 +200,9 @@ class UserControllers extends Controller
             'password' => 'required',
             'confirm_password' => 'required',
             'vendor_commission' => 'required',
+            'start_time.*' => 'nullable|date_format:H:i',
+            'end_time.*' => 'nullable|date_format:H:i',
+            'available.*' =>  ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],
         ]);
         $vendors = new vendors;
         $vendors->name = $request->restourant_name;
@@ -234,6 +239,26 @@ class UserControllers extends Controller
         }
 
         $vendors->save();
+        //
+        foreach ($request->start_time as $key => $val) {
+            if ($request->available[$key] == 1)
+                $data[] = [
+                    'vendor_id' => $vendors->id,
+                    'day_no' => $key,
+                    'start_time' => $request->start_time[$key],
+                    'end_time' => $request->end_time[$key],
+                    'available' => $request->available[$key],
+                ];
+            else
+                $data[] = [
+                    'vendor_id' => $vendors->id,
+                    'day_no' => $key,
+                    'start_time' => null,
+                    'end_time' => null,
+                    'available' => 0,
+                ];
+        }
+
         return redirect()->route('admin.chef.create')->with('message', 'Vendor Registration Successfully');
         
 
@@ -464,13 +489,7 @@ class UserControllers extends Controller
         $product->product_for  = 2;
         
 
-        if($request->customizable == 'true'){
-            $data = [];
-            foreach($request->variant_name as $k =>$v){
-                $data[] = array('variant_name' =>$v ,'price' =>$request->variant_price[$k]);
-            }
-            $request->variants = serialize($data);
-        }
+       
         $product->type  = $request->type;
         $product->customizable  = $request->customizable;
         if($request->has('product_image')){
@@ -479,33 +498,17 @@ class UserControllers extends Controller
             $product->product_image  = $filename;
         }
         $product->save();
+        if($request->customizable == 'true'){
+            foreach($request->variant_name as $k =>$v){
+                Variant::create(['product_id'=>$product->id,'variant_name'=>$v,'variant_price'=>$request->variant_price[$k]]);
+            }
+            
+                
+        }
         return redirect()->route('admin.vendor.view',Crypt::encryptString($request->userId_))->with('message', 'Cheflab Product  Registration Successfully');
         
     }
-    public function tetsapi(Request $request)
-    {
-        $user= User::where('email', $request->email)->first();
-        // print_r($data);
-            if (!$user ||  $request->password !=$user->password) {
-                return response([
-                    'message' => ['These credentials do not match our records.']
-                ], 404);
-            }
-        
-             $token = $user->createToken('my-app-token')->plainTextToken;
-        
-            $response = [
-                'user' => $user,
-                'token' => $token
-            ];
-        
-             return response($response, 201);
-    }
-
-    public function getData(Request $request)
-    {
-         return response($request->user(), 201);
-    }
+    
     public function soft_delete(Request $request)
     {
         try {

@@ -302,12 +302,7 @@
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');
       });
-      $.validator.addMethod("xxxValidation", function(value, element) {
-        alert(element);
-          if(value == '2'){
-            return true;
-          }
-      }, "Value must be '2'.");
+      
 
       $.validator.addMethod('checkVariants',
           function (value, element) {

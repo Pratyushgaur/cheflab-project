@@ -35,14 +35,15 @@ class VendorPromotion extends Controller
     public function store_slot(Request $request){
         $this->validate($request, [
             'date' => 'required',
-            'banner' => 'required',
+            'slot_name' => 'required',
             'slot_image' => 'required',
         ]);
         $slot = new SloteBook;
         $slot->date = $request->date;
         $slot->id = $request->id;
         $slot->price = $request->price;
-        $slot->banner = $request->banner;
+        $slot->slot_name = $request->slot_name;
+        $slot->position = $request->position;
         $slot->vendor_id = Auth::guard('vendor')->user()->id;
         $slot->banner = $request->banner;
         if($request->has('slot_image')){
@@ -100,7 +101,8 @@ class VendorPromotion extends Controller
     }
     public function getPrice(Request $request){
         $id = $request->id;
-        $slot =SloteMaster::where('id','=',$id)->select('id','price')->get();
+      //  var_dump($id);die;
+        $slot =SloteMaster::where('id','=',$id)->select('id','price','slot_name','position')->first();
         return \Response::json($slot);
     }
     public function getslot(Request $request){

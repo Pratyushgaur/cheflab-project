@@ -16,13 +16,14 @@ class isChef
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
     public function handle(Request $request, Closure $next)
-    {
-        if (session()->has('*$%&%*id**$%#')  && Auth::guard('chef')->user()) {
+    {   
+        
+        if (session()->has('*$%&%*id**$%#')  && Auth::guard('vendor')->user()) {
              return $next($request);
         }else{
             Auth::logout();
             Session::flush();
-             return redirect()->route('vendor.login');
+             return redirect()->route('vendor.login')->with('error','You Dont Have permission');
         }
     }
 }

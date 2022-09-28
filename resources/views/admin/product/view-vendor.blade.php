@@ -43,33 +43,23 @@
 
                         <ul class="list-group list-group-unbordered mb-3">
                           <li class="list-group-item">
-                            <b>Like's</b> <a class="float-right">1,322</a>
+                            <b>Expe.</b> <a class="float-right">{{$vendor->experience}}</a>
                           </li>
                           <li class="list-group-item text-success">
-                            <b>Success Order's</b> <a class="float-right">50</a>
+                            <b>Restorent Type</b> <a class="float-right">
+                              @if($vendor->vendor_food_type == 1)
+                              veg
+                              @elseif($vendor->vendor_food_type == 2)
+                              Nonveg
+                              @else
+                              Eggs
+                              @endif
+                            </a>
                           </li>
-                          <li class="list-group-item text-danger">
-                            <b>Cancel Order's</b> <a class="float-right">10</a>
-                          </li>
+                         
                           <li class="list-group-item ">
-                            <b>Mobile</b> <a class="float-right">{{$vendor->mobile}}</a>
-                          </li>
-                          <li class="list-group-item ">
-                            <b>Wallet</b> <a class="float-right">{{$vendor->wallet}}</a>
-                          </li>
-                          <li class="list-group-item ">
-                            <b>Commission</b> <a class="float-right">{{$vendor->commission}}%</a>
-                          </li>
-                          @if($vendor->vendor_type == 'chef')
-                          
-                          <li class="list-group-item ">
-                          <a href="{{ route('admin.cherf.product',\Crypt::encryptString($vendor->id)) }}" class="btn btn-primary btn-rounded btn-block"><b>Add New Product</b></a>
-                          <a href="{{ route('admin.cherf.videolink',\Crypt::encryptString($vendor->id)) }}" class="btn btn-primary btn-block"><b>Add Video Link</b></a>    
-                          </li>
-                          
-                          @endif
-                          
-                          
+                            <b>Menu</b> <a class="float-right">{{$menu->menuName}}</a>
+                          </li>                          
                         </ul>
                         
                       </div>
@@ -78,22 +68,7 @@
                     <!-- /.card -->
 
                     <!-- About Me Box -->
-                    <div class="card card-primary">
-                      <div class="card-header">
-                        <h3 class="card-title">About Me</h3>
-                      </div>
-                      <!-- /.card-header -->
-                      <div class="card-body">
-                        <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-                        <p class="text-muted">Bhawar Kua , Indore</p>
-                        <hr>
-
-                        <strong><i class="far fa-building-alt mr-1"></i> Address</strong>
-
-                        <p class="text-muted">{{$vendor->address}}</p>
-                      </div>
-                      <!-- /.card-body -->
-                    </div>
+                    
                     <!-- /.card -->
                   </div>
                   <!-- /.col -->
@@ -108,7 +83,7 @@
                         <div class="tab-content">
                           <div class="active tab-pane" id="activity">
                             <!-- product list -->
-                            <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                            <table id="example" class="table table-bordered table-hover dtr-inline datatable table-responsive" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
@@ -116,6 +91,7 @@
                                     <th> Image</th>
                                     <th  >Status</th>
                                     <th  >Product Price</th>
+                                    <th  >Categoris</th>
                                     <th  >Type</th>
                                     <th  >created at</th>
                                     <th  >Action</th>
@@ -158,8 +134,8 @@
                                     <div class="col-md-12">
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Rejoin</label>
-                                          <div id="price"></div>
-                                          <textarea type="text" name="comment_rejoin" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
+                                          <div id="slot_id"></div>
+                                          <textarea type="text" name="comment_reason" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
                                          
                                         </div>  
                                     </div>
@@ -200,6 +176,7 @@
              {data: 'product_image', name: 'product_image'},
              {data: 'status', name: 'status'},
              {data: 'product_price', name: 'product_price'},
+             {data: 'categoryName', name: 'categoryName'},
             {data: 'type', name: 'type'},
             {data: 'date', name: 'created_at'},
              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
@@ -243,25 +220,16 @@
              {data: 'link', name: 'link'},
              {data: 'date', name: 'created_at'},
              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-         ]
+         ],
     });
-    $("#restaurant-form").validate({
-      rules: {
-        comment_rejoin: {
-                  required: true,
-                //  remote: '{{route("restaurant.slot.checkdate")}}', 
-              },
-              
-        },
-          messages: {
-            comment_rejoin: {
-                  required: "Comment is required"
-              },
-          }
-    });
-  $(document).on('click', '.openModal', function () {
+   
+    $(document).on('click', '.openModal', function () {
         var id = $(this).data('id');
-        $('#price').append("<input type='hidden' name='id' value="+id+">");
+       // alert(id);die;
+        $('#slot_id').append("<input type='hidden' name='id' value="+id+">");
+    });
+    $(document).on('click', '.close', function () {
+      $('#slot_id').empty(); 
     });
      function reload_table() {
       table1.DataTable().ajax.reload(null, false);

@@ -1,4 +1,4 @@
-@extends('vendor.restaurants-layout')
+@extends('vendor.chef-layout')
 @section('main-content')
 <style>
       .select2-selection__choice{

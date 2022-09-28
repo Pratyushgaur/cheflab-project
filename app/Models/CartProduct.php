@@ -12,7 +12,7 @@ class CartProduct extends Model
     protected $fillable = ['cart_id', 'product_id', 'product_qty'];
     public function product()
     {
-        return $this->belongsTo('App\Product_master','product_id','id');
+        return $this->belongsTo(Product_master::class,'product_id','id');
     }
     public function cart()
     {

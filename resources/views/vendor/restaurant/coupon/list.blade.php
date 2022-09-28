@@ -35,8 +35,7 @@
                         <th scope="col">Code</th>
                         <th scope="col">Discount Type</th>
                         <th scope="col">Status</th>
-                        <th scope="col">From</th>
-                        <th scope="col">To</th>
+                        <th scope="col">Exp. To</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
@@ -70,11 +69,50 @@
             {data: 'code', name: 'code'},
             {data: 'discount_type', name: 'discount_type'},
             {data: 'status', name: 'status'},
-            {data: 'from', name: 'from'},
             {data: 'to', name: 'to'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
+    $(document).on('click', '.couponOff', function () {
+       var id = $(this).data('id');
+       $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          type: "POST",
+          url: '{{route("restaurant.coupon.inactive")}}', // This is what I have updated
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: { 
+            "_token": "{{ csrf_token() }}",
+            "id":id },
+            success: function(response){
+              toastr.error('Coupon Inactive Successfully', 'Alert');
+              
+            }
+      });
+  });
+  $(document).on('click', '.couponON', function () {
+       var id = $(this).data('id');
+       $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          type: "POST",
+          url: '{{route("restaurant.coupon.active")}}', // This is what I have updated
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: { 
+            "_token": "{{ csrf_token() }}",
+            "id":id },
+            success: function(response){
+              toastr.info('Your Coupon is Active ');
+              
+            }
+      });
+  });
   })(jQuery);
 </script>
 @endsection

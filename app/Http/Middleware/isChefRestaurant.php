@@ -16,11 +16,12 @@ class isChefRestaurant
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::guard('chef')->user() && Auth::guard('chef')->user()->vendor_type == 'chef') {
+        
+        if (Auth::guard('vendor')->user() && Auth::guard('vendor')->user()->vendor_type == 'chef') {
             return $next($request);
        }else{
            Auth::logout();
-           Session::flush();
+           //Session::flush();
            return redirect()->route('vendor.login')->with('error','You can not access This Route');
        }
     }

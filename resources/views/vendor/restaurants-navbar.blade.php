@@ -12,14 +12,10 @@
         </div>
 
 
-
         <div class="logo-sn logo-sm ms-d-block-sm">
             <a class="pl-0 ml-0 text-center navbar-brand mr-0" href="index.html"><img
                     src="{{ asset('commonarea') }}/logo.png   " style="height: 70px;" alt="logo"> </a>
         </div>
-
-
-
 
 
         @if (!isset($hideSidebar))
@@ -42,19 +38,18 @@
                 </li>
 
 
-
-
                 <li class="ms-nav-item ms-search-form pb-0 py-0">
                     <form class="ms-form" method="post">
                         <div class="ms-form-group my-0 mb-0 has-icon fs-14">
                             <input type="search" class="ms-form-input" name="search" placeholder="Search here..."
-                                value=""> <i class="flaticon-search text-disabled"></i>
+                                   value=""> <i class="flaticon-search text-disabled"></i>
                         </div>
                     </form>
                 </li>
 
-                <li class="ms-nav-item dropdown"> <a href="#" class="text-disabled ms-has-notification"
-                        id="mailDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                <li class="ms-nav-item dropdown"><a href="#" class="text-disabled ms-has-notification"
+                                                    id="mailDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false"><i
                             class="flaticon-mail"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="mailDropdown">
                         <li class="dropdown-menu-header">
@@ -66,9 +61,9 @@
                             <a class="media p-2" href="#">
                                 <div class="ms-chat-status ms-status-offline ms-chat-img mr-2 align-self-center">
                                     <img src="{{ asset('frontend') }}/assets/img/costic/customer-3.jpg"
-                                        class="ms-img-round" alt="people">
+                                         class="ms-img-round" alt="people">
                                 </div>
-                                <div class="media-body"> <span>Hey man, looking forward to your new project.</span>
+                                <div class="media-body"><span>Hey man, looking forward to your new project.</span>
                                     <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 30
                                         seconds
                                         ago</p>
@@ -77,7 +72,7 @@
                             <a class="media p-2" href="#">
                                 <div class="ms-chat-status ms-status-online ms-chat-img mr-2 align-self-center">
                                     <img src="{{ asset('frontend') }}/assets/img/costic/customer-2.jpg"
-                                        class="ms-img-round" alt="people">
+                                         class="ms-img-round" alt="people">
                                 </div>
                                 <div class="media-body"> <span>Dear John, I was told you bought Costic! Send me your
                                         feedback</span>
@@ -89,9 +84,9 @@
                             <a class="media p-2" href="#">
                                 <div class="ms-chat-status ms-status-offline ms-chat-img mr-2 align-self-center">
                                     <img src="{{ asset('frontend') }}/assets/img/costic/customer-1.jpg"
-                                        class="ms-img-round" alt="people">
+                                         class="ms-img-round" alt="people">
                                 </div>
-                                <div class="media-body"> <span>How many people are we inviting to the dashboard?</span>
+                                <div class="media-body"><span>How many people are we inviting to the dashboard?</span>
                                     <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 6
                                         hours
                                         ago</p>
@@ -99,59 +94,51 @@
                             </a>
                         </li>
                         <li class="dropdown-divider"></li>
-                        <li class="dropdown-menu-footer text-center"> <a href="pages/apps/email.html">Go to Inbox</a>
+                        <li class="dropdown-menu-footer text-center"><a href="pages/apps/email.html">Go to Inbox</a>
                         </li>
                     </ul>
                 </li>
-                <li class="ms-nav-item dropdown"> <a href="#" class="text-disabled ms-has-notification"
-                        id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
+                <?php
+                $user = Auth::guard('vendor')->user();
+                $count=count($user->unreadNotifications);
+                ?>
+                <li class="ms-nav-item dropdown">
+                    <a href="#" class="text-disabled {{($count>0) ? "ms-has-notification" : '' }}" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
                             class="flaticon-bell"></i></a>
                     <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="notificationDropdown">
+
                         <li class="dropdown-menu-header">
                             <h6 class="dropdown-header ms-inline m-0"><span class="text-disabled">Notifications</span>
-                            </h6><span class="badge badge-pill badge-info">4 New</span>
+                            </h6><span class="badge badge-pill badge-info">{{ $count }} New</span>
                         </li>
                         <li class="dropdown-divider"></li>
                         <li class="ms-scrollable ms-dropdown-list">
-                            <a class="media p-2" href="#">
-                                <div class="media-body"> <span>12 ways to improve your crypto dashboard</span>
-                                    <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 30
-                                        seconds ago</p>
-                                </div>
-                            </a>
-                            <a class="media p-2" href="#">
-                                <div class="media-body"> <span>You have newly registered users</span>
-                                    <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 45
-                                        minutes ago</p>
-                                </div>
-                            </a>
-                            <a class="media p-2" href="#">
-                                <div class="media-body"> <span>Your account was logged in from an unauthorized
-                                        IP</span>
-                                    <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 2
-                                        hours
-                                        ago</p>
-                                </div>
-                            </a>
-                            <a class="media p-2" href="#">
-                                <div class="media-body"> <span>An application form has been submitted</span>
-                                    <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i> 1
-                                        day
-                                        ago</p>
-                                </div>
-                            </a>
+
+                            <?php
+
+                            foreach ($user->unreadNotifications as $notification) {
+                                ?>
+                                <a class="media p-2" href="#">
+                                    <div class="media-body"><span> {{ @$notification->data['msg'] }}</span>
+                                        <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i>
+                                            {{get_time_ago(strtotime($notification->created_at))}}</p>
+                                    </div>
+                                </a>
+
+                            <?php } ?>
+
                         </li>
                         <li class="dropdown-divider"></li>
-                        <li class="dropdown-menu-footer text-center"> <a href="#">View all Notifications</a>
+                        <li class="dropdown-menu-footer text-center"><a href="#">View all Notifications</a>
                         </li>
                     </ul>
                 </li>
 
                 <li class="ms-nav-item ms-nav-user dropdown">
                     <a href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                       aria-expanded="false">
                         <img class="ms-user-img ms-img-round float-right"
-                            src="{{ asset('frontend') }}/assets/img/costic/customer-6.jpg" alt="people">
+                             src="{{ asset('frontend') }}/assets/img/costic/customer-6.jpg" alt="people">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
                         <li class="dropdown-menu-header">
@@ -160,12 +147,12 @@
                         </li>
                         <li class="dropdown-divider"></li>
                         <li class="ms-dropdown-list">
-                            <a class="media fs-14 p-2" >
+                            <a class="media fs-14 p-2">
                                 <span><i class="flaticon-gear mr-2"></i> Status</span>
                                 <label class="ms-switch right" style="float: right">
                                     <input name="restaurent_status" id="restaurent_status" type="checkbox"
-                                        value="1" onchange='change_rest_ststus()'
-                                        @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
+                                           value="1" onchange='change_rest_ststus()'
+                                           @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
                                     <span class="ms-switch-slider"></span> </label>
 
 
@@ -202,7 +189,7 @@
             </ul>
 
             <div class="ms-toggler ms-d-block-sm pr-0 ms-nav-toggler" data-toggle="slideDown"
-                data-target="#ms-nav-options"> <span class="ms-toggler-bar bg-primary"></span>
+                 data-target="#ms-nav-options"><span class="ms-toggler-bar bg-primary"></span>
                 <span class="ms-toggler-bar bg-primary"></span>
                 <span class="ms-toggler-bar bg-primary"></span>
             </div>
@@ -214,7 +201,6 @@
 
 
 </main>
-
 
 
 {{-- Restaurant online off line Model form start --}}
@@ -239,7 +225,7 @@
 
                     <label>
                         <input type="radio" name="offline_till" value="1" checked>
-                        The next working day , restaurant goes online. </label>
+                        The next working day , automatically restaurant goes online. </label>
                     <br>
                     <label><input type="radio" name="offline_till" value="2">
                         Manually, i will set it online. </label>
@@ -249,7 +235,8 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary shadow-none" onclick="submit_offline()">Go
-                        Offline</button>
+                        Offline
+                    </button>
                 </div>
             </form>
         </div>
@@ -299,7 +286,7 @@
                         "_token": "{{ csrf_token() }}",
                         restaurent_status: 'on'
                     },
-                    success: function(data) {
+                    success: function (data) {
 
                         if (data.msg != '') {
                             $("#restaurent_status").val(data.rest_status);
@@ -311,11 +298,12 @@
                                 showConfirmButton: true,
                                 timer: 15000
                             });
+                            $('#message-box').removeClass('show').dequeue();
                         } else
                             toastr.info('Somethin went wrong', 'Info');
 
                     },
-                    error: function(xhr, textStatus, thrownError) {
+                    error: function (xhr, textStatus, thrownError) {
                         toastr.info('Somethin went wrong', 'Info');
                     }
                 });
@@ -329,7 +317,7 @@
                 type: 'post',
                 cache: false,
                 data: $('#restaurent-offline-form').serialize(),
-                success: function(data) {
+                success: function (data) {
 
                     if (data.msg != '') {
                         $("#restaurent_status").val(data.rest_status);
@@ -346,26 +334,26 @@
                     } else
                         alert('Somethin went wrong');
                 },
-                error: function(xhr, textStatus, thrownError) {
+                error: function (xhr, textStatus, thrownError) {
                     alert('Somethin went wrong');
                 }
             });
         }
 
         //on modal close
-        $('#modal-10').on('hidden.bs.modal', function() {
+        $('#modal-10').on('hidden.bs.modal', function () {
             // do something…
             $.ajax({
                 url: '{{ route('restaurant.restaurent_get_status') }}',
                 type: 'get',
                 cache: false,
-                success: function(data) {
+                success: function (data) {
                     if (data.rest_status == 1) {
                         $("#restaurent_status").prop("checked", 'cheked');
                     } else
                         $("#restaurent_status").prop("checked", false);
                 },
-                error: function(xhr, textStatus, thrownError) {
+                error: function (xhr, textStatus, thrownError) {
                     toastr.info('Somethin went wrong', 'Info');
                 }
             });
@@ -374,12 +362,12 @@
 
 
 
-{{-- restaurant offline msg on top bar  --}}
+    {{-- restaurant offline msg on top bar  --}}
     <script>
-        $('#message-box').addClass('show').delay(15000000).queue(function() {
+        $('#message-box').addClass('show').delay(15000000).queue(function () {
             $(this).removeClass('show').dequeue();
         });
-        $("#close_msg_bar").click(function() {
+        $("#close_msg_bar").click(function () {
             $('#message-box').removeClass('show').dequeue();
 
         });

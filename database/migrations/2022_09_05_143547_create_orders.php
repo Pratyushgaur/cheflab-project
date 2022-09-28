@@ -15,12 +15,22 @@ class CreateOrders extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('customer_name');
             $table->unsignedBigInteger('vendor_id');
-            $table->string('order_status');
-            $table->string('order_total_price');
-            $table->string('pyment_type');
-            $table->string('order_time');
+            $table->unsignedBigInteger('user_id');
+            $table->string('customer_name');
+            $table->text('delivery_address')->comment('this addres also have deliver to customer name');
+            $table->enum('order_status',['pending','cancelled_by_customer','cancelled_by_vendor','completed','accept','payment_pending'])->default('pending');
+            $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
+            $table->float('gross_amount', 8, 2)->comment('after tax deduction ');
+            $table->float('net_amount', 8, 2)->comment('after discount and other deduction, this amount will payed  by customer');
+            $table->float('discount_amount', 6, 2);
+            $table->unsignedBigInteger('coupon_id')->default(null);
+            $table->enum('payment_type',['COD','GPay'])->default('COD');
+            $table->enum('payment_status',['paid','pending'])->default('pending');
+            $table->text('transaction_id')->default(null);
+            $table->text('payment_string')->default(null)->comment('payment gatway return json string');
+
+
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

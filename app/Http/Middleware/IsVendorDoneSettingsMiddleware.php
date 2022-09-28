@@ -24,7 +24,13 @@ class IsVendorDoneSettingsMiddleware
         $isOpningTimeDone = VendorOrderTime::where('vendor_id', Auth::guard('vendor')->user()->id)->count();
 
         if (!$isOpningTimeDone)
-            return redirect()->route('restaurant.require.ordertime')->withErrors(['msg' => 'Complete Your Order Accept Time Schedule for get Order']);
+            if (Auth::guard('vendor')->user()->vendor_type == 'chef') {
+                return redirect()->route('chef.require.ordertime')->withErrors(['msg' => 'Complete Your Order Accept Time Schedule for get Order']);
+            } elseif(Auth::guard('vendor')->user()->vendor_type == 'restaurant') {
+                return redirect()->route('restaurant.require.ordertime')->withErrors(['msg' => 'Complete Your Order Accept Time Schedule for get Order']);
+            }
+            
+            
 
         $location_setting = vendors::where('id', Auth::guard('vendor')->user()->id)
             ->whereNotNull('lat')

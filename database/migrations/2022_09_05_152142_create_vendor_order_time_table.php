@@ -17,8 +17,8 @@ class CreateVendorOrderTimeTable extends Migration
             $table->id();
             $table->unsignedBigInteger('vendor_id');
             $table->string('day_no',5)->comment('0=sun,1=mon,2=Tue,3=wed,4=thu,5=fri,6=sat');
-            $table->string('start_time',50)->nullable();
-            $table->string('end_time',50)->nullable();
+            $table->time('start_time')->nullable();
+            $table->time('end_time')->nullable();
             $table->string('available',50)->comment('0=not available,1=available')->default('1');
 
             $table->foreign('vendor_id')->references('id')->on('vendors');

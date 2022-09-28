@@ -149,19 +149,25 @@
 				    <li class="nav-item">
 						<a href="{{route('admin.banner.createbanner')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>Banner Promotion</p>
+						  <p>Position List</p>
 						</a>
 					</li>
 					<li class="nav-item">
+						<a href="{{route('admin.root.banner')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Root Banner</p>
+						</a>
+					</li>
+					<!--<li class="nav-item">
 						<a href="{{route('admin.vendor.store')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
 						  <p>Vendor Store Promotion</p>
 						</a>
-					</li>
+					</li>-->
 					<li class="nav-item">
 						<a href="{{route('admin.slotebook.list')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>Slot List</p>
+						  <p>Banner Request</p>
 						</a>
 					</li>	
 				</ul>

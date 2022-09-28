@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 use App\Models\Product_master;
 use App\Models\Catogory_master;
+use App\Models\Variant;
 use App\Models\Cuisines;
-
+use App\Models\VendorMenus;
 use App\Models\vendors;
 
 use Illuminate\Http\Request;
@@ -186,15 +187,6 @@ class ProductController extends Controller
           $product->product_price  = $request->product_price;
           $product->product_for  = 1;
           
-          
-          if($request->customizable == 'true'){
-              $data = [];
-              foreach($request->variant_name as $k =>$v){
-                  $data[] = array('variant_name' =>$v ,'price' =>$request->variant_price[$k]);
-              }
-             
-              $request->variants = serialize($data);
-          }
           $product->type  = $request->type;
           $product->customizable  = $request->customizable;
           if($request->has('product_image')){
@@ -203,6 +195,14 @@ class ProductController extends Controller
               $product->product_image  = $filename;
           }
           $product->save();
+          //
+         if($request->customizable == 'true'){
+            foreach($request->variant_name as $k =>$v){
+                Variant::create(['product_id'=>$product->id,'variant_name'=>$v,'variant_price'=>$request->variant_price[$k]]);
+            }
+            
+                
+        }
           return redirect()->route('admin.product.cheflabProduct')->with('message', 'Chef Product  Registration Successfully');
           
       }
@@ -241,49 +241,45 @@ class ProductController extends Controller
         return view('admin/product/pendinglist');
     }
     public function rejectProduct(Request $request){
-      //  return $request->input();die;
         $this->validate($request, [
-            'comment_rejoin' => 'required',
+            'cancel_reason' => 'required',
         ]);
-        $id = $request->id;
-        $product = Product_master::find($id);
-        $product->comment_rejoin = $request->comment_rejoin;
-        $product->product_activation = 3;
+        $product = Product_master::find($request->id);
+        $product->cancel_reason = $request->cancel_reason;
+        $product->status = '3';
         $product->save();
         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Reject Successfully');
     }
     public function getPendingList(Request $request){
         if ($request->ajax()) {
-            
-            $data = Product_master::latest()->get();
+       //    $data = Product_master::latest()->get();
+             $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();   
             if($request->rolename != ''){
                $data =  $data->where('status','=',$request->rolename);
             }
             return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action-js', function($data){
-                $btn = '<ul class="navbar-nav">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Action
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                $btn = '
+                <a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-danger btn-xs openModal" data-toggle="modal" data-target=".bd-example-modal-lg">
+                    View
+                </a>
+                           ';
+                //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
+                //<ul class="navbar-nav">
+                  //          <li class="nav-item dropdown">
+                    //           
+                      //          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        //            
+                          //          <a class="dropdown-item text-info" href="'.route('admin.vendor.product',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View Product</a>
+                            //        ';
                                     
-                                    
-                                    <a class="dropdown-item text-info" href="#"><i class="fas fa-edit"></i> Edit</a>
-                                    <a class="dropdown-item text-info" href="'.route('admin.vendor.product',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View Product</a>
-                                    <a class="dropdown-item text-danger" href="javascript:void(0);" data-id="" data-alert-message="Are You Sure to Delete this Vendor" data-action-url="' . route('admin.vendors.ajax.delete') . '" ><i class="fas fa-trash"></i> Delete</a>';
-                                    
-                                    /*if($data->vendor_type == 'chef'){
-                                        $btn .= '<a class="dropdown-item text-danger" href="'.route('admin.chefproduct.view',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';    
-                                    }*/
                                     
                                     
                                
-                                $btn .= '</div>
-                            </li>
-                        </ul>';
-                //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
+                              //  $btn .= '</div>
+                           // </li>
+                        //</ul>-->
                 return $btn;
             })
             
@@ -294,10 +290,22 @@ class ProductController extends Controller
             ->addColumn('product_image',function($data){
                 return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
             })
+            ->addColumn('status', function($data){
+                //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
+                
+                   if($data->status == 1){
+                       return '<span class="badge badge-success">Active</span>';
+                   }elseif($data->status == 2){
+                       return '<span class="badge badge-primary">Pending</span>';
+                   }elseif($data->status == 0){
+                       return '<span class="badge badge-primary">Inactive</span>';
+                   }else{
+                       return '<span class="badge badge-primary">Reject</span>';
+                   }
+               })
             
-            
-            ->rawColumns(['date'])
-            ->rawColumns(['action-js','product_image']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+            ->rawColumns(['date','status'])
+            ->rawColumns(['action-js','product_image','status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
             ->make(true);
         }
     }
@@ -305,19 +313,31 @@ class ProductController extends Controller
         $id =  Crypt::decryptString($encrypt_id);
         $product = Product_master::findOrFail($id);
         $vendor = vendors::findOrFail($product->userId);
-        return view('admin/product/view-vendor',compact('vendor','product'));
+        $menu = VendorMenus::findOrFail($product->userId);
+      //  $vendor = vendors::join('categories', 'vendors.deal_categories', '=', 'categories.id')->where(['vendors.id' => $product->userId])->select('vendors.*', 'categories.name as categoryName')->get();   
+       
+        return view('admin/product/view-vendor',compact('vendor','product','menu'));
+    }
+    public function venderId(Request $request){
+        $id = $request->id;
+        $product = Product_master::findOrFail($id);
+        $category = Product_master::where('userId','=',$product->userId)->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();
+        $cuisines = Product_master::where('userId','=',$product->userId)->join('cuisines', 'products.cuisines', '=', 'cuisines.id')->select('products.*', 'cuisines.name as cuisinesName')->get();
+        $vendor = vendors::findOrFail($product->userId);
+        $menu = VendorMenus::findOrFail($product->userId);
+        return \Response::json(['product' => $product,'category' => $category,'cuisines' => $cuisines,'cuisines' => $cuisines,'vendor' => $vendor,'menu' => $menu], 200);
     }
     public function venderProduct(Request $request,$id){
         $user = $request->id;
         if ($request->ajax()) {
-            $data = Product_master::where('userId','=',$user)->select('id','product_name','category','product_image','status','product_price','type','created_at')->get();
-          
+          //  $data = Product_master::where('userId','=',$user)->where('status','=','2')->select('id','product_name','category','product_image','status','product_price','type','created_at')->get();
+          $data = Product_master::where('userId','=',$user)->where('status','=','2')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();   
             
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '
-                    <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>
+                    
                     <a href="'. route("admin.vendor.productactive",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs">Accept</a> 
                     ';
                             if($data->status == 2){
@@ -331,6 +351,8 @@ class ProductController extends Controller
                             
                             ;    
                             }
+
+                            
                              return $btn;
                 })
                 
@@ -363,7 +385,7 @@ class ProductController extends Controller
     }
     public function activeProduct($encrypt_id){
         $id =  Crypt::decryptString($encrypt_id);
-         $update = \DB::table('products') ->where('id', $id) ->limit(1) ->update( ['product_activation' => 1 ]); 
+         $update = \DB::table('products') ->where('id', $id) ->limit(1) ->update( ['status' => '1' ]); 
          return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
     }
 }

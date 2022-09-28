@@ -17,6 +17,7 @@ class isVendor
      */
     public function handle(Request $request, Closure $next)
     {
+        
         if (session()->has('*$%&%*id**$%#')  && Auth::guard('vendor')->user()) {
              return $next($request);
         }else{

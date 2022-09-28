@@ -32,23 +32,7 @@ class CouponController extends Controller
                     'response'=>$coupon
 
                 ], 200);
-                /*$wordlist =  \App\Models\CouponHistory::where('code', '=', $coupon->code)->get();
-                $wordCount = $wordlist->count();
-                if($coupon->coupon_valid_x_user == $wordCount){
-                    return response()->json([
-                        'status' => false,
-                        'message'=>'Coupon is exp',
-            
-
-                    ], 401);   
-                }else{
-                    return response()->json([
-                        'status' => true,
-                        'message'=>'Data Get Successfully',
-                        'response'=>$coupon
-
-                    ], 200);
-                }*/
+                
                       
         } catch (\Throwable $th) {
             return response()->json([

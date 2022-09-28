@@ -84,7 +84,7 @@
                     <div class="col-xl-12 col-md-12 mb-3">
                       <label for="validationCustom10">Date</label>
                         <div class="input-group">
-                        <input type="date" name="date" class="form-control" min="2022-09-16" max="2022-09-22"  id="dateid" placeholder="Coupon Name">
+                        <input type="text" name="date" class="form-control"  id="datepicker" placeholder="Enter Date">
                       
                         </div>
                         <span class="date_error text-danger"></span>
@@ -187,7 +187,7 @@
             $('#row_dim').hide(); 
         } 
     });
-    $('#dateid').change(function(){
+    $('#datepicker').change(function(){
       var id = this.value;
       $.ajaxSetup({
           headers: {
@@ -213,7 +213,7 @@
                 console.log(uh);
                 var obj = JSON.parse(uh);
                   for(i=0; i<uh.length; i++) {
-                      $('#validationCustom22').append("<option value="+obj[i].slot_name+">"+obj[i].slot_name+"</option>");                      
+                      $('#validationCustom22').append("<option value="+obj[i].id+">"+obj[i].slot_name+"</option>");                      
                   }
               }
              
@@ -238,13 +238,19 @@
             success: function(response){
               var uh = JSON.stringify(response);
               var obj = JSON.parse(uh);
-              for(i=0; i<uh.length; i++) {
-                $('#price').append("<p class='text-danger' name='id' value="+obj[i].id+">Banner Rs.. "+obj[i].price+"</p>","<input type='hidden' name='price' value="+obj[i].price+">","<input type='hidden' name='id' value="+obj[i].id+">");
-              }
-              
+              $('#price').append("<p class='text-danger' name='id' value="+obj.id+">Banner Rs.. "+obj.price+"</p>","<input type='hidden' name='price' value="+obj.price+">","<input type='hidden' name='id' value="+obj.id+">","<input type='hidden' name='slot_name' value="+obj.slot_name+">","<input type='hidden' name='position' value="+obj.position+">");      
             }
-      });
+      }); 
+      $('#price').empty().append();
     });
+    $('#datepicker').datepicker({
+      
+      dateFormat: "yy-mm-dd",
+      maxDate:'+7d',
+      minDate: -0
+  });
+  
+   // min="2022-09-23" max="2022-09-28"
 </script>
 <script>
   (function($) {
