@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\VendorMenus;
 use App\Models\Product_master;
 use App\Models\Coupon;
+use App\Models\CouponHistory;
 use App\Models\Order_time;
 use DataTables;
 use Config;
@@ -77,20 +78,18 @@ class VendorCoupon extends Controller
                     return $date_with_format;
                 })
                 ->addColumn('status', function($data){
-                    if ($data->status) {
-                        $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round"></span></label>';
-                    } else {
-                        $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round"></span></label>';
+                    if ($data->status == 1) {
+                        $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round couponOff" data-id="' . $data->id . '"></span></label>';
+                    } elseif($data->status == 0) {
+                        $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round  couponON" data-id="' . $data->id . '""></span></label>';
                     }
-                    
-                    
                     return $btn;
                 })
                 ->addColumn('discount_type', function($data){
                     if ($data->discount_type) {
                         $btn = ''.$data->discount.'<i class="fa fa-percent fa-sm"></i>';
                     } else {
-                        $btn = ''.$data->discount.'<i class="fas fa-rupee-sign"></i>';
+                        $btn = ''.$data->discount.'<i class="fas fa-rupee-sign fa-sm"></i>';
                     }    
                     return $btn;
                 })
@@ -103,6 +102,20 @@ class VendorCoupon extends Controller
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
+    }
+    public function inActive(Request $request){
+        $id = $request->id;
+        $update = \DB::table('coupons')
+        ->where('id', $id)
+        ->update(['status' => '0']);
+       return \Response::json($update);
+    }
+    public function Active(Request $request){
+        $id = $request->id;
+        $update = \DB::table('coupons')
+        ->where('id', $id)
+        ->update(['status' => '1']);
+       return \Response::json($update);
     }
     public function fun_edit_coupon($encrypt_id){
         try {
@@ -152,6 +165,13 @@ class VendorCoupon extends Controller
        // var_dump($code);die;
         $code = $code->where('id','!=',$id);
         if ($code->exists()) {
+            return \Response::json(false);
+        } else {
+            return \Response::json(true);
+        }
+    }
+    public function checkCouponDate(Request $request,$id){
+        if (CouponHistory::where('coupon_id','=',$request->id)->exists()) {
             return \Response::json(false);
         } else {
             return \Response::json(true);

@@ -29,6 +29,7 @@
                   <div class="col-md-3">
 
                     <!-- Profile Image -->
+                    <!-- Profile Image -->
                     <div class="card card-primary card-outline">
                       <div class="card-body box-profile">
                         <div class="text-center">
@@ -76,24 +77,21 @@
                     <div class="card">
                       <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                          <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Product List</a></li>                          
+                          <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Slot List</a></li>                          
                         </ul>
                       </div><!-- /.card-header -->
                       <div class="card-body">
                         <div class="tab-content">
                           <div class="active tab-pane" id="activity">
                             <!-- product list -->
-                            <table id="example" class="table table-bordered table-hover dtr-inline datatable table-responsive" aria-describedby="example2_info" width="100%"> 
+                            <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Product Name</th>
-                                    <th> Image</th>
-                                    <th  >Status</th>
-                                    <th  >Product Price</th>
-                                    <th  >Categoris</th>
-                                    <th  >Type</th>
-                                    <th  >created at</th>
+                                    <th >Slot Name</th>
+                                    <th> Position</th>
+                                    <th  >Price</th>
+                                    <th  >Image</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -111,17 +109,18 @@
                 </div>
                 <!-- /.row -->
               </div><!-- /.container-fluid -->
-              <div class="modal fade" id="modal-default">
+            
+            <div class="modal fade" id="modal-default">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h4 class="modal-title">Product Reject Rejoin</h4>
+                    <h4 class="modal-title">Product Reject Reason</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                       <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                      <form id="restaurant-form" action="{{route('admin.product.reject')}}" method="post" enctype="multipart/form-data">
+                      <form id="restaurant-form" action="{{route('admin.slot.reject')}}" method="post" enctype="multipart/form-data">
                           @if ($errors->any())
                               @foreach ($errors->all() as $error)
                                   <div class="alert alert-danger">{{$error}}</div>
@@ -134,7 +133,7 @@
                                     <div class="col-md-12">
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Rejoin</label>
-                                          <div id="slot_id"></div>
+                                          <div id="price"></div>
                                           <textarea type="text" name="comment_reason" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
                                          
                                         </div>  
@@ -147,10 +146,12 @@
                   </div>
                   
                 </div>
-               
+                <!-- /.modal-content -->
               </div>
-             
+              <!-- /.modal-dialog -->
             </div>
+            <!-- /.modal -->
+          
             </section>
             <!-- /.content -->
           </div>
@@ -169,16 +170,13 @@
      let table = $('#example').dataTable({
          processing: true,
          serverSide: true,
-         ajax: "{{ route('admin.vendor.productList',$vendor->id)}}",
+         ajax: "{{ route('admin.slot.list',$vendor->id)}}",
          columns: [
              {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-             {data: 'product_name', name: 'product_name',orderable: false, searchable: false},
-             {data: 'product_image', name: 'product_image'},
-             {data: 'status', name: 'status'},
-             {data: 'product_price', name: 'product_price'},
-             {data: 'categoryName', name: 'categoryName'},
-            {data: 'type', name: 'type'},
-            {data: 'date', name: 'created_at'},
+             {data: 'slot_name', name: 'slot_name'},
+             {data: 'position', name: 'position'},
+             {data: 'price', name: 'price'},
+             {data: 'slot_image', name: 'slot_image'},
              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
          ]
      });
@@ -200,6 +198,15 @@
         
         
       })
+      
+     $(document).on('click', '.openModal', function () {
+        var id = $(this).data('id');
+        $('#price').append("<input type='hidden' name='slot_id' value="+id+">");
+    });
+   
+    $(document).on('click', '.close', function () {
+      $('#price').empty(); 
+    });
   // });
 
   function reload_table() {
@@ -207,32 +214,4 @@
    }
 
  </script>
- <script type="text/javascript">
-    let table1 = $('#example1').dataTable({
-         processing: true,
-         serverSide: true,
-         ajax: "{{ route('admin.cherf.video.link',\Crypt::encryptString($vendor->id))}}",
-      //   {{ route('admin.cherf.videolink',\Crypt::encryptString($vendor->id)) }}
-         columns: [
-             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-             {data: 'title', name: 'title',orderable: false, searchable: false},
-             {data: 'sub_title', name: 'sub_title'},
-             {data: 'link', name: 'link'},
-             {data: 'date', name: 'created_at'},
-             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-         ],
-    });
-   
-    $(document).on('click', '.openModal', function () {
-        var id = $(this).data('id');
-       // alert(id);die;
-        $('#slot_id').append("<input type='hidden' name='id' value="+id+">");
-    });
-    $(document).on('click', '.close', function () {
-      $('#slot_id').empty(); 
-    });
-     function reload_table() {
-      table1.DataTable().ajax.reload(null, false);
-    }
-  </script>
 @endsection

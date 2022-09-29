@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\vendor\restaurant;
+namespace App\Http\Controllers\chef;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -17,11 +17,11 @@ class VendorPromotion extends Controller
 {
     public function index()
     {
-        return view('vendor.restaurant.promotion.list');
+        return view('vendor.chef.promotion.list');
     }
     public function create_promotion(){
         $slot =SloteMaster::where('status','=','1')->select('id','price')->get();
-        return view('vendor.restaurant.promotion.create',compact('slot'));
+        return view('vendor.chef.promotion.create',compact('slot'));
     }
     public function selctvalue(Request $request){
      //  return  $request->input();die;
@@ -53,7 +53,7 @@ class VendorPromotion extends Controller
         }
         
         $slot->save();
-        return redirect()->route('restaurant.promotion.list')->with('message', 'SlotBook');
+        return redirect()->route('chef.promotion.list')->with('message', 'SlotBook');
     }
     public function get_list_slotbook(Request $request){
         if ($request->ajax()) {
@@ -102,7 +102,7 @@ class VendorPromotion extends Controller
     public function getPrice(Request $request){
         $id = $request->id;
       //  var_dump($id);die;
-        $slot =SloteMaster::where('id','=',$id)->select('id','price','slot_name','position')->first();
+        $slot =SloteMaster::where('id','=',$id)->select('id','price')->get();
         return \Response::json($slot);
     }
     public function getslot(Request $request){
@@ -114,13 +114,5 @@ class VendorPromotion extends Controller
         } else {
             return \Response::json(true);
         }
-    }
-    public function shop_promotion(Request  $request)
-    {
-        return view('vendor.restaurant.promotion.shop_promotion');
-    }
-    public function crate_shop_promotion()
-    {
-        return view('vendor.restaurant.promotion.create_shop_promotion');
     }
 }

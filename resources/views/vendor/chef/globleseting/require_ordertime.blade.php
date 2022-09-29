@@ -1,4 +1,4 @@
-@extends('vendor.restaurants-layout')
+@extends('vendor.chef-layout')
 @section('main-content')
     <!-- Body Content Wrapper -->
     <div class="ms-content-wrapper">

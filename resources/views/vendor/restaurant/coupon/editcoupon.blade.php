@@ -59,9 +59,9 @@
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb pl-0">
               <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-              <li class="breadcrumb-item"><a href="#">Coupon</a></li>
-              <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Menu Catalogue</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Create Coupon</li>
+              <li class="breadcrumb-item"><a href="#">Coupon Edit</a></li>
+              <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Coupon Edit</a></li>
+              <li class="breadcrumb-item active" aria-current="page">Edit Coupon</li>
               
 
             </ol>
@@ -70,57 +70,50 @@
         <div class="col-xl-12 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
-              <h6>Create New  Coupon</h6>
+              <h6>Edit  Coupon</h6>
             </div>
             <div class="ms-panel-body">
               <form class=" clearfix " id="coupon-form" action="{{route('restaurant.coupon.update')}}"  method="post" enctype="multipart/form-data">
-                @csrf
-                
-                @if ($errors->any())
-                    @foreach ($errors->all() as $error)
-                        <div class="alert alert-danger">{{$error}}</div>
-                    @endforeach
-                @endif
+              @csrf
+              
+              @if ($errors->any())
+                  @foreach ($errors->all() as $error)
+                      <div class="alert alert-danger">{{$error}}</div>
+                  @endforeach
+              @endif
                 <div class="form-row">
                     <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Coupon Name</label>
                         <div class="input-group">
-                        <input type="text" name="name" class="form-control" value="{{$coupon->name}}"  id="exampleInputEmail1" placeholder="Coupon Name">
-                        <input type="hidden" name="id" value="{{$coupon->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
-                        <input type="hidden" name="create_by" value="vendor" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
+                            <input type="text" name="name" class="form-control" value="{{$coupon->name}}"  id="exampleInputEmail1" placeholder="Coupon Name">
+                            <input type="hidden" name="id" value="{{$coupon->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
+                            <input type="hidden" name="create_by" value="vendor" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Name">
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                        <span class="name_error text-danger"></span>
                      </div>
+                    
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Coupon Code</label>
                         <div class="input-group">
-                        <input type="text" oninput="this.value = this.value.toUpperCase()" name="code" value="{{$coupon->code}}" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Code">
+                        <input type="text" oninput="this.value = this.value.toUpperCase()" value="{{$coupon->code}}" name="code" class="form-control"  id="exampleInputEmail1" placeholder="Coupon Code">
                         
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                        <span class="code_error text-danger"></span>
                      </div>
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Discount Type</label>
                         <div class="input-group">
                         <select class="form-control select2" name="discount_type" style="width: 100%;">
-                         <option value="{{$coupon->discount_type}}">{{$coupon->discount_type}}</option>
+                          @if($coupon->discount_type == 1)
+                          <option value="1">Percent</option>
+                          @else
+                          <option value="0">Amount</option>
+                          @endif;
                           <option value="1">Percent</option>
                           <option value="0">Amount</option>
                         </select>
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                           
                      </div>
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Discount</label>
@@ -128,41 +121,30 @@
                         <input type="text" name="discount" value="{{$coupon->discount}}" class="form-control"  id="" placeholder="Discount">
                         
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                        <span class="discount_error text-danger"></span>
                      </div>
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Maximum Discount Amount</label>
                         <div class="input-group">
-                        <input type="text" name="maxim_dis_amount" class="form-control" value="{{$coupon->maxim_dis_amount}}"  id="" placeholder="Maximum Discount Amount *">
+                        <input type="text" name="maxim_dis_amount" value="{{$coupon->maxim_dis_amount}}" class="form-control"  id="" placeholder="Maximum Discount Amount *">
                         
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                        <span class="maxim_dis_amount_error text-danger"></span>
                      </div> 
+                    
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Minimum Order Amount</label>
                         <div class="input-group">
-                        <input type="text" name="minimum_order_amount" class="form-control" value="{{$coupon->minimum_order_amount}}"  id="" placeholder="Maximum Discount Amount *">
+                        <input type="text" name="minimum_order_amount" value="{{$coupon->minimum_order_amount}}" class="form-control"  id="" placeholder="Minimum Order Amount *">
                         
                         </div>
-                            @error('name')
-                              <p class="text-danger">
-                                  {{ $message }}
-                              </p>
-                            @enderror
+                        <span class="minimum_order_amount_error text-danger"></span>   
                      </div> 
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">From</label>
                         <div class="input-group">
                         <div class="input-group date" id="reservationdate1" data-target-input="nearest">
-                              <input type="date" value="{{$coupon->from}}" name="from" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                              <input type="date" name="from" value="{{$coupon->from}}" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                         </div>
                         <span class="from_error text-danger"></span>
                         </div>
@@ -204,7 +186,15 @@
                       <label for="validationCustom10">Coupon Validity(Once a day/week/month or Lifetime)</label>
                         <div class="input-group">
                             <select class="form-control select2" name="promocode_use" style="width: 100%;">
-                            <option value="{{$coupon->promocode_use}}">{{$coupon->promocode_use}}</option>
+                            @if($coupon->promocode_use == 1)
+                            <option value="1">Once a Day</option>
+                            @elseif($coupon->promocode_use == 2)
+                            <option value="2">Once a Week</option>
+                            @elseif($coupon->promocode_use == 3)
+                            <option value="3">Once a Month</option>
+                            @else
+                            <option value="4">Lifetime</option>
+                            @endif;
                             <option value="1">Once a Day</option>
                             <option value="2">Once a Week</option>
                             <option value="3">Once a Month</option>
@@ -216,7 +206,7 @@
                      <div class="col-xl-4 col-md-12 mb-3">
                       <label for="validationCustom10">Coupon Valid For First X User &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <div class="input-group">
-                        <input type="text" value="{{$coupon->coupon_valid_x_user}}" name="coupon_valid_x_user" class="form-control"  id="" placeholder="Coupon Valid For First X User">
+                        <input type="text" name="coupon_valid_x_user" value="{{$coupon->coupon_valid_x_user}}" class="form-control"  id="" placeholder="Coupon Valid For First X User">
                         
                         </div>
                         <span class="minimum_order_amount_error text-danger"></span>   
@@ -224,7 +214,7 @@
                      <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">description</label>
                         <div class="input-group">
-                        <textarea type="text" value="{{$coupon->description}}" name="description" class="form-control"  id="" placeholder="description">{{$coupon->description}}</textarea>
+                        <textarea type="text" name="description" value="{{$coupon->description}}" class="form-control"  id="" placeholder="description">{{$coupon->description}}</textarea>
                         
                         </div>
                         <span class="description_error text-danger"></span> 
@@ -255,7 +245,7 @@
               },
               code: {
                   required: true,
-                 // remote: '{{route("admin.coupon.upercase")}}',
+                  remote: '{{route("restaurant.coupon.couponcheck")}}',
               },
               discount_type: {
                   required: true,
@@ -284,6 +274,7 @@
               },
               from: {
                 required: true,
+                remote: '{{route("restaurant.coupon.datechke",$coupon->id)}}',
               },
               to: {
                 required: true,
@@ -295,9 +286,11 @@
           messages: {
             name: {
                   required: "Coupon Name is required",
+                 // remote: "Coupon code is already exist",
               },
               code: {
                   required: "Coupon code is required",
+                  remote: "Coupon code is already Taken"
                  // remote:"Give Upore Case Value",
                  // remote:"ALL CHARACTOR ARE UPPERCASE",
               },
@@ -322,18 +315,23 @@
               promocode_use: {
                 required: "Promo Redeem Code is required",
               },
-             
               coupon_type: {
                 required: "Coupon Type is required",
               },
               from: {
                 required: "Date is required",
+                remote: "Coupon code is already Taken You can not change date"
               },
               to: {
                 required: "Date is required",
               },
               
-          }
+          },
+          errorPlacement: function (error, element) {
+              var name = $(element).attr("name");
+             
+              error.appendTo($("." + name + "_error"));
+          }, 
     });
     $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));

@@ -157,13 +157,25 @@
 						<i class="far fa-circle nav-icon"></i>
 						<p>Application Blog</p>
 						</a>
-					</li>
+					</li>-->
 					<li class="nav-item">
 						<a href="{{route('admin.slotebook.list')}}" class="nav-link">
 						<i class="far fa-circle nav-icon"></i>
 						<p>Slot List</p>
 						</a>
 					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.root.banner')}}" class="nav-link">
+							<i class="far fa-circle nav-icon"></i>
+							<p>Root Banner</p>
+						</a>
+					</li>
+					<li class="nav-item">
+                      	<a href="{{route('admin.slotebook.list')}}" class="nav-link">
+					  		<i class="far fa-circle nav-icon"></i>
+                        	<p>Banner Request</p>
+						</a>
+                  	</li>
 						
 				</ul>
 			</li>

@@ -87,12 +87,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Edit Slot </h1>
+            <h1>Banner List</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Edit Slot </li>
+              <li class="breadcrumb-item active">Slot List</li>
             </ol>
           </div>
         </div>
@@ -102,42 +102,7 @@
     <!-- Main content -->
     <section class="content">
 		<div class="row">
-			
-				<div class="col-md-4">
-        <form id="banner-form" action="{{route('admin.slot.update')}}" method="post" enctype="multipart/form-data">
-          @csrf
-          <div class="card card-primary">
-							<div class="card-header">
-							  <h3 class="card-title">Update Slot*</h3>
-
-							  <div class="card-tools">
-								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-								  <i class="fas fa-minus"></i></button>
-							  </div>
-							</div>
-							<div class="card-body">
-							    <div class="form-group">
-                      <label for="category_name">Slot Name <span class="text-danger">*</span></label>
-                      <input type="text" id="name" name="slot_name" value="{{$slot->slot_name}}" class="form-control" placeholder="Slot Name">
-                      <input type="hidden" id="name" name="id" value="{{$slot->id}}" class="form-control" placeholder="Slot Name">
-                      <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
-                  </div>
-                  <div class="form-group">
-                        <label for="category_name">Slot Price <span class="text-danger">*</span></label>
-                      <input type="text" id="name" name="price" value="{{$slot->price}}"  class="form-control" placeholder="Slot Name">
-                      
-                  </div>
-							</div>
-							<!-- /.card-body -->
-						</div>
-						<div>
-						
-						  <input type="submit" value="Update Changes" class="btn btn-success float-right">
-						</div>
-					</form>
-				  <!-- /.card -->
-				</div>
-				<div class="card card-info col-md-8">
+  		<div class="card card-info col-md-8">
             <div class="card-header">
               <h3 class="card-title">List</h3>
 
@@ -151,8 +116,9 @@
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Slot Name</th>
-                                    <th >Slot Price</th>
+                                    <th >Banner Name</th>
+                                    <th >Position</th>
+                                    <th >Image</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -190,33 +156,48 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{route('admin.slot.data')}}",
+        ajax: "{{route('admin.root.data')}}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'slot_name', name: 'slot_name'},
-            {data: 'price', name: 'price'},
+            {data: 'name', name: 'name'},
+            {data: 'position', name: 'position'},
+            {data: 'bannerImage', name: 'bannerImage'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
     $("#banner-form").validate({
       rules: {
-            slot_name: {
+            name: {
                 required: true,
-                remote: '{{route("admin.slot.check",$slot->id)}}',
+                maxlength: 20,
+                remote: '{{route("admin.banner.slotcheck")}}',
             },
-            price: {
+            slote_date: {
+                required: true,
+                remote: '{{route("admin.banner.slotchecktime",)}}',
+            },
+            max_no_banner:{
+              required: true,
+            },
+            banner: {
                 required: true,
                 number: true,
             },
         },
         messages: {
-          slot_name: {
-                remote:"Name  is  requed",
-                remote:"Slot Name is  allreadt Taken",
+            name: {
+                remote:"Name  Already Exist",
             },
-            price:{
-                remote:"Price is  Required",
+            slote_date:{
+                remote:"Date is  Required",
+                remote:"Date is  allreadt Taken",
             },
+            max_no_banner:{
+                remote:"Select Max Banner Required",
+            },
+            banner:{
+                remote:"Select Max Banner Required",
+            }
             
         }
       });

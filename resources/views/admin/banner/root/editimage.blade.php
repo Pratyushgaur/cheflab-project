@@ -2,7 +2,6 @@
 @section('content')
 @section('page-style')
 <style>
-    
         label.error {
             color: #dc3545;
             font-size: 14px;
@@ -87,12 +86,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Position List</h1>
+            <h1>Root Banner Edit</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Slot List</li>
+              <li class="breadcrumb-item active">Root Banner Edit</li>
             </ol>
           </div>
         </div>
@@ -102,38 +101,61 @@
     <!-- Main content -->
     <section class="content">
 		<div class="row">
-  		<div class="card card-info col-md-8">
+			
+				<div class="col-md-4">
+        @if($errors->any())
+            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+        @endif
+        <form id="restaurant-form" action="{{route('admin.root.update')}}" method="post" enctype="multipart/form-data">
+          @csrf
+          <div class="card card-primary">
             <div class="card-header">
-              <h3 class="card-title">List</h3>
+                <h3 class="card-title">Edit</h3>
 
-              <div class="card-tools">
+                <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                  <i class="fas fa-minus"></i></button>
-              </div>
+                    <i class="fas fa-minus"></i></button>
+                </div>
             </div>
-            <div class="card-body pad table-responsive">
-                        <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
-                            <thead>
-                                  <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th >Slot Name</th>
-                                    <th >Position</th>
-                                    <th >Price</th>
-                                    <th  >Action</th>
-                                  </tr>
-                            </thead>
-                            
-                        </table>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="category_name">Banner Name <span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" value="{{$root->name}}" class="form-control" placeholder="Category Name">
+                    <input type="hidden" name="id" id="txtpkey" value="{{$root->id}}">
+                    <input type="hidden" name="txtpkey" id="txtpkey" value="{{$root->id}}">
+                </div>
+                
+                <div class="form-group">
+                    <div>
+                        <label for="">Images <span class="text-danger">*</span></label>
                     </div>
+                    <div class="image-upload">
+                        <label for="file-input">
+                            <div class="upload-icon">
+                                <img class="icon" src="{{ asset('admin-banner'.'/'.$root->bannerImage) }}">
+                            </div>
+                        </label>
+                        <input id="file-input" type="file" name="bannerImage" required/>
+                    </div>      
+                </div>
+            </div>
             <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-		</div>
+        </div>
+        <div>
+        
+            <input type="submit" value="Save Changes" class="btn btn-success float-right">
+        </div>
+    </form>
+    <!-- /.card -->
+</div>
+
+           
+        
     </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
- 
+
   <!-- /.content-wrapper -->
 
   <!-- /.content-wrapper -->
@@ -152,54 +174,28 @@
 </script>
 
 <script type="text/javascript">
-  // $(function () {
-    let table = $('#example').dataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{route('admin.slot.data')}}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'slot_name', name: 'slot_name'},
-            {data: 'position', name: 'position'},
-            {data: 'price', name: 'price'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-        ]
-    });
-    $("#banner-form").validate({
-      rules: {
+  // $(function () 
+    $("#restaurant-form").validate({
+          rules: {
             name: {
+                  required: true,
+                  maxlength: 25,
+                  
+              },
+              bannerImage: {
                 required: true,
-                maxlength: 20,
-                remote: '{{route("admin.banner.slotcheck")}}',
-            },
-            slote_date: {
-                required: true,
-                remote: '{{route("admin.banner.slotchecktime",)}}',
-            },
-            max_no_banner:{
-              required: true,
-            },
-            banner: {
-                required: true,
-                number: true,
-            },
-        },
-        messages: {
-            name: {
-                remote:"Name  Already Exist",
-            },
-            slote_date:{
-                remote:"Date is  Required",
-                remote:"Date is  allreadt Taken",
-            },
-            max_no_banner:{
-                remote:"Select Max Banner Required",
-            },
-            banner:{
-                remote:"Select Max Banner Required",
             }
-            
-        }
+              
+          },
+          messages: {
+            name:{
+                remote:"Category Name Already Exist"
+            },
+            bannerImage:{
+                remote:"Image Required",
+            }
+              
+          }
       });
       $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
@@ -209,24 +205,8 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
-       //Timepicker
-    $('#timepicker').datetimepicker({
-      format: 'LT'
-    });
-    $('#timepicker1').datetimepicker({
-      format: 'LT'
-    });
-    $("#timeSlote").change(function() {
-        var value = +$(this).val();
-        value *= 1;
-        var nr = 0;
-        var elem = $('#games').empty();
-     
-        while (nr < value) {
-            elem.append($('<label for="category_name"> Banner priority amount <span class="text-danger">*</span></label><input type="text" id="name" name="banner[]" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Slot Name"><br>',{name : "whateverNameYouWant"}));
-            nr++;
-        }
-        }); 
+  
+      
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }

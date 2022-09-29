@@ -8,8 +8,8 @@
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb pl-0">
                 <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                <li class="breadcrumb-item"><a href="#">Coupon</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Coupon List</li>
+                <li class="breadcrumb-item"><a href="#">Promotion management</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Promotion</li>
                 
 
               </ol>
@@ -20,9 +20,9 @@
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
                 <div class="align-self-center align-left">
-                  <h6>Coupon List</h6>
+                  <h6>Promotion</h6>
                 </div>
-                <a href="{{route('restaurant.coupon.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create New</a>
+                <a href="{{route('chef.promotion.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create New</a>
               </div>
             </div>
             <div class="ms-panel-body">
@@ -31,14 +31,11 @@
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Code Name</th>
-                        <th scope="col">Code</th>
-                        <th scope="col">Discount Type</th>
-                        <th scope="col">Discount</th>
+                        <th scope="col">Slot</th>
+                        <th scope="col">Image</th>
+                        <th scope="col">Date</th>
                         <th scope="col">Status</th>
-                        <th scope="col">From</th>
-                        <th scope="col">To</th>
-                        <th scope="col">Action</th>
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -64,17 +61,13 @@
     let table = $('#menu-catalogue-table').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('chef.coupon.data') }}",
+        ajax: "{{ route('chef.slot.list') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'code', name: 'code'},
-            {data: 'discount_type', name: 'discount_type'},
-            {data: 'discount', name: 'discount'},
-            {data: 'status', name: 'status'},
-            {data: 'from', name: 'from'},
-            {data: 'to', name: 'to'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+            {data: 'banner', name: 'banner'},
+            {data: 'slot_image', name: 'slot_image',orderable: false, searchable: false},
+            {data: 'date', name: 'date'},
+            {data: 'slot_status', name: 'slot_status'},
         ]
     });
   })(jQuery);
