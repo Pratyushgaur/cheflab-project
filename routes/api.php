@@ -63,6 +63,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // order
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
+    Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
+
+    //profile
+    Route::post('get-user-info', [App\Http\Controllers\api\AppController::class, 'getUserInfo']);
+    Route::post('update-user-info', [App\Http\Controllers\api\AppController::class, 'updateUserInfo']);
+    Route::post('get-user-fav-vendors', [App\Http\Controllers\api\AppController::class, 'getUserFavVendors']);
+    
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);

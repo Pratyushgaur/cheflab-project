@@ -20,6 +20,9 @@ Route::get('/test',function (){ });
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/pubnub-test', function () {
+    return view('welcome2');
+});
 Route::get('admin-logout', function () {
 
     Auth::guard('admin')->logout();
