@@ -28,67 +28,68 @@
                 </nav>
 
 
-{{--                          <div class="col-md-12">--}}
-{{--                            <div class="ms-panel ms-panel-fh">--}}
-{{--                              <div class="ms-panel-header">--}}
-{{--                                <h6>Favourite Orders</h6>--}}
-{{--                              </div>--}}
-{{--                              <div class="ms-panel-body order-circle">--}}
+                {{--                          <div class="col-md-12">--}}
+                {{--                            <div class="ms-panel ms-panel-fh">--}}
+                {{--                              <div class="ms-panel-header">--}}
+                {{--                                <h6>Favourite Orders</h6>--}}
+                {{--                              </div>--}}
+                {{--                              <div class="ms-panel-body order-circle">--}}
 
-{{--                                <div class="row">--}}
-{{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-{{--                                      <h6 class="text-center">Pizza</h6>--}}
-{{--                                    <div class="progress-rounded progress-round-tiny">--}}
+                {{--                                <div class="row">--}}
+                {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
+                {{--                                      <h6 class="text-center">Pizza</h6>--}}
+                {{--                                    <div class="progress-rounded progress-round-tiny">--}}
 
-{{--                                      <div class="progress-value">12%</div>--}}
-{{--                                      <svg>--}}
-{{--                                        <circle class="progress-cicle bg-success" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="12" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-{{--                                        </circle>--}}
-{{--                                      </svg>--}}
-{{--                                    </div>--}}
-{{--                                  </div>--}}
-{{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-{{--                                        <h6 class="text-center">Mexican Noodels</h6>--}}
-{{--                                    <div class="progress-rounded progress-round-tiny">--}}
-{{--                                      <div class="progress-value">38.8%</div>--}}
-{{--                                      <svg>--}}
-{{--                                        <circle class="progress-cicle bg-primary" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="38.8" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-{{--                                        </circle>--}}
-{{--                                      </svg>--}}
-{{--                                    </div>--}}
-{{--                                  </div>--}}
-{{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-{{--                                      <h6 class="text-center">Spicy Salad</h6>--}}
-{{--                                    <div class="progress-rounded progress-round-tiny">--}}
-{{--                                      <div class="progress-value">78.8%</div>--}}
-{{--                                      <svg>--}}
-{{--                                        <circle class="progress-cicle bg-secondary" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="78.8" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-{{--                                        </circle>--}}
-{{--                                      </svg>--}}
-{{--                                    </div>--}}
-{{--                                  </div>--}}
-{{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-{{--                                      <h6 class="text-center">French Fries</h6>--}}
-{{--                                    <div class="progress-rounded progress-round-tiny">--}}
-{{--                                      <div class="progress-value">100%</div>--}}
-{{--                                      <svg>--}}
-{{--                                        <circle class="progress-cicle bg-dark" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="100" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-{{--                                        </circle>--}}
-{{--                                      </svg>--}}
-{{--                                    </div>--}}
-{{--                                  </div>--}}
-{{--                                </div>--}}
-{{--                              </div>--}}
-{{--                            </div>--}}
-{{--                          </div>--}}
-                <div class="col-12">
+                {{--                                      <div class="progress-value">12%</div>--}}
+                {{--                                      <svg>--}}
+                {{--                                        <circle class="progress-cicle bg-success" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="12" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
+                {{--                                        </circle>--}}
+                {{--                                      </svg>--}}
+                {{--                                    </div>--}}
+                {{--                                  </div>--}}
+                {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
+                {{--                                        <h6 class="text-center">Mexican Noodels</h6>--}}
+                {{--                                    <div class="progress-rounded progress-round-tiny">--}}
+                {{--                                      <div class="progress-value">38.8%</div>--}}
+                {{--                                      <svg>--}}
+                {{--                                        <circle class="progress-cicle bg-primary" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="38.8" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
+                {{--                                        </circle>--}}
+                {{--                                      </svg>--}}
+                {{--                                    </div>--}}
+                {{--                                  </div>--}}
+                {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
+                {{--                                      <h6 class="text-center">Spicy Salad</h6>--}}
+                {{--                                    <div class="progress-rounded progress-round-tiny">--}}
+                {{--                                      <div class="progress-value">78.8%</div>--}}
+                {{--                                      <svg>--}}
+                {{--                                        <circle class="progress-cicle bg-secondary" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="78.8" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
+                {{--                                        </circle>--}}
+                {{--                                      </svg>--}}
+                {{--                                    </div>--}}
+                {{--                                  </div>--}}
+                {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
+                {{--                                      <h6 class="text-center">French Fries</h6>--}}
+                {{--                                    <div class="progress-rounded progress-round-tiny">--}}
+                {{--                                      <div class="progress-value">100%</div>--}}
+                {{--                                      <svg>--}}
+                {{--                                        <circle class="progress-cicle bg-dark" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="100" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
+                {{--                                        </circle>--}}
+                {{--                                      </svg>--}}
+                {{--                                    </div>--}}
+                {{--                                  </div>--}}
+                {{--                                </div>--}}
+                {{--                              </div>--}}
+                {{--                            </div>--}}
+                {{--                          </div>--}}
+                <div class="row">
+                    <div class="col-xl-12 col-md-12">
                     <div class="ms-panel">
                         <div class="ms-panel-header">
                             <h6> Order List</h6>
                         </div>
                         <div class="ms-panel-body">
 
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="overflow: hidden;">
                                 <table class="table table-hover thead-primary" id="order">
                                     <thead>
                                     <tr>
@@ -102,6 +103,7 @@
                                         <th scope="col">Payment Type</th>
                                         <th scope="col">Payment Status</th>
                                         <th scope="col">Order Status</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
 
@@ -115,7 +117,9 @@
                                                 <td>{{$order->net_amount}}</td>
                                                 <td>{{$order->discount_amount}}</td>
                                                 <td>{{$order->payment_type}}</td>
-                                                <td> <span class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span> </td>
+                                                <td><span
+                                                        class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span>
+                                                </td>
                                                 <td>
                                                     <div class="input-group">
                                                         <div class="">
@@ -130,8 +134,8 @@
                                                                    onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>
                                                                 <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}"
                                                                    onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
-                                                                <a  data-toggle="modal" data-target="#modal-7"
-                                                                    class="dropdown-item {{'ms-text-'.$status_class['preparing']}}"
+                                                                <a data-toggle="modal" data-target="#modal-7"
+                                                                   class="dropdown-item {{'ms-text-'.$status_class['preparing']}}"
                                                                    onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})"
                                                                 >Preparing</a>
                                                                 <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}"
@@ -146,15 +150,27 @@
 
                                                 </td>
 
+                                                <td>
+                                                    <a href="{{route('restaurant.order.view',$order->id)}}"><i
+                                                            class="fa fa-eye text-secondary text-success"></i></a>
+                                                    {{--                                                    <a href="#"><i class="fas fa-pencil-alt text-secondary"></i></a>--}}
+                                                    {{--                                                    <a href="a.html"><i class="far fa-trash-alt ms-text-danger"></i></a>--}}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </thbody>
+                                    <tfoot>
+                                    <tr></tr>
+                                    </tfoot>
                                 </table>
+
+
                                 <div class="">{{ $orders->links('vendor.pagination.bootstrap-4') }}</div>
 
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
 
 
@@ -175,27 +191,31 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <form method="post" id="preparation_form">
-@csrf
-                <div class="modal-header bg-primary">
-                    <h3 class="modal-title has-icon text-white"><i class="flaticon-share"></i> Subscribe to our Newsletter</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
+                    @csrf
+                    <div class="modal-header bg-primary">
+                        <h3 class="modal-title has-icon text-white">Order preparation
+                        </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
 
-                <div class="modal-body">
+                    <div class="modal-body">
                         <div class="ms-form-group has-icon">
                             <label>Order preparation time</label>
-                            <input type="number" placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="2" min="10">
+                            <input type="number" placeholder="preparation time in minutes" class="form-control"
+                                   name="preparation_time" value="" step="2" min="10">
                             <i class="material-icons">timer</i>
                         </div>
 
-                </div>
+                    </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary shadow-none"
-{{--                            data-dismiss="modal"--}}
-                            id="submit_model" >Submit</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary shadow-none"
+                                {{--                            data-dismiss="modal"--}}
+                                id="submit_model">Submit
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -236,7 +256,7 @@
             });
         }
 
-        $('#modal-7').modal({ show: false})
+        $('#modal-7').modal({show: false})
 
         // $( "#modal-7" ).on('shown', function(){
         //     alert("I want this to appear after the modal has opened!");

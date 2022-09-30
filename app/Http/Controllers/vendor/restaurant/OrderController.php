@@ -5,10 +5,9 @@ namespace App\Http\Controllers\vendor\restaurant;
 use App\Events\OrderSendToPrepareEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Notifications\OrderSendToPreparationNotification;
+use Auth;
 use Config;
 use DataTables;
-use Auth;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -48,6 +47,7 @@ class OrderController extends Controller
             'msg' => "# $id Order Cancelled"
         ], 200);
     }
+
     public function order_preparing(Request $request,$id){
         $order=Order::find($id);
         $order->order_status='preparing';
@@ -55,7 +55,7 @@ class OrderController extends Controller
         $order->preparation_time_to=mysql_add_time($order->preparation_time_from,$request->preparation_time);
         $order->save();
         event(new OrderSendToPrepareEvent($id,$order->user_id,$order->vendor_id,$request->preparation_time));
-        return redirect()->route('restaurant.order.list')->with('success', "# $id Order send for preparing");
+        return redirect()->back()->with('success', "# $id Order send for preparing");
 
     }
 
@@ -69,6 +69,7 @@ class OrderController extends Controller
             'msg' => "# $id Order ready to dispatch."
         ], 200);
     }
+
     public function order_dispatched($id){
         $order=Order::find($id);
         $order->order_status='dispatched';
@@ -78,5 +79,13 @@ class OrderController extends Controller
             'order_status' => 'dispatched',
             'msg' => "# $id Order has been dispatched."
         ], 200);
+    }
+
+    public function view($id){
+        $order=Order::with('products','user','order_product_details')->find($id);
+        if(!$order)
+            return redirect()->back()->with('error', 'Order nOt found');
+//        dd($order);
+        return view('vendor.restaurant.order.view', compact('order'));
     }
 }

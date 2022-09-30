@@ -189,6 +189,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
             Route::post('order/ready_to_dispatch/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_ready_to_dispatch'])->name('restaurant.order.ready_to_dispatch')->where('id', '[0-9]+');
             Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
+            Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
 
 
             //coupon
