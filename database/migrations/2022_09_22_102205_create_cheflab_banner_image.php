@@ -32,7 +32,6 @@ class CreateCheflabBannerImage extends Migration
      */
     public function down()
     {
-
         Schema::dropIfExists('cheflab_banner_image');
 
     }

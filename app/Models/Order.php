@@ -24,7 +24,7 @@ class Order extends Model
     }
 
 
-    public function cart_product_variants()
+    public function order_product_variants()
     {
         return $this->hasManyThrough(OrderProductVariant::class, OrderProduct::class,'order_id','order_product_id','id','id');
     }

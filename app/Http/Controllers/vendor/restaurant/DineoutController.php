@@ -121,7 +121,7 @@ class DineoutController extends Controller
             $msg = 'Dine-out disable for your restaurant.';
             $data = '0';
         }
-        
+
         $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
 
         $vendor->table_service = $data;
