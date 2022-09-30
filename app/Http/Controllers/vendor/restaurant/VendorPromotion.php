@@ -76,7 +76,7 @@ class VendorPromotion extends Controller
         }
     }
     public function checkdate(Request $request){
-        $date = $request->id;
+         $date = $request->id;
         $vendor_id = Auth::guard('vendor')->user()->id;
        // var_dump($date);die;
         if (SloteBook::where('date','=',$date)->where('vendor_id','=',$vendor_id)->exists()) {

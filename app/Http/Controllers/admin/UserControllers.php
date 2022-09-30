@@ -353,9 +353,10 @@ class UserControllers extends Controller
     {
         $id =  Crypt::decryptString($encrypt_id);
         $vendor = Vendors::findOrFail($id);
+        $vendorLike = \App\Models\UserVendorLike::wherevendor_id($id)->count();
         $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
-        return view('admin/vendors/view-vendor',compact('vendor','categories','cuisines'));
+        return view('admin/vendors/view-vendor',compact('vendor','categories','cuisines','vendorLike'));
     }
     public function chef_product_list(Request $request,$userId){
         $user = $request->userId;
@@ -480,7 +481,7 @@ class UserControllers extends Controller
         return view('admin/vendors/chef-video-link',compact('vendor','categories','cuisines')); 
     }
     public function store_chef_product(Request $request){
-      
+        return $request->all();
         $this->validate($request, [
             'product_name' => 'required',
             'dis' => 'required',

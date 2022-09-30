@@ -38,14 +38,23 @@
                 </li>
 
 
-                <li class="ms-nav-item ms-search-form pb-0 py-0">
+                <!-- <li class="ms-nav-item ms-search-form pb-0 py-0">
                     <form class="ms-form" method="post">
                         <div class="ms-form-group my-0 mb-0 has-icon fs-14">
                             <input type="search" class="ms-form-input" name="search" placeholder="Search here..."
                                    value=""> <i class="flaticon-search text-disabled"></i>
                         </div>
                     </form>
+                </li> -->
+                <li class="ms-nav-item ms-search-form pb-0 py-0">
+                        <label class="ms-switch right" style="float: right">
+                                    <input name="restaurent_status" id="restaurent_status" type="checkbox"
+                                           value="1" onchange='change_rest_ststus()'
+                                           @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
+                                    <span class="ms-switch-slider"></span> 
+                        </label>
                 </li>
+                
 
                 <li class="ms-nav-item dropdown"><a href="#" class="text-disabled ms-has-notification"
                                                     id="mailDropdown" data-toggle="dropdown" aria-haspopup="true"
