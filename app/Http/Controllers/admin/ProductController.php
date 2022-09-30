@@ -11,18 +11,18 @@ use App\Models\Vendors;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
-use DataTables; 
+use DataTables;
 class ProductController extends Controller
 {
-    
+
     public function index($encrypt_id){
-       
+
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $vendor = Vendors::findOrFail($id);
             $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
             $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
-        
+
             if($vendor->vendor_type == 'restaurant'){
                 return view('admin/product/create_restaurant_product',compact('vendor','categories','cuisines'));
             }elseif($vendor->vendor_type == 'chef'){
@@ -30,10 +30,10 @@ class ProductController extends Controller
             }else{
                 return 'Wrong Route';
             }
-            
+
         } catch (\Exception $e) {
             return dd($e->getMessage());
-        } 
+        }
         return view('admin/product/createproduct');
     }
     public function addProduct(Request $request)
@@ -51,7 +51,7 @@ class ProductController extends Controller
         $filename = '';
         if($request->has('product_image')){
             $filename = time().'_'.$request->file('product_image')->getClientOriginalName();
-            $filePath = $request->file('product_image')->storeAs('public/product_image',$filename);  
+            $filePath = $request->file('product_image')->storeAs('public/product_image',$filename);
         }else{
             $filePath = $request->admin_image_old;
         }
@@ -87,29 +87,29 @@ class ProductController extends Controller
        // var_dump($data);die;
         return view('admin.product.list',['list'=>$data]);
      /*  if ($request->ajax()) {
-            
+
         $data = Product_master::all();
-        
+
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action-js', function($data){
                 $btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('products') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                 return $btn;
             })
-            
+
             ->addColumn('date', function($data){
                 $date_with_format = date('d M Y',strtotime($data->created_at));
                 return $date_with_format;
             })
 
-            
+
             ->rawColumns(['date'])
             ->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
             ->make(true);
             return view('admin.product.list');
     }*/
-    }   
-   
+    }
+
     public function edit_product($id){
         $data = Product_master::find($id);
         return view('admin.product.edit',['data'=>$data]);
@@ -118,7 +118,7 @@ class ProductController extends Controller
         $filename = '';
         if($request->has('product_image')){
             $filename = time().'_'.$request->file('product_image')->getClientOriginalName();
-            $filePath = $request->file('product_image')->storeAs('public/product_image',$filename);  
+            $filePath = $request->file('product_image')->storeAs('public/product_image',$filename);
         }else{
             $filePath = $request->admin_image_old;
         }
@@ -147,10 +147,10 @@ class ProductController extends Controller
                 return \Response::json(['error' => false,'success' => true , 'message' => 'Product Deleted Successfully'], 200);
             }else{
                 return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
-            } 
-            
-            
-            
+            }
+
+
+
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
@@ -158,7 +158,7 @@ class ProductController extends Controller
     }
 
     //
-    
+
     public function cheflabProduct()
     {
         return view('admin.product.cheflab-product-list');
@@ -186,7 +186,7 @@ class ProductController extends Controller
           $product->dis  = $request->dis;
           $product->product_price  = $request->product_price;
           $product->product_for  = 1;
-          
+
           $product->type  = $request->type;
           $product->customizable  = $request->customizable;
           if($request->has('product_image')){
@@ -200,28 +200,28 @@ class ProductController extends Controller
             foreach($request->variant_name as $k =>$v){
                 Variant::create(['product_id'=>$product->id,'variant_name'=>$v,'variant_price'=>$request->variant_price[$k]]);
             }
-            
-                
+
+
         }
           return redirect()->route('admin.product.cheflabProduct')->with('message', 'Chef Product  Registration Successfully');
-          
+
       }
     public function cheflab_product_list(Request $request){
-        
+
        // dd($user);
           if ($request->ajax()) {
             $data = Product_master::select('id','product_name','product_image','product_price','type','created_at');
             $data = $data->where('product_for','=','1');
             $data = $data->get();
-            
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
+                    $btn = '<a href="" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>
                             <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
@@ -229,13 +229,13 @@ class ProductController extends Controller
                 ->addColumn('product_image',function($data){
                     return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
                 })
-                
-                
+
+
                 ->rawColumns(['date'])
                 ->rawColumns(['action-js','product_image']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
-        
+
     }
     public function vendorProductList(Request $request){
         return view('admin/product/pendinglist');
@@ -253,7 +253,7 @@ class ProductController extends Controller
     public function getPendingList(Request $request){
         if ($request->ajax()) {
        //    $data = Product_master::latest()->get();
-             $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();   
+             $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();
             if($request->rolename != ''){
                $data =  $data->where('status','=',$request->rolename);
             }
@@ -268,21 +268,21 @@ class ProductController extends Controller
                 //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
                 //<ul class="navbar-nav">
                   //          <li class="nav-item dropdown">
-                    //           
+                    //
                       //          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        //            
+                        //
                           //          <a class="dropdown-item text-info" href="'.route('admin.vendor.product',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View Product</a>
                             //        ';
-                                    
-                                    
-                                    
-                               
+
+
+
+
                               //  $btn .= '</div>
                            // </li>
                         //</ul>-->
                 return $btn;
             })
-            
+
             ->addColumn('date', function($data){
                 $date_with_format = date('d M Y',strtotime($data->created_at));
                 return $date_with_format;
@@ -291,8 +291,8 @@ class ProductController extends Controller
                 return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
             })
             ->addColumn('status', function($data){
-                //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
-                
+                //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'
+
                    if($data->status == 1){
                        return '<span class="badge badge-success">Active</span>';
                    }elseif($data->status == 2){
@@ -303,7 +303,7 @@ class ProductController extends Controller
                        return '<span class="badge badge-primary">Reject</span>';
                    }
                })
-            
+
             ->rawColumns(['date','status'])
             ->rawColumns(['action-js','product_image','status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
             ->make(true);
@@ -314,8 +314,8 @@ class ProductController extends Controller
         $product = Product_master::findOrFail($id);
         $vendor = vendors::findOrFail($product->userId);
         $menu = VendorMenus::findOrFail($product->userId);
-      //  $vendor = vendors::join('categories', 'vendors.deal_categories', '=', 'categories.id')->where(['vendors.id' => $product->userId])->select('vendors.*', 'categories.name as categoryName')->get();   
-       
+      //  $vendor = vendors::join('categories', 'vendors.deal_categories', '=', 'categories.id')->where(['vendors.id' => $product->userId])->select('vendors.*', 'categories.name as categoryName')->get();
+
         return view('admin/product/view-vendor',compact('vendor','product','menu'));
     }
     public function venderId(Request $request){
@@ -331,31 +331,31 @@ class ProductController extends Controller
         $user = $request->id;
         if ($request->ajax()) {
           //  $data = Product_master::where('userId','=',$user)->where('status','=','2')->select('id','product_name','category','product_image','status','product_price','type','created_at')->get();
-          $data = Product_master::where('userId','=',$user)->where('status','=','2')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();   
-            
+          $data = Product_master::where('userId','=',$user)->where('status','=','2')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '
-                    
-                    <a href="'. route("admin.vendor.productactive",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs">Accept</a> 
+
+                    <a href="'. route("admin.vendor.productactive",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs">Accept</a>
                     ';
                             if($data->status == 2){
                                 $btn .= '<a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-danger btn-xs openModal" data-toggle="modal" data-target="#modal-default">
                                 Reject
                             </a>
-                            
-                            
-                            
+
+
+
                             '
-                            
-                            ;    
+
+                            ;
                             }
 
-                            
+
                              return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
@@ -363,10 +363,10 @@ class ProductController extends Controller
                 ->addColumn('product_image',function($data){
                     return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
                 })
-                
+
                 ->addColumn('status', function($data){
-                 //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
-                 
+                 //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'
+
                     if($data->status == 1){
                         return '<span class="badge badge-success">Active</span>';
                     }elseif($data->status == 2){
@@ -381,13 +381,13 @@ class ProductController extends Controller
                 ->rawColumns(['action-js','product_image','status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
-        
+
     }
     public function activeProduct($encrypt_id){
         $id =  Crypt::decryptString($encrypt_id);
         $product = Product_master::where('id','=', $id);
         $product = $product->first();
-        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ]); 
+        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ]);
         $vendor = Vendors::where('id','=',$product->userId)->select('deal_categories','deal_cuisines')->first();
         $categories  = explode(',',$vendor->deal_categories);
         if(!in_array($product->category,$categories)){

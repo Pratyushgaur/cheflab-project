@@ -2,7 +2,7 @@
 
     use App\Models\Orders;
     use Carbon\Carbon;
-
+    
 function front_end_date_time($datetime)
 {
     return date('d F, Y h:i a', strtotime($datetime));
@@ -94,6 +94,5 @@ function vendorTotalOrderCount($vendor_id)
 {
     return Orders::where(['vendor_id'=>$vendor_id])->count();
 }
-
 
 ?>

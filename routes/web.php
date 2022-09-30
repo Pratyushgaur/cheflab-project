@@ -124,7 +124,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('coupon-edit/{id}', [App\Http\Controllers\admin\CouponController::class, 'fun_edit_coupon'])->name('admin.coupon.edit');
     Route::post('coupon-update', [App\Http\Controllers\admin\CouponController::class, 'update'])->name('admin.coupon.update');
     Route::post('coupon-delete', [App\Http\Controllers\admin\CouponController::class, 'soft_delete'])->name('admin.coupon.delete');
-    
+
     // Banner Promotion
     Route::get('banner-promotion', [App\Http\Controllers\admin\BannerController::class, 'index'])->name('admin.banner.createbanner');
     Route::get('banner-list', [App\Http\Controllers\admin\BannerController::class, 'get_data_table_of_slote'])->name('admin.slot.data');
@@ -149,7 +149,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
    // Root Banner
    Route::get('banner-root-banner', [App\Http\Controllers\admin\AdminRootBannerController::class, 'index'])->name('admin.root.banner');
    Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');
-   Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit'); 
+   Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit');
    Route::post('root-image-update', [App\Http\Controllers\admin\AdminRootBannerController::class, 'updateBanner'])->name('admin.root.update');
    // Vendor Store Promotion
     Route::get('vendor-promotion', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.vendor.store');
@@ -212,6 +212,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
             Route::post('order/ready_to_dispatch/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_ready_to_dispatch'])->name('restaurant.order.ready_to_dispatch')->where('id', '[0-9]+');
             Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
+            Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
 
 
             //coupon
@@ -249,7 +250,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('promotion/on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getslot'])->name('restaurant.slot.checkslot');
             Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'shop_promotion'])->name('restaurant.shop.promotion');
             Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
-            
+
             //dine out
             Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_globle_setting'])->name('restaurant.dineout.setting');
             Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update'])->name('restaurant.dineout.update');
@@ -319,7 +320,7 @@ Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
                 Route::post('on-screen-checkdate', [App\Http\Controllers\chef\VendorPromotion::class,'checkdate'])->name('chef.slot.checkdate');
                 Route::post('on-screen-getprice', [App\Http\Controllers\chef\VendorPromotion::class,'getPrice'])->name('chef.slot.getPrice');
                 Route::get('on-screen-slot', [App\Http\Controllers\chef\VendorPromotion::class,'getslot'])->name('chef.slot.checkslot');
-            
+
             });
 
 
