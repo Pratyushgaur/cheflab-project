@@ -17,7 +17,7 @@ class CreateTableService extends Migration
             $table->id();
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')->references('id')->on('vendors');
-            $table->boolean('is_active')->default(0);
+            $table->boolean('is_active')->default(1);
             $table->integer('no_guest')->default(0);
             $table->integer('slot_time')->default(45);
             $table->integer('slot_discount')->default(0);

@@ -412,6 +412,7 @@
       </div>
     </div>
   </div>
+
   <!-- SCRIPTS -->
 <!-- SCRIPTS -->
   <!-- Global Required Scripts Start -->
@@ -468,8 +469,8 @@
   <script src="{{ asset('frontend') }}/assets/js/toastr.min.js"></script>
   @stack('scripts')
   @yield('page-js');
+
+@stack('model')
+
 </body>
-
-
-<!-- Mirrored from metropolitanhost.com/themes/themeforest/html/costic/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 28 Aug 2022 10:37:51 GMT -->
 </html>

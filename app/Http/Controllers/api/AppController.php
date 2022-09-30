@@ -443,7 +443,7 @@ class AppController extends Controller
             }
             //
             $product = Product_master::where('id', '=', $request->product_id)->select('addons', 'customizable')->first();
-            
+
             if (@$product->customizable == 'true') {
                 $options = unserialize($product->variants);
                 if ($product->addons == null) {
@@ -817,11 +817,10 @@ class AppController extends Controller
 
     public function view_cart(Request $request)
     {
-        //        dd($request->all());
+
         try {
             $validateUser = Validator::make($request->all(), [
                 'user_id' => 'required|numeric'
-
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();

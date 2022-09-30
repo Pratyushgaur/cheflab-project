@@ -47,13 +47,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
     Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
     Route::post('update-cart', [App\Http\Controllers\api\AppController::class, 'update_cart']);
-     
+
     // like dislike
     Route::post('like-vendor', [App\Http\Controllers\api\AppController::class, 'add_to_like_vendor']);
     Route::post('like-product', [App\Http\Controllers\api\AppController::class, 'add_to_like_product']);
     Route::post('dislike-product', [App\Http\Controllers\api\AppController::class, 'deleteLikeProduct']);
     Route::post('dislike-vendor', [App\Http\Controllers\api\AppController::class, 'deleteLikeVendor']);
-     
+
     // coupon
     Route::post('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
     Route::post('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
@@ -80,6 +80,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
     
+
+    //Dine out
+    Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutController::class, 'get_dine_out_slot']);
+    Route::post('dine-out-booking', [App\Http\Controllers\api\DineoutController::class, 'dine_out_booking']);
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);

@@ -206,8 +206,13 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('product/inactive', [App\Http\Controllers\vendor\restaurant\ProductController::class,'inActive'])->name('restaurant.product.inactive');
             Route::post('product/active', [App\Http\Controllers\vendor\restaurant\ProductController::class,'Active'])->name('restaurant.product.active');
             //vendor order linst
-            Route::get('order', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
-            Route::get('order/datatable/list', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'getData'])->name('order.datatable');
+            Route::get('orders', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
+            Route::post('order/accept/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_accept'])->name('restaurant.order.accept')->where('id', '[0-9]+');
+            Route::post('order/vendor_reject/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_vendor_reject'])->name('restaurant.order.vendor_reject')->where('id', '[0-9]+');
+            Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
+            Route::post('order/ready_to_dispatch/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_ready_to_dispatch'])->name('restaurant.order.ready_to_dispatch')->where('id', '[0-9]+');
+            Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
+
 
             //coupon
             Route::get('coupon', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'index'])->name('restaurant.coupon.list');
@@ -246,11 +251,13 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
             
             //dine out
-            Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'index'])->name('restaurant.dineout.index');
+            Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_globle_setting'])->name('restaurant.dineout.setting');
             Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update'])->name('restaurant.dineout.update');
             Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'vendor_table_setting'])->name('restaurant.dineout.vendor_table_setting');
             Route::post('dine-out-setting/active', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_setting'])->name('restaurant.dineout.dine_out_setting');
-
+            Route::get('dine-out/booking_requests', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'index'])->name('restaurant.dineout.index');
+            Route::post('dine-out/accept/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_accept'])->name('restaurant.dineout.accept')->where('id', '[0-9]+');
+            Route::post('dine-out/reject/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_reject'])->name('restaurant.dineout.reject')->where('id', '[0-9]+');
 
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
@@ -271,12 +278,15 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
     });
 });
-    // chef route
+// chef route
 
-    Route::get('chef-logout',function(){
-        Auth::logout();
-        return  redirect()->route('vendor.login');
-    })->name('chef.logout');
+Route::get('chef-logout',function(){
+    Auth::logout();
+    return  redirect()->route('vendor.login');
+})->name('chef.logout');
+
+Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
+    
 
     Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
         // chef route
@@ -322,4 +332,15 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
 
         });
+
+
+        Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class,'index'])->name('chef.globleseting');
+        Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class,'order_time'])->name('chef.globleseting.ordertime');
+        Route::post('globle/createtime', [App\Http\Controllers\chef\GlobleSetting::class,'store'])->name('chef.ordertime.store');
+        //
+        Route::get('globle/require/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'requireOrderTime'])->name('chef.require.ordertime');
+        Route::post('globle/createtime', [App\Http\Controllers\vendor\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.first_store');
+
+
     });
+});
