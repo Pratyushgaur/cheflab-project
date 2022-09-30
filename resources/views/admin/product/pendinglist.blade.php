@@ -316,7 +316,7 @@
               var uh = JSON.stringify(response);
               var obj = JSON.parse(uh);
               console.log(obj.product['status']);
-              $vendorimg = '<img src=""{{url('vendor')}}/'+obj.vendor['image']+'" />'; 
+              $vendorimg = '<img src=""{{url('vendors')}}/'+obj.vendor['image']+'" />'; 
               $('.widget-user-image').html($vendorimg);
               $('.widget-user-username').html(obj.vendor['name']); 
               $('.widget-user-desc').html("<p>"+obj.vendor['vendor_type']+"</p>");   
