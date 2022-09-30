@@ -290,7 +290,7 @@ Route::get('chef-logout',function(){
 Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
     
 
-    Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
+    
         // chef route
         Route::group(['middleware' => 'isChefRestaurant'], function(){
             Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
