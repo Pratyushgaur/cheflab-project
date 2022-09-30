@@ -186,7 +186,7 @@ class UserControllers extends Controller
     }
     public function store_chef(Request $request)
     {
-        return $request->input();die;
+        
         $this->validate($request, [
             'restourant_name' => 'required',
             'email' => 'required|unique:vendors,email',

@@ -41,7 +41,7 @@
 
                     <div id="collapseOne2" class="collapse show" data-parent="#accordionExample1">
                         <div class="card-body">
-                            <li><a href="{{route('restaurant.dineout.index')}}" class="">Dine Out Setting</a></li>
+                            <li><a href="{{route('restaurant.dineout.setting')}}" class="">Dine Out Setting</a></li>
                         </div>
                     </div>
                 </div>

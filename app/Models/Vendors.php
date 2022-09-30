@@ -8,9 +8,10 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 
 
-class vendors extends Authenticatable
+class Vendors extends Authenticatable
 {
     use HasFactory, Notifiable;
+
     protected $fillable = ['table_service'];
 
     public function vendor_order_time()
@@ -22,6 +23,7 @@ class vendors extends Authenticatable
     {
 //        date_default_timezone_set(config('app.timezone'));
         $v = Vendors::find($vendor_id);
+//        dd($vendor_id);
         if (!$v->is_online)
             return ['offline'];
 

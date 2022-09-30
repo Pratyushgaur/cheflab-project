@@ -22,7 +22,7 @@ class CouponController extends Controller
         return view('admin/coupon/create_coupon',compact('categories'));
     }
     public function store_coupon(Request $request){
-       // return  $request->input();die;
+       //return  $request->input();die;
         $this->validate($request, [
             'name' => 'required',
             'code' => 'required',
@@ -32,18 +32,16 @@ class CouponController extends Controller
             'minimum_order_amount' => 'required',
             'promo_redeem_count' => 'required',
             'promocode_use' => 'required',
-          //  'create_by' => 'required',
-          //  'coupon_type' => 'required',
             'from' => 'required',
             'to' => 'required',
-            'discription' => 'required',
+            'description' => 'required',
         ]);
         $coupon = new Coupon;
         $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
-        $coupon->discription  = $request->discription;
+        $coupon->description  = $request->description;
         $coupon->show_in  = $request->show_in;
         $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
@@ -164,7 +162,7 @@ class CouponController extends Controller
         $coupon->discount_type = $request->discount_type;
       //  $coupon->vendor_type = 'restaurant';
         $coupon->discount  = $request->discount;
-        $coupon->discription  = $request->discription;
+        $coupon->description  = $request->description;
         $coupon->type  = $request->type;
         $coupon->maximum_order_value  = $request->maximum_order_value;
         $coupon->minimum_order_value  = $request->minimum_order_value;

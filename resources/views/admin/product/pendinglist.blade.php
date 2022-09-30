@@ -10,33 +10,56 @@
               
             </div><!-- /.container-fluid -->
           </section>
-      
+
           <!-- Main content -->
           <section class="content">
             <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-primary card-outline">
+                      <div class="card-header">
+                          <div class="row">
+                            <div class="col-md-2">
+                                <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
+                                  <option value="">Filter By Role</option>
+                                  <option value="pending">Pending </option>
+                                  <option value="active">Active</option>
+                                  <option value="inactive">Inactive</option>
+                                  <option value="reject">Reject</option>
+                                </select>
+                            </div>
+                            
+                          </div>
+                          
+                      </div>
+                  </div>
+                </div>
+              </div>
               <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Vendor Product Listing </h3>
-                     
+                      <h3 class="card-title">Listing of Registered Restaurant And Chef </h3>
+                      
                       
                     </div>
                     <div class="card-body pad table-responsive">
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
-                                
+                                    <th  class="text-center">Sr No.</th>
                                     <th >Product Name</th>
-                                    <th  >Category</th>
                                     <th  >Image</th>
-                                    <th  >Price</th>
-                                    <th>Type</th>
+                                    <th  >Category</th>
+                                    <th> Type</th>
+                                    <th> Price</th>
+                                    <th  >status</th>
+                                    <th  >created at</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
-                           
+                            
                         </table>
                     </div>
                   </div>
@@ -45,47 +68,7 @@
                 
               </div>
             </div>
-            <div class="modal fade" id="modal-default">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Product Reject Rejoin</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <form id="restaurant-form" action="{{route('admin.product.reject')}}" method="post" enctype="multipart/form-data">
-                          @if ($errors->any())
-                              @foreach ($errors->all() as $error)
-                                  <div class="alert alert-danger">{{$error}}</div>
-                              @endforeach
-                          @endif
-                          @csrf
-                            
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Rejoin</label>
-                                          <div id="price"></div>
-                                          <textarea type="text" name="comment_rejoin" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
-                                         
-                                        </div>  
-                                    </div>
-                                </div>
-                            </div>
-  
-                            <button class="btn btn-primary float-right" type="submit">Submit</button>
-                      </form>
-                  </div>
-                  
-                </div>
-                <!-- /.modal-content -->
-              </div>
-              <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
+
           
           </section>
           <!-- /.content -->
@@ -99,50 +82,37 @@
 
 
 @section('js_section')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-<script type="text/javascript">
-    $(".s_meun").removeClass("active");
-    $(".city_cityadmin").addClass("active");
-    $(".city_menu").addClass("active");
+<script>
+  $("input[data-bootstrap-switch]").each(function(){
+    $(this).bootstrapSwitch('state', $(this).prop('checked'));
+  })
 </script>
 
-
- <script type="text/javascript">
-   
+<script type="text/javascript">
   // $(function () {
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.product.pendingdata') }}",
+        //ajax: "{{ route('admin.vendors.datatable') }}",
+        ajax:{
+            url:"{{ route('admin.product.pendingdata')}}",
+            data: function (d) {
+                d.rolename = $('#filter-by-role').val()
+            }
+        },
         columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+          {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'product_name', name: 'product_name'},
             {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
-            {data: 'product_price', name: 'product_price'},
+            {data: 'category', name: 'category'},
             {data: 'type', name: 'type'},
+            {data: 'product_price', name: 'product_price'},
+            {data: 'status', name: 'status',orderable: false, searchable: false},
+            {data: 'date', name: 'created_at'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
   // });
-  $("#restaurant-form").validate({
-      rules: {
-        comment_rejoin: {
-                  required: true,
-                //  remote: '{{route("restaurant.slot.checkdate")}}', 
-              },
-              
-        },
-          messages: {
-            comment_rejoin: {
-                  required: "Comment is required"
-              },
-          }
-    });
-  $(document).on('click', '.openModal', function () {
-        var id = $(this).data('id');
-        $('#price').append("<input type='hidden' name='id' value="+id+">");
-    });
 
   function reload_table() {
       table.DataTable().ajax.reload(null, false);

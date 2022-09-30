@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Events\OrderCreateEvent;
+use App\Events\OrderSendToPrepareEvent;
 use App\Listeners\OrderSendNotificationListener;
+use App\Listeners\OrderSendToPreparationNotificationListener;
 use Illuminate\Auth\Events\Registered;
 use App\Events\AdminLoginHistoryEvent;
 use App\Listeners\AdminLoginHistoryListener;
@@ -33,6 +35,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         OrderCreateEvent::class => [
             OrderSendNotificationListener::class,
+        ],
+        OrderSendToPrepareEvent::class => [
+            OrderSendToPreparationNotificationListener::class,
         ],
 
     ];

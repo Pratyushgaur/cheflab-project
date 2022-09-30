@@ -9,5 +9,5 @@ class TableService extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['vendor_id', 'no_guest', 'slot_time', 'slot_discount'];
+    protected $fillable = ['vendor_id', 'no_guest', 'slot_time', 'slot_discount','is_active'];
 }

@@ -4,12 +4,21 @@ namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Http\Controllers\Controller;
 use App\Models\TableService;
+use App\Models\TableServiceBooking;
 use App\Models\vendors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class DineoutController extends Controller
 {
+    public function dine_out_globle_setting()
+    {
+        $table_service = TableService::where('vendor_id', \Auth::guard('vendor')->user()->id)->first();
+        if (!$table_service)
+            $table_service = new TableService();
+        return view('vendor.restaurant.dineout.setting', compact('table_service'));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,10 +26,36 @@ class DineoutController extends Controller
      */
     public function index()
     {
-        $table_service = TableService::where('vendor_id', \Auth::guard('vendor')->user()->id)->first();
-        if (!$table_service)
-            $table_service = new TableService();
-        return view('vendor.restaurant.dineout.index', compact('table_service'));
+        $TableServiceBookings = TableServiceBooking::select('table_service_bookings.*', 'users.name')
+            ->join('users', 'user_id', '=', 'users.id')
+            ->where('vendor_id', \Auth::guard('vendor')->user()->id)->get();
+//dd($TableServiceBookings);
+        return view('vendor.restaurant.dineout.index', compact('TableServiceBookings'));
+    }
+
+    public function dine_out_accept($id)
+    {
+        $booking = TableServiceBooking::find($id);
+        $booking->booking_status = 'accepted';
+        $booking->save();
+        return response()->json([
+            'status' => 'success',
+            'booking_status' => 'Accepted',
+            'msg' => "# $id accepted"
+        ], 200);
+    }
+
+
+    public function dine_out_reject($id)
+    {
+        $booking = TableServiceBooking::find($id);
+        $booking->booking_status = 'rejected';
+        $booking->save();
+        return response()->json([
+            'status' => 'success',
+            'booking_status' => 'Rejected',
+            'msg' => "# $id rejected"
+        ], 200);
     }
 
     /**

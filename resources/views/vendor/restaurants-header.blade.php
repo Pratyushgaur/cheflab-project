@@ -20,6 +20,8 @@
   <link href="{{asset('frontend')}}/assets/css/jquery-ui.min.css" rel="stylesheet">
   <!-- Page Specific CSS (Slick Slider.css) -->
   <link href="{{asset('frontend')}}/assets/css/slick.css" rel="stylesheet">
+  <link href="{{asset('frontend')}}/assets/css/image-zoom/demo.css" rel="stylesheet">
+  <link href="{{asset('frontend')}}/assets/css/image-zoom/style.css" rel="stylesheet">
   <link href="{{asset('frontend')}}/assets/css/datatables.min.css" rel="stylesheet">
   <!-- Costic styles -->
   <link href="{{asset('frontend')}}/assets/css/style.css" rel="stylesheet">
@@ -51,6 +53,11 @@
     transform: none;
   }
       .ms-text-danger{width: 100%;}
+
+      .modal-backdrop {
+          /* bug fix - no overlay */
+          display: none;
+      }
     </style>
  @yield('page-css')
 

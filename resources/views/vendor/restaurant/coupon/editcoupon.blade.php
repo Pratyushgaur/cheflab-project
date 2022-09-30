@@ -222,12 +222,12 @@
                         <span class="minimum_order_amount_error text-danger"></span>   
                      </div> 
                      <div class="col-xl-3 col-md-12 mb-3">
-                      <label for="validationCustom10">Discription</label>
+                      <label for="validationCustom10">description</label>
                         <div class="input-group">
-                        <textarea type="text" value="{{$coupon->discription}}" name="discription" class="form-control"  id="" placeholder="Discription">{{$coupon->discription}}</textarea>
+                        <textarea type="text" value="{{$coupon->description}}" name="description" class="form-control"  id="" placeholder="description">{{$coupon->description}}</textarea>
                         
                         </div>
-                        <span class="discription_error text-danger"></span> 
+                        <span class="description_error text-danger"></span> 
                      </div> 
 
 
@@ -288,7 +288,7 @@
               to: {
                 required: true,
               },
-              discription: {
+              description: {
                 required: true,
               }
         },

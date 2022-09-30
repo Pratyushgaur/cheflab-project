@@ -445,12 +445,13 @@ class AppController extends Controller
             if (@$product->customizable == 'true') {
                 $options = unserialize($product->variants);
                 if ($product->addons == null) {
-                    $data = ['addons' => $product->addons];
+                    $data = ['addons' => []];
                 } else {
-                    $data = ['addons' => @unserialize($product->addons)];
+                    $addon = Addons::whereIn('id',explode(',',$product->addons))->select('id','addon','price')->get()->toArray();
+                    $data = ['addons' => $addon];
                 }
 
-                $v = Variant::select('variant_name', 'variant_price')->where('product_id', $request->product_id)->get();
+                $v = Variant::select('variant_name', 'variant_price','id')->where('product_id', $request->product_id)->get();
                 // dd($v->toArray());
                 if (isset($v))
                     $data['options'] = $v->toArray();
@@ -814,11 +815,10 @@ class AppController extends Controller
 
     public function view_cart(Request $request)
     {
-        //        dd($request->all());
+
         try {
             $validateUser = Validator::make($request->all(), [
                 'user_id' => 'required|numeric'
-
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
