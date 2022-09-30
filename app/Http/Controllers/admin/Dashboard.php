@@ -6,6 +6,7 @@ use App\Models\MangaoStaticUseradmin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Notification;
 use Auth;
 
 class Dashboard extends Controller
@@ -39,6 +40,7 @@ class Dashboard extends Controller
         //     }
 
         // die();
+      
         return view('admin.dashbord.dash');
     }
 }

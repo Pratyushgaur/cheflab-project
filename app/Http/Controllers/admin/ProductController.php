@@ -238,7 +238,8 @@ class ProductController extends Controller
 
     }
     public function vendorProductList(Request $request){
-        return view('admin/product/pendinglist');
+        $vendor = vendors::where('vendor_type','=','restaurant')->where('status','1')->select('id','name')->get();
+        return view('admin/product/pendinglist',compact('vendor'));
     }
     public function rejectProduct(Request $request){
         $this->validate($request, [
@@ -251,12 +252,16 @@ class ProductController extends Controller
         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Reject Successfully');
     }
     public function getPendingList(Request $request){
+       // $data1 = Product_master::where('product_for','=','3')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*',  'vendors.name as restaurantName')->get();
+       // $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName')->get(); 
+       // echo $data1;die;
         if ($request->ajax()) {
-       //    $data = Product_master::latest()->get();
-             $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();
+            $data = Product_master::where('product_for','=','3')->where('products.status','=','2')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();   
             if($request->rolename != ''){
-               $data =  $data->where('status','=',$request->rolename);
-            }
+                $data =  Product_master::where('products.status','=',$request->rolename)->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
+             }elseif($request->restaurant != ''){
+                $data =  Product_master::where('userId','=',$request->restaurant)->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
+             }
             return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action-js', function($data){
@@ -287,6 +292,7 @@ class ProductController extends Controller
                 $date_with_format = date('d M Y',strtotime($data->created_at));
                 return $date_with_format;
             })
+           
             ->addColumn('product_image',function($data){
                 return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
             })
