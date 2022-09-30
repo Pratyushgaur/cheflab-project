@@ -171,7 +171,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('vendors-product-list/{id}', [App\Http\Controllers\admin\ProductController::class, 'view_product'])->name('admin.vendor.product');
     Route::get('vendors-product-data/{id}', [App\Http\Controllers\admin\ProductController::class, 'venderProduct'])->name('admin.vendor.productList');
     Route::post('vendors-product-dataid', [App\Http\Controllers\admin\ProductController::class, 'venderId'])->name('admin.vendor.getId');
-    Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.vendor.productactive');
+    Route::post('vendor-products-active', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.vendor.productactive');
     Route::post('vendor-products-reject', [App\Http\Controllers\admin\ProductController::class, 'rejectProduct'])->name('admin.product.reject');
     
 });
@@ -209,6 +209,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'storeAddon'])->name('restaurant.product.addon.store');
             Route::post('product/inactive', [App\Http\Controllers\vendor\restaurant\ProductController::class,'inActive'])->name('restaurant.product.inactive');
             Route::post('product/active', [App\Http\Controllers\vendor\restaurant\ProductController::class,'Active'])->name('restaurant.product.active');
+            Route::get('product/edit/{id}', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'fun_edit_product'])->name('vendor.product.edit');
+            Route::post('product/update', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'update'])->name('restaurant.product.update');
             //vendor order linst
             Route::get('order', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
             Route::get('order/datatable/list', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'getData'])->name('order.datatable');

@@ -80,11 +80,58 @@ class ProductController extends Controller
                 foreach ($request->variant_name as $k => $v) {
                     Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
                 }
-
+              
             return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
         } catch (\Exception $th) {
             return $th->getMessage();
         }
+    }
+    public function update(Request $request){
+      //  return $request->input();die;
+        $this->validate($request, [
+            'product_name' => 'required',
+            'dis' => 'required',
+            'item_price' => 'required',
+            'cuisines' => 'required',
+            'category' => 'required',
+            'menu_id' => 'required',
+        ]);
+      
+            //dd($request->all());
+            $product = Product_master::find($request->id);
+            $product->product_name = $request->product_name;
+            $product->userId = Auth::guard('vendor')->user()->id;
+            $product->cuisines = $request->cuisines;
+            $product->category  = $request->category;
+            $product->menu_id  = $request->menu_id;
+            $product->dis  = $request->dis;
+            $product->type  = $request->product_type;
+            $product->product_price  = $request->item_price;
+            $product->customizable  = $request->custimization;
+            if($request->status == '0'){
+                $product->status  = 2;
+            }
+            if (!empty($request->addons)) {
+                $product->addons = implode(',', $request->addons);
+            }
+           
+            if($request->has('product_image')){
+                $filename = time().'-product_image-'.rand(100,999).'.'.$request->product_image->extension();
+                $request->product_image->move(public_path('products'),$filename);
+               // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+                $catogory->product_image  = $filename;
+            }    
+
+
+            $product->product_for = '3';
+            $product->save();
+            if ($request->custimization == 'true')
+                foreach ($request->variant_name as $k => $v) {
+                    Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
+                }
+              
+            return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
+       
     }
     public function getData(Request $request)
     {
@@ -94,10 +141,16 @@ class ProductController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
-                    $btn = '<a href="#"><i class="fa fa-edit"></i></a>
-                            <a  href="#"><i class="fa fa-trash"></i></a>
-                    ';
-                    return $btn;
+                    if ($data->status == '1') {
+                        $btn = '<a href="#"><i class="fa fa-edit"></i></a> <a  href="#"><i class="fa fa-trash"></i></a>';
+                    } elseif($data->status == '0'){
+                       // $btn  ='<a href="'. route("vendor.product.edit",Crypt::encryptString($data->id)) .'" class="badge badge-danger">Reuse</a><a  href="#"><i class="fa fa-trash"></i></a>';
+                       $btn  ='<a href="#" class="badge badge-danger">Reuse</a><a  href="#"><i class="fa fa-trash"></i></a>';
+                    }else{
+                        $btn = '<a href="#"><i class="fa fa-edit"></i></a> <a  href="#"><i class="fa fa-trash"></i></a>';
+                    }
+                    return $btn;                    
+                   
                 })
                 
                 ->addColumn('date', function($data){
@@ -116,7 +169,7 @@ class ProductController extends Controller
                 })
                 ->addColumn('admin_review', function($data){
                     //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
-                    
+                        
                        if($data->status == 1){
                         $btn  ='<span class="badge badge-success">Active</span>';
                        }elseif($data->status == 2){
@@ -142,6 +195,21 @@ class ProductController extends Controller
                 ->rawColumns(['action-js','product_name','product_price','status','admin_review']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
+    }
+    public function fun_edit_product($encrypt_id)
+    {
+        try {
+            $id =  Crypt::decryptString($encrypt_id);  
+           // $product = Product_master::findOrFail($id);
+            $product  =  Product_master::where('products.id','=',$id)->join('categories', 'products.category', '=', 'categories.id')->join('cuisines', 'products.userId', '=', 'cuisines.id')->join('vendor_menus', 'products.userId', '=', 'vendor_menus.id')->select('products.*', 'categories.name as categoryName','cuisines.name as cuisinesName','vendor_menus.menuName')->first();
+            $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
+            $cuisines = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
+            $addons =  Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
+            $menus =  VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->get();
+            return view('vendor.restaurant.products.edit',compact('product','cuisines','addons','menus','categories'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        } 
     }
     public function inActive(Request $request){
         $id = $request->id;

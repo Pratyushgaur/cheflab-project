@@ -8,7 +8,7 @@ use App\Models\DeliveryAddress;
 use Validator;
 use Carbon\Carbon;
 // this is vikas testing
-class DeliberyAddressController extends Controller
+class DeliveryAddressController extends Controller
 {
     public function deliverAddress(Request $request){
         try {
