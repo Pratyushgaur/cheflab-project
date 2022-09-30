@@ -389,8 +389,8 @@ class ProductController extends Controller
         }
 
     }
-    public function activeProduct($encrypt_id){
-        $id =  Crypt::decryptString($encrypt_id);
+    public function activeProduct(Request $request){
+        $id =  $request->id;
         $product = Product_master::where('id','=', $id);
         $product = $product->first();
         $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ]);
