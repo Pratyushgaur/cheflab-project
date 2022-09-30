@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Banner;
 use App\Models\SloteMaster;
 use App\Models\VendorStorePromotipn;
+use App\Models\AppPromotionBlogs;
+
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
 use Config;
@@ -21,24 +23,43 @@ class VendorPromotion extends Controller
     public function store(Request $request){
         $this->validate($request, [
             'position' => 'required',
-            'price' => 'required',
-            'position' => 'required',
+            'blog_type' => 'required',
+            'name' => 'required',
         ]);
-        $banner = new VendorStorePromotipn;
-        $banner->slot_name = $request->slot_name;
-        $banner->price =  $request->price;
-        $banner->position = $request->position;
-        $banner->save();
-        return redirect()->route('admin.vendor.store')->with('message', 'Store Create Successfully');
+        $blog = new AppPromotionBlogs;
+        $blog->name = $request->name;
+        $blog->app_position =  $request->position;
+        $blog->blog_type = $request->blog_type;
+        $blog->save();
+        return redirect()->route('admin.application.blog')->with('message', 'Blog Created Successfully');
           
     }
     public function get_data_table_of_slote(Request $request)
     {
         if ($request->ajax()) {
             
-            $data = VendorStorePromotipn::latest()->get();
+            $data = AppPromotionBlogs::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
+                ->addColumn('app_position', function($data){
+                    if ($data->app_position == 1) {
+                        return 'Restaurant';
+                    } else {
+                        return 'Chef';
+                    }
+                    
+                
+                })
+                ->addColumn('blog_type', function($data){
+                    if ($data->blog_type == 1) {
+                        return 'Vendor';
+                    } else {
+                        return 'Product';
+                    }
+                    
+                
+                })
+                
                 ->addColumn('action-js', function($data){
                     $btn = '<a href="#" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>';
                     return $btn;

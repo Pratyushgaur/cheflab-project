@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             Superadmin::class,
             CategorySeeder::class,
             CuisinesSeeder::class,
+            BannerSeeder::class,
+            //SlotSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

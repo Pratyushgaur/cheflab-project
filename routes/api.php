@@ -63,6 +63,23 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // order
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
+    Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
+
+    //profile
+    Route::post('get-user-info', [App\Http\Controllers\api\AppController::class, 'getUserInfo']);
+    Route::post('update-user-info', [App\Http\Controllers\api\AppController::class, 'updateUserInfo']);
+    Route::post('get-user-fav-vendors', [App\Http\Controllers\api\AppController::class, 'getUserFavVendors']);
+    //
+    // Banner Api
+    Route::get('getHomeBanner', [App\Http\Controllers\api\BannerController::class, 'getHomepageBanner']);
+    Route::get('getPromotionBanner', [App\Http\Controllers\api\BannerController::class, 'getPromotionBanner']);
+    // Review Rating
+    Route::get('getReviewRating', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
+    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
+    // Delivery Address
+    Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
+    Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
+
 
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutController::class, 'get_dine_out_slot']);

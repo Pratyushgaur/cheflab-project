@@ -99,12 +99,10 @@ class LoginApiController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
-                //'mobile_number' => 'required|numeric|digits:10|unique:user.mobile_number',
+                
                 'mobile_number' => 'required|numeric|digits:10|unique:users,mobile_number',
                 'name' => 'required|max:20',
                 'email' => 'required|email|unique:users,email',
-                //'email' => 'required|email|unique:user.email|max:50',
-                //'alternative_mobile' => 'numeric|digits:10'
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();

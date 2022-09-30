@@ -12,7 +12,7 @@
             <div class="ms-card-body media">
               <div class="media-body">
                 <span class="black-text"><strong>Today Order's</strong></span>
-                <h2>8,451</h2>
+                <h2>{{vendorTodayOrderCount(Auth::guard('vendor')->user()->id)}}</h2>
               </div>
             </div>
             <canvas id="line-chart"></canvas>
@@ -24,7 +24,7 @@
             <div class="ms-card-body media">
               <div class="media-body">
                 <span class="black-text"><strong>Total Order's</strong></span>
-                <h2>3,973</h2>
+                <h2>{{vendorTotalOrderCount(Auth::guard('vendor')->user()->id)}}</h2>
               </div>
             </div>
             <canvas id="line-chart-2"></canvas>
@@ -143,7 +143,7 @@
             <div class="ms-panel-body">
               <div class="row">
 
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                   <div class="ms-card no-margin">
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-5.jpg" alt="card_img">
@@ -213,7 +213,7 @@
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> -->
 
               </div>
             </div>
@@ -221,7 +221,7 @@
         </div>
         <!-- END/Food Orders -->
         <!-- Recent Orders Requested -->
-        <div class="col-xl-7 col-md-12">
+        <div class="col-xl-12 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
@@ -246,7 +246,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <!-- <tr>
                       <th scope="row">1</th>
                       <td>French Fries</td>
                       <td>Jhon Leo</td>
@@ -295,7 +295,7 @@
                       </td>
                       <td>12:05</td>
                       <td>$21</td>
-                    </tr>
+                    </tr> -->
                     
                   </tbody>
                 </table>
@@ -556,51 +556,7 @@
           </div> -->
           <!-- Favourite Products -->
           <!-- Total Earnings -->
-          <div class="ms-panel">
-            
-            <div class="ms-panel-body p-0">
-              <div class="ms-quick-stats">
-                <div class="ms-stats-grid">
-                  <i class="fa fa-star"></i>
-                  <p class="ms-text-dark">$8,033</p>
-                  <span>Today</span>
-                </div>
-                <div class="ms-stats-grid">
-                  <i class="fa fa-university"></i>
-                  <p class="ms-text-dark">$3,039</p>
-                  <span>Yesterday</span>
-                </div>
-              </div>
-            </div>
-            <div class="ms-panel-body p-0">
-              <div class="ms-quick-stats">
-                <div class="ms-stats-grid">
-                  <i class="fa fa-star"></i>
-                  <p class="ms-text-dark">$8,033</p>
-                  <span>Today</span>
-                </div>
-                <div class="ms-stats-grid">
-                  <i class="fa fa-university"></i>
-                  <p class="ms-text-dark">$3,039</p>
-                  <span>Yesterday</span>
-                </div>
-              </div>
-            </div>
-            <div class="ms-panel-body p-0">
-              <div class="ms-quick-stats">
-                <div class="ms-stats-grid">
-                  <i class="fa fa-star"></i>
-                  <p class="ms-text-dark">$8,033</p>
-                  <span>Today</span>
-                </div>
-                <div class="ms-stats-grid">
-                  <i class="fa fa-university"></i>
-                  <p class="ms-text-dark">$3,039</p>
-                  <span>Yesterday</span>
-                </div>
-              </div>
-            </div>
-          </div>
+          
         </div>
         <!-- Total Earnings -->
         

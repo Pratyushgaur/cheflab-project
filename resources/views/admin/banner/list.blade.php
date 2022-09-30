@@ -15,22 +15,45 @@
           <section class="content">
             <div class="container-fluid">
               <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-primary card-outline">
+                      <div class="card-header">
+                          <div class="row">
+                            <div class="col-md-2">
+                                <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
+                                  <option value="">Filter By Role</option>
+                                  <option value="1">Accept </option>
+                                  <option value="2">Reject</option>
+                                  <option value="0">Pending</option>
+                                </select>
+                            </div>
+                            
+                          </div>
+                          
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Listing of Slot Booking </h3>
-                   </div>
+                      <h3 class="card-title">Listing of Banner Request </h3>
+                      
+                      
+                    </div>
                     <div class="card-body pad table-responsive">
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
                                     <th >Slot Name</th>
-                                    <th  >Slot</th>
+                                    <th >Position</th>
+                                    <th  >Price</th>
                                     <th  >Image</th>
-                                    <th  >Date</th>
-                                    <th> Status</th>
+                                    <th  >status</th>
+                                    <th  >date</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -43,47 +66,7 @@
                 
               </div>
             </div>
-            <div class="modal fade" id="modal-default">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title">Product Reject Rejoin</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                      <form id="restaurant-form" action="{{route('admin.slot.reject')}}" method="post" enctype="multipart/form-data">
-                          @if ($errors->any())
-                              @foreach ($errors->all() as $error)
-                                  <div class="alert alert-danger">{{$error}}</div>
-                              @endforeach
-                          @endif
-                          @csrf
-                            
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Rejoin</label>
-                                          <div id="price"></div>
-                                          <textarea type="text" name="comment_rejoin" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>   
-                                         
-                                        </div>  
-                                    </div>
-                                </div>
-                            </div>
-  
-                            <button class="btn btn-primary float-right" type="submit">Submit</button>
-                      </form>
-                  </div>
-                  
-                </div>
-                <!-- /.modal-content -->
-              </div>
-              <!-- /.modal-dialog -->
-            </div>
-            <!-- /.modal -->
+
           
           </section>
           <!-- /.content -->
@@ -119,11 +102,12 @@
         },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'restaurantName', name: 'restaurantName'},
-            {data: 'banner', name: 'banner'},
+            {data: 'slot_name', name: 'slot_name'},
+            {data: 'position', name: 'position'},
+            {data: 'price', name: 'price'},
             {data: 'slot_image', name: 'slot_image',orderable: false, searchable: false},
-            {data: 'date', name: 'date'},
             {data: 'slot_status', name: 'slot_status'},
+            {data: 'date', name: 'date'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

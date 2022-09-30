@@ -35,14 +35,15 @@ class VendorPromotion extends Controller
     public function store_slot(Request $request){
         $this->validate($request, [
             'date' => 'required',
-            'banner' => 'required',
+            'slot_name' => 'required',
             'slot_image' => 'required',
         ]);
         $slot = new SloteBook;
         $slot->date = $request->date;
         $slot->id = $request->id;
         $slot->price = $request->price;
-        $slot->banner = $request->banner;
+        $slot->slot_name = $request->slot_name;
+        $slot->position = $request->position;
         $slot->vendor_id = Auth::guard('vendor')->user()->id;
         $slot->banner = $request->banner;
         if($request->has('slot_image')){
@@ -75,7 +76,7 @@ class VendorPromotion extends Controller
         }
     }
     public function checkdate(Request $request){
-        $date = $request->id;
+         $date = $request->id;
         $vendor_id = Auth::guard('vendor')->user()->id;
        // var_dump($date);die;
         if (SloteBook::where('date','=',$date)->where('vendor_id','=',$vendor_id)->exists()) {
@@ -100,7 +101,8 @@ class VendorPromotion extends Controller
     }
     public function getPrice(Request $request){
         $id = $request->id;
-        $slot =SloteMaster::where('id','=',$id)->select('id','price')->get();
+      //  var_dump($id);die;
+        $slot =SloteMaster::where('id','=',$id)->select('id','price','slot_name','position')->first();
         return \Response::json($slot);
     }
     public function getslot(Request $request){
@@ -112,5 +114,13 @@ class VendorPromotion extends Controller
         } else {
             return \Response::json(true);
         }
+    }
+    public function shop_promotion(Request  $request)
+    {
+        return view('vendor.restaurant.promotion.shop_promotion');
+    }
+    public function crate_shop_promotion()
+    {
+        return view('vendor.restaurant.promotion.create_shop_promotion');
     }
 }

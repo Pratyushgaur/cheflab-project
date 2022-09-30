@@ -160,11 +160,11 @@
                                   <thead>
                                         <tr role="row">
                                           <th  class="text-center">Sr No.</th>
-                                          <th >Slot Name</th>
-                                          <th >Price</th>
-                                          <th >Position</th>
+                                          <th >Name of Blog</th>
+                                          <th >App Position</th>
+                                          <th >Blog For</th>
                                           <th >Status</th>
-                                          <th  >Action</th>
+                                          <th >Action</th>
                                         </tr>
                                   </thead>
                                   
@@ -204,41 +204,27 @@
         ajax: "{{route('admin.vendorstore.data')}}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'slot_name', name: 'slot_name'},
-            {data: 'price', name: 'price'},
-            {data: 'position', name: 'position'},
+            {data: 'name', name: 'name'},
+            {data: 'app_position', name: 'app_position'},
+            {data: 'blog_type', name: 'blog_type'},
             {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
     $("#banner-form").validate({
       rules: {
-            slot_name: {
-                required: true,
-                maxlength: 20,
-                //remote: '{{route("admin.banner.slotcheck")}}',
+            blog_position: {
+                required: true
             },
-            price: {
-                required: true,
-                number: true,
+            blog_type: {
+                required: true
             },
-            position:{
+            name:{
               required: true,
             }
-        },
-        messages: {
-            slot_name: {
-                remote:"Name  is Required",
-            },
-            proc_terminate:{
-                remote:"Date is  Required",
-            },
-            position:{
-                remote:"Select Max Banner Required",
-            }
-            
         }
-      });
+        
+    });
       $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');

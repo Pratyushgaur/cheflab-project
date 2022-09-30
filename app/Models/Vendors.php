@@ -26,15 +26,11 @@ class Vendors extends Authenticatable
 //        dd($vendor_id);
         if (!$v->is_online)
             return ['offline'];
-
-        return \App\Models\Order_time::where('vendor_id', $vendor_id)
-            ->where('day_no', Carbon::now()->dayOfWeek)
-            ->where('start_time', '<=', date('H:i:s'))
-            ->where('end_time', '>', date('H:i:s'))
+        return \App\Models\Order_time::where('vendor_id',$vendor_id)
+            ->where('day_no',Carbon::now()->dayOfWeek)
+            ->where('start_time','<=',date('H:i:s'))
+            ->where('end_time','>',date('H:i:s'))
             ->exists();
-        // ->toSql();
-
-
     }
 
 

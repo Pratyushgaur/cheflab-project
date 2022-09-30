@@ -781,7 +781,8 @@
                 required:true,
               },
               location: {
-                checkLocation: true
+                //checkLocation: true
+                checkLocation:true
               },
               
               
@@ -843,23 +844,24 @@
   });
 
   $.validator.addMethod('checkLocation',function (value, element) {
-        var check = true;
-        if($('#address-latitude').val() == ''){
-            check =  false;
-        }
-        else if($('#address-longitude').val() == ''){
-            check =  false
-        }
-        if(check){
-            return true;
-        }else{
-            Swal.fire({icon: 'error',title: 'Oops...',text: "Please Select Location Properly", footer: ''});
-        }
+
+            var check = true;
+            if($('#address-latitude').val() == ''){
+                check =  false;
+            }
+            else if($('#address-longitude').val() == ''){
+                check =  false
+            }
+            if(check){
+                return true;
+            }else{
+                Swal.fire({icon: 'error',title: 'Oops...',text: "Please Select Location Properly", footer: ''});
+            }
+        
         
         
 
-        },'Please Select Location Properly '
-    );
+    },'Please Select Location Properly ');
   function initialize(){
             var map = new google.maps.Map(document.getElementById('address-map'),{
                 center:{

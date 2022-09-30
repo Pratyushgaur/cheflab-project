@@ -38,19 +38,19 @@
 				<ul class="nav nav-treeview">
 					<li class="nav-item">
 						<a href="{{ route('city') }}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>City</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{route('admin.category.create')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>Food Categories</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{route('admin.cuisines.create')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>Cuisines Categories</p>
 						</a>
 					</li>
@@ -69,19 +69,19 @@
 				    
 					<li class="nav-item">
 						<a href="{{route('admin.vendors.list')}}" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>All Vendors</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>All Delivery Boy</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>App Users</p>
 						</a>
 					</li>
@@ -98,17 +98,23 @@
 				<a href="#" class="nav-link">
 				<i class="nav-icon fa fa-star"></i>
 				  <p>
-					 Review
+					 Vendor Request
 					<i class="fas fa-angle-left right"></i>
 				  </p>
 				</a>
 				<ul class="nav nav-treeview">
 					<li class="nav-item">
 						<a href="{{route('admin.vendor.pendigProduct')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Vendor Product</p>
+						<i class="fa fa-arrow-right nav-icon"></i>
+						<p>Product Request</p>
 						</a>
 					</li>
+					<li class="nav-item">
+                      	<a href="{{route('admin.slotebook.list')}}" class="nav-link">
+					  		<i class="fa fa-arrow-right nav-icon"></i>
+                        	<p>Banner Request</p>
+						</a>
+                  	</li>
 				</ul>
 			</li>
 			 
@@ -129,9 +135,9 @@
 				</a>
 				<ul class="nav nav-treeview">
 				    <li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
+						<a href="{{route('admin.order.list')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Vendor Orders</p>
 						</a>
 					</li>	
 				</ul>
@@ -146,87 +152,54 @@
 				  </p>
 				</a>
 				<ul class="nav nav-treeview">
+
+					<li class="nav-item">
+						<a href="{{route('admin.root.banner')}}" class="nav-link">
+							<i class="fa fa-arrow-right nav-icon"></i>
+							<p>Root Banner</p>
+						</a>
+					</li>
+
 					<li class="nav-item">
 						<a href="{{route('admin.banner.createbanner')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
+						<i class="fa fa-arrow-right nav-icon"></i>
 						<p>Banner Promotion</p>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{route('admin.application.blog')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
+						<i class="fa fa-arrow-right nav-icon"></i>
 						<p>Application Blog</p>
 						</a>
-					</li>
-					<li class="nav-item">
-						<a href="{{route('admin.slotebook.list')}}" class="nav-link">
-						<i class="far fa-circle nav-icon"></i>
-						<p>Slot List</p>
-						</a>
-					</li>
+					</li>-->
+					
+					
+					
 						
 				</ul>
 			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
-				  
-				  <i class="far fa-bell nav-icon"></i>
-				  <p>
-					 Notification
-					<i class="fas fa-angle-left right"></i>
-				  </p>
+			
+			<li class="nav-item">
+				<a href="{{route('admin.coupon.list')}}" class="nav-link">
+				  <i class="far fa-circle nav-icon"></i>
+				  <p>Notification</p>
 				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
-						</a>
-					</li>	
-				</ul>
-			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
-				  
+			</li>  
+			<li class="nav-item">
+				<a href="{{route('admin.coupon.list')}}" class="nav-link">
 				  <i class="far fa-user nav-icon"></i>
-				  <p>
-					 Reffer & Earn
-					<i class="fas fa-angle-left right"></i>
-				  </p>
+				  <p>Reffer & Earn</p>
 				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
-						</a>
-					</li>	
-				</ul>
-			</li>
+			</li>  
 			
 			
+			
+		
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  
-				  <i class="far fa-bell nav-icon"></i>
-				  <p>
-				  	Banner Management
-					<i class="fas fa-angle-left right"></i>
-				  </p>
-				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
-						</a>
-					</li>	
-				</ul>
-			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
 				  
-				  <i class="far fa-wallet nav-icon"></i>
+				  <i class="fa fa-book nav-icon"></i>
 				  <p>
 				  	Account Settlement 
 					<i class="fas fa-angle-left right"></i>
@@ -235,7 +208,7 @@
 				<ul class="nav nav-treeview">
 				    <li class="nav-item">
 						<a href="#" class="nav-link">
-						  <i class="far fa-circle nav-icon"></i>
+						  <i class="fa fa-arrow-right  nav-icon"></i>
 						  <p>All Orders</p>
 						</a>
 					</li>	
