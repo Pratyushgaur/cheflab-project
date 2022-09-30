@@ -13,7 +13,7 @@
         <a href="{{route('restaurant.dashboard')}}" class="{{ Request::routeIs('restaurant.dashboard') ? 'active' : '' }}"> <span><i class="material-icons fs-16 ">home</i>Home</span>
         </a>
       </li>
-      
+
       <li class="menu-item">
         <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/menus*') ? 'active' : '' }}" data-toggle="collapse" data-target="#menus" aria-expanded="false" aria-controls="menus"><span><i class="fa fa-archive fs-16"></i>Menus</span>
         </a>
@@ -22,7 +22,7 @@
           </li>
           <li> <a href="{{route('restaurant.menu.create')}}" class="{{ Request::routeIs('restaurant.menu.create') ? 'active' : '' }}">Add Catalogue</a>
           </li>
-          
+
         </ul>
       </li>
 
@@ -32,12 +32,25 @@
         <ul id="product" class="collapse {{ request()->is('vendor/restaurant/product*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
           <li> <a href="{{route('restaurant.product.list')}}" class="{{ Request::routeIs('restaurant.product.list') ? 'active' : '' }}">Items</a></li>
           <li> <a href="{{route('restaurant.product.addon')}}" class="{{ Request::routeIs('restaurant.product.addon') ? 'active' : '' }}">Addons</a></li>
-          
+
         </ul>
       </li>
+      
       <li class="menu-item">
-        <a href="{{route('restaurant.promotion.list')}}"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
+        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/promotion*') ? 'active' : '' }}" data-toggle="collapse" data-target="#promotion" aria-expanded="false" aria-controls="promotion"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
         </a>
+        <ul id="promotion" class="collapse {{ request()->is('vendor/restaurant/promotion*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
+          <li>
+             <a href="{{route('restaurant.promotion.list')}}" class="{{ Request::routeIs('restaurant.promotion.list') ? 'active' : '' }} {{ Request::routeIs('restaurant.promotion.create') ? 'active' : '' }}">Banner Promotion</a>
+          </li>
+          <li>
+             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>
+          </li>
+          <li>
+             <a href="{{route('restaurant.promotion.list')}}" class="">Product Promotion</a>
+          </li>
+          
+        </ul>
       </li>
       <li class="menu-item">
         <a href="#" class="has-chevron" data-toggle="collapse" data-target="#orders" aria-expanded="false" aria-controls="orders"> <span><i class="nav-icon fa fa-shopping-basket fs-16"></i>Orders</span>
@@ -54,7 +67,14 @@
         </a>
       </li>
       <hr>
-      <li class="menu-item ">
+@if(\Auth::guard('vendor')->user()->table_service==1)
+        <li class="menu-item">
+            <a href="{{route('restaurant.dineout.index')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Dine Out</span>
+            </a>
+        </li>
+        <hr>
+@endif
+        <li class="menu-item ">
         <a href="" class=""> <span><i class="nav-icon fa fa-bell fs-16 "></i>Notification</span>
         </a>
       </li>
@@ -72,11 +92,11 @@
           </li>
         </ul>
       </li>
-      
+
 
       <!-- /Dashboard -->
       <!-- product -->
-    
+
       <!-- /Apps -->
     </ul>
   </aside>

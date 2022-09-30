@@ -43,13 +43,13 @@
 
                         <ul class="list-group list-group-unbordered mb-3">
                           <li class="list-group-item">
-                            <b>Like's</b> <a class="float-right">1,322</a>
+                            <b>Like's</b> <a class="float-right">{{$vendorLike}}</a>
                           </li>
                           <li class="list-group-item text-success">
-                            <b>Success Order's</b> <a class="float-right">50</a>
+                            <b>Success Order's</b> <a class="float-right">{{vendorOrderCountByStatus($vendor->id,'completed')}}</a>
                           </li>
                           <li class="list-group-item text-danger">
-                            <b>Cancel Order's</b> <a class="float-right">10</a>
+                            <b>Cancel Order's</b> <a class="float-right">{{vendorOrderCountByStatus($vendor->id,'cancelled_by_customer')}}</a>
                           </li>
                           <li class="list-group-item ">
                             <b>Mobile</b> <a class="float-right">{{$vendor->mobile}}</a>
@@ -85,12 +85,16 @@
                       <!-- /.card-header -->
                       <div class="card-body">
                         <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
-                        <p class="text-muted">Bhawar Kua , Indore</p>
+                        <hr>
+                        <iframe width="300" height="170"  src="//maps.google.com/maps?q={{$vendor->lat}},{{$vendor->long}}&z=20&output=embed"></iframe>
+                        
                         <hr>
 
                         <strong><i class="far fa-building-alt mr-1"></i> Address</strong>
 
                         <p class="text-muted">{{$vendor->address}}</p>
+                        
+
                       </div>
                       <!-- /.card-body -->
                     </div>

@@ -22,7 +22,7 @@ class SlotbookingTable extends Migration
             $table->string('date');
             $table->string('slot_image');
             $table->string('price');
-            $table->string('id');
+            //$table->string('id');
             $table->string('banner');
             $table->enum('slot_status', ['1', '2', '0'])->default('0')->comment('1-accept 2-reject 0-pending');
             $table->enum('is_active', ['1', '2', '0'])->default('0')->comment('1-accept 2-reject 0-pending');

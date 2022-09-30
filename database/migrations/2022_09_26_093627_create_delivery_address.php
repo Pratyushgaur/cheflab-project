@@ -19,7 +19,7 @@ class CreateDeliveryAddress extends Migration
             $table->text('house_no');
             $table->text('reach')->nullable();
             $table->text('contact_no')->nullable();
-            $table->enum('address_type', ['1', '2', '3'])->default('1')->comment('1-home 2-office 2-office');
+            $table->enum('address_type', ['1', '2', '3'])->default('1')->comment('1-home 2-office 3-other');
             $table->string('lat');
             $table->string('long');
             $table->softDeletes();

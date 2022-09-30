@@ -13,6 +13,7 @@ class VendorController extends Controller
 {
     public function set_offline(Request $request)
     {
+        date_default_timezone_set(config('app.timezone'));
         // dd(strtotime( "next monday" ));
         if ($request->offline_till == 1) {
             $day[0] = 'sunday';
@@ -34,6 +35,7 @@ class VendorController extends Controller
                     for ($i = (Carbon::now()->dayOfWeek + 1); $i <= 6; $i++)
                         if (isset($timeSchedule[$i])) {
                             $resum_date = date('Y-m-d H:i:s', strtotime("next " . $day[$i]));
+                            break;
                         }
                 } else {
                     $day_no = array_key_first($timeSchedule);

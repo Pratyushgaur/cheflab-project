@@ -19,6 +19,8 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             CuisinesSeeder::class,
             SlotSeeder::class,
+            BannerSeeder::class,
+            //SlotSeeder::class
         ]);
         // \App\Models\User::factory(10)->create();
 

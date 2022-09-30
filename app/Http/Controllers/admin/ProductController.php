@@ -6,7 +6,7 @@ use App\Models\Catogory_master;
 use App\Models\Variant;
 use App\Models\Cuisines;
 use App\Models\VendorMenus;
-use App\Models\vendors;
+use App\Models\Vendors;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -19,7 +19,7 @@ class ProductController extends Controller
        
         try {
             $id =  Crypt::decryptString($encrypt_id);  
-            $vendor = vendors::findOrFail($id);
+            $vendor = Vendors::findOrFail($id);
             $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
             $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
         
@@ -389,10 +389,24 @@ class ProductController extends Controller
         }
         
     }
-    public function activeProduct(Request $request){
-        $id =  $request->id;
-        $update = \DB::table('products') ->where('id', $id) ->limit(1) ->update( ['status' => '1' ]); 
-        return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
-        return \Response::json($update);
+    public function activeProduct($encrypt_id){
+        $id =  Crypt::decryptString($encrypt_id);
+        $product = Product_master::where('id','=', $id);
+        $product = $product->first();
+        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ]); 
+        $vendor = Vendors::where('id','=',$product->userId)->select('deal_categories','deal_cuisines')->first();
+        $categories  = explode(',',$vendor->deal_categories);
+        if(!in_array($product->category,$categories)){
+            array_push($categories,$product->category);
+            Vendors::where('id','=',$product->userId)->update(['deal_categories'=>implode(',',$categories)]);
+        }
+        $cuisines  = explode(',',$vendor->deal_cuisines);
+        if(!in_array($product->cuisines,$cuisines)){
+            array_push($cuisines,$product->cuisines);
+            Vendors::where('id','=',$product->userId)->update(['deal_cuisines'=>implode(',',$cuisines)]);
+        }
+        //return $product;
+
+         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
     }
 }

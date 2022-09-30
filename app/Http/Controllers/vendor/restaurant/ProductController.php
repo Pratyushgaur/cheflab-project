@@ -41,7 +41,7 @@ class ProductController extends Controller
             'product_name' => 'required',
             'dis' => 'required',
             'item_price' => 'required|integer',
-            'product_image' => 'required|mimes:jpeg,png,jpg|max:5120',
+            'product_image' => 'required',
             'cuisines' => 'required',
             'category' => 'required',
             'menu_id' => 'required',
@@ -70,7 +70,7 @@ class ProductController extends Controller
                 $product->addons = implode(',', $request->addons);
             }
             if ($request->has('product_image')) {
-                $filename = time() . '-restaurant-product-' . rand(100, 999) . '.' . $request->product_image->extension();
+                $filename = time() . '-restaurant-product-' . rand(100, 999) . '.' . $request->file('product_image')->clientExtension();
                 $request->product_image->move(public_path('products'), $filename);
                 $product->product_image  = $filename;
             }
@@ -80,8 +80,8 @@ class ProductController extends Controller
                 foreach ($request->variant_name as $k => $v) {
                     Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
                 }
-              
-            return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
+
+            return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Created Wait for Admin Review.');
         } catch (\Exception $th) {
             return $th->getMessage();
         }

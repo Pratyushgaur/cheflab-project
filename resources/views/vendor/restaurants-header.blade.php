@@ -32,7 +32,8 @@
     <link href="{{ asset('frontend') }}/assets/css/toastr.min.css" rel="stylesheet">
 
 {{-- msg bar shows on top --}}
-  <style>#message-box {
+  <style>
+  #message-box {
     width: 100%;
     background-color: #FFA339;
     height: 30px;
@@ -52,6 +53,13 @@
   #message-box.show {
     transform: none;
   }
+    .ms-text-danger{width: 100%;}
+
+    .modal-backdrop {
+        /* bug fix - no overlay */
+        display: none;
+    }
+    
     </style>
  @yield('page-css')
 

@@ -25,14 +25,15 @@ class CreateCouponsTable extends Migration
             $table->string('minimum_order_amount')->nullable();
             $table->string('promo_redeem_count')->nullable();
             $table->enum('promocode_use', ['1', '2','3','4'])->default('1')->comment('1-day 2-week 3-month 4-lifetime');
-            $table->string('coupon_type');
-            $table->string('product_id');
+            $table->string('coupon_type')->nullable();
+            $table->string('create_by')->nullable();
+            $table->string('product_id')->nullable();
             $table->enum('show_in', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->string('coupon_valid_x_user');
             $table->string('from');
             $table->string('to');
             $table->string('description');
-            $table->enum('status', ['1', '0'])->default('0')->comment('1-active 0-inactive');
+            $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
