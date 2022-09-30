@@ -16,7 +16,7 @@ class DeliveryAddressController extends Controller
             [
                 
                 'house_no' => 'required',
-                'contact_no' => 'numeric|max:10',  
+                'contact_no' => 'numeric',  
                 'lat' => 'required',  
                 'long' => 'required' 
             ]);
