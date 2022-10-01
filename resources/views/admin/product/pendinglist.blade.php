@@ -316,8 +316,9 @@
               var uh = JSON.stringify(response);
               var obj = JSON.parse(uh);
               console.log(obj.product['status']);
-              $vendorimg = '<img src=""{{url('vendor')}}/'+obj.vendor['image']+'" />'; 
-              $('.widget-user-image').html($vendorimg);
+             // $vendorimg = '<img src=""{{url('vendor')}}/'+obj.vendor['image']+'" />'; 
+             $vendorimg = '<img src="{{url('vendors')}}/'+obj.vendor['image']+'" alt="" >';  
+             $('.widget-user-image').html($vendorimg);
               $('.widget-user-username').html(obj.vendor['name']); 
               $('.widget-user-desc').html("<p>"+obj.vendor['vendor_type']+"</p>");   
               
@@ -332,7 +333,7 @@
              }
               
               $img = '<img src="{{url('products')}}/'+obj.product['product_image']+'" alt=""  style="width: 50px;">';
-              $im = '<img src=".asset("products")."/". '+obj.product['product_image']+'. />';
+          
               $('#tbody').html("<tr><td>"+obj.product['product_name']+"</td><td><a href='{{url("products")}}/"+obj.product['product_image']+"' class='without-caption image-link'>"+$img+"</td><td>"+obj.cuisines[0]['cuisinesName']+"</a></td><td>"+obj.category[0]['categoryName']+"</td><td>"+obj.menu['menuName']+"</td><td>"+obj.product['product_price']+"</td><td>"+obj.product['type']+"</td></tr>");
             }
       }); 
@@ -351,6 +352,7 @@
     });
     $(document).on('click', '.accept', function () {
       var id = $(this).data('id');
+     // alert(id);die;
       $.ajaxSetup({
           headers: {
               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -181,18 +181,20 @@ class ProductController extends Controller
                        }
                        return $btn;
                    })
-                ->addColumn('status', function ($data) {
-                    if ($data->status == 1) {
+                ->addColumn('product_approve', function ($data) {
+                    if ($data->product_approve == 1) {
                         $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $data->id . '"></span></label>';
-                    } else {
+                    } elseif($data->product_approve == 0){
+                        $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round onProduct" data-id="' . $data->id . '"></span></label>';
+                    }else{
                         $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round"></span></label>';
                     }
 
 
                     return $btn;
                 })
-                ->rawColumns(['date','action-js','product_name','product_price','status','admin_review'])
-                ->rawColumns(['action-js','product_name','product_price','status','admin_review']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->rawColumns(['date','action-js','product_name','product_price','status','admin_review','product_approve'])
+                ->rawColumns(['action-js','product_name','product_price','status','admin_review','product_approve']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
     }
@@ -215,14 +217,14 @@ class ProductController extends Controller
         $id = $request->id;
         $update = \DB::table('products')
         ->where('id', $id)
-        ->update(['status' => '0']);
+        ->update(['product_approve' => '0']);
        return \Response::json($update);
     }
     public function Active(Request $request){
         $id = $request->id;
         $update = \DB::table('products')
         ->where('id', $id)
-        ->update(['status' => '2']);
+        ->update(['product_approve' => '1']);
        return \Response::json($update);
     }
     public function getAddonData(Request $request)

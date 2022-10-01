@@ -389,11 +389,12 @@ class ProductController extends Controller
         }
 
     }
-    public function activeProduct($encrypt_id){
-        $id =  Crypt::decryptString($encrypt_id);
-        $product = Product_master::where('id','=', $id);
+    public function activeProduct(Request $request){
+        $id =  $request->id;
+      //  $product = Product_master::where('id','=', $id)->update(['status' => '1']);
+         $product = Product_master::where('id','=', $id);
         $product = $product->first();
-        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ]);
+        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ,'product_approve' => 1]);
         $vendor = Vendors::where('id','=',$product->userId)->select('deal_categories','deal_cuisines')->first();
         $categories  = explode(',',$vendor->deal_categories);
         if(!in_array($product->category,$categories)){

@@ -51,7 +51,6 @@
         <div class="modal fade" id="modal-8" tabindex="-1" role="dialog" aria-labelledby="modal-8">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
-
                 <div class="modal-header bg-primary">
                   <h3 class="modal-title has-icon text-white"><i class="flaticon-alert"></i> Reject Rejoin </h3>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -85,7 +84,7 @@
             {data: 'product_name', name: 'name'},
             {data: 'product_price', name: 'product_price'},
             {data: 'categoryName', name: 'categoryName'},
-            {data: 'status', name: 'status'},
+            {data: 'product_approve', name: 'product_approve'},
             {data: 'admin_review', name: 'admin_review'},
             {data: 'date', name: 'date'},
           
@@ -112,8 +111,8 @@
             "_token": "{{ csrf_token() }}",
             "id":id },
             success: function(response){
-              toastr.error('Product Inactive Successfully', 'Alert');
-              
+              toastr.info('Product Inactive On App Successfully', 'Alert');
+              window.location.reload();
             }
       });
   });
@@ -132,8 +131,8 @@
             "_token": "{{ csrf_token() }}",
             "id":id },
             success: function(response){
-              toastr.info('Your Product is pending ');
-              
+              toastr.info('Your Product is Active On App ');
+              window.location.reload();
             }
       });
   });
