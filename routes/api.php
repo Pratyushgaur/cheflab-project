@@ -98,4 +98,4 @@ Route::get('getPromotionBanner', [App\Http\Controllers\api\BannerController::cla
 Route::get('getReviewRating', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
 Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
 // Delivery Address
-Route::post('delivery-address-user',[App\Http\Controllers\api\DeliberyAddressController::class,'deliverAddress']);
+Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
