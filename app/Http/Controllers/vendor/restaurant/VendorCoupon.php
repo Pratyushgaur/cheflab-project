@@ -56,8 +56,14 @@ class VendorCoupon extends Controller
         $coupon->from  = $request->from;
         $coupon->to  = $request->to;
         $coupon->save();
+
+        // $subscribers = Superadmin::get();
+        //     foreach ($subscribers as $k => $admin)
+        //         $admin->notify(new ProductCreatedNotification($product->id,Auth::guard('vendor')->user()->name)); //With new post
+
          return redirect()->route('restaurant.coupon.list')->with('message', 'Coupon Create Successfully');
      }
+
      public function get_data_table_of_coupon(Request $request)
     {
       //  echo 'ok';die;
@@ -68,11 +74,11 @@ class VendorCoupon extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("restaurant.coupon.edit",Crypt::encryptString($data->id)) .'"><i class="fa fa-edit"></i></a>  
+                    $btn = '<a href="'. route("restaurant.coupon.edit",Crypt::encryptString($data->id)) .'"><i class="fa fa-edit"></i></a>
                     <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '"  data-alert-message="Are You Sure to Delete this Category" flash="Category"  data-action-url="' . route('restaurant.coupon.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
@@ -90,10 +96,10 @@ class VendorCoupon extends Controller
                         $btn = ''.$data->discount.'<i class="fa fa-percent fa-sm"></i>';
                     } else {
                         $btn = ''.$data->discount.'<i class="fas fa-rupee-sign fa-sm"></i>';
-                    }    
+                    }
                     return $btn;
                 })
-              
+
 
 
                 ->rawColumns(['date','action-js','status','discount_type'])
@@ -119,7 +125,7 @@ class VendorCoupon extends Controller
     }
     public function fun_edit_coupon($encrypt_id){
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $coupon = Coupon::findOrFail($id);
            // dd($city_data);
             return view('vendor.restaurant.coupon.editcoupon',compact('coupon'));
@@ -136,12 +142,12 @@ class VendorCoupon extends Controller
              //  echo $v->to;die;
                if($v->to > $date){
                   return \Response::json(false);
-                   
+
                 }else{
                     return \Response::json(true);
                 }
             }
-            
+
            // return \Response::json(false);
         } else {
             return \Response::json(true);
@@ -152,7 +158,7 @@ class VendorCoupon extends Controller
             $date = today()->format('Y-m-d');
             if(Coupon::where('from', '>=', $date)->exists()){
                 echo 'yesh';
-            }else{  
+            }else{
                 echo 'no';
             }
             return \Response::json(false);
@@ -219,13 +225,13 @@ class VendorCoupon extends Controller
                 return \Response::json(['error' => false,'success' => true , 'message' => 'City Deleted Successfully'], 200);
             }else{
                 return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
-            } 
-            
-            
-            
+            }
+
+
+
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
-    } 
+    }
 }

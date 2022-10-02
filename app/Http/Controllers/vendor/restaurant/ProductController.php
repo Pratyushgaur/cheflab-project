@@ -3,19 +3,19 @@
 namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Addons;
 use App\Models\Catogory_master;
 use App\Models\Cuisines;
-use App\Models\Addons;
-use App\Models\VendorMenus;
 use App\Models\Product_master;
+use App\Models\Superadmin;
 use App\Models\Variant;
-
-
-use Illuminate\Support\Facades\Crypt;
-use DataTables;
-use Config;
+use App\Models\VendorMenus;
+use App\Notifications\ProductCreatedNotification;
 use Auth;
+use Config;
+use DataTables;
+use Illuminate\Http\Request;
+
 
 class ProductController extends Controller
 {
@@ -23,18 +23,21 @@ class ProductController extends Controller
     {
         return view('vendor.restaurant.products.list');
     }
+
     function addons()
     {
         return view('vendor.restaurant.addons.list');
     }
+
     public function create(Type $var = null)
     {
         $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
         $cuisines = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
-        $addons =  Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
-        $menus =  VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->get();
+        $addons = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
+        $menus = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->get();
         return view('vendor.restaurant.products.create', compact('categories', 'cuisines', 'addons', 'menus'));
     }
+
     public function store(Request $request)
     {
         $this->validate($request, [
@@ -53,12 +56,12 @@ class ProductController extends Controller
             $product->product_name = $request->product_name;
             $product->userId = Auth::guard('vendor')->user()->id;
             $product->cuisines = $request->cuisines;
-            $product->category  = $request->category;
-            $product->menu_id  = $request->menu_id;
-            $product->dis  = $request->dis;
-            $product->type  = $request->product_type;
-            $product->product_price  = $request->item_price;
-            $product->customizable  = $request->custimization;
+            $product->category = $request->category;
+            $product->menu_id = $request->menu_id;
+            $product->dis = $request->dis;
+            $product->type = $request->product_type;
+            $product->product_price = $request->item_price;
+            $product->customizable = $request->custimization;
             // if($request->custimization == 'true'){
             //     $data = [];
             //     foreach($request->variant_name as $k =>$v){
@@ -72,7 +75,7 @@ class ProductController extends Controller
             if ($request->has('product_image')) {
                 $filename = time() . '-restaurant-product-' . rand(100, 999) . '.' . $request->file('product_image')->clientExtension();
                 $request->product_image->move(public_path('products'), $filename);
-                $product->product_image  = $filename;
+                $product->product_image = $filename;
             }
             $product->product_for = '3';
             $product->save();
@@ -80,12 +83,18 @@ class ProductController extends Controller
                 foreach ($request->variant_name as $k => $v) {
                     Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
                 }
+            $subscribers = Superadmin::get();
+            foreach ($subscribers as $k => $admin)
+                $admin->notify(new ProductCreatedNotification($product->id,Auth::guard('vendor')->user()->name)); //With new post
+//            Notification::route('database', $subscribers) //Sending  to subscribers
+//            ->notify(new ProductCreatedNotification($product->id)); //With new post
 
             return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Created Wait for Admin Review.');
         } catch (\Exception $th) {
             return $th->getMessage();
         }
     }
+
     public function getData(Request $request)
     {
         if ($request->ajax()) {
@@ -99,35 +108,34 @@ class ProductController extends Controller
                     ';
                     return $btn;
                 })
-                
-                ->addColumn('date', function($data){
-                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                ->addColumn('date', function ($data) {
+                    $date_with_format = date('d M Y', strtotime($data->created_at));
                     return $date_with_format;
                 })
-                ->addColumn('product_name', function($data){
-                    $btn = ' <img src="'.asset('products').'/'.$data->product_image.'" data-pretty="prettyPhoto" style="width:50px; height:30px;" alt="Trolltunga, Norway"> <div id="myModal" class="modal">
+                ->addColumn('product_name', function ($data) {
+                    $btn = ' <img src="' . asset('products') . '/' . $data->product_image . '" data-pretty="prettyPhoto" style="width:50px; height:30px;" alt="Trolltunga, Norway"> <div id="myModal" class="modal">
                     <img class="modal-content" id="img01">
-                  </div>'.$data->product_name.'';
+                  </div>' . $data->product_name . '';
                     return $btn;
                 })
                 ->addColumn('product_price', function ($data) {
                     $btn = '<i class="fas fa-rupee-sign fa-sm"></i>' . $data->product_price . '';
                     return $btn;
                 })
-                ->addColumn('admin_review', function($data){
-                    //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>' 
-                    
-                       if($data->status == 1){
-                        $btn  ='<span class="badge badge-success">Active</span>';
-                       }elseif($data->status == 2){
+                ->addColumn('admin_review', function ($data) {
+                    //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'
+
+                    if ($data->status == 1) {
+                        $btn = '<span class="badge badge-success">Active</span>';
+                    } elseif ($data->status == 2) {
                         $btn = '<span class="badge badge-primary">Pending</span>';
-                       }elseif($data->status == 0){
+                    } elseif ($data->status == 0) {
                         $btn = '<span class="badge badge-primary">Inactive</span>';
-                       }else{
-                        $btn = '<a href="javascript:void(0)" class="openModal"  data-id="'. $data->comment_reason .'"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
-                       }
-                       return $btn;
-                   })
+                    } else {
+                        $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
+                    }
+                    return $btn;
+                })
                 ->addColumn('status', function ($data) {
                     if ($data->status == 1) {
                         $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $data->id . '"></span></label>';
@@ -138,25 +146,30 @@ class ProductController extends Controller
 
                     return $btn;
                 })
-                ->rawColumns(['date','action-js','product_name','product_price','status','admin_review'])
-                ->rawColumns(['action-js','product_name','product_price','status','admin_review']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->rawColumns(['date', 'action-js', 'product_name', 'product_price', 'status', 'admin_review'])
+                ->rawColumns(['action-js', 'product_name', 'product_price', 'status', 'admin_review']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
     }
-    public function inActive(Request $request){
+
+    public function inActive(Request $request)
+    {
         $id = $request->id;
         $update = \DB::table('products')
-        ->where('id', $id)
-        ->update(['status' => '0']);
-       return \Response::json($update);
+            ->where('id', $id)
+            ->update(['status' => '0']);
+        return \Response::json($update);
     }
-    public function Active(Request $request){
+
+    public function Active(Request $request)
+    {
         $id = $request->id;
         $update = \DB::table('products')
-        ->where('id', $id)
-        ->update(['status' => '2']);
-       return \Response::json($update);
+            ->where('id', $id)
+            ->update(['status' => '2']);
+        return \Response::json($update);
     }
+
     public function getAddonData(Request $request)
     {
         $data = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
@@ -176,11 +189,13 @@ class ProductController extends Controller
             ->rawColumns(['action-js'])
             ->make(true);
     }
+
     public function createAddon()
     {
 
         return view('vendor.restaurant.addons.create');
     }
+
     public function storeAddon(Request $request)
     {
 
@@ -199,6 +214,5 @@ class ProductController extends Controller
         return redirect()->route('restaurant.product.addon')->with('message', 'Addon Create Successfully.');
     }
 
-    
-    
+
 }

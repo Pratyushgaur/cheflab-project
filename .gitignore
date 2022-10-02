@@ -21,3 +21,5 @@ composer.json
 .gitignore
 .gitignore
 /pubnub-php
+pubnub-php
+pubnub-php

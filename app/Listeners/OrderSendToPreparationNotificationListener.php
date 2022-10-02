@@ -32,9 +32,10 @@ class OrderSendToPreparationNotificationListener
     public function handle(OrderSendToPrepareEvent $event)
     {
         $customer = User::find($event->user_id);
-        $customer->notify(new OrderSendToPreparationNotification("Your Order #" .$event->order_id." send for preparation.It will be preparared in $event->preparationTime minutes"));
+        $vendor = Vendors::find($event->vendor_id);
 
-        $vendor = vendors::find($event->vendor_id);
-        $vendor->notify(new OrderSendToPreparationNotification("You have send Order #".$event->order_id." for preparation."));
+        $customer->notify(new OrderSendToPreparationNotification($event->order_id,$vendor->name,"Your Order #" .$event->order_id." send for preparation.It will be preparared in $event->preparationTime minutes"));
+
+        $vendor->notify(new OrderSendToPreparationNotification($event->order_id,$customer->name,"You have send Order #".$event->order_id." for preparation."));
     }
 }

@@ -35,7 +35,7 @@
 
         </ul>
       </li>
-      
+
       <li class="menu-item">
         <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/promotion*') ? 'active' : '' }}" data-toggle="collapse" data-target="#promotion" aria-expanded="false" aria-controls="promotion"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
         </a>
@@ -49,7 +49,7 @@
           <li>
              <a href="{{route('restaurant.promotion.list')}}" class="">Product Promotion</a>
           </li>
-          
+
         </ul>
       </li>
       <li class="menu-item">
@@ -75,7 +75,7 @@
         <hr>
 @endif
         <li class="menu-item ">
-        <a href="" class=""> <span><i class="nav-icon fa fa-bell fs-16 "></i>Notification</span>
+        <a href="{{route('notification.view')}}" class=""> <span><i class="nav-icon fa fa-bell fs-16 "></i>Notification</span>
         </a>
       </li>
       <li class="menu-item ">

@@ -30,9 +30,16 @@ class OrderSendNotificationListener
     public function handle(OrderCreateEvent $event)
     {
         $customer = User::find($event->user_id);
-        $customer->notify(new OrderCreateNotification("Your have placed a Order #" .$event->order_id));
-
         $vendor = vendors::find($event->vendor_id);
-        $vendor->notify(new OrderCreateNotification("You have received new Order #".$event->order_id));
+
+        $customer->notify(new OrderCreateNotification($event->order_id,$vendor->name,
+            "Your have placed a Order #" .$event->order_id,
+            '"'.route('restaurant.order.view',$event->order_id.'"')
+        ));
+
+        $vendor->notify(new OrderCreateNotification($event->order_id,$customer->name,
+            "You have received new Order #".$event->order_id,
+            '"'.route('restaurant.order.view',$event->order_id.'"')
+        ));
     }
 }

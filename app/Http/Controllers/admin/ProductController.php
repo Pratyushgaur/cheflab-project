@@ -8,6 +8,7 @@ use App\Models\Cuisines;
 use App\Models\VendorMenus;
 use App\Models\Vendors;
 
+use App\Notifications\ProductReviewNotification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -248,6 +249,8 @@ class ProductController extends Controller
         $product->cancel_reason = $request->cancel_reason;
         $product->status = '3';
         $product->save();
+        $vendor=Vendors::find($product->userId);
+        $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product rejected by admin.Reason: $request->cancel_reason")); //With new post
         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Reject Successfully');
     }
     public function getPendingList(Request $request){
@@ -400,7 +403,9 @@ class ProductController extends Controller
             Vendors::where('id','=',$product->userId)->update(['deal_cuisines'=>implode(',',$cuisines)]);
         }
         //return $product;
+        $vendor=Vendors::find($product->vendor_id);
+        $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product approved by admin.")); //With new post
 
-         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
+        return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
     }
 }

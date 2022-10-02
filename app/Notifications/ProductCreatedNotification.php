@@ -6,26 +6,22 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Crypt;
 
-class OrderSendToPreparationNotification extends Notification
+class ProductCreatedNotification extends Notification
 {
     use Queueable;
-    private $msg,$user_id,$vendor_id,$link,$order_id,$sender_name;
 
-
+    private  $product_id,$msg,$sender_name;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($order_id,$sender_name,$msg)
+    public function __construct($product_id,$sender_name)
     {
-        $this->msg = $msg;
+        $this->product_id=$product_id;
         $this->sender_name=$sender_name;
-//        $this->user_id = $user_id;
-//        $this->vendor_id = $vendor_id;
-//        $this->link = $link;
-        $this->order_id = $order_id;
     }
 
     /**
@@ -62,11 +58,9 @@ class OrderSendToPreparationNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'msg' => $this->msg,
+            'msg'=>\Auth::guard('vendor')->user()->name." added new product.",
             'sender_name'=>$this->sender_name,
-//            'user_id' => $this->user_id,
-//            'vendor_id'=>$this->vendor_id,
-            'link'=>route('restaurant.order.view',$this->order_id)
+            'link'=>route('admin.vendor.pendigProduct')
         ];
     }
 }

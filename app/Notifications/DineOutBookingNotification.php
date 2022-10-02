@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 class DineOutBookingNotification extends Notification
 {
     use Queueable;
-    private $msg,$link;
+    private $msg,$link,$sender_name;
 
 
     /**
@@ -18,10 +18,11 @@ class DineOutBookingNotification extends Notification
      *
      * @return void
      */
-    public function __construct($msg)
+    public function __construct($msg,$sender_name,$link)
     {
         $this->msg = $msg;
-//        $this->link = $link;
+        $this->sender_name=$sender_name;
+        $this->link = $link;
     }
 
     /**
@@ -59,7 +60,8 @@ class DineOutBookingNotification extends Notification
     {
         return [
             'msg' => $this->msg,
-//            'link' => $this->link
+            'sender_name'=>$this->sender_name,
+            'link' => $this->link
 
         ];
     }

@@ -88,4 +88,16 @@ function show_time_slots($start_time, $end_time, $duration, $break)
 
 }
 
+function vendorOrderCountByStatus($vendor_id,$status)
+{
+    return Orders::where(['vendor_id'=>$vendor_id,'order_status'=>$status])->count();
+}
+function vendorTodayOrderCount($vendor_id)
+{
+    return Orders::where(['vendor_id'=>$vendor_id])->whereDate('created_at', Carbon::today())->count();
+}
+function vendorTotalOrderCount($vendor_id)
+{
+    return Orders::where(['vendor_id'=>$vendor_id])->count();
+}
 ?>

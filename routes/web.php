@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\OrderCreateEvent;
 use App\Http\Middleware\isVendorLoginAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +17,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/test',function (){ });
+Route::get('/test', function () {
+    event(new OrderCreateEvent(6, 1, 1));
+
+});
 Route::get('/', function () {
     return view('welcome');
 });
@@ -141,20 +145,20 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('banner-slot-active/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'active'])->name('admin.slot.active');
     Route::get('banner-slot-reject/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'reject'])->name('admin.slot.reject');
     Route::get('banner-slot-comment/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'comment'])->name('admin.slot.comment');
-    Route::post('banner-commentstore', [App\Http\Controllers\admin\BannerController::class,'commentstore'])->name('admin.banner.commentstore');
+    Route::post('banner-commentstore', [App\Http\Controllers\admin\BannerController::class, 'commentstore'])->name('admin.banner.commentstore');
     Route::post('banner-slot-reject', [App\Http\Controllers\admin\BannerController::class, 'rejectProduct'])->name('admin.slot.reject');
     // application blog promotion
     Route::get('user-app-blog', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.application.blog');
     Route::post('user-app-blog-create', [App\Http\Controllers\admin\VendorPromotion::class, 'store'])->name('admin.application.blog.store');
-   // Root Banner
-   Route::get('banner-root-banner', [App\Http\Controllers\admin\AdminRootBannerController::class, 'index'])->name('admin.root.banner');
-   Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');
-   Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit');
-   Route::post('root-image-update', [App\Http\Controllers\admin\AdminRootBannerController::class, 'updateBanner'])->name('admin.root.update');
-   // Vendor Store Promotion
+    // Root Banner
+    Route::get('banner-root-banner', [App\Http\Controllers\admin\AdminRootBannerController::class, 'index'])->name('admin.root.banner');
+    Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');
+    Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit');
+    Route::post('root-image-update', [App\Http\Controllers\admin\AdminRootBannerController::class, 'updateBanner'])->name('admin.root.update');
+    // Vendor Store Promotion
     Route::get('vendor-promotion', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.vendor.store');
     Route::post('vendor-promotion/create', [App\Http\Controllers\admin\VendorPromotion::class, 'store'])->name('admin.vendorstore.store');
-    Route::get('vendor-promotion-list', [App\Http\Controllers\admin\VendorPromotion::class,'get_data_table_of_slote'])->name('admin.vendorstore.data');
+    Route::get('vendor-promotion-list', [App\Http\Controllers\admin\VendorPromotion::class, 'get_data_table_of_slote'])->name('admin.vendorstore.data');
     // Vender Pendig Product List
     Route::get('vendor-products-list', [App\Http\Controllers\admin\ProductController::class, 'vendorProductList'])->name('admin.vendor.pendigProduct');
     Route::get('vendor-products-pedingdata', [App\Http\Controllers\admin\ProductController::class, 'getPendingList'])->name('admin.product.pendingdata');
@@ -170,6 +174,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
 
+    Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 });
 //////////////////////////////////////vendor route ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -203,16 +208,16 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('product/addon/datatable', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'getAddonData'])->name('restaurant.product.addon.datatable');
             Route::get('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'createAddon'])->name('restaurant.product.addon.create');
             Route::post('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'storeAddon'])->name('restaurant.product.addon.store');
-            Route::post('product/inactive', [App\Http\Controllers\vendor\restaurant\ProductController::class,'inActive'])->name('restaurant.product.inactive');
-            Route::post('product/active', [App\Http\Controllers\vendor\restaurant\ProductController::class,'Active'])->name('restaurant.product.active');
+            Route::post('product/inactive', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'inActive'])->name('restaurant.product.inactive');
+            Route::post('product/active', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'Active'])->name('restaurant.product.active');
             //vendor order linst
             Route::get('orders', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
-            Route::post('order/accept/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_accept'])->name('restaurant.order.accept')->where('id', '[0-9]+');
-            Route::post('order/vendor_reject/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_vendor_reject'])->name('restaurant.order.vendor_reject')->where('id', '[0-9]+');
-            Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
-            Route::post('order/ready_to_dispatch/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_ready_to_dispatch'])->name('restaurant.order.ready_to_dispatch')->where('id', '[0-9]+');
-            Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
-            Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
+            Route::post('order/accept/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'order_accept'])->name('restaurant.order.accept')->where('id', '[0-9]+');
+            Route::post('order/vendor_reject/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'order_vendor_reject'])->name('restaurant.order.vendor_reject')->where('id', '[0-9]+');
+            Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
+            Route::post('order/ready_to_dispatch/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'order_ready_to_dispatch'])->name('restaurant.order.ready_to_dispatch')->where('id', '[0-9]+');
+            Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
+            Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
 
 
             //coupon
@@ -226,8 +231,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('coupon-update', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'update'])->name('restaurant.coupon.update');
             Route::post('coupon-delete', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'soft_delete'])->name('restaurant.coupon.delete');
             Route::post('restaurent_status', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'restaurent_status'])->name('restaurant.restaurent_status');
-            Route::post('coupon/inactive', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'inActive'])->name('restaurant.coupon.inactive');
-            Route::post('coupon/active', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'Active'])->name('restaurant.coupon.active');
+            Route::post('coupon/inactive', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'inActive'])->name('restaurant.coupon.inactive');
+            Route::post('coupon/active', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'Active'])->name('restaurant.coupon.active');
             Route::get('coupon-datecheck/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'checkCouponDate'])->name('restaurant.coupon.datechke');
             // vendor globle setting
             Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_time'])->name('restaurant.globleseting.ordertime');
@@ -240,26 +245,28 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'vendor_location'])->name('restaurant.globleseting.vendor_location');
             Route::post('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.save_vendor_location');
             //promotion management
-            Route::get('promotion/banner', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'index'])->name('restaurant.promotion.list');
-            Route::get('promotion/on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'create_promotion'])->name('restaurant.promotion.create');
-            Route::post('promotion/on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'store_slot'])->name('restaurant.slot.store');
-            Route::get('promotion/on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'selctvalue'])->name('restaurant.slot.data');
-            Route::get('promotion/on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'get_list_slotbook'])->name('restaurant.slot.list');
-            Route::post('promotion/on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
-            Route::post('promotion/on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getPrice'])->name('restaurant.slot.getPrice');
-            Route::get('promotion/on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getslot'])->name('restaurant.slot.checkslot');
-            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'shop_promotion'])->name('restaurant.shop.promotion');
-            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+            Route::get('promotion/banner', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'index'])->name('restaurant.promotion.list');
+            Route::get('promotion/on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'create_promotion'])->name('restaurant.promotion.create');
+            Route::post('promotion/on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'store_slot'])->name('restaurant.slot.store');
+            Route::get('promotion/on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'selctvalue'])->name('restaurant.slot.data');
+            Route::get('promotion/on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'get_list_slotbook'])->name('restaurant.slot.list');
+            Route::post('promotion/on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'checkdate'])->name('restaurant.slot.checkdate');
+            Route::post('promotion/on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'getPrice'])->name('restaurant.slot.getPrice');
+            Route::get('promotion/on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'getslot'])->name('restaurant.slot.checkslot');
+            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'shop_promotion'])->name('restaurant.shop.promotion');
+            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class, 'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
 
             //dine out
-            Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_globle_setting'])->name('restaurant.dineout.setting');
-            Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update'])->name('restaurant.dineout.update');
-            Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'vendor_table_setting'])->name('restaurant.dineout.vendor_table_setting');
-            Route::post('dine-out-setting/active', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_setting'])->name('restaurant.dineout.dine_out_setting');
-            Route::get('dine-out/booking_requests', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'index'])->name('restaurant.dineout.index');
-            Route::post('dine-out/accept/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_accept'])->name('restaurant.dineout.accept')->where('id', '[0-9]+');
-            Route::post('dine-out/reject/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_reject'])->name('restaurant.dineout.reject')->where('id', '[0-9]+');
+            Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'dine_out_globle_setting'])->name('restaurant.dineout.setting');
+            Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'update'])->name('restaurant.dineout.update');
+            Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'vendor_table_setting'])->name('restaurant.dineout.vendor_table_setting');
+            Route::post('dine-out-setting/active', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'dine_out_setting'])->name('restaurant.dineout.dine_out_setting');
+            Route::get('dine-out/booking_requests', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'index'])->name('restaurant.dineout.index');
+            Route::post('dine-out/accept/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'dine_out_accept'])->name('restaurant.dineout.accept')->where('id', '[0-9]+');
+            Route::post('dine-out/reject/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'dine_out_reject'])->name('restaurant.dineout.reject')->where('id', '[0-9]+');
 
+
+            Route::get('notification', [App\Http\Controllers\NotificationController::class, 'index'])->name('notification.view')->where('id', '[0-9]+');
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
 
@@ -281,53 +288,56 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 });
 // chef route
 
-Route::get('chef-logout',function(){
+Route::get('chef-logout', function () {
     Auth::logout();
-    return  redirect()->route('vendor.login');
+    return redirect()->route('vendor.login');
 })->name('chef.logout');
 
-    Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
-        // chef route
-        Route::group(['middleware' => 'isChefRestaurant'], function(){
-            Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
-                Route::get('dashbord', [App\Http\Controllers\chef\DashboardController::class,'index'])->name('chef.dashboard');
-                //chef order linst
-                Route::get('order', [App\Http\Controllers\chef\OrderController::class,'index'])->name('order.list');
-                Route::get('order/datatable/list', [App\Http\Controllers\chef\OrderController::class,'getData'])->name('order.datatable');
-                //coupon
-                Route::get('coupon', [App\Http\Controllers\chef\VendorCoupon::class,'index'])->name('chef.coupon.list');
-                Route::get('coupon-list', [App\Http\Controllers\chef\VendorCoupon::class,'get_data_table_of_coupon'])->name('chef.coupon.data');
-                Route::get('coupon-create', [App\Http\Controllers\chef\VendorCoupon::class,'create_coupon'])->name('chef.coupon.create');
-                Route::post('coupon-store', [App\Http\Controllers\chef\VendorCoupon::class,'store_coupon'])->name('chef.coupon.store');
-                Route::get('coupon-couponcheck', [App\Http\Controllers\chef\VendorCoupon::class,'checkCoupon'])->name('chef.coupon.couponcheck');
-                Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\chef\VendorCoupon::class,'checkCouponUpdate'])->name('chef.coupon.couponcheckedit');
-                Route::get('coupon-edit/{id}', [App\Http\Controllers\chef\VendorCoupon::class,'fun_edit_coupon'])->name('chef.coupon.edit');
-                Route::post('coupon-update', [App\Http\Controllers\chef\VendorCoupon::class,'update'])->name('chef.coupon.update');
-                Route::post('coupon-delete', [App\Http\Controllers\chef\VendorCoupon::class,'soft_delete'])->name('chef.coupon.delete');
-                //vendor product
-                Route::get('product-list', [App\Http\Controllers\chef\ChefProductController::class, 'index'])->name('chef.product.list');
-                Route::get('product/datatable/list', [App\Http\Controllers\chef\ChefProductController::class, 'getData'])->name('chef.product.datatable');
-                Route::post('product/inactive', [App\Http\Controllers\chef\ChefProductController::class,'inActive'])->name('chef.product.inactive');
-                //promotion management
-                Route::get('chef-promotion', [App\Http\Controllers\chef\VendorPromotion::class,'index'])->name('chef.promotion.list');
-                Route::get('on-screen-create', [App\Http\Controllers\chef\VendorPromotion::class,'create_promotion'])->name('chef.promotion.create');
-                Route::post('on-screen-store', [App\Http\Controllers\chef\VendorPromotion::class,'store_slot'])->name('chef.slot.store');
-                Route::get('on-screen-DATA', [App\Http\Controllers\chef\VendorPromotion::class,'selctvalue'])->name('chef.slot.data');
-                Route::get('on-screen-data', [App\Http\Controllers\chef\VendorPromotion::class,'get_list_slotbook'])->name('chef.slot.list');
-                Route::post('on-screen-checkdate', [App\Http\Controllers\chef\VendorPromotion::class,'checkdate'])->name('chef.slot.checkdate');
-                Route::post('on-screen-getprice', [App\Http\Controllers\chef\VendorPromotion::class,'getPrice'])->name('chef.slot.getPrice');
-                Route::get('on-screen-slot', [App\Http\Controllers\chef\VendorPromotion::class,'getslot'])->name('chef.slot.checkslot');
+Route::group(['middleware' => ['isChef'], 'prefix' => 'chef'], function () {
+    // chef route
+    Route::group(['middleware' => 'isChefRestaurant'], function () {
+        Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
+            Route::get('dashbord', [App\Http\Controllers\chef\DashboardController::class, 'index'])->name('chef.dashboard');
+            //chef order linst
+            Route::get('order', [App\Http\Controllers\chef\OrderController::class, 'index'])->name('order.list');
+            Route::get('order/datatable/list', [App\Http\Controllers\chef\OrderController::class, 'getData'])->name('order.datatable');
+            //coupon
+            Route::get('coupon', [App\Http\Controllers\chef\VendorCoupon::class, 'index'])->name('chef.coupon.list');
+            Route::get('coupon-list', [App\Http\Controllers\chef\VendorCoupon::class, 'get_data_table_of_coupon'])->name('chef.coupon.data');
+            Route::get('coupon-create', [App\Http\Controllers\chef\VendorCoupon::class, 'create_coupon'])->name('chef.coupon.create');
+            Route::post('coupon-store', [App\Http\Controllers\chef\VendorCoupon::class, 'store_coupon'])->name('chef.coupon.store');
+            Route::get('coupon-couponcheck', [App\Http\Controllers\chef\VendorCoupon::class, 'checkCoupon'])->name('chef.coupon.couponcheck');
+            Route::get('coupon-couponcheckUpdate/{id}', [App\Http\Controllers\chef\VendorCoupon::class, 'checkCouponUpdate'])->name('chef.coupon.couponcheckedit');
+            Route::get('coupon-edit/{id}', [App\Http\Controllers\chef\VendorCoupon::class, 'fun_edit_coupon'])->name('chef.coupon.edit');
+            Route::post('coupon-update', [App\Http\Controllers\chef\VendorCoupon::class, 'update'])->name('chef.coupon.update');
+            Route::post('coupon-delete', [App\Http\Controllers\chef\VendorCoupon::class, 'soft_delete'])->name('chef.coupon.delete');
+            //vendor product
+            Route::get('product-list', [App\Http\Controllers\chef\ChefProductController::class, 'index'])->name('chef.product.list');
+            Route::get('product/datatable/list', [App\Http\Controllers\chef\ChefProductController::class, 'getData'])->name('chef.product.datatable');
+            Route::post('product/inactive', [App\Http\Controllers\chef\ChefProductController::class, 'inActive'])->name('chef.product.inactive');
+            //promotion management
+            Route::get('chef-promotion', [App\Http\Controllers\chef\VendorPromotion::class, 'index'])->name('chef.promotion.list');
+            Route::get('on-screen-create', [App\Http\Controllers\chef\VendorPromotion::class, 'create_promotion'])->name('chef.promotion.create');
+            Route::post('on-screen-store', [App\Http\Controllers\chef\VendorPromotion::class, 'store_slot'])->name('chef.slot.store');
+            Route::get('on-screen-DATA', [App\Http\Controllers\chef\VendorPromotion::class, 'selctvalue'])->name('chef.slot.data');
+            Route::get('on-screen-data', [App\Http\Controllers\chef\VendorPromotion::class, 'get_list_slotbook'])->name('chef.slot.list');
+            Route::post('on-screen-checkdate', [App\Http\Controllers\chef\VendorPromotion::class, 'checkdate'])->name('chef.slot.checkdate');
+            Route::post('on-screen-getprice', [App\Http\Controllers\chef\VendorPromotion::class, 'getPrice'])->name('chef.slot.getPrice');
+            Route::get('on-screen-slot', [App\Http\Controllers\chef\VendorPromotion::class, 'getslot'])->name('chef.slot.checkslot');
 
-            });
+            Route::get('notification', [App\Http\Controllers\NotificationController::class, 'index'])->name('chef.notification.view')->where('id', '[0-9]+');
+        });
 
 
-        Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class,'index'])->name('chef.globleseting');
-        Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class,'order_time'])->name('chef.globleseting.ordertime');
-        Route::post('globle/createtime', [App\Http\Controllers\chef\GlobleSetting::class,'store'])->name('chef.ordertime.store');
+        Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class, 'index'])->name('chef.globleseting');
+        Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'order_time'])->name('chef.globleseting.ordertime');
+        Route::post('globle/createtime', [App\Http\Controllers\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.store');
         //
         Route::get('globle/require/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'requireOrderTime'])->name('chef.require.ordertime');
         Route::post('globle/createtime', [App\Http\Controllers\vendor\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.first_store');
 
 
     });
+
+
 });

@@ -10,7 +10,7 @@
         <h6>Opening times</h6>
         <div class="input-group">
             <input type="time" class=" start_time form-control" name="start_time[0]" id='start_time_0' data-item-id="0"
-                <?= isset($VendorOrderTime[0]['start_time']) ? 'value="' . $VendorOrderTime[0]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[0]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[0]['start_time'])) . '"' : '' ?>>
             <span class="start_time_0_error text-danger"></span>
         </div>
     </div>
@@ -18,7 +18,7 @@
         <h6>Closing times</h6>
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[0]" id="end_time_0" data-item-id="0"
-                <?= isset($VendorOrderTime[0]['end_time']) ? 'value="' . $VendorOrderTime[0]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[0]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[0]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
@@ -52,14 +52,14 @@
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[1]" data-item-id='1'
                 id="start_time_1"
-                <?= isset($VendorOrderTime[1]['start_time']) ? 'value="' . $VendorOrderTime[1]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[1]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[1]['start_time'] )). '"' : '' ?>>
         </div>
     </div>
     <div class="col-md-3 mb-4">
 
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[1]" data-item-id='1' id="end_time_1"
-                <?= isset($VendorOrderTime[1]['end_time']) ? 'value="' . $VendorOrderTime[1]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[1]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[1]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
@@ -93,14 +93,14 @@
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[2]" data-item-id='2'
                 id="start_time_2"
-                <?= isset($VendorOrderTime[2]['start_time']) ? 'value="' . $VendorOrderTime[2]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[2]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[2]['start_time'])) . '"' : '' ?>>
         </div>
     </div>
     <div class="col-md-3 mb-4">
 
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[2]" data-item-id='2' id="end_time_2"
-                <?= isset($VendorOrderTime[2]['end_time']) ? 'value="' . $VendorOrderTime[2]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[2]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[2]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
@@ -134,14 +134,14 @@
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[3]" data-item-id='3'
                 id="start_time_3"
-                <?= isset($VendorOrderTime[3]['start_time']) ? 'value="' . $VendorOrderTime[3]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[3]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[3]['start_time'])) . '"' : '' ?>>
         </div>
     </div>
     <div class="col-md-3 mb-4">
 
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[3]" data-item-id='3' id="end_time_3"
-                <?= isset($VendorOrderTime[3]['end_time']) ? 'value="' . $VendorOrderTime[3]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[3]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[3]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
@@ -175,14 +175,14 @@
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[4]" data-item-id='4'
                 id="start_time_4"
-                <?= isset($VendorOrderTime[4]['start_time']) ? 'value="' . $VendorOrderTime[4]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[4]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[4]['start_time'])) . '"' : '' ?>>
         </div>
     </div>
     <div class="col-md-3 mb-4">
 
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[4]" data-item-id='4' id="end_time_4"
-                <?= isset($VendorOrderTime[4]['end_time']) ? 'value="' . $VendorOrderTime[4]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[4]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[4]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
@@ -216,14 +216,14 @@
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[5]" data-item-id='5'
                 id="start_time_5"
-                <?= isset($VendorOrderTime[5]['start_time']) ? 'value="' . $VendorOrderTime[5]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[5]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[5]['start_time'])) . '"' : '' ?>>
         </div>
     </div>
     <div class="col-md-3 mb-4">
 
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[5]" data-item-id='5' id="end_time_5"
-                <?= isset($VendorOrderTime[5]['end_time']) ? 'value="' . $VendorOrderTime[5]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[5]['end_time']) ? 'value="' .date('H:i', strtotime($VendorOrderTime[5]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
@@ -256,14 +256,14 @@
         <div class="input-group">
             <input type="time" class="start_time form-control" name="start_time[6]" data-item-id='6'
                 id="start_time_6"
-                <?= isset($VendorOrderTime[6]['start_time']) ? 'value="' . $VendorOrderTime[6]['start_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[6]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[6]['start_time'])) . '"' : '' ?>>
         </div>
     </div>
     <div class="col-md-3 mb-4">
 
         <div class="input-group">
             <input type="time" class="end_time form-control" name="end_time[6]" data-item-id='6' id="end_time_6"
-                <?= isset($VendorOrderTime[6]['end_time']) ? 'value="' . $VendorOrderTime[6]['end_time'] . '"' : '' ?>>
+                <?= isset($VendorOrderTime[6]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[6]['end_time'])) . '"' : '' ?>>
         </div>
     </div>
 
