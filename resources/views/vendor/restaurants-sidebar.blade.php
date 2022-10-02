@@ -13,19 +13,11 @@
         <a href="{{route('restaurant.dashboard')}}" class="{{ Request::routeIs('restaurant.dashboard') ? 'active' : '' }}"> <span><i class="material-icons fs-16 ">home</i>Home</span>
         </a>
       </li>
-
       <li class="menu-item">
-        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/menus*') ? 'active' : '' }}" data-toggle="collapse" data-target="#menus" aria-expanded="false" aria-controls="menus"> <span><i class="fa fa-archive fs-16"></i>Menus </span>
+      <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menus Catalogue</span>
         </a>
-        <ul id="menus" class="collapse {{ request()->is('vendor/restaurant/menus*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
-          <li> <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}">Menu Catalogue</a>
-          </li>
-          <li> <a href="{{route('restaurant.menu.create')}}" class="{{ Request::routeIs('restaurant.menu.create') ? 'active' : '' }}">Add Catalogue</a>
-          </li>
-
-        </ul>
       </li>
-
+      
       <li class="menu-item">
         <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/product*') ? 'active' : '' }}" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="product"> <span><i class="nav-icon fa fa-fire fs-16"></i>Products </span>
         </a>

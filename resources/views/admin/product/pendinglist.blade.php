@@ -76,14 +76,25 @@
                   <div class="card card-primary card-outline">
                       <div class="card-header">
                           <div class="row">
-                            <div class="col-md-2">
+                          <div class="col-md-3">
                                 <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
-                                  <option value="">Filter By Role</option>
+                                  <option value="">Filter By Status</option>
                                   <option value="2">Pending </option>
                                   <option value="1">Active</option>
                                   <option value="0">Inactive</option>
                                   <option value="3">Reject</option>
                                 </select>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+
+                                <select class="form-control select2" style="width: 100%;" id="filter-by-restaurant" onchange="reload_table()">
+                                    <option value="">Select Restaurant</option>
+                                    @foreach($vendor as $val)
+                                        <option value="{{$val->id}}">{{$val->name}}</option>
+                                    @endforeach;
+                                </select>
+                              </div>
                             </div>
 
                           </div>
@@ -98,14 +109,13 @@
 
                     <div class="card-header">
                       <h3 class="card-title">Vendor Product List </h3>
-
-
-                    </div>
+                   </div>
                     <div class="card-body pad table-responsive">
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
+                                    <th >Restaurant Name</th>
                                     <th >Product Name</th>
                                     <th  >Image</th>
                                     <th  >Category</th>
@@ -125,14 +135,14 @@
 
               </div>
             </div>
-            <div class="modal fade bd-example-modal-lg" id="bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal fade bd-example-modal-lg"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                   <div class="modal-header">
-                       <h4 class="modal-title">Vendor Product</h4>
+
                     <div>
                  </div>
-                  <div class="col-md-10 accept">
+                  <div class="col-md-1 accept">
 
                       <!-- <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style=" color:#fff;"><i class="fa fa-search"> </i> Filter</a> -->
                   </div>
@@ -158,11 +168,6 @@
                         <div class="card-footer p-0">
                           <ul class="nav flex-column">
                             <li class="nav-item">
-                              <a href="#" class="nav-link" id="expe">
-
-                              </a>
-                            </li>
-                            <li class="nav-item">
                               <a href="#" class="nav-link" id="type">
 
                               </a>
@@ -182,6 +187,7 @@
                 <table class="table table-hover text-nowrap">
                   <thead>
                     <tr>
+
                       <th >Product Name</th>
                       <th> Image</th>
                       <th  >Cuisines </th>
@@ -273,19 +279,21 @@
         ajax:{
             url:"{{ route('admin.product.pendingdata')}}",
             data: function (d) {
-                d.rolename = $('#filter-by-role').val()
+                d.rolename = $('#filter-by-role').val(),
+                d.restaurant = $('#filter-by-restaurant').val()
             }
         },
         columns: [
           {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'product_name', name: 'product_name'},
-            {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
-            {data: 'categoryName', name: 'categoryName'},
-            {data: 'type', name: 'type'},
-            {data: 'product_price', name: 'product_price'},
-            {data: 'status', name: 'status',orderable: false, searchable: false},
-            {data: 'date', name: 'created_at'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+          {data: 'restaurantName', name: 'restaurantName'},
+          {data: 'product_name', name: 'product_name'},
+          {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
+          {data: 'categoryName', name: 'categoryName'},
+          {data: 'type', name: 'type'},
+          {data: 'product_price', name: 'product_price'},
+          {data: 'status', name: 'status',orderable: false, searchable: false},
+          {data: 'date', name: 'created_at'},
+          {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
   // });
@@ -307,30 +315,31 @@
 
               var uh = JSON.stringify(response);
               var obj = JSON.parse(uh);
-
-          //    var html  '';"<img class='img-circle elevation-2' src="" alt='User Avatar'>"
-            //  $('.widget-user-header bg-warning'),append(html);<div class="widget-user-image"><img class="img-circle elevation-2" src="asset('vendors').'/'.+obj.vendor['image']+" alt="User Avatar"></div>
-             // console.log(obj.vendor['name']);
-
-           //   $vendorimg = '<img src=".asset("vendor")."/". '+obj.vendor['image']+'. />';
-               $vendorimg = '<img src=""{{url('vendor')}}/'+obj.vendor['image']+'" />';
-            //  $('.widget-user-header').append('<img src="{{ url('asset("vendor")."/".') }} ' +obj.vendor['image'] +'" alt="">');
-              $('.widget-user-image').html($vendorimg);
+              console.log(obj.product['status']);
+             // $vendorimg = '<img src=""{{url('vendor')}}/'+obj.vendor['image']+'" />';
+             $vendorimg = '<img src="{{url('vendors')}}/'+obj.vendor['image']+'" alt="" >';
+             $('.widget-user-image').html($vendorimg);
               $('.widget-user-username').html(obj.vendor['name']);
               $('.widget-user-desc').html("<p>"+obj.vendor['vendor_type']+"</p>");
-              $('#expe').html(" Expe<span class='float-right badge bg-primary'>"+obj.vendor['experience']+"</span>");
+
               $('#type').html("Food Type<span class='float-right badge bg-info'>"+obj.product['type']+"</span>");
               $('#menu').html("Menu<span class='float-right badge bg-info'>"+obj.menu['menuName']+"</span>");
-              $btn = '<a href="{{route("admin.vendor.productactive",\Crypt::encryptString('+obj.product["id"]+'))}}" class="edit btn btn-warning btn-xs">Accept</a> <a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
-              $('.accept').html($btn);
+              $btn1 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="edit btn btn-warning btn-xs accept"  data-alert-message="Are You Sure to Accept this Product" flash="Product" " title="Accept">Accept</a> <a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
+              $btn2 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
+             if(obj.product['status'] == '2'){
+              $('.accept').html($btn1);
+             }else{
+              $('.accept').html($btn2);
+             }
+
               $img = '<img src="{{url('products')}}/'+obj.product['product_image']+'" alt=""  style="width: 50px;">';
-              $im = '<img src=".asset("products")."/". '+obj.product['product_image']+'. />';
+
               $('#tbody').html("<tr><td>"+obj.product['product_name']+"</td><td><a href='{{url("products")}}/"+obj.product['product_image']+"' class='without-caption image-link'>"+$img+"</td><td>"+obj.cuisines[0]['cuisinesName']+"</a></td><td>"+obj.category[0]['categoryName']+"</td><td>"+obj.menu['menuName']+"</td><td>"+obj.product['product_price']+"</td><td>"+obj.product['type']+"</td></tr>");
             }
       });
 
 
-       // $('#slot_id').append("<input type='hidden' name='id' value="+id+">");
+       // $('#slot_id').append("<input type='hidden' name='id' value="+id+">");{{route("admin.vendor.productactive",'obj.product["id"]')}}
     });
     $('#closebtn').click(function() {
         $('.openModal').modal('hide');
@@ -339,8 +348,41 @@
     $(document).on('click', '.rejectdata', function () {
         var id = $(this).data('id');
        // alert(id);die;
-        $('#slot_id').append("<input type='text' name='id' value="+id+">");
+        $('#slot_id').append("<input type='hidden' name='id' value="+id+">");
     });
+    $(document).on('click', '.accept', function () {
+      var id = $(this).data('id');
+     // alert(id);die;
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+          type: "POST",
+          url: '{{route("admin.vendor.productactive")}}', // This is what I have updated
+          headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+          data: {
+            "_token": "{{ csrf_token() }}",
+            "id":id },
+            success: function(response){
+
+              $(document).Toasts('create', {
+                class: 'bg-success',
+                title: 'Success',
+                subtitle: '',
+                body: 'Product Published on Application'
+              })
+               window.location.reload();
+             // $('#price').append("<p class='text-danger' name='id' value="+obj.id+">Banner Rs.. "+obj.price+"</p>","<input type='hidden' name='price' value="+obj.price+">","<input type='hidden' name='id' value="+obj.id+">","<input type='hidden' name='slot_name' value="+obj.slot_name+">","<input type='hidden' name='position' value="+obj.position+">");
+            }
+      });
+      $('#price').empty().append();
+    });
+
+
+
+
     $(document).on('click', '.close', function () {
       $('#slot_id').empty();
     });

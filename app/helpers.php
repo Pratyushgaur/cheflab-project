@@ -2,12 +2,7 @@
 
     use App\Models\Orders;
     use Carbon\Carbon;
-    function test(){
-
-    return 'yes';
-}
-
-
+    
 function front_end_date_time($datetime)
 {
     return date('d F, Y h:i a', strtotime($datetime));
@@ -86,6 +81,18 @@ function show_time_slots($start_time, $end_time, $duration, $break)
 
     return $time_slots;
 
+}
+function vendorOrderCountByStatus($vendor_id,$status)
+{
+    return Orders::where(['vendor_id'=>$vendor_id,'order_status'=>$status])->count();
+}
+function vendorTodayOrderCount($vendor_id)
+{
+    return Orders::where(['vendor_id'=>$vendor_id])->whereDate('created_at', Carbon::today())->count();
+}
+function vendorTotalOrderCount($vendor_id)
+{
+    return Orders::where(['vendor_id'=>$vendor_id])->count();
 }
 
 function vendorOrderCountByStatus($vendor_id,$status)

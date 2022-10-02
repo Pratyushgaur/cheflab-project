@@ -1,9 +1,8 @@
 
+
 @extends('admin.layouts.layouts')
 @section('content')
-
-
-  <style>
+<style>
    .table>tbody>tr>td {
       font-size: 16px !important;
    }

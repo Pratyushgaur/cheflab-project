@@ -19,7 +19,6 @@
   <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">
   <!-- JQVMap -->
   <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/jqvmap/jqvmap.min.css')}}">
-  <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/toastr/toastr.min.css')}}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{asset('commonarea/ass/dist/css/adminlte.min.css')}}">
   <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/bootstrap-colorpicker/css/bootstrap-colorpicker.min.css')}}">

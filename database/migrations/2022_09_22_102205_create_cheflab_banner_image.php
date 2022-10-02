@@ -20,9 +20,9 @@ class CreateCheflabBannerImage extends Migration
             $table->string('position',5);
             $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->softDeletes();
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
         });
+       
     }
 
     /**
@@ -33,5 +33,6 @@ class CreateCheflabBannerImage extends Migration
     public function down()
     {
         Schema::dropIfExists('cheflab_banner_image');
+
     }
 }

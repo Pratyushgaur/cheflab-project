@@ -4,8 +4,8 @@ namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Http\Controllers\Controller;
 use App\Models\TableService;
+use App\Models\Vendors;
 use App\Models\TableServiceBooking;
-use App\Models\vendors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

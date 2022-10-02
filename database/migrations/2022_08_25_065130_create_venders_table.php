@@ -40,6 +40,9 @@ class CreateVendersTable extends Migration
             $table->float('vendor_ratings',2,1)->default('0.0');
             $table->integer('review_count')->default('0');
             $table->enum('vendor_food_type',['1','2','3'])->default('1')->comment('1=veg,2=eggs,3=non veg');
+            $table->double('long',8,6)->nullable();
+            $table->double('lat',8,6)->nullable();
+            $table->enum('table_service',['1','0'])->default('1')->comment('1-active 0-inactive');
             $table->boolean('is_all_setting_done')->default(0)->comment('1=when vendor opning time setting and all other essential things done');
             $table->text('bio')->nullable();
             $table->softDeletes();

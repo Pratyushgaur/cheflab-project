@@ -142,7 +142,27 @@
             </div>
             <div class="ms-panel-body">
               <div class="row">
+                @foreach($product as $key =>$value)
+                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                  <div class="ms-card no-margin">
+                    <div class="ms-card-img">
+                      <img src="{{asset('products')}}/{{$value->product_image}}" alt="card_img" style="width: 530px; height: 240px;">
+                    </div>
+                    <div class="ms-card-body">
+                      <div class="ms-card-heading-title">
+                        <h6>{{$value->name}} </h6>
+                        <span class="green-text"><strong><i class="fas fa-rupee-sign"></i> {{$value->product_price}}</strong></span>
+                      </div>
 
+                      <div class="ms-card-heading-title">
+                        <p>Orders <span class="red-text">{{$value->orderTotal}}</span></p>
+                        
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+                @endforeach
                 <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                   <div class="ms-card no-margin">
                     <div class="ms-card-img">
@@ -160,8 +180,8 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                </div> -->
+                 <!--<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                   <div class="ms-card no-margin">
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
@@ -226,7 +246,7 @@
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
                 <div class="ms-header-text">
-                  <h6>Order Timing Chart</h6>
+                  <h6>Recent Order </h6>
                 </div>
               </div>
 
@@ -564,7 +584,7 @@
         <div class="col-md-12">
           <div class="ms-panel">
             <div class="ms-panel-header">
-              <h6>New Resturant Listings</h6>
+              <h6>Top Rating and Reviews for You</h6>
 
             </div>
             <div class="ms-panel-body">

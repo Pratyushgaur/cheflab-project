@@ -79,7 +79,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
-
+    
 
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutController::class, 'get_dine_out_slot']);
@@ -91,4 +91,11 @@ Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
-
+// Banner Api
+Route::get('getHomeBanner', [App\Http\Controllers\api\BannerController::class, 'getHomepageBanner']);
+Route::get('getPromotionBanner', [App\Http\Controllers\api\BannerController::class, 'getPromotionBanner']);
+// Review Rating
+Route::get('getReviewRating', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
+Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
+// Delivery Address
+Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);

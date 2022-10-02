@@ -128,7 +128,8 @@
                                                                 data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false"
                                                                 id="{{$order->id}}"
-                                                                style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}} </button>
+                                                                style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}} 
+                                                            </button>
                                                             <div class="dropdown-menu">
                                                                 <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}"
                                                                    onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>

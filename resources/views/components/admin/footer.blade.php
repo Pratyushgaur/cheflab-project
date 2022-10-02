@@ -28,14 +28,14 @@
 <script src="{{asset('commonarea/ass/plugins/chart.js/Chart.min.js')}}"></script>
 
 <!-- PAGE SCRIPTS -->
-<script src="{{asset('commonarea/ass/dist/js/pages/dashboard2.js')}}"></script>
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 
 
 <!-- Bootstrap 4 -->
 <script src="{{asset('commonarea/ass/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-<!-- ChartJS -->
-<script src="{{asset('commonarea/ass/plugins/chart.js/Chart.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/jqvmap/jquery.vmap.min.js')}}"></script>
+<script src="{{asset('commonarea/ass/plugins/jqvmap/maps/jquery.vmap.usa.js')}}"></script>
 <!-- Sparkline -->
 <script src="{{asset('commonarea/ass/plugins/sparklines/sparkline.js')}}"></script>
 <!-- JQVMap -->
@@ -58,6 +58,8 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{asset('commonarea/ass/dist/js/demo.js')}}"></script>
 
+  <!-- Select2 -->
+  
 
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
@@ -132,7 +134,12 @@
             }
         })
     })
-    
+    $('.select2').select2()
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    })
     
   })
 </script>
