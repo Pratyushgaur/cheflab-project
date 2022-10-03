@@ -138,7 +138,7 @@ class AppController extends Controller
                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $vendors[$key]->categories = $category;
             }
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
@@ -1111,6 +1111,7 @@ class AppController extends Controller
             global $cart_id;
             try {
                 DB::beginTransaction();
+
                 if (!Vendors::is_avaliavle($request->vendor_id))
                     return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
                 $data = $request->all();
@@ -1180,7 +1181,7 @@ class AppController extends Controller
                 $order = $order->orderBy('orders.id','desc');
                 $order = $order->skip($request->offset)->take(10);
                 $order = $order->get();
-                
+
                 foreach ($order as $key => $value) {
                     $products = OrderProduct::where('order_id','=',$value->order_id)->join('products','order_products.product_id','products.id')->select('product_id','order_products.product_name','order_products.product_price','product_qty')->get();
                     $order[$key]->products = $products;
@@ -1190,11 +1191,11 @@ class AppController extends Controller
                     'status' => true,
                     'message' => 'data get Successfully',
                     'response' => $order
-    
-                ], 200);
-                
 
-                
+                ], 200);
+
+
+
             }
             if($request->order_for == 'chef'){
 
@@ -1202,7 +1203,7 @@ class AppController extends Controller
             if($request->order_for == 'dineout'){
 
             }
-            
+
         } catch (Throwable $th) {
             return response()->json(['status' => False,
                 'error' => $th->getMessage(),
@@ -1309,9 +1310,9 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             //$user = User::find(request()->user()->id);
-            
+
             $update = User::where('id','=',request()->user()->id)->update(['name'=>$request->name,'email' =>$request->email,'alternative_number'=>$request->alternative_number]);
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'User Updated Successfully'
@@ -1353,7 +1354,7 @@ class AppController extends Controller
             $vendors = $vendors->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings','vendors.id','lat','long','deal_categories' );
             $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance");
             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
-            
+
             return response()->json([
                 'status' => true,
                 'message' => 'data get Successfully',
@@ -1369,5 +1370,5 @@ class AppController extends Controller
             ], 500);
         }
     }
-   
+
 }

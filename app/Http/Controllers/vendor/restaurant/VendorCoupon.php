@@ -10,6 +10,8 @@ use App\Models\Product_master;
 use App\Models\Coupon;
 use App\Models\CouponHistory;
 use App\Models\Order_time;
+use App\Models\Superadmin;
+use App\Notifications\VendorCouponNotification;
 use DataTables;
 use Config;
 use Auth;
@@ -59,7 +61,8 @@ class VendorCoupon extends Controller
 
         // $subscribers = Superadmin::get();
         //     foreach ($subscribers as $k => $admin)
-        //         $admin->notify(new ProductCreatedNotification($product->id,Auth::guard('vendor')->user()->name)); //With new post
+        //         $admin->notify(new VendorCouponNotification($coupon->id,Auth::guard('vendor')->user()->name,
+        //         \Auth::guard('vendor')->user()->name." added new coupon.Name : ".$coupon->name." , Code : ".$coupon->code)); //With new post
 
          return redirect()->route('restaurant.coupon.list')->with('message', 'Coupon Create Successfully');
      }

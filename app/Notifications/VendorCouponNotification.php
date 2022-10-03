@@ -57,9 +57,9 @@ class VendorCouponNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            // 'msg'=>$this->msg,
-            // 'sender_name'=>$this->sender_name,
-            // 'link'=>route('restaurant.product.list')
+            'msg'=>$this->msg,
+            'sender_name'=>$this->sender_name,
+            'link'=>route('restaurant.product.list')
 
         ];
     }

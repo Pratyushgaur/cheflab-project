@@ -20,16 +20,15 @@
                         <div class="ms-panel-body p-0">
                             <ul class="ms-list ms-feed ms-twitter-feed ms-recent-support-tickets">
                                 @foreach($notifications as $k=>$notification)
-                                    <?php $user = \App\Models\User::find($notification->data['user_id']);?>
+                                    <?php // $user = \App\Models\User::find($notification->data['user_id']);?>
                                     <li class="ms-list-item">
-                                        <a title="Click to view" href="{{$notification->data['link']}}"
-                                           class="media clearfix">
+                                        <a title="Click to view" href="{{$notification->data['link']}}" class="media clearfix">
                                             {{--                                            <img src="../../assets/img/costic/customer-4.jpg"--}}
                                             {{--                                                 class="ms-img-round ms-img-small" alt="This is another feature">--}}
                                             <div class="media-body">
                                                 <div class="customer-meta">
                                                     <div class="new">
-                                                        <h5 class="ms-feed-user mb-0">{{$user->name}}</h5>
+                                                        <h5 class="ms-feed-user mb-0">{{$notification->data['sender_name']}}</h5>
                                                         {{--                                                        <h6 class="ml-4 mb-0 text-red">Spicy Grilled Burger</h6>--}}
                                                     </div>
                                                 </div>

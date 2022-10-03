@@ -1,16 +1,16 @@
 <?php
 
-    use App\Models\Orders;
-    use Carbon\Carbon;
-    
+use App\Models\Orders;
+use Carbon\Carbon;
+
 function front_end_date_time($datetime)
 {
     return date('d F, Y h:i a', strtotime($datetime));
 }
 
-function mysql_date_time($datetime='')
+function mysql_date_time($datetime = '')
 {
-    if($datetime!='')
+    if ($datetime != '')
         return date('Y-m-d H:i:s', strtotime($datetime));
     else
         return date('Y-m-d H:i:s');
@@ -26,16 +26,16 @@ function mysql_time($datetime)
     return date('H:i:s', strtotime($datetime));
 }
 
-function mysql_date_time_marge($date,$time)
+function mysql_date_time_marge($date, $time)
 {
-    $date_only=date('Y-m-d', strtotime($date));
-    $time_only=date('H:i:s', strtotime($time));
-    return date('Y-m-d H:i:s', strtotime($date_only.$time_only));
+    $date_only = date('Y-m-d', strtotime($date));
+    $time_only = date('H:i:s', strtotime($time));
+    return date('Y-m-d H:i:s', strtotime($date_only . $time_only));
 }
 
-function mysql_add_time($datetime,$add_time_minites)
+function mysql_add_time($datetime, $add_time_minites)
 {
-    return date('Y-m-d H:i:s', strtotime('+'.$add_time_minites.' minutes',strtotime($datetime)));
+    return date('Y-m-d H:i:s', strtotime('+' . $add_time_minites . ' minutes', strtotime($datetime)));
 }
 
 function get_time_ago($time)
@@ -45,7 +45,8 @@ function get_time_ago($time)
     if ($time_difference < 1) {
         return 'less than 1 second ago';
     }
-    $condition = array(12 * 30 * 24 * 60 * 60 => 'year',
+    $condition = array(
+        12 * 30 * 24 * 60 * 60 => 'year',
         30 * 24 * 60 * 60 => 'month',
         24 * 60 * 60 => 'day',
         60 * 60 => 'hour',
@@ -80,31 +81,21 @@ function show_time_slots($start_time, $end_time, $duration, $break)
     $time_slots = array_diff($time_slots, $break);
 
     return $time_slots;
-
 }
-function vendorOrderCountByStatus($vendor_id,$status)
+function vendorOrderCountByStatus($vendor_id, $status)
 {
-    return Orders::where(['vendor_id'=>$vendor_id,'order_status'=>$status])->count();
+    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->count();
 }
 function vendorTodayOrderCount($vendor_id)
 {
-    return Orders::where(['vendor_id'=>$vendor_id])->whereDate('created_at', Carbon::today())->count();
+    return Orders::where(['vendor_id' => $vendor_id])->whereDate('created_at', Carbon::today())->count();
 }
 function vendorTotalOrderCount($vendor_id)
 {
-    return Orders::where(['vendor_id'=>$vendor_id])->count();
+    return Orders::where(['vendor_id' => $vendor_id])->count();
 }
 
-function vendorOrderCountByStatus($vendor_id,$status)
+function in_between_equal_to($check_number, $from, $to)
 {
-    return Orders::where(['vendor_id'=>$vendor_id,'order_status'=>$status])->count();
+    return ($from <= $check_number && $check_number <= $to);
 }
-function vendorTodayOrderCount($vendor_id)
-{
-    return Orders::where(['vendor_id'=>$vendor_id])->whereDate('created_at', Carbon::today())->count();
-}
-function vendorTotalOrderCount($vendor_id)
-{
-    return Orders::where(['vendor_id'=>$vendor_id])->count();
-}
-?>

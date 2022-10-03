@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notification;
 class OrderCreateNotification extends Notification
 {
     use Queueable;
-    private $msg,$user_id,$vendor_id,$link,$order_id;
+    private $msg,$sender_name,$vendor_id,$link,$order_id;
 
 
     /**
@@ -18,11 +18,11 @@ class OrderCreateNotification extends Notification
      *
      * @return void
      */
-    public function __construct($order_id,$user_id,$vendor_id,$msg,$link)
+    public function __construct($order_id,$sender_name,$msg,$link)
     {
         $this->msg = $msg;
-        $this->user_id = $user_id;
-        $this->vendor_id = $vendor_id;
+        $this->sender_name = $sender_name;
+        // $this->vendor_id = $vendor_id;
         $this->link = $link;
         $this->order_id = $order_id;
     }
@@ -62,8 +62,8 @@ class OrderCreateNotification extends Notification
     {
         return [
             'msg' => $this->msg,
-            'user_id' => $this->user_id,
-            'vendor_id'=>$this->vendor_id,
+            'sender_name' => $this->sender_name,
+            // 'vendor_id'=>$this->vendor_id,
             'link'=>route('restaurant.order.view',$this->order_id)
         ];
     }

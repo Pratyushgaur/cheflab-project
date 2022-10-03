@@ -103,7 +103,7 @@ class LoginApiController extends Controller
                 'mobile_number' => 'required|numeric|digits:10|unique:users,mobile_number',
                 'name' => 'required|max:20',
                 'email' => 'required|email|unique:users,email',
-                'alternative_mobile' => 'numeric|digits:10|unique:users,alternative_number',
+                'alternative_mobile' => 'nullable|sometimes|numeric|digits:10|unique:users,alternative_number',
 
             ]);
             if($validateUser->fails()){
