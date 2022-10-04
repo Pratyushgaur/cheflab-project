@@ -481,7 +481,7 @@ class UserControllers extends Controller
         return view('admin/vendors/chef-video-link',compact('vendor','categories','cuisines')); 
     }
     public function store_chef_product(Request $request){
-        return $request->all();
+       
         $this->validate($request, [
             'product_name' => 'required',
             'dis' => 'required',
