@@ -301,6 +301,7 @@ class AppController extends Controller
             $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
             $date = today()->format('Y-m-d');
             $coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('*')->get();
+            $catData = [];
             foreach ($category as $key => $value) {
                 $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
                 $product = $product->join('categories', 'products.category', '=', 'categories.id');
@@ -313,13 +314,16 @@ class AppController extends Controller
                 $product = $product->get();
 
                 //
-                $category[$key]->products = $product;
+                if (count($product->toArray())){
+                    $value->products = $product;
+                    $catData[] = $value;
+                }
             }
 
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
-                'response' => array('products'=>$category,'coupons'=>$coupon)
+                'response' => array('products'=>$catData,'coupons'=>$coupon)
 
             ], 200);
         } catch (Throwable $th) {
