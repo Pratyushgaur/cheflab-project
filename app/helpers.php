@@ -74,7 +74,7 @@ function show_time_slots($start_time, $end_time, $duration, $break)
     $add_mins = $duration * 60;
 
     while ($start_time <= $end_time) {
-        $time_slots[] = date("Y-m-d H:i", $start_time);
+        $time_slots[] = date("Y-m-d H:i:s", $start_time);
         $start_time += $add_mins;
     }
 

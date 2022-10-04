@@ -43,10 +43,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
     //add-to-cart
-    Route::post('add-to-cart', [App\Http\Controllers\api\AppController::class, 'add_to_cart']);
-    Route::post('empty-cart', [App\Http\Controllers\api\AppController::class, 'empty_cart']);
-    Route::post('view-cart', [App\Http\Controllers\api\AppController::class, 'view_cart']);
-    Route::post('update-cart', [App\Http\Controllers\api\AppController::class, 'update_cart']);
+    Route::post('add-to-cart', [App\Http\Controllers\api\CartApiController::class, 'add_to_cart']);
+    Route::post('empty-cart', [App\Http\Controllers\api\CartApiController::class, 'empty_cart']);
+    Route::post('view-cart', [App\Http\Controllers\api\CartApiController::class, 'view_cart']);
+    Route::post('view-cart-vendor', [App\Http\Controllers\api\CartApiController::class, 'view_cart_vendor']);
+    Route::post('update-cart', [App\Http\Controllers\api\CartApiController::class, 'update_cart']);
 
     // like dislike
     Route::post('like-vendor', [App\Http\Controllers\api\AppController::class, 'add_to_like_vendor']);
@@ -79,7 +80,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
-    
+
 
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutController::class, 'get_dine_out_slot']);

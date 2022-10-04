@@ -81,7 +81,7 @@ class DineoutController extends Controller
                 "booked_slot_discount" => $request->booked_slot_discount
             ]);
             if (isset($s->id))
-                return response()->json(['status' => true, 'message' => 'Your booking request send to restaurant.'], 200);
+                return response()->json(['status' => true, 'message' => 'Your booking request is sent to the restaurant.'], 200);
             else
                 return response()->json(['status' => false, 'error' => "something went wrong."], 401);
         } catch (Throwable $th) {

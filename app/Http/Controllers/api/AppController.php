@@ -706,7 +706,7 @@ class AppController extends Controller
         }
     }
 
-
+/*
     public function add_to_cart(Request $request)
     {
         try {
@@ -902,7 +902,7 @@ class AppController extends Controller
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
-
+*/
     public function add_to_like_vendor(Request $request)
     {
         try {
@@ -931,7 +931,7 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function update_cart(Request $request)
+   /* public function update_cart(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -1025,7 +1025,7 @@ class AppController extends Controller
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
-
+*/
     public function add_to_like_product(Request $request)
     {
         try {
@@ -1113,7 +1113,7 @@ class AppController extends Controller
                 DB::beginTransaction();
 
                 if (!Vendors::is_avaliavle($request->vendor_id))
-                    return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
+                    return response()->json(['status' => False, 'error' => "Vendor not available" ], 401);
                 $data = $request->all();
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);
