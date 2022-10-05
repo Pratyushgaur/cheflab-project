@@ -156,71 +156,69 @@ class CartApiController extends Controller
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
-
-//            $pro = Product_master::select('products.*')->where('status', 1)
-//                ->whereIn(
-//                    "products.id",
-//                    function ($query) use ($cart_id) {
-//                        $query->select('product_id as product_id')->from('cart_products')->where('cart_id', $cart_id);
-//                    }
-//                )
-//                ->with(['product_variants', 'cuisines'])->get();
-            \DB::enableQueryLog();
-            $pro = Product_master::select('cart_products.product_qty','products.product_name','products.product_image','products.category','products.menu_id','products.dis','products.type','products.product_price','products.customizable', 'products.product_for' ,'products.product_rating','products.cuisines','products.addons')
-                ->where('status', 1)
-                ->leftJoin('cart_products','products.id','cart_products.product_id')
+            $pro = Product_master::select('cart_products.product_qty','products.product_name','products.product_image','products.category','products.menu_id',
+                'products.dis','products.type','products.product_price','products.customizable', 'products.product_for' ,'products.product_rating','products.cuisines',
+                'products.addons','variants.id as variant_id','variants.*','cuisines.*','cuisines.id as cuisine_id','addons',
+                'cart_product_variants.*',
+                'products.id as product_id')
+                ->where('products.status', 1)
+                ->join('cart_products','products.id','cart_products.product_id')
                 ->where('cart_products.cart_id', $cart_id)
-                ->with(['product_variants'=>function($q){
-//                    $q->select('id','product_id','variant_name', 'variant_price');
-                }, 'cuisines'=>function($q){
-                    $q->select('id', 'name', 'cuisinesImage', 'position', 'is_active');
-                    $q->where('is_active',1);
-                }])
-                ->get();
+                ->leftJoin('variants','products.id','variants.product_id')
+                ->leftJoin('cart_product_variants','variants.id','cart_product_variants.variant_id')
+                ->leftJoin('cuisines','products.cuisines','cuisines.id')
+                ->get()->toArray();
+            $responce=[];
 
+            foreach ($pro as $k=>$product){
+                if($product['product_id']!=''){
 
-            if ($pro != null)
-                $pro = $pro->toArray();
+                    $responce[$product['product_id']]['product_id']=$product['product_id'];
+                    $responce[$product['product_id']]['product_name']=$product['product_name'];
+                    $responce[$product['product_id']]['product_qty']=$product['product_qty'];
+                    $responce[$product['product_id']]['product_image']=asset('products') .'/'.$product['product_image'];
+                    $responce[$product['product_id']]['category']=$product['category'];
+                    $responce[$product['product_id']]['menu_id']=$product['menu_id'];
+                    $responce[$product['product_id']]['dis']=$product['dis'];
+                    $responce[$product['product_id']]['type']=$product['type'];
+                    $responce[$product['product_id']]['product_price']=$product['product_price'];
+                    $responce[$product['product_id']]['customizable']=$product['customizable'];
+                    $responce[$product['product_id']]['product_for']=$product['product_for'];
+                    $responce[$product['product_id']]['product_rating']=$product['product_rating'];
+                    $responce[$product['product_id']]['addons']=$product['addons'];
 
-//            dd(\DB::getQueryLog ());
-            $variants = CartProductVariant::select('*')
-                ->where('cart_products.cart_id', $cart_id)
-                ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
-                ->pluck('variant_qty', 'variant_id');
-            if ($variants != null)
-                $variants = $variants->toArray();
+                    if($product['variant_id']!=''){
+                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_name']=$product['variant_name'];
+                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price']=$product['variant_price'];
+                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']=$product['variant_qty'];
+                    }
 
-            foreach ($pro as $k => $product) {
-                unset($pro[$k]['variants']);
-                unset($pro[$k]['created_at']);
-                unset($pro[$k]['updated_at']);
-                unset($pro[$k]['deleted_at']);
-                $pro[$k]['cuisines'] = $product['cuisines']['name'];
-                $pro[$k]['product_image'] = asset('products') . '/' . $product['product_image'];
-
-
-                if ($product['addons'] != '') {
-                    $pro[$k]['addons'] = @Addons::select(DB::raw('distinct addons.id,addon_id, addon, price, addon_qty'))
-                        // select('addon_id', 'addon', 'price', 'addon_qty')
-                        ->whereIn('addons.id', explode(',', $product['addons']))
-                        ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
-                        ->get()->toArray();
-                }
-                if (count($product['product_variants']) > 0) {
-                    foreach ($product['product_variants'] as $k1 => $product_variants) {
-                        unset($pro[$k]['product_variants'][$k1]['deleted_at']);
-                        unset($pro[$k]['product_variants'][$k1]['created_at']);
-                        unset($pro[$k]['product_variants'][$k1]['updated_at']);
-
-                        if (isset($variants[$product_variants['id']]))
-                            $pro[$k]['product_variants'][$k1]['variant_qty'] = $variants[$product_variants['id']];
-                        else
-                            $pro[$k]['product_variants'][$k1]['variant_qty'] = 0;
+                    if($product['cuisine_id']!=''){
+                        $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['name']=$product['name'];
+                        $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['cuisinesImage']=$product['cuisinesImage'];
                     }
                 }
             }
+            foreach ($responce as $i=>$p){
 
-            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $pro, 'wallet_amount' => $wallet_amount]], 200);
+                if(isset($p['variants']))
+                    $r[$i]['variants']=array_values($p['variants']);
+
+                if(isset($p['cuisines']))
+                    $r[$i]['cuisines']=array_values($p['cuisines']);
+
+                if($p['addons']!=''){
+                    $addons=explode(',',$p['addons']);
+                    $r[$i]['addons']=\App\Models\Addons::select('id','addon','price')->whereIn('id',$addons)->get()->toArray();
+                }
+                unset($p['variants']);
+                unset($p['cuisines']);
+                unset($p['addons']);
+                $r[$i]=array_merge($r[$i],$p);
+            }
+            $r=array_values($r);
+
+            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $r, 'wallet_amount' => $wallet_amount]], 200);
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
@@ -344,63 +342,70 @@ class CartApiController extends Controller
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
-//dd($cart_id);
-            $pro = Product_master::select('cart_products.product_qty','products.product_name','products.product_image','products.category','products.menu_id','products.dis','products.type','products.product_price','products.customizable', 'products.product_for' ,'products.product_rating','products.cuisines','products.addons')
-                ->where('status', 1)
-                ->leftJoin('cart_products','products.id','cart_products.product_id')
+            $pro = Product_master::select('cart_products.product_qty','products.product_name','products.product_image','products.category','products.menu_id',
+                'products.dis','products.type','products.product_price','products.customizable', 'products.product_for' ,'products.product_rating','products.cuisines',
+                'products.addons','variants.id as variant_id','variants.*','cuisines.*','cuisines.id as cuisine_id','addons',
+                'cart_product_variants.*',
+                'products.id as product_id')
+                ->where('products.status', 1)
+                ->join('cart_products','products.id','cart_products.product_id')
                 ->where('cart_products.cart_id', $cart_id)
-                ->with(['product_variants'=>function($q){
-                    $q->select('id','product_id','variant_name', 'variant_price');
-                }, 'cuisines'=>function($q){
-                    $q->select('id', 'name', 'cuisinesImage', 'position', 'is_active');
-                    $q->where('is_active',1);
-                }])
-                ->get();
+                ->leftJoin('variants','products.id','variants.product_id')
+                ->leftJoin('cart_product_variants','variants.id','cart_product_variants.variant_id')
+                ->leftJoin('cuisines','products.cuisines','cuisines.id')
+                ->get()->toArray();
+            $responce=[];
 
-            if ($pro != null)
-                $pro = $pro->toArray();
-//            dd(\DB::getQueryLog ());
-//            dd($pro);
-            $variants = CartProductVariant::select('*')
-                ->where('cart_products.cart_id', $cart_id)
-                ->join('cart_products', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')
-                ->pluck('variant_qty', 'variant_id');
-            if ($variants != null)
-                $variants = $variants->toArray();
+            foreach ($pro as $k=>$product){
+                if($product['product_id']!=''){
 
-            foreach ($pro as $k => $product) {
-                unset($pro[$k]['variants']);
-                unset($pro[$k]['created_at']);
-                unset($pro[$k]['updated_at']);
-                unset($pro[$k]['deleted_at']);
-                $pro[$k]['cuisines'] = $product['cuisines']['name'];
-                $pro[$k]['product_image'] = asset('products') . '/' . $product['product_image'];
+                    $responce[$product['product_id']]['product_id']=$product['product_id'];
+                    $responce[$product['product_id']]['product_name']=$product['product_name'];
+                    $responce[$product['product_id']]['product_qty']=$product['product_qty'];
+                    $responce[$product['product_id']]['product_image']=asset('products') .'/'.$product['product_image'];
+                    $responce[$product['product_id']]['category']=$product['category'];
+                    $responce[$product['product_id']]['menu_id']=$product['menu_id'];
+                    $responce[$product['product_id']]['dis']=$product['dis'];
+                    $responce[$product['product_id']]['type']=$product['type'];
+                    $responce[$product['product_id']]['product_price']=$product['product_price'];
+                    $responce[$product['product_id']]['customizable']=$product['customizable'];
+                    $responce[$product['product_id']]['product_for']=$product['product_for'];
+                    $responce[$product['product_id']]['product_rating']=$product['product_rating'];
+                    $responce[$product['product_id']]['addons']=$product['addons'];
 
+                    if($product['variant_id']!=''){
+                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_name']=$product['variant_name'];
+                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price']=$product['variant_price'];
+                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']=$product['variant_qty'];
+                    }
 
-                if ($product['addons'] != '') {
-                    $pro[$k]['addons'] = @Addons::select(DB::raw('distinct addons.id,addon_id, addon, price, addon_qty'))
-                        // select('addon_id', 'addon', 'price', 'addon_qty')
-                        ->whereIn('addons.id', explode(',', $product['addons']))
-                        ->leftJoin('cart_product_addons', 'cart_product_addons.addon_id', '=', 'addons.id')
-                        ->get()->toArray();
-                }
-                if (count($product['product_variants']) > 0) {
-                    foreach ($product['product_variants'] as $k1 => $product_variants) {
-                        unset($pro[$k]['product_variants'][$k1]['deleted_at']);
-                        unset($pro[$k]['product_variants'][$k1]['created_at']);
-                        unset($pro[$k]['product_variants'][$k1]['updated_at']);
-
-                        if (isset($variants[$product_variants['id']]))
-                            $pro[$k]['product_variants'][$k1]['variant_qty'] = $variants[$product_variants['id']];
-                        else
-                            $pro[$k]['product_variants'][$k1]['variant_qty'] = 0;
+                    if($product['cuisine_id']!=''){
+                        $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['name']=$product['name'];
+                        $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['cuisinesImage']=$product['cuisinesImage'];
                     }
                 }
             }
-            // dd($pro);
-            //    dd(\DB::getQueryLog ());
+            foreach ($responce as $i=>$p){
 
-            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $pro, 'wallet_amount' => $wallet_amount]], 200);
+                if(isset($p['variants']))
+                    $r[$i]['variants']=array_values($p['variants']);
+
+                if(isset($p['cuisines']))
+                    $r[$i]['cuisines']=array_values($p['cuisines']);
+
+                if($p['addons']!=''){
+                    $addons=explode(',',$p['addons']);
+                    $r[$i]['addons']=\App\Models\Addons::select('addons.id','addon','price','cart_product_addons.addon_qty')
+                        ->leftJoin('cart_product_addons','cart_product_addons.addon_id','addons.id')
+                        ->whereIn('addons.id',$addons)->get()->toArray();
+                }
+                unset($p['variants']);
+                unset($p['cuisines']);
+                unset($p['addons']);
+                $r[$i]=array_merge($r[$i],$p);
+            }
+            $r=array_values($r);
+            return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart" => $r, 'wallet_amount' => $wallet_amount]], 200);
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }

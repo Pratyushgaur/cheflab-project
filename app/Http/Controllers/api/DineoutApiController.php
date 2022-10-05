@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Catogory_master;
+use App\Models\Product_master;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\VendorOrderTime;
+use App\Models\Vendors;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 use URL;
 use Validator;
 
 
-class DineoutController extends Controller
+class DineoutApiController extends Controller
 {
 
     public function dine_out_booking(Request $request)
@@ -407,6 +409,64 @@ class DineoutController extends Controller
             }
         } catch (Throwable $th) {
             return response()->json(['status' => false, 'error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function get_dineout_restaurant(Request $request){
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric',
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            //$data['lat'] = 24.4637223;
+            //$data['lng'] = 74.8866346;
+            $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
+            $userid = request()->user()->id;
+
+            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
+                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings','vendors.id','lat','long','deal_categories',
+                    \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
+                ->selectRaw("ROUND({$select},1) AS distance")
+                ->leftJoin('user_vendor_like',function($join){
+                $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+                $join->where('user_vendor_like.user_id', '=',request()->user()->id );
+            })->orderBy('vendors.id', 'desc')->get();
+//dd($vendors);
+
+//            $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'vendors.name as restaurantName','products.id',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+//            $products = $products->leftJoin('user_product_like',function($join){
+//                $join->on('products.id', '=', 'user_product_like.product_id');
+//                $join->where('user_product_like.user_id', '=',request()->user()->id );
+//            });
+//            $products = $products->orderBy('products.id', 'desc')->get();
+//            dd($vendors);
+            foreach ($vendors as $key => $value) {
+                $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $vendors[$key]->categories = $category;
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Get Successfully',
+                'response' => ['vendors' => $vendors]
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
         }
     }
 }
