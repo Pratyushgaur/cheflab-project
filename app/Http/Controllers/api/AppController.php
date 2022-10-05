@@ -310,16 +310,46 @@ class AppController extends Controller
                     $join->where('user_product_like.user_id', '=',request()->user()->id );
                 });
                 $product = $product->where('menu_id', '=', $value->id);
-                $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'type','products.id as product_id','product_rating','categories.name as categoryName',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+                $product = $product->select('addons.*','addons.price as addon_price','addons.id as addon_id','variants.id as variant_id','variants.variant_price','variants.variant_name','products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'type','products.id as product_id','product_rating','categories.name as categoryName',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+                $product = $product->leftJoin('variants','variants.product_id','products.id');
+                $product = $product->leftJoin("addons", \DB::raw("FIND_IN_SET(addons, addons.id)"), ">", \DB::raw("'0'"));
                 $product = $product->get();
-
+//dd($product);
                 //
                 if (count($product->toArray())){
-                    $value->products = $product;
-                    $catData[] = $value;
+//                    $value->products = $product;
+                    foreach ($product as $i=>$p){
+
+                        if(!isset($variant[$p['product_id']]))
+                        $variant[$p['product_id']]=['product_id'=>$p['product_id'],
+                            'product_name'=>$p['product_name'],
+                            'product_price'=>$p['product_price'],
+                            'customizable'=>$p['customizable'],
+                            'image'=>$p['image'],
+                            'type'=>$p['type'],
+                            'product_rating'=>$p['product_rating'],
+                            'categoryName'=>$p['categoryName']];
+                        if($p->variant_id!=''){
+                            $variant[$p['product_id']]['variants'][$p->variant_id]=['id'=>$p->variant_id,
+                                'variant_name'=>$p->variant_name,
+                                'variant_price'=>$p->variant_price];
+                        }
+                        if($p->addon_id!='')
+                        $variant[$p['product_id']]['addons'][$p->addon_id]=['id'=>$p->addon_id,
+                            'addon_name'=>$p->addon,
+                            'addon_price'=>$p->addon_price];
+                    }
+                    foreach ($variant as $i=>$v) {
+                        if(isset($variant[$i]['variants']))
+                            $variant[$i]['variants']=array_values($variant[$i]['variants']);
+                        if(isset($variant[$i]['addons']))
+                            $variant[$i]['addons']=array_values($variant[$i]['addons']);
+                    }
+                    $variant=array_values($variant);
+
+                    $catData[] = $variant;
                 }
             }
-
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
