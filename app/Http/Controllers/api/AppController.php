@@ -302,6 +302,7 @@ class AppController extends Controller
             $date = today()->format('Y-m-d');
             $coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('*')->get();
             $catData = [];
+
             foreach ($category as $key => $value) {
                 $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
                 $product = $product->join('categories', 'products.category', '=', 'categories.id');
@@ -310,44 +311,66 @@ class AppController extends Controller
                     $join->where('user_product_like.user_id', '=',request()->user()->id );
                 });
                 $product = $product->where('menu_id', '=', $value->id);
-                $product = $product->select('addons.*','addons.price as addon_price','addons.id as addon_id','variants.id as variant_id','variants.variant_price','variants.variant_name','products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'type','products.id as product_id','product_rating','categories.name as categoryName',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+                $product = $product->select(
+//                    'addons.*','addons.price as addon_price','addons.id as addon_id','addons.addon as addon_name',
+                    'variants.id as variant_id','variants.variant_price','variants.variant_name',
+                    'products.product_name', 'product_price', 'customizable','products.addons',
+                    \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'type','products.id as product_id','product_rating','categories.name as categoryName',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
                 $product = $product->leftJoin('variants','variants.product_id','products.id');
-                $product = $product->leftJoin("addons", \DB::raw("FIND_IN_SET(addons, addons.id)"), ">", \DB::raw("'0'"));
+//                $product = $product->leftJoin("addons", \DB::raw("FIND_IN_SET(addons, addons.id)"), ">", \DB::raw("'0'"));
+//                $product = $product->leftJoin("addons",function($q){
+//                    $q->whereRaw(\DB::raw("FIND_IN_SET(addons, addons.id)"));
+//                });
                 $product = $product->get();
-//dd($product);
-                //
+//                dd(\DB::getQueryLog ());
+//                dd($product->toArray());
+
+                \DB::enableQueryLog();
+
+                //+
                 if (count($product->toArray())){
 //                    $value->products = $product;
                     foreach ($product as $i=>$p){
 
-                        if(!isset($variant[$p['product_id']]))
-                        $variant[$p['product_id']]=['product_id'=>$p['product_id'],
-                            'product_name'=>$p['product_name'],
-                            'product_price'=>$p['product_price'],
-                            'customizable'=>$p['customizable'],
-                            'image'=>$p['image'],
-                            'type'=>$p['type'],
-                            'product_rating'=>$p['product_rating'],
-                            'categoryName'=>$p['categoryName']];
+                        if(!isset($variant[$p['product_id']])){
+//                            dd($p['addons']);
+                            $addons=Addons::whereRaw(\DB::raw("FIND_IN_SET(addons.id, '".$p['addons']."')"))->get()->toArray();
+//                            print_r($addons);
+//                            dd(\DB::getQueryLog ());
+                            $variant[$p['product_id']]=['product_id'=>$p['product_id'],
+                                'product_name'=>$p['product_name'],
+                                'product_price'=>$p['product_price'],
+                                'customizable'=>$p['customizable'],
+                                'image'=>$p['image'],
+                                'type'=>$p['type'],
+                                'product_rating'=>$p['product_rating'],
+                                'categoryName'=>$p['categoryName'],
+                                'is_like'=>$p['is_like']
+                            ];
+                            if(count($addons))
+                            $variant[$p['product_id']]['addons']=$addons;
+                        }
                         if($p->variant_id!=''){
-                            $variant[$p['product_id']]['variants'][$p->variant_id]=['id'=>$p->variant_id,
+                            $variant[$p['product_id']]['options'][$p->variant_id]=['id'=>$p->variant_id,
                                 'variant_name'=>$p->variant_name,
                                 'variant_price'=>$p->variant_price];
                         }
                         if($p->addon_id!='')
                         $variant[$p['product_id']]['addons'][$p->addon_id]=['id'=>$p->addon_id,
-                            'addon_name'=>$p->addon,
-                            'addon_price'=>$p->addon_price];
+                            'addon'=>$p->addon,
+                            'price'=>$p->addon_price];
                     }
                     foreach ($variant as $i=>$v) {
-                        if(isset($variant[$i]['variants']))
-                            $variant[$i]['variants']=array_values($variant[$i]['variants']);
+                        if(isset($variant[$i]['options']))
+                            $variant[$i]['options']=array_values($variant[$i]['options']);
                         if(isset($variant[$i]['addons']))
                             $variant[$i]['addons']=array_values($variant[$i]['addons']);
                     }
                     $variant=array_values($variant);
 
-                    $catData[] = $variant;
+                    $catData[] =['menuName'=>$value->menuName,
+                        'id'=>$value->id,
+                        'products'=>$variant];
                 }
             }
             return response()->json([
