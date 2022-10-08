@@ -7,6 +7,7 @@ use App\Models\Catogory_master;
 use App\Models\Product_master;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
+use App\Models\TableServiceDiscount;
 use App\Models\VendorOrderTime;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
@@ -328,6 +329,9 @@ class DineoutApiController extends Controller
                 //                    ->groupBy('booked_slot_time_from')
                 //                    ->sum('booked_no_guest');
                 //dd($total);
+                $tableservice_discount=@TableServiceDiscount::select('discount_percent')->where('vendor_id',$request->vendor_id)->where('day_no', date('w', strtotime($request->date)))->first()->toArray();
+
+                $reponce=$tableservice_discount;
 
 
                 $days[0] = "sunday";
@@ -359,6 +363,7 @@ class DineoutApiController extends Controller
 
                 \Config::set('database.strict', false);
 
+
                 $booked_slots = TableServiceBooking::query()
                     ->select('table_service_bookings.booked_slot_time_from', 'table_service_bookings.booked_slot_time_to', DB::raw('sum(table_service_bookings.booked_no_guest) as total_booked_no_guest'))
                     ->where('booking_status', 'accepted')
@@ -376,6 +381,7 @@ class DineoutApiController extends Controller
                     @$reponce['days']['booking_time'][$i] = [
                         "available_no_guest" => $tableservice->no_guest,
                         'time_from' => $slot_time,
+                        'time_to' => $slot_time_to,
                         "available" => true
                     ];
 
@@ -389,6 +395,13 @@ class DineoutApiController extends Controller
                         if (($slot_time <= $booked_from_time && $booked_from_time <= $slot_time_to)
                             || ($slot_time <= $booked_to_time && $booked_to_time <= $slot_time_to)
                         ) {
+//                            echo "($slot_time <= $booked_from_time && $booked_from_time <= $slot_time_to)
+//                            || ($slot_time <= $booked_to_time && $booked_to_time <= $slot_time_to)
+//                        )";
+//                            echo boolval($slot_time <= $booked_from_time && $booked_from_time <= $slot_time_to)
+//                            ."|| ".boolval($slot_time <= $booked_to_time && $booked_to_time <= $slot_time_to). "<br/>";
+
+
                             @$reponce['days']['booking_time'][$i]['available_no_guest'] = @$reponce['days']['booking_time'][$i]['available_no_guest'] - $booked_table_services->total_booked_no_guest;
 
 
@@ -402,7 +415,7 @@ class DineoutApiController extends Controller
                     if (@$reponce['days']['booking_time'][$i]['available_no_guest'] <= 0)
                         @$reponce['days']['booking_time'][$i]['available'] = false;
                 }
-                // dd($reponce);
+//                 dd($reponce);
                 return response()->json(['status' => true, 'message' => 'Successfully', 'response' => $reponce], 200);
             } else {
                 return response()->json(['status' => false, 'error' => 'Restaurant not able to server for you.'], 401);

@@ -598,9 +598,18 @@ class AppController extends Controller
             }
             //
             if ($request->search_for == 'restaurant') {
-                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
+                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
+                    ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
             } elseif ($request->search_for == 'dishes') {
-                $data = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'), 'product_price', 'type')->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+//                $data = Product_master::where(['products.status' => '1', 'product_for' => '3'])
+//                    ->join('vendors', 'products.userId', '=', 'vendors.id')
+//                    ->select('products.product_name', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'), 'product_price', 'type')
+//                    ->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+
+                $data=get_product_with_variant_and_addons([['vendors.name', 'like', '%' . $request->keyword . '%'],
+                                                           ['products.status' => '1', 'product_for' => '3']],
+                    $user_id = '', $order_by_column = '', $order_by_order = '',true);
             } else {
                 $data = [];
             }
@@ -648,7 +657,10 @@ class AppController extends Controller
             });
             $vendors = $vendors->addSelect(DB::raw('(SELECT name FROM cuisines WHERE  cuisines.id IN (vendors.speciality) ) AS food_specility'));
             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
-            $products = Product_master::where(['products.status' => '1', 'product_for' => '2'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'))->orderBy('products.id', 'desc')->get();
+//            $products = Product_master::where(['products.status' => '1', 'product_for' => '2'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'))->orderBy('products.id', 'desc')->get();
+
+            $products=get_product_with_variant_and_addons(['products.status' => '1', 'product_for' => '2'], request()->user()->id, 'products.id', 'desc',false);
+
             return response()->json([
                 'status' => true,
                 'message' => 'Data Get Successfully',
