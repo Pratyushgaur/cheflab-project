@@ -23,7 +23,8 @@
                             <h6>Enable Dine Out Setting
                                 <label class="ms-switch right" style="float: right">
                                     <input name="vendor_table_service" id="vendor_table_service" type="checkbox"
-                                        value="1" @if (Auth::guard('vendor')->user()->table_service == 1) checked @endif>
+                                           value="1"
+                                           @if (Auth::guard('vendor')->user()->table_service == 1) checked @endif>
                                     <span class="ms-switch-slider"></span>
                                 </label>
                             </h6>
@@ -41,7 +42,7 @@
                                 @if (isset($table_service->id) && $table_service->id != '')
                                     <label class="ms-switch right" style="float: right">
                                         <input name="is_active" id="restaurent_status_id" type="checkbox" value="1"
-                                            @if ($table_service->is_active == 1) checked @endif>
+                                               @if ($table_service->is_active == 1) checked @endif>
                                         <span class="ms-switch-slider"></span>
                                     </label>
                                 @endif
@@ -62,7 +63,7 @@
 
                     {{-- Location form start --}}
                     <div class="form-row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label>Maximum number of guest allowed</label>
                             <div class="input-group">
                                 {{ Form::number('no_guest', null, ['class' => 'form-control', 'required', 'placeholder' => 'Select Slot Time ', 'min' => 1]) }}
@@ -74,7 +75,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label>Slot Time</label>
                             <div class="input-group">
                                 {{ Form::select(
@@ -99,17 +100,48 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-12 mb-3">
-                            <label>Discount %</label>
-                            <div class="input-group">
-                                {{ Form::number('slot_discount', null, ['class' => 'form-control', 'placeholder' => 'Discount %', 'min' => '0']) }}
+{{--                        <div class="col-md-12 mb-3">--}}
+{{--                            <label>Discount %</label>--}}
+{{--                            <div class="input-group">--}}
+{{--                                {{ Form::number('slot_discount', null, ['class' => 'form-control', 'placeholder' => 'Discount %', 'min' => '0']) }}--}}
 
-                                @if ($errors->has('slot_discount'))
-                                    <span class="ms-text-danger">
-                                        <strong>{{ $errors->first('slot_discount') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+{{--                                @if ($errors->has('slot_discount'))--}}
+{{--                                    <span class="ms-text-danger">--}}
+{{--                                        <strong>{{ $errors->first('slot_discount') }}</strong>--}}
+{{--                                    </span>--}}
+{{--                                @endif--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+                        <div class="col-md-12 mb-12">
+
+                            <?php
+                            $days[0] = "sunday";
+                            $days[1] = "monday";
+                            $days[2] = "tuesday";
+                            $days[3] = "wednesday";
+                            $days[4] = "thursday";
+                            $days[5] = "friday";
+                            $days[6] = "saturday";
+                            ?>
+
+                            <table class="table table-hover thead-primary">
+                                <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Discount Percentage</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php //dd($TableServiceDiscount);?>
+                                @for($i=0;$i<=6;$i++)
+                                    <tr>
+                                        <th>{{ucwords($days[$i])}}</th>
+                                        <th>{{Form::number("discount_percent[$i]", old("discount_percent[$i]",@$TableServiceDiscount[$i]->discount_percent),['class'=>'form-control','required'])}}</th>
+                                    </tr>
+                                @endfor
+                                </tbody>
+                            </table>
                         </div>
 
                     </div>
@@ -135,9 +167,12 @@
                 url: '{{ route('restaurant.dineout.vendor_table_setting') }}',
                 type: 'post',
                 cache: false,
-                data: $('#restaurent_status_form').serialize(),
-                success: function(data) {
-
+                data:{'_token' : '<?php echo csrf_token() ?>',
+                    'vendor_table_service' : $("#vendor_table_service").prop('checked')
+                },
+               // data: $('#restaurent_status_form').serialize(),
+                success: function (data) {
+alert($("#vendor_table_service").prop('checked'));
                     if (data.msg != '') {
                         $("#vendor_table_service").val(data.rest_status);
 
@@ -151,13 +186,13 @@
                         });
 
                         @if (!isset($table_service->id))
-                            $("#dine_out_full_form").submit();
+                        $("#dine_out_full_form").submit();
                         @endif
 
                     } else
                         toastr.error('Some thing went wrong', 'Error');
                 },
-                error: function(xhr, textStatus, thrownError) {
+                error: function (xhr, textStatus, thrownError) {
                     toastr.error('Some thing went wrong', 'Error');
                 }
             });
@@ -171,13 +206,13 @@
                 type: 'post',
                 cache: false,
                 data: $('#dine_out_form').serialize(),
-                success: function(data) {
+                success: function (data) {
                     if (data.msg != '') {
                         toastr.success(data.msg, 'Success');
                     } else
                         toastr.error('Some thing went wrong', 'Error');
                 },
-                error: function(xhr, textStatus, thrownError) {
+                error: function (xhr, textStatus, thrownError) {
                     toastr.error('Some thing went wrong', 'Error');
                 }
             });
@@ -189,7 +224,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 
     <script>
-        (function($) {
+        (function ($) {
 
 
             $("#dine_out_full_form").validate({

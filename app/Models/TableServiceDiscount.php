@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class TableServiceDiscount extends Model
 {
     use HasFactory;
+
+    protected $fillable=['vendor_id','day_no','discount_percent'];
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Catogory_master;
-use App\Models\Product_master;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
@@ -25,28 +24,28 @@ class DineoutApiController extends Controller
         try {
 
             $validateUser = Validator::make($request->all(), [
-                'vendor_id' => 'required|numeric',
-                'user_id' => 'required|numeric',
-                'date' => 'required|date',
-                'booked_no_guest' => 'required|numeric',
+                'vendor_id'             => 'required|numeric',
+                'user_id'               => 'required|numeric',
+                'date'                  => 'required|date',
+                'booked_no_guest'       => 'required|numeric',
                 'booked_slot_time_from' => 'required',
-                'booked_slot_discount' => 'required|numeric',
+                'booked_slot_discount'  => 'required|numeric',
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
             }
             $TableService = TableService::select('slot_time')
                 ->where('vendor_id', $request->vendor_id)
                 ->where('is_active', 1)
                 ->first();
             if (!isset($TableService->slot_time)) {
-                return response()->json(['status' => false, 'error' => "Restaurant not able to accept your booking."], 401);
+                return response()->json([ 'status' => false, 'error' => "Restaurant not able to accept your booking." ], 401);
             }
             $responce = [];
 
             $booked_slot_time_from = mysql_date_time_marge($request->date, $request->booked_slot_time_from);
-            $booked_slot_time_to = mysql_add_time($booked_slot_time_from, $TableService->slot_time);
+            $booked_slot_time_to   = mysql_add_time($booked_slot_time_from, $TableService->slot_time);
             \DB::enableQueryLog();
 
             //check restaurant is opne during requested time
@@ -59,7 +58,7 @@ class DineoutApiController extends Controller
                 ->exists();
 
             if (!$is_restaurant_open)
-                return response()->json(['status' => false, 'error' => "Restaurant not open during requested time."], 401);
+                return response()->json([ 'status' => false, 'error' => "Restaurant not open during requested time." ], 401);
 
             //get remaining tables
             $booked_table = @TableServiceBooking::where('table_service_bookings.vendor_id', $request->vendor_id)
@@ -71,26 +70,27 @@ class DineoutApiController extends Controller
                 ->selectRaw('(table_services.no_guest-sum(booked_no_guest)) as available_tables')->first();
 
             if (isset($booked_table->available_tables) && $booked_table->available_tables <= $request->booked_no_guest) {
-                return response()->json(['status' => false, 'error' => "Sorry! $request->booked_no_guest tables not available during this time slot."], 401);
+                return response()->json([ 'status' => false, 'error' => "Sorry! $request->booked_no_guest tables not available during this time slot." ], 401);
             }
 
             $TableServiceBooking = new TableServiceBooking();
-            $s = $TableServiceBooking->create([
-                "vendor_id" => $request->vendor_id,
-                "user_id" => $request->user_id,
-                "booked_no_guest" => $request->booked_no_guest,
+            $s                   = $TableServiceBooking->create([
+                "vendor_id"             => $request->vendor_id,
+                "user_id"               => $request->user_id,
+                "booked_no_guest"       => $request->booked_no_guest,
                 "booked_slot_time_from" => $booked_slot_time_from,
-                "booked_slot_time_to" => $booked_slot_time_to,
-                "booked_slot_discount" => $request->booked_slot_discount
+                "booked_slot_time_to"   => $booked_slot_time_to,
+                "booked_slot_discount"  => $request->booked_slot_discount
             ]);
             if (isset($s->id))
-                return response()->json(['status' => true, 'message' => 'Your booking request is sent to the restaurant.'], 200);
+                return response()->json([ 'status' => true, 'message' => 'Your booking request is sent to the restaurant.' ], 200);
             else
-                return response()->json(['status' => false, 'error' => "something went wrong."], 401);
+                return response()->json([ 'status' => false, 'error' => "something went wrong." ], 401);
         } catch (Throwable $th) {
-            return response()->json(['status' => false, 'error' => $th->getTrace()], 500);
+            return response()->json([ 'status' => false, 'error' => $th->getTrace() ], 500);
         }
     }
+
     /*
     public function get_dine_out_slot(Request $request)
     {
@@ -303,23 +303,34 @@ class DineoutApiController extends Controller
 
             $validateUser = Validator::make($request->all(), [
                 'vendor_id' => 'required|numeric',
-                'date' => 'required|date'
+                'date'      => 'required|date'
             ]);
             if ($validateUser->fails()) {
-                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
             }
 
 
             $reponce = [];
 
-            $vendor_order_time = VendorOrderTime::select('day_no', 'start_time', "end_time")
+            $vendor_order_time = @VendorOrderTime::select('day_no', 'start_time', "end_time")
                 ->where('vendor_id', $request->vendor_id)
                 ->where('day_no', date('w', strtotime($request->date)))
                 ->where('available', 1)
-                ->get()->toArray();
+                ->get();
+//                ->toArray();
+
+            if (isset($vendor_order_time[0])){
+//                dd($vendor_order_time);
+                $vendor_order_time = $vendor_order_time->toArray();
+            }
+
+            else {
+                return response()->json([ 'status' => false, 'error' => 'Restaurant is not available for today.' ], 401);
+            }
+
             $tableservice = TableService::where('vendor_id', $request->vendor_id)->where('is_active', 1)->first();
 
-            //            dd($vendor_order_time);
+//                        dd($vendor_order_time);
             if (isset($tableservice->no_guest) && $tableservice->no_guest != 0) {
                 //get booked tables'=
                 //                $total = TableServiceBooking::select(DB::raw('table_service_bookings.*,DATE_FORMAT(booked_slot_time_from,"%Y-%m-%d") as only_date'))
@@ -329,9 +340,9 @@ class DineoutApiController extends Controller
                 //                    ->groupBy('booked_slot_time_from')
                 //                    ->sum('booked_no_guest');
                 //dd($total);
-                $tableservice_discount=@TableServiceDiscount::select('discount_percent')->where('vendor_id',$request->vendor_id)->where('day_no', date('w', strtotime($request->date)))->first()->toArray();
+                $tableservice_discount = @TableServiceDiscount::select('discount_percent')->where('vendor_id', $request->vendor_id)->where('day_no', date('w', strtotime($request->date)))->first()->toArray();
 
-                $reponce=$tableservice_discount;
+                $reponce = $tableservice_discount;
 
 
                 $days[0] = "sunday";
@@ -344,8 +355,8 @@ class DineoutApiController extends Controller
 
                 foreach ($vendor_order_time as $k => $order_time) {
                     $start_time = mysql_date_time_marge($request->date, $order_time['start_time']); //$order_time['start_time'];
-                    $end_time = mysql_date_time_marge($request->date, $order_time['end_time']); //$order_time['end_time'];
-                    $duration = $tableservice->slot_time;
+                    $end_time   = mysql_date_time_marge($request->date, $order_time['end_time']);   //$order_time['end_time'];
+                    $duration   = $tableservice->slot_time;
 
                     if (date('w') == $order_time['day_no']) {
 
@@ -364,7 +375,7 @@ class DineoutApiController extends Controller
                 \Config::set('database.strict', false);
 
 
-                $booked_slots = TableServiceBooking::query()
+                $booked_slots  = TableServiceBooking::query()
                     ->select('table_service_bookings.booked_slot_time_from', 'table_service_bookings.booked_slot_time_to', DB::raw('sum(table_service_bookings.booked_no_guest) as total_booked_no_guest'))
                     ->where('booking_status', 'accepted')
                     ->where('booked_slot_time_from', '>=', $start_time)
@@ -372,7 +383,7 @@ class DineoutApiController extends Controller
                     ->where('vendor_id', $request->vendor_id)
                     ->groupBy('booked_slot_time_from', 'booked_slot_time_to')
                     ->get();
-                $i = 0;
+                $i             = 0;
                 $carry_forword = 0;
                 foreach ($all_all_slots as $k => $slot_time) {
                     $i++;
@@ -380,16 +391,16 @@ class DineoutApiController extends Controller
 
                     @$reponce['days']['booking_time'][$i] = [
                         "available_no_guest" => $tableservice->no_guest,
-                        'time_from' => $slot_time,
-                        'time_to' => $slot_time_to,
-                        "available" => true
+                        'time_from'          => $slot_time,
+                        'time_to'            => $slot_time_to,
+                        "available"          => true
                     ];
 
                     // echo "<br/><br/>".mysql_time($slot_time)."-".mysql_time($slot_time_to);
                     foreach ($booked_slots as $k => $booked_table_services) {
 
                         $booked_from_time = ($booked_table_services->booked_slot_time_from);
-                        $booked_to_time = ($booked_table_services->booked_slot_time_to);
+                        $booked_to_time   = ($booked_table_services->booked_slot_time_to);
 
 
                         if (($slot_time <= $booked_from_time && $booked_from_time <= $slot_time_to)
@@ -416,16 +427,17 @@ class DineoutApiController extends Controller
                         @$reponce['days']['booking_time'][$i]['available'] = false;
                 }
 //                 dd($reponce);
-                return response()->json(['status' => true, 'message' => 'Successfully', 'response' => $reponce], 200);
+                return response()->json([ 'status' => true, 'message' => 'Successfully', 'response' => $reponce ], 200);
             } else {
-                return response()->json(['status' => false, 'error' => 'Restaurant not able to server for you.'], 401);
+                return response()->json([ 'status' => false, 'error' => 'Restaurant not able to server for you.' ], 401);
             }
         } catch (Throwable $th) {
-            return response()->json(['status' => false, 'error' => $th->getMessage()], 500);
+            return response()->json([ 'status' => false, 'error' => $th->getMessage() ], 500);
         }
     }
 
-    public function get_dineout_restaurant(Request $request){
+    public function get_dineout_restaurant(Request $request)
+    {
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -438,7 +450,7 @@ class DineoutApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json([
                     'status' => false,
-                    'error' => $validateUser->errors()->all()
+                    'error'  => $validateUser->errors()->all()
 
                 ], 401);
             }
@@ -447,14 +459,14 @@ class DineoutApiController extends Controller
             $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
             $userid = request()->user()->id;
 
-            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
-                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings','vendors.id','lat','long','deal_categories',
+            $vendors = Vendors::where([ 'status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1' ])
+                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories',
                     \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
                 ->selectRaw("ROUND({$select},1) AS distance")
-                ->leftJoin('user_vendor_like',function($join){
-                $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
-                $join->where('user_vendor_like.user_id', '=',request()->user()->id );
-            })->orderBy('vendors.id', 'desc')->get();
+                ->leftJoin('user_vendor_like', function ($join) {
+                    $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+                    $join->where('user_vendor_like.user_id', '=', request()->user()->id);
+                })->orderBy('vendors.id', 'desc')->get();
 //dd($vendors);
 
 //            $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'vendors.name as restaurantName','products.id',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
@@ -465,20 +477,20 @@ class DineoutApiController extends Controller
 //            $products = $products->orderBy('products.id', 'desc')->get();
 //            dd($vendors);
             foreach ($vendors as $key => $value) {
-                $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $category                  = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $vendors[$key]->categories = $category;
             }
 
             return response()->json([
-                'status' => true,
-                'message' => 'Data Get Successfully',
-                'response' => ['vendors' => $vendors]
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => [ 'vendors' => $vendors ]
 
             ], 200);
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => $th->getMessage()
+                'error'  => $th->getMessage()
             ], 500);
         }
     }

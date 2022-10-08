@@ -23,3 +23,6 @@ composer.json
 /pubnub-php
 pubnub-php
 pubnub-php
+/public/products
+public/vendor-banner
+public/vendors
