@@ -407,10 +407,13 @@ class AppController extends Controller
                     }
                     $variant = array_values($variant);
 */
-                $variant=get_product_with_variant_and_addons(['product_for' => '3'],  request()->user()->id,  '',  '',false);
+                $variant=get_product_with_variant_and_addons(['product_for' => '3','menu_id' =>$value->id],  request()->user()->id,  '',  '',false);
+                if(!empty($variant)){
                     $catData[] = ['menuName' => $value->menuName,
                         'id' => $value->id,
                         'products' => $variant];
+                }  
+                
 
             }
             return response()->json([
