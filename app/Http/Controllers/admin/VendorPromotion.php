@@ -25,9 +25,13 @@ class VendorPromotion extends Controller
             'position' => 'required',
             'blog_type' => 'required',
             'name' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required'
         ]);
         $blog = new AppPromotionBlogs;
         $blog->name = $request->name;
+        $blog->start_time = $request->start_time;
+        $blog->end_time = $request->end_time;
         $blog->app_position =  $request->position;
         $blog->blog_type = $request->blog_type;
         $blog->save();

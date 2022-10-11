@@ -124,7 +124,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="blog_type">Blog type <span class="text-danger">*</span></label>
+                                <label for="blog_type">Shop type <span class="text-danger">*</span></label>
                                 <select name="blog_type" class="form-control" id="blog_type">
                                   <option value="1">Vendor</option>
                                   <option value="2">Product</option>
@@ -135,6 +135,40 @@
                                 <input type="text" id="name" name="name"  class="form-control" placeholder="Name of Blog">
                                 
                             </div>
+                            <div class="form-group">
+                                <label for="name">Blog Duration <span class="text-danger">*</span></label>
+                                <select name="duration" id="custimization" name="customizable" class="form-control">
+                                  <option value="1">fullday</option>
+                                  <option value="2">custom</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 mb-3 custmization-block" style="">
+                            <div class="row">
+                            <div class="form-group">
+                              <label>Start Time:</label>
+
+                              <div class="input-group date" id="timepicker" data-target-input="nearest">
+                                <input type="text" name="from" class="form-control datetimepicker-input" data-target="#timepicker"/>
+                                <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                </div>
+                                </div>
+                              <!-- /.input group -->
+                            </div>
+                            <div class="form-group">
+                              <label>End Time:</label>
+
+                              <div class="input-group date" id="timepicker2" data-target-input="nearest">
+                                <input type="text" name="to" class="form-control datetimepicker-input" data-target="#timepicker2"/>
+                                  <div class="input-group-append" data-target="#timepicker2" data-toggle="datetimepicker">
+                                    <div class="input-group-text"><i class="far fa-clock"></i>
+                                    </div>
+                                  </div>
+                              </div>
+                              <!-- /.input group -->
+                            </div>
+                              </div>
+                           </div>
                             <input type="submit" value="Save Changes" class="btn btn-success float-right">
                             
                         </div>
@@ -197,8 +231,9 @@
 </script>
 
 <script type="text/javascript">
+   (function($) {
   // $(function () {
-    let table = $('#example').dataTable({
+    /*let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
         ajax: "{{route('admin.vendorstore.data')}}",
@@ -210,7 +245,7 @@
             {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
-    });
+    });*/
     $("#banner-form").validate({
       rules: {
             blog_position: {
@@ -233,6 +268,14 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
+      $('.custmization-block').hide();
+      $('#custimization').change(function(){
+        if ($(this).val()  == '2') {
+          $('.custmization-block').show();
+        } else {
+          $('.custmization-block').hide();
+        }
+      })
        //Timepicker
     $('#timepicker').datetimepicker({
       format: 'LT'
@@ -254,6 +297,6 @@
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }
-
+  })(jQuery);
  </script>
 @endsection

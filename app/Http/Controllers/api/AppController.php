@@ -1070,7 +1070,6 @@ class AppController extends Controller
                 [
                     'user_id' => 'required|numeric',
                     'vendor_id' => 'required|numeric',
-                    'user_id' => 'required|numeric',
                     'customer_name' => 'required|string',
                     'delivery_address' => 'required|string',
                     'city' => 'required|string',
@@ -1111,7 +1110,7 @@ class AppController extends Controller
             global $cart_id;
             try {
                 DB::beginTransaction();
-                if (!Vendors::is_avaliavle($request->vendor_id))
+                if (!Vendors::is_available($request->vendor_id))
                     return response()->json(['status' => False, 'error' => "Vendor not available" ], 500);
                 $data = $request->all();
                 if (is_array($request->payment_string))
@@ -1277,7 +1276,7 @@ class AppController extends Controller
 
     public function getUserInfo(Request $request)
     {
-        try {
+          try {
 
             $user = User::find(request()->user()->id)->select('id','name','email','alternative_number')->first();
 
@@ -1363,6 +1362,22 @@ class AppController extends Controller
 
 
         } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function getUerFaq(){
+        try {
+            $data = \App\Models\User_faq::all();
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$data
+
+            ], 200);
+        } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()

@@ -85,11 +85,10 @@ class City extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("fun_edit_city",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
-                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this City" flash="City"  data-action-url="' . route('admin.city.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this City" flash="City"  data-action-url="' . route('admin.city.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+                //<a href="'. route("fun_edit_city",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>  
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;

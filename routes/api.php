@@ -79,7 +79,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
-    
+    // FAQ
+    Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
 
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutController::class, 'get_dine_out_slot']);
@@ -99,3 +100,5 @@ Route::get('getReviewRating', [App\Http\Controllers\api\VendorReviewController::
 Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
 // Delivery Address
 Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
+Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
+

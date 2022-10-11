@@ -16,7 +16,7 @@ class Products extends Migration
         //
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('userId');
+            $table->unsignedBigInteger('userId')->nullable();
              $table->foreign('userId')->references('id')->on('vendors')->nullable();
             $table->string('product_name');
             $table->string('product_image')->nullable();
@@ -31,8 +31,8 @@ class Products extends Migration
             $table->text('addons')->nullable();
             $table->string('cancel_reason')->nullable();
             $table->enum('product_for',['1','2','3'])->comment('1-cheflab 2-chef 3-restaurant');
-            $table->enum('status', ['1','0','2','3'])->default('2')->comment('1-active 0-inactive 2=pending 3=reject');
-            $table->enum('product_approve', ['1', '2'])->default('2')->comment('1-active 2-pending 3-reject');
+            $table->enum('status', ['1','0','3'])->default('0')->comment('1-active 0-inactive  3=rejec');
+            $table->enum('product_approve', ['1','0','2','3'])->default('2')->comment('1-active 0-inactive 2=pending 3=reject' );
             $table->string('product_rating',10)->default('0');
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

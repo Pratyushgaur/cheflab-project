@@ -102,6 +102,11 @@
 			
 				<div class="col-md-4">
         <form id="restaurant-form" action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
+          @if ($errors->any())
+              @foreach ($errors->all() as $error)
+                  <div class="alert alert-danger">{{$error}}</div>
+              @endforeach
+          @endif
           @csrf
           <div class="card card-primary">
 							<div class="card-header">
@@ -133,9 +138,10 @@
                                   <img class="icon" src="{{asset('add-image.png')}}">
                               </div>
                           </label>
-                          <input id="file-input" type="file" name="categoryImage" required/>
+                          <input id="file-input" type="file" name="categoryImage">
                       </div>      
                 </div>
+                <span class="product_image_error text-danger"></span>
 							</div>
 							<!-- /.card-body -->
 						</div>
@@ -234,7 +240,7 @@
                 remote:"Position Required",
             },
             categoryImage:{
-                remote:"Image Required"
+                remote:"Image Required",
             }
             
         }

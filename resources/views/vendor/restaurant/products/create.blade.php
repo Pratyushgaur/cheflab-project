@@ -167,7 +167,7 @@
                   <div class="col-md-6 mb-3">
                     <label for="">Item Price <span class="text-danger">*</span></label>
                     <div class="input-group">
-                      <input type="text" class="form-control" name="item_price" id="" placeholder="Enter Price" value="" >
+                      <input type="text" class="form-control" name="item_price" id="price" placeholder="Enter Price" value="" >
                       
                     </div>
                     
@@ -176,7 +176,7 @@
                   <div class="col-md-6 mb-3">
                     <label for="validationCustom23">Custmization Availablity</label>
                     <div class="input-group">
-                      <select class="form-control custimization" name="custimization" id="validationCustom23 " >
+                      <select class="form-control custimization" name="custimization" id="getPrice " >
                           <option value="false">No</option>
                           <option value="true">Yes</option>
 
@@ -199,7 +199,7 @@
                                   <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
                               </div>
                               <div class="col-md-2">
-                                  <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
+                                  <input type="text" name="price[]" id="myInput" class="form-control price" placeholder="Enter Price">
                               </div>
                           </div>
                           <!-- <div class="row input-container" style="padding-bottom:15px;">
@@ -298,6 +298,11 @@
         $('.custmization-block').hide();
       }
     })
+    $('#price').on("input", function(){
+       var price = document.getElementById('price').value;
+       $("#myInput").val(price);
+    })
+    
     $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');

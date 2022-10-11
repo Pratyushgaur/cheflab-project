@@ -167,7 +167,13 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('orders', [App\Http\Controllers\admin\OrderController::class, 'index'])->name('admin.order.list');
     Route::get('order-list', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order'])->name('admin.order.data');
     Route::post('get-vendor-byrole', [App\Http\Controllers\admin\OrderController::class, 'getVendorByRole'])->name('admin.vendor.byRole');
-    
+    // Globle Setting
+    Route::get('globle-setting', [App\Http\Controllers\admin\GlobleSetting::class, 'index'])->name('admin.globle.setting');
+    Route::get('globle-settin-faq', [App\Http\Controllers\admin\GlobleSetting::class, 'user_faq'])->name('admin.user.faq');
+    Route::post('globle-settin-create_faq', [App\Http\Controllers\admin\GlobleSetting::class, 'store_faq'])->name('admin.globle.store_faq');
+    Route::get('globle-settin-faq-data', [App\Http\Controllers\admin\GlobleSetting::class, 'getFaq'])->name('admin.user.faqdata');
+    Route::get('globle-settin-faq-edit/{id}', [App\Http\Controllers\admin\GlobleSetting::class, 'fun_edit_faq'])->name('admin.user.faqedit');
+    Route::post('globle-settin-update_faq', [App\Http\Controllers\admin\GlobleSetting::class, 'update_faq'])->name('admin.globle.update_faq');
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
 
 });
@@ -279,7 +285,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_Logo'])->name('restaurant.globleseting.first_vendor_logo');
         Route::post('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_Logo'])->name('restaurant.globleseting.save_vendor_logo');
 
-    });
+    });         
 });
 // chef route
 

@@ -21,12 +21,14 @@ class DeliverBoy extends Migration
             $table->string('password');
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->string('mobile',20)->unique();
+            $table->string('city');
             $table->string('pincode',8)->nullable();
-            $table->text('address')->nullable();
-            $table->string('other_document')->nullable();
-            $table->string('other_document_image')->nullable();
+            $table->string('identity_image');
+            $table->string('identity_number');
+            $table->enum('identity_type', ['1', '2','3'])->default('1')->comment('1-Passport 2-Driving License 3-Aadhar Card');
             $table->string('image')->nullable();
             $table->decimal('wallet',8,2)->default('0');
+            $table->enum('type', ['1', '2','3'])->default('1')->comment('1-Pure Commission 2-Rent_Commission 3-in_house');
             $table->softDeletes();
             $table->timestamps();
         });
