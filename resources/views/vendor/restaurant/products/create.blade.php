@@ -164,8 +164,17 @@
                           </ul>
                       </div>
                   </div>
-                  <div class="col-md-6 mb-3">
-                    <label for="">Item Price <span class="text-danger">*</span></label>
+                  <div class="col-md-4 mb-3">
+                    <label for="">Primary Variant Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" name="primary_variant_name" id="" placeholder="Primary Variant Name " value="" >
+                      
+                    </div>
+                    
+                    <span class="primary_variant_name_error text-danger"></span>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label for="">Primary Item Price <span class="text-danger">*</span></label>
                     <div class="input-group">
                       <input type="text" class="form-control" name="item_price" id="" placeholder="Enter Price" value="" >
                       
@@ -173,7 +182,7 @@
                     
                     <span class="item_price_error text-danger"></span>
                   </div>
-                  <div class="col-md-6 mb-3">
+                  <div class="col-md-4 mb-3">
                     <label for="validationCustom23">Custmization Availablity</label>
                     <div class="input-group">
                       <select class="form-control custimization" name="custimization" id="validationCustom23 " >
@@ -359,6 +368,9 @@
               },
               product_image:{
                 required:true
+              },
+              primary_variant_name:{
+                required:true
               }
           },
           messages: {
@@ -381,6 +393,9 @@
               item_price:{
                 required:"Please Give The Price of Product",
                 number:"Price Should be in Number"
+              }, 
+              primary_variant_name:{
+                required:"Please Enter Primary Variant Name"
               }   
           },
           errorPlacement: function (error, element) {

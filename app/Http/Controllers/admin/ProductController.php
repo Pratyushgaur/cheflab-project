@@ -394,11 +394,11 @@ class ProductController extends Controller
     }
     public function activeProduct(Request $request){
         $id =  $request->id;
-        dd($id);
       //  $product = Product_master::where('id','=', $id)->update(['status' => '1']);
         $product = Product_master::where('id','=', $id);
         $product = $product->first();
-        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ,'product_approve' => 1]);
+        Product_master::where('id','=', $id) ->limit(1)->update( ['status' => 1 ,'product_approve' => 1]);
+        //var_dump($product->userId);die;
         $vendor = Vendors::where('id','=',$product->userId)->select('deal_categories','deal_cuisines')->first();
         $categories  = explode(',',$vendor->deal_categories);
         if(!in_array($product->category,$categories)){
@@ -412,8 +412,9 @@ class ProductController extends Controller
         }
         //return $product;
         $vendor=Vendors::find($product->vendor_id);
+        
         $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product approved by admin.")); //With new post
-
+        return true;
         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
     }
 }
