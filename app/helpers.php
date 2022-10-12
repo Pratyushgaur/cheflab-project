@@ -122,7 +122,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-        'products.id as product_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'), 'product_rating')
+        'products.id as product_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'), 'product_rating','primary_variant_name')
         ->where([ 'products.status' => '1' ]);
 
 
@@ -165,7 +165,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                                'type'           => $p['type'],
                                                'product_rating' => $p['product_rating'],
                                                'categoryName'   => $p['categoryName'],
-                                               'is_like'        => $p['is_like']
+                                               'is_like'        => $p['is_like'],
+                                               'primary_variant_name'  => $p['primary_variant_name'],
                 ];
                 if ($with_restaurant_name)
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];

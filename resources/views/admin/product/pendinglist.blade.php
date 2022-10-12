@@ -324,7 +324,7 @@
 
               $('#type').html("Food Type<span class='float-right badge bg-info'>"+obj.product['type']+"</span>");
               $('#menu').html("Menu<span class='float-right badge bg-info'>"+obj.menu['menuName']+"</span>");
-              $btn1 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="edit btn btn-warning btn-xs accept"  data-alert-message="Are You Sure to Accept this Product" flash="Product" " title="Accept">Accept</a> <a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
+              $btn1 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="edit btn btn-warning btn-xs accept-btn"  data-alert-message="Are You Sure to Accept this Product" flash="Product" " title="Accept">Accept</a> <a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
               $btn2 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
              if(obj.product['status'] == '2'){
               $('.accept').html($btn1);
@@ -350,14 +350,15 @@
        // alert(id);die;
         $('#slot_id').append("<input type='hidden' name='id' value="+id+">");
     });
-    $(document).on('click', '.accept', function () {
+    $(document).on('click', '.accept-btn', function () {
       var id = $(this).data('id');
+      
      // alert(id);die;
-      $.ajaxSetup({
-          headers: {
-              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-      });
+      // $.ajaxSetup({
+      //     headers: {
+      //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      //     }
+      // });
       $.ajax({
           type: "POST",
           url: '{{route("admin.vendor.productactive")}}', // This is what I have updated
@@ -373,7 +374,7 @@
                 subtitle: '',
                 body: 'Product Published on Application'
               })
-               window.location.reload();
+               //window.location.reload();
              // $('#price').append("<p class='text-danger' name='id' value="+obj.id+">Banner Rs.. "+obj.price+"</p>","<input type='hidden' name='price' value="+obj.price+">","<input type='hidden' name='id' value="+obj.id+">","<input type='hidden' name='slot_name' value="+obj.slot_name+">","<input type='hidden' name='position' value="+obj.position+">");
             }
       });
