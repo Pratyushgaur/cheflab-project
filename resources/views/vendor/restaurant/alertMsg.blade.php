@@ -82,7 +82,7 @@
             @endif
             @if ($errors->any())
             @foreach ($errors->all() as $error)
-            toastr.info('{{ $error }}', 'Info');
+            toastr.info('{{ $error }}', 'Danger');
             @endforeach
             @endif
             $("#clearToast").on('click', function () {

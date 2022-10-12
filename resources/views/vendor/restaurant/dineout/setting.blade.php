@@ -172,7 +172,7 @@
                 },
                // data: $('#restaurent_status_form').serialize(),
                 success: function (data) {
-alert($("#vendor_table_service").prop('checked'));
+// alert($("#vendor_table_service").prop('checked'));
                     if (data.msg != '') {
                         $("#vendor_table_service").val(data.rest_status);
 

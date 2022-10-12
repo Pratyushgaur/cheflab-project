@@ -22,9 +22,12 @@ function mysql_date($datetime)
     return date('Y-m-d', strtotime($datetime));
 }
 
-function mysql_time($datetime)
+function mysql_time($datetime = '')
 {
-    return date('H:i:s', strtotime($datetime));
+    if ($datetime != '')
+        return date('H:i:s', strtotime($datetime));
+    else
+        return date('H:i:s');
 }
 
 function mysql_date_time_marge($date, $time)
@@ -37,6 +40,12 @@ function mysql_date_time_marge($date, $time)
 function mysql_add_time($datetime, $add_time_minites)
 {
     return date('Y-m-d H:i:s', strtotime('+' . $add_time_minites . ' minutes', strtotime($datetime)));
+}
+
+
+function mysql_add_days($datetime, $add_days)
+{
+    return date('Y-m-d H:i:s', strtotime('+' . $add_days . ' days', strtotime($datetime)));
 }
 
 function get_time_ago($time)
@@ -104,10 +113,9 @@ function in_between_equal_to($check_number, $from, $to)
     return ($from <= $check_number && $check_number <= $to);
 }
 
-
-function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '',$with_restaurant_name=false)
+function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false)
 {
-//    DB::enableQueryLog();
+    DB::enableQueryLog();
 
     $product = Product_master::select(
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price',
@@ -117,12 +125,13 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         'products.id as product_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'), 'product_rating')
         ->where([ 'products.status' => '1' ]);
 
+
     if (!empty($product_where))
         $product->where($product_where);
 
-    if($with_restaurant_name)
-    {
-        $product->join('vendors', 'products.userId', '=', 'vendors.id')->select('vendors.name as restaurantName');
+    if ($with_restaurant_name) {
+        $product->join('vendors', 'products.userId', '=', 'vendors.id');
+        $product->addSelect('vendors.name as restaurantName');
     }
 
     $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
@@ -140,15 +149,10 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
+    $product = $product->get();
 
-    $product = $product->select('variants.id as variant_id', 'variants.variant_name', 'variants.variant_price',
-        'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
-        'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
-        'cuisines.name as cuisinesName', 'dis as description', 'products.id as product_id',
-        DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'), 'product_rating')
-        ->get();
 
+//    dd(\DB::getQueryLog ());
     $variant = [];
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
@@ -163,8 +167,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                                'categoryName'   => $p['categoryName'],
                                                'is_like'        => $p['is_like']
                 ];
-                if($with_restaurant_name)
-                    $variant[$p['product_id']] ['restaurantName']=$p['restaurantName'];
+                if ($with_restaurant_name)
+                    $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
 
             }
             if ($p->variant_id != '') {
@@ -187,4 +191,20 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     $product = array_values($variant);
 
     return $product;
+}
+
+function get_restaurant_ids_near_me($lat, $lng, $where = [])
+{
+
+//    SELECT id, ( 3959 * acos(cos(radians(22.719568)) * cos(radians(lat)) * cos(radians(lng) - radians(75.857727)) + sin(radians(22.719568)) * sin(radians(lat ))) ) AS distance FROM markers HAVING distance < 50;
+
+    $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
+    $vendors = \App\Models\Vendors::where([ 'is_all_setting_done' => '1' ]);
+    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,id")
+        ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
+    if (empty($where))
+        $vendors->where($where);
+    return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
+
+
 }

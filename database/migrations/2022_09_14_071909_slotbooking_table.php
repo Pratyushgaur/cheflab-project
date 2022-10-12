@@ -15,16 +15,18 @@ class SlotbookingTable extends Migration
     {
         //
         Schema::create('slotbooking_table', function (Blueprint $table) {
-            $table->bigIncrements('slot_id');
-            $table->unsignedBigInteger('id')->nullable();
-            //$table->foreign('id')->references('id')->on('slot')->nullable();
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('cheflab_banner_image_id');
             $table->string('vendor_id');
-            $table->string('date');
+            $table->datetime('from_date');
+            $table->datetime('to_date');
+
+            $table->time('from_time');
+            $table->time('to_time');
+
             $table->string('slot_image');
             $table->string('price');
-            //$table->string('id');
-            $table->string('banner');
-            $table->enum('slot_status', ['1', '2', '0'])->default('0')->comment('1-accept 2-reject 0-pending');
+
             $table->enum('is_active', ['1', '2', '0'])->default('0')->comment('1-accept 2-reject 0-pending');
             $table->string('comment_rejoin');
             $table->timestamp('created_at')->useCurrent();

@@ -77,7 +77,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //
     // Banner Api
     Route::get('getHomeBanner', [App\Http\Controllers\api\BannerController::class, 'getHomepageBanner']);
-    Route::get('getPromotionBanner', [App\Http\Controllers\api\BannerController::class, 'getPromotionBanner']);
+    Route::post('getPromotionBanner', [App\Http\Controllers\api\BannerController::class, 'getPromotionBanner']);
     // Review Rating
     Route::get('getReviewRating', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
     Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);

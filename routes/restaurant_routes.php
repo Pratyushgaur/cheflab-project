@@ -61,16 +61,16 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'vendor_location'])->name('restaurant.globleseting.vendor_location');
             Route::post('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.save_vendor_location');
             //promotion management
-            Route::get('promotion/banner', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'index'])->name('restaurant.promotion.list');
-            Route::get('promotion/on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'create_promotion'])->name('restaurant.promotion.create');
-            Route::post('promotion/on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'store_slot'])->name('restaurant.slot.store');
-            Route::get('promotion/on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'selctvalue'])->name('restaurant.slot.data');
-            Route::get('promotion/on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'get_list_slotbook'])->name('restaurant.slot.list');
-            Route::post('promotion/on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'checkdate'])->name('restaurant.slot.checkdate');
-            Route::post('promotion/on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getPrice'])->name('restaurant.slot.getPrice');
-            Route::get('promotion/on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'getslot'])->name('restaurant.slot.checkslot');
-            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'shop_promotion'])->name('restaurant.shop.promotion');
-            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotion::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+            Route::get('promotion/banner', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'index'])->name('restaurant.promotion.list');
+            Route::get('promotion/on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'create_promotion'])->name('restaurant.promotion.create');
+            Route::post('promotion/on-screen-store', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'store_slot'])->name('restaurant.slot.store');
+            Route::get('promotion/on-screen-DATA', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'selctvalue'])->name('restaurant.slot.data');
+            Route::get('promotion/on-screen-data', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'get_list_slotbook'])->name('restaurant.slot.list');
+            Route::post('promotion/on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'checkdate'])->name('restaurant.slot.checkdate');
+            Route::post('promotion/on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'getPrice'])->name('restaurant.slot.getPrice');
+            Route::get('promotion/on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'getslot'])->name('restaurant.slot.checkslot');
+            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
+            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
 
             //dine out
             Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_globle_setting'])->name('restaurant.dineout.setting');

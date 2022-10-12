@@ -59,7 +59,11 @@
         /* bug fix - no overlay */
         display: none;
     }
-    
+
+      .error{
+          width: 100% !important;
+          color:red;
+      }
     </style>
  @yield('page-css')
 

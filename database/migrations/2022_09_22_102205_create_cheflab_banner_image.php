@@ -17,12 +17,13 @@ class CreateCheflabBannerImage extends Migration
             $table->id();
             $table->string('name');
             $table->string('bannerImage');
-            $table->string('position',5);
+            $table->tinyInteger('position');
+            $table->string('price');
             $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->softDeletes();
 
         });
-       
+
     }
 
     /**
