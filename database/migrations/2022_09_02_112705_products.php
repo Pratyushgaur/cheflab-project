@@ -16,7 +16,7 @@ class Products extends Migration
         //
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedBigInteger('userId');
+            $table->unsignedBigInteger('userId')->nullable();
              $table->foreign('userId')->references('id')->on('vendors')->nullable();
             $table->string('product_name');
             $table->string('product_image')->nullable();
@@ -24,6 +24,7 @@ class Products extends Migration
             $table->unsignedBigInteger('category')->references('id')->on('categories');
             $table->unsignedBigInteger('menu_id')->references('id')->on('vendor_menus')->nullable();
             $table->string('dis');
+            $table->string('chili_level');
             $table->enum('type',['veg','non_veg','eggs']);
             $table->decimal('product_price', 10,2);
             $table->string('customizable',20);

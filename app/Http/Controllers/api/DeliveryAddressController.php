@@ -14,7 +14,7 @@ class DeliveryAddressController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
-                
+                'user_id' => 'required',
                 'house_no' => 'required',
                 'contact_no' => 'numeric',  
                 'lat' => 'required',  
@@ -26,7 +26,7 @@ class DeliveryAddressController extends Controller
             }
             $address = new DeliveryAddress;
             $address->house_no =$request->house_no;
-            $address->user_id = request()->user()->id;
+            $address->user_id = $request->user_id;
             $address->reach =$request->reach;
             $address->contact_no =$request->contact_no;
             $address->address_type =$request->address_type;

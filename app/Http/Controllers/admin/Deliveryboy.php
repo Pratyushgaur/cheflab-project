@@ -27,19 +27,19 @@ class Deliveryboy extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|unique:vendors,email',
+            'city' => 'required',
             'pincode' => 'required',
             'phone' => 'required|unique:vendors,mobile',
-            'address' => 'required',
-            'password' => 'required',
-            'confirm_password' => 'required',
+            'identity_image' => 'required',
+            'identity_number' => 'required',
         ]);
         $vendors = new Deliver_boy;
         $vendors->name = $request->name;
         $vendors->email = $request->email;
-        $vendors->password = Hash::make($request->password);
         $vendors->mobile  = $request->phone;
         $vendors->pincode  = $request->pincode;
-        $vendors->address  = $request->address;
+        $vendors->phone  = $request->phone;
+        $vendors->city  = $request->city;
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('dliver-boy'),$filename);
@@ -47,14 +47,14 @@ class Deliveryboy extends Controller
         }else{
             $vendors->image  = 'deliver-boy.png';
         }
-        if($request->has('other_document')){
-            $filename = time().'-other-document-'.rand(100,999).'.'.$request->other_document->extension();
-            $request->other_document->move(public_path('dliver-boy-documents'),$filename);
-            $vendors->other_document_image  = $filename;
-            $vendors->other_document  = $request->other_document_name;
+        if($request->has('identity_image')){
+            $filename = time().'-other-document-'.rand(100,999).'.'.$request->identity_image->extension();
+            $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->identity_image  = $filename;
+            $vendors->identity_number  = $request->identity_number;
         }
         $vendors->save();
-        return redirect()->route('admin.deliverboy.list')->with('message', 'Vendor Registration Successfully');
+        return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
     }
     public function get_data_table_of_deliverboy(Request $request)
     {

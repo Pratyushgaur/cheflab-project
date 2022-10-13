@@ -44,7 +44,7 @@ class ProductController extends Controller
             'product_name' => 'required',
             'dis' => 'required',
             'item_price' => 'required|integer',
-            'product_image' => 'required',
+          //  'product_image' => 'required',
             'cuisines' => 'required',
             'category' => 'required',
             'menu_id' => 'required',
@@ -52,12 +52,13 @@ class ProductController extends Controller
         ]);
         try {
 
-            //dd($request->all());
+          //  dd($request->all());
             $product = new Product_master;
             $product->product_name = $request->product_name;
             $product->userId = Auth::guard('vendor')->user()->id;
             $product->cuisines = $request->cuisines;
             $product->category = $request->category;
+            $product->chili_level = $request->chili_level;
             $product->menu_id = $request->menu_id;
             $product->dis = $request->dis;
             $product->type = $request->product_type;

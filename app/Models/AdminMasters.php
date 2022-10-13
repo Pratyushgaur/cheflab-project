@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class AppPromotionBlogs extends Model
+use Illuminate\Database\Eloquent\SoftDeletes;
+class AdminMasters extends Model
 {
     use HasFactory;
-    protected $table ='app_promotion_blog';	
+    protected $table ='admin_masters';	
     public $timestamps = false;
 }

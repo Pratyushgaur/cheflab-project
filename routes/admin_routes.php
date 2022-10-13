@@ -135,7 +135,11 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('orders', [App\Http\Controllers\admin\OrderController::class, 'index'])->name('admin.order.list');
     Route::get('order-list', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order'])->name('admin.order.data');
     Route::post('get-vendor-byrole', [App\Http\Controllers\admin\OrderController::class, 'getVendorByRole'])->name('admin.vendor.byRole');
-
+    // Globle Setting
+    Route::get('globle-setting', [App\Http\Controllers\admin\GlobleSetting::class,'index'])->name('admin.globle.setting');
+    Route::get('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'user_faq'])->name('admin.user.faq');
+    Route::get('globle-setting-data', [App\Http\Controllers\admin\GlobleSetting::class,'getFaq'])->name('admin.user.faqdata');
+    Route::post('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'store_faq'])->name('admin.globle.store_faq');
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
 
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');

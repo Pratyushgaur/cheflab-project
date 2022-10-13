@@ -25,9 +25,13 @@ class VendorPromotion extends Controller
             'position' => 'required',
             'blog_type' => 'required',
             'name' => 'required',
+            'from' => 'required',
+            'to' => 'required'
         ]);
         $blog = new AppPromotionBlogs;
         $blog->name = $request->name;
+        $blog->from = $request->from;
+        $blog->to = $request->to;
         $blog->app_position =  $request->position;
         $blog->blog_type = $request->blog_type;
         $blog->save();

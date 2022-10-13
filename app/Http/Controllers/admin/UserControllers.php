@@ -139,7 +139,7 @@ class UserControllers extends Controller
             'vendor_commission' => 'required',
             'categories' => 'required',
             'deal_cuisines' => 'required',
-
+            'tax' => 'required',
         ]);
         $vendors = new Vendors;
         $vendors->name = $request->restaurant_name;
@@ -152,7 +152,9 @@ class UserControllers extends Controller
         $vendors->fssai_lic_no  = $request->fssai_lic_no;
         $vendors->commission  = $request->vendor_commission;
         $vendors->vendor_food_type  = $request->type;
-        
+        $vendors->tax  = $request->tax;
+        $vendors->gst_available  = $request->gst_available;
+        $vendors->gst_no  = $request->gst_no;
         $vendors->deal_categories  = implode(',',$request->categories);
         $vendors->deal_cuisines  = implode(',',$request->deal_cuisines);
         

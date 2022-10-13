@@ -73,7 +73,7 @@ class MenuController extends Controller
     }
     public function check_duplicate_menu(Request $request ,$id=null)
     {
-        if (VendorMenus::where('menuName','=',$request->name)->exists()) {
+        if (VendorMenus::where('menuName','=',$request->name)->where('vendor_id','=',\Auth::guard('vendor')->user()->id)->exists()) {
             return \Response::json(false);
         } else {
             return \Response::json(true);

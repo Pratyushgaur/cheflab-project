@@ -2,6 +2,7 @@
 @section('content')
 @section('page-style')
 <style>
+    
         label.error {
             color: #dc3545;
             font-size: 14px;
@@ -22,9 +23,6 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
-        
-        
         .upload-icon img{
           width: 100px;
           height: 100px;
@@ -86,12 +84,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create Cuisines</h1>
+            <h1>Create FAQ</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create Cuisines</li>
+              <li class="breadcrumb-item active">Create FAQ</li>
             </ol>
           </div>
         </div>
@@ -103,57 +101,40 @@
 		<div class="row">
 			
 				<div class="col-md-4">
-        @if($errors->any())
-            {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-        @endif
-        <form id="restaurant-form" action="{{route('admin.cuisines.store')}}" method="post" enctype="multipart/form-data">
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                <div class="alert alert-danger">{{$error}}</div>
-            @endforeach
-        @endif
-        @csrf
-          <div class="card card-primary">
-							<div class="card-header">
-							  <h3 class="card-title">Create</h3>
+        <form id="restaurant-form" action="{{route('admin.globle.store_faq')}}" method="post" enctype="multipart/form-data">
+          @if ($errors->any())
+              @foreach ($errors->all() as $error)
+                  <div class="alert alert-danger">{{$error}}</div>
+              @endforeach
+          @endif
+          @csrf
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Create</h3>
 
-							  <div class="card-tools">
-								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-								  <i class="fas fa-minus"></i></button>
-							  </div>
-							</div>
-							<div class="card-body">
-							  <div class="form-group">
-                  <label for="category_name">Cuisines Name</label>
-                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Cuisines Name">
-                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                    <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i></button>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label for="category_name">Position</label>
-                  <input type="number" id="position" name="position" value="{{!empty($class_name[0]->position) ? $class_name[0]->position : ''}}" class="form-control" placeholder="Position ">
-                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="category_name">Question <span class="text-danger">*</span></label>
+                        <input type="text" id="faq_question" name="faq_question" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Your Question">
+                        <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="category_name">Answer <span class="text-danger">*</span></label>
+                        <textarea type="text" id="position" name="faq_answer" value="{{!empty($class_name[0]->answer) ? $class_name[0]->answer : ''}}" class="form-control" placeholder="Your Answer "></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                      <div>
-                        <label for="">Cuisines Images</label>
-                      </div>
-                      <div class="image-upload">
-                          <label for="file-input">
-                              <div class="upload-icon">
-                                  <img class="icon" src="{{asset('add-image.png')}}">
-                              </div>
-                          </label>
-                          <input id="file-input" type="file" name="cuisinesImage" required/>
-                      </div>      
-                </div>
-							</div>
-							<!-- /.card-body -->
-						</div>
-						<div>
-						
-						  <input type="submit" value="Save Changes" class="btn btn-success float-right">
-						</div>
-					</form>
+                <!-- /.card-body -->
+			</div>
+            <div>
+            
+                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+            </div>
+		</form>
 				  <!-- /.card -->
 				</div>
 				<div class="card card-info col-md-8">
@@ -170,10 +151,8 @@
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Cuisines Name</th>
-                                    <th >Position</th>
-                                    <th  >Image</th>
-                                  
+                                    <th >Question</th>
+                                    <th >Answer</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -188,7 +167,7 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
-
+ 
   <!-- /.content-wrapper -->
 
   <!-- /.content-wrapper -->
@@ -198,57 +177,47 @@
 
 
 @section('js_section')
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-
-
-
-
-
-    
-
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
     $(".city_cityadmin").addClass("active");
     $(".city_menu").addClass("active");
 </script>
-
-<script>
-   $(document).ready(function() {
-    
+x
+<script type="text/javascript">
+  // $(function () {
+    let table = $('#example').dataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('admin.user.faqdata') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'faq_question', name: 'faq_question'},
+            {data: 'faq_answer', name: 'faq_answer'},
+            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+        ]
+    });
     $("#restaurant-form").validate({
-        rules: {
-            name: {
+      rules: {
+           faq_question: {
                 required: true,
-                maxlength: 20,
-                remote: '{{route("check-duplicate-cuisines")}}',
             },
-            position: {
+            faq_answer: {
                 required: true,
-                number: true,
             },
-            cuisinesImage:{
-              required: true,
-              image: true,
-            }
         },
         messages: {
-            name: {
-                remote:"This Cuisines Name Already Exist"
+            faq_question: {
+                remote:"Category  Already Exist",
             },
-            position:{
-                remote:"Image Required"
-            },
-            cuisinesImage:{
-                remote:"Image Required"
+            faq_answer:{
+                remote:"Position Required",
             }
             
         }
-    });
-
-
-    $('#file-input').change( function(event) {
+      });
+      $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');
       });
@@ -256,24 +225,8 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
-   });
-</script>
-<script type="text/javascript">
-  // $(function () {
-    let table = $('#example').dataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.cuisines.datatable') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'position', name: 'position'},
-            {data: 'cuisinesImage', name: 'cuisinesImage'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-        ]
-    });
-  // });
-
+  
+      
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }

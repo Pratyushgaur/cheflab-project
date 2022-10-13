@@ -74,7 +74,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="{{route('admin.deliverboy.list')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>All Delivery Boy</p>
 						</a>
@@ -231,6 +231,12 @@
 						</a>
 					</li>
 				</ul>
+			</li>
+			<li class="nav-item">
+				<a href="{{route('admin.globle.setting')}}" class="nav-link">
+				  <i class="nav-icon fa fa-cog"></i>
+				  <p>GlobleSetting</p>
+				</a>
 			</li>
 			<li class="nav-item">
 				<a href="{{route('admin.logout')}}" class="nav-link">

@@ -218,7 +218,7 @@
                                           <label for="">Customizable Availablity</label>
 
                                           
-                                          <select name="customizable" id="customizable" name="customizable" class="form-control">
+                                          <select name="customizable" id="custimization" name="customizable" class="form-control">
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
                                           </select>
@@ -226,8 +226,39 @@
                                     </div>
                                 
                                   </div>
-
-                                    <div class="custmization-block" style="display:none">
+                                  <div class="col-md-12 mb-3 custmization-block" style="">
+                                        <div class="row">
+                                          <div class="col-md-12">
+                                              <h5>Add More Variant</h5>
+                                          </div>
+                                        </div>
+                                        <div class="variant-input-container">
+                                            <div class="row input-container" style="padding-bottom:15px;">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
+                                                </div>
+                                            </div>
+                                            <!-- <div class="row input-container" style="padding-bottom:15px;">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                        
+                                        
+                                        <div class="row">
+                                          <div class="col-md-4"><a href="javascript:void(0)" class="add">+ Add More Variant</a></div>
+                                        </div>
+                                    <!--<div class="custmization-block" style="display:none">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <h3>Add More Variant</h3>
@@ -248,7 +279,8 @@
                                         <div class="variant-container"> 
                                         </div>
                                   
-                                    </div> 
+                                    </div> -->
+                                 </div>
                                     <div class="col-sm-3">
                                         <div>
                                           <label for="">Product Image </label>
@@ -256,12 +288,12 @@
                                         </div>
                                         <div class="image-upload">
                                           
-                                            <label for="file-input3">
-                                                <div class="upload-icon3">
-                                                    <img class="icon3" src="{{asset('add-image.png')}}">
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    <img class="icon" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
-                                            <input id="file-input3" type="file" name="product_image"/>
+                                            <input id="file-input" type="file" name="product_image"/>
                                             
                                         </div>   
                                     
@@ -317,8 +349,55 @@
 </script>
 
 <script type="text/javascript">
-  $(document).ready(function() {
-    
+   (function($) {
+    $('.custmization-block').hide();
+    $(document).on('click','.delete-variant',function(){
+      $(this).parent().parent().parent().remove();
+      
+    })
+    $(document).on('click','.add',function(){
+      var html = '<div class="row input-container" style="padding-bottom:15px;"><div class="col-md-4"><input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name"></div><div class="col-md-2"><input type="text" name="price[]" class="form-control price" placeholder="Enter Price"></div><div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div></div>';
+      $('.variant-input-container').append(html);
+    })
+    $('#custimization').change(function(){
+      if ($(this).val()  == 'true') {
+        $('.custmization-block').show();
+      } else {
+        $('.custmization-block').hide();
+      }
+    })
+    $('#file-input').change( function(event) {
+          $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon").parents('.upload-icon').addClass('has-img');
+      });
+      
+
+      $.validator.addMethod('checkVariants',
+          function (value, element) {
+            if (value == 'true') {
+              var check = true;
+              $('.input-container').each(function(index, value) {
+                if($(this).find('.variant_name').val() == ''){
+                  check = false;
+                }
+                if($(this).find('.price').val() == ''){
+                  check = false;
+                }
+                
+              });
+              if (check) {
+                return true;
+              } else {
+                return false;
+              }
+             
+            } else {
+              return true;
+            }
+           
+
+          },'Variants Fields is required'
+      );
     $("#restaurant-form").validate({
           rules: {
             product_name: {
@@ -357,19 +436,8 @@
       });     
   
 
-      $('#file-input').change( function(event) {
-          $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon").parents('.upload-icon').addClass('has-img');
-      });
-      $('#file-input2').change( function(event) {
-          $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon2").parents('.upload-icon2').addClass('has-img2');
-      });
-      $('#file-input3').change( function(event) {
-          $("img.icon3").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon3").parents('.upload-icon3').addClass('has-img3');
-      });
-      $('#customizable').change(function(){
+    
+      /*$('#customizable').change(function(){
         if ($(this).val() == 'true') {
           $('.custmization-block').show();
         } else {
@@ -378,23 +446,15 @@
       })
       $('.add').click(function(){
         if ($('.variant_name').val() !='' && $('.price').val() !='') {
-          var html = '<div class="row"><div class="col-md-4" style="text-align:center"><span>'+$('.variant_name').val()+'</span></div><div class="col-md-2"><span>'+$('.price').val()+'</span></div><div class="col-md-2"><button type="button" class="btn btn-danger "><i class="fa fa-trash"></i></button></div></div><input type="hidden" name="variant_name[]" value="'+$('.variant_name').val()+'"><input type="hidden" name="variant_price[]" value="'+$('.price').val()+'"><br>';  
+          var html = '<div class="row"><div class="col-md-4" style="text-align:center"><span>'+$('.variant_name').val()+'</span></div><div class="col-md-2"><span>'+$('.price').val()+'</span></div><div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div></div><input type="hidden" name="variant_name[]" value="'+$('.variant_name').val()+'"><input type="hidden" name="variant_price[]" value="'+$('.price').val()+'"><br>';  
           $('.variant-container').append(html);
         }else{
           return false;
         }
         
         
-      })
-  });
+      })*/
+    })(jQuery);
  </script>
- <script>
-        $(document).ready(function(){
-            $(".add").click(function(){
-                var variant_name = $(".variant_name").val();
-                var price = $(".price").val();
-               
-            });
-        });
- </script>
+ 
 @endsection

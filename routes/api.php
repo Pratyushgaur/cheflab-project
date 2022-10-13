@@ -84,8 +84,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
-
-
+    // FAQ
+    Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
+    // Privacy Polic TAD 
+    Route::post('terms-and-condition-userapp', [App\Http\Controllers\api\AppController::class, 'getTACusers']);
+    Route::post('privacy-and-policy', [App\Http\Controllers\api\AppController::class, 'getPrivacyPolicy']);
+    Route::post('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getCancellationPolicy']);
+    Route::post('aboutus', [App\Http\Controllers\api\AppController::class, 'getAboutUs']);
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutApiController::class, 'get_dine_out_slot']);
     Route::post('dine-out-booking', [App\Http\Controllers\api\DineoutApiController::class, 'dine_out_booking']);
@@ -97,4 +102,5 @@ Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
+
 

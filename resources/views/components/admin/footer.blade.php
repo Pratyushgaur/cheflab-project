@@ -140,7 +140,12 @@
     $('.select2bs4').select2({
       theme: 'bootstrap4'
     })
-    
+    $('#timepicker').datetimepicker({
+      format: 'LT'
+    })
+    $('#timepicker2').datetimepicker({
+      format: 'LT'
+    })
   })
 </script>
 @if (\Session::has('message'))

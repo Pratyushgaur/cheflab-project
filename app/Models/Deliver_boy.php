@@ -4,10 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AppPromotionBlogs extends Model
+
+
+class Deliver_boy extends Model
 {
-    use HasFactory;
-    protected $table ='app_promotion_blog';	
+    use HasFactory, SoftDeletes;
+    protected $table ='deliver_boy';	
     public $timestamps = false;
 }
