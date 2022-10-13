@@ -37,8 +37,7 @@ class BannerSeeder extends Seeder
                     'position'    => '3',
                     'is_active'   => '1',
                     'price'       => '800',
-                    'for'         => 'product',
-                    'type'        => 'restaurant'
+      
                 ],
                 [
                     'name'        => 'Banner 4',
@@ -46,8 +45,7 @@ class BannerSeeder extends Seeder
                     'position'    => '4',
                     'is_active'   => '1',
                     'price'       => '700',
-                    'for'         => 'product',
-                    'type'        => 'restaurant'
+             
                 ],
                 [
                     'name'        => 'Banner 5',
