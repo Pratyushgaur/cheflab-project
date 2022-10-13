@@ -20,7 +20,7 @@
                     <div class="ms-panel-header">
                         <div class="d-flex justify-content-between">
                             <div class="align-self-center align-left">
-                                <h6>Items</h6>
+                                <h6>Dine Out</h6>
                             </div>
                         </div>
                     </div>

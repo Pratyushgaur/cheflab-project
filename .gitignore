@@ -1,6 +1,10 @@
 /node_modules
 /public/hot
 /public/storage
+/public/vendors
+/public/vendor-banner
+/public/products
+
 /storage/*.key
 /vendor
 .env
@@ -21,3 +25,5 @@ composer.json
 .gitignore
 .gitignore
 /pubnub-php
+pubnub-php
+pubnub-php

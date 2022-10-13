@@ -21,7 +21,6 @@ class CreateAdminMasters extends Migration
             $table->text('terms_conditions_deliverboy');
             $table->text('refund_cancellation_cheflab');
             $table->text('aboutus');
-            $table->text('refund_cancellation_cheflab');
             $table->string('delivery_charges_fix');
             $table->string('delivery_charges_per_km');
             $table->string('company_name');

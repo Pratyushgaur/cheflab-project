@@ -8,6 +8,7 @@ use App\Models\Cuisines;
 use App\Models\VendorMenus;
 use App\Models\Vendors;
 
+use App\Notifications\ProductReviewNotification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -250,14 +251,16 @@ class ProductController extends Controller
         $product->cancel_reason = $request->cancel_reason;
         $product->status = '3';
         $product->save();
+        $vendor=Vendors::find($product->userId);
+        $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product rejected by admin.Reason: $request->cancel_reason")); //With new post
         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Reject Successfully');
     }
     public function getPendingList(Request $request){
        // $data1 = Product_master::where('product_for','=','3')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*',  'vendors.name as restaurantName')->get();
-       // $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName')->get(); 
+       // $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName')->get();
        // echo $data1;die;
         if ($request->ajax()) {
-            $data = Product_master::where('product_for','=','3')->where('products.status','=','2')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();   
+            $data = Product_master::where('product_for','=','3')->where('products.status','=','2')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
             if($request->rolename != ''){
                 $data =  Product_master::where('products.status','=',$request->rolename)->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
              }elseif($request->restaurant != ''){
@@ -293,7 +296,7 @@ class ProductController extends Controller
                 $date_with_format = date('d M Y',strtotime($data->created_at));
                 return $date_with_format;
             })
-           
+
             ->addColumn('product_image',function($data){
                 return "<img src=".asset('products').'/'.$data->product_image."  style='width: 50px;' />";
             })
@@ -395,7 +398,8 @@ class ProductController extends Controller
       //  $product = Product_master::where('id','=', $id)->update(['status' => '1']);
         $product = Product_master::where('id','=', $id);
         $product = $product->first();
-        $product->where('id','=', $id) ->limit(1)->update( ['status' => 1 ,'product_approve' => 1]);
+        Product_master::where('id','=', $id) ->limit(1)->update( ['status' => 1 ,'product_approve' => 1]);
+        //var_dump($product->userId);die;
         $vendor = Vendors::where('id','=',$product->userId)->select('deal_categories','deal_cuisines')->first();
         $categories  = explode(',',$vendor->deal_categories);
         if(!in_array($product->category,$categories)){
@@ -408,7 +412,10 @@ class ProductController extends Controller
             Vendors::where('id','=',$product->userId)->update(['deal_cuisines'=>implode(',',$cuisines)]);
         }
         //return $product;
-
-         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
+        $vendor=Vendors::find($product->vendor_id);
+        
+        $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product approved by admin.")); //With new post
+        return true;
+        return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');
     }
 }

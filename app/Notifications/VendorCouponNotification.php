@@ -7,25 +7,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OrderSendToPreparationNotification extends Notification
+class VendorCouponNotification extends Notification
 {
     use Queueable;
-    private $msg,$user_id,$vendor_id,$link,$order_id,$sender_name;
-
-
+    var $vendor_coupn_id,$sender_name,$msg;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($order_id,$sender_name,$msg)
+    public function __construct($vendor_coupn_id,$sender_name,$msg)
     {
-        $this->msg = $msg;
+        $this->vendor_coupn_id=$vendor_coupn_id;
         $this->sender_name=$sender_name;
-//        $this->user_id = $user_id;
-//        $this->vendor_id = $vendor_id;
-//        $this->link = $link;
-        $this->order_id = $order_id;
+        $this->msg=$msg;
     }
 
     /**
@@ -62,11 +57,10 @@ class OrderSendToPreparationNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'msg' => $this->msg,
+            'msg'=>$this->msg,
             'sender_name'=>$this->sender_name,
-//            'user_id' => $this->user_id,
-//            'vendor_id'=>$this->vendor_id,
-            'link'=>route('restaurant.order.view',$this->order_id)
+            'link'=>route('restaurant.product.list')
+
         ];
     }
 }

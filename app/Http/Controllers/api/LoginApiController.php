@@ -13,21 +13,21 @@ class LoginApiController extends Controller
 {
     public function register_send_otp(Request $request)
     {
-        
-        try 
+
+        try
         {
-            $validateUser = Validator::make($request->all(), 
+            $validateUser = Validator::make($request->all(),
             [
                 'mobile_number' => 'required|numeric|digits:10'
             ]);
 
             if($validateUser->fails()){
                 $error = $validateUser->errors();
-                
+
                 return response()->json([
                     'status' => false,
                     'error'=>$validateUser->errors()->all()
-                    
+
                 ], 401);
             }
             if(User::where('mobile_number', '=', $request->mobile_number)->exists()){
@@ -44,8 +44,8 @@ class LoginApiController extends Controller
                     'otp'=>$otp,
                 ], 200);
             }
-            
-           
+
+
 
         } catch (\Throwable $th) {
             return response()->json([
@@ -56,9 +56,9 @@ class LoginApiController extends Controller
     }
     public function register_verify_otp(Request $request)
     {
-        
+
         try {
-            $validateUser = Validator::make($request->all(), 
+            $validateUser = Validator::make($request->all(),
             [
                 'mobile_number' => 'required|numeric|digits:10',
                 'otp' => 'required|numeric|digits:4',
@@ -68,7 +68,7 @@ class LoginApiController extends Controller
                 return response()->json([
                     'status' => false,
                     'error'=>$validateUser->errors()->all()
-                    
+
                 ], 401);
             }
             $insertedOtp = Mobileotp::where(['mobile_number' =>$request->mobile_number])->first();
@@ -86,7 +86,7 @@ class LoginApiController extends Controller
                 ], 200);
             }
 
-            
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -97,27 +97,30 @@ class LoginApiController extends Controller
     public function register_user(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), 
+            $validateUser = Validator::make($request->all(),
             [
-                
+
                 'mobile_number' => 'required|numeric|digits:10|unique:users,mobile_number',
                 'name' => 'required|max:20',
                 'email' => 'required|email|unique:users,email',
+                'alternative_mobile' => 'nullable|sometimes|numeric|digits:10|unique:users,alternative_number',
+
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();
                 return response()->json([
                     'status' => false,
                     'error'=>$validateUser->errors()->all()
-                    
+
                 ], 401);
             }
-            //check otp is verified 
+
+            //check otp is verified
             if(Mobileotp::where(['mobile_number' =>$request->mobile_number,'status' =>'1'])->exists()){
-                
+
                 $user = new User;
                 if($request->referralcode != ''){//
-                    
+
                       $referralUser = User::where('referralCode','=',$request->referralcode);
                     if($referralUser->exists()){
                         $r_user = $referralUser->first();
@@ -126,12 +129,12 @@ class LoginApiController extends Controller
                         return response()->json([
                             'status' => false,
                             'error'=>'Invalid Referral Code'
-                            
+
                         ], 401);
                     }
                 }
-                
-                
+
+
                 $user->name =$request->name;
                 $user->email =$request->email;
                 $user->mobile_number =$request->mobile_number;
@@ -149,8 +152,8 @@ class LoginApiController extends Controller
             }else{
                 return response()->json([
                     'status' => false,
-                    'error'=>'System Error'
-                    
+                    'error'=>'OTP is not verified.'
+
                 ], 401);
             }
         } catch (\Throwable $th) {
@@ -159,14 +162,14 @@ class LoginApiController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
-        
+
 
     }
 
     public function login_send_otp(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), 
+            $validateUser = Validator::make($request->all(),
             [
                 'mobile_number' => 'required|numeric|digits:10'
             ]);
@@ -175,7 +178,7 @@ class LoginApiController extends Controller
                 return response()->json([
                     'status' => false,
                     'error'=>$validateUser->errors()->all()
-                    
+
                 ], 401);
             }
             if (User::where(['mobile_number' => $request->mobile_number])->exists()) {
@@ -189,12 +192,12 @@ class LoginApiController extends Controller
                 return response()->json([
                     'status' => false,
                     'error'=>'Mobile Number Not Found'
-                    
+
                 ], 401);
             }
-            
 
-            
+
+
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -205,7 +208,7 @@ class LoginApiController extends Controller
     public function login_verify_otp(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), 
+            $validateUser = Validator::make($request->all(),
             [
                 'mobile_number' => 'required|numeric|digits:10',
                 'otp' => 'required|numeric|digits:4',
@@ -215,7 +218,7 @@ class LoginApiController extends Controller
                 return response()->json([
                     'status' => false,
                     'error'=>$validateUser->errors()->all()
-                    
+
                 ], 401);
             }
             $insertedOtp = Mobileotp::where(['mobile_number' =>$request->mobile_number])->first();
@@ -240,7 +243,7 @@ class LoginApiController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
-        
+
     }
     function getData(Request $request){
         return $request->user();
@@ -256,7 +259,7 @@ class LoginApiController extends Controller
             ]);
         }
         return $Otp_no;
-        
+
     }
     public function generateReferralCode($name)
     {
@@ -268,19 +271,19 @@ class LoginApiController extends Controller
             $exit = false;
             $code = $name.rand(1000,9999);
             while($exit == false){
-                
+
                 if(User::where('referralCode','=',$code)->exists()){
                     $code = $name.rand(1000,9999);
                 }else{
                     $exit = true;
                 }
-                
+
             }
             return $code;
         } else {
             return $code;
         }
-        
-        
+
+
     }
 }

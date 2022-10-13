@@ -24,6 +24,7 @@ class Products extends Migration
             $table->unsignedBigInteger('category')->references('id')->on('categories');
             $table->unsignedBigInteger('menu_id')->references('id')->on('vendor_menus')->nullable();
             $table->string('dis');
+            $table->string('chili_level');
             $table->enum('type',['veg','non_veg','eggs']);
             $table->decimal('product_price', 10,2);
             $table->string('customizable',20);
@@ -31,8 +32,8 @@ class Products extends Migration
             $table->text('addons')->nullable();
             $table->string('cancel_reason')->nullable();
             $table->enum('product_for',['1','2','3'])->comment('1-cheflab 2-chef 3-restaurant');
-            $table->enum('status', ['1','0','3'])->default('0')->comment('1-active 0-inactive  3=rejec');
-            $table->enum('product_approve', ['1','0','2','3'])->default('2')->comment('1-active 0-inactive 2=pending 3=reject' );
+            $table->enum('status', ['1','0','2','3'])->default('2')->comment('1-active 0-inactive 2=pending 3=reject');
+            $table->enum('product_approve', ['1','0','2','3'])->default('2')->comment('1-approve 2-pending 3-reject');
             $table->string('product_rating',10)->default('0');
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVendersTable extends Migration
+class CreateVendorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -20,7 +20,7 @@ class CreateVendersTable extends Migration
             $table->string('password');
             $table->date('dob')->nullable();
             $table->string('experience')->nullable();
-            $table->boolean('is_online')->default(1);            
+            $table->boolean('is_online')->default(1);
             $table->enum('vendor_type',['restaurant','chef']);
             $table->string('deal_categories',255);
             $table->string('deal_cuisines',255)->nullable();
@@ -29,6 +29,9 @@ class CreateVendersTable extends Migration
             $table->string('pincode',8)->nullable();
             $table->text('address')->nullable();
             $table->string('fssai_lic_no')->nullable();
+            $table->enum('gst_available', ['0', '1'])->default('0')->comment('1-no 0-yes');
+            $table->string('gst_no',15)->nullable();
+            $table->string('tex');
             $table->string('other_document')->nullable();
             $table->string('other_document_image')->nullable();
             $table->string('image')->nullable();

@@ -10,7 +10,7 @@ use Carbon\Carbon;
 // this is vikas testing
 class BannerController extends Controller
 {
-    public function getHomepageBanner(){
+    public function getHomepageBanner(Request $request){
         try {
             $data = \App\Models\RootImage::where(['is_active'=>'1'])->select('name',\DB::raw('CONCAT("'.asset('admin-banner').'/", bannerImage) AS image'),'id')->orderBy('position','ASC')->get();
             return response()->json([

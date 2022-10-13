@@ -26,7 +26,7 @@
 				  <i class="nav-icon fas fa-tachometer-alt"></i>
 				  <p>Dashboard</p>
 				</a>
-			</li>  
+			</li>
 	  		<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  <i class="nav-icon fas fa-edit"></i>
@@ -54,7 +54,7 @@
 						  <p>Cuisines Categories</p>
 						</a>
 					</li>
-					
+
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">
@@ -66,7 +66,7 @@
 				  </p>
 				</a>
 				<ul class="nav nav-treeview">
-				    
+
 					<li class="nav-item">
 						<a href="{{route('admin.vendors.list')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
@@ -87,13 +87,13 @@
 					</li>
 				</ul>
 			</li>
-			
+
 			<li class="nav-item">
 				<a href="{{route('admin.product.cheflabProduct')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
 				  <p>Product Management</p>
 				</a>
-			</li>  
+			</li>
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				<i class="nav-icon fa fa-star"></i>
@@ -117,16 +117,16 @@
                   	</li>
 				</ul>
 			</li>
-			 
+
 			<li class="nav-item">
 				<a href="{{route('admin.coupon.list')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
 				  <p>Coupon Management</p>
 				</a>
-			</li>  
+			</li>
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
-				  
+
 				  <i class="far fa-circle nav-icon "></i>
 				  <p>
 					 Order Management
@@ -139,15 +139,15 @@
 						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>Vendor Orders</p>
 						</a>
-					</li>	
+					</li>
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
-				  
+
 				  <i class="fa fa-bullhorn  nav-icon"></i>
 				  <p>
-				  	Promotion Management 
+				  	Promotion Management
 					<i class="fas fa-angle-left right"></i>
 				  </p>
 				</a>
@@ -172,36 +172,36 @@
 						<p>Application Blog</p>
 						</a>
 					</li>-->
-					
-					
-					
-						
+
+
+
+
 				</ul>
 			</li>
-			
+
 			<li class="nav-item">
-				<a href="{{route('admin.coupon.list')}}" class="nav-link">
+				<a href="{{route('admin.notification.view')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
 				  <p>Notification</p>
 				</a>
-			</li>  
+			</li>
 			<li class="nav-item">
 				<a href="{{route('admin.coupon.list')}}" class="nav-link">
 				  <i class="far fa-user nav-icon"></i>
 				  <p>Reffer & Earn</p>
 				</a>
-			</li>  
-			
-			
-			
-		
+			</li>
+
+
+
+
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
-				  
-				  
+
+
 				  <i class="fa fa-book nav-icon"></i>
 				  <p>
-				  	Account Settlement 
+				  	Account Settlement
 					<i class="fas fa-angle-left right"></i>
 				  </p>
 				</a>
@@ -211,12 +211,12 @@
 						  <i class="fa fa-arrow-right  nav-icon"></i>
 						  <p>All Orders</p>
 						</a>
-					</li>	
+					</li>
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
-				  
+
 				  <i class="far fa-user nav-icon"></i>
 				  <p>
 					 Content Management
@@ -229,7 +229,7 @@
 						  <i class="far fa-circle nav-icon"></i>
 						  <p>All Orders</p>
 						</a>
-					</li>	
+					</li>
 				</ul>
 			</li>
 			<li class="nav-item">
@@ -245,10 +245,9 @@
 				</a>
 			</li>
 		</ul>
-		
+
       </nav>
       <!-- /.sidebar-menu -->
     </div>
     <!-- /.sidebar -->
   </aside>
-  
