@@ -1392,8 +1392,7 @@ class AppController extends Controller
     {
         try {
 
-            $user = User::find(request()->user()->id)->select('id', 'name', 'email', 'alternative_number')->first();
-
+            $user = User::where('id','=',request()->user()->id)->select('id', 'name', 'email', 'alternative_number')->first();
             return response()->json([
                 'status' => true,
                 'message' => 'Data get Successfully',
