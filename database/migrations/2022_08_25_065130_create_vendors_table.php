@@ -29,7 +29,7 @@ class CreateVendorsTable extends Migration
             $table->string('pincode',8)->nullable();
             $table->text('address')->nullable();
             $table->string('fssai_lic_no')->nullable();
-            $table->enum('gst_available', ['0', '1'])->default('0')->comment('1-no 0-yes');
+            $table->enum('gst_available', ['0', '1'])->default('0')->comment('0-no 1-yes');
             $table->string('gst_no',15)->nullable();
             $table->string('tex');
             $table->string('other_document')->nullable();

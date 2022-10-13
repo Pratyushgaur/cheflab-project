@@ -287,8 +287,8 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>
                                         <select class="form-control gstavailable" name="gst_available">
-                                            <option value="no">Not Available</option>
-                                            <option value="yes">Available</option>
+                                            <option value="0">Not Available</option>
+                                            <option value="1">Available</option>
                                         </select>
                                     </div>  
                                   </div>
@@ -428,7 +428,7 @@
     $('.select2').select2();
     $('.custmization-block').hide();
     $('.gstavailable').change(function(){
-      if ($(this).val()  == 'yes') {
+      if ($(this).val()  == '1') {
         $('.custmization-block').show();
       } else {
         $('.custmization-block').hide();
