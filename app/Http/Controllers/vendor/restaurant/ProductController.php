@@ -82,6 +82,7 @@ class ProductController extends Controller
             }
             $product->product_for = '3';
             $product->save();
+            Variant::create(['product_id' => $product->id, 'variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
             if ($request->custimization == 'true')
                 foreach ($request->variant_name as $k => $v) {
                     Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
