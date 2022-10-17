@@ -19,7 +19,7 @@ return [
     //Promotion time setting
     "promotion_restaurant_time"         => [ "7:00:00-14:00:00"  => "7 AM - 2 PM",
                                              "14:00:00-21:00:00" => "2 PM - 9 PM",
-                                             "21:00:00-4:00:00"  => "9 PM - 4 AM"//if time frame cover 2 days then make sure "to time" should be more then 24
+                                             "21:00:00-4:00:00"  => "9 PM - 4 AM"
     ],
 
     //number of banner slides shows
@@ -30,4 +30,5 @@ return [
     'promotion_banner_for_only_values'  => [ 'chef', 'restaurant', 'dineout' ],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
 
+    'deliver_boy_type' => [ 1 => 'Pure Commission', 2 => "Rent Commission", 3 => "In House" ]//deliver_boy table : type column
 ];

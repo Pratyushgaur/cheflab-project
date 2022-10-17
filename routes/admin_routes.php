@@ -159,4 +159,10 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('globle-user-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedback'])->name('admin.globle.feedbackdata');
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
+
+
+    //users
+    Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
+    Route::post('user/delete/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_delete'])->name('admin.user.delete');
+
 });
