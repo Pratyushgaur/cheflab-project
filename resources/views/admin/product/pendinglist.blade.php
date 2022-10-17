@@ -172,11 +172,7 @@
 
                               </a>
                             </li>
-                            <li class="nav-item">
-                              <a href="#" class="nav-link"  id="menu">
-                                Menu
-                              </a>
-                            </li>
+                        
                           </ul>
                         </div>
                       </div>
@@ -323,7 +319,7 @@
               $('.widget-user-desc').html("<p>"+obj.vendor['vendor_type']+"</p>");
 
               $('#type').html("Food Type<span class='float-right badge bg-info'>"+obj.product['type']+"</span>");
-              $('#menu').html("Menu<span class='float-right badge bg-info'>"+obj.menu['menuName']+"</span>");
+             // $('#menu').html("Menu<span class='float-right badge bg-info'>"+obj.menu['menuName']+"</span>");
               $btn1 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="edit btn btn-warning btn-xs accept-btn"  data-alert-message="Are You Sure to Accept this Product" flash="Product" " title="Accept">Accept</a> <a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
               $btn2 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
              if(obj.product['status'] == '2'){

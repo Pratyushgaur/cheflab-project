@@ -334,8 +334,9 @@ class ProductController extends Controller
         $category = Product_master::where('userId','=',$product->userId)->join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->get();
         $cuisines = Product_master::where('userId','=',$product->userId)->join('cuisines', 'products.cuisines', '=', 'cuisines.id')->select('products.*', 'cuisines.name as cuisinesName')->get();
         $vendor = vendors::findOrFail($product->userId);
-        $menu = VendorMenus::findOrFail($product->userId);
-        return \Response::json(['product' => $product,'category' => $category,'cuisines' => $cuisines,'cuisines' => $cuisines,'vendor' => $vendor,'menu' => $menu], 200);
+     //   $menu = VendorMenus::findOrFail($vendor->userId);
+       // var_dump($vendor);die;
+        return \Response::json(['product' => $product,'category' => $category,'cuisines' => $cuisines,'cuisines' => $cuisines,'vendor' => $vendor], 200);
     }
     public function venderProduct(Request $request,$id){
         $user = $request->id;
