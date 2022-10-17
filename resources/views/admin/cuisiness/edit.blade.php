@@ -86,12 +86,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Create Cuisines</h1>
+            <h1>Update Cuisines Category</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Create Cuisines</li>
+              <li class="breadcrumb-item active">Update Cuisines Category</li>
             </ol>
           </div>
         </div>
@@ -152,7 +152,7 @@
 				</div>
 				<div class="card card-info col-md-8">
             <div class="card-header">
-              <h3 class="card-title">List</h3>
+              <h3 class="card-title">List of Cuisines Categories</h3>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">

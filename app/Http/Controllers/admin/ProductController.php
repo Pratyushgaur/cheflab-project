@@ -197,13 +197,14 @@ class ProductController extends Controller
           }
           $product->save();
           //
-         if($request->customizable == 'true'){
-            foreach($request->variant_name as $k =>$v){
-                Variant::create(['product_id'=>$product->id,'variant_name'=>$v,'variant_price'=>$request->variant_price[$k]]);
+         /*if ($request->custimization == 'true')
+                foreach ($request->variant_name as $k => $v) {
+                    Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
+                }*/
+            if ($request->custimization == 'true')
+                foreach ($request->variant_name as $k => $v) {
+                    Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
             }
-
-
-        }
           return redirect()->route('admin.product.cheflabProduct')->with('message', 'Chef Product  Registration Successfully');
 
       }

@@ -1182,7 +1182,6 @@ class AppController extends Controller
                 [
                     'user_id' => 'required|numeric',
                     'vendor_id' => 'required|numeric',
-                    'user_id' => 'required|numeric',
                     'customer_name' => 'required|string',
                     'delivery_address' => 'required|string',
                     'city' => 'required|string',
@@ -1390,7 +1389,7 @@ class AppController extends Controller
 
     public function getUserInfo(Request $request)
     {
-        try {
+          try {
 
             $user = User::where('id','=',request()->user()->id)->select('id', 'name', 'email', 'alternative_number')->first();
             return response()->json([
@@ -1483,5 +1482,85 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function getUerFaq(){
+        try {
+            $data = \App\Models\User_faq::all();
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$data
 
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function getTACusers(){
+        try {
+            $data = \App\Models\AdminMasters::select('terms_conditions_cheflab');
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$data
+
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function getPrivacyPolicy(){
+        try {
+            $data = \App\Models\AdminMasters::select('privacy_policy');
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$data
+
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function getCancellationPolicy(){
+        try {
+            $data = \App\Models\AdminMasters::select('refund_cancellation_cheflab');
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$data
+
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function getAboutUs(){
+        try {
+            $data = \App\Models\AdminMasters::select('aboutus');
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$data
+
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+   
 }

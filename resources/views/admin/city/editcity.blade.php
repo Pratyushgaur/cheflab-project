@@ -57,8 +57,7 @@
 				<div class="card card-info col-md-8">
 				<div class="card card-info">
             <div class="card-header">
-              <h3 class="card-title">Files</h3>
-
+              <h3 class="card-title">List of Cities</h3>
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                   <i class="fas fa-minus"></i></button>

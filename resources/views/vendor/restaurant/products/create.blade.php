@@ -176,7 +176,7 @@
                   <div class="col-md-4 mb-3">
                     <label for="">Primary Item Price <span class="text-danger">*</span></label>
                     <div class="input-group">
-                      <input type="text" class="form-control" name="item_price" id="" placeholder="Enter Price" value="" >
+                      <input type="text" class="form-control" name="item_price" id="price" placeholder="Enter Price" value="" >
                       
                     </div>
                     
@@ -185,7 +185,7 @@
                   <div class="col-md-4 mb-3">
                     <label for="validationCustom23">Custmization Availablity</label>
                     <div class="input-group">
-                      <select class="form-control custimization" name="custimization" id="validationCustom23 " >
+                      <select class="form-control custimization" name="custimization" id="getPrice" >
                           <option value="false">No</option>
                           <option value="true">Yes</option>
 
@@ -194,8 +194,6 @@
                     </div>
                     <span class="custimization_error text-danger"></span>
                   </div>
-
-
                   <div class="col-md-12 mb-3 custmization-block" style="">
                       <div class="row">
                         <div class="col-md-12">
@@ -208,7 +206,7 @@
                                   <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
                               </div>
                               <div class="col-md-2">
-                                  <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
+                                  <input type="text" name="price[]" id="myInput" class="form-control price" placeholder="Enter Price">
                               </div>
                           </div>
                           <!-- <div class="row input-container" style="padding-bottom:15px;">
@@ -244,6 +242,21 @@
                           </div>
                         </div>
                       </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="validationCustom23">Chili Level</label>
+                    <div class="input-group">
+                      <select class="form-control" name="chili_level">
+                          <option value="no">Not Available</option>
+                          <option value="1">1 Chili</option>
+                          <option value="2">2 Chili</option>
+                          <option value="3">3 Chili</option>
+                          <option value="4">4 Chili</option>
+                          <option value="5">5 Chili</option>
+                      </select>
+                      
+                    </div>
+                    <span class="custimization_error text-danger"></span>
                   </div>
                   <div class="col-md-6 mb-3">
                         <div>
@@ -307,6 +320,11 @@
         $('.custmization-block').hide();
       }
     })
+    $('#price').on("input", function(){
+       var price = document.getElementById('price').value;
+       $("#myInput").val(price);
+    })
+    
     $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');
@@ -366,9 +384,7 @@
                 checkVariants: true,
                 required:true
               },
-              product_image:{
-                required:true
-              },
+             
               primary_variant_name:{
                 required:true
               }

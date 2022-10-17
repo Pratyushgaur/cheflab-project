@@ -158,7 +158,12 @@
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter  Email">
                                     </div>  
                                   </div>
-                                  
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">City <span class="text-danger">*</span></label>
+                                        <input type="text" name="city" class="form-control"  id="" placeholder="Enter City">
+                                    </div>  
+                                  </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
@@ -171,28 +176,16 @@
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>  
                                   </div>
-                                  <div class="col-md-12">
+                                  <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
-                                        <input type="text" name="address" class="form-control"  id="" placeholder="Enter Restaurant Address">
+                                        <label for="exampleInputEmail1">Delivery Boy Section  <span class="text-danger">*</span></label>
+                                        <select name="type" class="form-control">
+                                          <option value="1">Pure Commission</option>
+                                            <option value="2">Rent/Day Commission</option>
+                                            <option value="3">In House</option>
+                                        </select>
                                     </div>  
-                                  </div>
-                                 
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
-                                        <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
-                                        <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
-                                    </div>  
-                                  </div>
-                                  
-                                  
-                                  
+                                  </div> 
                                 </div>
                                 
                               </div>
@@ -207,7 +200,7 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                  <div class="col-sm-3">
+                                  <div class="col-sm-4">
                                         <div>
                                           <label for="">Deliver Boy Images</label>
                                         </div>
@@ -220,10 +213,19 @@
                                             <input id="file-input" type="file" name="image" required/>
                                         </div>        
                                   </div>
-                                  
-                                  <div class="col-sm-3">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
+                                        <select name="identity_type"  class="form-control">
+                                          <option value="1">Passport</option>
+                                          <option value="2">Driving License</option>
+                                          <option value="3">Aadhar Card</option>
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
                                         <div>
-                                          <label for="">Other Document </label>
+                                          <label for="">Identity Image </label>
                                           
                                         </div>
                                         <div class="image-upload">
@@ -233,10 +235,10 @@
                                                     <img class="icon3" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
-                                            <input id="file-input3" type="file" name="other_document"/>
+                                            <input id="file-input3" type="file" name="identity_image"/>
                                             
                                         </div>   
-                                        <input type="text" name="other_document_name" class="form-control" placeholder="Document Name">    
+                                        <input type="text" name="identity_number" class="form-control" placeholder="Document Name">    
                                   </div>
                                 </div>
                                 <!-- div row -->
@@ -246,7 +248,7 @@
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Register Restaurant </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Register Deliver Boy </button>
                           </div>
                       </form>
                       
@@ -303,7 +305,7 @@
                   email: true,
                   remote: '{{route("admin.deliverboy.emailcheck")}}',
               },
-              address: {
+              city: {
                   required: true,
                   minlength: 5,
                   maxlength: 60
@@ -321,15 +323,11 @@
                   maxlength: 6,
                   number: true
               },
-              password:{
+              identity_image:{
                 required: true,
-                maxlength: 20,  
-                minlength: 5,
-                
               },
-              confirm_password:{
+              identity_number:{
                  required: true,
-                 equalTo : '[name="password"]'
               },
              
               
@@ -346,7 +344,7 @@
                   email: "Email must be a valid email address",
                   remote:"This Email is Already has been Taken"
               },
-              address: {
+              city: {
                   required: "Address is required",
                   maxlength: "Address cannot be more than 60 characters",
                   minlength: "Address cannot be Less than 5 characters"
@@ -357,13 +355,15 @@
                   minlength: "pincode cannot be Less than 6 characters",
                   number: "Pincode must be an number"
               },
-              confirm_password:{
-                equalTo:"Field Not Match with Passowrd Field"
+              identity_image:{
+                equalTo:"Identity Image Required"
               },
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
+              },
+              identity_number:{
+                remote:"Identity Number is Required"
               }
-              
           }
       });
 

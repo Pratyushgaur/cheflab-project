@@ -156,7 +156,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         ->leftJoin('addons', function ($join) {
             $join->whereRaw(DB::raw("FIND_IN_SET(addons.id, products.addons)"));
         });
-
+    $product = $product->orderBy('variants.id', 'ASC');
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
     $product = $product->get();

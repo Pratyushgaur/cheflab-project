@@ -277,8 +277,27 @@
                                         <input type="text" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>  
                                   </div>
-                                  
-                                  
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Tax<span class="text-danger">*</span></label>
+                                        <input type="text" name="tax" class="form-control"  id="" placeholder="Tax">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>
+                                        <select class="form-control gstavailable" name="gst_available">
+                                            <option value="0">Not Available</option>
+                                            <option value="1">Available</option>
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-6 custmization-block">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
+                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                    </div>  
+                                  </div>
                                 </div>
                                 
                               </div>
@@ -407,23 +426,29 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('.select2').select2();
-    
+    $('.custmization-block').hide();
+    $('.gstavailable').change(function(){
+      if ($(this).val()  == '1') {
+        $('.custmization-block').show();
+      } else {
+        $('.custmization-block').hide();
+      }
+    })
       $("#restaurant-form").validate({
           rules: {
               Restaurant_name: {
                   required: true,
-                  maxlength: 40,
               },
               email: {
                   required: true,
-                  maxlength: 30,
+                  maxlength: 60,
                   email: true,
                   remote: '{{route("admin.vendor.emailcheck")}}',
               },
               address: {
                   required: true,
                   minlength: 5,
-                  maxlength: 60
+                  maxlength: 140
               },
               phone: {
                   required: true,
@@ -454,6 +479,9 @@
               vendor_commission:{
                 required:true,
                 number: true
+              },
+              tax: {
+                required: true,
               },
               'categories[]':{
                 required:true
@@ -491,6 +519,9 @@
               },
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
+              },
+              tax:{
+                remote:"Tax is required"
               },
               'categories[]':{
                 required:"Select Deals categories"
