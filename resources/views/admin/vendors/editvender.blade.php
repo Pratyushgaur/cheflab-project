@@ -107,6 +107,11 @@
             border-radius: 18px;
             margin:0px;
         }
+        
+
+
+
+
         .upload-icon4{
           width: 150px;
           height: 150px;
@@ -136,6 +141,9 @@
             border-radius: 18px;
             margin:0px;
         }
+        .select2-selection__choice{
+          background:#007bff !important;
+        }
       </style>
       @endsection
       <!-- Content Wrapper. Contains page content -->
@@ -155,7 +163,7 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Edit  Chef </h3>
+                      <h3 class="card-title">Edit  Restaurant </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
@@ -167,39 +175,90 @@
 
                               </div>
                               <div class="card-body">
+                                <div class="error">
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
+                                </div>
+                             
                                 <div class="row">
+                                  
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Chef <span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->name}}" name="restourant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
+                                        <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$vendor->name}}" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                         <input type="hidden" value="{{$vendor->id}}" name="id" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                                        <input type="email" value="{{$vendor->email}}" name="email" class="form-control"  id="" placeholder="Enter Chef Email">
+                                        <input type="email" name="email" value="{{$vendor->email}}" class="form-control"  id="" placeholder="Enter Restaurant Email">
                                     </div>  
                                   </div>
                                   
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->pincode}}" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
+                                        <input type="text" name="pincode" value="{{$vendor->pincode}}" class="form-control"  id="" placeholder="Enter Pincode">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
+                                        <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>  
+                                  </div>
+                                  <!--<div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
+                                        <select name="categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                           
+                                          <option value="{{$vendor->deal_categories}}">{{$vendor->deal_categories}}</option>
+                                            @foreach($categories as $k =>$v)
+                                            <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                          </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
+                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
+                                        <option value="{{$vendor->deal_cuisines}}">{{$vendor->cuisinesName}}</option>  
+                                            @foreach($cuisines as $k =>$v)
+                                            <option value="{{$v->id}}">{{$v->name}}</option>
+                                            @endforeach
+                                          </select>
+                                    </div>  
+                                  </div>-->
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
+                                        <input type="text" name="address"  value="{{$vendor->address}}" class="form-control"  id="" placeholder="Enter Restaurant Address">
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->mobile}}" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
-                                        <input type="text" name="address" value="{{$vendor->address}}" class="form-control"  id="" placeholder="Enter Chef Address">
-                                    </div>  
-                                  </div>
+                                      <div class="form-group">
+                                        
+                                          <label for="exampleInputEmail1">Vendor Food Type</label><br>
+                                          
+                                          <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                           
+                                              <input type="radio" id="veg" name="type" value="1" checked>
+                                              <label for="veg">Veg</label>
+                                            </div>
+                                       
+                                            <div class="icheck-danger d-inline">
+                                              <input type="radio" id="non_veg" name="type" value="3" >
+                                              <label for="non_veg">Veg + Non Veg</label>
+                                            </div>
+                                       
+                                            
+                                          </div>
+                                      </div>  
+                                    </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
@@ -209,12 +268,36 @@
                                   
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Vendor Commission Persentage <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Vendor Commission Persentage<span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->commission}}" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>  
                                   </div>
-                                  
-                                  
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Tax<span class="text-danger">*</span></label>
+                                        <input type="text" name="tax" value="{{$vendor->tax}}" class="form-control"  id="" placeholder="Tax">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>
+                                        <select class="form-control gstavailable" name="gst_available">
+                                            @if($vendor->gst_available == '0')
+                                            <option value="0">Not Available</option>
+                                            @else
+                                            <option value="1">Available</option>
+                                            @endif
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  @if($vendor->gst_available == '1')
+                                  <div class="col-md-6 custmization-block">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
+                                        <input type="password" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                    </div>  
+                                  </div>
+                                  @endif
                                 </div>
                                 
                               </div>
@@ -231,12 +314,16 @@
                                 <div class="row">
                                   <div class="col-sm-3">
                                         <div>
-                                          <label for="">Chef Images</label>
+                                          <label for="">Restaurant Images</label>
                                         </div>
                                         <div class="image-upload">
                                             <label for="file-input">
                                                 <div class="upload-icon">
-                                                    <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
+                                                    @if($vendor->image == null)
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    @else
+                                                    <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->image ) }}">
+                                                    @endif
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="image" required/>
@@ -254,7 +341,6 @@
                                                   @else
                                                   <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->fassai_image ) }}">
                                                   @endif
-                                                    
                                                 </div>
                                             </label>
                                             <input id="file-input2" type="file" name="fassai_image"/>
@@ -270,11 +356,10 @@
                                           
                                             <label for="file-input3">
                                                 <div class="upload-icon3">
-                                                    
                                                     @if($vendor->other_document == null)
-                                                    <img class="icon3" src="{{asset('add-image.png')}}">
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon3" src="{{ asset('vendor-documents'.'/'.$vendor->other_document ) }}">
+                                                    <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->other_document ) }}">
                                                     @endif
                                                 </div>
                                             </label>
@@ -292,14 +377,14 @@
                                           
                                             <label for="file-input4">
                                                 <div class="upload-icon4">
-                                                @if($vendor->banner_image == null)
-                                                    <img class="icon3" src="{{asset('add-image.png')}}">
+                                                    @if($vendor->banner_image == null)
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon3" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                    <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->other_document ) }}">
                                                     @endif
                                                 </div>
                                             </label>
-                                            <input id="file-input4" type="file" name="banner_image"/>
+                                            <input id="file-input4"  type="file" name="banner_image"/>
                                             
                                         </div>   
                                         
@@ -312,7 +397,7 @@
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update</button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Register Restaurant </button>
                           </div>
                       </form>
                       
@@ -356,23 +441,31 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    
+    $('.select2').select2();
+    $('.custmization-block').hide();
+    $('.gstavailable').change(function(){
+      if ($(this).val()  == 'yes') {
+        $('.custmization-block').show();
+      } else {
+        $('.custmization-block').hide();
+      }
+    })
       $("#restaurant-form").validate({
           rules: {
-              restourant_name: {
+            restourant_name: {
                   required: true,
-                  maxlength: 20,
+                  maxlength: 80,
               },
               email: {
                   required: true,
-                  maxlength: 30,
+                  maxlength: 60,
                   email: true,
                   remote: '{{route("admin.vendor.emailcheckUpdate",$vendor->id)}}',
               },
               address: {
                   required: true,
                   minlength: 5,
-                  maxlength: 60
+                  maxlength: 120
               },
               phone: {  
                   required: true,
@@ -393,12 +486,16 @@
               vendor_commission:{
                 required:true,
                 number: true
+              },
+              tax: {
+                required: true,
               }
+
               
               
           },
           messages: {
-              restourant_name: {
+            restourant_name: {
                   required: "Name is required",
                   maxlength: "First name cannot be more than 20 characters"
               },
@@ -422,9 +519,10 @@
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
               },
-              vendor_commission: {
-                required: "Commissiion is required",
+              tax:{
+                remote:"Tax is required"
               }
+              
               
           }
       });

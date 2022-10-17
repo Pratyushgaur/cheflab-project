@@ -263,7 +263,7 @@
                                     <div class="col-md-6">
                                       <div class="form-group">
                                             <div>
-                                              <label for="">Images <span class="text-danger">*</span></label>
+                                              <label for="">Images </label>
                                             </div>
                                             <div class="image-upload">
                                                 <label for="file-input">

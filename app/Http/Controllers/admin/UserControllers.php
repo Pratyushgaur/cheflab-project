@@ -54,7 +54,7 @@ class UserControllers extends Controller
                                         
                                         <a class="dropdown-item text-info" href="'.route('admin.chef.edit',Crypt::encryptString($data->id)).'"><i class="fas fa-edit"></i> Edit</a>
                                         <a class="dropdown-item text-info" href="'.route('admin.vendor.view',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View More</a>
-                                        <a class="dropdown-item text-danger" href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" data-alert-message="Are You Sure to Delete this Vendor" data-action-url="' . route('admin.vendors.ajax.delete') . '" ><i class="fas fa-trash"></i> Delete</a>';
+                                        <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="Vendor"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a>';
                                         
                                         if($data->vendor_type == 'chef'){
                                             $btn .= '<a class="dropdown-item text-danger" href="'.route('admin.chefproduct.view',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';    
@@ -231,9 +231,9 @@ class UserControllers extends Controller
             $request->image->move(public_path('vendors'),$filename);
            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $vendors->image  = $filename;
-        }else{
+        }/*else{
             $vendors->image  = 'default_chef_image.jpg';
-        }
+        }*/
         if($request->has('fassai_image')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->fassai_image->extension();
             $request->fassai_image->move(public_path('vendor-documents'),$filename);
@@ -276,21 +276,33 @@ class UserControllers extends Controller
     public function vendors_update(Request $request){
        // return $request->input();die;
        $this->validate($request, [
-        'restourant_name' => 'required',
-        'pincode' => 'required',
-        'address' => 'required',
-        'vendor_commission' => 'required',
+            'restaurant_name' => 'required',
+            'email' => 'required',
+            'pincode' => 'required',
+            'phone' => 'required',
+            'address' => 'required',
+            'fssai_lic_no' => 'required',
+            'vendor_commission' => 'required',
+        //    'categories' => 'required',
+          //  'deal_cuisines' => 'required',
+            'tax' => 'required',
       ]);
         $vendors = Vendors::find($request->id);
-       // dd($vendors);
-        $vendors->name = $request->restourant_name;
-        $vendors->id = $request->id;
-        $vendors->email = $request->email;
-        $vendors->password = Hash::make($request->password);
-        $vendors->vendor_type = 'chef';
-        $vendors->mobile  = $request->phone;
-        $vendors->pincode  = $request->pincode;
-        $vendors->address  = $request->address;
+      //  dd($vendors);
+       $vendors->name = $request->restaurant_name;
+       $vendors->email = $request->email;
+       $vendors->vendor_type = 'restaurant';
+       $vendors->mobile  = $request->phone;
+       $vendors->pincode  = $request->pincode;
+       $vendors->address  = $request->address;
+       $vendors->fssai_lic_no  = $request->fssai_lic_no;
+       $vendors->commission  = $request->vendor_commission;
+       $vendors->vendor_food_type  = $request->type;
+       $vendors->tax  = $request->tax;
+       $vendors->gst_available  = $request->gst_available;
+       $vendors->gst_no  = $request->gst_no;
+    //   $vendors->deal_categories  = implode(',',$request->categories);
+     //  $vendors->deal_cuisines  = implode(',',$request->deal_cuisines);
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('vendors'),$filename);
@@ -454,8 +466,13 @@ class UserControllers extends Controller
     public function chef_edit($encrypt_id){
         try {
             $id =  Crypt::decryptString($encrypt_id);  
+          //  dd($id);die;
             $vendor = Vendors::findOrFail($id);
-            return view('admin/vendors/editvender',compact('vendor'));
+           // $vendor =  Vendors::where('vendors.id','=',$id)->join('categories', 'vendors.deal_categories', '=', 'categories.id')->join('cuisines', 'vendors.deal_cuisines', '=', 'cuisines.id')->select('vendors.*', 'categories.name as categoryName','cuisines.name as cuisinesName')->get()->first();
+            //dd($vendor);die;
+            $categories = Catogory_master::where('is_active','=','1')->get();
+            $cuisines = Cuisines::where('is_active','=','1')->get();
+            return view('admin/vendors/editvender',compact('vendor','categories','cuisines'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 
