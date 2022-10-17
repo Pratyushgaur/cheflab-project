@@ -62,7 +62,7 @@
             <form class="needs-validation" novalidate="" action="{{route('action.vendor.login')}}" method="post">
             
             @csrf
-              <h3>Vendor Login </h3>
+              <h3>Vendor's Login </h3>
               <p>Please enter your email and password to continue</p>
                 @if (\Session::has('error'))
                     
