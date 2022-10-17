@@ -14,33 +14,15 @@
           <!-- Main content -->
           <section class="content">
             <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card card-primary card-outline">
-                      <div class="card-header">
-                          <div class="row">
-                            <!--<div class="col-md-2">
-                                <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
-                                  <option value="">Filter By Role</option>
-                                  <option value="restaurant">Restaurant</option>
-                                  <option value="chef">Chef</option>
-                                </select>
-                            </div>-->
-                            <div class="col-md-10">
-                                <a href="{{route('admin.coupon.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create Coupon</a>
-                            </div>
-                          </div>
-                          
-                      </div>
-                  </div>
-                </div>
+            <div class="row">
+                
               </div>
               <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">List of Coupons </h3>
+                      <h3 class="card-title">List of  User Feedback </h3>
                       
                       
                     </div>
@@ -48,14 +30,14 @@
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th >Name</th>
-                                    <th >Code</th>
-                                    <th  >Discount Type</th>
-                                    <th  >Discount</th>
-                                    <th> Type</th>
-                                    <th> Expires At</th>
-                                    <th  >Action</th>
+                                    <th class="text-center">Sr No.</th>
+                                    <th>User-id</th>
+                                    <th>User Name</th>
+                                    <th>Mobile</th>
+                                    <th>Email</th>
+                                    <th>Subject</th>
+                                    <th>Descreption</th>
+                                    <th>Action</th>
                                   </tr>
                             </thead>
                             
@@ -92,15 +74,15 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.coupon.data') }}",
+        
+        ajax:"{{ route('admin.globle.feedbackdata') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},
-            {data: 'code', name: 'code'},
-            {data: 'discount_type', name: 'discount_type'},
-            {data: 'discount', name: 'discount'},
-            {data: 'status', name: 'status'},
-            {data: 'to', name: 'to'},
+            {data: 'mobile', name: 'mobile'},
+            {data: 'email', name: 'email'},
+            {data: 'subject', name: 'subject'},
+            {data: 'description', name: 'description'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
@@ -108,7 +90,38 @@
 
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
-   }
+  }
+  $('#filter-by-role').change(function(){
+    $.ajax({
+      method:"GET",
+      action:"{{route('admin.vendor.byRole')}}",
+      data:{
+        role:$(this).val()
+      },
+      success:function(){
+
+      }
+    })
+    //
+    $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+        type: "POST",
+        url: '{{route("admin.vendor.byRole")}}', // This is what I have updated
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: { "_token": "{{ csrf_token() }}","role":$(this).val() },
+        success: function(response){
+          var html = '<option value="">Filter By Vendor</option>';
+          for(var i=0;response.length >i; i++){
+            html+='<option value="'+response[i].id+'">'+response[i].name+'</option>';
+          }
+          $('#filter-by-vendor').html(html);
+        }
+      }); 
+  })
 
  </script>
 @endsection

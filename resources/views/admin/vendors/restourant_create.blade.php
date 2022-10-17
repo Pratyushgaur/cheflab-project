@@ -295,7 +295,7 @@
                                   <div class="col-md-6 custmization-block">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="password" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
                                     </div>  
                                   </div>
                                 </div>
@@ -438,18 +438,17 @@
           rules: {
               Restaurant_name: {
                   required: true,
-                  maxlength: 40,
               },
               email: {
                   required: true,
-                  maxlength: 30,
+                  maxlength: 60,
                   email: true,
                   remote: '{{route("admin.vendor.emailcheck")}}',
               },
               address: {
                   required: true,
                   minlength: 5,
-                  maxlength: 60
+                  maxlength: 140
               },
               phone: {
                   required: true,

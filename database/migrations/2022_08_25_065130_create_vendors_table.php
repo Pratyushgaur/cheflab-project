@@ -31,7 +31,7 @@ class CreateVendorsTable extends Migration
             $table->string('fssai_lic_no')->nullable();
             $table->enum('gst_available', ['0', '1'])->default('0')->comment('0-no 1-yes');
             $table->string('gst_no',15)->nullable();
-            $table->string('tex');
+            $table->string('tax');
             $table->string('other_document')->nullable();
             $table->string('other_document_image')->nullable();
             $table->string('image')->nullable();
