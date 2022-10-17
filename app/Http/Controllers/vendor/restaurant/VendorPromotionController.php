@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\vendor\restaurant;
 
+use App\Events\CreateSlotBookingEvent;
 use App\Http\Controllers\Controller;
 use App\Models\RootImage;
 use App\Models\SloteBook;
@@ -20,8 +21,16 @@ class VendorPromotionController extends Controller
 
     public function create_promotion()
     {
+        $for = [];
+        if (@Auth::guard('vendor')->user()->vendor_type == 'chef')
+            $for = [ 'chef' => "Chef Promotion" ];
+        else if (@Auth::guard('vendor')->user()->vendor_type == 'restaurant')
+            $for = [ 'restaurant' => "Restaurant Promotion" ];
+        if (@Auth::guard('vendor')->user()->table_service == 1)
+            $for['dineout'] = "Dine-out Promotion";
+
         $slot = RootImage::where('is_active', '=', '1')->select('id', 'price')->get();
-        return view('vendor.restaurant.promotion.create', compact('slot'));
+        return view('vendor.restaurant.promotion.create', compact('slot', 'for'));
     }
 
     public function selctvalue(Request $request)
@@ -44,6 +53,7 @@ class VendorPromotionController extends Controller
             'slot_image'      => 'required',
             'booked_for_time' => 'required',
             'position'        => 'required',
+            'for'             => 'required',
             'price'           => 'required'
         ]);
 //        dd($request->all());
@@ -73,6 +83,7 @@ class VendorPromotionController extends Controller
         $slot->cheflab_banner_image_id = $request->id;
         $slot->price                   = $request->price;
         $slot->cheflab_banner_image_id = $request->position;
+        $slot->for                     = $request->for;
         $slot->vendor_id               = Auth::guard('vendor')->user()->id;
 
         if ($request->has('slot_image')) {
@@ -82,6 +93,7 @@ class VendorPromotionController extends Controller
         }
 
         $slot->save();
+        event(new CreateSlotBookingEvent($slot));
         return redirect()->route('restaurant.promotion.list')->with('message', 'Slot successfully booked');
     }
 
@@ -89,23 +101,30 @@ class VendorPromotionController extends Controller
     {
         if ($request->ajax()) {
             $vendor_id = Auth::guard('vendor')->user()->id;
-            $data      = SloteBook::join('cheflab_banner_image','cheflab_banner_image.id','slotbooking_table.cheflab_banner_image_id')
-            ->where('vendor_id', $vendor_id)
-                ->select('position','cheflab_banner_image_id',\DB::raw('DATE_FORMAT(from_date,"%D %b %y") as from_date'),\DB::raw('DATE_FORMAT(to_date,"%D %b %y") as to_date'),
-                    \DB::raw('DATE_FORMAT(from_time,"%r") as from_time'),\DB::raw('DATE_FORMAT(to_time,"%r") as to_time'),
-                     'name', 'slot_image', 'slotbooking_table.is_active')->get();
+            $data      = SloteBook::join('cheflab_banner_image', 'cheflab_banner_image.id', 'slotbooking_table.cheflab_banner_image_id')
+                ->where('vendor_id', $vendor_id)
+                ->select('position', 'cheflab_banner_image_id', \DB::raw('DATE_FORMAT(from_date,"%D %b %y") as from_date'), \DB::raw('DATE_FORMAT(to_date,"%D %b %y") as to_date'),
+                    \DB::raw('DATE_FORMAT(from_time,"%r") as from_time'), \DB::raw('DATE_FORMAT(to_time,"%r") as to_time'),
+                    'name', 'slot_image', 'slotbooking_table.is_active')->get();
             //  $data = \App\Models\SloteBook::where(['slotbooking_table.slot_status'=>'0'])->join('vendors','slotbooking_table.vendor_id','=','vendors.id')->select('slotbooking_table.banner','slot_id','date','slot_image','slot_status','vendors.name as restaurantName')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('is_active', function ($data) {
-                    return $status_class = (!empty($data->is_active)) && ($data->is_active == 0) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-primary">Pending</span>';
-                    return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
+                    if(!empty($data->is_active) && ($data->is_active==1))
+                        $return='<span class="badge badge-success">Active</span>';
+                    else if(!empty($data->is_active) && ($data->is_active==2))
+                        $return='<span class="badge badge-danger">Rejected</span>';
+                    else
+                        $return='<span class="badge badge-primary">Pending</span>';
+                    return $return;
+//                    return $status_class = (!empty($data->is_active)) && ($data->is_active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-primary">Pending</span>';
+                    return '<input type="checkbox" name="my-checkbox" checked data-bo/otstrap-switch data-off-color="danger" data-on-color="success">';
                 })
                 ->addColumn('slot_image', function ($data) {
                     return "<img src=" . asset('slot-vendor-image') . '/' . $data->slot_image . "  style='width: 50px;' />";
                 })
 //                ->rawColumns([ 'from_date', 'is_active', 'slot_image' ])
-                ->rawColumns([ 'is_active', 'slot_image','from_date','to_date','from_time','to_time', 'is_active', 'slot_image','position' ])
+                ->rawColumns([ 'is_active', 'slot_image', 'from_date', 'to_date', 'from_time', 'to_time', 'is_active', 'slot_image', 'position' ])
                 ->make(true);
         }
     }
@@ -162,7 +181,8 @@ class VendorPromotionController extends Controller
 
 
         //same request already exists/
-        if (SloteBook::where('from_date', '=', $date_from)->where('to_date', '=', $date_to)->where('vendor_id', '=', $vendor_id)->where('from_time', $time[0])->exists()) {
+        if (SloteBook::where('for', '=', $request->banner_for)->where('from_date', '=', $date_from)->where('to_date', '=', $date_to)
+            ->where('vendor_id', '=', $vendor_id)->where('from_time', $time[0])->exists()) {
             return response()->json([
                 'status'  => false,
                 'message' => 'Duplicate request'
@@ -177,18 +197,22 @@ class VendorPromotionController extends Controller
 
         //if no vendor found, that means all slotes available for current vendor
         if (empty($vendor_ids)) {
-            $slot = RootImage::where('is_active', '=', '1')->select('id', 'price', \DB::raw('name as slot_name'))->get();
+            $slot = RootImage::where('is_active', '=', '1')->where('banner_for', '=', $request->banner_for)->select('id', 'price', \DB::raw('name as slot_name'))->get();
             return \Response::json($slot);
         }
 
 
         //eliminate already booked slots
-        $booked_slot_ids = SloteBook::where(function ($q) use ($date_to, $date_from) {
-            $q->where([ [ 'from_date', '>=', $date_from ], [ 'from_date', '<=', $date_to ] ])
-                ->orWhere([ [ 'to_date', '>=', $date_from ], [ 'to_date', '<=', $date_to ] ]);
-        })->whereIn('vendor_id', $vendor_ids)->pluck('cheflab_banner_image_id');
+        $booked_slot_ids = SloteBook::where('for', '=', $request->banner_for)->where(function ($q) use ($date_to, $date_from,$time) {
+            $q->where(function ($q) use ($date_to, $date_from) {
+                $q->where([ [ 'from_date', '>=', $date_from ], [ 'from_date', '<=', $date_to ] ])
+                    ->orWhere([ [ 'to_date', '>=', $date_from ], [ 'to_date', '<=', $date_to ] ]);
+            })
+            ->where('from_time',$time[0])->where('to_time',$time[1]);
+        })->where('is_active', '=', '1')
+            ->whereIn('vendor_id', $vendor_ids)->pluck('cheflab_banner_image_id');
 
-        $slotMaster = RootImage::where('is_active', '=', '1')->select('id', 'price', \DB::raw('name as slot_name'));
+        $slotMaster = RootImage::where('is_active', '=', '1')->where('banner_for', '=', $request->banner_for)->select('id', 'price', \DB::raw('name as slot_name'));
 
         if (!empty($booked_slot_ids)) {
             $slotMaster->whereNotIn('id', $booked_slot_ids);

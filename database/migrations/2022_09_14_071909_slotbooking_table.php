@@ -26,9 +26,10 @@ class SlotbookingTable extends Migration
 
             $table->string('slot_image');
             $table->string('price');
-
+            $table->enum('for', ['chef', 'restaurant', 'dineout'])->comment('in mobile app where banner should be displed');
             $table->enum('is_active', ['1', '2', '0'])->default('0')->comment('1-accept 2-reject 0-pending');
-            $table->string('comment_rejoin');
+            $table->string('comment_reason');
+            $table->enum('payment_status', ['1', '0'])->default('0')->comment('1-Done  0-pending');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->softDeletes();

@@ -73,6 +73,9 @@
                 "hideMethod": "fadeOut"
             }
 
+            @if (Session::has('error'))
+            toastr.success('{{ Session::get('error') }}', 'Danger');
+            @endif
 
             @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}', 'Success');

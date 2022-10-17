@@ -20,24 +20,28 @@
                         <div class="ms-panel-body p-0">
                             <ul class="ms-list ms-feed ms-twitter-feed ms-recent-support-tickets">
                                 @foreach($notifications as $k=>$notification)
-                                    <?php // $user = \App\Models\User::find($notification->data['user_id']);?>
+                                    <?php
+//                                    dd($notification);
+                                    // $user = \App\Models\User::find($notification->data['user_id']);?>
                                     <li class="ms-list-item">
-                                        <a title="Click to view" href="{{$notification->data['link']}}" class="media clearfix">
-                                            {{--                                            <img src="../../assets/img/costic/customer-4.jpg"--}}
-                                            {{--                                                 class="ms-img-round ms-img-small" alt="This is another feature">--}}
+                                        <a title="Click to view" href="{{$notification->data['link']}}"
+                                           class="media clearfix">
+{{--                                                                                        <img src="../../assets/img/costic/customer-4.jpg"--}}
+{{--                                                                                             class="ms-img-round ms-img-small" alt="This is another feature">--}}
                                             <div class="media-body">
                                                 <div class="customer-meta">
                                                     <div class="new">
                                                         <h5 class="ms-feed-user mb-0">{{$notification->data['sender_name']}}</h5>
-                                                        {{--                                                        <h6 class="ml-4 mb-0 text-red">Spicy Grilled Burger</h6>--}}
+{{--                                                        <h6 class="ml-4 mb-0 text-red">Spicy Grilled Burger</h6>--}}
                                                     </div>
                                                 </div>
                                                 <span class="my-2 d-block"> <i class="material-icons">date_range</i> {{ front_end_date_time($notification->created_at) }}</span>
                                                 <p class="d-block">
+{{--                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.--}}
+{{--                                                    Nulla luctus lectus a facilisis bibendum. Duis quis convallis sapien--}}
 
-                                                    {{ $notification->data['msg'] }}
-                                                    {{--                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.--}}
-                                                    {{--                                                    Nulla luctus lectus a facilisis bibendum. Duis quis convallis sapien--}}
+                                                    <?php echo $notification->data['msg']; ?>
+
                                                     ...</p>
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="ms-feed-controls"> <span>
@@ -59,9 +63,9 @@
                         </div>
                     </div>
                     <div class="right">
-                        @if(empty($notifications))
-                            {{ $notifications->links('vendor.pagination.bootstrap-4') }}
-                        @endif
+                        {{--                        @if(empty($notifications))--}}
+                        {{--                            {{ @$notifications->links('vendor.pagination.bootstrap-4') }}--}}
+                        {{--                        @endif--}}
                     </div>
 
                 </div>

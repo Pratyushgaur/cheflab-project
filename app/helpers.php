@@ -9,6 +9,16 @@ function front_end_date_time($datetime)
     return date('d F, Y h:i a', strtotime($datetime));
 }
 
+function front_end_time($datetime)
+{
+    return date('h:i a', strtotime($datetime));
+}
+
+function front_end_date($datetime)
+{
+    return date('d F, Y ', strtotime($datetime));
+}
+
 function mysql_date_time($datetime = '')
 {
     if ($datetime != '')
@@ -122,7 +132,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-        'products.id as product_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'), 'product_rating','primary_variant_name')
+        'products.id as product_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'), 'product_rating', 'primary_variant_name')
         ->where([ 'products.status' => '1' ]);
 
 
@@ -157,16 +167,16 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
             if (!isset($variant[$p['product_id']])) {
-                $variant[$p['product_id']] = [ 'product_id'     => $p['product_id'],
-                                               'product_name'   => $p['product_name'],
-                                               'product_price'  => $p['product_price'],
-                                               'customizable'   => $p['customizable'],
-                                               'image'          => $p['image'],
-                                               'type'           => $p['type'],
-                                               'product_rating' => $p['product_rating'],
-                                               'categoryName'   => $p['categoryName'],
-                                               'is_like'        => $p['is_like'],
-                                               'primary_variant_name'  => $p['primary_variant_name'],
+                $variant[$p['product_id']] = [ 'product_id'           => $p['product_id'],
+                                               'product_name'         => $p['product_name'],
+                                               'product_price'        => $p['product_price'],
+                                               'customizable'         => $p['customizable'],
+                                               'image'                => $p['image'],
+                                               'type'                 => $p['type'],
+                                               'product_rating'       => $p['product_rating'],
+                                               'categoryName'         => $p['categoryName'],
+                                               'is_like'              => $p['is_like'],
+                                               'primary_variant_name' => $p['primary_variant_name'],
                 ];
                 if ($with_restaurant_name)
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
@@ -208,4 +218,34 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [])
     return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
 
 
+}
+
+
+function front_end_currency($number)
+{
+//    setlocale(LC_MONETARY, 'en_IN');
+//    $amount = money_format('%!i', $number);
+//    return "$amount \20B9;";
+    $decimal = (string)($number - floor($number));
+    $money = floor($number);
+    $length = strlen($money);
+    $delimiter = '';
+    $money = strrev($money);
+
+    for($i=0;$i<$length;$i++){
+        if(( $i==3 || ($i>3 && ($i-1)%2==0) )&& $i!=$length){
+            $delimiter .=',';
+        }
+        $delimiter .=$money[$i];
+    }
+
+    $result = strrev($delimiter);
+    $decimal = preg_replace("/0\./i", ".", $decimal);
+    $decimal = substr($decimal, 0, 3);
+
+    if( $decimal != '0'){
+        $result = $result.$decimal;
+    }
+
+    return $result.'  &#8377; ';
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Validator;
 
 // this is vikas testing
@@ -86,6 +87,7 @@ class BannerController extends Controller
                 [
                     'lat' => 'required|numeric',
                     'lng' => 'required|numeric',
+                    'for' => ['required', Rule::in( config('custom_app_setting.promotion_banner_for_only_values'))]
                 ]
             );
             if ($validateUser->fails()) {
@@ -104,6 +106,8 @@ class BannerController extends Controller
 
             $slots = \App\Models\SloteBook::rightJoin('cheflab_banner_image', 'cheflab_banner_image.id', '=', 'slotbooking_table.cheflab_banner_image_id')
                 ->where([ 'cheflab_banner_image.is_active' => '1' ])
+                ->where([ 'cheflab_banner_image.banner_for' =>  $request->for])
+                ->where([ 'slotbooking_table.for' =>  $request->for])
                 ->whereOr(function ($q) use ($vendor_ids, $current_date, $current_time) {
                     $q->whereIn('vendor_id', $vendor_ids)
                         ->where('from_date', '<=', $current_date)
