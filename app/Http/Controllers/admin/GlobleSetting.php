@@ -8,6 +8,7 @@ use App\Models\Globle_master;
 use App\Models\AdminMasters;
 use App\Models\Dynamic;
 use App\Models\Cuisines;
+use App\Models\User_faq;
 use App\Models\vendors;
 use App\Models\UserFeedback;
 use Illuminate\Http\Request;
@@ -188,7 +189,7 @@ class GlobleSetting extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'.route('admin.user.faqedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'.route('admin.user.feedbackedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 

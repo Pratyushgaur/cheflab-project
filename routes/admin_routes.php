@@ -150,6 +150,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('globle-static-storeRefund', [App\Http\Controllers\admin\GlobleSetting::class,'storeRefund'])->name('admin.globle.storeRefund');
     Route::get('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'user_faq'])->name('admin.user.faq');
     Route::get('globle-setting-data', [App\Http\Controllers\admin\GlobleSetting::class,'getFaq'])->name('admin.user.faqdata');
+    Route::get('globle-setting-faqedit/{id}', [App\Http\Controllers\admin\GlobleSetting::class,'fun_edit_faq'])->name('admin.user.faqedit');
+    Route::post('globle-setting-faqupdate', [App\Http\Controllers\admin\GlobleSetting::class,'update_faq'])->name('admin.globle.update_faq');   
     Route::post('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'store_faq'])->name('admin.globle.store_faq');
     Route::get('globle-delivery-charge', [App\Http\Controllers\admin\GlobleSetting::class,'delivery_charge'])->name('admin.globle.delivery_charge');
     Route::post('globle-store-deliverycharge', [App\Http\Controllers\admin\GlobleSetting::class,'storeDelivery'])->name('admin.globle.storeDelivercharge');
@@ -157,6 +159,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('globle-payment-store', [App\Http\Controllers\admin\GlobleSetting::class,'storePaytm'])->name('admin.globle.storePaytm');
     Route::get('globle-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.globle.feedbacklist');
     Route::get('globle-user-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedback'])->name('admin.globle.feedbackdata');
+    Route::get('globle-user-feedbackedit', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedbackEdit'])->name('admin.user.feedbackedit');
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 });

@@ -226,7 +226,7 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Aboutu <span class="text-danger">*</span></label>
-                                        <textarea name="aboutus" class="form-control" value="{{$data->aboutus}}"  id="" placeholder="About.."></textarea>
+                                        <textarea name="aboutus" class="form-control" value="{{$data->aboutus}}"  id="" placeholder="About..">{{$data->aboutus}}</textarea>
                                     </div>  
                                   </div>
                                   <div class="col-md-12">
