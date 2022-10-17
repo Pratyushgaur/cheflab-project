@@ -160,6 +160,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('globle-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.globle.feedbacklist');
     Route::get('globle-user-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedback'])->name('admin.globle.feedbackdata');
     Route::get('globle-user-feedbackedit', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedbackEdit'])->name('admin.user.feedbackedit');
+    Route::get('globle-defualtime', [App\Http\Controllers\admin\GlobleSetting::class,'defaulttimeset'])->name('admin.globle.defaulttime');
+    Route::post('globle-setting-storeDefaultTime', [App\Http\Controllers\admin\GlobleSetting::class,'storeDefaultTime'])->name('admin.globle.storeDefaultTime'); 
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 });

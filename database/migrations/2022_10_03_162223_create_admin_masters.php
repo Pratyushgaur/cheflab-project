@@ -30,6 +30,8 @@ class CreateAdminMasters extends Migration
             $table->text('razorpay_publish_key');
             $table->text('paytm_publish_key');
             $table->string('order_limit_amout');
+            $table->string('default_cooking_time');
+            $table->string('default_delivery_time');
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

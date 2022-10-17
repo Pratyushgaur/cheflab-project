@@ -59,11 +59,23 @@ class GlobleSetting extends Controller
         $data = AdminMasters::findOrFail($id);
         return view('admin/setting/payment',compact('data'));
     }
+    public function defaulttimeset(){
+        $id = '1';
+        $data = AdminMasters::findOrFail($id);
+        return view('admin/setting/defaulttimeset',compact('data'));
+    }
     public function user_faq(){
         return view('admin/setting/faq');
     }
     public function feedbacklist(){
         return view('admin/setting/feedbacklist');
+    }
+    public function storeDefaultTime(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->default_cooking_time = $request->default_cooking_time;
+        $general->default_delivery_time = $request->default_delivery_time;
+        $general->save();
+        return redirect()->route('admin.globle.defaulttime')->with('message', 'Default Time Update Successfully');
     }
     public function store_faq(Request $request){
         $this->validate($request, [
