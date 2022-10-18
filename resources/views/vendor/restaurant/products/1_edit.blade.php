@@ -72,13 +72,14 @@
                 </nav>
             </div>
 
-            <div class="col-xl-12 col-md-12">
+            <div class="col-xl-8 col-md-12">
                 <div class="ms-panel ms-panel-fh">
                     <div class="ms-panel-header">
                         <h6>Add New Item</h6>
                     </div>
                     <div class="ms-panel-body">
-                        <form class=" clearfix" id="product-form" method="post" enctype="multipart/form-data">
+                        <form class=" clearfix" id="product-form" action="{{route('restaurant.product.update')}}"
+                              method="post" enctype="multipart/form-data">
                             @csrf
 
                             @if ($errors->any())
@@ -90,9 +91,15 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="validationCustom18">Item Name <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" name="product_name" class="form-control"
+                                        <input type="text" name="product_name" value="{{$product->product_name}}"
+                                               class="form-control" id="validationCustom18" placeholder="Product Name"
+                                               value="">
+                                        <input type="hidden" name="id" value="{{$product->id}}" class="form-control"
                                                id="validationCustom18" placeholder="Product Name" value="">
-
+                                        <input type="hidden" name="status" value="{{$product->status}}"
+                                               class="form-control" id="validationCustom18" placeholder="Product Name"
+                                               value="">
+                                        <input type="hidden" name="txtpkey" id="txtpkey" value="{{$product->id}}">
                                     </div>
                                     <span class="product_name_error text-danger"></span>
                                 </div>
@@ -102,6 +109,8 @@
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <select class="form-control select2" name="cuisines" id="validationCustom22">
+                                            <option
+                                                value="{{$product->cuisinesName}}">{{$product->cuisinesName}}</option>
                                             @foreach($cuisines as $k =>$value)
                                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                             @endforeach
@@ -114,6 +123,8 @@
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <select class="form-control select2" name="category" id="validationCustom">
+                                            <option
+                                                value="{{$product->categoryName}}">{{$product->categoryName}}</option>
                                             @foreach($categories as $k =>$value)
                                                 <option value="{{$value->id}}">{{$value->name}}</option>
                                             @endforeach
@@ -128,6 +139,7 @@
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <select class="form-control select2" name="menu_id" id="validationCustom24">
+                                            <option value="{{$product->menuName}}">{{$product->menuName}}</option>
                                             @foreach($menus as $k =>$value)
                                                 <option value="{{$value->id}}">{{$value->menuName}}</option>
                                             @endforeach
@@ -143,8 +155,9 @@
                                     <label for="validationCustom12">Description <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <textarea rows="5" id="validationCustom12" name="dis" class="form-control"
-                                                  placeholder="Message"></textarea>
+                                        <textarea rows="5" id="validationCustom12" name="dis" value="{{$product->dis}}"
+                                                  class="form-control"
+                                                  placeholder="Message">{{$product->dis}}</textarea>
 
                                     </div>
                                     <span class="dis_error text-danger"></span>
@@ -178,30 +191,22 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="">Primary Variant Name <span class="text-danger">*</span></label>
+                                <div class="col-md-6 mb-3">
+                                    <label for="">Item Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="primary_variant_name" id=""
-                                               placeholder="Primary Variant Name " value="">
-
-                                    </div>
-
-                                    <span class="primary_variant_name_error text-danger"></span>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="">Primary Item Price <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="item_price" id="price"
-                                               placeholder="Enter Price" value="">
+                                        <input type="text" class="form-control" value="{{$product->product_price}}"
+                                               name="item_price" id="" placeholder="Enter Price" value="">
 
                                     </div>
 
                                     <span class="item_price_error text-danger"></span>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label for="validationCustom23">Custmization Availablity</label>
                                     <div class="input-group">
-                                        <select class="form-control custimization" name="custimization" id="getPrice">
+                                        <select class="form-control custimization" name="custimization"
+                                                id="validationCustom23 ">
+
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
 
@@ -210,6 +215,8 @@
                                     </div>
                                     <span class="custimization_error text-danger"></span>
                                 </div>
+
+
                                 <div class="col-md-12 mb-3 custmization-block" style="">
                                     <div class="row">
                                         <div class="col-md-12">
@@ -224,8 +231,8 @@
                                                        placeholder="Enter Variant Name">
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="text" name="price[]" id="myInput"
-                                                       class="form-control price" placeholder="Enter Price">
+                                                <input type="text" name="price[]" class="form-control price"
+                                                       placeholder="Enter Price">
                                             </div>
                                         </div>
                                         <!-- <div class="row input-container" style="padding-bottom:15px;">
@@ -266,58 +273,20 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Preparation Time</label>
-                                    <div class="input-group">
-                                        {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),null,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','reuired']) }}
-
-                                        @if ($errors->has('preparation_time'))
-                                            <span
-                                                class="ms-text-danger"><strong>{{ $errors->first('preparation_time') }}</strong></span>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label>Chili Level</label>
-                                    <div class="input-group">
-                                        {{ Form::select('chili_level', config('custom_app_setting.product_chili_level'),null,['class' => 'form-control', 'required']) }}
-
-                                        @if ($errors->has('chili_level'))
-                                            <span
-                                                class="ms-text-danger"><strong>{{ $errors->first('chili_level') }}</strong></span>
-                                        @endif
-                                        <span class="custimization_error text-danger"></span>
-                                    </div>
-                                </div>
-
-                                {{--                                <div class="col-md-6 mb-3">--}}
-                                {{--                                    <label for="validationCustom23">Chili Level</label>--}}
-                                {{--                                    <div class="input-group">--}}
-                                {{--                                        <select class="form-control" name="chili_level">--}}
-                                {{--                                            <option value="no">Not Available</option>--}}
-                                {{--                                            <option value="1">1 Chili</option>--}}
-                                {{--                                            <option value="2">2 Chili</option>--}}
-                                {{--                                            <option value="3">3 Chili</option>--}}
-                                {{--                                            <option value="4">4 Chili</option>--}}
-                                {{--                                            <option value="5">5 Chili</option>--}}
-                                {{--                                        </select>--}}
-
-                                {{--                                    </div>--}}
-                                {{--                                    <span class="custimization_error text-danger"></span>--}}
-                                {{--                                </div>--}}
-                                <div class="col-md-6 mb-3">
                                     <div>
                                         <label for="">Product Images</label>
                                     </div>
                                     <div class="image-upload">
                                         <label for="file-input">
                                             <div class="upload-icon">
-                                                <img class="icon" src="{{asset('add-image.png')}}">
+                                                <img class="icon"
+                                                     src="{{ asset('products'.'/'.$product->product_image) }}">
                                             </div>
                                         </label>
-                                        <input id="file-input" type="file" name="product_image" required>
+                                        <input id="file-input" type="file" name="product_image" required/>
                                     </div>
                                 </div>
-                                <span class="product_image_error text-danger"></span>
+
                                 <!--  -->
 
 
@@ -364,11 +333,6 @@
                     $('.custmization-block').hide();
                 }
             })
-            $('#price').on("input", function () {
-                var price = document.getElementById('price').value;
-                $("#myInput").val(price);
-            })
-
             $('#file-input').change(function (event) {
                 $("img.icon").attr('src', URL.createObjectURL(event.target.files[0]));
                 $("img.icon").parents('.upload-icon').addClass('has-img');
@@ -427,10 +391,6 @@
                     custimization: {
                         checkVariants: true,
                         required: true
-                    },
-
-                    primary_variant_name: {
-                        required: true
                     }
                 },
                 messages: {
@@ -453,9 +413,6 @@
                     item_price: {
                         required: "Please Give The Price of Product",
                         number: "Price Should be in Number"
-                    },
-                    primary_variant_name: {
-                        required: "Please Enter Primary Variant Name"
                     }
                 },
                 errorPlacement: function (error, element) {

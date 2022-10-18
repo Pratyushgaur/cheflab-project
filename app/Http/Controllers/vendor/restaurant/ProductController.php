@@ -15,6 +15,7 @@ use Auth;
 use Config;
 use DataTables;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 
 class ProductController extends Controller
@@ -122,9 +123,9 @@ class ProductController extends Controller
             $product->type  = $request->product_type;
             $product->product_price  = $request->item_price;
             $product->customizable  = $request->custimization;
-            if($request->status == '0'){
+//            if($request->status == '0'){
                 $product->status  = 2;
-            }
+//            }
             if (!empty($request->addons)) {
                 $product->addons = implode(',', $request->addons);
             }
@@ -157,7 +158,7 @@ class ProductController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
                     if ($data->status == '1') {
-                        $btn = '<a href="#"><i class="fa fa-edit"></i></a> <a  href="#"><i class="fa fa-trash"></i></a>';
+                        $btn = '<a href="'.route('vendor.product.edit',['id'=>Crypt::encryptString($data->id)]).'"><i class="fa fa-edit"></i></a> <a  href="#"><i class="fa fa-trash"></i></a>';
                     } elseif($data->status == '0'){
                        // $btn  ='<a href="'. route("vendor.product.edit",Crypt::encryptString($data->id)) .'" class="badge badge-danger">Reuse</a><a  href="#"><i class="fa fa-trash"></i></a>';
                        $btn  ='<a href="#" class="badge badge-danger">Reuse</a><a  href="#"><i class="fa fa-trash"></i></a>';
@@ -215,7 +216,9 @@ class ProductController extends Controller
     public function fun_edit_product($encrypt_id)
     {
         try {
+
             $id =  Crypt::decryptString($encrypt_id);
+//            dd($id);
            // $product = Product_master::findOrFail($id);
             $product  =  Product_master::where('products.id','=',$id)->join('categories', 'products.category', '=', 'categories.id')->join('cuisines', 'products.userId', '=', 'cuisines.id')->join('vendor_menus', 'products.userId', '=', 'vendor_menus.id')->select('products.*', 'categories.name as categoryName','cuisines.name as cuisinesName','vendor_menus.menuName')->first();
             $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();

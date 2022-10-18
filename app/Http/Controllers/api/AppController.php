@@ -412,8 +412,8 @@ class AppController extends Controller
                     $catData[] = ['menuName' => $value->menuName,
                         'id' => $value->id,
                         'products' => $variant];
-                }  
-                
+                }
+
 
             }
             return response()->json([
@@ -1562,5 +1562,45 @@ class AppController extends Controller
             ], 500);
         }
     }
-   
+
+    public function chelfleb_produst(Request $request)
+    {
+        try {
+//            $validateUser = Validator::make(
+//                $request->all(),
+//                [
+//                    'lat' => 'required|numeric',
+//                    'lng' => 'required|numeric',
+//                ]
+//            );
+//            if ($validateUser->fails()) {
+//                $error = $validateUser->errors();
+//                return response()->json([
+//                    'status' => false,
+//                    'error' => $validateUser->errors()->all()
+//
+//                ], 401);
+//            }
+            //$data['lat'] = 24.4637223;
+            //$data['lng'] = 74.8866346;
+            $userid = request()->user()->id;
+            $products=get_product_with_variant_and_addons('', $userid, 'products.id', 'desc',false,true);
+//            dd(DB::getQueryLog());
+//
+//            dd($products);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Data Get Successfully',
+                'response' => ['products' => $products]
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
 }

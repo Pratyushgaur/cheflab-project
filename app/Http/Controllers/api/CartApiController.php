@@ -410,7 +410,10 @@ class CartApiController extends Controller
                 $r[$i] = array_merge($r[$i], $p);
             }
             $r = array_values($r);
-            return response()->json([ 'status' => true, 'message' => 'Data Get Successfully', 'response' => [ "cart" => $r, 'wallet_amount' => $wallet_amount ] ], 200);
+            $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
+
+            return response()->json([ 'status' => true, 'message' => 'Data Get Successfully',
+            'response' => [ "cart" => $r, 'wallet_amount' => $wallet_amount,'max_cod_amount'=>@$admin_setting->max_cod_amount ] ], 200);
         } catch (Throwable $th) {
             return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
         }

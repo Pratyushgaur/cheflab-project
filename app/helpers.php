@@ -123,11 +123,11 @@ function in_between_equal_to($check_number, $from, $to)
     return ($from <= $check_number && $check_number <= $to);
 }
 
-function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false)
+function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false,$is_chefleb_product=false)
 {
     DB::enableQueryLog();
 
-    $product = Product_master::select('userId as vendor_id',
+    $product = Product_master::select(DB::raw('products.userId as vendor_id'),
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
@@ -139,6 +139,9 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     if (!empty($product_where))
         $product->where($product_where);
 
+    if($is_chefleb_product){
+        $product->where(['product_for' => '1']);
+    }else
     if ($with_restaurant_name) {
         $product->join('vendors', 'products.userId', '=', 'vendors.id');
         $product->addSelect('vendors.name as restaurantName');
@@ -178,7 +181,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                                'is_like'              => $p['is_like'],
                                                'primary_variant_name' => $p['primary_variant_name'],
                                                'preparation_time'     => $p['preparation_time'],
-                                               'vedor_id'           => $p['vedor_id'],
+                                               'vendor_id'           => $p['vendor_id'],
                 ];
                 if ($with_restaurant_name)
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
