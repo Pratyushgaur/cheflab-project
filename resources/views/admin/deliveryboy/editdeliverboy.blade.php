@@ -22,23 +22,23 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
-        
-        
+
+
+
         .upload-icon img{
           width: 100px;
           height: 100px;
           margin:19px;
           cursor: pointer;
         }
-        
-        
+
+
         .upload-icon.has-img {
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon.has-img img {
             /*width: 100%;
             height: auto;*/
@@ -55,20 +55,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon2 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon2.has-img2{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon2.has-img2 img {
             /*width: 100%;
             height: auto;*/
@@ -85,20 +85,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon3 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon3.has-img3{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon3.has-img3 img {
             /*width: 100%;
             height: auto;*/
@@ -114,7 +114,7 @@
           <!-- Content Header (Page header) -->
           <section class="content-header">
             <div class="container-fluid">
-              
+
             </div><!-- /.container-fluid -->
           </section>
 
@@ -122,12 +122,12 @@
           <section class="content">
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-12"> 
+                <div class="col-md-12">
                   <div class="card card-primary card-outline">
-                    
+
                     <div class="card-header">
                       <h3 class="card-title">Edit  Deliver Boy </h3>
-                      
+
                     </div>
                     <div class="card-body pad table-responsive">
                       <form id="restaurant-form" action="{{route('admin.deliverboy.update')}}" method="post" enctype="multipart/form-data">
@@ -143,49 +143,49 @@
                                       {{ implode('', $errors->all('message')) }}
                                     @endif
                                 </div>
-                             
+
                                 <div class="row">
-                                  
+
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Deliver Boy <span class="text-danger">*</span></label>
                                         <input type="text" name="name" value="{{$city_data->name}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter  Name">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" value="{{$city_data->email}}" class="form-control"  id="" placeholder="Enter  Email">
-                                    </div>  
+                                    </div>
                                   </div>
-                                  
+
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" value="{{$city_data->pincode}}" class="form-control"  id="" placeholder="Enter Pincode">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" value="{{$city_data->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
-                                    </div>  
+                                    </div>
                                   </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
-                                        <input type="text" name="address" value="{{$city_data->address}}" class="form-control"  id="" placeholder="Enter Restaurant Address">
-                                    </div>  
-                                  </div>
-                                 
-                                 
-                                  
-                                  
-                                  
+{{--                                  <div class="col-md-12">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>--}}
+{{--                                        <input type="text" name="address" value="{{$city_data->address}}" class="form-control"  id="" placeholder="Enter Restaurant Address">--}}
+{{--                                    </div>  --}}
+{{--                                  </div>--}}
+
+
+
+
+
                                 </div>
-                                
+
                               </div>
-                              
+
                           </div>
                           <!-- basic information end -->
                           <hr>
@@ -207,48 +207,48 @@
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="image" required/>
-                                        </div>        
+                                        </div>
                                   </div>
-                                  
+
                                   <div class="col-sm-3">
                                         <div>
                                           <label for="">Other Document </label>
-                                          
+
                                         </div>
                                         <div class="image-upload">
-                                          
+
                                             <label for="file-input3">
                                                 <div class="upload-icon3">
                                                     <img class="icon3" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
                                             <input id="file-input3" type="file" name="other_document"/>
-                                            
-                                        </div>   
-                                        <input type="text" name="other_document_name" value="{{$city_data->other_document_name}}" class="form-control" placeholder="Document Name">    
+
+                                        </div>
+                                        <input type="text" name="other_document_name" value="{{$city_data->other_document_name}}" class="form-control" placeholder="Document Name">
                                   </div>
                                 </div>
                                 <!-- div row -->
                               </div>
-                              
-                              
+
+
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
                             <button class="btn btn-success" ><i class="fa fa-save"></i>Update Deliver Boy </button>
                           </div>
                       </form>
-                      
+
                     </div>
 
                   </div>
 
                 </div>
-                
+
               </div>
             </div>
 
-          
+
           </section>
           <!-- /.content -->
         </div>
@@ -269,7 +269,7 @@
 
 
 
-    
+
 
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
@@ -279,7 +279,7 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    
+
       $("#restaurant-form").validate({
           rules: {
               name: {
@@ -310,9 +310,9 @@
                   maxlength: 6,
                   number: true
               }
-             
-              
-              
+
+
+
           },
           messages: {
                 name: {
@@ -339,7 +339,7 @@
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
               }
-              
+
           }
       });
 

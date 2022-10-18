@@ -84,7 +84,18 @@
                                     <div class="alert alert-danger">{{$error}}</div>
                                 @endforeach
                             @endif
+
                             <div class="form-row">
+                                <div class="col-xl-6 col-md-6 mb-3">
+                                    <label for="validationCustom10">Promotion for *</label>
+                                    <div class="input-group">
+                                        {{ Form::select('for', $for, null,['class'=>"form-control", 'id' => 'banner_for','placeholder'=>'Select Slide shows in section']) }}
+                                    </div>
+                                    <span class="banner_error text-danger"></span>
+
+                                </div>
+
+
                                 <div class="col-xl-6 col-md-6 mb-3">
                                     <label for="validationCustom10">Date *</label>
                                     <div class="input-group">
@@ -221,7 +232,8 @@
                         "_token": "{{ csrf_token() }}",
                         "id": $("#date_frame").val(),
                         "date": $("#datepicker").val(),
-                        "time": $("#time_frame").val()
+                        "time": $("#time_frame").val(),
+                        "banner_for": $("#banner_for").val()
                     },
                     success: function (response) {
                         $('#validationCustom22').html('');

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('alternative_number',15)->unique()->nullable();
             $table->string('referralCode',)->unique()->nullable();
             $table->string('referby',)->nullable();
+//            $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

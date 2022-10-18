@@ -15,6 +15,7 @@ class AddPrimaryVariantNameToProductsTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->string('primary_variant_name')->nullable()->after('type');
+            $table->tinyInteger('preparation_time')->after('type');
         });
     }
 
@@ -27,6 +28,7 @@ class AddPrimaryVariantNameToProductsTable extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('primary_variant_name');
+            $table->dropColumn('preparation_time');
         });
     }
 }

@@ -81,7 +81,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('dine-out/accept/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_accept'])->name('restaurant.dineout.accept')->where('id', '[0-9]+');
             Route::post('dine-out/reject/{id}', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_reject'])->name('restaurant.dineout.reject')->where('id', '[0-9]+');
 
-
+            //payment transection
+            Route::post('payment', [App\Http\Controllers\vendor\restaurant\TransectionController::class,'payment_request'])->name('transection.request');
 
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');

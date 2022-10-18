@@ -16,80 +16,80 @@ class BannerSeeder extends Seeder
         \DB::table('cheflab_banner_image')->insert(
             [
                 [
-                    'name'        => 'Banner 1',
+                    'name'        => 'Banner Restaurant 1',
                     'bannerImage' => 'banner1.jpg',
                     'position'    => '1',
                     'is_active'   => '1',
                     'price'       => '1000',
+                    'banner_for'  => 'restaurant',
 
                 ],
                 [
-                    'name'        => 'Banner 2',
+                    'name'        => 'Banner Restaurant 2',
                     'bannerImage' => 'banner2.jpg',
                     'position'    => '2',
                     'is_active'   => '1',
                     'price'       => '900',
-
+                    'banner_for'  => 'restaurant',
                 ],
                 [
-                    'name'        => 'Banner 3',
+                    'name'        => 'Banner Restaurant 3',
                     'bannerImage' => 'banner3.jpg',
                     'position'    => '3',
                     'is_active'   => '1',
                     'price'       => '800',
-      
-                ],
-                [
-                    'name'        => 'Banner 4',
-                    'bannerImage' => 'banner4.jpg',
-                    'position'    => '4',
-                    'is_active'   => '1',
-                    'price'       => '700',
-             
-                ],
-                [
-                    'name'        => 'Banner 5',
-                    'bannerImage' => 'banner5.jpg',
-                    'position'    => '5',
-                    'is_active'   => '1',
-                    'price'       => '600',
+                    'banner_for'  => 'restaurant',
 
                 ],
                 [
-                    'name'        => 'Banner 6',
+                    'name'        => 'Banner chef 1',
+                    'bannerImage' => 'banner4.jpg',
+                    'position'    => '1',
+                    'is_active'   => '1',
+                    'price'       => '700',
+                    'banner_for'  => 'chef',
+
+                ],
+                [
+                    'name'        => 'Banner chef 2',
+                    'bannerImage' => 'banner5.jpg',
+                    'position'    => '2',
+                    'is_active'   => '1',
+                    'price'       => '600',
+                    'banner_for'  => 'chef',
+                ],
+                [
+                    'name'        => 'Banner chef 3',
                     'bannerImage' => 'banner1.jpg',
-                    'position'    => '6',
+                    'position'    => '3',
                     'is_active'   => '1',
                     'price'       => '500',
+                    'banner_for'  => 'chef',
                 ],
                 [
-                    'name'        => 'Banner 7',
+                    'name'        => 'Banner dine-out 1',
                     'bannerImage' => 'banner2.jpg',
-                    'position'    => '7',
+                    'position'    => '1',
                     'is_active'   => '1',
                     'price'       => '400',
+                    'banner_for'  => 'dineout',
                 ],
                 [
-                    'name'        => 'Banner 8',
+                    'name'        => 'Banner dine-out 2',
                     'bannerImage' => 'banner3.jpg',
-                    'position'    => '8',
+                    'position'    => '2',
                     'is_active'   => '1',
                     'price'       => '300',
+                    'banner_for'  => 'dineout',
                 ],
                 [
-                    'name'        => 'Banner 9',
+                    'name'        => 'Banner dine-out 3',
                     'bannerImage' => 'banner4.jpg',
-                    'position'    => '9',
+                    'position'    => '3',
                     'is_active'   => '1',
                     'price'       => '200',
-                ],
-                [
-                    'name'        => 'Banner 10',
-                    'bannerImage' => 'banner5.jpg',
-                    'position'    => '10',
-                    'is_active'   => '1',
-                    'price'       => '100',
-                ],
+                    'banner_for'  => 'dineout',
+                ]
             ]
         );
     }
