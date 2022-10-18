@@ -30,5 +30,12 @@ return [
     'promotion_banner_for_only_values'  => [ 'chef', 'restaurant', 'dineout' ],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
 
-    'deliver_boy_type' => [ 1 => 'Pure Commission', 2 => "Rent Commission", 3 => "In House" ]//deliver_boy table : type column
+    'deliver_boy_type' => [ 1 => 'Pure Commission', 2 => "Rent Commission", 3 => "In House" ],//deliver_boy table : type column
+
+    'product_preparation_time' => [ 5=>"5 Minutes",10=>"10 Minutes",15=>"15 Minutes",20=>"20 Minutes",30=>"30 Minutes",
+                                  45=>"45 Minutes",60=>"60 Minutes",75=>"1 Hour 15 Minutes",90=>"1 Hour 30 Minutes",105=>"1 Hour 45 Minutes",
+                                  120=>"2 Hours"],//"products" table preparation_time column
+
+    'product_chili_level' => ['no'=>"Not Available",'1'=>'1 Chili','2'=>'2 Chili','3'=>'3 Chili','4'=>'4 Chili','5'=>'5 Chili' ],//deliver_boy table : type column
+
 ];

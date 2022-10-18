@@ -178,6 +178,7 @@ class ProductController extends Controller
               'dis' => 'required',
               'product_price' => 'required',
               'product_image' => 'required',
+              'preparation_time'=>"required"
           ]);
           $product = new Product_master;
           $product->product_name = $request->product_name;
@@ -187,6 +188,7 @@ class ProductController extends Controller
           $product->dis  = $request->dis;
           $product->product_price  = $request->product_price;
           $product->product_for  = 1;
+          $product->preparation_time  = $request->preparation_time;
 
           $product->type  = $request->type;
           $product->customizable  = $request->customizable;
@@ -413,7 +415,7 @@ class ProductController extends Controller
         }
         //return $product;
         $vendor=Vendors::find($product->vendor_id);
-        
+
         $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product approved by admin.")); //With new post
         return true;
         return redirect()->route('admin.vendor.pendigProduct')->with('message', 'Product Accept Successfully');

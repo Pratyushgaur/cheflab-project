@@ -22,23 +22,23 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
-        
-        
+
+
+
         .upload-icon img{
           width: 100px;
           height: 100px;
           margin:19px;
           cursor: pointer;
         }
-        
-        
+
+
         .upload-icon.has-img {
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon.has-img img {
             /*width: 100%;
             height: auto;*/
@@ -55,20 +55,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon2 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon2.has-img2{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon2.has-img2 img {
             /*width: 100%;
             height: auto;*/
@@ -85,20 +85,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon3 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon3.has-img3{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon3.has-img3 img {
             /*width: 100%;
             height: auto;*/
@@ -114,7 +114,7 @@
           <!-- Content Header (Page header) -->
           <section class="content-header">
             <div class="container-fluid">
-              
+
             </div><!-- /.container-fluid -->
           </section>
 
@@ -122,12 +122,12 @@
           <section class="content">
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-12"> 
+                <div class="col-md-12">
                   <div class="card card-primary card-outline">
-                    
+
                     <div class="card-header">
                       <h3 class="card-title">Create Chef Lab Official Product </h3>
-                      
+
                     </div>
                     <div class="card-body pad table-responsive">
                       <form id="restaurant-form" action="{{route('admin.product.cheflabProduct.store')}}" method="post" enctype="multipart/form-data">
@@ -148,9 +148,9 @@
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Name of Product</label>
                                           <input type="text" name="product_name" class="form-control" data-rule-required="true" id="exampleInputEmail1" placeholder="Enter Product Name">
-                                          
-                                        
-                                      </div>  
+
+
+                                      </div>
                                     </div>
                                     <div class="col-md-4">
                                       <div class="form-group">
@@ -160,7 +160,7 @@
                                                   <option value="{{$value->id}}">{{$value->name}}</option>
                                                 @endforeach
                                           </select>
-                                      </div>  
+                                      </div>
                                     </div>
 
 
@@ -174,8 +174,8 @@
                                         </select>
                                       </div>
                                     </div>
-                                    
-                                    
+
+
 
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -186,9 +186,9 @@
 
                                     <div class="col-md-3">
                                       <div class="form-group">
-                                        
+
                                           <label for="exampleInputEmail1">Product Type</label><br>
-                                          
+
                                           <div class="form-group clearfix">
                                             <div class="icheck-success d-inline">
                                               <input type="radio" id="veg" name="type" value="veg" checked>
@@ -202,29 +202,40 @@
                                               <input type="radio" id="eggs" name="type" value="eggs">
                                               <label for="eggs">Eggs</label>
                                             </div>
-                                            
+
                                           </div>
-                                      </div>  
+                                      </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-3">
                                       <div class="form-group">
                                           <label for="">Product Price</label>
                                           <input type="text" name="product_price" class="form-control"  id="product_owner" placeholder="Product Price">
                                       </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                <div class="col-md-3 mb-3">
+                                    <label>Preparation Time</label>
+                                    <div class="input-group">
+                                        {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),null,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','reuired']) }}
+
+                                        @if ($errors->has('preparation_time'))
+                                            <span class="ms-text-danger"><strong>{{ $errors->first('preparation_time') }}</strong></span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                    <div class="col-md-3">
                                       <div class="form-group">
                                           <label for="">Customizable Availablity</label>
 
-                                          
+
                                           <select name="customizable" id="custimization" name="customizable" class="form-control">
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
                                           </select>
                                       </div>
                                     </div>
-                                
+
                                   </div>
                                   <div class="col-md-12 mb-3 custmization-block" style="">
                                         <div class="row">
@@ -253,8 +264,8 @@
                                                 </div>
                                             </div> -->
                                         </div>
-                                        
-                                        
+
+
                                         <div class="row">
                                           <div class="col-md-4"><a href="javascript:void(0)" class="add">+ Add More Variant</a></div>
                                         </div>
@@ -276,32 +287,32 @@
                                             </div>
                                         </div>
                                             <br>
-                                        <div class="variant-container"> 
+                                        <div class="variant-container">
                                         </div>
-                                  
+
                                     </div> -->
                                  </div>
                                     <div class="col-sm-3">
                                         <div>
                                           <label for="">Product Image </label>
-                                          
+
                                         </div>
                                         <div class="image-upload">
-                                          
+
                                             <label for="file-input">
                                                 <div class="upload-icon">
                                                     <img class="icon" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="product_image"/>
-                                            
-                                        </div>   
-                                    
+
+                                        </div>
+
                                   </div>
                                 </div>
-                               
-                                
-                                
+
+
+
 
                               </div>
                               <div class="card-footer">
@@ -309,17 +320,17 @@
                               </div>
                             </div>
                       </form>
-                      
+
                     </div>
 
                   </div>
 
                 </div>
-                
+
               </div>
             </div>
 
-          
+
           </section>
           <!-- /.content -->
         </div>
@@ -340,7 +351,7 @@
 
 
 
-    
+
 
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
@@ -353,7 +364,7 @@
     $('.custmization-block').hide();
     $(document).on('click','.delete-variant',function(){
       $(this).parent().parent().parent().remove();
-      
+
     })
     $(document).on('click','.add',function(){
       var html = '<div class="row input-container" style="padding-bottom:15px;"><div class="col-md-4"><input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name"></div><div class="col-md-2"><input type="text" name="price[]" class="form-control price" placeholder="Enter Price"></div><div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div></div>';
@@ -370,7 +381,7 @@
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');
       });
-      
+
 
       $.validator.addMethod('checkVariants',
           function (value, element) {
@@ -383,18 +394,18 @@
                 if($(this).find('.price').val() == ''){
                   check = false;
                 }
-                
+
               });
               if (check) {
                 return true;
               } else {
                 return false;
               }
-             
+
             } else {
               return true;
             }
-           
+
 
           },'Variants Fields is required'
       );
@@ -427,16 +438,16 @@
               product_price: {
                   required: "Address is required",
               },
-             
+
               phone:{
                 remote:"Please Uplode Product Image Image"
               }
-              
-          }
-      });     
-  
 
-    
+          }
+      });
+
+
+
       /*$('#customizable').change(function(){
         if ($(this).val() == 'true') {
           $('.custmization-block').show();
@@ -446,15 +457,15 @@
       })
       $('.add').click(function(){
         if ($('.variant_name').val() !='' && $('.price').val() !='') {
-          var html = '<div class="row"><div class="col-md-4" style="text-align:center"><span>'+$('.variant_name').val()+'</span></div><div class="col-md-2"><span>'+$('.price').val()+'</span></div><div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div></div><input type="hidden" name="variant_name[]" value="'+$('.variant_name').val()+'"><input type="hidden" name="variant_price[]" value="'+$('.price').val()+'"><br>';  
+          var html = '<div class="row"><div class="col-md-4" style="text-align:center"><span>'+$('.variant_name').val()+'</span></div><div class="col-md-2"><span>'+$('.price').val()+'</span></div><div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div></div><input type="hidden" name="variant_name[]" value="'+$('.variant_name').val()+'"><input type="hidden" name="variant_price[]" value="'+$('.price').val()+'"><br>';
           $('.variant-container').append(html);
         }else{
           return false;
         }
-        
-        
+
+
       })*/
     })(jQuery);
  </script>
- 
+
 @endsection

@@ -65,6 +65,8 @@ class ProductController extends Controller
             $product->primary_variant_name = $request->primary_variant_name;
             $product->product_price = $request->item_price;
             $product->customizable = $request->custimization;
+            $product->preparation_time = $request->preparation_time;
+
             // if($request->custimization == 'true'){
             //     $data = [];
             //     foreach($request->variant_name as $k =>$v){
