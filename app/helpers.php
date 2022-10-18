@@ -127,7 +127,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 {
     DB::enableQueryLog();
 
-    $product = Product_master::select(
+    $product = Product_master::select('userId as vendor_id',
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
@@ -178,6 +178,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                                'is_like'              => $p['is_like'],
                                                'primary_variant_name' => $p['primary_variant_name'],
                                                'preparation_time'     => $p['preparation_time'],
+                                               'vedor_id'           => $p['vedor_id'],
                 ];
                 if ($with_restaurant_name)
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];

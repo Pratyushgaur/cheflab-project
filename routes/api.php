@@ -86,7 +86,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
     // FAQ
     Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
-    // Privacy Polic TAD 
+    // Privacy Polic TAD
     Route::post('terms-and-condition-userapp', [App\Http\Controllers\api\AppController::class, 'getTACusers']);
     Route::post('privacy-and-policy', [App\Http\Controllers\api\AppController::class, 'getPrivacyPolicy']);
     Route::post('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getCancellationPolicy']);
@@ -102,5 +102,7 @@ Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
 Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
 Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
+
+Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
 

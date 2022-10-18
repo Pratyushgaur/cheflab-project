@@ -8,23 +8,24 @@ use App\Models\Globle_master;
 use App\Models\AdminMasters;
 use App\Models\Dynamic;
 use App\Models\Cuisines;
+use App\Models\User_faq;
 use App\Models\vendors;
 use App\Models\UserFeedback;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
-use DataTables; 
+use DataTables;
 class GlobleSetting extends Controller
 {
-    
+
     public function index(){
       //  $city = City_master::where('status','=','1')->select('id','city_name')->get();
        /* try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $vendor = vendors::findOrFail($id);
             $categories = Catogory_master::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
             $cuisines = Cuisines::where('is_active','=','1')->orderby('position','ASC')->select('id','name')->get();
-        
+
             if($vendor->vendor_type == 'restaurant'){
                 return view('admin/product/create_restaurant_product',compact('vendor','categories','cuisines'));
             }elseif($vendor->vendor_type == 'chef'){
@@ -32,7 +33,7 @@ class GlobleSetting extends Controller
             }else{
                 return 'Wrong Route';
             }
-            
+
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } */
@@ -153,9 +154,9 @@ class GlobleSetting extends Controller
         return redirect()->route('admin.globle.store')->with('message', 'City Registration Successfully');
     }
     public function get_data_table_of_globle(Request $request)
-    {   
+    {
         if ($request->ajax()) {
-            
+
             $data = Globle_master::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -163,16 +164,16 @@ class GlobleSetting extends Controller
                     $btn = '<a href="'. url("admin/edit-globle") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('categories') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
 
                 ->addColumn('status', function($data){
-                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
+                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>';
                 })
-               
+
                 ->rawColumns(['date','action-js','status'])
                 ->rawColumns(['action-js','categoryImage'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -183,7 +184,7 @@ class GlobleSetting extends Controller
     }
     public function getFeedback(Request $request){
         if ($request->ajax()) {
-            
+
             $data = UserFeedback::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -191,14 +192,14 @@ class GlobleSetting extends Controller
                     $btn = '<a href="'.route('admin.user.faqedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
 
-               
-               
+
+
                 ->rawColumns(['date','action-js'])
                 ->rawColumns(['action-js'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -208,7 +209,7 @@ class GlobleSetting extends Controller
     }
     public function getFaq(Request $request){
         if ($request->ajax()) {
-            
+
             $data = User_faq::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -216,14 +217,14 @@ class GlobleSetting extends Controller
                     $btn = '<a href="'.route('admin.user.faqedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
 
-               
-               
+
+
                 ->rawColumns(['date','action-js'])
                 ->rawColumns(['action-js'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -235,23 +236,23 @@ class GlobleSetting extends Controller
     {
         $city = City_master::where('status','=','1')->select('id','city_name')->get();
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $city_data = Globle_master::findOrFail($id);
            // dd($city_data);
             return view('admin/globle/edit',compact('city_data'),['city'=>$city]);
         } catch (\Exception $e) {
             return dd($e->getMessage());
-        } 
+        }
     }
     public function fun_edit_faq($encrypt_id){
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $faq = User_faq::findOrFail($id);
            // dd($city_data);
             return view('admin/setting/editfaq',compact('faq'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
-        } 
+        }
     }
     public function update_faq(Request $request){
         $this->validate($request, [
@@ -274,10 +275,10 @@ class GlobleSetting extends Controller
                 return \Response::json(['error' => false,'success' => true , 'message' => 'FAQ Deleted Successfully'], 200);
             }else{
                 return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
-            } 
-            
-            
-            
+            }
+
+
+
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
@@ -290,13 +291,13 @@ class GlobleSetting extends Controller
         $city = Dynamic::where('status','=','1')->select('id','chef_image','restorent_image','dine_image')->get();
       //  dd($city);
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $city_data = Dynamic::findOrFail($id);
            // dd($city_data);
             return view('admin/globle/editimage',compact('city_data'),['city'=>$city]);
         } catch (\Exception $e) {
             return dd($e->getMessage());
-        } 
+        }
     }
     function updateImage(Request $request){
 
@@ -312,7 +313,7 @@ class GlobleSetting extends Controller
         if($request->has('chef_image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->chef_image->extension();
             $request->chef_image->move(public_path('dynamic'),$filename);
-           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
             $dynamic->chef_image  = $filename;
         }
         if($request->has('restorent_image')){
@@ -326,15 +327,15 @@ class GlobleSetting extends Controller
             $dynamic->dine_image  = $filename;
             $dynamic->dine_image  = $request->dine_image;
         }
-       
+
         $dynamic->save();
         return redirect()->route('admin.restouren.image')->with('message', 'Image Trgister Successfully');
-        
+
     }
     public function get_data_table_of_image(Request $request)
     {
         if ($request->ajax()) {
-            
+
             $data = Globle_master::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -342,14 +343,14 @@ class GlobleSetting extends Controller
                     $btn = '<a href="'. url("admin/edit-dynamic") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('categories') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
 
                 ->addColumn('status', function($data){
-                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
+                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>';
                 })
                 ->addColumn('chef_image',function($data){
                     return "<img src=".asset('dynamic').'/'.$data->chef_image."  style='width: 50px;' />";
@@ -368,5 +369,5 @@ class GlobleSetting extends Controller
         }
 
     }
-    
+
 }
