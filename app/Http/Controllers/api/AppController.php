@@ -609,10 +609,8 @@ class AppController extends Controller
 //                    ->join('vendors', 'products.userId', '=', 'vendors.id')
 //                    ->select('products.product_name', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'), 'product_price', 'type')
 //                    ->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
-
-                $data=get_product_with_variant_and_addons([['vendors.name', 'like', '%' . $request->keyword . '%'],
-                                                           ['products.status' => '1', 'product_for' => '3']],
-                    $user_id = '', $order_by_column = '', $order_by_order = '',true);
+                $user_id = request()->user()->id;
+                $data=get_product_with_variant_and_addons([['vendors.name', 'like', '%' . $request->keyword . '%'],['products.status', '=', '1'],[ 'product_for' ,'=', '3']],$user_id , '','',true);
             } else {
                 $data = [];
             }
