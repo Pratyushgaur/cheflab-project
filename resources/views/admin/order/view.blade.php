@@ -28,7 +28,7 @@
                             <button type="button" class="btn btn-block btn-outline-primary">Edit Order</button>
                         </div>
                         <div class="col-sm-3 invoice-col">
-                            <a  href="{{rout('admin.order.invoice')}}" class="btn btn-block btn-primary">Print Invoice</a>
+                            <a  href="#" class="btn btn-block btn-primary">Print Invoice</a>
                             <address>
                             <strong>Status, <button type="button" class="btn  btn-xs btn-outline-info">{{$order->payment_status}}</button></strong><br>
                             Payment Method:, {{$order->payment_type}}<br>

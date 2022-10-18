@@ -144,11 +144,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('globle-privacy-general', [App\Http\Controllers\admin\GlobleSetting::class,'general'])->name('admin.globle.general');
     Route::post('globle-general-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeGernel'])->name('admin.globle.storeGernel');
     Route::get('globle-static-page', [App\Http\Controllers\admin\GlobleSetting::class,'staticpage'])->name('admin.globle.staticpage');
-    Route::get('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'user_faq'])->name('admin.user.faq');
-    Route::get('globle-setting-data', [App\Http\Controllers\admin\GlobleSetting::class,'getFaq'])->name('admin.user.faqdata');
-    Route::get('globle-setting-faqedit/{id}', [App\Http\Controllers\admin\GlobleSetting::class,'fun_edit_faq'])->name('admin.user.faqedit');
-    Route::post('globle-setting-faqupdate', [App\Http\Controllers\admin\GlobleSetting::class,'update_faq'])->name('admin.globle.update_faq');   
-    Route::post('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'store_faq'])->name('admin.globle.store_faq');
+   
     Route::get('globle-delivery-charge', [App\Http\Controllers\admin\GlobleSetting::class,'delivery_charge'])->name('admin.globle.delivery_charge');
     Route::post('globle-store-deliverycharge', [App\Http\Controllers\admin\GlobleSetting::class,'storeDelivery'])->name('admin.globle.storeDelivercharge');
     Route::get('globle-payment-setting', [App\Http\Controllers\admin\GlobleSetting::class,'payment'])->name('admin.globle.payment.setting');
@@ -167,10 +163,14 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('content-menegement-user', [App\Http\Controllers\admin\Contantmanagement::class,'index'])->name('admin.user.contentmanagement');
     Route::post('content-static-user-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'storePrivacy'])->name('admin.user.storePrivacy');
     Route::post('content-static-storeVendorTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeVendorTC'])->name('admin.user.storeVendorTC');
-    Route::post('content-static-storeCheflabTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeCheflabTC'])->name('admin.globle.storeCheflabTC');
-    Route::post('content-static-storeDeliveryTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeDeliveryTC'])->name('admin.globle.storeDeliveryTC');
-  //  Route::post('content-static-storeRefund', [App\Http\Controllers\admin\Contantmanagement::class,'storeRefund'])->name('admin.user.storeRefund');
-   
+  //  Route::post('content-static-storeCheflabTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeCheflabTC'])->name('admin.globle.storeCheflabTC');
+    //Route::post('content-static-storeDeliveryTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeDeliveryTC'])->name('admin.globle.storeDeliveryTC');
+    Route::post('content-static-storeRefund', [App\Http\Controllers\admin\Contantmanagement::class,'storeRefund'])->name('admin.user.storeRefund');
+    Route::get('content-static-faquser', [App\Http\Controllers\admin\Contantmanagement::class,'user_faq'])->name('admin.user.faq');
+    Route::get('content-static-data', [App\Http\Controllers\admin\Contantmanagement::class,'getFaq'])->name('admin.user.faqdata');
+    Route::get('content-static-faqedit/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq'])->name('admin.user.faqedit');
+    Route::post('content-static-faqupdate', [App\Http\Controllers\admin\Contantmanagement::class,'update_faq'])->name('admin.globle.update_faq');   
+    Route::post('content-static-faq', [App\Http\Controllers\admin\Contantmanagement::class,'store_faq'])->name('admin.user.store_faq');
     //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 

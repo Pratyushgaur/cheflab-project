@@ -164,7 +164,7 @@
           <div class="card-header">
             <h3 class="card-title">
               <i class="fas fa-edit"></i>
-               User Conta Management
+               User Contant Management
             </h3>
           </div>
           <div class="card-body">
@@ -246,7 +246,7 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body pad table-responsive">
-                            <form id="restaurant-form" action="{{route('admin.globle.storeDeliveryTC')}}" method="post" enctype="multipart/form-data">
+                            <form id="restaurant-form" action="{{route('admin.user.storeRefund')}}" method="post" enctype="multipart/form-data">
                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                  <div class="card card-default">
                                     <div class="card-body">
@@ -266,26 +266,40 @@
                   <div class="tab-pane fade" id="vert-tabs-refund" role="tabpanel" aria-labelledby="vert-tabs-refund-tab">
                     <div class="card card-outline card-info">
                         <div class="card-header">
-                            <h3 class="card-title">
-                            FAQ
-                            </h3>
+                            
+                            <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                Create FAQ
+                            </button>-->
+                            <a href="{{route('admin.user.faq')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create New FAQ</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body pad table-responsive">
-                            <form id="restaurant-form" action="" method="post" enctype="multipart/form-data">
-                               <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                                 <div class="card card-default">
-                                    <div class="card-body">
-                                        <input type="hidden" name="id" value="{{$data->id}}">
-                                        <textarea id="refund" name="refund_cancellation_cheflab">
-                                            {{$data->refund_cancellation_cheflab}}
-                                        </textarea>
-                                    </div>
-                                    <div class="card-footer">
-                                        <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
-                                    </div>
-                                  </div>
-                              </form>
+                        <div class="card card-info col-md-12">
+                                <div class="card-header">
+                                <h3 class="card-title">List</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                    <i class="fas fa-minus"></i></button>
+                                </div>
+                                </div>
+                                <div class="card-body pad table-responsive">
+                                            <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                                                <thead>
+                                                    <tr role="row">
+                                                        <th  class="text-center">Sr No.</th>
+                                                        <th >Question</th>
+                                                        <th >Answer</th>
+                                                        <th  >Action</th>
+                                                    </tr>
+                                                </thead>
+                                                
+                                            </table>
+                                        </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
+                            </div>
                           </div>
                     </div>
                   </div>
@@ -304,9 +318,45 @@
                 
               </div>
             </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Create New FAQ</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="restaurant-form" action="{{route('admin.user.store_faq')}}" method="post" enctype="multipart/form-data">
+                          @if ($errors->any())
+                              @foreach ($errors->all() as $error)
+                                  <div class="alert alert-danger">{{$error}}</div>
+                              @endforeach
+                          @endif
+                          @csrf
 
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="category_name">Question <span class="text-danger">*</span></label>
+                                    <input type="text" id="faq_question" name="faq_question" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Your Question">
+                                    <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="category_name">Answer <span class="text-danger">*</span></label>
+                                    <textarea type="text" id="position" name="faq_answer" value="{{!empty($class_name[0]->answer) ? $class_name[0]->answer : ''}}" class="form-control" placeholder="Your Answer "></textarea>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary float-right" type="submit">Submit</button>
+                      </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
           
           </section>
+          
           <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
@@ -337,10 +387,49 @@
     $('#cheflabtc').summernote() 
     $('#deliveryboy').summernote()
     $('#refund').summernote()
+    $('#exampleModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    var recipient = button.data('whatever') // Extract info from data-* attributes
+    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+    var modal = $(this)
+    modal.find('.modal-title').text('New message to ' + recipient)
+    modal.find('.modal-body input').val(recipient)
+    })
+    $("#restaurant-form").validate({
+      rules: {
+           faq_question: {
+                required: true,
+            },
+            faq_answer: {
+                required: true,
+            },
+        },
+        messages: {
+            faq_question: {
+                remote:"Category  Already Exist",
+            },
+            faq_answer:{
+                remote:"Position Required",
+            }
+            
+        }
+      });
 </script>
 
 <script type="text/javascript">
   $(document).ready(function() {
+    let table = $('#example').dataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{ route('admin.user.faqdata') }}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'faq_question', name: 'faq_question'},
+            {data: 'faq_answer', name: 'faq_answer'},
+            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+        ]
+    });
     $('.select2').select2();
     $('.custmization-block').hide();
     $('.gstavailable').change(function(){

@@ -600,6 +600,7 @@ class AppController extends Controller
                 ], 401);
             }
             //
+            
             if ($request->search_for == 'restaurant') {
                 $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
                     ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
