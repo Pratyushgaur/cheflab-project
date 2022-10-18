@@ -91,6 +91,21 @@ class OrderController extends Controller
             return dd($e->getMessage());
         } 
     }
+    public function invoice($encrypt_id){
+        try {
+            $id =  Crypt::decryptString($encrypt_id);  
+            $order_id =$id;
+            $order = Orders::findOrFail($id);
+            $vendor_id = $order->vendor_id;
+            $orderProduct = OrderProduct::findOrFail($order_id);
+            $product_id = $orderProduct->product_id;
+            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price')->get();
+            $vendor = Vendors::findOrFail($vendor_id);
+            return view('admin.order.invoice',compact('order','orderProduct','product','vendor'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        } 
+    }
     public function get_data_table_of_product(Request $request,$id)
     {
         $product_id = $id;

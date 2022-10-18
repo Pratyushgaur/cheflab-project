@@ -137,17 +137,13 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('order-list', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order'])->name('admin.order.data');
     Route::post('get-vendor-byrole', [App\Http\Controllers\admin\OrderController::class, 'getVendorByRole'])->name('admin.vendor.byRole');
     Route::get('orders-view/{id}', [App\Http\Controllers\admin\OrderController::class, 'vieworder'])->name('admin.order.view');
+    Route::get('orders-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoice'])->name('admin.order.invoice');
     Route::get('orders-product/{id}', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_product'])->name('admin.order.product');
     // Globle Setting
     Route::get('globle-setting', [App\Http\Controllers\admin\GlobleSetting::class,'index'])->name('admin.globle.setting');
     Route::get('globle-privacy-general', [App\Http\Controllers\admin\GlobleSetting::class,'general'])->name('admin.globle.general');
     Route::post('globle-general-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeGernel'])->name('admin.globle.storeGernel');
     Route::get('globle-static-page', [App\Http\Controllers\admin\GlobleSetting::class,'staticpage'])->name('admin.globle.staticpage');
-    Route::post('globle-static-storePrivacy', [App\Http\Controllers\admin\GlobleSetting::class,'storePrivacy'])->name('admin.globle.storePrivacy');
-    Route::post('globle-static-storeVendorTC', [App\Http\Controllers\admin\GlobleSetting::class,'storeVendorTC'])->name('admin.globle.storeVendorTC');
-    Route::post('globle-static-storeCheflabTC', [App\Http\Controllers\admin\GlobleSetting::class,'storeCheflabTC'])->name('admin.globle.storeCheflabTC');
-    Route::post('globle-static-storeDeliveryTC', [App\Http\Controllers\admin\GlobleSetting::class,'storeDeliveryTC'])->name('admin.globle.storeDeliveryTC');
-    Route::post('globle-static-storeRefund', [App\Http\Controllers\admin\GlobleSetting::class,'storeRefund'])->name('admin.globle.storeRefund');
     Route::get('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'user_faq'])->name('admin.user.faq');
     Route::get('globle-setting-data', [App\Http\Controllers\admin\GlobleSetting::class,'getFaq'])->name('admin.user.faqdata');
     Route::get('globle-setting-faqedit/{id}', [App\Http\Controllers\admin\GlobleSetting::class,'fun_edit_faq'])->name('admin.user.faqedit');
@@ -157,11 +153,24 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('globle-store-deliverycharge', [App\Http\Controllers\admin\GlobleSetting::class,'storeDelivery'])->name('admin.globle.storeDelivercharge');
     Route::get('globle-payment-setting', [App\Http\Controllers\admin\GlobleSetting::class,'payment'])->name('admin.globle.payment.setting');
     Route::post('globle-payment-store', [App\Http\Controllers\admin\GlobleSetting::class,'storePaytm'])->name('admin.globle.storePaytm');
-    Route::get('globle-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.globle.feedbacklist');
+    Route::get('app-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.app.feedbacklist');
+    Route::get('app-vendor-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'vendorfeedbacklist'])->name('admin.app.vendorfeedbacklist');
+    Route::get('app-deliverboy-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'DeliveryBoyfeedbacklist'])->name('admin.app.deliveryfeedbacklist');
     Route::get('globle-user-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedback'])->name('admin.globle.feedbackdata');
+    Route::get('globle-vendor-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getVendorFeedback'])->name('admin.vendor.feedbackdata');
+    Route::get('globle-deliveryboy-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getDeliveryboyFeedback'])->name('admin.deliveryboy.feedbackdata');
     Route::get('globle-user-feedbackedit', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedbackEdit'])->name('admin.user.feedbackedit');
     Route::get('globle-defualtime', [App\Http\Controllers\admin\GlobleSetting::class,'defaulttimeset'])->name('admin.globle.defaulttime');
     Route::post('globle-setting-storeDefaultTime', [App\Http\Controllers\admin\GlobleSetting::class,'storeDefaultTime'])->name('admin.globle.storeDefaultTime'); 
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
+    // Contant Managemnt 
+    Route::get('content-menegement-user', [App\Http\Controllers\admin\Contantmanagement::class,'index'])->name('admin.user.contentmanagement');
+    Route::post('content-static-user-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'storePrivacy'])->name('admin.user.storePrivacy');
+    Route::post('content-static-storeVendorTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeVendorTC'])->name('admin.user.storeVendorTC');
+    Route::post('content-static-storeCheflabTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeCheflabTC'])->name('admin.globle.storeCheflabTC');
+    Route::post('content-static-storeDeliveryTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeDeliveryTC'])->name('admin.globle.storeDeliveryTC');
+  //  Route::post('content-static-storeRefund', [App\Http\Controllers\admin\Contantmanagement::class,'storeRefund'])->name('admin.user.storeRefund');
+   
+    //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 });

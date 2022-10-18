@@ -225,9 +225,51 @@
 				</a>
 				<ul class="nav nav-treeview">
 				    <li class="nav-item">
+						<a href="{{route('admin.user.contentmanagement')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>User Content</p>
+						</a>
+					</li>
+					<li class="nav-item">
 						<a href="#" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
+						  <p>Vendor Content</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Deliveryboy Content</p>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+
+				  <i class="far fa-user nav-icon"></i>
+				  <p>
+					 Feed Back
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+				    <li class="nav-item">
+						<a href="{{route('admin.app.feedbacklist')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>App Feedback</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.app.vendorfeedbacklist')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Vendor Feedback</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.app.deliveryfeedbacklist')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Delivery Boy Feedback</p>
 						</a>
 					</li>
 				</ul>

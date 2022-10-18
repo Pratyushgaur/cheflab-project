@@ -233,7 +233,7 @@
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Reason</label>
                                           <div id="slot_id"></div>
-                                          <textarea type="text" name="cancel_reason" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Rejoin"></textarea>
+                                          <textarea type="text" name="cancel_reason" class="form-control"  id="exampleInputEmail1" placeholder="Enter Your Reason "></textarea>
 
                                         </div>
                                     </div>

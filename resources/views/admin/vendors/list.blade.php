@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-md-10">
                                 <a href="{{route('admin.restourant.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create New Restaurant</a>
-                                
+                                <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-user"> </i> Create New Chef</a>
                             </div>
                           </div>
                           

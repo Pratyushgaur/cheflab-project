@@ -38,7 +38,6 @@ class Deliveryboy extends Controller
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
         $vendors->pincode  = $request->pincode;
-        $vendors->phone  = $request->phone;
         $vendors->city  = $request->city;
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();

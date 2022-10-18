@@ -120,7 +120,7 @@
 							<div class="card-body">
 							  <div class="form-group">
                   <label for="category_name">Category Name <span class="text-danger">*</span></label>
-                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Category Name">
+                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Enter Category">
                   <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
                 </div>
                 <div class="form-group">

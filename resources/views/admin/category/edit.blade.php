@@ -120,7 +120,7 @@
 							<div class="card-body">
 							  <div class="form-group">
                   <label for="category_name">Category Name <span class="text-danger">*</span></label>
-                  <input type="text" id="name" name="name" value="{{$city_data->name}}" class="form-control" placeholder="Category Name">
+                  <input type="text" id="name" name="name" value="{{$city_data->name}}" class="form-control" placeholder="Edit category">
                   <input type="hidden" name="id" id="txtpkey" value="{{$city_data->id}}">
                   <input type="hidden" name="txtpkey" id="txtpkey" value="{{$city_data->id}}">
                 </div>

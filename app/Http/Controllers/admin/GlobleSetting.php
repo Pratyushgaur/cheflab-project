@@ -11,6 +11,8 @@ use App\Models\Cuisines;
 use App\Models\User_faq;
 use App\Models\vendors;
 use App\Models\UserFeedback;
+use App\Models\VendorFeedback;
+use App\Models\DeliveryboyFeedback;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -69,6 +71,12 @@ class GlobleSetting extends Controller
     }
     public function feedbacklist(){
         return view('admin/setting/feedbacklist');
+    }
+    public function vendorfeedbacklist(){
+        return view('admin/setting/vendorfeedback');
+    }
+    public function DeliveryBoyfeedbacklist(){
+        return view('admin/setting/deliveryboyfeedback');
     }
     public function storeDefaultTime(Request $request){
         $general = AdminMasters::find($request->id);
@@ -198,6 +206,56 @@ class GlobleSetting extends Controller
         if ($request->ajax()) {
             
             $data = UserFeedback::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="'.route('admin.user.feedbackedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+                
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+               
+               
+                ->rawColumns(['date','action-js'])
+                ->rawColumns(['action-js'])
+                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function getVendorFeedback(Request $request){
+        if ($request->ajax()) {
+            
+            $data = VendorFeedback::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="'.route('admin.user.feedbackedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+                
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+               
+               
+                ->rawColumns(['date','action-js'])
+                ->rawColumns(['action-js'])
+                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function getDeliveryboyFeedback(Request $request){
+        if ($request->ajax()) {
+            
+            $data = DeliveryboyFeedback::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
