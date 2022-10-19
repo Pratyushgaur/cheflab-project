@@ -171,6 +171,11 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('content-static-faqedit/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq'])->name('admin.user.faqedit');
     Route::post('content-static-faqupdate', [App\Http\Controllers\admin\Contantmanagement::class,'update_faq'])->name('admin.globle.update_faq');   
     Route::post('content-static-faq', [App\Http\Controllers\admin\Contantmanagement::class,'store_faq'])->name('admin.user.store_faq');
+
+    Route::get('content-menegement-vendor', [App\Http\Controllers\admin\Contantmanagement::class,'vendor'])->name('admin.vendor.contentmanagement');
+    Route::post('content-static-vendore-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'vendorPrivacy'])->name('admin.vendor.storePrivacy');
+    Route::post('content-static-VendorTC', [App\Http\Controllers\admin\Contantmanagement::class,'VendorTC'])->name('admin.vendore.storeVendorTC');
+    Route::post('content-static-vendorRefund', [App\Http\Controllers\admin\Contantmanagement::class,'vendorRefund'])->name('admin.vendore.storeRefund');
     //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 

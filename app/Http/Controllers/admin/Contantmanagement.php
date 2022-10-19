@@ -15,6 +15,11 @@ class Contantmanagement extends Controller
         $data = Content_management::findOrFail($id);
         return view('admin/contentmangement/user',compact('data'));
     }
+    public function vendor(){
+        $id = '1';
+        $data = Content_management::findOrFail($id);
+        return view('admin/contentmangement/vendor',compact('data'));
+    }
     public function storePrivacy(Request $request){
         $general = Content_management::find($request->id);
         $general->user_privacy_policy = $request->user_privacy_policy;
@@ -117,5 +122,23 @@ class Contantmanagement extends Controller
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
+    }
+    public function vendorPrivacy(Request $request){
+        $general = Content_management::find($request->id);
+        $general->vendor_privacy_policy = $request->vendor_privacy_policy;
+        $general->save();
+        return redirect()->route('admin.vendor.contentmanagement')->with('message', 'Privacy Policy  Update Successfully');
+    }
+    public function VendorTC(Request $request){
+        $general = Content_management::find($request->id);
+        $general->terms_conditions_vendor = $request->terms_conditions_vendor;
+        $general->save();
+        return redirect()->route('admin.vendor.contentmanagement')->with('message', 'Privacy Policy  Update Successfully');
+    }
+    public function vendorRefund(Request $request){
+        $general = Content_management::find($request->id);
+        $general->refund_cancellation_vendor = $request->refund_cancellation_vendor;
+        $general->save();
+        return redirect()->route('admin.vendor.contentmanagement')->with('message', 'Privacy Policy  Update Successfully');
     }
 }
