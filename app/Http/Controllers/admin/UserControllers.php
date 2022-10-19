@@ -18,8 +18,20 @@ use App\Rules\VendorOrderTimeRule;
 class UserControllers extends Controller
 {
 
-    public function index(){
-        return view('admin/vendors/list');
+    public function index(Request $request){
+//        dd("sdfs");
+        $data = Vendors::latest();
+        if($request->rolename != '')
+            $data->where('vendor_type','=',$request->rolename);
+
+        if($request->search != '')
+            $data->where('vendor_type','like','%'.$request->rolename.'%')
+                ->where('name','like','%'.$request->rolename.'%')
+                ->where('email','like','%'.$request->rolename.'%');
+
+        $vendors=$data->paginate(15);;
+
+        return view('admin/vendors/list',compact('vendors'));
     }
     public function create_restourant()
     {
