@@ -38,7 +38,7 @@
 
                                     </div>
                                     <div class="col-md-6">
-                                        <a href="{{route('admin.restourant.create')}}" class="pull-right btn btn-sm btn-success " style="float: right;  color:#fff;"><i class="fa fa-building"> </i> Create New Restaurant</a>
+                                        <a href="{{route('admin.restourant.create')}}" class="pull-right btn btn-sm btn-success " style="float: right;  color:#fff;"><i class="fa fa-plus"> </i> Create New Restaurant</a>
                                     </div>
                                 </div>
                                 </form>
