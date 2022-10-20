@@ -158,6 +158,13 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('globle-user-feedbackedit', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedbackEdit'])->name('admin.user.feedbackedit');
     Route::get('globle-defualtime', [App\Http\Controllers\admin\GlobleSetting::class,'defaulttimeset'])->name('admin.globle.defaulttime');
     Route::post('globle-setting-storeDefaultTime', [App\Http\Controllers\admin\GlobleSetting::class,'storeDefaultTime'])->name('admin.globle.storeDefaultTime'); 
+    
+    
+    Route::get('globle-social-media', [App\Http\Controllers\admin\GlobleSetting::class,'social_media'])->name('admin.globle.socialmedia');
+    Route::post('globle-social-media-add', [App\Http\Controllers\admin\GlobleSetting::class,'social_media_add'])->name('admin.globle.socialmedia_add');
+    Route::get('globle-social-media-data', [App\Http\Controllers\admin\GlobleSetting::class,'getSocialMedia'])->name('admin.globle.socilamediadata');
+    Route::get('globle-social-media-edit/{id}', [App\Http\Controllers\admin\GlobleSetting::class, 'fun_edit_socialmedia'])->name('admin.social.mediaedit');
+    Route::post('globle-social-media-update', [App\Http\Controllers\admin\GlobleSetting::class,'social_media_update'])->name('admin.globle.socialmedia_update');
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
     // Contant Managemnt 
     Route::get('content-menegement-user', [App\Http\Controllers\admin\Contantmanagement::class,'index'])->name('admin.user.contentmanagement');
@@ -176,6 +183,21 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('content-static-vendore-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'vendorPrivacy'])->name('admin.vendor.storePrivacy');
     Route::post('content-static-VendorTC', [App\Http\Controllers\admin\Contantmanagement::class,'VendorTC'])->name('admin.vendore.storeVendorTC');
     Route::post('content-static-vendorRefund', [App\Http\Controllers\admin\Contantmanagement::class,'vendorRefund'])->name('admin.vendore.storeRefund');
+    Route::get('content-static-faqvendor', [App\Http\Controllers\admin\Contantmanagement::class,'vendor_faq'])->name('admin.vendor.faq');
+    Route::get('content-static-vendor-data', [App\Http\Controllers\admin\Contantmanagement::class,'getVendorFaq'])->name('admin.vendor.faqdata');
+    Route::post('content-static-faq-vendor', [App\Http\Controllers\admin\Contantmanagement::class,'vendorstore_faq'])->name('admin.vendor.store_faq');
+    Route::get('content-static-faqedit-vendor/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq_vendor'])->name('admin.vendor.faqedit');
+    Route::post('content-static-vendor-faqupdate', [App\Http\Controllers\admin\Contantmanagement::class,'update_vendorfaq'])->name('admin.vendor.update_faq');  
+    
+    Route::get('content-menegement-dliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'dliveryboy'])->name('admin.dliveryboy.contentmanagement');
+    Route::post('content-static-deliveryboy-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboyPrivacy'])->name('admin.deliveryboy.storePrivacy');
+    Route::post('content-static-dliveryboy-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'dliveryboyPrivacy'])->name('admin.deliveryboy.storeVendorTC');
+    Route::post('content-static-dliveryboyRefund', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboyRefund'])->name('admin.deliveryboy.storeRefund');
+    Route::get('content-static-faqdliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboy_faq'])->name('admin.deliveryboy.faq');
+    Route::get('content-static-deliveryboy-data', [App\Http\Controllers\admin\Contantmanagement::class,'getDeliverboyFaq'])->name('admin.deliveryboy.faqdata');
+    Route::post('content-static-faq-deliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboystore_faq'])->name('admin.deliveryboy.store_faq');
+    Route::get('content-static-faqedit-deliveryboy/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq_deliveryboy'])->name('admin.deliveryboy.faqedit');
+    Route::post('content-static-vendor-faqdeliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'update_deliveryboyfaq'])->name('admin.deliveryboy.update_faq');  
     //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 

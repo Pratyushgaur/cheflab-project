@@ -52,20 +52,7 @@
                     <a href="{{route('admin.globle.payment.setting')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                <div class="col-lg-6 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-bars">
-                    <div class="inner">
-                        <h3>Static Pages</h3>
-
-                        <p>Bussiness Static Pages Like Help About Us Privacy Policy Etc.</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                    <a href="{{route('admin.globle.staticpage')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
+                
                 <div class="col-lg-6 col-6">
                     <!-- small box -->
                     <div class="small-box bg-warning">
@@ -91,21 +78,7 @@
                     <div class="icon">
                         <i class="ion ion-bag"></i>
                     </div>
-                    <a href="{{route('admin.globle.feedbacklist')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-6">
-                    <!-- small box -->
-                    <div class="small-box bg-danger">
-                    <div class="inner">
-                        <h3> FAQ</h3>
-
-                        <p>To Change FAQ.</p>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-bag"></i>
-                    </div>
-                    <a href="{{route('admin.user.faq')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-6">
@@ -120,6 +93,20 @@
                         <i class="ion ion-bag"></i>
                     </div>
                     <a href="{{route('admin.globle.defaulttime')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                    <div class="inner">
+                        <h3> Social Media</h3>
+
+                        <p>To Change Social Media Link.</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                    <a href="{{route('admin.globle.socialmedia')}}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div> 

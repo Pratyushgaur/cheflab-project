@@ -164,7 +164,7 @@
           <div class="card-header">
             <h3 class="card-title">
               <i class="fas fa-edit"></i>
-               Vendor Contant Management
+               Delivery Boy Contant Management
             </h3>
           </div>
           <div class="card-body">
@@ -189,13 +189,13 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body pad table-responsive">
-                            <form id="restaurant-form" action="{{route('admin.vendor.storePrivacy')}}" method="post" enctype="multipart/form-data">
+                            <form id="restaurant-form" action="{{route('admin.deliveryboy.storePrivacy')}}" method="post" enctype="multipart/form-data">
                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                  <div class="card card-default">
                                     <div class="card-body">
                                         <input type="hidden" name="id" value="{{$data->id}}">
-                                        <textarea id="summernote" name="vendor_privacy_policy">
-                                            {{$data->vendor_privacy_policy}}
+                                        <textarea id="summernote" name="deliveryboy_privacy_policy">
+                                            {{$data->deliveryboy_privacy_policy}}
                                         </textarea>
                                     </div>
                                     <div class="card-footer">
@@ -217,13 +217,13 @@
                           </div>
                           <!-- /.card-header -->
                           <div class="card-body pad table-responsive">
-                              <form id="restaurant-form" action="{{route('admin.vendore.storeVendorTC')}}" method="post" enctype="multipart/form-data">
+                              <form id="restaurant-form" action="{{route('admin.deliveryboy.storeVendorTC')}}" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                   <div class="card card-default">
                                       <div class="card-body">
                                           <input type="hidden" name="id" value="{{$data->id}}">
-                                          <textarea id="privacy_policy" name="terms_conditions_vendor">
-                                              {{$data->terms_conditions_vendor}}
+                                          <textarea id="privacy_policy" name="terms_conditions_deliverboy">
+                                              {{$data->terms_conditions_deliverboy}}
                                           </textarea>
                                       </div>
                                       <div class="card-footer">
@@ -246,13 +246,13 @@
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body pad table-responsive">
-                            <form id="restaurant-form" action="{{route('admin.vendore.storeRefund')}}" method="post" enctype="multipart/form-data">
+                            <form id="restaurant-form" action="{{route('admin.deliveryboy.storeRefund')}}" method="post" enctype="multipart/form-data">
                                <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                                  <div class="card card-default">
                                     <div class="card-body">
                                         <input type="hidden" name="id" value="{{$data->id}}">
-                                        <textarea id="deliveryboy" name="refund_cancellation_vendor">
-                                            {{$data->refund_cancellation_vendor}}
+                                        <textarea id="deliveryboy" name="refund_cancellation_deliveryboy">
+                                            {{$data->refund_cancellation_deliveryboy}}
                                         </textarea>
                                     </div>
                                     <div class="card-footer">
@@ -270,7 +270,7 @@
                             <!--<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                 Create FAQ
                             </button>-->
-                            <a href="{{route('admin.vendor.faq')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create New FAQ</a>
+                            <a href="{{route('admin.deliveryboy.faq')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create New FAQ</a>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body pad table-responsive">
@@ -422,7 +422,7 @@
     let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.vendor.faqdata') }}",
+        ajax: "{{ route('admin.deliveryboy.faqdata') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'faq_question', name: 'faq_question'},

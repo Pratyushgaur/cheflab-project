@@ -13,6 +13,7 @@ use App\Models\vendors;
 use App\Models\UserFeedback;
 use App\Models\VendorFeedback;
 use App\Models\DeliveryboyFeedback;
+use App\Models\Social_media;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -77,6 +78,20 @@ class GlobleSetting extends Controller
     }
     public function DeliveryBoyfeedbacklist(){
         return view('admin/setting/deliveryboyfeedback');
+    }
+    public function social_media(){
+        return view('admin/setting/social_media');
+    }
+    public function social_media_add(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+            'link' => 'required',
+        ]);
+        $faq = new Social_media;
+        $faq->name = $request->name;
+        $faq->link = $request->link;
+        $faq->save();
+        return redirect()->route('admin.globle.socialmedia')->with('message', 'Socila Media Create Successfully');
     }
     public function storeDefaultTime(Request $request){
         $general = AdminMasters::find($request->id);
@@ -277,6 +292,41 @@ class GlobleSetting extends Controller
                 ->make(true);
         }
     }
+    public function getSocialMedia(Request $request){
+        if ($request->ajax()) {
+            
+            $data = Social_media::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="'.route('admin.social.mediaedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+
+
+                ->rawColumns(['date','action-js'])
+                ->rawColumns(['action-js'])
+                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function fun_edit_socialmedia($encrypt_id){
+        try {
+            $id =  Crypt::decryptString($encrypt_id);
+            $social  = Social_media::findOrFail($id);
+           // dd($city_data);
+            return view('admin/setting/social_media_edit',compact('social'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        }
+    }
     public function fun_edit_category($encrypt_id)
     {
         $city = City_master::where('status','=','1')->select('id','city_name')->get();
@@ -309,6 +359,17 @@ class GlobleSetting extends Controller
         $faq->faq_answer = $request->faq_answer;
         $faq->save();
         return redirect()->route('admin.user.faq')->with('message', 'FAQ Update Successfully');
+    }
+    public function social_media_update(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+            'link' => 'required',
+        ]);
+        $faq = Social_media::find($request->id);
+        $faq->name = $request->name;
+        $faq->link = $request->link;
+        $faq->save();
+        return redirect()->route('admin.globle.socialmedia')->with('message', 'Socila Media Update Successfully');
     }
     public function soft_delete(Request $request)
     {
