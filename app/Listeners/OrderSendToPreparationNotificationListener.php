@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\OrderCreateEvent;
 use App\Events\OrderSendToPrepareEvent;
+use App\Jobs\OrderPreparationDoneJob;
 use App\Models\User;
 use App\Models\vendors;
 use App\Notifications\OrderCreateNotification;
@@ -31,11 +32,13 @@ class OrderSendToPreparationNotificationListener
      */
     public function handle(OrderSendToPrepareEvent $event)
     {
-        $customer = User::find($event->user_id);
-        $vendor = Vendors::find($event->vendor_id);
+        $customer = User::find($event->order->user_id);
+        $vendor = Vendors::find($event->order->vendor_id);
 
-        $customer->notify(new OrderSendToPreparationNotification($event->order_id,$vendor->name,"Your Order #" .$event->order_id." send for preparation.It will be preparared in $event->preparationTime minutes"));
+        $customer->notify(new OrderSendToPreparationNotification($event->order->id,$vendor->name,"Your Order #" .$event->order->id." send for preparation.It will be preparared in $event->preparationTime minutes"));
 
-        $vendor->notify(new OrderSendToPreparationNotification($event->order_id,$customer->name,"You have send Order #".$event->order_id." for preparation."));
+        $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,"You have send Order #".$event->order->id." for preparation."));
+
+        OrderPreparationDoneJob::dispatch($event->order)->delay(now()->addMinutes((int) $event->preparationTime));
     }
 }

@@ -23,7 +23,9 @@ class CreateAdminMasters extends Migration
 //            $table->text('aboutus');
             $table->string('delivery_charges_fix');
             $table->string('delivery_charges_per_km');
-            $table->string('max_cod_amount');
+            $table->string('max_cod_amount')->comment('if order more then this then disable COD');
+            $table->string('max_preparation_time')->comment('max preparation time');
+
 //            $table->string('company_name');
 //            $table->string('logo');
 //            $table->string('favicon');

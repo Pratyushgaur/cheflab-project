@@ -52,7 +52,6 @@ function mysql_add_time($datetime, $add_time_minites)
     return date('Y-m-d H:i:s', strtotime('+' . $add_time_minites . ' minutes', strtotime($datetime)));
 }
 
-
 function mysql_add_days($datetime, $add_days)
 {
     return date('Y-m-d H:i:s', strtotime('+' . $add_days . ' days', strtotime($datetime)));
@@ -144,7 +143,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     } else
         if ($with_restaurant_name) {
             $product->join('vendors', 'products.userId', '=', 'vendors.id');
-            $product->addSelect('vendors.name as restaurantName');
+            $product->addSelect('vendors.name as restaurantName','vendors.image as vendor_image','banner_image');
         }
 
     $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
@@ -185,8 +184,17 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                                'preparation_time'     => $p['preparation_time'],
                                                'vendor_id'            => $p['vendor_id'],
                 ];
-                if ($with_restaurant_name)
+                if ($with_restaurant_name){
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
+                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') .$p['vendor_image'];
+
+                    $banners = json_decode($p['banner_image']);
+                    $variant[$p['product_id']] ['banner_image']  = array_map(function ($banner) {
+                        return URL::to('vendor-banner/') . '/' . $banner;
+                    }, $banners);
+
+                }
+
 
             }
             if ($p->variant_id != '') {
@@ -227,7 +235,6 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [])
 
 }
 
-
 function front_end_currency($number)
 {
 //    setlocale(LC_MONETARY, 'en_IN');
@@ -255,4 +262,8 @@ function front_end_currency($number)
     }
 
     return $result . '  &#8377; ';
+}
+
+function get_delivery_boy_near_me($lat,$lng){
+    return [1];
 }
