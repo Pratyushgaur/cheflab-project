@@ -11,6 +11,7 @@ use App\Models\Product_master;
 use App\Models\User;
 use App\Models\Variant;
 use App\Models\Vendors;
+use App\Models\Orders;
 use App\Rules\VendorOrderTimeRule;
 use DataTables;
 use Illuminate\Http\Request;
@@ -624,7 +625,18 @@ class UserControllers extends Controller
         $users = User::orderBy('id', 'desc')->paginate(15);
         return view('admin/vendors/user_list', compact('users'));
     }
-
+    public function user_inactive($id){
+        $id   = decrypt($id);
+        $user = User::find($id);
+        User::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
+        return redirect()->back()->with('message', 'User Inactive Successfully.');
+    }
+    public function user_active($id){
+        $id   = decrypt($id);
+        $user = User::find($id);
+        User::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        return redirect()->back()->with('message', 'User Active Successfully.');
+    }
     public function user_delete($id)
     {
         $id   = decrypt($id);
@@ -633,6 +645,13 @@ class UserControllers extends Controller
             return redirect()->back()->with('message', 'user does not exist.');
         $user->delete();
         return redirect()->back()->with('message', 'Successfully deleted.');
+    }
+    public function user_view($id){
+        $id = decrypt($id);
+        $user = User::find($id);
+        $order    = Orders::where('user_id','=',$id)->select('customer_name','delivery_address','city','total_amount')->get();
+       //  var_dump($user);die;
+        return view('admin/vendors/user_view',compact('user','order'));
     }
 
 }

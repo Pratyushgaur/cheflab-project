@@ -204,6 +204,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
+    Route::post('users/inactive{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
+    Route::post('users/active{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
     Route::post('user/delete/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_delete'])->name('admin.user.delete');
+    Route::get('users/view/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_view'])->name('admin.user.view');
 
 });
