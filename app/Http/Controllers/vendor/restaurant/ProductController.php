@@ -113,7 +113,7 @@ class ProductController extends Controller
             'menu_id'          => 'required',
             'preparation_time' => 'required',
         ]);
-
+//dd($request->all());
         $product                   = Product_master::find($request->id);
         $product->product_name     = $request->product_name;
         $product->userId           = Auth::guard('vendor')->user()->id;
@@ -126,11 +126,10 @@ class ProductController extends Controller
         $product->customizable     = $request->custimization;
         $product->preparation_time = $request->preparation_time;
         $product->chili_level      = $request->chili_level;
-
-
-        if ($request->status == '0') {
-            $product->status = 2;
-        }
+        $product->product_approve  = 2;
+//        if ($request->status == '0') {
+//            $product->status = 2;
+//        }
         if (!empty($request->addons)) {
             $product->addons = implode(',', $request->addons);
         }
@@ -156,7 +155,9 @@ class ProductController extends Controller
     {
         if ($request->ajax()) {
 
-            $data = Product_master::join('categories', 'products.category', '=', 'categories.id')->select('products.*', 'categories.name as categoryName')->where('products.userId', '=', Auth::guard('vendor')->user()->id)->get();
+            $data = Product_master::join('categories', 'products.category', '=', 'categories.id')
+                ->select('products.*', 'categories.name as categoryName')
+                ->where('products.userId', '=', Auth::guard('vendor')->user()->id)->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
@@ -224,11 +225,18 @@ class ProductController extends Controller
             $id = Crypt::decryptString($encrypt_id);
 //            dd($id);
             // $product = Product_master::findOrFail($id);
-            $product    = Product_master::where('products.id', '=', $id)->join('categories', 'products.category', '=', 'categories.id')->join('cuisines', 'products.userId', '=', 'cuisines.id')->join('vendor_menus', 'products.userId', '=', 'vendor_menus.id')->select('products.*', 'categories.name as categoryName', 'cuisines.name as cuisinesName', 'vendor_menus.menuName')->first();
-            $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
-            $cuisines   = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
+            $product    = Product_master::where('products.id', '=', $id)
+//                ->leftJoin('categories', 'products.category', '=', 'categories.id')
+//                ->leftJoin('cuisines', 'products.userId', '=', 'cuisines.id')
+//                ->join('vendor_menus', 'products.userId', '=', 'vendor_menus.id')
+//                ->select('products.*', 'categories.name as categoryName', 'cuisines.name as cuisinesName', 'vendor_menus.menuName')
+                ->first();
+            $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->pluck('name', 'id');
+            $cuisines   = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->pluck('name', 'id');
             $addons     = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
-            $menus      = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->get();
+//            $menus      = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->get();
+            $menus = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->pluck('menuName', 'id');
+//            dd($product);
             return view('vendor.restaurant.products.edit', compact('product', 'cuisines', 'addons', 'menus', 'categories'));
         } catch (\Exception $e) {
             return dd($e->getMessage());

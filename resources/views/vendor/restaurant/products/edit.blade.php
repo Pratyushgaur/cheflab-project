@@ -106,12 +106,19 @@
                                     <label for="validationCustom22">Select Cuisines Category <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <select class="form-control select2" name="cuisines" id="validationCustom22">
-                                            <option value="{{$product->cuisinesName}}">{{$product->cuisinesName}}</option>
-                                            @foreach($cuisines as $k =>$value)
-                                                <option value="{{$value->id}}">{{$value->name}}</option>
-                                            @endforeach
-                                        </select>
+                                        {{ Form::select('cuisines', $cuisines,$product->cuisines, ['class' => 'form-control select2', 'placeholder' => 'Select cuisine ','required','id'=>'validationCustom22']) }}
+                                        @if ($errors->has('cuisines'))
+                                            <span class="ms-text-danger"><strong>{{ $errors->first('cuisines') }}</strong></span>
+                                        @endif
+
+
+
+{{--                                        <select class="form-control select2" name="cuisines" id="validationCustom22">--}}
+{{--                                            <option value="{{$product->cuisinesName}}">{{$product->cuisinesName}}</option>--}}
+{{--                                            @foreach($cuisines as $k =>$value)--}}
+{{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
                                     </div>
                                     <span class="cuisines_error text-danger"></span>
                                 </div>
@@ -119,13 +126,18 @@
                                     <label for="validationCustom">Select Product Category <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <select class="form-control select2" name="category" id="validationCustom">
-                                            <option value="{{$product->categoryName}}">{{$product->categoryName}}</option>
-                                            @foreach($categories as $k =>$value)
-                                                <option value="{{$value->id}}">{{$value->name}}</option>
-                                            @endforeach
+                                        {{ Form::select('category', $categories,$product->category, ['class' => 'form-control select2', 'placeholder' => 'Select Category ','required','id'=>'validationCustom']) }}
+                                        @if ($errors->has('category'))
+                                            <span class="ms-text-danger"><strong>{{ $errors->first('category') }}</strong></span>
+                                        @endif
 
-                                        </select>
+                                        {{--                                        <select class="form-control select2" name="category" id="validationCustom">--}}
+{{--                                            <option value="{{$product->categoryName}}">{{$product->categoryName}}</option>--}}
+{{--                                            @foreach($categories as $k =>$value)--}}
+{{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
+{{--                                            @endforeach--}}
+
+{{--                                        </select>--}}
 
                                     </div>
                                     <span class="category_error text-danger"></span>
@@ -134,13 +146,17 @@
                                     <label for="validationCustom24">Select Product Catalogue <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <select class="form-control select2" name="menu_id" id="validationCustom24">
-                                            <option value="{{$product->menuName}}">{{$product->menuName}}</option>
-                                            @foreach($menus as $k =>$value)
-                                                <option value="{{$value->id}}">{{$value->menuName}}</option>
-                                            @endforeach
+                                        {{ Form::select('menu_id', $categories,$product->category, ['class' => 'form-control select2', 'placeholder' => 'Select Catalogue ','required','id'=>'validationCustom24']) }}
+                                        @if ($errors->has('menu_id'))
+                                            <span class="ms-text-danger"><strong>{{ $errors->first('menu_id') }}</strong></span>
+                                        @endif
+{{--                                        <select class="form-control select2" name="menu_id" id="validationCustom24">--}}
+{{--                                            <option value="{{$product->menuName}}">{{$product->menuName}}</option>--}}
+{{--                                            @foreach($menus as $k =>$value)--}}
+{{--                                                <option value="{{$value->id}}">{{$value->menuName}}</option>--}}
+{{--                                            @endforeach--}}
 
-                                        </select>
+{{--                                        </select>--}}
 
                                     </div>
                                     <span class="menu_id_error text-danger"></span>
@@ -200,7 +216,7 @@
                                     <label for="">Primary Variant Name <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="primary_variant_name" id=""
-                                               placeholder="Primary Variant Name " value="">
+                                               placeholder="Primary Variant Name " value="{{$product->primary_variant_name}}">
 
                                     </div>
 
@@ -209,7 +225,7 @@
                                 <div class="col-md-4 mb-3">
                                     <label for="">Primary Item Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="item_price" id="price" placeholder="Enter Price" value="">
+                                        <input type="text" class="form-control" name="product_price" id="price" placeholder="Enter Price" value="{{$product->item_price}}">
 
                                     </div>
 

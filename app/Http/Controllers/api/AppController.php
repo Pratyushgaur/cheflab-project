@@ -153,12 +153,17 @@ class AppController extends Controller
             //$data['lng'] = 74.8866346;
             $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
             $userid = request()->user()->id;
-            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories', \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))->selectRaw("ROUND({$select},1) AS distance");
+            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
+                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings',
+                    'vendors.id', 'lat', 'long', 'deal_categories', \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
+                ->selectRaw("ROUND({$select},1) AS distance");
             $vendors = $vendors->leftJoin('user_vendor_like', function ($join) {
                 $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
                 $join->where('user_vendor_like.user_id', '=', request()->user()->id);
             });
+
             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
+
 /*
             $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])
                 ->join('vendors', 'products.userId', '=', 'vendors.id')
@@ -186,7 +191,8 @@ class AppController extends Controller
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => $th->getMessage()
+//                'error' => $th->getMessage()
+                'error' => $th->getTraceAsString()
             ], 500);
         }
     }
@@ -228,7 +234,7 @@ class AppController extends Controller
 
                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $timeSchedule = VendorOrderTime::where(['vendor_id' => $value->id, 'day_no' => Carbon::now()->dayOfWeek])->first();
-                if ($timeSchedule->available) {
+                if (@$timeSchedule->available) {
                     if (strtotime(date('H:i:s')) >= strtotime($timeSchedule->start_time) && strtotime(date('H:i:s')) <= strtotime($timeSchedule->end_time)) {
                         $data[$key]->isClosed = false;
                     } else {
