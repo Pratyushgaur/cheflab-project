@@ -119,7 +119,7 @@
                             <div class="form-group">
                                 <label for="blog_position">Blog Position <span class="text-danger">*</span></label>
                                 <select name="position" class="form-control" id="blog_position">
-                                  <option value="1">Restaurent</option>
+                                  <option value="1">Restaurant</option>
                                   <option value="2">Chef</option>
                                 </select>
                             </div>

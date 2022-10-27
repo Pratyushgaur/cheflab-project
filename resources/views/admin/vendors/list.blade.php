@@ -96,7 +96,7 @@
                                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                                             <a class="dropdown-item text-info" href="{{route('admin.chef.edit',Crypt::encryptString($vendor->id))}}'"><i class="fas fa-edit"></i> Edit</a>
                                                             <a class="dropdown-item text-info" href="{{route('admin.vendor.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i> View More</a>
-                                                            <a class="dropdown-item text-danger" href="javascript:void(0);" data-id="{{ Crypt::encryptString($vendor->id) }}"  data-alert-message="Are You Sure to Delete this Vendor" flash="Vendor"  data-action-url="{{route('admin.vendors.ajax.delete')}}" title="Delete" > <i class="fa fa-trash"></i> Delete</a>
+                                                            <a class="dropdown-item text-danger vendor-delete" href="javascript:void(0);" data-id="{{ Crypt::encryptString($vendor->id) }}"  data-alert-message="Are You Sure to Delete this Vendor" flash="Vendor"  data-action-url="{{route('admin.vendors.ajax.delete')}}" title="Delete" > <i class="fa fa-trash"></i> Delete</a>
                                                             <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>
                                                         </div>
                                                     </li>

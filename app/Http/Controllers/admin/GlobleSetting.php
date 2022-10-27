@@ -40,7 +40,9 @@ class GlobleSetting extends Controller
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } */
-        return view('admin/setting/settingpage');
+        $id = '1';
+        $data = AdminMasters::findOrFail($id);
+        return view('admin/setting/settingpage',compact('data'));
     }
     public function delivery_charge(){
         $id = '1';

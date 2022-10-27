@@ -219,20 +219,20 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Google Map Key <span class="text-danger">*</span></label>
-                                        <input type="text" name="goofle_map_key" value="{{$data->goofle_map_key}}" class="form-control"  id="" placeholder="Enter Restaurant Email">
+                                        <input type="text" name="goofle_map_key" value="{{$data->goofle_map_key}}" class="form-control"  id="" placeholder="Enter Google Map Key">
                                     </div>  
                                   </div>
                                   
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Aboutu <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">About Us <span class="text-danger">*</span></label>
                                         <textarea name="aboutus" class="form-control" value="{{$data->aboutus}}"  id="" placeholder="About..">{{$data->aboutus}}</textarea>
                                     </div>  
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Order Limit Amount <span class="text-danger">*</span></label>
-                                        <input type="text" name="order_limit_amout" value="{{$data->order_limit_amout}}" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                        <input type="text" name="order_limit_amout" value="{{$data->order_limit_amout}}" class="form-control"  id="" placeholder="Enter Order Limit Amount">
                                     </div>  
                                   </div>
                                  </div>

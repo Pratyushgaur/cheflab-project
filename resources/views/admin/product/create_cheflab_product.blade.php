@@ -413,11 +413,10 @@
           rules: {
             product_name: {
                   required: true,
-                  maxlength: 25,
+                  maxlength: 60,
               },
               dis: {
                   required: true,
-                  maxlength: 30,
               },
               product_price: {
                   required: true,

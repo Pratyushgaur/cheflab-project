@@ -62,7 +62,7 @@
         rules: {
             name: {
                   required: true,
-                  maxlength: 25,
+                  maxlength: 80,
                   remote: '{{route("restaurant.menu.check_duplicate")}}',
               },
               

@@ -97,6 +97,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('dine-out-get-restaurant', [App\Http\Controllers\api\DineoutApiController::class, 'get_dineout_restaurant']);
 
     Route::get('chelfleb-products', [\App\Http\Controllers\api\AppController::class, 'chelfleb_produst']);
+    // User Rechar 
+    Route::post('get-user-wallet', [App\Http\Controllers\api\Userwallet::class, 'getUserwallet']);
+    Route::post('recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'Recharge']);
+    Route::post('user-all-transaction', [App\Http\Controllers\api\Userwallet::class, 'allTransactions']);
+
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);

@@ -142,6 +142,7 @@ class ProductController extends Controller
     {
         try {
             $id =  Crypt::decryptString($request->id);
+            var_dump($id);die;
             $data = Product_master::findOrFail($id);
             if ($data ) {
                 $data->delete();

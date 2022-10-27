@@ -298,7 +298,7 @@
                                   <div class="col-md-6 custmization-block">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
                                     </div>
                                   </div>
                                 </div>

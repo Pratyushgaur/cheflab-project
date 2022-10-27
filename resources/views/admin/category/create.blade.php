@@ -169,7 +169,7 @@
                                     <th >Category Name</th>
                                     <th >Position</th>
                                     <th  >Image</th>
-                                  
+                                    <th  >Status</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -213,6 +213,7 @@
             {data: 'name', name: 'city_name'},
             {data: 'position', name: 'position'},
             {data: 'categoryImage', name: 'categoryImage'},
+            {data: 'is_active', name: 'is_active'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

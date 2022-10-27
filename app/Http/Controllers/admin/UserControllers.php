@@ -593,8 +593,6 @@ class UserControllers extends Controller
             } else {
                 return \Response::json([ 'error' => true, 'success' => false, 'error_message' => 'Finding data error' ], 200);
             }
-
-
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json([ 'error' => true, 'success' => false, 'error_message' => $e->getMessage() ], 200);

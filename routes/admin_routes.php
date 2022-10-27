@@ -51,6 +51,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('category-update', [App\Http\Controllers\admin\Category::class, 'update'])->name('admin.category.update');
     Route::get('check-duplicate-category', [App\Http\Controllers\admin\Category::class, 'check_duplicate_category'])->name('check-duplicate-category');
     Route::get('check-edit_duplicate-category/{id}', [App\Http\Controllers\admin\Category::class, 'check_edit_duplicate_category'])->name('check-edit_duplicate-category');
+    Route::post('category-inactive/{id}', [App\Http\Controllers\admin\Category::class, 'inactive'])->name('admin.category.inactive');
+    Route::post('category-active/{id}', [App\Http\Controllers\admin\Category::class, 'active'])->name('admin.category.active');
     // cuisiness
     Route::get('cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'index'])->name('admin.cuisines.create');
     Route::post('cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'store_cuisines'])->name('admin.cuisines.store');
@@ -204,8 +206,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
-    Route::post('users/inactive{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
-    Route::post('users/active{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
+    Route::post('users/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
+    Route::post('users/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
     Route::post('user/delete/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_delete'])->name('admin.user.delete');
     Route::get('users/view/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_view'])->name('admin.user.view');
 
