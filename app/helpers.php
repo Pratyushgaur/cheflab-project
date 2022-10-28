@@ -127,7 +127,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     DB::enableQueryLog();
 
     $product = Product_master::select(DB::raw('products.userId as vendor_id'),
-        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time',
+        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
@@ -143,13 +143,13 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     } else
         if ($with_restaurant_name) {
             $product->join('vendors', 'products.userId', '=', 'vendors.id');
-            $product->addSelect('vendors.name as restaurantName','vendors.image as vendor_image','banner_image');
+            $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'banner_image');
         }
 
     $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
 
     if ($user_id != '') {
-        $product->addSelect('user_id',DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+        $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
         $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
             $join->on('products.id', '=', 'user_product_like.product_id');
             $join->where('user_product_like.user_id', '=', $user_id);
@@ -183,13 +183,14 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                                'primary_variant_name' => $p['primary_variant_name'],
                                                'preparation_time'     => $p['preparation_time'],
                                                'vendor_id'            => $p['vendor_id'],
+                                               'chili_level'          => $p['chili_level']
                 ];
-                if ($with_restaurant_name){
+                if ($with_restaurant_name) {
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
-                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') .$p['vendor_image'];
+                    $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
 
-                    $banners = json_decode($p['banner_image']);
-                    $variant[$p['product_id']] ['banner_image']  = array_map(function ($banner) {
+                    $banners                                    = json_decode($p['banner_image']);
+                    $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
                         return URL::to('vendor-banner/') . '/' . $banner;
                     }, $banners);
 
@@ -264,6 +265,7 @@ function front_end_currency($number)
     return $result . '  &#8377; ';
 }
 
-function get_delivery_boy_near_me($lat,$lng){
-    return [1];
+function get_delivery_boy_near_me($lat, $lng)
+{
+    return [ 1 ];
 }
