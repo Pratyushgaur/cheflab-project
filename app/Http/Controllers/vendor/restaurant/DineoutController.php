@@ -148,22 +148,22 @@ class DineoutController extends Controller
      */
     public function update(Request $request)
     {
+//        dd($request->all());
         $request->validate(
             [
                 'no_guest'      => 'required|numeric',
                 'slot_time'     => 'required|numeric',
-                'slot_discount' => 'required|numeric'
+                'discount_percent.*' => 'required|numeric'
             ]
         );
 
         $data = [
             'no_guest'  => $request->no_guest,
             'slot_time' => $request->slot_time,
-            //            'slot_discount' => $request->slot_discount,
             'vendor_id' => Auth::guard('vendor')->user()->id
         ];
         TableService::updateOrCreate([ 'vendor_id' => Auth::guard('vendor')->user()->id ], $data);
-        foreach ($request->discount as $k => $d) {
+        foreach ($request->discount_percent as $k => $d) {
             $discount = [ 'discount_percent' => $d ];
 
             TableServiceDiscount::updateOrCreate([ 'vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $k ], $discount);
