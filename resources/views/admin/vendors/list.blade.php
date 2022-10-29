@@ -144,7 +144,6 @@
                                             <td>{{$vendor->name}}</td>
                                             <td>{{$vendor->email}}</td>
                                             <td>{{$vendor->vendor_type}}</td>
-                                            <!--<td><?php// echo (!empty($vendor->status)) && ($vendor->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'?></td>-->
                                             <td>
                                                 @if($vendor->status == '1')
                                                 <a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Vendor" flash="User" data-action-url="{{route('admin.vendors.inactive',['id'=>encrypt($vendor->id)])}}" title="Inactive">Active</a>
