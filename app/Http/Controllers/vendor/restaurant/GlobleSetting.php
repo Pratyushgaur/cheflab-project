@@ -303,7 +303,7 @@ class GlobleSetting extends Controller
             $name = 'cancel_check-' . Str::random(10) . uniqid();
             $bank['cancel_check'] = $folderPath . $name . '.' . $image_type;
             file_put_contents($bank['cancel_check'], $image_base64);
-            $bank['cancel_check'] = $name;
+            $bank['cancel_check'] = $name . '.' . $image_type;;
 //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
 //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
 //            $bank['cancel_check'] = $filename;
@@ -320,7 +320,7 @@ class GlobleSetting extends Controller
             $name = 'fassi_image-' . Str::random(10) . uniqid();
             $vendor->licence_image = $folderPath . $name . '.' . $image_type;
             file_put_contents($vendor->licence_image, $image_base64);
-            $vendor->licence_image = $name;
+            $vendor->licence_image = $name . '.' . $image_type;;
 //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
 //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
 //            $bank['cancel_check'] = $filename;
@@ -337,7 +337,7 @@ class GlobleSetting extends Controller
             $name = 'pancard_image-' . Str::random(10) . uniqid();
             $vendor->pancard_image = $folderPath . $name . '.' . $image_type;
             file_put_contents($vendor->pancard_image, $image_base64);
-            $vendor->pancard_image = $name;
+            $vendor->pancard_image = $name . '.' . $image_type;;
 //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
 //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
 //            $bank['cancel_check'] = $filename;
@@ -353,7 +353,7 @@ class GlobleSetting extends Controller
             $name = 'aadhar_card_image-' . Str::random(10) . uniqid();
             $vendor->aadhar_card_image = $folderPath . $name . '.' . $image_type;
             file_put_contents($vendor->aadhar_card_image, $image_base64);
-            $vendor->aadhar_card_image = $name;
+            $vendor->aadhar_card_image = $name . '.' . $image_type;;
 //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
 //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
 //            $bank['cancel_check'] = $filename;
