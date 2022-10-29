@@ -33,7 +33,7 @@ class Products extends Migration
             $table->string('cancel_reason')->nullable();
             $table->enum('product_for',['1','2','3'])->comment('1-cheflab 2-chef 3-restaurant');
 //            $table->enum('status', ['1','0','2','3'])->default('2')->comment('1-active 0-inactive 2=pending 3=reject');
-            $table->enum('status', ['1','0'])->default('2')->comment('1-active 0-inactive; Mobile app product visibility');
+            $table->enum('status', ['1','0'])->default('0')->comment('1-active 0-inactive; Mobile app product visibility');
             $table->enum('product_approve', ['1','0','2','3'])->default('2')->comment('1-approve 2-pending 3-reject, Admin will aprove product first then it will goes to mobile app');
             $table->string('product_rating',10)->default('0');
             $table->dateTime('created_at')->useCurrent();

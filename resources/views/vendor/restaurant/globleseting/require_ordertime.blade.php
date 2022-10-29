@@ -12,8 +12,8 @@
                     </ol>
                 </nav>
             </div> --}}
-            <div class="col-xl-3"></div>
-            <div class="col-xl-6 col-md-6 ">
+            <div class="col-xl-2"></div>
+            <div class="col-xl-8 col-md-8 ">
                 <div class="ms-panel ms-panel-fh">
                     <div class="ms-panel-header">
                         <h6>Restaurant Essential Setting</h6>
@@ -22,16 +22,14 @@
                         <div class="row ">
 
                             <div class="col-md-12">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb breadcrumb-arrow has-gap has-bg">
-                                        
-                                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i>
-                                                Restaurant Timing</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Location</li>
-                                        <li class="breadcrumb-item active">Logo And Banner</li>
+                                <nav aria-label = "breadcrumb">
+                                    <ol class = "breadcrumb breadcrumb-arrow has-gap has-bg">
+                                        <li class = "breadcrumb-item"><a href = "{{route('restaurant.require.ordertime')}}">Restaurant Timing</a></li>
+                                        <li class = "breadcrumb-item active"><a href = "{{route('restaurant.globleseting.frist_vendor_location')}}">Location</a></li>
+                                        <li class = "breadcrumb-item active"><a href = "{{route('restaurant.globleseting.first_vendor_logo')}}">Logo And Banner</a></li>
+                                        <li class = "breadcrumb-item active"><a href = "{{route('restaurant.globleseting.first_bank_details')}}">Bank Details</a></li>
                                     </ol>
                                 </nav>
-
 
                                 <form class="validation-fill clearfix ms-form-wizard style1-wizard " id="order_time_form"
                                     action="{{ route('restaurant.ordertime.first_store') }}" method="post">
@@ -62,7 +60,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3"></div>
+            <div class="col-xl-2"></div>
 
 
 

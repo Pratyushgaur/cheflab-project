@@ -47,21 +47,19 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header" data-toggle="collapse" role="button" data-target="#collapseTwo"
-                         aria-expanded="false" aria-controls="collapseTwo">
-                        <span> Lorem Ipsum has been the industry standard dummy text</span>
+                    <div class="card-header" data-toggle="collapse" role="button" data-target="#collapseOne2"
+                         aria-expanded="true" aria-controls="collapseOne">
+                        <span>Bank And documents</span>
                     </div>
 
-                    <div id="collapseTwo" class="collapse" data-parent="#accordionExample1">
+                    <div id="collapseOne2" class="collapse show" data-parent="#accordionExample1">
                         <div class="card-body">
-                            Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative
-                            approaches to corporate strategy foster collaborative thinking to further the overall value
-                            proposition.
-                            Organically grow the holistic world view of disruptive innovation via workplace diversity
-                            and empowerment.
+                            <li><a href="{{route('restaurant.globleseting.bank_details')}}" class="">Bank and other documents</a></li>
                         </div>
                     </div>
                 </div>
+
+
 
             </div>
         </div>

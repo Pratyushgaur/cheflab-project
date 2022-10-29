@@ -12,8 +12,8 @@
                     </ol>
                 </nav>
             </div> --}}
-            <div class="col-xl-3"></div>
-            <div class="col-xl-6 col-md-6">
+            <div class="col-xl-2"></div>
+            <div class="col-xl-8 col-md-8">
                 <div class="ms-panel ms-panel-fh">
                     <div class="ms-panel-header">
                         <h6>Restaurant Essential Setting</h6>
@@ -22,20 +22,12 @@
                         <div class="row">
 
                             <div class="col-md-12">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb breadcrumb-arrow has-gap has-bg">
-                                        <li class="breadcrumb-item">
-                                            <a href="#">
-                                                Restaurant Timing
-                                            </a>
-                                        </li>
-                                        <li class="breadcrumb-item">
-                                            <a href="#">
-                                                Location
-                                            </a>
-                                        </li>
-                                        
-                                        <li class="breadcrumb-item active">Logo And Banner</li>
+                                <nav aria-label = "breadcrumb">
+                                    <ol class = "breadcrumb breadcrumb-arrow has-gap has-bg">
+                                        <li class = "breadcrumb-item"><a href = "{{route('restaurant.require.ordertime')}}">Restaurant Timing</a></li>
+                                        <li class = "breadcrumb-item"><a href = "{{route('restaurant.globleseting.frist_vendor_location')}}">Location</a></li>
+                                        <li class = "breadcrumb-item active"><a href = "{{route('restaurant.globleseting.first_vendor_logo')}}">Logo And Banner</a></li>
+                                        <li class = "breadcrumb-item active"><a href = "{{route('restaurant.globleseting.first_bank_details')}}">Bank Details</a></li>
                                     </ol>
                                 </nav>
 
@@ -45,20 +37,20 @@
 
                                     {{-- Location form start --}}
                                     <div class="form-row">
-                                        <div class="col-md-12 mb-3"> 
+                                        <div class="col-md-12 mb-3">
                                             <label>Location</label>
                                             <div class="input-group">
-                                                <input type="text" id="address-input" name="location" class="form-control map-input" value="" >    
+                                                <input type="text" id="address-input" name="location" class="form-control map-input" value="" >
                                             </div>
-                                            
+
                                         </div>
-                                        <div class="col-md-12 mb-3"> 
+                                        <div class="col-md-12 mb-3">
                                             <div id="address-map-container" style="width:100%;height:400px; ">
                                                 <div style="width: 100%; height: 100%" id="address-map"></div>
                                                 <input type="hidden" name="address_latitude" id="" value="{{ old('address_latitude') ?? '0' }}" />
                                                 <input type="hidden" name="address_longitude" id="" value="{{ old('address_longitude') ?? '0' }}" />
                                             </div>
-                                            
+
                                         </div>
                                         <div class="col-md-6 mb-3">
                                             <label>Restaurent Latitude</label>
@@ -109,13 +101,13 @@
 
 
             </div>
-            <div class="col-xl-3"></div>
+            <div class="col-xl-2"></div>
         </div>
     @endsection
     @section('page-js')
     <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize&language=en&region=GB" async defer></script>
     <script>
-        
+
         function initialize(){
             var map = new google.maps.Map(document.getElementById('address-map'),{
                 center:{
@@ -123,7 +115,7 @@
                     lng:-0.12775829999998223
                 },
                 zoom:15
-                
+
             });
             var marker = new google.maps.Marker({
                 position:{
@@ -135,14 +127,14 @@
             });
             var searchBox = new google.maps.places.SearchBox(document.getElementById("address-input"));
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('address-input'));
-            
+
             google.maps.event.addListener(searchBox, 'places_changed', function(event) {
                 searchBox.set('map', null);
 
-                
-                
+
+
                 var places = searchBox.getPlaces();
-                
+
                 setLocationCoordinates(places[0].geometry.location.lat(),places[0].geometry.location.lng());
                 var bounds = new google.maps.LatLngBounds();
                 var i, place;
@@ -152,7 +144,7 @@
 
                         position: place.geometry.location,
                         draggable:true
-                    
+
 
                     });
                     marker.bindTo('map', searchBox, 'map');
@@ -164,12 +156,12 @@
                         this.unbindAll();
                     }
                     });
-                    
+
                     bounds.extend(place.geometry.location);
 
 
                 }(place));
-                    
+
 
 
 
@@ -189,6 +181,6 @@
                 longitudeField.value = lng;
             }
         }
-        
+
     </script>
 @endsection
