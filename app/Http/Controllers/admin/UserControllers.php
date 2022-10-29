@@ -170,6 +170,10 @@ class UserControllers extends Controller
             'categories'        => 'required',
             'deal_cuisines'     => 'required',
             'tax'               => 'required',
+            'pancard_number'   => 'required',
+            'pancard_image'   => 'required',
+            'aadhar_number'   => 'required',
+            'aadhar_card_image'   => 'required',
         ]);
         $vendors                   = new Vendors;
         $vendors->name             = $request->restaurant_name;
@@ -183,6 +187,8 @@ class UserControllers extends Controller
         $vendors->commission       = $request->vendor_commission;
         $vendors->vendor_food_type = $request->type;
         $vendors->tax              = $request->tax;
+        $vendors->pancard_number = $request->pancard_number;
+        $vendors->aadhar_number = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
@@ -199,6 +205,16 @@ class UserControllers extends Controller
             $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
             $request->fassai_image->move(public_path('vendor-documents'), $filename);
             $vendors->licence_image = $filename;
+        }
+        if ($request->has('pancard_image')) {
+            $filename = time() . '-pancard_image-' . rand(100, 999) . '.' . $request->pancard_image->extension();
+            $request->pancard_image->move(public_path('pancard'), $filename);
+            $vendors->pancard_image = $filename;
+        }
+        if ($request->has('aadhar_card_image')) {
+            $filename = time() . '-addar-' . rand(100, 999) . '.' . $request->aadhar_card_image->extension();
+            $request->aadhar_card_image->move(public_path('aadhar'), $filename);
+            $vendors->aadhar_card_image = $filename;
         }
         if ($request->has('other_document')) {
             $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
@@ -447,7 +463,7 @@ class UserControllers extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
                     $btn = '<a href="' . route("admin.chef.productedit", Crypt::encryptString($data->id)) . '" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>
-                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 ->addColumn('product_image', function ($data) {
@@ -455,7 +471,7 @@ class UserControllers extends Controller
                 })
                 ->addColumn('status', function ($data) {
                     if ($data->status == 1) {
-                        $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-success btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="' . route('admin.vendors.inactive') .'">Active</a>';
+                        $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-success btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="">Active</a>';
                     } elseif ($data->status == 2) {
                         $btn = '<span class="badge badge-primary">Pending</span>';
                     } elseif ($data->status == 0) {

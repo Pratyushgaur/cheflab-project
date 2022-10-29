@@ -384,13 +384,13 @@
                                   <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Pan Card Number. </label>
-                                            <input type="text" name="other_document_no" class="form-control" placeholder="Pan Card Number">
+                                            <input type="text" name="pancard_number" class="form-control" placeholder="Pan Card Number">
                                         </div>
                                   </div>
                                   <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Pan Card Image. </label>
-                                            <input type="file" name="other_document_no" class="form-control" placeholder="Pan Card Image">
+                                            <input type="file" name="pancard_image" class="form-control" placeholder="Pan Card Image">
                                         </div>
                                   </div>
                                   <div class="col-sm-3">
@@ -405,17 +405,23 @@
                                             <input type="text" name="other_document_no" class="form-control" placeholder="Document Number">
                                         </div>
                                   </div>
-                                  <div class="col-sm-3">
+                                  <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Other Document.</label>
                                             <input type="file" name="other_document" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
                                         </div>
                                         
                                   </div>
-                                  <div class="col-sm-3">
+                                  <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Aadhar Number. </label>
-                                            <input type="text" name="other_document_no" class="form-control" placeholder="Addhar Number">
+                                            <input type="text" name="aadhar_number" class="form-control" placeholder="Addhar Number">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Aadhar Image. </label>
+                                            <input type="file" name="aadhar_card_image" class="form-control" placeholder="Addhar Number">
                                         </div>
                                   </div>
                                 </div>
@@ -424,50 +430,7 @@
 
 
                           </div>
-                          <div class="card card-default">
-                              <div class="card-header">
-                                <h3 class="card-title text-bold">Bank  Information</h3>
-                              </div>
-                              <div class="card-body">
-                                <div class="row">
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Bank Name. </label>
-                                        <input type="text" name="fssai_lic_no" class="form-control"  id="" placeholder="Enter Bank Name">
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">A/C Number. </label>
-                                            <input type="text" name="fassai_image" class="form-control"  id="" placeholder="Enter A/C Number">
-                                        </div>
-                                  </div>
-                                  <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">A/C Holder Name. </label>
-                                            <input type="text" name="other_document_name" class="form-control" placeholder="A/C Holder Name">
-                                        </div>
-                                  </div>
-                                  <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">IFSC Code. </label>
-                                            <input type="text" name="other_document_no" class="form-control" placeholder="IFSC Code">
-                                        </div>
-                                  </div>
-                                  <div class="col-sm-2">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Cancelled Cheque.</label>
-                                            <input type="file" name="other_document" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
-                                        </div>
-                                        
-                                  </div>
-                                 
-                                </div>
-                                <!-- div row -->
-                              </div>
-
-
-                          </div>
+                          
                           <div class="card card-default">
                               <div class="card-header">
                                 <h3 class="card-title text-bold">Location for Order Pickup</h3>
@@ -603,6 +566,18 @@
               tax: {
                 required: true,
               },
+              pancard_number: {
+                required: true,
+              },
+              pancard_image: {
+                required: true,
+              },
+              aadhar_number: {
+                required: true,
+              },
+              aadhar_card_image: {
+                required: true,
+              },
               'categories[]':{
                 required:true
               },
@@ -642,6 +617,18 @@
               },
               tax:{
                 remote:"Tax is required"
+              },
+              pancard_number:{
+                remote:"pan card number is required"
+              },
+              pancard_image:{
+                remote:"pan card image is required"
+              },
+              aadhar_number:{
+                remote:"aadhar card number is required"
+              },
+              aadhar_card_image:{
+                remote:"aadhar card image is required"
               },
               'categories[]':{
                 required:"Select Deals categories"
