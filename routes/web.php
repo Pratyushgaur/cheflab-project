@@ -18,21 +18,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/test', function () {
-    $data['lat'] = 24.4637223;
-    $data['lng'] = 74.8866346;
-    $select = "( 3959 * acos( cos( radians(".$data['lat'].") ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians(".$data['lng'].") ) + sin( radians(".$data['lat'].") ) * sin( radians( vendors.lat ) ) ) ) ";
-//    $userid = request()->user()->id;
-    $vendors = \App\Models\Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
-        ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings',
-            'vendors.id', 'lat', 'long', 'deal_categories', \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
-//        ->selectRaw("-({$select},1) AS distance");
-    $vendors = $vendors->leftJoin('user_vendor_like', function ($join) {
-        $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
-        $join->where('user_vendor_like.user_id', '=', 1);
-    });
-//    dd("sdfsd");
-    $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
-dd($vendors);
+
+dd(Auth::guard('vendor')->user());
 });
 
 

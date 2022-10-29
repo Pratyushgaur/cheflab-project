@@ -4,18 +4,17 @@ namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Events\IsAllSettingDoneEvent;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Crypt;
-use App\Models\VendorMenus;
+use App\Models\BankDetail;
 use App\Models\Order_time;
 use App\Models\VendorOrderTime;
 use App\Models\vendors;
 use App\Rules\VendorOrderTimeRule;
-use Illuminate\Support\Str;
-use DataTables;
 use Config;
+use DataTables;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class GlobleSetting extends Controller
 {
@@ -44,6 +43,7 @@ class GlobleSetting extends Controller
         // dd($VendorOrderTime);
         return view('vendor.restaurant.globleseting.ordertime', compact('VendorOrderTime'));
     }
+
     public function store(Request $request)
     {
 
@@ -52,7 +52,7 @@ class GlobleSetting extends Controller
         $request->validate([
             'start_time.*' => 'nullable|date_format:H:i',
             'end_time.*' => 'nullable|date_format:H:i',
-            'available.*' =>  ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],
+            'available.*' => ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],
         ]);
 
         foreach ($request->start_time as $key => $val) {
@@ -60,8 +60,8 @@ class GlobleSetting extends Controller
                 $data[] = [
                     'vendor_id' => Auth::guard('vendor')->user()->id,
                     'day_no' => $key,
-                    'start_time' => date('H:i:s',strtotime($request->start_time[$key])),
-                    'end_time' => date('H:i:s',strtotime($request->end_time[$key])),
+                    'start_time' => date('H:i:s', strtotime($request->start_time[$key])),
+                    'end_time' => date('H:i:s', strtotime($request->end_time[$key])),
                     'available' => $request->available[$key],
                 ];
             else
@@ -179,6 +179,7 @@ class GlobleSetting extends Controller
         else
             return redirect()->back()->with('success', 'Settings update Successfully');
     }
+
     public function first_vendor_Logo()
     {
         $hideSidebar = true;
@@ -187,7 +188,9 @@ class GlobleSetting extends Controller
 
         return view('vendor.restaurant.globleseting.require_logo_banner', compact('Vendor', 'hideSidebar'));
     }
-    public function save_vendor_Logo(Request $request){
+
+    public function save_vendor_Logo(Request $request)
+    {
         $this->validate($request, [
             'logo' => 'required',
             'banner' => 'required'
@@ -214,34 +217,157 @@ class GlobleSetting extends Controller
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
-        $name = 'logo-'.Str::random(10).uniqid();
-        $file = $folderPath .$name. '.'.$image_type;
+        $name = 'logo-' . Str::random(10) . uniqid();
+        $file = $folderPath . $name . '.' . $image_type;
         file_put_contents($file, $image_base64);
-        vendors::where('id', Auth::guard('vendor')->user()->id)->update(['image'=>$name.'.'.$image_type]);
+        vendors::where('id', Auth::guard('vendor')->user()->id)->update(['image' => $name . '.' . $image_type]);
 
-        if (!empty($request->banner)){
+        if (!empty($request->banner)) {
             $json = [];
-            foreach($request->banner as $k =>$img){
+            foreach ($request->banner as $k => $img) {
                 $folderPath = "vendor-banner/"; //path location
 
                 $image_parts = explode(";base64,", $img);
                 $image_type_aux = explode("image/", $image_parts[0]);
                 $image_type = $image_type_aux[1];
                 $image_base64 = base64_decode($image_parts[1]);
-                $name = 'banner-'.Str::random(10).uniqid();
-                $file = $folderPath .$name. '.'.$image_type;
+                $name = 'banner-' . Str::random(10) . uniqid();
+                $file = $folderPath . $name . '.' . $image_type;
                 file_put_contents($file, $image_base64);
-                $json[] = $name.'.'.$image_type;
+                $json[] = $name . '.' . $image_type;
             }
-            vendors::where('id', Auth::guard('vendor')->user()->id)->update(['banner_image'=>json_encode($json)]);
+            vendors::where('id', Auth::guard('vendor')->user()->id)->update(['banner_image' => json_encode($json)]);
         }
 
         event(new IsAllSettingDoneEvent());
         return redirect()->route('restaurant.dashboard')->with('poup_success', 'Settings update Successfully');
 
 
-
-
-
     }
+
+    public function first_bank_details()
+    {
+        $hideSidebar = true;
+        $bankDetail = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();
+
+        return view('vendor.restaurant.globleseting.require_bankdetailes', compact('bankDetail', 'hideSidebar'));
+    }
+
+    public function bank_details()
+    {
+        $hideSidebar = false;
+        $bankDetail = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();
+
+        return view('vendor.restaurant.globleseting.bankdetailes', compact('bankDetail', 'hideSidebar'));
+    }
+
+    public function save_bank_details(Request $request)
+    {
+//        dd($request->all());
+//        dd($request->routeIs('restaurant.globleseting.save_bank_details'));
+        if ($request->routeIs('restaurant.globleseting.save_bank_details'))
+            $request->validate([
+                'holder_name' => 'required',
+                'ifsc' => 'required',
+                'bank_name' => 'required',
+                'account_no' => ['required', 'regex:/^\w{1,17}$/'],
+                'aadhar_number' => "required",
+                'fssai_lic_no' => "required",
+            ]);
+        else
+            $request->validate([
+                'holder_name' => 'required',
+                'ifsc' => 'required',
+                'bank_name' => 'required',
+//            'cancel_check' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
+                'cancel_check' => 'required',
+                'account_no' => ['required', 'regex:/^\w{1,17}$/'],
+                'aadhar_number' => "required",
+                'aadhar_card_image' => "required",
+                'pancard_number' => "required",
+                'pancard_image' => "required",
+                'fassi_image' => "required",
+                'fssai_lic_no' => "required",
+            ]);
+
+        $bank = $request->all();
+        $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
+        if ($request->has('cancel_check') && $request->cancel_check!='') {
+            $img = $request->cancel_check;
+            $folderPath = "vendor-documents/"; //path location
+
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $name = 'cancel_check-' . Str::random(10) . uniqid();
+            $bank['cancel_check'] = $folderPath . $name . '.' . $image_type;
+            file_put_contents($bank['cancel_check'], $image_base64);
+            $bank['cancel_check'] = $name;
+//            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+//            $request->cancel_check->move(public_path('vendor-documents'), $filename);
+//            $bank['cancel_check'] = $filename;
+        }
+
+        if ($request->has('fassi_image') && $request->fassi_image!='') {
+            $img = $request->fassi_image;
+            $folderPath = "vendor-documents/"; //path location
+
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $name = 'fassi_image-' . Str::random(10) . uniqid();
+            $vendor->licence_image = $folderPath . $name . '.' . $image_type;
+            file_put_contents($vendor->licence_image, $image_base64);
+            $vendor->licence_image = $name;
+//            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+//            $request->cancel_check->move(public_path('vendor-documents'), $filename);
+//            $bank['cancel_check'] = $filename;
+        }
+
+        if ($request->has('pancard_image') && $request->pancard_image!='') {
+            $img = $request->pancard_image;
+            $folderPath = "vendor-documents/"; //path location
+
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $name = 'pancard_image-' . Str::random(10) . uniqid();
+            $vendor->pancard_image = $folderPath . $name . '.' . $image_type;
+            file_put_contents($vendor->pancard_image, $image_base64);
+            $vendor->pancard_image = $name;
+//            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+//            $request->cancel_check->move(public_path('vendor-documents'), $filename);
+//            $bank['cancel_check'] = $filename;
+        }
+        if ($request->has('aadhar_card_image') && $request->aadhar_card_image!='') {
+            $img = $request->aadhar_card_image;
+            $folderPath = "vendor-documents/"; //path location
+
+            $image_parts = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $name = 'aadhar_card_image-' . Str::random(10) . uniqid();
+            $vendor->aadhar_card_image = $folderPath . $name . '.' . $image_type;
+            file_put_contents($vendor->aadhar_card_image, $image_base64);
+            $vendor->aadhar_card_image = $name;
+//            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+//            $request->cancel_check->move(public_path('vendor-documents'), $filename);
+//            $bank['cancel_check'] = $filename;
+        }
+        $bank['vendor_id'] = \Auth::guard('vendor')->user()->id;
+        $bankDetail = new BankDetail($bank);
+        $bankDetail->save();
+
+        $vendor->aadhar_number = $request->aadhar_number;
+        $vendor->pancard_number = $request->pancard_number;
+        $vendor->fssai_lic_no = $request->fssai_lic_no;
+
+        $vendor->save();
+        return redirect()->route('restaurant.dashboard')->with('poup_success', 'Settings update Successfully');
+    }
+
 }

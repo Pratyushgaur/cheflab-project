@@ -1,7 +1,9 @@
 <?php // vendor auth route
 Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
     // restaurant route
-    Route::group(['prefix' => 'restaurant', 'middleware' => ['isRestaurant']], function () {
+    Route::group([
+        'prefix' => 'restaurant',
+                  'middleware' => ['isRestaurant']], function () {
         Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
             Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 
@@ -61,6 +63,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             //vendor location
             Route::get('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'vendor_location'])->name('restaurant.globleseting.vendor_location');
             Route::post('globle/location', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_location'])->name('restaurant.globleseting.save_vendor_location');
+
             //promotion management
             Route::get('promotion/banner', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'index'])->name('restaurant.promotion.list');
             Route::get('promotion/on-screen-create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'create_promotion'])->name('restaurant.promotion.create');
@@ -85,6 +88,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             //payment transection
             Route::post('payment', [App\Http\Controllers\vendor\restaurant\TransectionController::class,'payment_request'])->name('transection.request');
 
+            Route::get('globle/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'bank_details'])->name('restaurant.globleseting.bank_details');
+            Route::post('globle/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_bank_details'])->name('restaurant.globleseting.save_bank_details');
+
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
 
@@ -101,6 +107,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         // first time Banner or logo setup
         Route::get('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_vendor_Logo'])->name('restaurant.globleseting.first_vendor_logo');
         Route::post('globle/require/logo', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_vendor_Logo'])->name('restaurant.globleseting.save_vendor_logo');
+
+        Route::get('globle/require/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_bank_details'])->name('restaurant.globleseting.first_bank_details');
+        Route::post('globle/require/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_bank_details'])->name('restaurant.globleseting.first_save_bank_details');
 
     });
 });
