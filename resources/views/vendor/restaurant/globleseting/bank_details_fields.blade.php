@@ -4,7 +4,7 @@
     <div class="col-md-12 mb-12">
         <label>Bank name <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('bank_name', null, ['class' => 'form-control', 'required', 'placeholder' => 'Bank name', 'min' => 3]) }}
+            {{ Form::text('bank_name', null, ['class' => 'form-control',  'placeholder' => 'Bank name', 'min' => 3]) }}
             @if ($errors->has('bank_name'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('bank_name') }}</strong></span>
             @endif
@@ -13,7 +13,7 @@
     <div class="col-md-6 mb-3">
         <label>Account holder name <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('holder_name', null, ['class' => 'form-control', 'required', 'placeholder' => 'Account Holder name', 'min' => 3]) }}
+            {{ Form::text('holder_name', null, ['class' => 'form-control', 'placeholder' => 'Account Holder name', 'min' => 3]) }}
             @if ($errors->has('holder_name'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('holder_name') }}</strong></span>
             @endif
@@ -22,7 +22,7 @@
     <div class="col-md-6 mb-3">
         <label>Account number<code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::number('account_no', null, ['class' => 'form-control', 'required', 'placeholder' => 'Account Number','pattern'=>"[1-9]{10}"]) }}
+            {{ Form::number('account_no', null, ['class' => 'form-control', 'placeholder' => 'Account Number','pattern'=>"[1-9]{10}"]) }}
             @if ($errors->has('account_no'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('account_no') }}</strong></span>
             @endif
@@ -32,7 +32,7 @@
     <div class="col-md-6 mb-3">
         <label>IFSC Code <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('ifsc', null, ['class' => 'form-control', 'required', 'placeholder' => 'IFSC', 'min' => 3]) }}
+            {{ Form::text('ifsc', null, ['class' => 'form-control',  'placeholder' => 'IFSC', 'min' => 3]) }}
             @if ($errors->has('ifsc'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('ifsc') }}</strong></span>
             @endif
@@ -40,20 +40,10 @@
     </div>
 
 
-{{--    <div class="col-md-6 mb-3">--}}
-{{--        <label>Cancel check scan image <code class="ms-text-danger">*</code></label>--}}
-{{--        <div class="input-group">--}}
-{{--            {{ Form::file('cancel_check', null, ['class' => 'form-control', 'required', 'placeholder' => 'cancel_check', 'min' => 3]) }}--}}
-{{--            @if ($errors->has('cancel_check'))--}}
-{{--                <span class="ms-text-danger"> <strong>{{ $errors->first('cancel_check') }}</strong></span>--}}
-{{--            @endif--}}
-{{--        </div>--}}
-{{--    </div>--}}
-
     <div class="col-md-6 mb-3">
         <label>Aadhar Number <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('aadhar_number', \Auth::guard('vendor')->user()->aadhar_number, ['class' => 'form-control', 'required', 'placeholder' => 'Aadhar number', 'min' => 3]) }}
+            {{ Form::text('aadhar_number', \Auth::guard('vendor')->user()->aadhar_number, ['class' => 'form-control',  'placeholder' => 'Aadhar number', 'min' => 3]) }}
             @if ($errors->has('aadhar_number'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('aadhar_number') }}</strong></span>
             @endif
@@ -62,7 +52,7 @@
     <div class="col-md-6 mb-3">
         <label>Pan Number <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('pancard_number', \Auth::guard('vendor')->user()->pancard_number, ['class' => 'form-control', 'required', 'placeholder' => 'Pan number', 'min' => 3]) }}
+            {{ Form::text('pancard_number', \Auth::guard('vendor')->user()->pancard_number, ['class' => 'form-control',  'placeholder' => 'Pan number', 'min' => 3]) }}
             @if ($errors->has('pancard_number'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('pancard_number') }}</strong></span>
             @endif
@@ -71,7 +61,7 @@
     <div class="col-md-6 mb-3">
         <label>Fassi Number <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('fssai_lic_no', \Auth::guard('vendor')->user()->fssai_lic_no, ['class' => 'form-control', 'required', 'placeholder' => 'fassi number', 'min' => 3]) }}
+            {{ Form::text('fssai_lic_no', \Auth::guard('vendor')->user()->fssai_lic_no, ['class' => 'form-control', 'placeholder' => 'fassi number', 'min' => 3]) }}
             @if ($errors->has('fssai_lic_no'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('fssai_lic_no') }}</strong></span>
             @endif
@@ -157,95 +147,60 @@
                 });
             });
 
-            $("#product-form").validate({
-                rules: {
-                    product_name: {
-                        required: true,
-                        maxlength: 40,
-                    },
-                    cuisines: {
-                        required: true
-                    },
-                    category: {
-                        required: true
-                    },
-                    menu_id: {
-                        required: true
-                    },
-                    dis: {
-                        required: true,
-                    },
-                    item_price: {
-                        required: true,
-                        number: true,
-                        maxlength: 10,
-                    },
-                    custimization: {
-                        checkVariants: true,
-                        required: true
-                    },
+            // $("#menu-form").validate({
+            //     rules: {
+            //         bank_name: {
+            //             required: true,
+            //             maxlength: 40,
+            //         },
+            //         holder_name: {
+            //             required: true
+            //         },
+            //         ifsc: {
+            //             required: true
+            //         },
+            //         aadhar_number: {
+            //             required: true
+            //         },
+            //         pancard_number: {
+            //             required: true,
+            //         },
+            //         account_no: {
+            //             required: true,
+            //             number: true,
+            //             maxlength: 18,
+            //         },
+            //         fssai_lic_no: {
+            //             required: true
+            //         }
+            //     }
+            // });
 
-                    primary_variant_name: {
-                        required: true
-                    }
-                },
-                messages: {
-                    product_name: {
-                        required: "Item Name is required",
-                        maxlength: "Item  name cannot be more than 40 characters"
-                    },
-                    cuisines: {
-                        required: "Cuisines is Required",
-                    },
-                    category: {
-                        required: "Category is required",
-                    },
-                    menu_id: {
-                        required: "Product Should be in Catalogue",
-                    },
-                    dis: {
-                        required: "Item Description is Required For Detail of Product",
-                    },
-                    item_price: {
-                        required: "Please Give The Price of Product",
-                        number: "Price Should be in Number"
-                    },
-                    primary_variant_name: {
-                        required: "Please Enter Primary Variant Name"
-                    }
-                },
-                errorPlacement: function (error, element) {
-                    var name = $(element).attr("name");
-
-                    error.appendTo($("." + name + "_error"));
-                },
-            });
-
-            $('#menu-form').submit(function () {
-                var error = false;
-                var pancard_image = $('input[name="pancard_image"]').val();
-                if (pancard_image == '') {
-                    error = true;
-                    toastr.error('Please Select Pan card scan copy  ', 'Alert');
-                }
-                var fassi_image = $('input[name="fassi_image"]').val();
-                if (fassi_image == '') {
-                    error = true;
-                    toastr.error('Please Select fassi scan copy  ', 'Alert');
-                }
-                var aadhar_card_image = $('input[name="aadhar_card_image"]').val();
-                if (aadhar_card_image == '') {
-                    error = true;
-                    toastr.error('Please Select aadhar card scan copy  ', 'Alert');
-                }
-
-                if(error){
-                    return false;
-                }
-
-
-
-            });
+            // $('#menu-form').submit(function () {
+            //     var error = false;
+            //     var pancard_image = $('input[name="pancard_image"]').val();
+            //     if (pancard_image == '') {
+            //         error = true;
+            //         toastr.error('Please Select Pan card scan copy  ', 'Alert');
+            //     }
+            //     var fassi_image = $('input[name="fassi_image"]').val();
+            //     if (fassi_image == '') {
+            //         error = true;
+            //         toastr.error('Please Select fassi scan copy  ', 'Alert');
+            //     }
+            //     var aadhar_card_image = $('input[name="aadhar_card_image"]').val();
+            //     if (aadhar_card_image == '') {
+            //         error = true;
+            //         toastr.error('Please Select aadhar card scan copy  ', 'Alert');
+            //     }
+            //
+            //     if(error){
+            //         return false;
+            //     }
+            //
+            //
+            //
+            // });
         });
     </script>
 

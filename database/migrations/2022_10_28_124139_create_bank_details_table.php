@@ -18,10 +18,10 @@ class CreateBankDetailsTable extends Migration
             $table->integer('vendor_id');
 //            $table->foreign('vendor_id')->references('id')->on('vendors');
 
-            $table->string('holder_name');
-            $table->string('account_no');
-            $table->string('ifsc');
-            $table->string('bank_name');
+            $table->string('holder_name')->nullable();
+            $table->string('account_no')->nullable();
+            $table->string('ifsc')->nullable();
+            $table->string('bank_name')->nullable();
             $table->string('cancel_check')->default(null)->nullable();
             $table->timestamps();
         });
