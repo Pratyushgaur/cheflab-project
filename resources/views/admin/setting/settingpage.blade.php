@@ -228,6 +228,36 @@
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Email<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->email}}" name="email" class="form-control"  id="exampleInputEmail1" placeholder="Enter Suport Email">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Conteact Number<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->phone}}" name="phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Conteact Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Suport Conteact Number<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->suport_phone}}" name="suport_phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Suport Conteact Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Office Address<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->office_addres}}" name="office_addres" class="form-control"  id="exampleInputEmail1" placeholder="Enter Office Address">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">GST NO<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->gstno}}" name="gstno" class="form-control"  id="exampleInputEmail1" placeholder="Enter GST NO">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Google Map Key <span class="text-danger">*</span></label>
                                         <input type="text" name="goofle_map_key" value="{{$data->goofle_map_key}}" class="form-control"  id="" placeholder="Enter Google Map Key">
                                     </div>  

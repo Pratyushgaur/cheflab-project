@@ -108,6 +108,9 @@
                           <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Food</a></li>
                           <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Order</a></li>
                           <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Reviews</a></li>
+                          @if($vendor->vendor_type == 'chef')
+                            <li class="nav-item"><a class="nav-link" href="#video" data-toggle="tab">Video List</a></li>
+                          @endif
                         </ul>
                       </div><!-- /.card-header -->
                       <div class="card-body">
@@ -159,6 +162,24 @@
                                         <th  >Review</th>
                                         <th  >Date	</th>
                                         <th  >Status</th>
+                                      </tr>
+                                </thead>
+                                
+                              </table>
+                          </div>
+                           <!-- /.tab-pane -->
+                          <div class="tab-pane" id="video">
+                              <input type="hidden"  name="userId" value="{{\Crypt::encryptString($vendor->id)}}">
+                              @csrf
+                              <table id="video1" class="table1 table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                                <thead>
+                                      <tr role="row">
+                                        <th  class="text-center">Sr No.</th>
+                                        <th > Title</th>
+                                        <th> Sub Title</th>
+                                        <th  >Link</th>
+                                        <th  >created at</th>
+                                        <th  >Action</th>
                                       </tr>
                                 </thead>
                                 
@@ -251,23 +272,23 @@
       table2.DataTable().ajax.reload(null, false);
     }
  </script> 
- <script type="text/javascript">
-    let table1 = $('#example1').dataTable({
+ <script  type="text/javascript">
+    let table1 = $('#video1').dataTable({
          processing: true,
          serverSide: true,
-         ajax: "{{ route('admin.cherf.video.link',\Crypt::encryptString($vendor->id))}}",
-      //   {{ route('admin.cherf.videolink',\Crypt::encryptString($vendor->id)) }}
+         ajax: "{{ route('admin.cherf.video.link',$vendor->id)}}",
          columns: [
              {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-             {data: 'title', name: 'title',orderable: false, searchable: false},
+             {data: 'title', name: 'title'},
              {data: 'sub_title', name: 'sub_title'},
              {data: 'link', name: 'link'},
-             {data: 'date', name: 'created_at'},
+             {data: 'date', name: 'date'},
              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
          ]
-    });
+     });
      function reload_table() {
       table1.DataTable().ajax.reload(null, false);
     }
-  </script>
+ </script> 
+ 
 @endsection

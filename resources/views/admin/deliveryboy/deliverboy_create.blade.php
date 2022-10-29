@@ -145,7 +145,19 @@
                                 </div>
                              
                                 <div class="row">
-                                  
+                                <div class="col-sm-12">
+                                        <div>
+                                          <label for="">Deliver Boy Images</label>
+                                        </div>
+                                        <div class="image-upload">
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    <img class="icon" src="{{asset('add-image.png')}}">
+                                                </div>
+                                            </label>
+                                            <input id="file-input" type="file" name="image" required/>
+                                        </div>        
+                                  </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Deliver Boy <span class="text-danger">*</span></label>
@@ -177,6 +189,18 @@
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                        </div>
+                                    </div>
+                                  <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Delivery Boy Section  <span class="text-danger">*</span></label>
                                         <select name="type" class="form-control">
@@ -200,19 +224,7 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                  <div class="col-sm-4">
-                                        <div>
-                                          <label for="">Deliver Boy Images</label>
-                                        </div>
-                                        <div class="image-upload">
-                                            <label for="file-input">
-                                                <div class="upload-icon">
-                                                    <img class="icon" src="{{asset('add-image.png')}}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input" type="file" name="image" required/>
-                                        </div>        
-                                  </div>
+                                  
                                   <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
@@ -238,7 +250,6 @@
                                             <input id="file-input3" type="file" name="identity_image"/>
                                             
                                         </div>   
-                                        <input type="text" name="identity_number" class="form-control" placeholder="Document Name">    
                                   </div>
                                 </div>
                                 <!-- div row -->
@@ -323,6 +334,16 @@
                   maxlength: 6,
                   number: true
               },
+              password:{
+                required: true,
+                maxlength: 20,
+                minlength: 5,
+
+              },
+              confirm_password:{
+                 required: true,
+                 equalTo : '[name="password"]'
+              },
               identity_image:{
                 required: true,
               },
@@ -354,6 +375,9 @@
                   maxlength: "pincode cannot be more than 6 characters",
                   minlength: "pincode cannot be Less than 6 characters",
                   number: "Pincode must be an number"
+              },
+              confirm_password:{
+                equalTo:"Field Not Match with Passowrd Field"
               },
               identity_image:{
                 equalTo:"Identity Image Required"

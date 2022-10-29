@@ -32,7 +32,7 @@
                                         <th> Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
-                                        <th>Alternate mobile no</th>
+                                        <th>Total Order</th>
                                         <th>Wallet</th>
                                         <th>Active/Inactive</th>
                                         <th>Action</th>

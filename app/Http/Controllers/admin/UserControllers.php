@@ -515,11 +515,11 @@ class UserControllers extends Controller
                 ->make(true);
         }
     }
-    public function chef_videolist(Request $request, $encrypt_id)
+    public function chef_videolist(Request $request, $id)
     {
-        $user = Crypt::decryptString($encrypt_id);
+        $vendor_id = $request->id;  
         if ($request->ajax()) {
-            $data = Chef_video::where('userId', '=', $user)->select('id', 'userId', 'title', 'sub_title', 'link', 'created_at')->get();
+            $data = Chef_video::where('userId', '=', $vendor_id)->select('id', 'userId', 'title', 'sub_title', 'link', 'created_at')->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -605,23 +605,23 @@ class UserControllers extends Controller
 
     public function store_chef_product(Request $request)
     {
-
+     //   echo 'ok';die;
+  //   return $request->input();die;
         $this->validate($request, [
             'product_name'  => 'required',
             'dis'           => 'required',
             'product_price' => 'required',
             'product_image' => 'required',
         ]);
-        $product                = new Product_master;
+        $product  = new Product_master;
         $product->product_name  = $request->product_name;
-        $product->userId        = $request->userId_;
+        $product->userId        = $request->userId;
         $product->cuisines      = $request->cuisines;
         $product->category      = $request->category;
         $product->dis           = $request->dis;
         $product->product_price = $request->product_price;
+        $product->preparation_time = $request->preparation_time;
         $product->product_for   = 2;
-
-
         $product->type         = $request->type;
         $product->customizable = $request->customizable;
 
@@ -632,14 +632,11 @@ class UserControllers extends Controller
         }
 
         $product->save();
-        if ($request->customizable == 'true') {
+        if ($request->custimization == 'true')
             foreach ($request->variant_name as $k => $v) {
-                Variant::create([ 'product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->variant_price[$k] ]);
-            }
-
-
+                Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
         }
-        return redirect()->route('admin.vendor.view', Crypt::encryptString($request->userId_))->with('message', 'Cheflab Product  Registration Successfully');
+        return redirect()->route('admin.vendor.view', Crypt::encryptString($request->userId))->with('message', 'Cheflab Product  Registration Successfully');
 
     }
 

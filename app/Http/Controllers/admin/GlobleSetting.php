@@ -130,6 +130,11 @@ class GlobleSetting extends Controller
     public function storeGernel(Request $request){
         $general = AdminMasters::find($request->id);
         $general->company_name = $request->company_name;
+        $general->email = $request->email;
+        $general->phone = $request->phone;
+        $general->suport_phone = $request->suport_phone;
+        $general->office_addres = $request->office_addres;
+        $general->gstno = $request->gstno;
         $general->goofle_map_key = $request->goofle_map_key;
         $general->aboutus = $request->aboutus;
         $general->order_limit_amout = $request->order_limit_amout;

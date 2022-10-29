@@ -21,6 +21,9 @@ class Deliveryboy extends Controller
     public function create_deliverboy(){
         return view('admin/deliveryboy/deliverboy_create');
     }
+    public function deliverboy_reviews(){
+        return view('admin/deliveryboy/deliverboy_reviews');
+    }
     public function store_deliverboy(Request $request)
     {
 //        return $request->input();die;
@@ -29,6 +32,8 @@ class Deliveryboy extends Controller
             'email' => 'required|unique:vendors,email',
             'city' => 'required',
             'pincode' => 'required',
+            'password'          => 'required',
+            'confirm_password'  => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'identity_image' => 'required',
             'identity_number' => 'required',
@@ -37,6 +42,7 @@ class Deliveryboy extends Controller
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
+        $vendors->password            = Hash::make($request->password);
         $vendors->pincode  = $request->pincode;
         $vendors->city  = $request->city;
 //        $vendors->address  = $request->address;
