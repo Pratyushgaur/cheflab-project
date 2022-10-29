@@ -47,21 +47,21 @@ class IsVendorDoneSettingsMiddleware
 
 
 
-        $alldoc = vendors::where('id', Auth::guard('vendor')->user()->id)
-            ->whereNotNull('aadhar_number')->where('aadhar_number','!=','')
-            ->WhereNotNull('aadhar_card_image')->where('aadhar_card_image','!=','')
-            ->WhereNotNull('pancard_number')->where('pancard_number','!=','')
-            ->WhereNotNull('pancard_image')->where('pancard_image','!=','')
-            ->exists();
-        $bankdetails = BankDetail::where('id', Auth::guard('vendor')->user()->id)
-            ->whereNotNull('holder_name')->where('holder_name','!=','')
-            ->WhereNotNull('account_no')->where('account_no','!=','')
-            ->WhereNotNull('ifsc')->where('ifsc','!=','')
-            ->WhereNotNull('bank_name')->where('bank_name','!=','')
-            ->WhereNotNull('cancel_check')->where('cancel_check','!=','')
-            ->exists();
-        if (!$alldoc || !$bankdetails)
-            return redirect()->route('restaurant.globleseting.first_bank_details')->withErrors([ 'msg' => 'Please provide bank details and required documents' ]);
+//        $alldoc = vendors::where('id', Auth::guard('vendor')->user()->id)
+//            ->whereNotNull('aadhar_number')->where('aadhar_number','!=','')
+//            ->WhereNotNull('aadhar_card_image')->where('aadhar_card_image','!=','')
+//            ->WhereNotNull('pancard_number')->where('pancard_number','!=','')
+//            ->WhereNotNull('pancard_image')->where('pancard_image','!=','')
+//            ->exists();
+//        $bankdetails = BankDetail::where('id', Auth::guard('vendor')->user()->id)
+//            ->whereNotNull('holder_name')->where('holder_name','!=','')
+//            ->WhereNotNull('account_no')->where('account_no','!=','')
+//            ->WhereNotNull('ifsc')->where('ifsc','!=','')
+//            ->WhereNotNull('bank_name')->where('bank_name','!=','')
+//            ->WhereNotNull('cancel_check')->where('cancel_check','!=','')
+//            ->exists();
+//        if (!$alldoc || !$bankdetails)
+//            return redirect()->route('restaurant.globleseting.first_bank_details')->withErrors([ 'msg' => 'Please provide bank details and required documents' ]);
 
 
         return $next($request);

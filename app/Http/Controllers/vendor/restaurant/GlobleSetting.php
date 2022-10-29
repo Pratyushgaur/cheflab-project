@@ -265,7 +265,7 @@ class GlobleSetting extends Controller
     {
 //        dd($request->all());
 //        dd($request->routeIs('restaurant.globleseting.save_bank_details'));
-        if ($request->routeIs('restaurant.globleseting.save_bank_details'))
+/*        if ($request->routeIs('restaurant.globleseting.save_bank_details'))
             $request->validate([
                 'holder_name' => 'required',
                 'ifsc' => 'required',
@@ -289,7 +289,7 @@ class GlobleSetting extends Controller
                 'fassi_image' => "required",
                 'fssai_lic_no' => "required",
             ]);
-
+*/
         $bank = $request->all();
         $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
         if ($request->has('cancel_check') && $request->cancel_check!='') {

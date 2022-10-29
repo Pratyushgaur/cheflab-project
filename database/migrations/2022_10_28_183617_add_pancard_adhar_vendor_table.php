@@ -14,10 +14,10 @@ class AddPancardAdharVendorTable extends Migration
     public function up()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->string('aadhar_number')->default(null)->after('bio');
-            $table->string('aadhar_card_image')->default(null)->after('bio');
-            $table->string('pancard_number')->default(null)->after('bio');
-            $table->string('pancard_image')->default(null)->after('bio');
+            $table->string('aadhar_number')->default(null)->after('bio')->nullable();
+            $table->string('aadhar_card_image')->default(null)->after('bio')->nullable();
+            $table->string('pancard_number')->default(null)->after('bio')->nullable();
+            $table->string('pancard_image')->default(null)->after('bio')->nullable();
 //            $table->string('fassi_image')->default(null)->after('fssai_lic_no');
 
         });
