@@ -142,7 +142,7 @@ class ProductController extends Controller
     {
         try {
             $id =  Crypt::decryptString($request->id);
-            var_dump($id);die;
+           
             $data = Product_master::findOrFail($id);
             if ($data ) {
                 $data->delete();
@@ -223,7 +223,7 @@ class ProductController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '<a href="" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>
-                            <a href="javascript:void(0);" data-id="" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
 

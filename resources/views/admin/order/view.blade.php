@@ -107,16 +107,48 @@
                           
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Change Order Status<span class="text-danger">*</span></label>
-                                <select class="form-control gstavailable" name="gst_available">
-                                  <option >Status</option>
-                                  <option >Pending</option>
-                                  <option >Confirmed</option>
-                                  <option >Processing</option>
-                                  <option >Handover</option>
-                                  <option >Out For Delivery</option>
-                                  <option >Delivered</option>
-                                  <option >Canceled</option>
-                                </select>
+                                @if ($order->order_status != 'refunded')
+                                        <div>
+                                            <div class="dropdown">
+                                               
+                                                <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
+                                                  <h6>
+                                                      <span>{{ __('messages.status') }} :</span>
+                                                      @if ($order['order_status'] == 'pending')
+                                                          <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ __('messages.pending') }}
+                                                          </span>
+                                                      @elseif($order['order_status'] == 'confirmed')
+                                                          <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ __('messages.confirmed') }}
+                                                          </span>
+                                                      @elseif($order['order_status'] == 'processing')
+                                                          <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ __('messages.processing') }}
+                                                          </span>
+                                                      @elseif($order['order_status'] == 'picked_up')
+                                                          <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ __('messages.out_for_delivery') }}
+                                                          </span>
+                                                      @elseif($order['order_status'] == 'delivered')
+                                                          <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ __('messages.delivered') }}
+                                                          </span>
+                                                      @elseif($order['order_status'] == 'failed')
+                                                          <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ __('messages.payment') }}
+                                                              {{ __('messages.failed') }}
+                                                          </span>
+                                                      @else
+                                                          <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize font-medium">
+                                                              {{ str_replace('_', ' ', $order['order_status']) }}
+                                                          </span>
+                                                      @endif
+                                                  </h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                             </div> 
                             <button type="button" class="btn btn-block btn-primary">Assign Delivery Man Munally</button>
                           </address>
@@ -163,6 +195,9 @@
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
   }
+  $('#status').change(function() {
+
+  })
   $('#filter-by-role').change(function(){
     $.ajax({
       method:"GET",

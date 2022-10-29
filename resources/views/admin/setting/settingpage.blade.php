@@ -241,8 +241,8 @@
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Order Limit Amount <span class="text-danger">*</span></label>
-                                        <input type="text" name="order_limit_amout" value="{{$data->order_limit_amout}}" class="form-control"  id="" placeholder="Enter Order Limit Amount">
+                                        <label for="exampleInputEmail1">COD Limit Amount <span class="text-danger">*</span></label>
+                                        <input type="text" name="order_limit_amout" value="{{$data->order_limit_amout}}" class="form-control"  id="" placeholder="COD Order Limit Amount">
                                     </div>  
                                   </div>
                                  </div>

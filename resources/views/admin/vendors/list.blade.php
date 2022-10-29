@@ -14,6 +14,67 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
+                        <div class="row">
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box">
+                        <span class="info-box-icon bg-info elevation-1"><i class="fas fa-users"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Restaurants</span>
+                            <span class="info-box-number">
+                           {{$restaurant}}
+                            </span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box mb-3">
+                        <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Active Restaurants</span>
+                            <span class="info-box-number">{{$active_resto}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+
+                    <!-- fix for small devices only -->
+                    <div class="clearfix hidden-md-up"></div>
+
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box mb-3">
+                        <span class="info-box-icon bg-success elevation-1"><i class="fa fa-building"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Total Delivery Boy</span>
+                            <span class="info-box-number">{{$delivery_boy}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-12 col-sm-6 col-md-3">
+                        <div class="info-box mb-3">
+                        <span class="info-box-icon bg-warning elevation-1"><i class="fa-solid fa-hat-chef"></i></span>
+
+                        <div class="info-box-content">
+                            <span class="info-box-text">Chef's</span>
+                            <span class="info-box-number">{{$chef}}</span>
+                        </div>
+                        <!-- /.info-box-content -->
+                        </div>
+                        <!-- /.info-box -->
+                    </div>
+                    <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
@@ -83,7 +144,14 @@
                                             <td>{{$vendor->name}}</td>
                                             <td>{{$vendor->email}}</td>
                                             <td>{{$vendor->vendor_type}}</td>
-                                            <td><?php echo (!empty($vendor->status)) && ($vendor->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'?></td>
+                                            <!--<td><?php// echo (!empty($vendor->status)) && ($vendor->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'?></td>-->
+                                            <td>
+                                                @if($vendor->status == '1')
+                                                <a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Vendor" flash="User" data-action-url="{{route('admin.vendors.inactive',['id'=>encrypt($vendor->id)])}}" title="Inactive">Active</a>
+                                                @else
+                                                 <a href="javascript:void(0);" class="btn btn-danger btn-xs active-record"  data-alert-message="Are You Sure to Active this Vendor" flash="User" data-action-url="{{route('admin.vendors.active',['id'=>encrypt($vendor->id)])}} " title="Active">Inactive</a>
+                                                @endif
+                                            </td>
                                             <td><img src="{{asset('vendors').'/'.$vendor->image}}"  style='width: 50px;' /></td>
                                             <td>{{$vendor->wallet}}</td>
                                             <td>{{front_end_date($vendor->created_at)}}</td>
@@ -96,8 +164,10 @@
                                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                                             <a class="dropdown-item text-info" href="{{route('admin.chef.edit',Crypt::encryptString($vendor->id))}}'"><i class="fas fa-edit"></i> Edit</a>
                                                             <a class="dropdown-item text-info" href="{{route('admin.vendor.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i> View More</a>
-                                                            <a class="dropdown-item text-danger vendor-delete" href="javascript:void(0);" data-id="{{ Crypt::encryptString($vendor->id) }}"  data-alert-message="Are You Sure to Delete this Vendor" flash="Vendor"  data-action-url="{{route('admin.vendors.ajax.delete')}}" title="Delete" > <i class="fa fa-trash"></i> Delete</a>
-                                                            <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>
+                                                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> 
+                                                            @if($vendor->vendor_type == 'chef')
+                                                              <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>
+                                                            @endif
                                                         </div>
                                                     </li>
                                                 </ul>

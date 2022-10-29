@@ -105,57 +105,96 @@
                     <div class="card">
                       <div class="card-header p-2">
                         <ul class="nav nav-pills">
-                          <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Product List</a></li>
-                          <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Video List</a></li>
-                          <li class="nav-item"><a class="nav-link" href="#settingslink" data-toggle="tab">Order's</a></li>
-                          
+                          <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">Food</a></li>
+                          <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">Order</a></li>
+                          <li class="nav-item"><a class="nav-link" href="#settings" data-toggle="tab">Reviews</a></li>
                         </ul>
                       </div><!-- /.card-header -->
                       <div class="card-body">
                         <div class="tab-content">
                           <div class="active tab-pane" id="activity">
-                            <!-- product list -->
-                            <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
-                            <thead>
-                                  <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th >Product Name</th>
-                                    <th> Image</th>
-                                    <th  >Product Price</th>
-                                    <th  >Type</th>
-                                    <th  >created at</th>
-                                    <th  >Action</th>
-                                  </tr>
-                            </thead>
-                            
-                        </table>
+                              <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                                <thead>
+                                      <tr role="row">
+                                        <th  class="text-center">Sr No.</th>
+                                        <th >Product Name</th>
+                                        <th> Image</th>
+                                        <th  >Product Price</th>
+                                        <th  >Type</th>
+                                        <th  >Status</th>
+                                        <th  >created at</th>
+                                        <th  >Action</th>
+                                      </tr>
+                                </thead>
+                                
+                              </table>
                           </div>
                           <!-- /.tab-pane -->
                           <div class="tab-pane" id="timeline">
-                              <input type="hidden"  name="userId" value="{{\Crypt::encryptString($vendor->id)}}">
-                              @csrf
-                            <div class="card card-default">
-                            <table id="example1" class="table1 table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
-                            <thead>
-                                  <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th > Title</th>
-                                    <th> Sub Title</th>
-                                    <th  >Link</th>
-                                    <th  >created at</th>
-                                    <th  >Action</th>
-                                  </tr>
-                            </thead>
-                            
-                        </table>
-                            
+                            <!-- The timeline -->
+                              <table id="order" class="table2 table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                                <thead>
+                                      <tr role="row">
+                                        <th  class="text-center">Sr No.</th>
+                                        <th >	Order ID</th>
+                                        <th> Order Date</th>
+                                        <th  >Customer Information</th>
+                                        <th  >Total Amount	</th>
+                                        <th  >Order Status</th>
+                                        
+                                        <th  >Action</th>
+                                      </tr>
+                                </thead>
+                                
+                              </table>
                           </div>
                           <!-- /.tab-pane -->
-
-                          <div class="tab-pane" id="settingslink">
+                         <div class="tab-pane" id="settings">
                             <form class="form-horizontal">
-                             
-                            
+                              <div class="form-group row">
+                                <label for="inputName" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                  <input type="email" class="form-control" id="inputName" placeholder="Name">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                  <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="inputName2" class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" id="inputName2" placeholder="Name">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="inputExperience" class="col-sm-2 col-form-label">Experience</label>
+                                <div class="col-sm-10">
+                                  <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label for="inputSkills" class="col-sm-2 col-form-label">Skills</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="offset-sm-2 col-sm-10">
+                                  <div class="checkbox">
+                                    <label>
+                                      <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="offset-sm-2 col-sm-10">
+                                  <button type="submit" class="btn btn-danger">Submit</button>
+                                </div>
+                              </div>
                             </form>
                           </div>
                           <!-- /.tab-pane -->
@@ -165,6 +204,7 @@
                     </div>
                     <!-- /.card -->
                   </div>
+
                   <!-- /.col -->
                 </div>
                 <!-- /.row -->
@@ -194,11 +234,12 @@
              {data: 'product_image', name: 'product_image'},
              {data: 'product_price', name: 'product_price'},
             {data: 'type', name: 'type'},
+            {data: 'status', name: 'status'},
             {data: 'date', name: 'created_at'},
              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
          ]
      });
-    
+     
     $('#customizable').change(function(){
         if ($(this).val() == 'true') {
           $('.custmization-block').show();
@@ -223,6 +264,26 @@
    }
 
  </script>
+ <script  type="text/javascript">
+    let table2 = $('#order').dataTable({
+         processing: true,
+         serverSide: true,
+         ajax: "{{ route('admin.user.orderlist',$vendor->id)}}",
+         columns: [
+             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+             {data: 'id', name: 'id'},
+             {data: 'date', name: 'created_at'},
+             {data: 'delivery_address', name: 'delivery_address'},
+            {data: 'total_amount', name: 'total_amount'},
+            {data: 'order_status', name: 'order_status'},
+           
+             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+         ]
+     });
+     function reload_table() {
+      table2.DataTable().ajax.reload(null, false);
+    }
+ </script> 
  <script type="text/javascript">
     let table1 = $('#example1').dataTable({
          processing: true,

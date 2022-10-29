@@ -11,6 +11,7 @@ use App\Models\Product_master;
 use App\Models\User;
 use App\Models\Variant;
 use App\Models\Vendors;
+use App\Models\Deliver_boy;
 use App\Models\Orders;
 use App\Rules\VendorOrderTimeRule;
 use DataTables;
@@ -36,7 +37,15 @@ class UserControllers extends Controller
             });
         }
         $vendors = $v->paginate(15);
-        return view('admin/vendors/list', compact('vendors'));
+        $wordlist = Vendors::where('vendor_type', '=','restaurant')->get();
+        $restaurant = $wordlist->count();
+        $re_avtive = Vendors::where('vendor_type', '=','restaurant')->where('status', '=','1')->get();
+        $active_resto = $re_avtive->count();
+        $delivery = Deliver_boy::all();
+        $delivery_boy = $delivery->count();
+        $chef = Vendors::where('vendor_type', '=','chef')->get();
+        $chef = $chef->count();
+        return view('admin/vendors/list', compact('vendors','restaurant','active_resto','delivery_boy','chef'));
     }
 
     public function create_restourant()
@@ -74,8 +83,8 @@ class UserControllers extends Controller
 
                                         <a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>
                                         <a class="dropdown-item text-info" href="' . route('admin.vendor.view', Crypt::encryptString($data->id)) . '"><i class="fa fa-eye"></i> View More</a>
-                                        <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="Vendor"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a>';
-
+                                        <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> ';
+                                        
                     if ($data->vendor_type == 'chef') {
                         $btn .= '<a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
                     }
@@ -432,7 +441,7 @@ class UserControllers extends Controller
         $user = $request->id;
         //    dd($user);
         if ($request->ajax()) {
-            $data = Product_master::where('userId', $user)->select('id', 'product_name', 'product_image', 'product_price', 'type', 'created_at')->get();
+            $data = Product_master::where('userId', $user)->select('id', 'product_name', 'product_image', 'product_price', 'type', 'created_at','status')->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -444,16 +453,52 @@ class UserControllers extends Controller
                 ->addColumn('product_image', function ($data) {
                     return "<img src=" . asset('products') . '/' . $data->product_image . "  style='width: 50px;' />";
                 })
+                ->addColumn('status', function ($data) {
+                    if ($data->status == 1) {
+                        $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-success btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="' . route('admin.vendors.inactive') .'">Active</a>';
+                    } elseif ($data->status == 2) {
+                        $btn = '<span class="badge badge-primary">Pending</span>';
+                    } elseif ($data->status == 0) {
+                        $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-danger btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="">Active</a>';
+                    } else {
+                        $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
+                    }
+                    return $btn;
+                  /*  $btn = '<a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive"  data-action-url="" title="Delete" >Active</a> 
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" >Inactive</a> ';
+                    return $btn;*/
+                })
+                ->addColumn('date', function ($data) {
+                    $date_with_format = date('d M Y', strtotime($data->created_at));
+                    return $date_with_format;
+                })
+                ->rawColumns([ 'date','status' ])
+                ->rawColumns([ 'action-js', 'product_image','status' ]) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function order_list(Request $request, $id){
+        $vendor_id = $request->id;
+        //    dd($user);
+        if ($request->ajax()) {
+            $data = Orders::where('vendor_id', $vendor_id)->select('id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'created_at')->get();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function ($data) {
+                    $btn = '<a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+               
                 ->addColumn('date', function ($data) {
                     $date_with_format = date('d M Y', strtotime($data->created_at));
                     return $date_with_format;
                 })
                 ->rawColumns([ 'date' ])
-                ->rawColumns([ 'action-js', 'product_image' ]) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->rawColumns([ 'action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
     }
-
     public function chef_videolist(Request $request, $encrypt_id)
     {
         $user = Crypt::decryptString($encrypt_id);
@@ -633,6 +678,18 @@ class UserControllers extends Controller
         $id   = decrypt($id);
         $user = User::find($id);
         User::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        return redirect()->back()->with('message', 'User Active Successfully.');
+    }
+    public function vendor_inactive($id){
+        $id   = decrypt($id);
+        $user = Vendors::find($id);
+        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Inactive Successfully' ], 200);
+    }
+    public function vendor_active($id){
+        $id   = decrypt($id);
+        $user = Vendors::find($id);
+        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
         return redirect()->back()->with('message', 'User Active Successfully.');
     }
     public function user_delete($id)
