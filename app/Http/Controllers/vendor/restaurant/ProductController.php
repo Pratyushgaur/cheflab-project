@@ -135,17 +135,47 @@ class ProductController extends Controller
         }
 
         if ($request->has('product_image')) {
+            $old_image=public_path('products/').$product->product_image;
             $filename = time() . '-product_image-' . rand(100, 999) . '.' . $request->product_image->extension();
             $request->product_image->move(public_path('products'), $filename);
             // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
             $product->product_image = $filename;
+
+            @unlink($old_image);
         }
         $product->product_for = '3';
         $product->save();
-        if ($request->custimization == 'true')
-            foreach ($request->variant_name as $k => $v) {
-                Variant::create([ 'product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k] ]);
+        if ($request->custimization == 'true') {
+//            Flight::upsert([
+////                ['departure' => 'Oakland', 'destination' => 'San Diego', 'price' => 99],
+////                ['departure' => 'Chicago', 'destination' => 'New York', 'price' => 150]
+////            ], ['departure', 'destination'], ['price']);
+            $save=[];
+            $count=0;
+//            echo "<pre>";
+            if(count($request->variant_name)>0) {
+                foreach ($request->variant_name as $k => $v) {
+                    $save[$count] = ['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]];
+                    if (isset($request->variant_id[$k])) {
+//                        dd($request->variant_id[$k]);
+                        Variant::where('id', $request->variant_id[$k])->update($save[$count]);
+                        $ids[] = (int)$request->variant_id[$k];
+//                        print_r($save[$count]);
+                    }
+                    else {
+                        $vari = Variant::create($save[$count]);
+                        $ids[]  = (int)$vari->id;
+//                        print_r($vari);
+                    }
+                    $count++;
+                }
+                \DB::enableQueryLog();
+//dd($ids);
+                $ids=Variant::where('product_id',$product->id)->whereNotIn('id', array_values($ids))->delete();
+//                dd(\DB::getQueryLog ());
+
             }
+        }
 //dd($product);
         return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
 
@@ -225,18 +255,19 @@ class ProductController extends Controller
             $id = Crypt::decryptString($encrypt_id);
 //            dd($id);
             // $product = Product_master::findOrFail($id);
-            $product    = Product_master::where('products.id', '=', $id)
+            $product    = Product_master::where('products.id', '=', $id)->with('product_variants')
 //                ->leftJoin('categories', 'products.category', '=', 'categories.id')
 //                ->leftJoin('cuisines', 'products.userId', '=', 'cuisines.id')
 //                ->join('vendor_menus', 'products.userId', '=', 'vendor_menus.id')
 //                ->select('products.*', 'categories.name as categoryName', 'cuisines.name as cuisinesName', 'vendor_menus.menuName')
                 ->first();
+//            dd($product);
             $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->pluck('name', 'id');
             $cuisines   = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->pluck('name', 'id');
             $addons     = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
 //            $menus      = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->get();
-            $menus = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->pluck('menuName', 'id');
-//            dd($product);
+            $menus = VendorMenus::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->pluck('menuName', 'id')->toArray();
+//            dd($menus);
             return view('vendor.restaurant.products.edit', compact('product', 'cuisines', 'addons', 'menus', 'categories'));
         } catch (\Exception $e) {
             return dd($e->getMessage());

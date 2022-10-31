@@ -101,6 +101,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::post('save-user-feedback', [App\Http\Controllers\api\FeedbackApiController::class, 'save_feedback']);
 
+
+    //firbase
+    Route::patch('/user-fcm-token', [\App\Http\Controllers\API\FirebaseApiController::class, 'updateTokenUser'])->name('fcmToken_user');
+    Route::get('/user-send-notification',[\App\Http\Controllers\API\FirebaseApiController::class,'notification'])->name('notification_user');
+
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
@@ -112,3 +117,4 @@ Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::cla
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
 
+Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
