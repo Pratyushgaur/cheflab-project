@@ -616,6 +616,8 @@ class AppController extends Controller
                     'keyword' => 'required',
                     'search_for' => 'required',
                     'offset' => 'required|numeric',
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric',
                 ]
             );
             if ($validateUser->fails()) {
@@ -628,9 +630,12 @@ class AppController extends Controller
             }
             //
             if ($request->search_for == 'restaurant') {
-                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
-                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
+                $data =get_restaurant_near_me($request->lat, $request->lng,  [ 'vendor_type' => 'restaurant'], $request->user()->id)
+                    ->addSelect('review_count')
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+//                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
+//                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
+//                    ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
             } elseif ($request->search_for == 'dishes') {
 //                $data = Product_master::where(['products.status' => '1', 'product_for' => '3'])
 //                    ->join('vendors', 'products.userId', '=', 'vendors.id')
