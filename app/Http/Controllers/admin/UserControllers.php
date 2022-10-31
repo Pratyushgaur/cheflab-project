@@ -81,13 +81,15 @@ class UserControllers extends Controller
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
 
-                                        <a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>
+                                        
                                         <a class="dropdown-item text-info" href="' . route('admin.vendor.view', Crypt::encryptString($data->id)) . '"><i class="fa fa-eye"></i> View More</a>
                                         <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> ';
-                                        
-                    if ($data->vendor_type == 'chef') {
-                        $btn .= '<a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
-                    }
+                    if($data->vendor_type == 'restaurant'){
+                        $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>';
+                    }elseif($data->vendor_type == 'chef'){
+                        $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.editchef', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit Chef</a><a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
+                    }                    
+                   
 
 
                     $btn .= '</div>
@@ -381,7 +383,62 @@ class UserControllers extends Controller
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
 
     }
+    public function chef_update(Request $request)
+    {
+//        return $request->input();die;
+        $this->validate($request, [
+            'restaurant_name'   => 'required',
+            'email'             => 'required',
+            'pincode'           => 'required',
+            'phone'             => 'required',
+            'address'           => 'required',
+            'fssai_lic_no'      => 'required',
+            'vendor_commission' => 'required',
+            //    'categories' => 'required',
+            //  'deal_cuisines' => 'required',
+        ]);
+        $vendors = Vendors::find($request->id);
+        //  dd($vendors);
+        $vendors->name             = $request->restaurant_name;
+        $vendors->email            = $request->email;
+        $vendors->vendor_type      = 'chef';
+        $vendors->mobile           = $request->phone;
+        $vendors->pincode          = $request->pincode;
+        $vendors->address          = $request->address;
+        $vendors->fssai_lic_no     = $request->fssai_lic_no;
+        $vendors->commission       = $request->vendor_commission;
+        $vendors->deal_categories  = implode(',', $request->categories);
+        $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+        $vendors->speciality    = implode(',', $request->speciality);
+        if ($request->has('image')) {
+            $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();
+            $request->image->move(public_path('vendors'), $filename);
+            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
+            $vendors->image = $filename;
+        } else {
+            if (!file_exists(public_path('vendors') . '/' . $vendors->image))
+                $vendors->image = 'default_restourant_image.jpg';
+        }
+        if ($request->has('fassai_image')) {
+            $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
+            $request->fassai_image->move(public_path('vendor-documents'), $filename);
+            $vendors->licence_image = $filename;
+        }
+        if ($request->has('other_document')) {
+            $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
+            $request->other_document->move(public_path('vendor-documents'), $filename);
+            $vendors->other_document_image = $filename;
+            $vendors->other_document       = $request->other_document_name;
+        }
+        if ($request->has('banner_image')) {
+            $filename = time() . '-banner-' . rand(100, 999) . '.' . $request->banner_image->extension();
+            $request->banner_image->move(public_path('vendor-banner'), $filename);
+            $vendors->banner_image = $filename;
+        }
+        $vendors->save();
+        return redirect()->route('admin.vendors.list')->with('message', 'Chef Details Update  Successfully');
 
+    }
     public function addVideo(Request $request)
     {
         $this->validate($request, [
@@ -574,7 +631,20 @@ class UserControllers extends Controller
             return dd($e->getMessage());
         }
     }
-
+    public function chef_editchef($encrypt_id){
+        try {
+            $id = Crypt::decryptString($encrypt_id);
+            //  dd($id);die;
+            $vendor = Vendors::findOrFail($id);
+            // $vendor =  Vendors::where('vendors.id','=',$id)->join('categories', 'vendors.deal_categories', '=', 'categories.id')->join('cuisines', 'vendors.deal_cuisines', '=', 'cuisines.id')->select('vendors.*', 'categories.name as categoryName','cuisines.name as cuisinesName')->get()->first();
+            //dd($vendor);die;
+            $categories = @Catogory_master::where('is_active', '=', '1')->pluck('name', 'id')->toArray();;//->get();
+            $cuisines = @Cuisines::where('is_active', '=', '1')->pluck('name', 'id')->toArray();          //->get();
+            return view('admin/vendors/editchef', compact('vendor', 'categories', 'cuisines'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        }
+    }
     public function chef_product_edit($encrypt_id)
     {
         $id         = Crypt::decryptString($encrypt_id);
@@ -618,6 +688,7 @@ class UserControllers extends Controller
         $product->userId        = $request->userId;
         $product->cuisines      = $request->cuisines;
         $product->category      = $request->category;
+        $product->status           = '1';
         $product->dis           = $request->dis;
         $product->product_price = $request->product_price;
         $product->preparation_time = $request->preparation_time;

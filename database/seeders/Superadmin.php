@@ -20,7 +20,7 @@ class Superadmin extends Seeder
         	'name'=>'Super Admin',
         	'email'=>'admin@gmail.com',
         	'mobile_number'=>'1234567890',
-        	'password'=>Hash::make('admin@123'),
+        	'password'=>Hash::make('admin@654321'),
 			'created_at'=> date('Y-m-d h:i:s')
 
         ]);

@@ -163,11 +163,11 @@
                   <div class="card card-primary card-outline">
 
                     <div class="card-header">
-                      <h3 class="card-title">Edit  Restaurant </h3>
+                      <h3 class="card-title">Edit  Chef </h3>
 
                     </div>
                     <div class="card-body pad table-responsive">
-                      <form id="restaurant-form" action="{{route('admin.vendors.update')}}" method="post" enctype="multipart/form-data">
+                      <form id="restaurant-form" action="{{route('admin.chef.update')}}" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                           <div class="card card-default">
                               <div class="card-header">
@@ -196,7 +196,18 @@
                                         <input type="email" name="email" value="{{$vendor->email}}" class="form-control"  id="" placeholder="Enter Restaurant Email">
                                     </div>
                                   </div>
-
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">DOB <span class="text-danger">*</span></label>
+                                        <input type="date" name="dob" class="form-control"   value="{{$vendor->dob}}" id="" placeholder="Enter Chef Email">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Cooking Exp <span class="text-danger">*</span></label>
+                                        <input type="number" name="experience" class="form-control"   value="{{$vendor->experience}}" id="" placeholder="Enter Cooking Experence ">
+                                    </div>  
+                                  </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
@@ -229,50 +240,34 @@
                                         <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
                                         {{ Form::select('deal_cuisines[]',$cuisines,@explode(',',$vendor->deal_cuisines),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Cuisines" ,'style'=>"width: 100%;"]) }}
 {{--                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">--}}
-{{--                                        <option value="{{$vendor->deal_cuisines}}">{{$vendor->cuisinesName}}</option>--}}
+{{--                                           <option value="{{$vendor->deal_cuisines}}">{{$vendor->cuisinesName}}</option>--}}
 {{--                                            @foreach($cuisines as $k =>$v)--}}
 {{--                                            <option value="{{$v->id}}">{{$v->name}}</option>--}}
 {{--                                            @endforeach--}}
-{{--                                          </select>--}}
+{{--                                        </select>--}}
                                     </div>
                                   </div>
+                                  <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Speciality <span class="text-danger">*</span></label>
+                                        {{ Form::select('speciality[]',$cuisines,@explode(',',$vendor->speciality),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Cuisines" ,'style'=>"width: 100%;"]) }}
+{{--                                        <select name="speciality[]" class="select2" multiple="multiple" data-placeholder="Select Speciality" style="width: 100%;">--}}
+{{--                                           <option value="{{$vendor->speciality}}">{{$vendor->speciality}}</option>--}}
+{{--                                            @foreach($cuisines as $k =>$v)--}}
+{{--                                            <option value="{{$v->id}}">{{$v->name}}</option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+                                    </div>
+                                  </div>
+
+
+                                  
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address"  value="{{$vendor->address}}" class="form-control"  id="" placeholder="Enter Restaurant Address">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
-                                      <div class="form-group">
-
-                                          <label for="exampleInputEmail1">Vendor Food Type</label><br>
-
-                                          <div class="form-group clearfix">
-                                            <div class="icheck-success d-inline">
-                                              @if($vendor->vendor_food_type == '1')
-                                               <input type="radio" id="veg" name="type" value="1" checked>
-                                               <label for="veg">Veg</label>
-                                              @elseif($vendor->vendor_food_type != '1')
-                                              <input type="radio" id="veg" name="type" value="1">
-                                              <label for="veg">Veg</label>
-                                              @endif
-                                            </div>
-
-                                            <div class="icheck-danger d-inline">
-                                            @if($vendor->vendor_food_type == '3')
-                                              <input type="radio" id="non_veg" name="type" value="3" checked>
-                                              <label for="non_veg">Veg + Non Veg</label>
-                                              @elseif($vendor->vendor_food_type != '3')
-                                              <input type="radio" id="non_veg" name="type" value="3">
-                                              
-                                              <label for="non_veg">Veg + Non Veg</label>
-                                              @endif
-                                            </div>
-
-
-                                          </div>
-                                      </div>
-                                    </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
@@ -286,32 +281,6 @@
                                         <input type="text" value="{{$vendor->commission}}" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>
                                   </div>
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Tax<span class="text-danger">*</span></label>
-                                        <input type="text" name="tax" value="{{$vendor->tax}}" class="form-control"  id="" placeholder="Tax">
-                                    </div>
-                                  </div>
-                                  <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>
-                                        <select class="form-control gstavailable" name="gst_available">
-                                            @if($vendor->gst_available == '0')
-                                            <option value="0">Not Available</option>
-                                            @else
-                                            <option value="1">Available</option>
-                                            @endif
-                                        </select>
-                                    </div>
-                                  </div>
-                                  @if($vendor->gst_available == '1')
-                                  <div class="col-md-6 custmization-block">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="password" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
-                                    </div>
-                                  </div>
-                                  @endif
                                 </div>
 
                               </div>
@@ -411,7 +380,7 @@
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>  Update Restaurant </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>  Update Chef </button>
                           </div>
                       </form>
 

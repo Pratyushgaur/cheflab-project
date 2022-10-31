@@ -4,9 +4,6 @@ Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
 
 
 
-// chef route
-Route::group(['middleware' => 'isChefRestaurant'], function(){
-    Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
         Route::get('dashbord', [App\Http\Controllers\chef\DashboardController::class,'index'])->name('chef.dashboard');
         //chef order linst
         Route::get('order', [App\Http\Controllers\chef\OrderController::class,'index'])->name('order.list');
@@ -36,7 +33,7 @@ Route::group(['middleware' => 'isChefRestaurant'], function(){
         Route::get('on-screen-slot', [App\Http\Controllers\chef\VendorPromotion::class,'getslot'])->name('chef.slot.checkslot');
 
 
-    });
+
 
 
     Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class,'index'])->name('chef.globleseting');
@@ -47,7 +44,7 @@ Route::group(['middleware' => 'isChefRestaurant'], function(){
     Route::post('globle/createtime', [App\Http\Controllers\vendor\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.first_store');
 
 
-});
+
 
 
 Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class,'index'])->name('chef.globleseting');
