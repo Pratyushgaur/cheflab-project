@@ -195,9 +195,13 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
 
                     $banners                                    = json_decode($p['banner_image']);
-                    $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
-                        return URL::to('vendor-banner/') . '/' . $banner;
-                    }, $banners);
+
+                    if(is_array($banners))
+                        $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                        $variant[$p['product_id']] ['banner_image']=[];
 
                 }
 
