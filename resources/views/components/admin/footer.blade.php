@@ -168,7 +168,8 @@
                     //console.log();
                     if (response.success == true) {
                       Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
-                      $('#example').DataTable().ajax.reload();
+                      //$('#example').DataTable().ajax.reload();
+                      location.reload();
                     } else {
                       Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
                     }
@@ -216,7 +217,8 @@
                     //console.log();
                     if (response.success == true) {
                       Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
-                      $('#example').DataTable().ajax.reload();
+                     // $('#example').DataTable().ajax.reload();
+                     location.reload();
                     } else {
                       Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
                     }

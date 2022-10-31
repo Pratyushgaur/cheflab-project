@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\AdminMasters;
 use App\Models\Mobileotp;
 use Validator;
 
@@ -117,7 +118,7 @@ class LoginApiController extends Controller
 
             //check otp is verified
             if(Mobileotp::where(['mobile_number' =>$request->mobile_number,'status' =>'1'])->exists()){
-
+                $refer_amount = AdminMasters::select('refer_amount');
                 $user = new User;
                 if($request->referralcode != ''){//
 
@@ -138,6 +139,7 @@ class LoginApiController extends Controller
                 $user->name =$request->name;
                 $user->email =$request->email;
                 $user->mobile_number =$request->mobile_number;
+                $user->by_earn = $refer_amount;
                 $user->alternative_number =$request->alternative_mobile;
                 $user->referralCode = $this->generateReferralCode($request->name);
                 $user->save();

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Models\Variant;
 use App\Models\Vendors;
 use App\Models\Deliver_boy;
+use App\Models\AdminMasters;
 use App\Models\Orders;
 use App\Rules\VendorOrderTimeRule;
 use DataTables;
@@ -756,13 +757,13 @@ class UserControllers extends Controller
         $id   = decrypt($id);
         $user = User::find($id);
         User::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
-        return redirect()->back()->with('message', 'User Inactive Successfully.');
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
     }
     public function user_active($id){
         $id   = decrypt($id);
         $user = User::find($id);
         User::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
-        return redirect()->back()->with('message', 'User Active Successfully.');
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
     }
     public function vendor_inactive($id){
         $id   = decrypt($id);
@@ -774,6 +775,7 @@ class UserControllers extends Controller
         $id   = decrypt($id);
         $user = Vendors::find($id);
         Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Active Successfully' ], 200);
         return redirect()->back()->with('message', 'User Active Successfully.');
     }
     public function user_delete($id)
@@ -792,5 +794,21 @@ class UserControllers extends Controller
        //  var_dump($user);die;
         return view('admin/vendors/user_view',compact('user','order'));
     }
-
+    public function refer()
+    {
+        $user = User::all();
+        return view('admin/vendors/refer',compact('user'));
+    }
+    public function referamount()
+    {   
+        $id ='1';
+        $refer_amount = AdminMasters::find($id);
+        return view('admin/vendors/referamount',compact('refer_amount'));
+    }
+    public function referamountUpdate(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->refer_amount = $request->refer_amount;
+        $general->save();
+        return redirect()->route('admin.refe.earn')->with('message', 'Refer Amount  Update Successfully');
+    }
 }

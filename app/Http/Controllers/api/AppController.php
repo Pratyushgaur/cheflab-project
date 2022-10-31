@@ -1505,7 +1505,7 @@ class AppController extends Controller
     }
     public function getTACusers(){
         try {
-            $data = \App\Models\AdminMasters::select('terms_conditions_cheflab');
+            $data = \App\Models\Content_management::select('terms_conditions_user');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -1519,9 +1519,9 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getPrivacyPolicy(){
+    public function getUserPrivacyPolicy(){
         try {
-            $data = \App\Models\AdminMasters::select('privacy_policy');
+            $data = \App\Models\Content_management::select('user_privacy_policy');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -1535,9 +1535,9 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getCancellationPolicy(){
+    public function getUserCancellationPolicy(){
         try {
-            $data = \App\Models\AdminMasters::select('refund_cancellation_cheflab');
+            $data = \App\Models\Content_management::select('refund_cancellation_user');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',

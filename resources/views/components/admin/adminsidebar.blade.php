@@ -192,9 +192,9 @@
 				</a>
 			</li>
 			<li class="nav-item">
-				<a href="{{route('admin.coupon.list')}}" class="nav-link">
+				<a href="{{route('admin.refe.earn')}}" class="nav-link">
 				  <i class="far fa-user nav-icon"></i>
-				  <p>Reffer & Earn</p>
+				  <p>Refer & Earn</p>
 				</a>
 			</li>
 

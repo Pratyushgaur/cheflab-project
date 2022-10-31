@@ -65,8 +65,18 @@ class CuisinesController extends Controller
                 ->addColumn('cuisinesImage', function($data){
                     return "<img src=".asset('cuisines').'/'.$data['cuisinesImage']." style='width:100px;height:100px;' />";
                 })
+                ->addColumn('is_active', function ($data) {
+                    //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'
+
+                    if ($data->is_active == 1) {
+                        $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.cuisines.inactive",Crypt::encryptString($data->id)) .'" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Cuisines" flash="Category"   title="Inactive" >Active</a> ';
+                    }else {
+                        $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.cuisines.active",Crypt::encryptString($data->id)) .'" class="btn btn-danger btn-xs active-record" data-alert-message="Are You Sure to Active this Cuisines" flash="Category"   title="Active" >Inactive</a> ';
+                    }
+                    return $btn;
+                })
                 ->rawColumns(['date','action-js','status'])
-                ->rawColumns(['action-js','cuisinesImage'])
+                ->rawColumns(['action-js','cuisinesImage','is_active'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
@@ -137,5 +147,18 @@ class CuisinesController extends Controller
         } else {
             return \Response::json(true);
         }
+    }
+    public function inactive($encrypt_id){
+        $id =  Crypt::decryptString($encrypt_id);  
+        $user = Cuisines::find($id);
+        Cuisines::where('id','=', $user->id)->limit(1)->update( ['is_active' => 0]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Cuisines Inactive Successfully' ], 200);
+       // return redirect()->back()->with('message', 'User Inactive Successfully.');
+    }
+    public function active($encrypt_id){
+        $id =  Crypt::decryptString($encrypt_id);  
+        $user = Cuisines::find($id);
+        Cuisines::where('id','=', $user->id)->limit(1)->update( ['is_active' => 1]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Cuisines Active Successfully' ], 200);
     }
 }

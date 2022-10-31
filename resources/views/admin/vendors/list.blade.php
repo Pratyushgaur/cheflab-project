@@ -98,7 +98,7 @@
                                         <a href="{{route('admin.vendors.list')}}" class="pull-right btn btn-sm btn-primary "><i class="fas fa-refresh"> </i> Reset</a>
 
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <a href="{{route('admin.restourant.create')}}" class="pull-right btn btn-sm btn-success " style="float: right;  color:#fff;"><i class="fa fa-plus"> </i> Create New Restaurant</a>
                                     </div>
                                     <div class="col-md-3">

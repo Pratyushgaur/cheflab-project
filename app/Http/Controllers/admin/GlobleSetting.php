@@ -100,7 +100,7 @@ class GlobleSetting extends Controller
         $general->default_cooking_time = $request->default_cooking_time;
         $general->default_delivery_time = $request->default_delivery_time;
         $general->save();
-        return redirect()->route('admin.globle.defaulttime')->with('message', 'Default Time Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Default Time Update Successfully');
     }
     public function store_faq(Request $request){
         $this->validate($request, [
@@ -118,14 +118,14 @@ class GlobleSetting extends Controller
         $general->razorpay_publish_key = $request->razorpay_publish_key;
         $general->paytm_publish_key = $request->paytm_publish_key;
         $general->save();
-        return redirect()->route('admin.globle.storePaytm')->with('message', 'Update Payment setting Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Payment setting Successfully');
     }
     public function storeDelivery(Request $request){
         $general = AdminMasters::find($request->id);
         $general->delivery_charges_fix = $request->delivery_charges_fix;
         $general->delivery_charges_per_km = $request->delivery_charges_per_km;
         $general->save();
-        return redirect()->route('admin.globle.payment.setting')->with('message', 'Update Chargs Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Chargs Successfully');
     }
     public function storeGernel(Request $request){
         $general = AdminMasters::find($request->id);
@@ -149,19 +149,19 @@ class GlobleSetting extends Controller
             $general->favicon  = $filename;
         }
         $general->save();
-        return redirect()->route('admin.globle.general')->with('message', 'Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Successfully');
     }
     public function storePrivacy(Request $request){
         $general = AdminMasters::find($request->id);
         $general->privacy_policy = $request->privacy_policy;
         $general->save();
-        return redirect()->route('admin.globle.staticpage')->with('message', 'Privacy Policy  Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Privacy Policy  Update Successfully');
     }
     public function storeVendorTC(Request $request){
         $general = AdminMasters::find($request->id);
         $general->terms_conditions_vendor = $request->terms_conditions_vendor;
         $general->save();
-        return redirect()->route('admin.globle.staticpage')->with('message', 'Vendor Terms & Condition  Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Vendor Terms & Condition  Update Successfully');
     }
     public function storeCheflabTC(Request $request){
         $general = AdminMasters::find($request->id);

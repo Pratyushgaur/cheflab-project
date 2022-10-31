@@ -69,9 +69,9 @@ class Category extends Controller
                     //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'
 
                     if ($data->is_active == 1) {
-                        $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.category.inactive",Crypt::encryptString($data->id)) .'" class="btn btn-success btn-xs delete-record" data-alert-message="Are You Sure to Inactive this Category" flash="Category"   title="Inactive" >Active</a> ';
+                        $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.category.inactive",Crypt::encryptString($data->id)) .'" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Category" flash="Category"   title="Inactive" >Active</a> ';
                     }else {
-                        $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.category.active",Crypt::encryptString($data->id)) .'" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Active this Category" flash="Category"   title="Active" >Inactive</a> ';
+                        $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.category.active",Crypt::encryptString($data->id)) .'" class="btn btn-danger btn-xs active-record" data-alert-message="Are You Sure to Active this Category" flash="Category"   title="Active" >Inactive</a> ';
                     }
                     return $btn;
                 })
@@ -155,13 +155,13 @@ class Category extends Controller
         $id =  Crypt::decryptString($encrypt_id);  
         $user = Catogory_master::find($id);
         Catogory_master::where('id','=', $user->id)->limit(1)->update( ['is_active' => 0]);
-        return redirect()->route('admin.category.store')->with('message', 'Category Inactive Successfully');
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Catogory Inactive Successfully' ], 200);
        // return redirect()->back()->with('message', 'User Inactive Successfully.');
     }
     public function active($encrypt_id){
         $id =  Crypt::decryptString($encrypt_id);  
         $user = Catogory_master::find($id);
         Catogory_master::where('id','=', $user->id)->limit(1)->update( ['is_active' => 1]);
-        return redirect()->route('admin.category.store')->with('message', 'Category Inactive Successfully');
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Catogory Active Successfully' ], 200);
     }
 }

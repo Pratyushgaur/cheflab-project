@@ -35,7 +35,10 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('vendors-chef-video-edit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_videoedit'])->name('admin.chef.videoedit');
     Route::post('vendors-chef-video-update', [App\Http\Controllers\admin\UserControllers::class, 'updateVideo'])->name('admin.chef.video.update');
     Route::post('vendors-chef-video-delete', [App\Http\Controllers\admin\UserControllers::class, 'soft_delete_video'])->name('admin.chef.video.ajax.delete');
-    //
+    // Refer Earn
+    Route::get('refer-earn', [App\Http\Controllers\admin\UserControllers::class, 'refer'])->name('admin.refe.earn');
+    Route::get('refer-amount-update', [App\Http\Controllers\admin\UserControllers::class, 'referamount'])->name('admin.refer.referamount');
+    Route::post('refer-amount-store', [App\Http\Controllers\admin\UserControllers::class, 'referamountUpdate'])->name('admin.refer.amountUpdate');
     //chef route
     Route::get('vendors-chef-create', [App\Http\Controllers\admin\UserControllers::class, 'create_chef'])->name('admin.chef.create');
     Route::post('vendors-chef-store', [App\Http\Controllers\admin\UserControllers::class, 'store_chef'])->name('admin.chef.store');
@@ -67,11 +70,14 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('cuisines/delete', [App\Http\Controllers\admin\CuisinesController::class, 'soft_delete'])->name('admin.cuisines.ajax.delete');
     Route::get('check-duplicate-cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'check_duplicate_cuisines'])->name('check-duplicate-cuisines');
     Route::get('check-edit_duplicate-cuisines/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'check_edit_duplicate_cuisines'])->name('check-edit_duplicate-cuisines');
-
+    Route::post('cuisines-inactive/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'inactive'])->name('admin.cuisines.inactive');
+    Route::post('cuisines-active/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'active'])->name('admin.cuisines.active');
     // product routes
     Route::get('products', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.product.create');
     Route::get('vendor/products/create/{id}', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.vendor.product.create');
     Route::get('vendors-chef-product-list/{id}', [App\Http\Controllers\admin\UserControllers::class, 'view_chefproduct'])->name('admin.chefproduct.view');
+    Route::post('products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'active'])->name('admin.product.active');
+    Route::post('products-reject/{id}', [App\Http\Controllers\admin\ProductController::class, 'reject'])->name('aadmin.product.reject');
     //chef lAB PRODUCT
     Route::get('cheflab-products', [App\Http\Controllers\admin\ProductController::class, 'cheflabProduct'])->name('admin.product.cheflabProduct');
     Route::get('cheflab-products-create', [App\Http\Controllers\admin\ProductController::class, 'createChefLabProduct'])->name('admin.product.cheflabProduct.create');

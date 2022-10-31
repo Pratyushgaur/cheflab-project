@@ -173,7 +173,7 @@
                                     <th >Cuisines Name</th>
                                     <th >Position</th>
                                     <th  >Image</th>
-                                  
+                                    <th  >Status</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -269,6 +269,7 @@
             {data: 'name', name: 'name'},
             {data: 'position', name: 'position'},
             {data: 'cuisinesImage', name: 'cuisinesImage'},
+            {data: 'is_active', name: 'is_active'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
