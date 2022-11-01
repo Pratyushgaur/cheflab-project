@@ -243,20 +243,20 @@ class ProductController extends Controller
 
     }
     public function vendorProductList(Request $request){
-      //  $vendor = vendors::where('vendor_type','=','restaurant')->where('status','1')->select('id','name')->get();
-        $v =  Product_master::where('product_for','=','3')->where('products.status','=','2')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName','vendor_type','email')->get();
-        if ($request->rolename != '')
-            $v->where('status', '=', $request->rolename);
-        if ($request->search != ''){
-            $search = $request->search;
-            $v->where(function ($q) use ($search) {
-                $q->where('status', 'like', '%' . $search . '%')
-                    ->orWhere('name', 'like', '%' . $search . '%')
-                    ->orWhere('email', 'like', '%' . $search . '%');
-            });
-        }
-        $vendors = $v;
-        return view('admin/product/pendinglist',compact('vendors'));
+        $vendor = vendors::where('vendor_type','=','restaurant')->where('status','1')->select('id','name')->get();
+        // $v =  Product_master::where('product_for','=','3')->where('products.status','=','2')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName','vendor_type','email')->get();
+        // if ($request->rolename != '')
+        //     $v->where('status', '=', $request->rolename);
+        // if ($request->search != ''){
+        //     $search = $request->search;
+        //     $v->where(function ($q) use ($search) {
+        //         $q->where('status', 'like', '%' . $search . '%')
+        //             ->orWhere('name', 'like', '%' . $search . '%')
+        //             ->orWhere('email', 'like', '%' . $search . '%');
+        //     });
+        // }
+        // $vendors = $v;
+        return view('admin/product/pendinglist',compact('vendor'));
     }
     public function rejectProduct(Request $request){
         $this->validate($request, [

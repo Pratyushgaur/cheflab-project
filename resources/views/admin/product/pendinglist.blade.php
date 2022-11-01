@@ -76,24 +76,26 @@
                   <div class="card card-primary card-outline">
                       <div class="card-header">
                           <div class="row">
-                                <div class="col-md-2">
-                                  {{Form::select('rolename',['pending'=>'Pending','active'=>'Active','reject'=>'Reject'],request()->rolename,['class'=>'form-control','placeholder'=>'Filter By Role'])}}
-      {{--                                        <select name="rolename" class="form-control">--}}
-      {{--                                            <option value="">Filter By Role</option>--}}
-      {{--                                            <option value="pending">Pending</option>--}}
-      {{--                                            <option value="active">Active</option>--}}
-      {{--                                            <option value="reject">Reject</option>--}}
-      {{--                                        </select>--}}
-                              </div>
-                              <div class="col-md-2">
-                                  <input type="text" name="search" class="form-control" placeholder="Search" value="{{request()->search}}">
-                              </div>
+                          <div class="col-md-3">
+                                <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
+                                  <option value="">Filter By Status</option>
+                                  <option value="2">Pending </option>
+                                  <option value="1">Active</option>
+                                  <option value="0">Inactive</option>
+                                  <option value="3">Reject</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
 
-                              <div class="col-md-2">
-                              <button type="submit" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fas fa-search"> </i> Search</button>
-                                  <a href="{{route('admin.vendors.list')}}" class="pull-right btn btn-sm btn-primary "><i class="fas fa-refresh"> </i> Reset</a>
-
+                                <select class="form-control select2" style="width: 100%;" id="filter-by-restaurant" onchange="reload_table()">
+                                    <option value="">Select Restaurant</option>
+                                    @foreach($vendor as $val)
+                                        <option value="{{$val->id}}">{{$val->name}}</option>
+                                    @endforeach;
+                                </select>
                               </div>
+                            </div>
 
                           </div>
 
@@ -124,41 +126,8 @@
                                     <th  >Action</th>
                                   </tr>
                             </thead>
-                            <tbody>
-                            @foreach($vendors as $k=>$vendor)
-                                <tr>
-                                    <td>{{$k+1}}</td>
-                                    <td>{{$vendor->restaurantName}}</td>
-                                    <td>{{$vendor->product_name}}</td>
-                                    <td><img src="{{asset('products').'/'.$vendor->product_image}}"  style='width: 50px;' /></td>
-                                    <td>{{$vendor->categoryName}}</td>
-                                    <td>{{$vendor->type}}</td>
-                                    <td>{{$vendor->product_price}}</td>
-                                    <td>
-                                        @if($vendor->status == '2')
-                                        <a href="" class="btn btn-primary btn-xs inactive-record" title="Inactive">Pending</a>
-                                        @endif
-                                    </td>
-                                    <td>{{front_end_date($vendor->created_at)}}</td>
-                                    <td>
-                                        <ul class="navbar-nav">
-                                            <li class="nav-item dropdown">
-                                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    Action
-                                                </a>
-                                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                                    <a href="javascript:void(0);" class="btn btn-primary btn-xs active-record" data-alert-message="Are You Sure to Active this Product" flash="User" data-action-url="{{route('admin.product.active',['id'=>encrypt($vendor->id)])}}" title="Product">Active</a>
-                                                    <a class="dropdown-item text-info" href="{{route('admin.chef.productedit',Crypt::encryptString($vendor->id))}}'"><i class="fas fa-edit"></i> Edit</a>
-                                                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa-solid fa-bowl-food"></i>Delete</a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            @endforeach
-                            </tbody>
+
                         </table>
-                        <div class=""></div>
                     </div>
                   </div>
 
@@ -299,30 +268,30 @@
 
 <script type="text/javascript">
   // $(function () {
-    // let table = $('#example').dataTable({
-    //     processing: true,
-    //     serverSide: true,
-    //     //ajax: "{{ route('admin.vendors.datatable') }}",
-    //     ajax:{
-    //         url:"{{ route('admin.product.pendingdata')}}",
-    //         data: function (d) {
-    //             d.rolename = $('#filter-by-role').val(),
-    //             d.restaurant = $('#filter-by-restaurant').val()
-    //         }
-    //     },
-    //     columns: [
-    //       {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-    //       {data: 'restaurantName', name: 'restaurantName'},
-    //       {data: 'product_name', name: 'product_name'},
-    //       {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
-    //       {data: 'categoryName', name: 'categoryName'},
-    //       {data: 'type', name: 'type'},
-    //       {data: 'product_price', name: 'product_price'},
-    //       {data: 'status', name: 'status',orderable: false, searchable: false},
-    //       {data: 'date', name: 'created_at'},
-    //       {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-    //     ]
-    // });
+    let table = $('#example').dataTable({
+        processing: true,
+        serverSide: true,
+        //ajax: "{{ route('admin.vendors.datatable') }}",
+        ajax:{
+            url:"{{ route('admin.product.pendingdata')}}",
+            data: function (d) {
+                d.rolename = $('#filter-by-role').val(),
+                d.restaurant = $('#filter-by-restaurant').val()
+            }
+        },
+        columns: [
+          {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+          {data: 'restaurantName', name: 'restaurantName'},
+          {data: 'product_name', name: 'product_name'},
+          {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
+          {data: 'categoryName', name: 'categoryName'},
+          {data: 'type', name: 'type'},
+          {data: 'product_price', name: 'product_price'},
+          {data: 'status', name: 'status',orderable: false, searchable: false},
+          {data: 'date', name: 'created_at'},
+          {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+        ]
+    });
   // });
   $(document).on('click', '.openModal', function () {
         var id = $(this).data('id');
