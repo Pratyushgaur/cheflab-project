@@ -30,14 +30,39 @@ class AddPancardAdharVendorTable extends Migration
      */
     public function down()
     {
+        if (Schema::hasColumn('vendors', 'aadhar_number')){
+            Schema::table('vendors', function (Blueprint $table) {
+                $table->dropColumn('aadhar_number');
+            });
+        }
+        if (Schema::hasColumn('vendors', 'aadhar_card_image')){
+            Schema::table('vendors', function (Blueprint $table) {
+                $table->dropColumn('aadhar_card_image');
+            });
+        }
+        if (Schema::hasColumn('vendors', 'pancard_number')){
+            Schema::table('vendors', function (Blueprint $table) {
+                $table->dropColumn('pancard_number');
+            });
+        }
+        if (Schema::hasColumn('vendors', 'pancard_image')){
+            Schema::table('vendors', function (Blueprint $table) {
+                $table->dropColumn('pancard_image');
+            });
+        }
+        if (Schema::hasColumn('vendors', 'fassi_image')){
+            Schema::table('vendors', function (Blueprint $table) {
+                $table->dropColumn('fassi_image');
+            });
+        }
 
-        Schema::table('vendors', function (Blueprint $table) {
-            $table->dropColumn('aadhar_number');
-            $table->dropColumn('aadhar_card_image');
-            $table->dropColumn('pancard_number');
-            $table->dropColumn('pancard_image');
-            $table->dropColumn('fassi_image');
-
-        });
+//        Schema::table('vendors', function (Blueprint $table) {
+//            $table->dropColumn('aadhar_number');
+//            $table->dropColumn('aadhar_card_image');
+//            $table->dropColumn('pancard_number');
+//            $table->dropColumn('pancard_image');
+//            $table->dropColumn('fassi_image');
+//
+//        });
     }
 }

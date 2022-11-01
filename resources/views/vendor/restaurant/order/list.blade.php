@@ -130,7 +130,9 @@
                                                                     <?php if($order->order_status == 'pending') { ?>
                                                                     <a class = "dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick = "ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>
                                                                         <a class = "dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick = "ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
-                                                                    <?php }else if($order->order_status == 'accepted'){?>
+                                                                    <?php }
+                                                                    else if($order->order_status == 'accepted'){
+                                                                        ?>
                                                                     <a data-toggle = "modal" data-target = "#modal-7" class = "dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick = "preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
                                                                     <?php }
                                                                     if($order->order_status == 'preparing') {?>
@@ -250,7 +252,7 @@
             });
         }
 
-        $('#modal-7').modal({show: false})
+        $('#modal-7').modal({show: false});
 
         // $( "#modal-7" ).on('shown', function(){
         //     alert("I want this to appear after the modal has opened!");

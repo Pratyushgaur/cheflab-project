@@ -74,7 +74,7 @@
             }
 
             @if (Session::has('error'))
-            toastr.success('{{ Session::get('error') }}', 'Danger');
+            toastr.error('{{ Session::get('error') }}', 'Danger');
             @endif
 
             @if (Session::has('success'))
@@ -85,7 +85,7 @@
             @endif
             @if ($errors->any())
             @foreach ($errors->all() as $error)
-            toastr.info('{{ $error }}', 'Danger');
+            toastr.error('{{ $error }}', 'Danger');
             @endforeach
             @endif
             $("#clearToast").on('click', function () {

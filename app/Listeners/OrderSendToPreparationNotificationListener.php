@@ -35,10 +35,12 @@ class OrderSendToPreparationNotificationListener
         $customer = User::find($event->order->user_id);
         $vendor = Vendors::find($event->order->vendor_id);
 
-        $customer->notify(new OrderSendToPreparationNotification($event->order->id,$vendor->name,"Your Order #" .$event->order->id." send for preparation.It will be preparared in $event->preparationTime minutes"));
-
-        $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,"You have send Order #".$event->order->id." for preparation."));
-
-        OrderPreparationDoneJob::dispatch($event->order)->delay(now()->addMinutes((int) $event->preparationTime));
+        $customer->notify(new OrderSendToPreparationNotification($event->order->id,$vendor->name,'Send for preparation',"Your Order #" .$event->order->id." send for preparation.It will be preparared in $event->preparationTime minutes",$customer->fcm_token));
+//we dont need to send firbase notification to vendor so we dont pass fcm_token
+        $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,'Send for preparation',"You have send Order #".$event->order->id." for preparation.",''));
+//dd( $event->preparationTime);
+        OrderPreparationDoneJob::dispatch($event->order)
+//            ->delay(now()->addMinutes(10));
+            ->delay(now()->addMinutes((int) $event->preparationTime));
     }
 }

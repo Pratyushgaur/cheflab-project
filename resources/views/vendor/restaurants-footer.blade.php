@@ -507,6 +507,24 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
 <script>
     $(document).ready(function () {
+        toastr.options =
+            {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": true,
+                "positionClass": "toast-top-left",
+                "preventDuplicates": false,
+                // "onclick": null,
+                "showDuration": "3000",
+                "hideDuration": "10000",
+                "timeOut": 0,
+                "extendedTimeOut": 0,
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
         if ('serviceWorker' in navigator) {
             window.addEventListener("load", function () {
                 // navigator.serviceWorker.register("firebase-messaging-sw.js");
@@ -553,14 +571,6 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
             messagingSenderId: "307095509147",
             appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
             measurementId: "G-8Y9V6YWCWD"
-
-
-            // apiKey: "XXXXXXXXXXXXXXXXXXXXXXXXXX",
-            // authDomain: "XXXXXXX.firebaseapp.com",
-            // projectId: "XXXXXXXXXX",
-            // storageBucket: "XXXXXXXXXX.appspot.com",
-            // messagingSenderId: "XXXXXXXXXX",
-            // appId: "1:XXXXXXXXX:web:XXXXXXXXXXXXX"
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
@@ -576,10 +586,8 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                     _method: "PATCH",
                     token
                 }).then(({data}) => {
-                    // console.log('sdffsdf');
                     console.log(data);
                 }).catch(({response: {data}}) => {
-                    // console.log('sdffsdf');
                     console.error(data)
                 })
 
@@ -591,48 +599,36 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
         initFirebaseMessagingRegistration();
 
-        // messaging.onMessage(function ({data: {body, title,aditionalData,clickAction}}) {
-        //     new Notification(title, {body});
-        //     console.log(title);
-        //     console.log(body);
-        //     console.log(aditionalData);
-        //     console.log(clickAction);
-        //     Swal.fire({
-        //             // position: 'top-end',
-        //             type: 'info',
-        //             title: title,
-        //             text: body,
-        //             showConfirmButton: true,
-        //             // timer: 15000
-        //         }
-        //     );
-        // });
         messaging.onMessage((payload) => {
-            console.log('Message received. ', payload.data.title);
             new Notification(payload.title, {body: payload.data.body});
-            // alert(payload.link);
-            if (payload.data.link ===void 0){
+
+            if (payload.data.link === void 0) {
                 // console.log("in if "+payload.link);
-                Swal.fire({
-                    type: payload.data.msg_type,
-                    title: payload.data.title,
-                    text: payload.data.body,
-                    showConfirmButton: true
-                });
-            }
-            else {
+                // Swal.fire({
+                //     type: payload.data.msg_type,
+                //     title: payload.data.title,
+                //     text: payload.data.body,
+                //     showConfirmButton: true
+                // });
+                toastr.info(payload.data.title, payload.data.body);
+            } else {
                 // console.log("in else "+payload.link);
-                Swal.fire({
-                    type: payload.data.msg_type,
-                    title: payload.data.title,
-                    text: payload.data.body,
-                    showConfirmButton: true
-                }).then(function () {
+                // Swal.fire({
+                //     type: payload.data.msg_type,
+                //     title: payload.data.title,
+                //     text: payload.data.body,
+                //     showConfirmButton: true
+                // }).then(function () {
+                //     var win = window.open(payload.data.link, '_blank');
+                //     win.focus();
+                //     // window.open(payload.data.link, "_blank");
+                //     // window.location.href = payload.data.link;
+                // });
+                toastr.options.onclick = function () {
                     var win = window.open(payload.data.link, '_blank');
-                    win.focus();
-                    // window.open(payload.data.link, "_blank");
-                    // window.location.href = payload.data.link;
-                });
+                    console.log('clicked');
+                }
+                toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="payload.data.link">View</a>', payload.data.title,);
             }
         });
     });
