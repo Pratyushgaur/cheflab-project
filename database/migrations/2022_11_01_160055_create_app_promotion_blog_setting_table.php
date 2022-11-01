@@ -13,8 +13,13 @@ class CreateAppPromotionBlogSettingTable extends Migration
      */
     public function up()
     {
-        Schema::create('app_promotion_blog_setting', function (Blueprint $table) {
+        Schema::create('app_promotion_blog_settings', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('app_promotion_blog_id');
+            $table->tinyInteger('blog_position');
+            $table->string('blog_price');
+            $table->string('blog_promotion_date_frame');
+            $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->timestamps();
         });
     }

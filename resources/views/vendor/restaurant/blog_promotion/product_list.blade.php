@@ -22,7 +22,7 @@
                             <div class="align-self-center align-left">
                                 <h6>Promotion</h6>
                             </div>
-                            <a href="{{route('restaurant.shop.promotion.create')}}" class="btn btn-primary btn-sm"><i
+                            <a href="{{route('restaurant.product.promotion.create')}}" class="btn btn-primary btn-sm"><i
                                     class="fa fa-plus"></i> Create New</a>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Image</th>
+                                    <th scope="col">Product</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Blog Type</th>
                                     <th scope="col">Position</th>
@@ -50,9 +50,7 @@
                                 @foreach($appPromotionBlogBookings as $k=>$appPromotionBlogBooking)
                                     <tr>
                                         <td>{{$k+1}}</td>
-                                        <td><img
-                                                src="{{asset('slot-vendor-image').'/' .$appPromotionBlogBooking->image}}">
-                                        </td>
+                                        <td>{{$appPromotionBlogBooking->product->product_name}}</td>
                                         <td>{{$appPromotionBlogBooking->app_promotion_blog->name}}</td>
                                         <td>{{$blog_type[$appPromotionBlogBooking->app_promotion_blog->blog_type]}}</td>
                                         <td>{{$appPromotionBlogBooking->app_promotion_setting->blog_position}}</td>

@@ -21,6 +21,7 @@ class VendorPromotion extends Controller
         return view('admin/promotion/app-blog');
     }
     public function store(Request $request){
+//        dd($request->all());
         $this->validate($request, [
             'position' => 'required',
             'blog_type' => 'required',
@@ -32,9 +33,10 @@ class VendorPromotion extends Controller
         $blog->name = $request->name;
         $blog->from = $request->from;
         $blog->to = $request->to;
-//        $blog->app_position =  $request->position;
+        $blog->vendor_type =  $request->position;
         $blog->blog_type = $request->blog_type;
         $blog->save();
+
         return redirect()->route('admin.application.blog')->with('message', 'Blog Created Successfully');
 
     }
@@ -45,8 +47,8 @@ class VendorPromotion extends Controller
             $data = AppPromotionBlogs::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('app_position', function($data){
-                    if ($data->app_position == 1) {
+                ->addColumn('vendor_type', function($data){
+                    if ($data->vendor_type == 1) {
                         return 'Restaurant';
                     } else {
                         return 'Chef';

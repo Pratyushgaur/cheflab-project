@@ -76,7 +76,14 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 //            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
 //            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
             Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
-            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'create_shop_promotion'])->name('restaurant.shop.promotion.create');
+            Route::post('promotion/shop-promotion/position', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'get_positions'])->name('restaurant.shop.promotion.positions');
+            Route::post('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'save_shop_promotion'])->name('restaurant.shop.promotion.save');
+
+            Route::get('promotion/product-promotion', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'product_promotion'])->name('restaurant.product.promotion');
+            Route::get('promotion/product-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'create_product_promotion'])->name('restaurant.product.promotion.create');
+            Route::post('promotion/product-promotion/position', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'product_get_positions'])->name('restaurant.product.promotion.positions');
+            Route::post('promotion/product-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'save_product_promotion'])->name('restaurant.product.promotion.save');
 
 
             //dine out

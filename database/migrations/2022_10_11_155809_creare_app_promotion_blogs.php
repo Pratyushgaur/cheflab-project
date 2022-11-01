@@ -15,7 +15,7 @@ class CreareAppPromotionBlogs extends Migration
     {
         Schema::create('app_promotion_blog', function (Blueprint $table) {
             $table->id();
-            $table->enum('position',['1','2'])->default('1')->comment('1-restaurent 2-chef');
+            $table->enum('vendor_type',['1','2'])->default('1')->comment('1-restaurent 2-chef');
             $table->enum('blog_type',['1','2'])->default('1')->comment('1-vendor 2-product');
             $table->string('name');
             $table->enum('duration', ['1','2'])->default('1')->comment('1-fullday 2-custom');
