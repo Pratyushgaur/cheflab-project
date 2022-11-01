@@ -7,7 +7,7 @@ return [
     */
 
     //radius that should be cover by a restaurant
-    'near_by_distance'                  => 40,//in miles
+    'near_by_distance'                  => 70,//in miles
 
 
     //-----------------Promotion Settings---------------------------
