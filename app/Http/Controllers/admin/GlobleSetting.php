@@ -136,6 +136,9 @@ class GlobleSetting extends Controller
         $general->office_addres = $request->office_addres;
         $general->gstno = $request->gstno;
         $general->goofle_map_key = $request->goofle_map_key;
+        $general->facebook_link = $request->facebook_link;
+        $general->instagram_link = $request->instagram_link;
+        $general->youtube_link = $request->youtube_link;
         $general->aboutus = $request->aboutus;
         $general->order_limit_amout = $request->order_limit_amout;
         if($request->has('logo')){
@@ -480,7 +483,12 @@ class GlobleSetting extends Controller
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
-
+        
     }
-
+    public function product_active(){
+       Product_master::where('status','=', '2')->update( ['status' => 1 ,'product_approve' => 1]);
+       return redirect()->route('admin.dashboard')->with('message', 'Product Active Successfully');
+    }
+    
+    
 }

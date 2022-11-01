@@ -87,10 +87,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // FAQ
     Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
     // Privacy Polic TAD User
-    Route::post('terms-and-condition-userapp', [App\Http\Controllers\api\AppController::class, 'getTACusers']);
-    Route::post('privacy-and-policy', [App\Http\Controllers\api\AppController::class, 'getUserPrivacyPolicy']);
-    Route::post('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getUserCancellationPolicy']);
-    Route::post('aboutus', [App\Http\Controllers\api\AppController::class, 'getAboutUs']);
+    Route::get('terms-and-condition-userapp', [App\Http\Controllers\api\AppController::class, 'getTACusers']);
+    Route::get('privacy-and-policy', [App\Http\Controllers\api\AppController::class, 'getUserPrivacyPolicy']);
+    Route::get('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getUserCancellationPolicy']);
+    Route::get('aboutus', [App\Http\Controllers\api\AppController::class, 'getAboutUs']);
+    Route::get('socialmedia', [App\Http\Controllers\api\AppController::class, 'getSocialmedia']);
+    
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutApiController::class, 'get_dine_out_slot']);
     Route::post('dine-out-booking', [App\Http\Controllers\api\DineoutApiController::class, 'dine_out_booking']);

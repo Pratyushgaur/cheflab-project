@@ -408,7 +408,7 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                       <label for="exampleInputEmail1">Twitter Link<span class="text-danger">*</span></label>
-                                      <textarea name="tiweeter_link" class="form-control" value="{{$data->tiweeter_link}}"  id="" placeholder="Twitter Link..">{{$data->tiweeter_link}}</textarea>
+                                      <textarea name="youtube_link" class="form-control" value="{{$data->youtube_link}}"  id="" placeholder="Twitter Link..">{{$data->tiweeter_link}}</textarea>
                                     </div>
                                   </div>
                                   
