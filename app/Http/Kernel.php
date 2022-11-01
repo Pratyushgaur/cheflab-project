@@ -42,7 +42,8 @@ class Kernel extends HttpKernel
 
         'api' => [
             EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
+//            'throttle:api',
+            'throttle:600,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         'isAdmin' => [

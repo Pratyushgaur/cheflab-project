@@ -122,21 +122,26 @@ function in_between_equal_to($check_number, $from, $to)
     return ($from <= $check_number && $check_number <= $to);
 }
 
-function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false)
+function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false,$where_vendor_in=[])
 {
     DB::enableQueryLog();
 
     $product = Product_master::select(DB::raw('products.userId as vendor_id'),
-        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level',
+        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level','type',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
         'products.id as product_id', 'product_rating', 'primary_variant_name')
-        ->where([ 'products.status' => '1' ]);
+        ->where([ 'products.status' => '1' ])
+        ->where([ 'products.product_approve' => '1' ]);
 
 
     if (!empty($product_where))
         $product->where($product_where);
+
+    if (!empty($where_vendor_in))
+        $product->whereIn('vendors.id',$where_vendor_in);
+
 
     if ($is_chefleb_product) {
         $product->where([ 'product_for' => '1' ]);
@@ -190,9 +195,13 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
 
                     $banners                                    = json_decode($p['banner_image']);
-                    $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
-                        return URL::to('vendor-banner/') . '/' . $banner;
-                    }, $banners);
+
+                    if(is_array($banners))
+                        $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                        $variant[$p['product_id']] ['banner_image']=[];
 
                 }
 
@@ -220,18 +229,21 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     return $product;
 }
 
-function get_restaurant_ids_near_me($lat, $lng, $where = [])
+function get_restaurant_ids_near_me($lat, $lng, $where = [],$return_query_object=false)
 {
 
-//    SELECT id, ( 3959 * acos(cos(radians(22.719568)) * cos(radians(lat)) * cos(radians(lng) - radians(75.857727)) + sin(radians(22.719568)) * sin(radians(lat ))) ) AS distance FROM markers HAVING distance < 50;
-
     $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
-    $vendors = \App\Models\Vendors::where([ 'is_all_setting_done' => '1' ]);
-    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,id")
+    $vendors = \App\Models\Vendors::where([ 'status' => '1','is_all_setting_done' => '1' ]);
+    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,vendors.id")
         ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
+
     if (empty($where))
         $vendors->where($where);
-    return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
+    if ($return_query_object) {
+           return $vendors;
+    }
+    else
+        return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
 
 
 }
@@ -268,4 +280,29 @@ function front_end_currency($number)
 function get_delivery_boy_near_me($lat, $lng)
 {
     return [ 1 ];
+}
+
+function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id)
+{
+    date_default_timezone_set('Asia/Kolkata');
+    $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+
+    $vendors->addSelect('vendors.id', 'name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
+        \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        DB::raw('if(available,false,true)  as isClosed'),
+        \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
+    )
+        ->leftJoin('vendor_order_time', function ($join) {
+            $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                ->where('day_no', '=', Carbon::now()->dayOfWeek)
+                ->where('start_time', '<=', mysql_time())
+                ->where('end_time', '>', mysql_time())->where('available', '=', 1);
+        })
+        ->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
+            $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+            $join->where('user_vendor_like.user_id', '=', $current_user_id);
+        });
+
+    return $vendors;
+
 }

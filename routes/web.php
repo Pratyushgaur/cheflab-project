@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/test', function () {
 
 dd(Auth::guard('vendor')->user());
-});
+})->name('test');
 
 
 Route::get('/', function () {
@@ -66,3 +66,11 @@ Route::get('chef-logout', function () {
 
 //notification
 Route::get('notification', [ App\Http\Controllers\NotificationController::class, 'index' ])->name('notification.view')->where('id', '[0-9]+');
+
+
+
+//test
+Route::get('get-firebase-data', [\App\Http\Controllers\FirebaseController::class, 'index'])->name('firebase.index');
+Route::patch('/fcm-token', [\App\Http\Controllers\FirebaseController::class, 'updateTokenVendor'])->name('fcmToken_vendor');
+Route::get('/send-notification',[\App\Http\Controllers\FirebaseController::class,'notification'])->name('notification');
+

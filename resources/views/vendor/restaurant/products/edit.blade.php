@@ -1,5 +1,6 @@
 @extends('vendor.restaurants-layout')
 @section('main-content')
+
     <style>
         .select2-selection__choice {
             background: #ff0018;
@@ -65,7 +66,7 @@
                         <li class="breadcrumb-item"><a href="#">Products</a></li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.product.list')}}">Items</a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Create New Item</li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Item</li>
 
 
                     </ol>
@@ -142,21 +143,16 @@
                                     </div>
                                     <span class="category_error text-danger"></span>
                                 </div>
+
                                 <div class="col-md-4 mb-3">
-                                    <label for="validationCustom24">Select Product Catalogue <span
+                                    <label for="validationCustom24">Select Menu <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        {{ Form::select('menu_id', $categories,$product->category, ['class' => 'form-control select2', 'placeholder' => 'Select Catalogue ','required','id'=>'validationCustom24']) }}
+                                        {{ Form::select('menu_id',$menus,$product->menu_id, ['class' => 'form-control select2', 'placeholder' => 'Select menu ','required','id'=>'validationCustom24']) }}
+
                                         @if ($errors->has('menu_id'))
                                             <span class="ms-text-danger"><strong>{{ $errors->first('menu_id') }}</strong></span>
                                         @endif
-{{--                                        <select class="form-control select2" name="menu_id" id="validationCustom24">--}}
-{{--                                            <option value="{{$product->menuName}}">{{$product->menuName}}</option>--}}
-{{--                                            @foreach($menus as $k =>$value)--}}
-{{--                                                <option value="{{$value->id}}">{{$value->menuName}}</option>--}}
-{{--                                            @endforeach--}}
-
-{{--                                        </select>--}}
 
                                     </div>
                                     <span class="menu_id_error text-danger"></span>
@@ -225,7 +221,7 @@
                                 <div class="col-md-4 mb-3">
                                     <label for="">Primary Item Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="product_price" id="price" placeholder="Enter Price" value="{{$product->item_price}}">
+                                        <input type="text" class="form-control" name="product_price" id="price" placeholder="Enter Price" value="{{$product->product_price}}">
 
                                     </div>
 
@@ -236,7 +232,7 @@
                                     <div class="input-group">
                                         <select class="form-control custimization" name="custimization" id="validationCustom23 ">
                                             <option value="false">No</option>
-                                            <option value="true">Yes</option>
+                                            <option value="true" {{($product->customizable=='true') ? "selected" : ''}}>Yes</option>
                                         </select>
                                     </div>
                                     <span class="custimization_error text-danger"></span>
@@ -247,7 +243,25 @@
                                             <h5>Product Variant</h5>
                                         </div>
                                     </div>
+{{--                                    {{dd($product->product_variants)}}--}}
+
                                     <div class="variant-input-container">
+                                        @if($product->customizable=='true')
+                                        @foreach($product->product_variants as $k=>$vri)
+
+                                            <input type="hidden" name="variant_id[]" value="{{$vri->id}}">
+                                            <div class="row input-container" style="padding-bottom:15px;">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name" value="{{$vri->variant_name}}">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="price[]" class="form-control price" placeholder="Enter Price" value="{{$vri->variant_price}}">
+                                                </div>
+                                                <div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div>
+                                            </div>
+                                        @endforeach
+
+                                        @else
                                         <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
                                                 <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name">
@@ -256,6 +270,7 @@
                                                 <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
                                             </div>
                                         </div>
+                                            @endif
                                         <!-- <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
                                                 <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
@@ -357,13 +372,20 @@
         (function ($) {
             $('.select2').select2();
 
+            <?php if($product->customizable == 'false'){?>
             $('.custmization-block').hide();
+            <?php }?>
+
             $(document).on('click', '.delete-variant', function () {
                 $(this).parent().parent().parent().remove();
 
             })
             $(document).on('click', '.add', function () {
-                var html = '<div class="row input-container" style="padding-bottom:15px;"><div class="col-md-4"><input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name"></div><div class="col-md-2"><input type="text" name="price[]" class="form-control price" placeholder="Enter Price"></div><div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div></div>';
+                var html = '<div class="row input-container" style="padding-bottom:15px;"><div class="col-md-4">' +
+                    '<input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">' +
+                    '</div><div class="col-md-2"><input type="text" name="price[]" class="form-control price" placeholder="Enter Price"></div>' +
+                    '<div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>' +
+                    '</div></div>';
                 $('.variant-input-container').append(html);
             })
             $('.custimization').change(function () {
