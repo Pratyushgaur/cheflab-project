@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\DineOutBookingEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Catogory_master;
 use App\Models\TableService;
@@ -35,14 +36,14 @@ class DineoutApiController extends Controller
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             $TableService = TableService::select('slot_time')
                 ->where('vendor_id', $request->vendor_id)
                 ->where('is_active', 1)
                 ->first();
             if (!isset($TableService->slot_time)) {
-                return response()->json([ 'status' => false, 'error' => "Restaurant not able to accept your booking." ], 401);
+                return response()->json(['status' => false, 'error' => "Restaurant not able to accept your booking."], 401);
             }
             $responce = [];
 
@@ -60,7 +61,7 @@ class DineoutApiController extends Controller
                 ->exists();
 //dd(DB::getQueryLog());
             if (!$is_restaurant_open)
-                return response()->json([ 'status' => false, 'error' => "Restaurant not open during requested time." ], 401);
+                return response()->json(['status' => false, 'error' => "Restaurant not open during requested time."], 401);
 
             //get remaining tables
             $booked_table = @TableServiceBooking::where('table_service_bookings.vendor_id', $request->vendor_id)
@@ -72,11 +73,11 @@ class DineoutApiController extends Controller
                 ->selectRaw('(table_services.no_guest-sum(booked_no_guest)) as available_tables')->first();
 
             if (isset($booked_table->available_tables) && $booked_table->available_tables <= $request->booked_no_guest) {
-                return response()->json([ 'status' => false, 'error' => "Sorry! $request->booked_no_guest tables not available during this time slot." ], 401);
+                return response()->json(['status' => false, 'error' => "Sorry! $request->booked_no_guest tables not available during this time slot."], 401);
             }
 
             $TableServiceBooking = new TableServiceBooking();
-            $s                   = $TableServiceBooking->create([
+            $TableServiceBooking = $TableServiceBooking->create([
                 "vendor_id"                 => $request->vendor_id,
                 "user_id"                   => $request->user_id,
                 "booked_no_guest"           => $request->booked_no_guest,
@@ -86,12 +87,14 @@ class DineoutApiController extends Controller
                 "booked_for_customer_name"  => $request->booked_for_customer_name,
                 "booked_for_customer_phone" => $request->booked_for_customer_phone
             ]);
-            if (isset($s->id))
-                return response()->json([ 'status' => true, 'message' => 'Your booking request is sent to the restaurant.' ], 200);
-            else
-                return response()->json([ 'status' => false, 'error' => "something went wrong." ], 401);
+
+            if (isset($TableServiceBooking->id)) {
+                event(new DineOutBookingEvent($TableServiceBooking, $request->user_id, $request->vendor_id));
+                return response()->json(['status' => true, 'message' => 'Your booking request is sent to the restaurant.'], 200);
+            } else
+                return response()->json(['status' => false, 'error' => "something went wrong."], 401);
         } catch (Throwable $th) {
-            return response()->json([ 'status' => false, 'error' => $th->getTrace() ], 500);
+            return response()->json(['status' => false, 'error' => $th->getTrace()], 500);
         }
     }
 
@@ -310,7 +313,7 @@ class DineoutApiController extends Controller
                 'date'      => 'required|date'
             ]);
             if ($validateUser->fails()) {
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
 
@@ -327,7 +330,7 @@ class DineoutApiController extends Controller
 //                dd($vendor_order_time);
                 $vendor_order_time = $vendor_order_time->toArray();
             } else {
-                return response()->json([ 'status' => false, 'error' => 'Restaurant is not available for today.' ], 401);
+                return response()->json(['status' => false, 'error' => 'Restaurant is not available for today.'], 401);
             }
 
             $tableservice = TableService::where('vendor_id', $request->vendor_id)->where('is_active', 1)->first();
@@ -428,12 +431,12 @@ class DineoutApiController extends Controller
                         @$reponce['days']['booking_time'][$i]['available'] = false;
                 }
 //                 dd($reponce);
-                return response()->json([ 'status' => true, 'message' => 'Successfully', 'response' => $reponce ], 200);
+                return response()->json(['status' => true, 'message' => 'Successfully', 'response' => $reponce], 200);
             } else {
-                return response()->json([ 'status' => false, 'error' => 'Restaurant not able to server for you.' ], 401);
+                return response()->json(['status' => false, 'error' => 'Restaurant not able to server for you.'], 401);
             }
         } catch (Throwable $th) {
-            return response()->json([ 'status' => false, 'error' => $th->getMessage() ], 500);
+            return response()->json(['status' => false, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -460,7 +463,7 @@ class DineoutApiController extends Controller
             $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
             $userid = request()->user()->id;
 
-            $vendors = Vendors::where([ 'status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1' ])
+            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
                 ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories',
                     \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
                 ->selectRaw("ROUND({$select},1) AS distance")
@@ -485,7 +488,7 @@ class DineoutApiController extends Controller
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => [ 'vendors' => $vendors ]
+                'response' => ['vendors' => $vendors]
 
             ], 200);
         } catch (Throwable $th) {
@@ -501,18 +504,18 @@ class DineoutApiController extends Controller
     {
 
         try {
-            $validateUser = Validator::make($request->all(), [ 'vendor_id' => 'required|numeric' ]);
+            $validateUser = Validator::make($request->all(), ['vendor_id' => 'required|numeric']);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $table_service_booking = TableServiceBooking::select('vendor_id','user_id','booking_status','booked_no_guest','booked_slot_time_from','booked_slot_time_to','booked_slot_discount')->where('user_id', auth()->user()->id)->where('vendor_id', $request->vendor_id)->first();
+            $table_service_booking = TableServiceBooking::select('vendor_id', 'user_id', 'booking_status', 'booked_no_guest', 'booked_slot_time_from', 'booked_slot_time_to', 'booked_slot_discount')->where('user_id', auth()->user()->id)->where('vendor_id', $request->vendor_id)->first();
 
 
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => [ 'table_service_booking' => $table_service_booking ]
+                'response' => ['table_service_booking' => $table_service_booking]
 
             ], 200);
         } catch (Throwable $th) {

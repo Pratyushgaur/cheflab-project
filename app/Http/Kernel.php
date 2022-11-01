@@ -42,8 +42,8 @@ class Kernel extends HttpKernel
 
         'api' => [
             EnsureFrontendRequestsAreStateful::class,
-//            'throttle:api',
-            'throttle:600,1',
+//            'throttle:api',//https://startutorial.com/view/fixing-429-too-many-requests-in-laravel
+            'throttle:600,1',//You can delete this middleware or change limits. In the first parameter, set the maximum number of requests per minute to be processed. The second parameter should include the number of minutes you need to wait before completing other requests when the limit of requests from the first parameter is exceeded.
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
         'isAdmin' => [

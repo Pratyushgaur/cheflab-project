@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notification;
 class OrderSendToPreparationNotification extends Notification
 {
     use Queueable;
+    protected $fcmTokens, $title;
     private $msg,$user_id,$vendor_id,$link,$order_id,$sender_name;
 
 
@@ -18,8 +19,10 @@ class OrderSendToPreparationNotification extends Notification
      *
      * @return void
      */
-    public function __construct($order_id,$sender_name,$msg)
+    public function __construct($order_id,$sender_name,$title,$msg,$fcm_token)
     {
+        $this->title=$title;
+        $this->fcmTokens=$fcm_token;
         $this->msg = $msg;
         $this->sender_name=$sender_name;
 //        $this->user_id = $user_id;

@@ -94,7 +94,7 @@ class OrderController extends Controller
     {
         $order = Order::with('products', 'user', 'order_product_details')->find($id);
         if (!$order)
-            return redirect()->back()->with('error', 'Order nOt found');
+            return redirect()->back()->with('error', 'Order not found');
 //        dd($order);
         return view('vendor.restaurant.order.view', compact('order'));
     }

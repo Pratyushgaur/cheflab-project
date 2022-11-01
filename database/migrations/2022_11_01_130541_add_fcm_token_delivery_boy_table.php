@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddFcmTokenVendorTable extends Migration
+class AddFcmTokenDeliveryBoyTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddFcmTokenVendorTable extends Migration
      */
     public function up()
     {
-
-        Schema::table('vendors', function (Blueprint $table) {
-            $table->string('fcm_token')->default(null)->after('pancard_image')->nullable();
+        Schema::table('deliver_boy', function (Blueprint $table) {
+            $table->string('fcm_token')->default(null)->after('wallet')->nullable();
         });
     }
 
@@ -26,8 +25,8 @@ class AddFcmTokenVendorTable extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('vendors', 'fcm_token')){
-            Schema::table('vendors', function (Blueprint $table) {
+        if (Schema::hasColumn('deliver_boy', 'fcm_token')){
+            Schema::table('deliver_boy', function (Blueprint $table) {
                 $table->dropColumn('fcm_token');
             });
         }

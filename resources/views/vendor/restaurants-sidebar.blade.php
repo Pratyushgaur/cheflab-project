@@ -17,7 +17,7 @@
       <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menus Catalogue</span>
         </a>
       </li>
-      
+
       <li class="menu-item">
         <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/product*') ? 'active' : '' }}" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="product"> <span><i class="nav-icon fa fa-fire fs-16"></i>Products </span>
         </a>
@@ -35,12 +35,12 @@
           <li>
              <a href="{{route('restaurant.promotion.list')}}" class="{{ Request::routeIs('restaurant.promotion.list') ? 'active' : '' }} {{ Request::routeIs('restaurant.promotion.create') ? 'active' : '' }}">Banner Promotion</a>
           </li>
-          <li>
-             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>
-          </li>
-          <li>
-             <a href="{{route('restaurant.promotion.list')}}" class="">Product Promotion</a>
-          </li>
+{{--          <li>--}}
+{{--             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>--}}
+{{--          </li>--}}
+{{--          <li>--}}
+{{--             <a href="{{route('restaurant.promotion.list')}}" class="">Product Promotion</a>--}}
+{{--          </li>--}}
 
         </ul>
       </li>

@@ -73,8 +73,11 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('promotion/on-screen-checkdate', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'checkdate'])->name('restaurant.slot.checkdate');
             Route::post('promotion/on-screen-getprice', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'getPrice'])->name('restaurant.slot.getPrice');
             Route::get('promotion/on-screen-slot', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'getslot'])->name('restaurant.slot.checkslot');
-            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
-            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+//            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
+//            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
+            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+
 
             //dine out
             Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_globle_setting'])->name('restaurant.dineout.setting');

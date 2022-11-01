@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\TableServiceBooking;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,15 +15,15 @@ class DineOutBookingEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $booking_id,$user_id,$vendor_id;
+    public $TableServiceBooking,$user_id,$vendor_id;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($booking_id,$user_id,$vendor_id)
+    public function __construct(TableServiceBooking $TableServiceBooking,$user_id,$vendor_id)
     {
-        $this->booking_id=$booking_id;
+        $this->TableServiceBooking=$TableServiceBooking;
         $this->user_id=$user_id;
         $this->vendor_id=$vendor_id;
     }

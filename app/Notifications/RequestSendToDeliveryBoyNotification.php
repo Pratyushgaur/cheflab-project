@@ -7,11 +7,11 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Kutia\Larafirebase\Messages\FirebaseMessage;
 
-class DineOutBookingNotification extends Notification
+class RequestSendToDeliveryBoyNotification extends Notification
 {
     use Queueable;
     protected $fcmTokens, $title;
-    private $msg, $link, $sender_name;
+    private $msg, $accept_link, $sender_name, $decline_link;
 
 
     /**
@@ -19,13 +19,14 @@ class DineOutBookingNotification extends Notification
      *
      * @return void
      */
-    public function __construct($title, $msg, $sender_name, $link, $fcmTokens)
+    public function __construct($title, $msg, $sender_name, $fcmTokens, $accept_link, $decline_link)
     {
-        $this->title       = $title;
-        $this->fcmTokens   = $fcmTokens;
-        $this->msg         = $msg;
-        $this->sender_name = $sender_name;
-        $this->link        = $link;
+        $this->title        = $title;
+        $this->fcmTokens    = $fcmTokens;
+        $this->msg          = $msg;
+        $this->sender_name  = $sender_name;
+        $this->accept_link  = $accept_link;
+        $this->decline_link = $decline_link;
     }
 
     /**
@@ -62,10 +63,11 @@ class DineOutBookingNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'msg'         => $this->msg,
-            'sender_name' => $this->sender_name,
-            'link'        => $this->link
-
+            'msg'          => $this->msg,
+            'sender_name'  => $this->sender_name,
+            'link'         => '',
+            'accept_link'  => $this->accept_link,
+            'decline_link' => $this->decline_link
         ];
     }
 
@@ -76,10 +78,12 @@ class DineOutBookingNotification extends Notification
                 ->withTitle($this->title)
                 ->withBody($this->msg)
                 ->withSound('default')
-                ->withClickAction($this->link)
+                ->withClickAction( $this->accept_link)
                 ->withAdditionalData([
-                    'msg_type' => 'info',
-                    'link'     => $this->link
+                    'msg_type'     => 'info',
+                    'link'         => '',
+                    'accept_link'  => $this->accept_link,
+                    'decline_link' => $this->decline_link
                 ])
                 ->withPriority('high')->asMessage($this->fcmTokens);
 
