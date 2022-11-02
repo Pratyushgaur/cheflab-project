@@ -46,6 +46,7 @@ class UserControllers extends Controller
         $delivery_boy = $delivery->count();
         $chef = Vendors::where('vendor_type', '=','chef')->get();
         $chef = $chef->count();
+        //Orders::where('vendor_id','=', $vendors->id)->where('order_status','=',)select('order_status')->get();
         return view('admin/vendors/list', compact('vendors','restaurant','active_resto','delivery_boy','chef'));
     }
 
