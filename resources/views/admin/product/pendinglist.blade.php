@@ -277,6 +277,9 @@
             data: function (d) {
                 d.rolename = $('#filter-by-role').val(),
                 d.restaurant = $('#filter-by-restaurant').val()
+            },
+            error: function (error) {
+              console.log('error; ' + eval(error));
             }
         },
         columns: [

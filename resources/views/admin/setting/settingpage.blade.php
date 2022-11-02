@@ -168,139 +168,14 @@
           <!-- Main content -->
           <section class="content">
             <div class="row">
-                <!-- <div class="col-lg-12 col-6">
-                  
-                  <div class="card card-primary card-outline">
-                    
-                    <div class="card-header">
-                      <h3 class="card-title">Update Setting </h3>
-                      
-                    </div>
-                    <div class="card-body pad table-responsive">
-                      <form id="restaurant-form" action="{{route('admin.globle.storeGernel')}}" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                          <div class="card card-default">
-                              <div class="card-header">
-                                <h3 class="card-title text-bold" >Basic Information</h3>
-
-                              </div>
-                              <div class="card-body">
-                                <div class="error">
-                                @if($errors->any())
-                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                                @endif
-                                </div>
-                             
-                                <div class="row">
-                                <div class="col-md-6">
-                                        <div>
-                                          <label for="">Company  Logo</label>
-                                        </div>
-                                        <div class="image-upload">
-                                            <label for="file-input">
-                                                <div class="upload-icon">
-                                                    <img class="icon" src="{{ asset('logo'.'/'.$data->logo ) }}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input" type="file" name="logo" required/>
-                                        </div>        
-                                  </div>
-                                  <div class="col-md-6">
-                                        <div>
-                                          <label for="">Company Favicon </label>
-                                        </div>
-                                        <div class="image-upload">
-                                            <label for="file-input2">
-                                                <div class="upload-icon2">
-                                                    <img class="icon2" src="{{ asset('logo'.'/'.$data->favicon ) }}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input2" type="file" name="favicon"/>
-                                            
-                                        </div>       
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Business Name<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->company_name}}" name="company_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
-                                        <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Email<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->email}}" name="email" class="form-control"  id="exampleInputEmail1" placeholder="Enter Suport Email">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Conteact Number<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->phone}}" name="phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Conteact Number">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Suport Conteact Number<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->suport_phone}}" name="suport_phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Suport Conteact Number">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Office Address<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->office_addres}}" name="office_addres" class="form-control"  id="exampleInputEmail1" placeholder="Enter Office Address">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">GST NO<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->gstno}}" name="gstno" class="form-control"  id="exampleInputEmail1" placeholder="Enter GST NO">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Google Map Key <span class="text-danger">*</span></label>
-                                        <input type="text" name="goofle_map_key" value="{{$data->goofle_map_key}}" class="form-control"  id="" placeholder="Enter Google Map Key">
-                                    </div>  
-                                  </div>
-                                  
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">About Us <span class="text-danger">*</span></label>
-                                        <textarea name="aboutus" class="form-control" value="{{$data->aboutus}}"  id="" placeholder="About..">{{$data->aboutus}}</textarea>
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">COD Limit Amount <span class="text-danger">*</span></label>
-                                        <input type="text" name="order_limit_amout" value="{{$data->order_limit_amout}}" class="form-control"  id="" placeholder="COD Order Limit Amount">
-                                    </div>  
-                                  </div>
-                                 </div>
-                                
-                              </div>
-                              
-                          </div>
-                       
-                              
-                              
-                          </div>
-                         
-                          <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
-                          </div>
-                      </form>
-                      
-                    </div>
-
-                  </div>
-                </div> -->
+                
                 <!-- Start of Genral Setting -->
                 <div class="col-lg-12 col-6">
                     <!-- small box -->
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Update Payemnt Setting </h3>
+                      <h3 class="card-title">Update Genral Setting </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
@@ -327,7 +202,7 @@
                                                   <img class="icon" src="{{ asset('logo'.'/'.$data->logo ) }}">
                                               </div>
                                           </label>
-                                          <input id="file-input" type="file" name="logo" required/>
+                                          <input id="file-input" type="file" name="logo">
                                       </div>   
                                   </div>
                                   <div class="col-md-6">
@@ -407,8 +282,8 @@
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                      <label for="exampleInputEmail1">Twitter Link<span class="text-danger">*</span></label>
-                                      <textarea name="youtube_link" class="form-control" value="{{$data->youtube_link}}"  id="" placeholder="Twitter Link..">{{$data->tiweeter_link}}</textarea>
+                                      <label for="exampleInputEmail1">Youtube Link<span class="text-danger">*</span></label>
+                                      <textarea name="youtube_link" class="form-control" value="{{$data->youtube_link}}"  id="" placeholder="Youtube Link..">{{$data->tiweeter_link}}</textarea>
                                     </div>
                                   </div>
                                   
