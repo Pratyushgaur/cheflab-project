@@ -12,7 +12,21 @@ class BannerController extends Controller
 {
     public function getHomepageBanner(Request $request){
         try {
-            $data = \App\Models\RootImage::where([ 'is_active' => '1' ])->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'type' => 'required'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $data = \App\Models\RootImage::where('type','=',$request->type)->where([ 'is_active' => '1' ])->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
