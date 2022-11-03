@@ -315,6 +315,7 @@ function get_restaurant_near_me_filertyrestourant($lat, $lng, $where = [], $curr
 
     $vendors->addSelect('vendors.id', 'name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        \DB::raw('CONCAT("' . asset('vendors-banner') . '/", banner_image) AS banner_image'),
         DB::raw('if(available,false,true)  as isClosed'),
         \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
     )
@@ -340,6 +341,7 @@ function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id
 
     $vendors->addSelect('vendors.id', 'name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        \DB::raw('CONCAT("' . asset('vendors-banner') . '/", banner_image) AS banner_image'),
         DB::raw('if(available,false,true)  as isClosed'),
         \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
     )

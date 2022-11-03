@@ -1400,6 +1400,48 @@ class AppController extends Controller
 
                 ], 401);
             }
+            if($request->value == '1'){
+                $userid = request()->user()->id;
+
+                $where = [ 'vendor_type' => 'restaurant'];
+                $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id);
+                $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
+                $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
+               // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
+    
+                foreach ($vendors as $key => $value) {
+                    $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $vendors[$key]->categories = $category;
+                }
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data Get Successfully',
+                    'response' => ['vendors' => $vendors]
+    
+                ], 200);
+            }
+            if($request->value == '2'){
+                $userid = request()->user()->id;
+
+                $where = [ 'vendor_type' => 'restaurant'];
+                $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id);
+                $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
+                $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
+               // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
+    
+                foreach ($vendors as $key => $value) {
+                    $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $vendors[$key]->categories = $category;
+                }
+    
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Data Get Successfully',
+                    'response' => ['vendors' => $vendors]
+    
+                ], 200);
+            }
             if($request->value == '3'){
                 $userid = request()->user()->id;
 
