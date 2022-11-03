@@ -168,7 +168,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     $product = $product->orderBy('variants.id', 'ASC');
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
-    $product = $product->limit(30)->get();
+    $product = $product->get();
 
 
 //    dd(\DB::getQueryLog ());
@@ -234,16 +234,16 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [],$return_query_object
 
     $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
     $vendors = \App\Models\Vendors::where([ 'status' => '1','is_all_setting_done' => '1' ]);
-    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,vendors.id");
-      //  ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
+    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,vendors.id")
+        ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
 
     if (empty($where))
         $vendors->where($where);
     if ($return_query_object) {
-           return $vendors->limit(30);
+           return $vendors;
     }
     else
-        return $vendors->orderBy('vendors.id', 'desc')->limit(30)->pluck('id');
+        return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
 
 
 }
