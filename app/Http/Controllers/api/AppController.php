@@ -138,7 +138,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'lat' => 'required|numeric',
-                    'lng' => 'required|numeric',
+                    'lng' => 'required|numeric'
                 ]
             );
             if ($validateUser->fails()) {
@@ -629,7 +629,7 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            
+
             if ($request->search_for == 'restaurant') {
                 $data =get_restaurant_near_me($request->lat, $request->lng,  [ 'vendor_type' => 'restaurant'], $request->user()->id)
                     ->addSelect('review_count')

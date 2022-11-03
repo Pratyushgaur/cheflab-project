@@ -458,19 +458,27 @@ class DineoutApiController extends Controller
 
                 ], 401);
             }
+            $userid = request()->user()->id;
             //$data['lat'] = 24.4637223;
             //$data['lng'] = 74.8866346;
-            $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
-            $userid = request()->user()->id;
+//            $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
+//
+//
+//            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
+//                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories',
+//                    \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
+//                ->selectRaw("ROUND({$select},1) AS distance")
+//                ->leftJoin('user_vendor_like', function ($join) {
+//                    $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+//                    $join->where('user_vendor_like.user_id', '=', request()->user()->id);
+//                })->orderBy('vendors.id', 'desc')->get();
 
-            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
-                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories',
-                    \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
-                ->selectRaw("ROUND({$select},1) AS distance")
-                ->leftJoin('user_vendor_like', function ($join) {
-                    $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
-                    $join->where('user_vendor_like.user_id', '=', request()->user()->id);
-                })->orderBy('vendors.id', 'desc')->get();
+            $where=['table_service' => '1', 'vendor_type' => 'restaurant'];
+            $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id)
+            ->join('table_services', function ($join) {
+                $join->on('table_services.vendor_id', '=', 'vendors.id')
+                    ->where('table_services.is_active', '=', 1);
+            })->get();
 //dd($vendors);
 
 //            $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'vendors.name as restaurantName','products.id',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));

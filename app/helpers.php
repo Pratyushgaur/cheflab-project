@@ -234,8 +234,8 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [],$return_query_object
 
     $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
     $vendors = \App\Models\Vendors::where([ 'status' => '1','is_all_setting_done' => '1' ]);
-    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,vendors.id");
-      //  ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
+    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance,vendors.id")
+        ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
 
     if (empty($where))
         $vendors->where($where);
