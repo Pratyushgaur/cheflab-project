@@ -108,6 +108,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-user-tryonce', [App\Http\Controllers\api\AppController::class, 'getTryonce']);
     //  filter by restourant
     Route::post('get-filter-restourant', [App\Http\Controllers\api\AppController::class, 'filterByRestaurant']);
+    Route::post('get-filter-chef', [App\Http\Controllers\api\AppController::class, 'filterByChef']);
     //firbase
     Route::patch('/user-fcm-token', [\App\Http\Controllers\API\FirebaseApiController::class, 'updateTokenUser'])->name('fcmToken_user');
     Route::get('/user-send-notification',[\App\Http\Controllers\API\FirebaseApiController::class,'notification'])->name('notification_user');
