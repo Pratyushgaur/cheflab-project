@@ -19,7 +19,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/test', function () {
 
-dd(Auth::guard('vendor')->user());
+    $today=\Carbon\Carbon::now()->dayOfWeek;
+
+    if( $today==6)
+        $next_available_day=\App\Models\VendorOrderTime::where('day_no','>=',0)->where('available',1)->orderBy('day_no')->first();
+    else
+        $next_available_day=\App\Models\VendorOrderTime::where('day_no','>=',$today)->where('available',1)->orderBy('day_no')->first();
+
+    if(!isset($next_available_day->id))
+        $next_available_day=\App\Models\VendorOrderTime::where('day_no','>=',0)->where('available',1)->orderBy('day_no')->first();
+
+    return
+    dd($next_available_day);
+
 })->name('test');
 
 
