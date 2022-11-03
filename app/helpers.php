@@ -293,6 +293,57 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id)
         DB::raw('if(available,false,true)  as isClosed'),
         \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
     )
+        
+        ->leftJoin('vendor_order_time', function ($join) {
+            $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                ->where('day_no', '=', Carbon::now()->dayOfWeek)
+                ->where('start_time', '<=', mysql_time())
+                ->where('end_time', '>', mysql_time())->where('available', '=', 1);
+        })
+        ->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
+            $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+            $join->where('user_vendor_like.user_id', '=', $current_user_id);
+        });
+
+    return $vendors;
+
+}
+function get_restaurant_near_me_filertyrestourant($lat, $lng, $where = [], $current_user_id)
+{
+    date_default_timezone_set('Asia/Kolkata');
+    $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+
+    $vendors->addSelect('vendors.id', 'name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
+        \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        DB::raw('if(available,false,true)  as isClosed'),
+        \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
+    )
+    ->where('vendor_food_type','=','1')
+        ->leftJoin('vendor_order_time', function ($join) {
+            $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                ->where('day_no', '=', Carbon::now()->dayOfWeek)
+                ->where('start_time', '<=', mysql_time())
+                ->where('end_time', '>', mysql_time())->where('available', '=', 1);
+        })
+        ->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
+            $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+            $join->where('user_vendor_like.user_id', '=', $current_user_id);
+        });
+
+    return $vendors;
+
+}
+function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id)
+{
+    date_default_timezone_set('Asia/Kolkata');
+    $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+
+    $vendors->addSelect('vendors.id', 'name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
+        \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        DB::raw('if(available,false,true)  as isClosed'),
+        \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
+    )
+    ->where('vendor_food_type','=','3')
         ->leftJoin('vendor_order_time', function ($join) {
             $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
                 ->where('day_no', '=', Carbon::now()->dayOfWeek)
