@@ -295,7 +295,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id)
     )
         ->leftJoin('vendor_order_time', function ($join) {
             $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
-                ->where('day_no', '=', Carbon::now()->dayOfWeek)
+                ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
                 ->where('start_time', '<=', mysql_time())
                 ->where('end_time', '>', mysql_time())->where('available', '=', 1);
         })

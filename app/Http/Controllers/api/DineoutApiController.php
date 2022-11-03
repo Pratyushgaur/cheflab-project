@@ -10,6 +10,7 @@ use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
 use App\Models\VendorOrderTime;
 use App\Models\Vendors;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -380,7 +381,8 @@ class DineoutApiController extends Controller
 
 
                 $booked_slots  = TableServiceBooking::query()
-                    ->select('table_service_bookings.booked_slot_time_from', 'table_service_bookings.booked_slot_time_to', DB::raw('sum(table_service_bookings.booked_no_guest) as total_booked_no_guest'))
+                    ->select('table_service_bookings.booked_slot_time_from', 'table_service_bookings.booked_slot_time_to',
+                        DB::raw('sum(table_service_bookings.booked_no_guest) as total_booked_no_guest'))
                     ->where('booking_status', 'accepted')
                     ->where('booked_slot_time_from', '>=', $start_time)
                     ->where('booked_slot_time_to', '<=', $end_time)
@@ -475,10 +477,16 @@ class DineoutApiController extends Controller
 
             $where=['table_service' => '1', 'vendor_type' => 'restaurant'];
             $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id)
+                ->addSelect('table_service_discounts.discount_percent')
             ->join('table_services', function ($join) {
                 $join->on('table_services.vendor_id', '=', 'vendors.id')
                     ->where('table_services.is_active', '=', 1);
-            })->get();
+            })
+                ->join('table_service_discounts', function ($join) {
+                    $join->on('table_service_discounts.vendor_id', '=', 'vendors.id')
+                        ->where('table_service_discounts.day_no', '=', Carbon::now()->dayOfWeek);
+
+                })->get();
 //dd($vendors);
 
 //            $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'vendors.name as restaurantName','products.id',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
