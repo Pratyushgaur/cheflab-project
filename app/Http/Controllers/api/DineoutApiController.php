@@ -9,7 +9,7 @@ use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
 use App\Models\VendorOrderTime;
-use App\Models\Vendors;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -380,7 +380,8 @@ class DineoutApiController extends Controller
 
 
                 $booked_slots  = TableServiceBooking::query()
-                    ->select('table_service_bookings.booked_slot_time_from', 'table_service_bookings.booked_slot_time_to', DB::raw('sum(table_service_bookings.booked_no_guest) as total_booked_no_guest'))
+                    ->select('table_service_bookings.booked_slot_time_from', 'table_service_bookings.booked_slot_time_to',
+                        DB::raw('sum(table_service_bookings.booked_no_guest) as total_booked_no_guest'))
                     ->where('booking_status', 'accepted')
                     ->where('booked_slot_time_from', '>=', $start_time)
                     ->where('booked_slot_time_to', '<=', $end_time)
@@ -446,8 +447,10 @@ class DineoutApiController extends Controller
             $validateUser = Validator::make(
                 $request->all(),
                 [
-                    'lat' => 'required|numeric',
-                    'lng' => 'required|numeric',
+                    'lat'           => 'required|numeric',
+                    'lng'           => 'required|numeric',
+                    'vendor_offset' => 'required|numeric',
+                    'vendor_limit'  => 'required|numeric',
                 ]
             );
             if ($validateUser->fails()) {
@@ -458,19 +461,25 @@ class DineoutApiController extends Controller
 
                 ], 401);
             }
-            //$data['lat'] = 24.4637223;
-            //$data['lng'] = 74.8866346;
-            $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
             $userid = request()->user()->id;
 
-            $vendors = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
-                ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories',
-                    \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'))
-                ->selectRaw("ROUND({$select},1) AS distance")
-                ->leftJoin('user_vendor_like', function ($join) {
-                    $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
-                    $join->where('user_vendor_like.user_id', '=', request()->user()->id);
-                })->orderBy('vendors.id', 'desc')->get();
+            $where        = ['table_service' => '1', 'vendor_type' => 'restaurant'];
+            $vendors      = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id)
+                ->addSelect('table_service_discounts.discount_percent')
+                ->join('table_services', function ($join) {
+                    $join->on('table_services.vendor_id', '=', 'vendors.id')
+                        ->where('table_services.is_active', '=', 1);
+                })
+                ->join('table_service_discounts', function ($join) {
+                    $join->on('table_service_discounts.vendor_id', '=', 'vendors.id')
+                        ->where('table_service_discounts.day_no', '=', Carbon::now()->dayOfWeek);
+
+                });
+            $vendors1     = $vendors;
+            $vendor_count = $vendors1->count();
+            $vendors      = $vendors->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+
+
 //dd($vendors);
 
 //            $products = Product_master::where(['products.status' => '1', 'product_for' => '3'])->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),'vendors.name as restaurantName','products.id',\DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
@@ -483,12 +492,15 @@ class DineoutApiController extends Controller
             foreach ($vendors as $key => $value) {
                 $category                  = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $vendors[$key]->categories = $category;
+                $vendors[$key]->next_available=next_available_day($value->id);
             }
 
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => ['vendors' => $vendors]
+                'response' => [
+                    'vendor_total_records' => $vendor_count,
+                    'vendors'              => $vendors]
 
             ], 200);
         } catch (Throwable $th) {

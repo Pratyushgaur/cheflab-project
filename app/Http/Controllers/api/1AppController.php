@@ -79,7 +79,7 @@ class AppController extends Controller
             $validateUser = Validator::make(
                 $request->all(),
                 [
-                    'product_id' => 'required|numeric'
+                    'product_id' => 'required|numeric',
                 ]
             );
             if ($validateUser->fails()) {
