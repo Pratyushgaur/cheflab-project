@@ -104,7 +104,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-user-wallet', [App\Http\Controllers\api\Userwallet::class, 'getUserwallet']);
     Route::post('recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'Recharge']);
     Route::post('user-all-transaction', [App\Http\Controllers\api\Userwallet::class, 'allTransactions']);
-
+    // Try once
+    Route::post('get-user-tryonce', [App\Http\Controllers\api\AppController::class, 'getTryonce']);
 
     //firbase
     Route::patch('/user-fcm-token', [\App\Http\Controllers\API\FirebaseApiController::class, 'updateTokenUser'])->name('fcmToken_user');

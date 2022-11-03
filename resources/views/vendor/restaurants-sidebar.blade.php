@@ -35,12 +35,12 @@
           <li>
              <a href="{{route('restaurant.promotion.list')}}" class="{{ Request::routeIs('restaurant.promotion.list') ? 'active' : '' }} {{ Request::routeIs('restaurant.promotion.create') ? 'active' : '' }}">Banner Promotion</a>
           </li>
-{{--          <li>--}}
-{{--             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>--}}
-{{--          </li>--}}
-{{--          <li>--}}
-{{--             <a href="{{route('restaurant.promotion.list')}}" class="">Product Promotion</a>--}}
-{{--          </li>--}}
+          <li>
+             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>
+          </li>
+          <li>
+              <a href="{{route('restaurant.product.promotion')}}" class="{{ Request::routeIs('restaurant.product.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.product.promotion.create') ? 'active' : '' }}">Product Promotion</a>
+          </li>
 
         </ul>
       </li>

@@ -629,7 +629,6 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            
             if ($request->search_for == 'restaurant') {
                 $data =get_restaurant_near_me($request->lat, $request->lng,  [ 'vendor_type' => 'restaurant'], $request->user()->id)
                     ->addSelect('review_count')
@@ -1352,37 +1351,7 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getTryonce(Request $request){
-        try {
 
-            $validateUser = Validator::make($request->all(), [
-                'user_id' => 'required|numeric',
-            ]);
-            if ($validateUser->fails()) {
-                $error = $validateUser->errors();
-                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
-            }
-            $order = Order::where('user_id', '=', $request->user_id);
-            $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),  'vendors.name as vendor_name','vendors.id as vendor_id','vendors.id as vendor_type');
-            $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
-            $order = $order->orderBy('orders.id', 'desc');
-            $order = $order->skip($request->offset)->take(10);
-            $order = $order->get();
-            return response()->json([
-                'status' => true,
-                'message' => 'data get Successfully',
-                'response' => $order
-
-            ], 200);
-
-
-        } catch (Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'error' => $th->getMessage()
-            ], 500);
-        }
-    }
     public function deleteLikeProduct(Request $request)
     {
         try {
@@ -1562,7 +1531,7 @@ class AppController extends Controller
     }
     public function getTACusers(){
         try {
-            $data = \App\Models\Content_management::select('terms_conditions_user')->get();
+            $data = \App\Models\AdminMasters::select('terms_conditions_cheflab');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -1576,9 +1545,9 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getUserPrivacyPolicy(){
+    public function getPrivacyPolicy(){
         try {
-            $data = \App\Models\Content_management::select('user_privacy_policy')->get();
+            $data = \App\Models\AdminMasters::select('privacy_policy');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -1592,9 +1561,9 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getUserCancellationPolicy(){
+    public function getCancellationPolicy(){
         try {
-            $data = \App\Models\Content_management::select('refund_cancellation_user')->get();
+            $data = \App\Models\AdminMasters::select('refund_cancellation_cheflab');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -1610,7 +1579,7 @@ class AppController extends Controller
     }
     public function getAboutUs(){
         try {
-            $data = \App\Models\AdminMasters::select('aboutus')->get();
+            $data = \App\Models\AdminMasters::select('aboutus');
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
@@ -1624,22 +1593,7 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getSocialmedia(){
-        try {
-            $data = \App\Models\AdminMasters::select('facebook_link','instagram_link','youtube_link')->get();
-            return response()->json([
-                'status' => true,
-                'message'=>'Data Get Successfully',
-                'response'=>$data
 
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'error' => $th->getMessage()
-            ], 500);
-        }
-    }
     public function chelfleb_produst(Request $request)
     {
         try {
