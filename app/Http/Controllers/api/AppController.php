@@ -1363,7 +1363,7 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             $order = Order::where('user_id', '=', $request->user_id);
-            $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),  'vendors.name as vendor_name','vendors.id as vendor_id','vendors.id as vendor_type');
+            $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),  'vendors.name as vendor_name','vendors.id as vendor_id','vendors.id as vendor_type','vendors.deal_categories as categories','vendors.deal_cuisines as cuisines',\DB::raw('CONCAT("' . asset('vendor-banner') . '/", vendors.banner_image) AS banner_image'));
             $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
             $order = $order->orderBy('orders.id', 'desc');
             $order = $order->skip($request->offset)->take(10);
