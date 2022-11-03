@@ -122,37 +122,13 @@ function in_between_equal_to($check_number, $from, $to)
     return ($from <= $check_number && $check_number <= $to);
 }
 
-function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = 0, $limit = 30, $return_total_count = false)
+function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = null, $limit = null, $return_total_count = false, $product_ids = null)
 {
     DB::enableQueryLog();
-    $pro = Product_master::select('id');
-    if (!empty($product_where))
-        $pro->where($product_where);
+    //for pagination
 
-    if ($where_vendor_in != null && is_array($where_vendor_in))
-        $pro->whereIn('vendors.id', $where_vendor_in);
-
-    if ($is_chefleb_product) {
-        $pro->where(['product_for' => '1']);
-    }
-    if ($order_by_column != '' && $order_by_order != '')
-        $pro->orderBy($order_by_column, $order_by_order);
-
-    if ($return_total_count)
-        return $pro->count();
-
-    $pro_ids = $pro->offset($offset)->limit($limit)->pluck('id');
-
-
-    $product = Product_master::select(DB::raw('products.userId as vendor_id'),
-        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
-        'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
-        'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-        'products.id as product_id', 'product_rating', 'primary_variant_name')
-        ->where(['products.status' => '1'])
-        ->where(['products.product_approve' => '1'])
-        ->whereIn('products.id', $pro_ids);
+    $product = Product_master::where(['products.status' => '1'])
+        ->where(['products.product_approve' => '1']);
 
 
     if (!empty($product_where))
@@ -161,15 +137,29 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 //    if (!empty($where_vendor_in))
     if ($where_vendor_in != null && is_array($where_vendor_in))
         $product->whereIn('vendors.id', $where_vendor_in);
-
-
-    if ($is_chefleb_product) {
+    if ($is_chefleb_product)
         $product->where(['product_for' => '1']);
-    } else
-        if ($with_restaurant_name) {
-            $product->join('vendors', 'products.userId', '=', 'vendors.id');
-            $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'banner_image');
-        }
+
+
+    if ($return_total_count) {
+        $product2 = $product;
+        return $product2->count();
+    }
+
+
+    if (!is_null($offset) && !is_null($limit)) {
+        $product1 = $product;
+        return $product_ids = $product1->offset($offset)->limit($limit)->pluck('id');
+        $product->whereIn('products.id', $product_ids);
+    }
+
+    if ($product_ids != null)
+        $product->whereIn('products.id', $product_ids);
+    if ($with_restaurant_name) {
+        $product->join('vendors', 'products.userId', '=', 'vendors.id');
+        $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'banner_image');
+    }
+
 
     $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
 
@@ -188,10 +178,19 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     $product = $product->orderBy('variants.id', 'ASC');
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
-    $product = $product->get();
 
+//    dd($product->get()->toArray());
 
-//    dd(\DB::getQueryLog ());
+    $product = $product->addSelect(DB::raw('products.userId as vendor_id'),
+        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
+        'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
+        'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
+        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
+        'products.id as product_id', 'product_rating', 'primary_variant_name')
+        ->get();
+
+//dd($product->toArray());
+//    dd(\DB::getQueryLog());
     $variant = [];
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
@@ -245,7 +244,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
             $variant[$i]['addons'] = array_values($variant[$i]['addons']);
     }
     $product = array_values($variant);
-
+//dd($product);
     return $product;
 }
 
@@ -308,21 +307,23 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
     date_default_timezone_set('Asia/Kolkata');
     $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
 
-    $vendors->addSelect('name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
-        \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
-        DB::raw('if(available,false,true)  as isClosed'),
-        \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like')
-    )
-        ->leftJoin('vendor_order_time', function ($join) {
-            $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
-                ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
-                ->where('start_time', '<=', mysql_time())
-                ->where('end_time', '>', mysql_time())->where('available', '=', 1);
-        })
-        ->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
+    $vendors->leftJoin('vendor_order_time', function ($join) {
+        $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+            ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+            ->where('start_time', '<=', mysql_time())
+            ->where('end_time', '>', mysql_time())->where('available', '=', 1);
+    });
+
+    if ($current_user_id != null) {
+        $vendors->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
             $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
             $join->where('user_vendor_like.user_id', '=', $current_user_id);
-        });
+        })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
+    }
+    $vendors->addSelect('name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
+        \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        DB::raw('if(available,false,true)  as isClosed')
+    );
 
     if (!empty($limit) && !empty($offset))
         $vendors->offset($offset)->limit($limit);
@@ -345,7 +346,7 @@ function next_available_day($vendor_id, $return_obj = false)
     if (isset($next_available_day->id))
         if ($return_obj)
             return $next_available_day;
-        else{
+        else {
             $days[0] = "sunday";
             $days[1] = "monday";
             $days[2] = "tuesday";
@@ -354,9 +355,9 @@ function next_available_day($vendor_id, $return_obj = false)
             $days[5] = "friday";
             $days[6] = "saturday";
 
-            return $days[$next_available_day->day_no].' at '.front_end_time($next_available_day->start_time);
+            return $days[$next_available_day->day_no] . ' at ' . front_end_time($next_available_day->start_time);
         }
-        else
-            return null;
+    else
+        return null;
 
 }
