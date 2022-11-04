@@ -18,7 +18,7 @@ class CreateAppPromotionBlogSettingTable extends Migration
             $table->unsignedBigInteger('app_promotion_blog_id');
             $table->tinyInteger('blog_position');
             $table->string('blog_price');
-            $table->string('blog_promotion_date_frame');
+            $table->string('blog_promotion_date_frame')->comment('week,2 week, one month');
             $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->timestamps();
         });
