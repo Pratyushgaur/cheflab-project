@@ -200,7 +200,6 @@ class AppController extends Controller
                     'lng'           => 'required|numeric',
                     'vendor_offset' => 'required|numeric',
                     'vendor_limit'  => 'required|numeric',
-
                 ]
             );
             if ($validateUser->fails()) {
