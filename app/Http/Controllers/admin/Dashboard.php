@@ -45,7 +45,7 @@ class Dashboard extends Controller
         // die();
         $wordlist = Orders::where('payment_status', '=','paid')->get();
         $deliveryorder = $wordlist->count();
-        $re_avtive = Orders::where('order_status', '=','restaurant')->where('status', '=','1')->get();
+        $re_avtive = Orders::where('order_status', '=','restaurant')->get();
         $active_resto = $re_avtive->count();
         $delivery = Deliver_boy::all();
         $delivery_boy = $delivery->count();
