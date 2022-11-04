@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Addons;
 use App\Models\Catogory_master;
 use App\Models\Chef_video;
+use App\Models\ContactUs;
 use App\Models\Coupon;
 use App\Models\Cuisines;
 use App\Models\Order;
@@ -154,20 +155,25 @@ class AppController extends Controller
                 ], 401);
             }
 
-            $userid         = request()->user()->id;
-            $where          = ['vendor_type' => 'restaurant'];
-            $vendors        = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, $request->vendor_offset, $request->vendor_limit);
-            $vendors        = $vendors->orderBy('vendors.id', 'desc')->get();
-            $vendor_ids     = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);//not need to pass offset; limit set on products
-            $products       = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
-            $products_count = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit, true);
+            $userid  = request()->user()->id;
+            $where   = ['vendor_type' => 'restaurant'];
+            $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
+            $vendors = $vendors->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+
+            $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);//not need to pass offset; limit set on products
+            //get productd's shoud display in pagination
+            $products_ids = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
+            // product details
+            $products = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, false, $products_ids);
+            // total products
+            $products_count = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, true);
             $vendor_count   = count($vendor_ids);
 
             foreach ($vendors as $key => $value) {
                 $category                  = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $vendors[$key]->categories = $category;
 
-                $vendors[$key]->next_available=next_available_day($value->id);
+                $vendors[$key]->next_available = next_available_day($value->id);
             }
 
             return response()->json([
@@ -210,13 +216,17 @@ class AppController extends Controller
 
                 ], 401);
             }
-
+//DB::enableQueryLog();
             $user_id      = request()->user()->id;
-            $vendor_obj1  = get_restaurant_ids_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant']);
-            $vendor_count = count($vendor_obj1);
-            $vendor_obj   = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $user_id, $request->vendor_offset, $request->vendor_limit);
-            $data         = $vendor_obj->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service')
-                ->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)')->get();
+            $vendor_count  = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'],null,null,null)
+                ->whereRaw('FIND_IN_SET(' . $request->category_id . ',deal_categories)')->count();
+//dd(DB::getQueryLog());
+
+            $vendor_obj   = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $user_id, null, null);
+            $vendor_obj->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service')
+                ->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)');
+
+            $data = $vendor_obj->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
             //            date_default_timezone_set('Asia/Kolkata');
             $baseurl = URL::to('vendor-banner/') . '/';
@@ -229,11 +239,11 @@ class AppController extends Controller
                 else
                     $urlbanners = [];
 
-                $category                 = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
-                $data[$key]->categories   = $category;
-                $data[$key]->imageUrl     = $baseurl;
-                $data[$key]->banner_image = $urlbanners;
-                $data[$key]->next_available=next_available_day($value->id);
+                $category                   = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $data[$key]->categories     = $category;
+                $data[$key]->imageUrl       = $baseurl;
+                $data[$key]->banner_image   = $urlbanners;
+                $data[$key]->next_available = next_available_day($value->id);
             }
             return response()->json([
                 'status'   => true,
@@ -266,7 +276,7 @@ class AppController extends Controller
             );
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json(['status' => false,'error'  => $validateUser->errors()->all()], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
             $vendor_obj = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id);
@@ -286,11 +296,11 @@ class AppController extends Controller
                 else
                     $urlbanners = '';
 
-                $category                 = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
-                $data[$key]->categories   = $category;
-                $data[$key]->imageUrl     = $baseurl;
-                $data[$key]->banner_image = $urlbanners;
-                $data[$key]->next_available=next_available_day($value->id);
+                $category                   = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $data[$key]->categories     = $category;
+                $data[$key]->imageUrl       = $baseurl;
+                $data[$key]->banner_image   = $urlbanners;
+                $data[$key]->next_available = next_available_day($value->id);
 
             }
             return response()->json([
@@ -438,25 +448,34 @@ class AppController extends Controller
 
                 ], 401);
             }
+
+
             $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
             $data     = [];
             $dk       = 0;
             foreach ($category as $key => $value) {
-                $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
-                $product = $product->join('categories', 'products.category', '=', 'categories.id');
-                $product = $product->leftJoin('user_product_like', function ($join) {
-                    $join->on('products.id', '=', 'user_product_like.product_id');
-                    $join->where('user_product_like.user_id', '=', request()->user()->id);
-                });
-                $product = $product->where('menu_id', '=', $value->id);
-                $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'type', 'products.id as product_id', 'product_rating', 'categories.name as categoryName', \DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
-                $product = $product->where('type', '=', $request->food_type);
-                if ($product->exists()) {
-                    $product   = $product->get();
-                    $data[$dk] = array('menuName' => $value->menuName, 'id' => $value->id, 'products' => $product);
+                $product_where = ['products.status' => '1', 'product_for' => '3', 'type' => $request->food_type, 'menu_id' => $value->id];
+                $product       = get_product_with_variant_and_addons($product_where, request()->user()->id, null, null, $with_restaurant_name = true,
+                    $is_chefleb_product = false, $where_vendor_in = null, null, null, $return_total_count = false);
 
-                    $dk++;
-                }
+                $data[$key] = array('menuName' => $value->menuName, 'id' => $value->id, 'products' => $product);
+
+
+//                $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
+//                $product = $product->join('categories', 'products.category', '=', 'categories.id');
+//                $product = $product->leftJoin('user_product_like', function ($join) {
+//                    $join->on('products.id', '=', 'user_product_like.product_id');
+//                    $join->where('user_product_like.user_id', '=', request()->user()->id);
+//                });
+//                $product = $product->where('menu_id', '=', $value->id);
+//                $product = $product->select('products.product_name', 'product_price', 'customizable', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'type', 'products.id as product_id', 'product_rating', 'categories.name as categoryName', \DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+//                $product = $product->where('type', '=', $request->food_type);
+//                if ($product->exists()) {
+//                    $product   = $product->get();
+//                    $data[$dk] = array('menuName' => $value->menuName, 'id' => $value->id, 'products' => $product);
+//
+//                    $dk++;
+//                }
 
 
             }
@@ -468,14 +487,13 @@ class AppController extends Controller
 
             ], 200);
         } catch (Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'error'  => $th->getMessage()
-            ], 500);
+            return response()->json(['status' => false,
+                                     'error'  => $th->getMessage()], 500);
         }
     }
 
-    public function getRestaurantBrowsemenu(Request $request)
+    public
+    function getRestaurantBrowsemenu(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -516,7 +534,8 @@ class AppController extends Controller
         }
     }
 
-    public function getRestaurantCustmizeProductData(Request $request)
+    public
+    function getRestaurantCustmizeProductData(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -572,7 +591,8 @@ class AppController extends Controller
         }
     }
 
-    public function getRestaurantSearchData(Request $request)
+    public
+    function getRestaurantSearchData(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -602,8 +622,8 @@ class AppController extends Controller
 //                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
 //                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
 //                    ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
-                foreach ($data as $key=>$value)
-                    $data[$key]->next_available=next_available_day($value->id);
+                foreach ($data as $key => $value)
+                    $data[$key]->next_available = next_available_day($value->id);
             } elseif ($request->search_for == 'dishes') {
 //                $data = Product_master::where(['products.status' => '1', 'product_for' => '3'])
 //                    ->join('vendors', 'products.userId', '=', 'vendors.id')
@@ -629,9 +649,11 @@ class AppController extends Controller
             ], 500);
         }
     }
-    // restaurant page
-    //
-    public function chefHomePage(Request $request)
+
+// restaurant page
+//
+    public
+    function chefHomePage(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -677,7 +699,8 @@ class AppController extends Controller
         }
     }
 
-    public function getChefByCategory(Request $request)
+    public
+    function getChefByCategory(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -738,7 +761,8 @@ class AppController extends Controller
         }
     }
 
-    public function getChefDetailPage(Request $request)
+    public
+    function getChefDetailPage(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -778,7 +802,8 @@ class AppController extends Controller
         }
     }
 
-    public function getChefProfile(Request $request)
+    public
+    function getChefProfile(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -1014,7 +1039,8 @@ class AppController extends Controller
             }
         }
     */
-    public function add_to_like_vendor(Request $request)
+    public
+    function add_to_like_vendor(Request $request)
     {
         try {
 
@@ -1137,8 +1163,9 @@ class AppController extends Controller
              return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
          }
      }
- */
-    public function add_to_like_product(Request $request)
+    */
+    public
+    function add_to_like_product(Request $request)
     {
         try {
 
@@ -1172,7 +1199,8 @@ class AppController extends Controller
     }
 
 
-    public function create_order(Request $request)
+    public
+    function create_order(Request $request)
     {
 //        date_default_timezone_set(config('app.timezone'));
         try {
@@ -1264,7 +1292,8 @@ class AppController extends Controller
         }
     }
 
-    public function get_order(Request $request)
+    public
+    function get_order(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -1607,7 +1636,8 @@ class AppController extends Controller
         }
     }
 
-    public function deleteLikeVendor(Request $request)
+    public
+    function deleteLikeVendor(Request $request)
     {
         try {
 
@@ -1640,7 +1670,8 @@ class AppController extends Controller
         }
     }
 
-    public function getUserInfo(Request $request)
+    public
+    function getUserInfo(Request $request)
     {
         try {
 
@@ -1661,7 +1692,8 @@ class AppController extends Controller
         }
     }
 
-    public function updateUserInfo(Request $request)
+    public
+    function updateUserInfo(Request $request)
     {
         try {
             $validateUser = Validator::make($request->all(), [
@@ -1692,7 +1724,8 @@ class AppController extends Controller
         }
     }
 
-    public function getUserFavVendors(Request $request)
+    public
+    function getUserFavVendors(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -1736,7 +1769,8 @@ class AppController extends Controller
         }
     }
 
-    public function getUerFaq()
+    public
+    function getUerFaq()
     {
         try {
             $data = \App\Models\User_faq::all();
@@ -1754,7 +1788,8 @@ class AppController extends Controller
         }
     }
 
-    public function getTACusers()
+    public
+    function getTACusers()
     {
         try {
             $data = \App\Models\Content_management::select('terms_conditions_user')->get();
@@ -1772,7 +1807,8 @@ class AppController extends Controller
         }
     }
 
-    public function getUserPrivacyPolicy()
+    public
+    function getUserPrivacyPolicy()
     {
         try {
             $data = \App\Models\Content_management::select('user_privacy_policy')->get();
@@ -1790,7 +1826,8 @@ class AppController extends Controller
         }
     }
 
-    public function getUserCancellationPolicy()
+    public
+    function getUserCancellationPolicy()
     {
         try {
             $data = \App\Models\Content_management::select('refund_cancellation_user')->get();
@@ -1808,7 +1845,8 @@ class AppController extends Controller
         }
     }
 
-    public function getAboutUs()
+    public
+    function getAboutUs()
     {
         try {
             $data = \App\Models\AdminMasters::select('aboutus')->get();
@@ -1826,7 +1864,8 @@ class AppController extends Controller
         }
     }
 
-    public function getSocialmedia()
+    public
+    function getSocialmedia()
     {
         try {
             $data = \App\Models\AdminMasters::select('facebook_link', 'instagram_link', 'youtube_link')->get();
@@ -1844,7 +1883,8 @@ class AppController extends Controller
         }
     }
 
-    public function chelfleb_produst(Request $request)
+    public
+    function chelfleb_produst(Request $request)
     {
         try {
 //            $validateUser = Validator::make(
@@ -1885,5 +1925,42 @@ class AppController extends Controller
     }
 
 
+    public function save_contact_us(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(),
+                [
+                    'subject'     => 'required',
+                    'description' => 'required'
+                ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+
+
+            $ContactUs              = new ContactUs();
+            $ContactUs->user_id     = auth()->user()->id;
+            $ContactUs->subject     = $request->subject;
+            $ContactUs->description = $request->description;
+            $ContactUs->save();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Successfully'
+            ], 200);
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 
 }

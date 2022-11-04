@@ -23,23 +23,35 @@
         </ul>
       </li>
       <li class="menu-item">
-        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/product*') ? 'active' : '' }}" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="product"> <span><i class="nav-icon fa fa-fire fs-16"></i>Products</span>
+        <a href="#" class="has-chevron {{ request()->is('vendor/chef/product*') ? 'active' : '' }}" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="product"> <span><i class="nav-icon fa fa-fire fs-16"></i>Products</span>
         </a>
-        <ul id="product" class="collapse {{ request()->is('vendor/restaurant/product*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
+        <ul id="product" class="collapse {{ request()->is('vendor/chef/product*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
           <li> <a href="{{route('chef.product.list')}}" class="{{ Request::routeIs('chef.product.list') ? 'active' : '' }}">Items</a></li>
           
         </ul>
       </li>
       <li class="menu-item">
-        <a href="{{route('chef.promotion.list')}}"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
+        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/promotion*') ? 'active' : '' }}" data-toggle="collapse" data-target="#promotion" aria-expanded="false" aria-controls="promotion"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
         </a>
+        <ul id="promotion" class="collapse {{ request()->is('vendor/restaurant/promotion*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
+          <li>
+             <a href="{{route('chef.promotion.list')}}" class="{{ Request::routeIs('chef.promotion.list') ? 'active' : '' }} {{ Request::routeIs('chef.promotion.create') ? 'active' : '' }}">Banner Promotion</a>
+          </li>
+          <li>
+             <a href="{{route('chef.shop.promotion')}}" class="{{ Request::routeIs('chef.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('chef.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>
+          </li>
+          <li>
+              <a href="{{route('chef.product.promotion')}}" class="{{ Request::routeIs('chef.product.promotion') ? 'active' : '' }}{{ Request::routeIs('chef.product.promotion.create') ? 'active' : '' }}">Product Promotion</a>
+          </li>
+
+        </ul>
       </li>
       <li class="menu-item">
         <a href="#" class="has-chevron" data-toggle="collapse" data-target="#orders" aria-expanded="false" aria-controls="orders"> <span><i class="nav-icon fa fa-shopping-basket fs-16"></i>Orders</span>
         </a>
         <ul id="orders" class="collapse " aria-labelledby="product" data-parent="#side-nav-accordion">
           <li>
-             <a href="{{route('restaurant.order.list')}}" class="">Order List</a>
+             <a href="{{route('chef.order.list')}}" class="">Order List</a>
           </li>
         </ul>
       </li>

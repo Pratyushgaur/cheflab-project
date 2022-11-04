@@ -31,8 +31,8 @@ class VendorPromotion extends Controller
         ]);
         $blog = new AppPromotionBlogs;
         $blog->name = $request->name;
-        $blog->from = $request->from;
-        $blog->to = $request->to;
+        $blog->from = mysql_time($request->from);
+        $blog->to = mysql_time($request->to);
         $blog->vendor_type =  $request->position;
         $blog->blog_type = $request->blog_type;
         $blog->save();

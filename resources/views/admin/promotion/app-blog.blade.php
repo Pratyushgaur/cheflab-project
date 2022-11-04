@@ -2,7 +2,7 @@
 @section('content')
 @section('page-style')
 <style>
-    
+
         label.error {
             color: #dc3545;
             font-size: 14px;
@@ -23,23 +23,23 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
-        
-        
+
+
+
         .upload-icon img{
           width: 100px;
           height: 100px;
           margin:19px;
           cursor: pointer;
         }
-        
-        
+
+
         .upload-icon.has-img {
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon.has-img img {
             /*width: 100%;
             height: auto;*/
@@ -56,20 +56,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon2 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon2.has-img2{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon2.has-img2 img {
             /*width: 100%;
             height: auto;*/
@@ -102,7 +102,7 @@
           <!-- Main content -->
           <section class="content">
             <div class="row">
-            
+
               <div class="col-md-4">
                 <form id="banner-form" action="{{route('admin.application.blog.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
@@ -133,15 +133,15 @@
                             <div class="form-group">
                                 <label for="name">Name of Blog <span class="text-danger">*</span></label>
                                 <input type="text" id="name" name="name"  class="form-control" placeholder="Name of Blog">
-                                
+
                             </div>
-                            <div class="form-group">
-                                <label for="name">Blog Duration <span class="text-danger">*</span></label>
-                                <select name="duration" id="custimization" name="customizable" class="form-control">
-                                  <option value="1">fullday</option>
-                                  <option value="2">custom</option>
-                                </select>
-                            </div>
+{{--                            <div class="form-group">--}}
+{{--                                <label for="name">Blog Duration <span class="text-danger">*</span></label>--}}
+{{--                                <select name="duration" id="custimization" name="customizable" class="form-control">--}}
+{{--                                  <option value="1">fullday</option>--}}
+{{--                                  <option value="2">custom</option>--}}
+{{--                                </select>--}}
+{{--                            </div>--}}
                             <div class="col-md-12 mb-3 custmization-block" style="">
                             <div class="row">
                             <div class="form-group">
@@ -170,13 +170,13 @@
                               </div>
                            </div>
                             <input type="submit" value="Save Changes" class="btn btn-success float-right">
-                            
+
                         </div>
-                      
+
                       </div>
                       <div>
-                      
-                        
+
+
                     </div>
                 </form>
               </div>
@@ -190,7 +190,7 @@
                   </div>
                 </div>
                 <div class="card-body pad table-responsive">
-                              <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                              <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
                                   <thead>
                                         <tr role="row">
                                           <th  class="text-center">Sr No.</th>
@@ -201,7 +201,7 @@
                                           <th >Action</th>
                                         </tr>
                                   </thead>
-                                  
+
                               </table>
                           </div>
                   <!-- /.card-body -->
@@ -212,7 +212,7 @@
           <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-      
+
         <!-- /.content-wrapper -->
 
         <!-- /.content-wrapper -->
@@ -258,7 +258,7 @@
               required: true,
             }
         }
-        
+
     });
       $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
@@ -268,14 +268,14 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
-      $('.custmization-block').hide();
-      $('#custimization').change(function(){
-        if ($(this).val()  == '2') {
-          $('.custmization-block').show();
-        } else {
-          $('.custmization-block').hide();
-        }
-      })
+      // $('.custmization-block').hide();
+      // $('#custimization').change(function(){
+      //   if ($(this).val()  == '2') {
+      //     $('.custmization-block').show();
+      //   } else {
+      //     $('.custmization-block').hide();
+      //   }
+      // })
        //Timepicker
     $('#timepicker').datetimepicker({
       format: 'LT'
@@ -288,12 +288,12 @@
         value *= 1;
         var nr = 0;
         var elem = $('#games').empty();
-     
+
         while (nr < value) {
             elem.append($('<label for="category_name"> Banner priority amount <span class="text-danger">*</span></label><input type="text" id="name" name="banner[]" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Slot Name"><br>',{name : "whateverNameYouWant"}));
             nr++;
         }
-        }); 
+        });
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }
