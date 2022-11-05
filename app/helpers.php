@@ -252,7 +252,7 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
 {
 
     $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
-    $vendors = \App\Models\Vendors::where(['status' => '1', 'is_all_setting_done' => '1']);
+    $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
     $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")
         ->addSelect("vendors.id")
         ->having('distance', '<=', config('custom_app_setting.near_by_distance'));
@@ -260,7 +260,10 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
     if (empty($where))
         $vendors->where($where);
     if ($return_query_object) {
-        return $vendors->offset($offset)->limit($limit);
+        if ($offset != null && $limit != null)
+            return $vendors->offset($offset)->limit($limit);
+        else
+            return $vendors;
     } else
         return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
 
@@ -321,7 +324,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
     $vendors->addSelect('name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
-        \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
+        \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed')
     );
 
