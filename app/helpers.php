@@ -134,7 +134,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     if (!empty($product_where))
         $product->where($product_where);
 
-//    if (!empty($where_vendor_in))
+    //    if (!empty($where_vendor_in))
     if ($where_vendor_in != null && is_array($where_vendor_in))
         $product->whereIn('vendors.id', $where_vendor_in);
     if ($is_chefleb_product)
@@ -244,7 +244,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
             $variant[$i]['addons'] = array_values($variant[$i]['addons']);
     }
     $product = array_values($variant);
-//dd($product);
+    //dd($product);
     return $product;
 }
 

@@ -10,6 +10,8 @@ use App\Models\Deliver_boy;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
+
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 class Deliveryboy extends Controller
@@ -24,35 +26,44 @@ class Deliveryboy extends Controller
     public function deliverboy_reviews(){
         return view('admin/deliveryboy/deliverboy_reviews');
     }
-    public function store_deliverboy(Request $request)
+    /*public function store_deliverboy(Request $request)
     {
-//        return $request->input();die;
+     //   $code = $name.rand('aplha',6);
+        // $code = Str::random(4);
+        // $uname  =  $request->name;
+        // $ridercode =  $uname.$code;
+        // var_dump($ridercode);die;
+       //return $request->input();die;
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|unique:vendors,email',
             'city' => 'required',
             'pincode' => 'required',
-            'password'          => 'required',
+            'password'  => 'required',
             'confirm_password'  => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'identity_image' => 'required',
             'identity_number' => 'required',
         ]);
+      //  $code = $name.rand('aplha',6);
+        //$code = str_random('aplha',6);
+        //$uname  =  $request->name;
+        //$ridercode =  $uname.$code;
         $vendors = new Deliver_boy;
         $vendors->name = $request->name;
+        dd($vendors);
+        //$vendors = $ridercode;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
-        $vendors->password            = Hash::make($request->password);
+        $vendors->password   = Hash::make($request->password);
         $vendors->pincode  = $request->pincode;
         $vendors->city  = $request->city;
 //        $vendors->address  = $request->address;
-//        dd($vendors);
+
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('dliver-boy'),$filename);
             $vendors->image  = $filename;
-        }else{
-            $vendors->image  = 'deliver-boy.png';
         }
         if($request->has('identity_image')){
             $filename = time().'-other-document-'.rand(100,999).'.'.$request->identity_image->extension();
@@ -63,6 +74,37 @@ class Deliveryboy extends Controller
         $vendors->save();
 
         return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
+    }*/
+    public function store_deliverboy(Request $request)
+    {
+      // echo 'ok';die;
+     // return $request->input();die;
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|unique:vendors,email',
+            'city' => 'required',
+            'pincode' => 'required',
+            'password'  => 'required',
+            'confirm_password'  => 'required',
+            'phone' => 'required|unique:vendors,mobile',
+            'identity_image' => 'required',
+            'identity_number' => 'required',
+        ]);
+        $deliveryboy = new Deliver_boy;
+        $deliveryboy->name = $request->name;
+        dd($deliveryboy);die;
+        if($request->has('categoryImage')){
+            $filename = time().'-categoryImage-'.rand(100,999).'.'.$request->categoryImage->extension();
+            $request->categoryImage->move(public_path('categories'),$filename);
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+            $catogory->categoryImage  = $filename;
+        }
+        $catogory->position  = $request->position;;
+        
+        $catogory->save();
+        return redirect()->route('admin.category.store')->with('message', 'Category Registration Successfully');
+        
+
     }
     public function get_data_table_of_deliverboy(Request $request)
     {
@@ -129,7 +171,6 @@ class Deliveryboy extends Controller
     }
     public function checkEmailExist(Request $request,$id=null)
     {
-
         if (Deliver_boy::where('email','=',$request->email)->exists()) {
             return \Response::json(false);
         } else {

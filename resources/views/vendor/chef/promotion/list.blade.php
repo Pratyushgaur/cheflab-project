@@ -22,7 +22,7 @@
                             <div class="align-self-center align-left">
                                 <h6>Promotion</h6>
                             </div>
-                            <a href="{{route('restaurant.promotion.create')}}" class="btn btn-primary btn-sm"><i
+                            <a href="{{route('chef.promotion.create')}}" class="btn btn-primary btn-sm"><i
                                     class="fa fa-plus"></i> Create New</a>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
             let table = $('#menu-catalogue-table').dataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('restaurant.slot.list') }}",
+                ajax: "{{ route('chef.slot.list') }}",
                 columns: [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'name', name: 'name'},

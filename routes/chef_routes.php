@@ -32,8 +32,8 @@ Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
         Route::post('promotion/on-screen-checkdate', [App\Http\Controllers\chef\VendorPromotionController::class,'checkdate'])->name('chef.slot.checkdate');
         Route::post('promotion/on-screen-getprice', [App\Http\Controllers\chef\VendorPromotionController::class,'getPrice'])->name('chef.slot.getPrice');
         Route::get('promotion/on-screen-slot', [App\Http\Controllers\chef\VendorPromotionController::class,'getslot'])->name('chef.slot.checkslot');
-//            Route::get('promotion/shop-promotion', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'shop_promotion'])->name('restaurant.shop.promotion');
-//            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\vendor\restaurant\VendorPromotionController::class,'crate_shop_promotion'])->name('restaurant.shop.promotion.create');
+//            Route::get('promotion/shop-promotion', [App\Http\Controllers\chef\VendorPromotionController::class,'shop_promotion'])->name('chef.shop.promotion');
+//            Route::get('promotion/shop-promotion/create', [App\Http\Controllers\chef\VendorPromotionController::class,'crate_shop_promotion'])->name('chef.shop.promotion.create');
         Route::get('promotion/shop-promotion', [App\Http\Controllers\chef\BlogPromotionController::class,'shop_promotion'])->name('chef.shop.promotion');
         Route::get('promotion/shop-promotion/create', [App\Http\Controllers\chef\BlogPromotionController::class,'create_shop_promotion'])->name('chef.shop.promotion.create');
         Route::post('promotion/shop-promotion/position', [App\Http\Controllers\chef\BlogPromotionController::class,'get_positions'])->name('chef.shop.promotion.positions');
@@ -54,17 +54,36 @@ Route::group(['middleware'=>['isChef'],'prefix' =>'chef'], function(){
         Route::post('order/preparation_time', [App\Http\Controllers\chef\OrderController::class,'get_preparation_time'])->name('chef.order.get_preparation_time')->where('id', '[0-9]+');
 
 
+        //dine out
+        Route::get('dine-out-setting', [App\Http\Controllers\chef\DineoutController::class,'dine_out_globle_setting'])->name('chef.dineout.setting');
+        Route::post('dine-out-setting/edit', [App\Http\Controllers\chef\DineoutController::class,'update'])->name('chef.dineout.update');
+        Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\chef\DineoutController::class,'vendor_table_setting'])->name('chef.dineout.vendor_table_setting');
+        Route::post('dine-out-setting/active', [App\Http\Controllers\chef\DineoutController::class,'dine_out_setting'])->name('chef.dineout.dine_out_setting');
+        Route::get('dine-out/booking_requests', [App\Http\Controllers\chef\DineoutController::class,'index'])->name('chef.dineout.index');
+        Route::post('dine-out/accept/{id}', [App\Http\Controllers\chef\DineoutController::class,'dine_out_accept'])->name('chef.dineout.accept')->where('id', '[0-9]+');
+        Route::post('dine-out/reject/{id}', [App\Http\Controllers\chef\DineoutController::class,'dine_out_reject'])->name('chef.dineout.reject')->where('id', '[0-9]+');
+
+        //payment transection
+        Route::post('payment', [App\Http\Controllers\chef\TransectionController::class,'payment_request'])->name('transection.request');
+
+        Route::get('globle/bank', [App\Http\Controllers\chef\GlobleSetting::class, 'bank_details'])->name('chef.globleseting.bank_details');
+        Route::post('globle/bank', [App\Http\Controllers\chef\GlobleSetting::class, 'save_bank_details'])->name('chef.globleseting.save_bank_details');
 
 
 
 
 
-        Route::get('globle', [App\Http\Controllers\chef\GlobleSetting::class,'index'])->name('chef.globleseting');
-        Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class,'order_time'])->name('chef.globleseting.ordertime');
-        Route::post('globle/createtime', [App\Http\Controllers\chef\GlobleSetting::class,'store'])->name('chef.ordertime.store');
-        //
-        Route::get('globle/require/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'requireOrderTime'])->name('chef.require.ordertime');
-        Route::post('globle/createtime', [App\Http\Controllers\vendor\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.first_store');
+      // vendor globle setting
+      Route::get('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'order_time'])->name('chef.globleseting.ordertime');
+      Route::post('globle/ordertime', [App\Http\Controllers\chef\GlobleSetting::class, 'store'])->name('chef.ordertime.store');
+      Route::post('offline', [App\Http\Controllers\chef\VendorController::class, 'set_offline'])->name('chef.set_offline');
+      Route::post('online', [App\Http\Controllers\chef\VendorController::class, 'set_online'])->name('chef.set_online');
+      Route::get('isonline', [App\Http\Controllers\chef\VendorController::class, 'restaurent_get_status'])->name('chef.restaurent_get_status');
+
+      //vendor location
+      Route::get('globle/location', [App\Http\Controllers\chef\GlobleSetting::class, 'vendor_location'])->name('chef.globleseting.vendor_location');
+      Route::post('globle/location', [App\Http\Controllers\chef\GlobleSetting::class, 'save_vendor_location'])->name('chef.globleseting.save_vendor_location');
+
 
 
 

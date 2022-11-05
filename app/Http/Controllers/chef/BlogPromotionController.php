@@ -20,7 +20,7 @@ class BlogPromotionController extends Controller
             ->whereIn('app_promotion_blog_id', $ids)
             ->where('vendor_id', \Auth::guard('vendor')->user()->id)->paginate(25);
 //        dd($appPromotionBlogBookings);
-        return view('vendor.restaurant.blog_promotion.list', compact('appPromotionBlogBookings'));
+        return view('vendor.chef.blog_promotion.list', compact('appPromotionBlogBookings'));
     }
 
     public function product_promotion(Request $request)
@@ -31,7 +31,7 @@ class BlogPromotionController extends Controller
             ->where('vendor_id', \Auth::guard('vendor')->user()->id)->paginate(25);
 //        dd($appPromotionBlogBookings);
 
-        return view('vendor.restaurant.blog_promotion.product_list', compact('appPromotionBlogBookings'));
+        return view('vendor.chef.blog_promotion.product_list', compact('appPromotionBlogBookings'));
     }
 
 
@@ -39,7 +39,7 @@ class BlogPromotionController extends Controller
     {
         $app_promotion = AppPromotionBlogs::select(\DB::raw("CONCAT(`name`, ' ( ', `from`, ' - ', `to`, ' ) ') AS display_name"), 'id')
             ->where('vendor_type', '1')->where('blog_type', '1')->pluck('display_name', 'id');
-        return view('vendor.restaurant.blog_promotion.create_shop_promotion', compact('app_promotion'));
+        return view('vendor.chef.blog_promotion.create_shop_promotion', compact('app_promotion'));
     }
 
     public function create_product_promotion()
@@ -47,7 +47,7 @@ class BlogPromotionController extends Controller
         $app_promotion = AppPromotionBlogs::select(\DB::raw("CONCAT(`name`, ' ( ', `from`, ' - ', `to`, ' ) ') AS display_name"), 'id')
             ->where('vendor_type', '1')->where('blog_type', '2')->pluck('display_name', 'id');
         $products      = Product_master::where('product_image', '!=', '')->pluck('product_name', 'id');
-        return view('vendor.restaurant.blog_promotion.create_product_promotion', compact('app_promotion', 'products'));
+        return view('vendor.chef.blog_promotion.create_product_promotion', compact('app_promotion', 'products'));
     }
 
 

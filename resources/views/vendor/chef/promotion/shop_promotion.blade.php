@@ -20,9 +20,9 @@
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
                 <div class="align-self-center align-left">
-                  <h6>Promotion</h6>
+                  <h6>Promotiondd</h6>
                 </div>
-                <a href="{{route('restaurant.shop.promotion.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create New</a>
+                <a href="{{route('chef.shop.promotion.create')}}" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create New</a>
               </div>
             </div>
             <div class="ms-panel-body">
@@ -61,7 +61,7 @@
     let table = $('#menu-catalogue-table').dataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('restaurant.slot.list') }}",
+        ajax: "{{ route('chef.slot.list') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'banner', name: 'banner'},
