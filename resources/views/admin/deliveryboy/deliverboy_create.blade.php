@@ -107,6 +107,9 @@
             border-radius: 18px;
             margin:0px;
         }
+        .select2-selection__choice{
+          background:#007bff !important;
+        }
       </style>
       @endsection
       <!-- Content Wrapper. Contains page content -->
@@ -126,7 +129,7 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Create New Deliver Boy </h3>
+                      <h3 class="card-title">Create Delivery Boy </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
@@ -144,10 +147,8 @@
 
                               </div>
                               <div class="card-body">
-                                
-                             
                                 <div class="row">
-                                <div class="col-sm-12">
+                                  <div class="col-sm-12">
                                         <div>
                                           <label for="">Deliver Boy Images</label>
                                         </div>
@@ -160,58 +161,54 @@
                                             <input id="file-input" type="file" name="image" required/>
                                         </div>        
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Deliver Boy <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" class="form-control"  id="exampleInputEmail1" placeholder="Enter  Name">
+                                        <label for="exampleInputEmail1">Name of Delivery Boy <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Deliveryboy Name">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control"  id="" placeholder="Enter  Email">
+                                        <input type="email" name="email" class="form-control"  id="" placeholder="Enter Deliveryboy Email">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">City <span class="text-danger">*</span></label>
                                         <input type="text" name="city" class="form-control"  id="" placeholder="Enter City">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
-                                            <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
-                                            <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
-                                        </div>
-                                    </div>
-                                  <div class="col-md-6">
+                                  
+                                  
+                                  
+                                  <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Delivery Boy Section  <span class="text-danger">*</span></label>
-                                        <select name="type" class="form-control">
-                                          <option value="1">Pure Commission</option>
-                                            <option value="2">Rent/Day Commission</option>
-                                            <option value="3">In House</option>
-                                        </select>
+                                        <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
+                                        <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
                                     </div>  
-                                  </div> 
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
+                                        <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                    </div>  
+                                  </div>
+                                  
+                                  
+                                  
                                 </div>
                                 
                               </div>
@@ -226,8 +223,7 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                  
-                                  <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
                                         <select name="identity_type"  class="form-control">
@@ -260,14 +256,21 @@
                                         </div>   
                                   </div>
                                 </div>
+                                  
+                                </div>
                                 <!-- div row -->
-                              </div>
+                            </div>
                               
                               
                           </div>
-                          <!-- schedule information end -->
+                         
+                          
+                         
+                              
+                              
+                          </div>
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Register Deliver Boy </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Register Deliveryboy </button>
                           </div>
                       </form>
                       
@@ -296,6 +299,7 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize&language=en&region=GB" async defer></script>
 
 
 
@@ -311,21 +315,19 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-    
+    $('.select2').select2();
+        
       $("#restaurant-form").validate({
           rules: {
               name: {
                   required: true,
-                  maxlength: 25,
+                  maxlength: 40,
               },
               email: {
                   required: true,
                   maxlength: 30,
-              },
-              city: {
-                  required: true,
-                  minlength: 5,
-                  maxlength: 60
+                  email: true,
+                  remote: '{{route("admin.deliverboy.emailcheck")}}',
               },
               phone: {
                   required: true,
@@ -340,40 +342,36 @@
                   maxlength: 6,
                   number: true
               },
+
               password:{
                 required: true,
-                maxlength: 20,
+                maxlength: 20,  
                 minlength: 5,
-
+                
               },
               confirm_password:{
                  required: true,
                  equalTo : '[name="password"]'
               },
+      
               identity_image:{
                 required: true,
               },
               identity_number:{
                  required: true,
-              },
-             
-              
-              
+              }
+
           },
           messages: {
-                name: {
+              name: {
                   required: "Name is required",
-                  maxlength: "First name cannot be more than 20 characters"
+                  maxlength: "First name cannot be more than 40 characters"
               },
               email: {
                   required: "Please Enter Email",
                   maxlength: "Email cannot be more than 30 characters",
                   email: "Email must be a valid email address",
-              },
-              city: {
-                  required: "Address is required",
-                  maxlength: "Address cannot be more than 60 characters",
-                  minlength: "Address cannot be Less than 5 characters"
+                  remote:"This Email is Already has been Taken"
               },
               pincode: {
                   required: "pincode is required",
@@ -393,6 +391,9 @@
               identity_number:{
                 remote:"Identity Number is Required"
               }
+             
+              
+              
           }
       });
 
@@ -409,5 +410,157 @@
           $("img.icon3").parents('.upload-icon3').addClass('has-img3');
       });
   });
+
+  $.validator.addMethod('checkLocation',function (value, element) {
+
+            var check = true;
+            if($('#address-latitude').val() == ''){
+                check =  false;
+            }
+            else if($('#address-longitude').val() == ''){
+                check =  false
+            }
+            if(check){
+                return true;
+            }else{
+                Swal.fire({icon: 'error',title: 'Oops...',text: "Please Select Location Properly", footer: ''});
+            }
+        
+        
+        
+
+    },'Please Select Location Properly ');
+    function initialize() {
+
+$('form').on('keyup keypress', function(e) {
+    var keyCode = e.keyCode || e.which;
+    if (keyCode === 13) {
+        e.preventDefault();
+        return false;
+    }
+});
+const locationInputs = document.getElementsByClassName("map-input");
+
+const autocompletes = [];
+const geocoder = new google.maps.Geocoder;
+for (let i = 0; i < locationInputs.length; i++) {
+
+    const input = locationInputs[i];
+    const fieldKey = input.id.replace("-input", "");
+    const isEdit = document.getElementById(fieldKey + "-latitude").value != '' && document.getElementById(fieldKey + "-longitude").value != '';
+
+    const latitude = parseFloat(document.getElementById(fieldKey + "-latitude").value) || 51.5073509;
+    const longitude = parseFloat(document.getElementById(fieldKey + "-longitude").value) || -0.12775829999998223;
+
+    const map = new google.maps.Map(document.getElementById(fieldKey + '-map'), {
+        center: {
+            lat: latitude,
+            lng: longitude
+        },
+        zoom: 13
+    });
+    const marker = new google.maps.Marker({
+        map: map,
+        position: {
+            lat: latitude,
+            lng: longitude
+        },
+    });
+
+    marker.setVisible(isEdit);
+
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.key = fieldKey;
+    autocompletes.push({
+        input: input,
+        map: map,
+        marker: marker,
+        autocomplete: autocomplete
+    });
+}
+
+for (let i = 0; i < autocompletes.length; i++) {
+    const input = autocompletes[i].input;
+    const autocomplete = autocompletes[i].autocomplete;
+    const map = autocompletes[i].map;
+    const marker = autocompletes[i].marker;
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        marker.setVisible(false);
+        const place = autocomplete.getPlace();
+
+        geocoder.geocode({
+            'placeId': place.place_id
+        }, function(results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                const lat = results[0].geometry.location.lat();
+                const lng = results[0].geometry.location.lng();
+                setLocationCoordinates(autocomplete.key, lat, lng);
+            }
+        });
+
+        if (!place.geometry) {
+            window.alert("No details available for input: '" + place.name + "'");
+            input.value = "";
+            return;
+        }
+
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);
+        }
+        marker.setPosition(place.geometry.location);
+        marker.setVisible(true);
+
+    });
+}
+}
+function setLocationCoordinates(key, lat, lng) {
+const latitudeField = document.getElementById(key + "-" + "latitude");
+const longitudeField = document.getElementById(key + "-" + "longitude");
+latitudeField.value = lat;
+longitudeField.value = lng;
+}
  </script>
+ <script>
+        (function($) {
+            $(".select-av").change(function() {
+
+                if ($(this).val() == 0) {
+
+                    $("#start_time_" + $(this).attr('data-item-id')).val(null);
+                    $("#end_time_" + $(this).attr('data-item-id')).val(null);
+                    $('#start_time_'+ $(this).attr('data-item-id')).prop('required', false);
+                    $('#end_time_'+ $(this).attr('data-item-id')).prop('required', false);
+                }else
+                {
+                    $('#start_time_'+ $(this).attr('data-item-id')).prop('required', true);
+                    $('#end_time_'+ $(this).attr('data-item-id')).prop('required', true);
+                }
+            });
+
+            $(".start_time").focusout(function() {
+                var v = $(this).val();
+
+                $(".start_time").each(function() {
+                    if ($(this).val() == '' && $("#available_" + $(this).attr('data-item-id')).val() ==
+                        1) {
+                        $(this).val(v);
+                    }
+
+                });
+            });
+            $(".end_time").focusout(function() {
+                var v = $(this).val();
+                $(".end_time").each(function() {
+                    if ($(this).val() == '' && $("#available_" + $(this).attr('data-item-id')).val() ==
+                        1) {
+                        $(this).val(v);
+                    }
+                });
+            });
+        })(jQuery);
+    </script>
 @endsection
