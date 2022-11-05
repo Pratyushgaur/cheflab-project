@@ -131,6 +131,12 @@
                     </div>
                     <div class="card-body pad table-responsive">
                       <form id="restaurant-form" action="{{route('admin.diliverboy.store')}}" method="post" enctype="multipart/form-data">
+                            @if ($errors->any())
+                                @foreach ($errors->all() as $error)
+                                    <div class="alert alert-danger">{{$error}}</div>
+                                @endforeach
+                            @endif
+                            @csrf
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                           <div class="card card-default">
                               <div class="card-header">
@@ -138,11 +144,7 @@
 
                               </div>
                               <div class="card-body">
-                                <div class="error">
-                                    @if($errors->any())
-                                      {{ implode('', $errors->all('message')) }}
-                                    @endif
-                                </div>
+                                
                              
                                 <div class="row">
                                 <div class="col-sm-12">
@@ -235,6 +237,12 @@
                                         </select>
                                     </div>  
                                   </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="identity_number" class="form-control"  id="" placeholder="Enter Identity Number">
+                                    </div>  
+                                  </div>
                                   <div class="col-sm-4">
                                         <div>
                                           <label for="">Identity Image </label>
@@ -313,8 +321,6 @@
               email: {
                   required: true,
                   maxlength: 30,
-                  email: true,
-                  remote: '{{route("admin.deliverboy.emailcheck")}}',
               },
               city: {
                   required: true,
@@ -363,7 +369,6 @@
                   required: "Please Enter Email",
                   maxlength: "Email cannot be more than 30 characters",
                   email: "Email must be a valid email address",
-                  remote:"This Email is Already has been Taken"
               },
               city: {
                   required: "Address is required",

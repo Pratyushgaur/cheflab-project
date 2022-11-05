@@ -90,18 +90,31 @@ class Deliveryboy extends Controller
             'identity_image' => 'required',
             'identity_number' => 'required',
         ]);
-        $deliveryboy = new Deliver_boy;
-        $deliveryboy->name = $request->name;
-        dd($deliveryboy);die;
-        if($request->has('categoryImage')){
-            $filename = time().'-categoryImage-'.rand(100,999).'.'.$request->categoryImage->extension();
-            $request->categoryImage->move(public_path('categories'),$filename);
-           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
-            $catogory->categoryImage  = $filename;
+        $code = Str::random(4);
+        $ridercode =  $uname.$code;
+        $vendors = new Deliver_boy;
+        $vendors->name = $request->name;
+        $vendors = $ridercode;
+        $vendors->email = $request->email;
+        $vendors->mobile  = $request->phone;
+        $vendors->password   = Hash::make($request->password);
+        $vendors->pincode  = $request->pincode;
+        $vendors->city  = $request->city;
+        $vendors->identity_number  = $request->identity_number;
+//        $vendors->address  = $request->address;
+
+        if($request->has('image')){
+            $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
+            $request->image->move(public_path('dliver-boy'),$filename);
+            $vendors->image  = $filename;
         }
-        $catogory->position  = $request->position;;
-        
-        $catogory->save();
+        if($request->has('identity_image')){
+            $filename = time().'-other-document-'.rand(100,999).'.'.$request->identity_image->extension();
+            $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->identity_image  = $filename;
+            $vendors->identity_number  = $request->identity_number;
+        }
+        $vendors->save();
         return redirect()->route('admin.category.store')->with('message', 'Category Registration Successfully');
         
 
