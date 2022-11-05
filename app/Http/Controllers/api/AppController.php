@@ -1882,7 +1882,7 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getReferAmmount(){
+    public function getReferAmmount(Request $request){
         try {
             $validateUser = Validator::make($request->all(), 
             [
