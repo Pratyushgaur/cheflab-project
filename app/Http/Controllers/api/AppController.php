@@ -219,11 +219,11 @@ class AppController extends Controller
             }
 //DB::enableQueryLog();
             $user_id      = request()->user()->id;
-            $vendor_count  = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'],null,null,null)
+            $vendor_count = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], null, null, null)
                 ->whereRaw('FIND_IN_SET(' . $request->category_id . ',deal_categories)')->count();
 //dd(DB::getQueryLog());
 
-            $vendor_obj   = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $user_id, null, null);
+            $vendor_obj = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $user_id, null, null);
             $vendor_obj->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service')
                 ->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)');
 
@@ -1711,4 +1711,86 @@ class AppController extends Controller
         }
     }
 
+
+    public function getAllLikeProducts(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $where_vendor_in = get_restaurant_ids_near_me($request->lat, $request->lng, null, $request->user()->id, null, null);
+
+
+            $product_ids = UserProductLike::where('user_id', $request->user()->id)->pluck('product_id');
+            
+            $data        = get_product_with_variant_and_addons(null, $request->user()->id, $order_by_column = '', $order_by_order = '',
+                $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in,
+                $offset = null, $limit = null, $return_total_count = false, $product_ids);
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'products' => $data
+            ], 200);
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getAllLikerestaurants(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $data       = [];
+            $vendor_ids = UserVendorLike::where('user_id', $request->user()->id)->pluck('vendor_id');
+            if (!empty($vendor_ids))
+                $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id, null, null)
+                    ->whereIn('vendors.id', $vendor_ids)->get();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Successfully',
+                'vendors' => $data
+            ], 200);
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }
