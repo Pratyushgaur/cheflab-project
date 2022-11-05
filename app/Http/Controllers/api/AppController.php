@@ -1884,11 +1884,27 @@ class AppController extends Controller
     }
     public function getReferAmmount(){
         try {
+            $validateUser = Validator::make($request->all(), 
+            [
+                'user_id' => 'required|numeric',
+            ]);
+            if($validateUser->fails()){
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'=>$validateUser->errors()->all()
+                    
+                ], 401);
+            }
+            $refercode = \App\Models\User::where(['id'=>$request->user_id])->select('referralCode')->get();
             $data = \App\Models\AdminMasters::select('refer_earn_msg', 'refer_amount')->get();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => $data
+                'response' => [
+                    'refer_amount' => $data,
+                    'refercode'  => $refercode
+                ]
 
             ], 200);
         } catch (\Throwable $th) {

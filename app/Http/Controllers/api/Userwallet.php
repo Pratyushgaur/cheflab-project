@@ -62,6 +62,13 @@ class Userwallet extends Controller
             $user->type =$request->type;
             $user->transaction_id =$request->transaction_id;
             $user->save();
+            $users = User::where('id', '=', $request->user_id)->select('wallet_amount')->get();
+            foreach($users as $key => $value){
+                $total = $request->amount + $value['wallet_amount'];
+               
+            }
+   
+            $update = User::where('id', '=', $request->user_id)->update(['wallet_amount' => $total]);
             return response()->json([
                 'status' => true,
                 'message'=>'Recharge  Successfully'
