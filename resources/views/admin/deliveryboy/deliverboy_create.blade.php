@@ -169,7 +169,7 @@
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Email</label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Deliveryboy Email">
                                     </div>  
                                   </div>
@@ -234,7 +234,7 @@
                                     </div>  
                                   </div>
                                   <div class="col-md-4">
-                                    <div class="form-group">
+                                    <div class="form-group">identity_image
                                         <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
                                         <input type="text" name="identity_number" class="form-control"  id="" placeholder="Enter Identity Number">
                                     </div>  
@@ -323,12 +323,7 @@
                   required: true,
                   maxlength: 40,
               },
-              email: {
-                  required: true,
-                  maxlength: 30,
-                  email: true,
-                  remote: '{{route("admin.deliverboy.emailcheck")}}',
-              },
+  
               phone: {
                   required: true,
                   minlength: 10,
@@ -367,12 +362,7 @@
                   required: "Name is required",
                   maxlength: "First name cannot be more than 40 characters"
               },
-              email: {
-                  required: "Please Enter Email",
-                  maxlength: "Email cannot be more than 30 characters",
-                  email: "Email must be a valid email address",
-                  remote:"This Email is Already has been Taken"
-              },
+             
               pincode: {
                   required: "pincode is required",
                   maxlength: "pincode cannot be more than 6 characters",
