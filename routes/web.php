@@ -34,7 +34,18 @@ Route::get('/test', function () {
 
 })->name('test');
 
-
+Route::get('/clear-cache', function() {
+    Artisan::call('view:clear');
+    echo Artisan::output();
+    Artisan::call('config:clear');
+    echo Artisan::output();
+    Artisan::call('route:clear');
+    echo Artisan::output();
+    Artisan::call('cache:clear');
+    echo Artisan::output();
+//    dd($r);
+    return "Cache is cleared";
+});
 Route::get('/', function () {
     return view('welcome');
 });

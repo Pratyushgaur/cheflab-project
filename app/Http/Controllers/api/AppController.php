@@ -1987,7 +1987,7 @@ class AppController extends Controller
 
 
             $product_ids = UserProductLike::where('user_id', $request->user()->id)->pluck('product_id');
-            
+
             $data        = get_product_with_variant_and_addons(null, $request->user()->id, $order_by_column = '', $order_by_order = '',
                 $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in,
                 $offset = null, $limit = null, $return_total_count = false, $product_ids);
