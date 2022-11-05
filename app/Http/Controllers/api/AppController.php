@@ -1736,7 +1736,7 @@ class AppController extends Controller
 
             $product_ids = UserProductLike::where('user_id', $request->user()->id)->pluck('product_id');
 
-            $data        = get_product_with_variant_and_addons(null, $request->user()->id, $order_by_column = '', $order_by_order = '',
+            $data = get_product_with_variant_and_addons(null, $request->user()->id, $order_by_column = '', $order_by_order = '',
                 $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in,
                 $offset = null, $limit = null, $return_total_count = false, $product_ids);
 
@@ -1792,5 +1792,48 @@ class AppController extends Controller
                 'error'  => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function getRestuarantByOrders(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat'           => 'required|numeric',
+                    'lng'           => 'required|numeric',
+                    'vendor_offset' => 'required|numeric',
+                    'vendor_limit'  => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            DB::enableQueryLog();
+            $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id)
+                ->join('orders', 'vendors.id', '=', 'orders.vendor_id')
+                ->addSelect(DB::raw('COUNT(*) as order_count'))
+                ->groupBy('orders.vendor_id')
+                ->orderBy('order_count', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)
+                ->get();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Successfully',
+                'vendors' => $data
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+
     }
 }

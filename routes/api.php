@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('get-all-liked-products', [\App\Http\Controllers\api\AppController::class, 'getAllLikeProducts']);
     Route::get('get-all-liked-restaurant', [\App\Http\Controllers\api\AppController::class, 'getAllLikerestaurants']);
 
+    Route::post('get-restaurant-by-order', [\App\Http\Controllers\api\AppController::class, 'getRestuarantByOrders']);
     //blog promotion
     Route::post('get-blog-promotion', [\App\Http\Controllers\api\BlogPromotionController::class, 'getBlogPromotion']);
 
