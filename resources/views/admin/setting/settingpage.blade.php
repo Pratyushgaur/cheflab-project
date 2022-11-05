@@ -390,6 +390,48 @@
                 </div>
                 <!-- End of Delivery Person Setting -->
                 <div class="col-lg-12 col-6">
+                    <!-- small box -->
+                  <div class="card card-primary card-outline">
+                    <div class="card-header">
+                      <h3 class="card-title">Update  Refer And Earn Massage</h3>  
+                    </div>
+                    <div class="card-body pad table-responsive">
+                      <form id="restaurant-form" action="{{route('admin.refer.amountUpdate')}}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title text-bold" >Basic Information</h3>
+                            </div>
+                            <div class="card-body">
+                              <div class="error">
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                <div class="form-group">
+                                      <label for="exampleInputEmail1">Refer Ammount <span class="text-danger">*</span></label>
+                                      <input type="text" name="refer_amount" value="{{$data->refer_amount}}" class="form-control"  id="" placeholder="Enter Refer Ammount">
+                                  </div> 
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">Massage<span class="text-danger">*</span></label>
+                                        <textarea type="text" value="{{$data->refer_earn_msg}}" name="refer_earn_msg" class="form-control"  id="exampleInputEmail1" placeholder="Enter Refer Earn Massage">{{$data->refer_earn_msg}}</textarea>
+                                      <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
+                                  </div> 
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                         <div class="card-footer">
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
+                          </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <!-- End of charges -->
+                <div class="col-lg-12 col-6">
                   <div class="card card-primary card-outline">
                       <div class="card-header">
                         <h3 class="card-title">Update Default Time Setup Setting </h3>  
@@ -431,6 +473,7 @@
                   </div>
                 </div>
                 <!-- End of Default Time Setup Setting -->
+                
                 <div class="col-lg-12 col-6">
                   <div class="card card-primary card-outline">
                   </div>

@@ -1882,7 +1882,22 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function getReferAmmount(){
+        try {
+            $data = \App\Models\AdminMasters::select('refer_earn_msg', 'refer_amount')->get();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $data
 
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
     public
     function chelfleb_produst(Request $request)
     {

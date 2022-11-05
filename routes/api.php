@@ -118,6 +118,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     //blog promotion
     Route::post('get-blog-promotion', [\App\Http\Controllers\api\BlogPromotionController::class, 'getBlogPromotion']);
+    // refer ammount
+    Route::get('refer-amount', [\App\Http\Controllers\api\AppController::class, 'getReferAmmount']);
 
 });
 

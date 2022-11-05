@@ -809,7 +809,8 @@ class UserControllers extends Controller
     public function referamountUpdate(Request $request){
         $general = AdminMasters::find($request->id);
         $general->refer_amount = $request->refer_amount;
+        $general->refer_earn_msg = $request->refer_earn_msg;
         $general->save();
-        return redirect()->route('admin.refe.earn')->with('message', 'Refer Amount  Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Refer Amount  Update Successfully');
     }
 }
