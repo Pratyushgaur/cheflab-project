@@ -97,3 +97,8 @@ Route::get('get-firebase-data', [\App\Http\Controllers\FirebaseController::class
 Route::patch('/fcm-token', [\App\Http\Controllers\FirebaseController::class, 'updateTokenVendor'])->name('fcmToken_vendor');
 Route::get('/send-notification',[\App\Http\Controllers\FirebaseController::class,'notification'])->name('notification');
 
+
+
+Route::get('event-registration', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'register']);
+Route::get('payment', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'order']);
+Route::post('payment/status', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'paymentCallback']);
