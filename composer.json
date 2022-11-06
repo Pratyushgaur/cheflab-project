@@ -21,7 +21,8 @@
         "monolog/monolog": "^2.8",
         "psr/log": "^1.1",
         "rmccue/requests": "^2.0",
-        "yajra/laravel-datatables-oracle": "^9.21"
+        "yajra/laravel-datatables-oracle": "^9.21",
+        "paytm/paytm-pg": "*"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

@@ -26,6 +26,7 @@ class BlogPromotionController extends Controller
 
                 ], 401);
             }
+            $data=[];
             $Blogs = AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
 //                ->where(function ($p) {
 //                    $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
