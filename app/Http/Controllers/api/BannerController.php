@@ -15,7 +15,7 @@ class BannerController extends Controller
             $validateUser = Validator::make(
                 $request->all(),
                 [
-                    'type' => 'required'
+                    'banner_for' => 'required'
                 ]
             );
             if ($validateUser->fails()) {
