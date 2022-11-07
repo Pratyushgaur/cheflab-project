@@ -95,9 +95,7 @@
                                         <input type="text" name="product_name" value="{{$product->product_name}}" class="form-control" id="validationCustom18" placeholder="Product Name" value="">
                                         <input type="hidden" name="id" value="{{$product->id}}" class="form-control"
                                                id="validationCustom18" placeholder="Product Name" value="">
-                                        <input type="hidden" name="status" value="{{$product->status}}"
-                                               class="form-control" id="validationCustom18" placeholder="Product Name"
-                                               value="">
+                                        <input type="hidden" name="status" value="{{$product->status}}" class="form-control" id="validationCustom18" placeholder="Product Name" value="">
                                         <input type="hidden" name="txtpkey" id="txtpkey" value="{{$product->id}}">
                                     </div>
                                     <span class="product_name_error text-danger"></span>
@@ -114,12 +112,12 @@
 
 
 
-{{--                                        <select class="form-control select2" name="cuisines" id="validationCustom22">--}}
-{{--                                            <option value="{{$product->cuisinesName}}">{{$product->cuisinesName}}</option>--}}
-{{--                                            @foreach($cuisines as $k =>$value)--}}
-{{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
-{{--                                            @endforeach--}}
-{{--                                        </select>--}}
+                                        {{--                                        <select class="form-control select2" name="cuisines" id="validationCustom22">--}}
+                                        {{--                                            <option value="{{$product->cuisinesName}}">{{$product->cuisinesName}}</option>--}}
+                                        {{--                                            @foreach($cuisines as $k =>$value)--}}
+                                        {{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
+                                        {{--                                            @endforeach--}}
+                                        {{--                                        </select>--}}
                                     </div>
                                     <span class="cuisines_error text-danger"></span>
                                 </div>
@@ -133,12 +131,12 @@
                                         @endif
 
                                         {{--                                        <select class="form-control select2" name="category" id="validationCustom">--}}
-{{--                                            <option value="{{$product->categoryName}}">{{$product->categoryName}}</option>--}}
-{{--                                            @foreach($categories as $k =>$value)--}}
-{{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
-{{--                                            @endforeach--}}
+                                        {{--                                            <option value="{{$product->categoryName}}">{{$product->categoryName}}</option>--}}
+                                        {{--                                            @foreach($categories as $k =>$value)--}}
+                                        {{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
+                                        {{--                                            @endforeach--}}
 
-{{--                                        </select>--}}
+                                        {{--                                        </select>--}}
 
                                     </div>
                                     <span class="category_error text-danger"></span>
@@ -232,7 +230,9 @@
                                     <div class="input-group">
                                         <select class="form-control custimization" name="custimization" id="validationCustom23 ">
                                             <option value="false">No</option>
-                                            <option value="true" {{($product->customizable=='true') ? "selected" : ''}}>Yes</option>
+                                            <option value="true" {{($product->customizable=='true') ? "selected" : ''}}>
+                                                Yes
+                                            </option>
                                         </select>
                                     </div>
                                     <span class="custimization_error text-danger"></span>
@@ -243,35 +243,37 @@
                                             <h5>Product Variant</h5>
                                         </div>
                                     </div>
-{{--                                    {{dd($product->product_variants)}}--}}
+                                    {{--                                    {{dd($product->product_variants)}}--}}
 
                                     <div class="variant-input-container">
                                         @if($product->customizable=='true')
-                                        @foreach($product->product_variants as $k=>$vri)
+                                            @foreach($product->product_variants as $k=>$vri)
 
-                                            <input type="hidden" name="variant_id[]" value="{{$vri->id}}">
-                                            <div class="row input-container" style="padding-bottom:15px;">
-                                                <div class="col-md-4">
-                                                    <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name" value="{{$vri->variant_name}}">
+                                                <input type="hidden" name="variant_id[]" value="{{$vri->id}}">
+                                                <div class="row input-container" style="padding-bottom:15px;">
+                                                    <div class="col-md-4">
+                                                        <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name" value="{{$vri->variant_name}}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="text" name="price[]" class="form-control price" placeholder="Enter Price" value="{{$vri->variant_price}}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <a class="" href="javascript:void(0)"><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>
+                                                    </div>
                                                 </div>
-                                                <div class="col-md-2">
-                                                    <input type="text" name="price[]" class="form-control price" placeholder="Enter Price" value="{{$vri->variant_price}}">
-                                                </div>
-                                                <div class="col-md-2"><a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a></div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
 
                                         @else
-                                        <div class="row input-container" style="padding-bottom:15px;">
-                                            <div class="col-md-4">
-                                                <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name">
+                                            <div class="row input-container" style="padding-bottom:15px;">
+                                                <div class="col-md-4">
+                                                    <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
+                                                </div>
                                             </div>
-                                            <div class="col-md-2">
-                                                <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
-                                            </div>
-                                        </div>
-                                            @endif
-                                        <!-- <div class="row input-container" style="padding-bottom:15px;">
+                                    @endif
+                                    <!-- <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
                                                 <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
                                             </div>
@@ -286,18 +288,22 @@
 
 
                                     <div class="row">
-                                        <div class="col-md-4"><a href="javascript:void(0)" class="add">+ Add More Variant</a></div>
+                                        <div class="col-md-4"><a href="javascript:void(0)" class="add">+ Add More
+                                                Variant</a></div>
                                     </div>
                                     <br>
                                     <div class="row">
                                         <div class="col-md-12 mb-12">
                                             <label for="validationCustom23">Select Product Addons (Optional)</label>
                                             <div class="input-group">
-                                                <select class="form-control select2 addons-select" name="addons[]" multiple="true" id="validationCustom23">
-                                                    @foreach($addons as $k =>$value)
-                                                        <option value="{{$value->id}}">{{$value->addon}} -Rs {{$value->price}}</option>
-                                                    @endforeach
-                                                </select>
+                                                {{ Form::select('addons[]',$addons,@explode(',',@$product->addons), ['class' => 'form-control select2 addons-select','required','id'=>'validationCustom23','multiple'=>"true"]) }}
+
+
+                                                {{--                                                <select class="form-control select2 addons-select" name="addons[]" multiple="true" id="validationCustom23">--}}
+                                                {{--                                                    @foreach($addons as $k =>$value)--}}
+                                                {{--                                                        <option value="{{$value->id}}">{{$value->addon}} -Rs {{$value->price}}</option>--}}
+                                                {{--                                                    @endforeach--}}
+                                                {{--                                                </select>--}}
                                             </div>
                                         </div>
                                     </div>
@@ -305,7 +311,7 @@
                                 <div class="col-md-4 mb-3">
                                     <label>Preparation Time</label>
                                     <div class="input-group">
-{{--                                        {{dd($product)}}--}}
+                                        {{--                                        {{dd($product)}}--}}
                                         {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),$product->preparation_time,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','required']) }}
 
                                         @if ($errors->has('preparation_time'))
@@ -436,7 +442,7 @@
                 rules: {
                     product_name: {
                         required: true,
-                        maxlength: 40,
+                        maxlength: 120,
                     },
                     cuisines: {
                         required: true

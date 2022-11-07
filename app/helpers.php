@@ -257,6 +257,8 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
         ->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
 
+    $vendors->join('products as p','p.userId','=','vendors.id')->addSelect('p.userId',DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count','>',0);
+
     if (empty($where))
         $vendors->where($where);
     if ($return_query_object) {
@@ -313,9 +315,12 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
     $vendors->leftJoin('vendor_order_time', function ($join) {
         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
             ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
-            ->where('start_time', '<=', mysql_time())
-            ->where('end_time', '>', mysql_time())->where('available', '=', 1);
+                        //--------------commented, we are sending is open and is_closed
+//            ->where('start_time', '<=', mysql_time())
+//            ->where('end_time', '>', mysql_time())
+            ->where('available', '=', 1);
     });
+
 
     if ($current_user_id != null) {
         $vendors->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
@@ -323,7 +328,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
             $join->where('user_vendor_like.user_id', '=', $current_user_id);
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
-    $vendors->addSelect('name', "vendor_food_type", 'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
+    $vendors->addSelect('is_all_setting_done','start_time','end_time','vendor_order_time.day_no','vendors.name', "vendor_food_type", 'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed')
     );
@@ -331,6 +336,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
     if (!empty($limit) && !empty($offset))
         $vendors->offset($offset)->limit($limit);
 
+//    dd($vendors->get()->toArray());
     return $vendors;
 
 }

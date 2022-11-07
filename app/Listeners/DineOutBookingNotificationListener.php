@@ -28,7 +28,7 @@ class DineOutBookingNotificationListener
     public function handle(DineOutBookingEvent $event)
     {
         $customer = User::find($event->user_id);
-        $vendor   = vendors::find($event->vendor_id);
+        $vendor   = Vendors::find($event->vendor_id);
 
         $customer->notify(new DineOutBookingNotification('Dine-out Booking', "Your booking request send to restaurant.Please wait for acceptance.Booking ID #" . $event->TableServiceBooking->id,
             $vendor->name, '', $customer->fcm_token));

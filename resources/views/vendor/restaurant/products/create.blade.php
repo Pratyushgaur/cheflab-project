@@ -90,8 +90,7 @@
                                 <div class="col-md-12 mb-3">
                                     <label for="validationCustom18">Item Name <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <input type="text" name="product_name" class="form-control"
-                                               id="validationCustom18" placeholder="Product Name" value="">
+                                        <input type="text" name="product_name" class="form-control" id="validationCustom18" placeholder="Product Name" value="">
 
                                     </div>
                                     <span class="product_name_error text-danger"></span>
@@ -248,18 +247,19 @@
                                     </div>
                                     <br>
                                     <div class="row">
-                                        <div class="col-md-8 mb-3">
+                                        <div class="col-md-12 mb-3">
                                             <label for="validationCustom23">Select Product Addons (Optional)</label>
                                             <div class="input-group">
-                                                <select class="form-control select2 addons-select" name="addons[]"
-                                                        multiple="true" id="validationCustom23">
+                                                {{ Form::select('addons[]',$addons,null, ['class' => 'form-control select2 addons-select','required','id'=>'validationCustom23','multiple'=>"true"]) }}
+{{--                                                <select class="form-control select2 addons-select" name="addons[]"--}}
+{{--                                                        multiple="true" id="validationCustom23">--}}
 
-                                                    @foreach($addons as $k =>$value)
-                                                        <option value="{{$value->id}}">{{$value->addon}}
-                                                            -Rs {{$value->price}}</option>
-                                                    @endforeach
+{{--                                                    @foreach($addons as $k =>$value)--}}
+{{--                                                        <option value="{{$value->id}}">{{$value->addon}}--}}
+{{--                                                            -Rs {{$value->price}}</option>--}}
+{{--                                                    @endforeach--}}
 
-                                                </select>
+{{--                                                </select>--}}
 
                                             </div>
                                         </div>
@@ -405,7 +405,7 @@
                 rules: {
                     product_name: {
                         required: true,
-                        maxlength: 40,
+                        maxlength: 120,
                     },
                     cuisines: {
                         required: true
@@ -436,7 +436,7 @@
                 messages: {
                     product_name: {
                         required: "Item Name is required",
-                        maxlength: "Item  name cannot be more than 40 characters"
+                        maxlength: "Item  name cannot be more than 120 characters"
                     },
                     cuisines: {
                         required: "Cuisines is Required",
