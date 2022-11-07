@@ -42,7 +42,7 @@ return [
                                    45  => "45 Minutes", 60 => "60 Minutes", 75 => "1 Hour 15 Minutes", 90 => "1 Hour 30 Minutes", 105 => "1 Hour 45 Minutes",
                                    120 => "2 Hours"],//"products" table preparation_time column
 
-    'product_chili_level' => ['no' => "Not Available", '1' => '1 Chili', '2' => '2 Chili', '3' => '3 Chili', '4' => '4 Chili', '5' => '5 Chili'],//deliver_boy table : type column
+    'product_chili_level' => ['no' => "Not Available", '1' => '1 Chili', '2' => '2 Chili', '3' => '3 Chili'],//deliver_boy table : type column
 
     'admin_master_id' => '1',//admin_master id
 

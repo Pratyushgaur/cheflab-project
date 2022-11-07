@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Events\DineOutBookingEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Catogory_master;
+use App\Models\Cuisines;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
@@ -465,7 +466,7 @@ class DineoutApiController extends Controller
 
             $where        = ['table_service' => '1', 'vendor_type' => 'restaurant'];
             $vendors      = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id)
-                ->addSelect('table_service_discounts.discount_percent')
+                ->addSelect('table_service_discounts.discount_percent', 'deal_cuisines')
                 ->join('table_services', function ($join) {
                     $join->on('table_services.vendor_id', '=', 'vendors.id')
                         ->where('table_services.is_active', '=', 1);
@@ -490,9 +491,10 @@ class DineoutApiController extends Controller
 //            $products = $products->orderBy('products.id', 'desc')->get();
 //            dd($vendors);
             foreach ($vendors as $key => $value) {
-                $category                  = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
-                $vendors[$key]->categories = $category;
-                $vendors[$key]->next_available=next_available_day($value->id);
+                $vendors[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                $category                      = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $vendors[$key]->categories     = $category;
+                $vendors[$key]->next_available = next_available_day($value->id);
             }
 
             return response()->json([
