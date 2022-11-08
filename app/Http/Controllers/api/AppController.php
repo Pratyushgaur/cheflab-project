@@ -1345,8 +1345,7 @@ class AppController extends Controller
             ], 500);
         }
     }
-    public function getTryonce(Request $request){
-        try {
+
 
     public
     function deleteLikeProduct(Request $request)
