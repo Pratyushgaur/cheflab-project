@@ -15,18 +15,22 @@ class BannerController extends Controller
             $validateUser = Validator::make(
                 $request->all(),
                 [
-                    'banner_for' => 'required'
+                    'for' => ['required', Rule::in( config('custom_app_setting.promotion_banner_for_only_values'))]
                 ]
             );
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
                 return response()->json([
                     'status' => false,
-                    'error' => $validateUser->errors()->all()
+                    'error'  => $validateUser->errors()->all()
 
                 ], 401);
             }
-            $data = \App\Models\RootImage::where('banner_for','=',$request->banner_for)->where([ 'is_active' => '1' ])->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
+
+            $data = \App\Models\RootImage::where([ 'is_active' => '1' ])
+                ->where('banner_for',$request->for)
+                ->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')
+                ->orderBy('position', 'ASC')->get();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
