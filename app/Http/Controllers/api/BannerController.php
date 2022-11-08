@@ -26,7 +26,7 @@ class BannerController extends Controller
 
                 ], 401);
             }
-            $data = \App\Models\RootImage::where('type','=',$request->type)->where([ 'is_active' => '1' ])->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
+            $data = \App\Models\RootImage::where('banner_for','=',$request->banner_for)->where([ 'is_active' => '1' ])->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
