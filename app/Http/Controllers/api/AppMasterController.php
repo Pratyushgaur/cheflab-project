@@ -11,7 +11,7 @@ class AppMasterController extends Controller
     public function getCategories()
     {
         try {
-            Product_master::
+         //   Product_master::
             $data = \App\Models\Catogory_master::where(['is_active'=>'1'])->select('categories.name',\DB::raw('CONCAT("'.asset('categories').'/", categoryImage) AS image'),'id')
                 ->orderBy('position','ASC')->get();
             return response()->json([
