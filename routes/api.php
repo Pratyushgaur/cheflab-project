@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
-    Route::get('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories']);
-    Route::get('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
+    Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories']);
+    Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
     Route::post('getProductDetail', [App\Http\Controllers\api\AppController::class, 'getProductDetail']);
     //
     // restaurant home page api
@@ -106,8 +106,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::patch('/user-fcm-token', [\App\Http\Controllers\API\FirebaseApiController::class, 'updateTokenUser'])->name('fcmToken_user');
     Route::get('/user-send-notification',[\App\Http\Controllers\API\FirebaseApiController::class,'notification'])->name('notification_user');
     Route::post('save-contact-us', [\App\Http\Controllers\api\AppController::class, 'save_contact_us']);
-    Route::get('get-all-liked-products', [\App\Http\Controllers\api\AppController::class, 'getAllLikeProducts']);
-    Route::get('get-all-liked-restaurant', [\App\Http\Controllers\api\AppController::class, 'getAllLikerestaurants']);
+    Route::post('get-all-liked-products', [\App\Http\Controllers\api\AppController::class, 'getAllLikeProducts']);
+    Route::post('get-all-liked-restaurant', [\App\Http\Controllers\api\AppController::class, 'getAllLikerestaurants']);
 
     Route::post('get-restaurant-by-order', [\App\Http\Controllers\api\AppController::class, 'getRestuarantByOrders']);
     Route::post('cancel-order', [\App\Http\Controllers\api\AppController::class, 'cancel_order']);

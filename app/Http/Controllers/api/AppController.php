@@ -158,7 +158,7 @@ class AppController extends Controller
             $userid  = request()->user()->id;
             $where   = ['vendor_type' => 'restaurant'];
             $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
-            $vendors = $vendors->addSelect('deal_cuisines')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+            $vendors = $vendors->addSelect('deal_cuisines','banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
             $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);//not need to pass offset; limit set on products
             //get productd's shoud display in pagination
@@ -169,7 +169,16 @@ class AppController extends Controller
             $products_count = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, true);
             $vendor_count   = count($vendor_ids);
 
+
             foreach ($vendors as $key => $value) {
+                $banners = json_decode($value->banner_image);
+                if (is_array($banners))
+                    $urlbanners = array_map(function ($banner) {
+                        return URL::to('vendor-banner/') . '/' . $banner;
+                    }, $banners);
+                else
+                    $urlbanners = [];
+                $vendors[$key]->banner_image   = $urlbanners;
                 $vendors[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                 $category                      = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $vendors[$key]->categories     = $category;
@@ -1757,7 +1766,7 @@ class AppController extends Controller
             }
             $data       = [];
             $vendor_ids = UserVendorLike::where('user_id', $request->user()->id)->pluck('vendor_id');
-            if (!empty($vendor_ids)){
+            if (!empty($vendor_ids)) {
                 $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id, null, null)
                     ->whereIn('vendors.id', $vendor_ids)->get();
                 foreach ($data as $key => $value) {
@@ -1805,7 +1814,7 @@ class AppController extends Controller
             DB::enableQueryLog();
             $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id)
                 ->join('orders', 'vendors.id', '=', 'orders.vendor_id')
-                ->addSelect('deal_cuisines',DB::raw('COUNT(*) as order_count'))
+                ->addSelect('deal_cuisines', DB::raw('COUNT(*) as order_count'))
                 ->groupBy('orders.vendor_id')
                 ->orderBy('order_count', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)
                 ->get();
@@ -1839,7 +1848,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'isCancelledWithin30Second' => 'required|in:1,0',
-                    'order_id'    => 'required|numeric'
+                    'order_id'                  => 'required|numeric'
                 ]
             );
             if ($validateUser->fails()) {
@@ -1847,19 +1856,25 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
-            $order=Order::where('id',$request->order_id)
-                ->where('user_id',$request->user()->id)
+            $order = Order::where('id', $request->order_id)
+                ->where('user_id', $request->user()->id)
                 ->first();
 //            dd($order->id);
-            if(!isset($order->id))
+            if (!isset($order->id))
                 return response()->json(['status' => false, 'error' => "order not found.You can only cancel orders placed by you."], 401);
 
-            $order->order_status='cancelled_by_customer';
+            $order->order_status = 'cancelled_by_customer';
             $order->save();
 
-            $user=User::find($request->user()->id);
-            $user->wallet_amount-=$order->net_amount;
+            $user                = User::find($request->user()->id);
+            $user->wallet_amount -= $order->net_amount;
             $user->save();
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Successfully'
+            ], 200);
+
 
         } catch (Throwable $th) {
             return response()->json(['status' => False,

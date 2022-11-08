@@ -248,16 +248,16 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     return $product;
 }
 
-function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = 0, $limit = 30)
+function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = null, $limit = null, $group_by = true)
 {
 
     $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
     $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
-    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")
-        ->addSelect("vendors.id");
+    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
 
-    $vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
+    if ($group_by)
+        $vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
 
     if (empty($where))
         $vendors->where($where);
@@ -331,7 +331,8 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
             $join->where('user_vendor_like.user_id', '=', $current_user_id);
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
-    $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type", 'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
+    $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type",
+        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed')
     );

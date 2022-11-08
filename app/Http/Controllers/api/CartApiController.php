@@ -118,7 +118,7 @@ class CartApiController extends Controller
                     $cart_obj->delete();
                 }
                 DB::commit();
-                return response()->json([ 'status' => true, 'message' => 'Data Get Successfully' ], 200);
+                return response()->json([ 'status' => true, 'message' => 'Successfully' ], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
@@ -199,6 +199,7 @@ class CartApiController extends Controller
                     }
                 }
             }
+            dd($responce);
             foreach ($responce as $i => $p) {
 
                 if (isset($p['variants']))
