@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
-    Route::get('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories']);
-    Route::get('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
+    Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories']);
+    Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
     Route::post('getProductDetail', [App\Http\Controllers\api\AppController::class, 'getProductDetail']);
     //
     // restaurant home page api

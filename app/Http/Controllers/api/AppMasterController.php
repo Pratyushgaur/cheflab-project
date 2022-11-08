@@ -3,21 +3,45 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product_master;
 use Illuminate\Http\Request;
+use Validator;
+
 // this is vikas testing
 class AppMasterController extends Controller
 {
-    public function getCategories()
+    public function getCategories(Request $request)
     {
         try {
-         //   Product_master::
-            $data = \App\Models\Catogory_master::where(['is_active'=>'1'])->select('categories.name',\DB::raw('CONCAT("'.asset('categories').'/", categoryImage) AS image'),'id')
-                ->orderBy('position','ASC')->get();
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+
+            $resturants   = get_restaurant_ids_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], true, null, null, false);
+            $category_ids = $resturants->join('products as p', 'p.userId', '=', 'vendors.id')
+                ->addSelect('p.category', \DB::raw('COUNT(*) as product_count'))
+                ->groupBy('p.category')->having('product_count', '>',0)->pluck('p.category');
+
+            if ($category_ids != '' && $category_ids != null)
+                $data = \App\Models\Catogory_master::whereIn('id', $category_ids)->where(['is_active' => '1'])->select('categories.name', \DB::raw('CONCAT("' . asset('categories') . '/", categoryImage) AS image'), 'id')
+                    ->orderBy('position', 'ASC')->get();
+            else
+                $data = [];
             return response()->json([
-                'status' => true,
-                'message'=>'Data Get Successfully',
-                'response'=>$data
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $data
 
             ], 200);
 
@@ -25,19 +49,41 @@ class AppMasterController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => $th->getMessage()
+                'error'  => $th->getMessage()
             ], 500);
         }
 
     }
-    public function getCuisines()
+
+    public function getCuisines(Request $request)
     {
         try {
-            $data = \App\Models\Cuisines::where(['is_active'=>'1'])->select('cuisines.name',\DB::raw('CONCAT("'.asset('cuisines').'/", cuisinesImage) AS image'),'id')->orderBy('position','ASC')->get();
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+
+            $resturants   = get_restaurant_ids_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], true, null, null, false);
+            $cuisines_ids = $resturants->join('products as p', 'p.userId', '=', 'vendors.id')
+                ->addSelect('p.cuisines', \DB::raw('COUNT(*) as product_count'))
+                ->groupBy('p.cuisines')->having('product_count', '>',0)->pluck('p.cuisines');
+
+            $data = \App\Models\Cuisines::whereIn('id',$cuisines_ids)->where(['is_active' => '1'])->select('cuisines.name', \DB::raw('CONCAT("' . asset('cuisines') . '/", cuisinesImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
             return response()->json([
-                'status' => true,
-                'message'=>'Data Get Successfully',
-                'response'=>$data
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $data
 
             ], 200);
 
@@ -45,7 +91,7 @@ class AppMasterController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error' => $th->getMessage()
+                'error'  => $th->getTrace()
             ], 500);
         }
 
