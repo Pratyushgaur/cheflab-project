@@ -46,6 +46,8 @@ class CouponController extends Controller
         $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
+        $coupon->promo_redeem_count  = $request->promo_redeem_count;
+        $coupon->promocode_use  = $request->promocode_use;
         $coupon->create_by  = $request->create_by;
         $coupon->from  = $request->from;
         $coupon->to  = $request->to;
@@ -61,9 +63,18 @@ class CouponController extends Controller
     public function get_data_table_of_coupon(Request $request)
     {
       //  echo 'ok';die;
+    //   if(Carbon::now()->between(Carbon::createFromFormat('Y-m-d', $data->from), Carbon::createFromFormat('Y-m-d', $data->to)->addDay())){
+    //     echo 'ok';die;
+    //      return  $btn =  '<button class="btn btn-xs btn-success">active</button>'; 
+
+    //  }else{
+    //      Coupon::where('id','=', $data->id)->limit(1)->update( ['status' => 0]);
+    //      return  $btn =  '<button class="btn btn-xs btn-danger">In active</button>'; 
+    //  }
         if ($request->ajax()) {
             
             $data = Coupon::latest()->get();
+            
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){

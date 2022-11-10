@@ -91,10 +91,11 @@ class Deliveryboy extends Controller
             'identity_number' => 'required',
         ]);
         $code = Str::random(4);
-        $ridercode =  $uname.$code;
+        $uname  =  $request->name;
         $vendors = new Deliver_boy;
+        $ridercode =  $uname.$code;
+        $vendors->ridercode   = $ridercode;
         $vendors->name = $request->name;
-        $vendors = $ridercode;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
         $vendors->password   = Hash::make($request->password);
@@ -104,18 +105,19 @@ class Deliveryboy extends Controller
 //        $vendors->address  = $request->address;
 
         if($request->has('image')){
-            $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
+            $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('dliver-boy'),$filename);
             $vendors->image  = $filename;
         }
+       
         if($request->has('identity_image')){
-            $filename = time().'-other-document-'.rand(100,999).'.'.$request->identity_image->extension();
+            $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
             $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->identity_image  = $filename;
             $vendors->identity_number  = $request->identity_number;
         }
         $vendors->save();
-        return redirect()->route('admin.category.store')->with('message', 'Category Registration Successfully');
+        return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
         
 
     }

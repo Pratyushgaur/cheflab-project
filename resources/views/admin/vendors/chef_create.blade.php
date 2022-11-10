@@ -150,6 +150,12 @@
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Owner <span class="text-danger">*</span></label>
+                                        <input type="text" name="restourant_owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Owner Name">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Chef Email">
                                     </div>  
@@ -158,6 +164,12 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">DOB <span class="text-danger">*</span></label>
                                         <input type="date" name="dob" class="form-control"  id="" placeholder="Enter Chef Email">
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Origin <span class="text-danger">*</span></label>
+                                        <input type="text" name="origin" class="form-control"  id="" placeholder="Enter Chef Origin">
                                     </div>  
                                   </div>
                                   <div class="col-md-3">
@@ -198,7 +210,7 @@
                                           </select>
                                     </div>  
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Speciality <span class="text-danger">*</span></label>
                                           <select name="speciality[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
@@ -208,7 +220,26 @@
                                             </select>
                                       </div> 
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+
+                                          <label for="exampleInputEmail1"> Food Type</label><br>
+
+                                          <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                              <input type="radio" id="veg" name="type" value="1" checked>
+                                              <label for="veg">Veg</label>
+                                            </div>
+                                            <div class="icheck-danger d-inline">
+                                              <input type="radio" id="non_veg" name="type" value="3">
+                                              <label for="non_veg">Veg + Non Veg</label>
+                                            </div>
+
+
+                                          </div>
+                                      </div>
+                                    </div>
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Address">
@@ -256,7 +287,7 @@
                                 <div class="row">
                                   <div class="col-sm-3">
                                         <div>
-                                          <label for="">Chef Images</label>
+                                          <label for="">Chef logo</label>
                                         </div>
                                         <div class="image-upload">
                                             <label for="file-input">
@@ -265,6 +296,19 @@
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="image" required/>
+                                        </div>        
+                                  </div>
+                                  <div class="col-sm-3">
+                                        <div>
+                                          <label for="">Chef Profile Images</label>
+                                        </div>
+                                        <div class="image-upload">
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    <img class="icon" src="{{asset('add-image.png')}}">
+                                                </div>
+                                            </label>
+                                            <input id="file-input" type="file" name="profile_image" required/>
                                         </div>        
                                   </div>
                                   <div class="col-sm-3">

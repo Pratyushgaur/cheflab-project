@@ -178,17 +178,14 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     $product = $product->orderBy('variants.id', 'ASC');
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
-
 //    dd($product->get()->toArray());
-
     $product = $product->addSelect(DB::raw('products.userId as vendor_id'),
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
-        'products.id as product_id', 'products.product_name', 'product_price', 'customizable',
+        'products.id as product_id','products.dis as description', 'products.product_name', 'product_price', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-        'products.id as product_id', 'product_rating', 'primary_variant_name')
+        'products.id as product_id', 'product_rating','tax', 'primary_variant_name')
         ->get();
-
 //dd($product->toArray());
 //    dd(\DB::getQueryLog());
     $variant = [];
@@ -332,7 +329,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
     $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type",
-        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
+        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories','fssai_lic_no',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed')
     );

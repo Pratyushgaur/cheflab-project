@@ -183,14 +183,20 @@
 
                                 <div class="row">
 
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->name}}" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                         <input type="hidden" value="{{$vendor->id}}" name="id" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Restaurant Owner <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$vendor->owner_name}}" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Owner Name">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" value="{{$vendor->email}}" class="form-control"  id="" placeholder="Enter Restaurant Email">

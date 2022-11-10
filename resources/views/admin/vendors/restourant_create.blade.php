@@ -250,6 +250,12 @@
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Restaurant Owner <span class="text-danger">*</span></label>
+                                        <input type="text" name="owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Owner Name">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Restaurant Email">
                                     </div>

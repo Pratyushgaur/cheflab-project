@@ -127,8 +127,8 @@
                                     <thead>
                                     <tr role="row">
                                         <th class="text-center">Sr No.</th>
-                                        <th>Vendor Name</th>
-                                        <th>Email</th>
+                                        <th>Vendor Name / Owner name</th>
+                                        <th>Email/Mobileno</th>
                                         <th>Type</th>
                                         <th> Status</th>
                                         <th> Image</th>
@@ -141,8 +141,8 @@
                                     @foreach($vendors as $k=>$vendor)
                                         <tr>
                                             <td>{{$k+1}}</td>
-                                            <td>{{$vendor->name}}</td>
-                                            <td>{{$vendor->email}}</td>
+                                            <td>{{$vendor->name}} {{$vendor->owner_name}} </td>
+                                            <td>{{$vendor->email}} {{$vendor->mobile}}</td>
                                             <td>{{$vendor->vendor_type}}</td>
                                             <td>
                                                 @if($vendor->status == '1')
@@ -153,7 +153,7 @@
                                             </td>
                                             <td><img src="{{asset('vendors').'/'.$vendor->image}}"  style='width: 50px;' /></td>
                                             <td>{{$vendor->wallet}}</td>
-                                            <td>{{front_end_date($vendor->created_at)}}</td>
+                                            <td>{{front_end_date_time($vendor->created_at)}}</td>
                                             <td>
                                                 <ul class="navbar-nav">
                                                     <li class="nav-item dropdown">
@@ -165,10 +165,10 @@
                                                             <a class="dropdown-item text-info" href="{{route('admin.chef.edit',Crypt::encryptString($vendor->id))}}'"><i class="fas fa-edit"></i> Edit</a>
                                                             @endif
                                                             <a class="dropdown-item text-info" href="{{route('admin.vendor.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i> View More</a>
-                                                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" ><i class="fa-solid fa-bowl-food"></i>Delete</a> 
+                                                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i>Delete</a> 
                                                             @if($vendor->vendor_type == 'chef')
                                                                <a class="dropdown-item text-info" href="{{route('admin.chef.editchef', Crypt::encryptString($vendor->id))}}"><i class="fas fa-edit"></i> Edit Chef</a>
-                                                              <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>
+                                                              <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i>Add/View  Product</a>
                                                             @endif
                                                         </div>
                                                     </li>

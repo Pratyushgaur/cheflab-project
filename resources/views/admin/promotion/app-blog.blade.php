@@ -233,7 +233,7 @@
 <script type="text/javascript">
    (function($) {
   // $(function () {
-    /*let table = $('#example').dataTable({
+    let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
         ajax: "{{route('admin.vendorstore.data')}}",
@@ -245,7 +245,7 @@
             {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
-    });*/
+    });
     $("#banner-form").validate({
       rules: {
             blog_position: {

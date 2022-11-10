@@ -183,14 +183,20 @@
 
                                 <div class="row">
 
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->name}}" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                         <input type="hidden" value="{{$vendor->id}}" name="id" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Restaurant Owner <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$vendor->owner_name}}" name="owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Owner Name">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" value="{{$vendor->email}}" class="form-control"  id="" placeholder="Enter Restaurant Email">
@@ -261,7 +267,37 @@
                                   </div>
 
 
-                                  
+                                  <div class="col-md-6">
+                                      <div class="form-group">
+
+                                          <label for="exampleInputEmail1">Vendor Food Type</label><br>
+
+                                          <div class="form-group clearfix">
+                                            <div class="icheck-success d-inline">
+                                              @if($vendor->vendor_food_type == '1')
+                                               <input type="radio" id="veg" name="type" value="1" checked>
+                                               <label for="veg">Veg</label>
+                                              @elseif($vendor->vendor_food_type != '1')
+                                              <input type="radio" id="veg" name="type" value="1">
+                                              <label for="veg">Veg</label>
+                                              @endif
+                                            </div>
+
+                                            <div class="icheck-danger d-inline">
+                                            @if($vendor->vendor_food_type == '3')
+                                              <input type="radio" id="non_veg" name="type" value="3" checked>
+                                              <label for="non_veg">Veg + Non Veg</label>
+                                              @elseif($vendor->vendor_food_type != '3')
+                                              <input type="radio" id="non_veg" name="type" value="3">
+                                              
+                                              <label for="non_veg">Veg + Non Veg</label>
+                                              @endif
+                                            </div>
+
+
+                                          </div>
+                                      </div>
+                                    </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
@@ -310,6 +346,23 @@
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="image" required/>
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-3">
+                                        <div>
+                                          <label for="">Profile Images</label>
+                                        </div>
+                                        <div class="image-upload">
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    @if($vendor->profile_image == null)
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    @else
+                                                    <img class="icon2" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
+                                                    @endif
+                                                </div>
+                                            </label>
+                                            <input id="file-input" type="file" name="profile_image" required/>
                                         </div>
                                   </div>
                                   <div class="col-sm-3">
