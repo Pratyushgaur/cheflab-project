@@ -46,15 +46,15 @@
                         </div>
                     </form>
                 </li> -->
-                <!-- <li class="ms-nav-item ms-search-form pb-0 py-0 pc-offline-block">
+            <!-- <li class="ms-nav-item ms-search-form pb-0 py-0 pc-offline-block">
                     <label class="ms-switch right" style="float: right">
                         <input name="restaurent_status" id="restaurent_status" type="checkbox"
                                 value="1" onchange='change_rest_ststus()'
                                 @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
-                        <span class="ms-switch-slider"></span> 
+                        <span class="ms-switch-slider"></span>
                     </label>
                 </li> -->
-                
+
 
                 <li class="ms-nav-item dropdown"><a href="#" class="text-disabled ms-has-notification"
                                                     id="mailDropdown" data-toggle="dropdown" aria-haspopup="true"
@@ -109,7 +109,7 @@
                 </li>
                 <?php
                 $user = Auth::guard('vendor')->user();
-                $count=count($user->unreadNotifications);
+                $count = count($user->unreadNotifications);
                 ?>
                 <li class="ms-nav-item dropdown">
                     <a href="#" class="text-disabled {{($count>0) ? "ms-has-notification" : '' }}" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i
@@ -126,13 +126,13 @@
                             <?php
 
                             foreach ($user->unreadNotifications as $notification) {
-                                ?>
-                                <a class="media p-2" href="#">
-                                    <div class="media-body"><span> {{ @$notification->data['msg'] }}</span>
-                                        <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i>
-                                            {{get_time_ago(strtotime($notification->created_at))}}</p>
-                                    </div>
-                                </a>
+                            ?>
+                            <a class="media p-2" href="#">
+                                <div class="media-body"><span> <?php echo @$notification->data['msg']; ?></span>
+                                    <p class="fs-10 my-1 text-disabled"><i class="material-icons">access_time</i>
+                                        {{get_time_ago(strtotime($notification->created_at))}}</p>
+                                </div>
+                            </a>
 
                             <?php } ?>
 
@@ -147,48 +147,43 @@
                     <a href="#" id="userDropdown" data-toggle="dropdown" aria-haspopup="true"
                        aria-expanded="false">
                         <img class="ms-user-img ms-img-round float-right"
-                             src="{{ asset('frontend') }}/assets/img/costic/customer-6.jpg" alt="people">
+                             src="{{ (file_exists(public_path('vendors').DIRECTORY_SEPARATOR.\Auth::guard('vendor')->user()->image)) ? URL::to('vendors/') . '/' .\Auth::guard('vendor')->user()->image :  asset('frontend')."/assets/img/costic/customer-3.jpg" }}" alt="people">
                     </a>
                     <ul class="dropdown-menu dropdown-menu-right user-dropdown" aria-labelledby="userDropdown">
                         <li class="dropdown-menu-header">
                             <h6 class="dropdown-header ms-inline m-0"><span class="text-disabled">Welcome,
-                                    {{ ucfirst(Auth::guard('vendor')->user()->vendor_type) }}</span></h6>
+                                    {{ ucfirst(Auth::guard('vendor')->user()->name) }}</span></h6>
                         </li>
                         <li class="dropdown-divider"></li>
                         <li class="ms-dropdown-list">
                             <a class="media fs-14 p-2">
                                 <span><i class="flaticon-gear mr-2"></i> Status</span>
-                                <label class="ms-switch right mobile-offline-block" style="float: right" >
+                                <label class="ms-switch right mobile-offline-block" style="float: right">
                                     <input name="restaurent_status" id="restaurent_status" type="checkbox"
                                            value="1" onchange='change_rest_ststus()'
                                            @if (Auth::guard('vendor')->user()->is_online == 1) checked @endif>
-                                    <span class="ms-switch-slider"></span> 
+                                    <span class="ms-switch-slider"></span>
                                 </label>
 
 
                             </a>
 
 
-                            <a class="media fs-14 p-2" href="pages/prebuilt-pages/user-profile.html"> <span><i
+                            <a class="media fs-14 p-2" href="{{route('restaurant.profile')}}"> <span><i
                                         class="flaticon-user mr-2"></i> Profile</span>
                             </a>
 
 
-                            <a class="media fs-14 p-2" href="pages/apps/email.html"> <span><i
-                                        class="flaticon-mail mr-2"></i> Inbox</span> <span
-                                    class="badge badge-pill badge-info">3</span>
-                            </a>
-                            <a class="media fs-14 p-2" href="pages/prebuilt-pages/user-profile.html"> <span><i
-                                        class="flaticon-gear mr-2"></i> Account Settings</span>
-                            </a>
+                            {{--                            <a class="media fs-14 p-2" href="pages/apps/email.html"> <span><i--}}
+                            {{--                                        class="flaticon-mail mr-2"></i> Inbox</span> <span--}}
+                            {{--                                    class="badge badge-pill badge-info">3</span>--}}
+                            {{--                            </a>--}}
+                            {{--                            <a class="media fs-14 p-2" href="pages/prebuilt-pages/user-profile.html"> <span><i--}}
+                            {{--                                        class="flaticon-gear mr-2"></i> Account Settings</span>--}}
+                            {{--                            </a>--}}
                         </li>
                         <li class="dropdown-divider"></li>
 
-                        <li class="dropdown-menu-footer">
-                            <a class="media fs-14 p-2" href="pages/prebuilt-pages/lock-screen.html"> <span><i
-                                        class="flaticon-security mr-2"></i> Lock</span>
-                            </a>
-                        </li>
                         <li class="dropdown-menu-footer">
                             <a class="media fs-14 p-2" href="{{ route('vendor.logout') }}"> <span><i
                                         class="flaticon-shut-down mr-2"></i> Logout</span>

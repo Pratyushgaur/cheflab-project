@@ -46,6 +46,11 @@ return [
 
     'admin_master_id' => '1',//admin_master id
 
-    'blog_type' =>[	'1'=>'vendor', '2'=>'product'],//table :app_promotion_blog column:blog_type
+    'blog_type' => ['1' => 'vendor', '2' => 'product'],//table :app_promotion_blog column:blog_type
 
+    'product_type' => ['veg' => 'Veg', 'non_veg' => "Non-veg"],//table :products column:type
+
+    'vendor_type' => ['restaurant' => "Restaurant", 'chef' => "Chef"],//table :products column:type
+
+    'vendor_food_type' => [1 => 'Veg', 3 => 'Veg + Non Veg'],
 ];

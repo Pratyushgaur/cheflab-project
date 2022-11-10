@@ -30,6 +30,8 @@ class AppMasterController extends Controller
 
             $resturants   = get_restaurant_ids_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], true, null, null, false);
             $category_ids = $resturants->join('products as p', 'p.userId', '=', 'vendors.id')
+                ->where('p.status','=','1')
+                ->where('p.product_approve','=','1')
                 ->addSelect('p.category', \DB::raw('COUNT(*) as product_count'))
                 ->groupBy('p.category')->having('product_count', '>',0)->pluck('p.category');
 
@@ -77,6 +79,8 @@ class AppMasterController extends Controller
             $resturants   = get_restaurant_ids_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], true, null, null, false);
             $cuisines_ids = $resturants->join('products as p', 'p.userId', '=', 'vendors.id')
                 ->addSelect('p.cuisines', \DB::raw('COUNT(*) as product_count'))
+                ->where('p.status','=','1')
+                ->where('p.product_approve','=','1')
                 ->groupBy('p.cuisines')->having('product_count', '>',0)->pluck('p.cuisines');
 
             $data = \App\Models\Cuisines::whereIn('id',$cuisines_ids)->where(['is_active' => '1'])->select('cuisines.name', \DB::raw('CONCAT("' . asset('cuisines') . '/", cuisinesImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
