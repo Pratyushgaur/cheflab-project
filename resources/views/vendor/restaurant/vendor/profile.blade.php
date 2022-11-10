@@ -1,4 +1,5 @@
 <?php
+$urlbanners='';
 $vendor_food_type = config('custom_app_setting.vendor_food_type');
 //echo $resturant->vendor_type;
 //dd($vendor_type);
