@@ -329,7 +329,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
     $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type",
-        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories','fssai_lic_no',
+        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories','fssai_lic_no','tax',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed')
     );
