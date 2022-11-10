@@ -28,6 +28,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('product/active', [App\Http\Controllers\vendor\restaurant\ProductController::class,'Active'])->name('restaurant.product.active');
             Route::get('product/edit/{id}', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'fun_edit_product'])->name('vendor.product.edit');
             Route::post('product/update', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'update'])->name('restaurant.product.update');
+            Route::get('product/delete', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'delete'])->name('restaurant.product.delete');
             //vendor order linst
             Route::get('orders', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
             Route::post('order/accept/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_accept'])->name('restaurant.order.accept')->where('id', '[0-9]+');
@@ -120,6 +121,10 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
         Route::get('globle/require/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'first_bank_details'])->name('restaurant.globleseting.first_bank_details');
         Route::post('globle/require/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_bank_details'])->name('restaurant.globleseting.first_save_bank_details');
+
+        Route::get('user/profile', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'profile'])->name('restaurant.profile');
+
+        Route::post('user/profile/update', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'update'])->name('restaurant.update');
 
     });
 });

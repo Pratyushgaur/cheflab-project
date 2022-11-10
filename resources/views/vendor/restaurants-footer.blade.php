@@ -4,45 +4,45 @@
 
     <ul class="nav nav-tabs ms-quick-bar-list" role="tablist">
 
-        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"
-            title="Launch To-do-list" data-title="To-do-list">
-            <a href="#qa-toDo" aria-controls="qa-toDo" role="tab" data-toggle="tab"> <i class="flaticon-list"></i>
+{{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+{{--            title="Launch To-do-list" data-title="To-do-list">--}}
+{{--            <a href="#qa-toDo" aria-controls="qa-toDo" role="tab" data-toggle="tab"> <i class="flaticon-list"></i>--}}
 
-            </a>
-        </li>
-        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"
-            title="Launch Reminders" data-title="Reminders">
-            <a href="#qa-reminder" aria-controls="qa-reminder" role="tab" data-toggle="tab">
-                <i class="flaticon-bell"></i>
+{{--            </a>--}}
+{{--        </li>--}}
+{{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+{{--            title="Launch Reminders" data-title="Reminders">--}}
+{{--            <a href="#qa-reminder" aria-controls="qa-reminder" role="tab" data-toggle="tab">--}}
+{{--                <i class="flaticon-bell"></i>--}}
 
-            </a>
-        </li>
-        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"
-            title="Launch Notes" data-title="Notes">
-            <a href="#qa-notes" aria-controls="qa-notes" role="tab" data-toggle="tab"> <i class="flaticon-pencil"></i>
+{{--            </a>--}}
+{{--        </li>--}}
+{{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+{{--            title="Launch Notes" data-title="Notes">--}}
+{{--            <a href="#qa-notes" aria-controls="qa-notes" role="tab" data-toggle="tab"> <i class="flaticon-pencil"></i>--}}
 
-            </a>
-        </li>
-        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"
-            title="Invite Members" data-title="Invite Members">
-            <a href="#qa-invite" aria-controls="qa-invite" role="tab" data-toggle="tab">
-                <i class="flaticon-share-1"></i>
+{{--            </a>--}}
+{{--        </li>--}}
+{{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+{{--            title="Invite Members" data-title="Invite Members">--}}
+{{--            <a href="#qa-invite" aria-controls="qa-invite" role="tab" data-toggle="tab">--}}
+{{--                <i class="flaticon-share-1"></i>--}}
 
-            </a>
-        </li>
-        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"
-            title="Settings" data-title="Settings">
-            <a href="#qa-settings" aria-controls="qa-settings" role="tab" data-toggle="tab">
-                <i class="flaticon-gear"></i>
+{{--            </a>--}}
+{{--        </li>--}}
+{{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+{{--            title="Settings" data-title="Settings">--}}
+{{--            <a href="#qa-settings" aria-controls="qa-settings" role="tab" data-toggle="tab">--}}
+{{--                <i class="flaticon-gear"></i>--}}
 
-            </a>
-        </li>
+{{--            </a>--}}
+{{--        </li>--}}
     </ul>
     <div class="ms-configure-qa" data-toggle="tooltip" data-placement="left" title="Configure Quick Access">
 
-        <a href="#"> <i class="flaticon-hammer"></i>
+{{--        <a href="#"> <i class="flaticon-hammer"></i>--}}
 
-        </a>
+{{--        </a>--}}
 
     </div>
 
@@ -528,11 +528,14 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         if ('serviceWorker' in navigator) {
             window.addEventListener("load", function () {
                 // navigator.serviceWorker.register("firebase-messaging-sw.js");
-                navigator.serviceWorker.register("{{URL::to('/')}}/firebase-messaging-sw.js");
+{{--                alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
+                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js11111111111111')}}");
+                navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js22222222'}}");
             });
 
             window.addEventListener('flutter-first-frame', function () {
                 navigator.serviceWorker.register('flutter_service_worker.js');
+{{--                navigator.serviceWorker.register('{{URL::to("/")}}flutter_service_worker.js');--}}
             });
         }
 

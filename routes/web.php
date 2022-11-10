@@ -97,3 +97,5 @@ Route::get('get-firebase-data', [\App\Http\Controllers\FirebaseController::class
 Route::patch('/fcm-token', [\App\Http\Controllers\FirebaseController::class, 'updateTokenVendor'])->name('fcmToken_vendor');
 Route::get('/send-notification',[\App\Http\Controllers\FirebaseController::class,'notification'])->name('notification');
 
+
+

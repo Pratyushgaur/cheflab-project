@@ -4,7 +4,6 @@
 /public/vendors
 /public/vendor-banner
 /public/products
-
 /storage/*.key
 /vendor
 .env
@@ -14,7 +13,6 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-composer.json
 .idea/vcs.xml
 .idea/php.xml
 .idea/modules.xml
@@ -23,9 +21,6 @@ composer.json
 .idea/cheflab-project.iml
 .idea/.gitignore
 .gitignore
-.gitignore
-/pubnub-php
-pubnub-php
 /public/products
 public/vendor-banner
 public/vendors

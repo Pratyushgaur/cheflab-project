@@ -78,7 +78,7 @@
                         <h6>Add New Item</h6>
                     </div>
                     <div class="ms-panel-body">
-                        <form class=" clearfix" id="product-form" method="post" enctype="multipart/form-data">
+                        <form class=" clearfix" id="product-form" method="post" enctype="multipart/form-data" action="#">
                             @csrf
 
                             @if ($errors->any())
@@ -200,14 +200,14 @@
                                 <div class="col-md-4 mb-3">
                                     <label for="validationCustom23">Custmization Availablity</label>
                                     <div class="input-group">
-                                        <select class="form-control custimization" name="custimization" id="getPrice">
-                                            <option value="false">No</option>
+                                        <select class="form-control custimization" name="custimization" id="custimization_id">
+                                            <option value="false" selected>No</option>
                                             <option value="true">Yes</option>
 
                                         </select>
 
                                     </div>
-                                    <span class="custimization_error text-danger"></span>
+{{--                                    <span class="custimization_error text-danger"></span>--}}
                                 </div>
                                 <div class="col-md-12 mb-3 custmization-block" style="">
                                     <div class="row">
@@ -218,14 +218,12 @@
                                     <div class="variant-input-container">
                                         <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
-                                                <input type="text" name="variant_name[]"
-                                                       class="form-control variant_name"
-                                                       placeholder="Enter Variant Name">
+                                                <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name">
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="text" name="price[]" id="myInput"
-                                                       class="form-control price" placeholder="Enter Price">
+                                                <input type="text" name="price[]" id="myInput" class="form-control price" placeholder="Enter Price">
                                             </div>
+{{--                                            <span class="custimization_error text-danger"></span>--}}
                                         </div>
                                         <!-- <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
@@ -238,6 +236,7 @@
                                                 <a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>
                                             </div>
                                         </div> -->
+
                                     </div>
 
 
@@ -250,22 +249,22 @@
                                         <div class="col-md-12 mb-3">
                                             <label for="validationCustom23">Select Product Addons (Optional)</label>
                                             <div class="input-group">
-                                                {{ Form::select('addons[]',$addons,null, ['class' => 'form-control select2 addons-select','required','id'=>'validationCustom23','multiple'=>"true"]) }}
-{{--                                                <select class="form-control select2 addons-select" name="addons[]"--}}
-{{--                                                        multiple="true" id="validationCustom23">--}}
+                                                {{ Form::select('addons[]',$addons,null, ['class' => 'form-control select2 addons-select','id'=>'validationCustom23','multiple'=>"true"]) }}
+                                                {{--                                                <select class="form-control select2 addons-select" name="addons[]"--}}
+                                                {{--                                                        multiple="true" id="validationCustom23">--}}
 
-{{--                                                    @foreach($addons as $k =>$value)--}}
-{{--                                                        <option value="{{$value->id}}">{{$value->addon}}--}}
-{{--                                                            -Rs {{$value->price}}</option>--}}
-{{--                                                    @endforeach--}}
+                                                {{--                                                    @foreach($addons as $k =>$value)--}}
+                                                {{--                                                        <option value="{{$value->id}}">{{$value->addon}}--}}
+                                                {{--                                                            -Rs {{$value->price}}</option>--}}
+                                                {{--                                                    @endforeach--}}
 
-{{--                                                </select>--}}
+                                                {{--                                                </select>--}}
 
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label>Preparation Time</label>
                                     <div class="input-group">
                                         {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),null,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','reuired']) }}
@@ -276,7 +275,7 @@
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label>Chili Level</label>
                                     <div class="input-group">
                                         {{ Form::select('chili_level', config('custom_app_setting.product_chili_level'),null,['class' => 'form-control', 'required']) }}
@@ -285,7 +284,23 @@
                                             <span
                                                 class="ms-text-danger"><strong>{{ $errors->first('chili_level') }}</strong></span>
                                         @endif
-                                        <span class="custimization_error text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label>Type</label>
+                                    <div class="input-group">
+
+                                        <label>{!! Form ::radio('type','veg',true) !!} Veg</label>
+
+                                        <label>{!! Form ::radio('type','non_veg',true,['style'=>"margin-left: 10px;"]) !!}
+                                            Non-veg</label>
+
+                                        @if ($errors->has('type'))
+                                            <span
+                                                class="ms-text-danger"><strong>{{ $errors->first('type') }}</strong></span>
+                                        @endif
+
                                     </div>
                                 </div>
 
@@ -378,6 +393,8 @@
             $.validator.addMethod('checkVariants',
                 function (value, element) {
                     if (value == 'true') {
+
+                        var at_least_one_vaariant = false;
                         var check = true;
                         $('.input-container').each(function (index, value) {
                             if ($(this).find('.variant_name').val() == '') {
@@ -386,20 +403,27 @@
                             if ($(this).find('.price').val() == '') {
                                 check = false;
                             }
-
+                            if ($(this).find('.variant_name').val() != '' && $(this).find('.price').val() != '')
+                                at_least_one_vaariant = true;
                         });
-                        if (check) {
-                            return true;
-                        } else {
-                            return false;
+// alert($("#validationCustom23").val());
+                        if (at_least_one_vaariant == false) {
+                            if ($("#validationCustom23").val() == '') {
+                                return false;
+                            }else
+                                return true;
+                        }else{
+                            if (check) {
+                                return true;
+                            } else {
+                                return false;
+                            }
                         }
 
                     } else {
                         return true;
                     }
-
-
-                }, 'Variants Fields is required'
+                }, 'Variants or Addons one of fields is required'
             );
             $("#product-form").validate({
                 rules: {
@@ -457,13 +481,16 @@
                     primary_variant_name: {
                         required: "Please Enter Primary Variant Name"
                     }
-                },
+                }
+            {{--,
                 errorPlacement: function (error, element) {
                     var name = $(element).attr("name");
 
                     error.appendTo($("." + name + "_error"));
-                },
+                },--}}
             });
+
+// alert($("#custimization_id").val());
         })(jQuery);
     </script>
 @endsection

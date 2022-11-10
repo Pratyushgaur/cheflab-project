@@ -22,7 +22,13 @@ class ProductController extends Controller
 {
     function index()
     {
-        return view('vendor.restaurant.products.list');
+        $products = Product_master::join('categories', 'products.category', '=', 'categories.id')
+            ->select('products.*', 'categories.name as categoryName')
+            ->where('products.userId', '=', Auth::guard('vendor')->user()->id)->paginate(4);
+        $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name','id');
+
+//dd($products);
+        return view('vendor.restaurant.products.list',compact('products','categories'));
     }
 
     function addons()
@@ -32,8 +38,8 @@ class ProductController extends Controller
 
     public function create(Type $var = null)
     {
-        $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id',explode(',',\Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->select('id', 'name')->get();
-        $cuisines   = Cuisines::where('is_active', '=', '1')->whereIn('id',explode(',',\Auth::guard('vendor')->user()->deal_cuisines))->orderby('position', 'ASC')->select('id', 'name')->get();
+        $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->select('id', 'name')->get();
+        $cuisines   = Cuisines::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_cuisines))->orderby('position', 'ASC')->select('id', 'name')->get();
 //        $addons     = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
         $addons = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->select(\DB::raw('CONCAT(`addon`," - Rs ",`price`) as addon'), 'id')->pluck('addon', 'id');
 
@@ -55,6 +61,14 @@ class ProductController extends Controller
         ]);
         try {
 
+            if($request->custimization == 'true')
+            {
+                if($request->addons=='')
+                foreach ($request->variant_name as $k => $v)
+                    if($v=='' || $request->price[$k]=='')
+                        return redirect()->back()->with('error', 'variant or addon, at least one of the filed must be required.');
+            }
+
             //  dd($request->all());
             $product                       = new Product_master;
             $product->product_name         = $request->product_name;
@@ -69,6 +83,7 @@ class ProductController extends Controller
             $product->product_price        = $request->item_price;
             $product->customizable         = $request->custimization;
             $product->preparation_time     = $request->preparation_time;
+            $product->type                 = $request->type;
 
             // if($request->custimization == 'true'){
             //     $data = [];
@@ -90,6 +105,7 @@ class ProductController extends Controller
             Variant::create(['product_id' => $product->id, 'variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
             if ($request->custimization == 'true')
                 foreach ($request->variant_name as $k => $v) {
+                    if($v!='' && $request->price[$k]!='')
                     Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
                 }
             $subscribers = Superadmin::get();
@@ -98,7 +114,7 @@ class ProductController extends Controller
 //            Notification::route('database', $subscribers) //Sending  to subscribers
 //            ->notify(new ProductCreatedNotification($product->id)); //With new post
 
-            return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Created Wait for Admin Review.');
+            return redirect()->route('restaurant.product.list')->with('success', 'Congratulation Product is Created Wait for Admin Review.');
         } catch (\Exception $th) {
             return $th->getMessage();
         }
@@ -116,21 +132,29 @@ class ProductController extends Controller
             'preparation_time' => 'required',
         ]);
 //dd($request->all());
-        $product                   = Product_master::find($request->id);
-        $product->product_name     = $request->product_name;
-        $product->userId           = Auth::guard('vendor')->user()->id;
-        $product->cuisines         = $request->cuisines;
-        $product->category         = $request->category;
-        $product->menu_id          = $request->menu_id;
-        $product->dis              = $request->dis;
-        $product->type             = $request->product_type;
-        $product->product_price    = $request->item_price;
-        $product->customizable     = $request->custimization;
-        $product->preparation_time = $request->preparation_time;
-        $product->chili_level      = $request->chili_level;
-        $product->primary_variant_name = $request->primary_variant_name;
-        $product->product_approve  = 2;
+        if($request->custimization == 'true')
+        {
+            if($request->addons=='')
+                foreach ($request->variant_name as $k => $v)
+                    if($v=='' || $request->price[$k]=='')
+                        return redirect()->back()->with('error', 'variant or addon, at least one of the filed must be required.');
+        }
 
+        $product                       = Product_master::find($request->id);
+        $product->product_name         = $request->product_name;
+        $product->userId               = Auth::guard('vendor')->user()->id;
+        $product->cuisines             = $request->cuisines;
+        $product->category             = $request->category;
+        $product->menu_id              = $request->menu_id;
+        $product->dis                  = $request->dis;
+        $product->type                 = $request->product_type;
+        $product->product_price        = $request->item_price;
+        $product->customizable         = $request->custimization;
+        $product->preparation_time     = $request->preparation_time;
+        $product->chili_level          = $request->chili_level;
+        $product->primary_variant_name = $request->primary_variant_name;
+        $product->product_approve      = 2;
+        $product->type                 = $request->type;
 //        if ($request->status == '0') {
 //            $product->status = 2;
 //        }
@@ -180,7 +204,7 @@ class ProductController extends Controller
             }
         }
 //dd($product);
-        return redirect()->route('restaurant.product.list')->with('message', 'Congratulation Product is Published.');
+        return redirect()->route('restaurant.product.list')->with('success', 'Congratulation Product is Published.');
 
     }
 
@@ -267,8 +291,8 @@ class ProductController extends Controller
 //            dd($product);
 //            $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->pluck('name', 'id');
 //            $cuisines   = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->pluck('name', 'id');
-            $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id',explode(',',\Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name', 'id');//->select('id', 'name')->get();
-            $cuisines   = Cuisines::where('is_active', '=', '1')->whereIn('id',explode(',',\Auth::guard('vendor')->user()->deal_cuisines))->orderby('position', 'ASC')->pluck('name', 'id');//->select('id', 'name')->get();
+            $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name', 'id');//->select('id', 'name')->get();
+            $cuisines   = Cuisines::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_cuisines))->orderby('position', 'ASC')->pluck('name', 'id');//->select('id', 'name')->get();
 
 //            $addons     = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->get();
             $addons = Addons::where('vendorId', '=', Auth::guard('vendor')->user()->id)->select(\DB::raw('CONCAT(`addon`," - Rs ",`price`) as addon'), 'id')->pluck('addon', 'id');
@@ -340,8 +364,27 @@ class ProductController extends Controller
             'vendorId' => Auth::guard('vendor')->user()->id
         ]);
 
-        return redirect()->route('restaurant.product.addon')->with('message', 'Addon Create Successfully.');
+        return redirect()->route('restaurant.product.addon')->with('success', 'Addon Create Successfully.');
     }
 
+    public function delete(Request $request)
+    {
+        try {
+            $id   = Crypt::decryptString($request->id);
+            $data = Product_master::findOrFail($id);
+            if ($data) {
+                $data->delete();
+                return redirect()->route('restaurant.product.list')->with('success', 'Product deleted successfully.');
+            } else {
+
+                return redirect()->route('restaurant.product.list')->with('error', 'Something wen wrong.');
+            }
+
+
+        } catch (DecryptException $e) {
+            //return redirect('city')->with('error', 'something went wrong');
+            return redirect()->route('restaurant.product.list')->with('error', 'Something wen wrong.');
+        }
+    }
 
 }

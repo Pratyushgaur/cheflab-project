@@ -235,7 +235,7 @@
                                             </option>
                                         </select>
                                     </div>
-                                    <span class="custimization_error text-danger"></span>
+                                    <span id="custimization_error" class="custimization_error text-danger"></span>
                                 </div>
                                 <div class="col-md-12 mb-3 custmization-block" style="">
                                     <div class="row">
@@ -296,7 +296,7 @@
                                         <div class="col-md-12 mb-12">
                                             <label for="validationCustom23">Select Product Addons (Optional)</label>
                                             <div class="input-group">
-                                                {{ Form::select('addons[]',$addons,@explode(',',@$product->addons), ['class' => 'form-control select2 addons-select','required','id'=>'validationCustom23','multiple'=>"true"]) }}
+                                                {{ Form::select('addons[]',$addons,@explode(',',@$product->addons), ['class' => 'form-control select2 addons-select','id'=>'validationCustom23','multiple'=>"true"]) }}
 
 
                                                 {{--                                                <select class="form-control select2 addons-select" name="addons[]" multiple="true" id="validationCustom23">--}}
@@ -329,7 +329,22 @@
                                             <span
                                                 class="ms-text-danger"><strong>{{ $errors->first('chili_level') }}</strong></span>
                                         @endif
-                                        <span class="custimization_error text-danger"></span>
+                                        <span class="chili_level_error text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label>Type</label>
+                                    <div class="input-group">
+
+                                        <label>{!! Form ::radio('type','veg',($product->type=='veg') ? true : false) !!}  Veg</label>
+
+                                        <label>{!! Form ::radio('type','non_veg',($product->type=='non_veg') ? true : false,['style'=>"margin-left: 10px;"]) !!} Non-veg</label>
+
+                                        @if ($errors->has('type'))
+                                            <span
+                                                class="ms-text-danger"><strong>{{ $errors->first('type') }}</strong></span>
+                                        @endif
+                                        <span class="type_error text-danger"></span>
                                     </div>
                                 </div>
 
@@ -415,6 +430,7 @@
             $.validator.addMethod('checkVariants',
                 function (value, element) {
                     if (value == 'true') {
+                        var at_least_one_vaariant = false;
                         var check = true;
                         $('.input-container').each(function (index, value) {
                             if ($(this).find('.variant_name').val() == '') {
@@ -423,21 +439,28 @@
                             if ($(this).find('.price').val() == '') {
                                 check = false;
                             }
-
+                            if ($(this).find('.variant_name').val() != '' && $(this).find('.price').val() != '')
+                                at_least_one_vaariant = true;
                         });
-                        if (check) {
-                            return true;
-                        } else {
-                            return false;
+                        if (at_least_one_vaariant == false) {
+                            if ($("#validationCustom23").val() == '') {
+
+                                return false;
+                            }else
+                                return true;
+                        }else{
+                            if (check) {
+                                return true;
+                            } else {
+
+                                return false;
+                            }
                         }
 
                     } else {
                         return true;
                     }
-
-
-                }, 'Variants Fields is required'
-            );
+                }, 'Veriant or addon, at least one of the field must be required.');
             $("#product-form").validate({
                 rules: {
                     product_name: {
@@ -494,12 +517,7 @@
                     primary_variant_name: {
                         required: "Please Enter Primary Variant Name"
                     }
-                },
-                errorPlacement: function (error, element) {
-                    var name = $(element).attr("name");
-
-                    error.appendTo($("." + name + "_error"));
-                },
+                }
             });
         })(jQuery);
     </script>
