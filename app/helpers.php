@@ -209,6 +209,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                 ];
                 if ($with_restaurant_name) {
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
+                    $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
+                    $variant[$p['product_id']] ['tax'] = $p['tax'];
                     $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
 
                     $banners = json_decode($p['banner_image']);
