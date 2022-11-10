@@ -157,7 +157,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product->whereIn('products.id', $product_ids);
     if ($with_restaurant_name) {
         $product->join('vendors', 'products.userId', '=', 'vendors.id');
-        $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'banner_image');
+        $product->addSelect('vendors.name as restaurantName' ,'vendors.image as vendor_image', 'banner_image','tax','fssai_lic_no');
     }
 
 
@@ -178,7 +178,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     $product = $product->orderBy('variants.id', 'ASC');
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
-//    dd($product->get()->toArray());
+       //    dd($product->get()->toArray());
     $product = $product->addSelect(DB::raw('products.userId as vendor_id'),
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
@@ -186,8 +186,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
         'products.id as product_id', 'product_rating','tax', 'primary_variant_name')
         ->get();
-//dd($product->toArray());
-//    dd(\DB::getQueryLog());
+      //dd($product->toArray());
+     //    dd(\DB::getQueryLog());
     $variant = [];
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
