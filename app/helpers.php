@@ -157,7 +157,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product->whereIn('products.id', $product_ids);
     if ($with_restaurant_name) {
         $product->join('vendors', 'products.userId', '=', 'vendors.id');
-        $product->addSelect('vendors.name as restaurantName' ,'vendors.image as vendor_image', 'banner_image','tax','fssai_lic_no');
+        $product->addSelect('vendors.name as restaurantName' ,'vendors.image as vendor_image', 'banner_image');
     }
 
 
@@ -179,12 +179,13 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
        //    dd($product->get()->toArray());
+       $qty = '0';
     $product = $product->addSelect(DB::raw('products.userId as vendor_id'),
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id','products.dis as description', 'products.product_name', 'product_price','dis', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-        'products.id as product_id', 'product_rating','tax', 'primary_variant_name')
+        'products.id as product_id', 'product_rating', 'primary_variant_name')
         ->get();
       //dd($product->toArray());
      //    dd(\DB::getQueryLog());
@@ -205,12 +206,13 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                               'primary_variant_name' => $p['primary_variant_name'],
                                               'preparation_time'     => $p['preparation_time'],
                                               'vendor_id'            => $p['vendor_id'],
-                                              'chili_level'          => $p['chili_level']
+                                              'chili_level'          => $p['chili_level'],
+                                              'caart_qty'            =>$qty
                 ];
                 if ($with_restaurant_name) {
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
-                    $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
-                    $variant[$p['product_id']] ['tax'] = $p['tax'];
+                  //  $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
+                   // $variant[$p['product_id']] ['tax'] = $p['tax'];
                     $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
 
                     $banners = json_decode($p['banner_image']);
@@ -332,7 +334,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
     $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type",
-        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories','fssai_lic_no','tax',
+        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed')
     );
