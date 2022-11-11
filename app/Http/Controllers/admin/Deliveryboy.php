@@ -7,6 +7,7 @@ use App\Models\Catogory_master;
 use App\Models\Cuisines;
 use App\Models\Product_master;
 use App\Models\Deliver_boy;
+use App\Models\DeliveryboySetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -25,6 +26,11 @@ class Deliveryboy extends Controller
     }
     public function deliverboy_reviews(){
         return view('admin/deliveryboy/deliverboy_reviews');
+    }
+    public function setting(Request $request){
+        $id = '1';
+        $data = DeliveryboySetting::findOrFail($id);
+        return view('admin/deliveryboy/setting',compact('data'));
     }
     /*public function store_deliverboy(Request $request)
     {
@@ -120,6 +126,17 @@ class Deliveryboy extends Controller
         return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
         
 
+    }
+    public function storeDelivercharge(Request $request){
+        $general = DeliveryboySetting::find($request->id);
+        $general->a_to_b_charge = $request->a_to_b_charge;
+        $general->b_to_c_charge = $request->b_to_c_charge;
+        $general->fix_charge_1 = $request->fix_charge_1;
+        $general->fix_charge_2 = $request->fix_charge_2;
+        $general->incentive_one = $request->incentive_one;
+        $general->incentive_to = $request->incentive_to;
+        $general->save();
+        return redirect()->route('admin.deliverboy.setting')->with('message', 'Update Chargs Successfully');
     }
     public function get_data_table_of_deliverboy(Request $request)
     {
