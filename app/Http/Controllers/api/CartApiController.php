@@ -55,12 +55,12 @@ class CartApiController extends Controller
                     $error = 'Another Cart is already exist.So that you can not create new one';
                     return response()->json([ 'status' => false, 'error' => $error ], 401);
                 }
-
                 $cart_obj            = new Cart($request->all());
                 $cart_obj->user_id   = $request->user_id;
                 $cart_obj->vendor_id = $request->vendor_id;
                 $cart_obj->saveOrFail();
                 $cart_id = $cart_obj->id;
+               
                 foreach ($request->products as $k => $p) {
                     $cart_products = new CartProduct($p);
                     $cart_obj->products()->save($cart_products);
@@ -168,6 +168,7 @@ class CartApiController extends Controller
                 ->leftJoin('cart_product_variants', 'variants.id', 'cart_product_variants.variant_id')
                 ->leftJoin('cuisines', 'products.cuisines', 'cuisines.id')
                 ->get()->toArray();
+            
             $responce = [];
 
             foreach ($pro as $k => $product) {
@@ -218,11 +219,12 @@ class CartApiController extends Controller
                 $r[$i] = array_merge($r[$i], $p);
             }
             $r = array_values($r);
-
+            $c = $request->count($r);
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
             return response()->json([ 'status'   => true,
                                       'message'  => 'Data Get Successfully',
                                       'response' => [ "cart"           => $r,
+                                                      "cont"   => $c,
                                                       'wallet_amount'  => $wallet_amount,
                                                       'max_cod_amount' => @$admin_setting->max_cod_amount ] ], 200);
         } catch (Throwable $th) {
