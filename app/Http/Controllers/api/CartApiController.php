@@ -148,7 +148,7 @@ class CartApiController extends Controller
             if (!isset($cart_users->id))
                 return response()->json([ 'status' => false, 'error' => "your cart is empty" ], 401);
             $cart_id = $cart_users->id;
-
+            dd($cart_id);
             $e = Cart::where('id', $cart_id)->exists();
             if (!$e)
                 return response()->json([ 'status' => false, 'error' => 'Cart does not exists.' ], 401);
