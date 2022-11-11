@@ -195,7 +195,7 @@
                                         <tr role="row">
                                           <th  class="text-center">Sr No.</th>
                                           <th >Name of Blog</th>
-                                          <th >App Position</th>
+                                          <th >Blog Position</th>
                                           <th >Blog For</th>
                                           <th >Status</th>
                                           <th >Action</th>
@@ -240,7 +240,7 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},
-            {data: 'app_position', name: 'app_position'},
+            {data: 'vendor_type', name: 'vendor_type'},
             {data: 'blog_type', name: 'blog_type'},
             {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},

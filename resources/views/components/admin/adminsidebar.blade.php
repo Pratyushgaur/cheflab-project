@@ -115,7 +115,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{route('admin.deliverboy.review')}}" class="nav-link">
+						<a href="{{route('admin.deliverboy.setting')}}" class="nav-link">
 						<i class="nav-icon fa fa-cog"></i>
 						  <p>Setting</p>
 						</a>

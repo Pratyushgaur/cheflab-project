@@ -107,6 +107,36 @@
             border-radius: 18px;
             margin:0px;
         }
+        /*  */
+        .upload-icon4{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+        
+        .upload-icon4 img{
+            width: 100px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+        
+        .upload-icon4.has-img4{
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+        
+        .upload-icon4.has-img4 img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
         .select2-selection__choice{
           background:#007bff !important;
         }
@@ -150,12 +180,6 @@
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Owner <span class="text-danger">*</span></label>
-                                        <input type="text" name="restourant_owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Owner Name">
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-3">
-                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Chef Email">
                                     </div>  
@@ -184,13 +208,13 @@
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>  
                                   </div>
-                                  <div class="col-md-3">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>  
                                   </div>
-                                  <div class="col-md-3">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
                                           <select name="deal_categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
@@ -200,7 +224,7 @@
                                             </select>
                                       </div> 
                                   </div>
-                                  <div class="col-md-3">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
                                         <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
@@ -269,7 +293,12 @@
                                         <input type="text" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>  
                                   </div>
-                                  
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Tax<span class="text-danger">*</span></label>
+                                        <input type="text" name="tax" class="form-control"  id="" placeholder="Tax">
+                                    </div>
+                                  </div>
                                   
                                 </div>
                                 
@@ -295,7 +324,7 @@
                                                     <img class="icon" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
-                                            <input id="file-input" type="file" name="image" required/>
+                                            <input id="file-input" type="file" name="image">
                                         </div>        
                                   </div>
                                   <div class="col-sm-3">
@@ -303,12 +332,12 @@
                                           <label for="">Chef Profile Images</label>
                                         </div>
                                         <div class="image-upload">
-                                            <label for="file-input">
-                                                <div class="upload-icon">
-                                                    <img class="icon" src="{{asset('add-image.png')}}">
+                                            <label for="file-input4">
+                                                <div class="upload-icon4">
+                                                    <img class="icon4" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
-                                            <input id="file-input" type="file" name="profile_image" required/>
+                                            <input id="file-input4" type="file" name="profile_image">
                                         </div>        
                                   </div>
                                   <div class="col-sm-3">
@@ -884,6 +913,10 @@
       $('#file-input3').change( function(event) {
           $("img.icon3").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon3").parents('.upload-icon3').addClass('has-img3');
+      });
+      $('#file-input4').change( function(event) {
+          $("img.icon4").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon4").parents('.upload-icon4').addClass('has-img4');
       });
   });
 
