@@ -83,7 +83,7 @@ class ProductController extends Controller
             $product->product_price        = $request->item_price;
             $product->customizable         = $request->custimization;
             $product->preparation_time     = $request->preparation_time;
-            $product->type                 = $request->type;
+     //       $product->type                 = $request->type;
 
             // if($request->custimization == 'true'){
             //     $data = [];
@@ -147,14 +147,14 @@ class ProductController extends Controller
         $product->category             = $request->category;
         $product->menu_id              = $request->menu_id;
         $product->dis                  = $request->dis;
-        $product->type                 = $request->product_type;
+   //     $product->type                 = $request->product_type;
         $product->product_price        = $request->item_price;
         $product->customizable         = $request->custimization;
         $product->preparation_time     = $request->preparation_time;
         $product->chili_level          = $request->chili_level;
         $product->primary_variant_name = $request->primary_variant_name;
         $product->product_approve      = 2;
-        $product->type                 = $request->type;
+       // $product->type                 = $request->type;
 //        if ($request->status == '0') {
 //            $product->status = 2;
 //        }
