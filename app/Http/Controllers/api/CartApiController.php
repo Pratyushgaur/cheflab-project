@@ -134,7 +134,6 @@ class CartApiController extends Controller
 
     public function view_cart(Request $request)
     {
-
         try {
             $validateUser = Validator::make($request->all(), [
                 'user_id' => 'required|numeric'
@@ -143,12 +142,11 @@ class CartApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
             }
-
+          
             $cart_users = Cart::where('user_id', $request->user_id)->first();
             if (!isset($cart_users->id))
                 return response()->json([ 'status' => false, 'error' => "your cart is empty" ], 401);
             $cart_id = $cart_users->id;
-            dd($cart_id);
             $e = Cart::where('id', $cart_id)->exists();
             if (!$e)
                 return response()->json([ 'status' => false, 'error' => 'Cart does not exists.' ], 401);
@@ -171,7 +169,7 @@ class CartApiController extends Controller
                 ->leftJoin('cuisines', 'products.cuisines', 'cuisines.id')
                 ->get()->toArray();
             $responce = [];
-
+            
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '') {
 
@@ -201,7 +199,7 @@ class CartApiController extends Controller
                     }
                 }
             }
-            dd($responce);
+          
             foreach ($responce as $i => $p) {
 
                 if (isset($p['variants']))
