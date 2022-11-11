@@ -52,11 +52,11 @@ class CartApiController extends Controller
             try {
                 DB::beginTransaction();
                 // database queries here
-                $is_exist = Cart::where('user_id', $request->user_id)->first();
-                if (isset($is_exist->id)) {
-                    $error = 'Another Cart is already exist.So that you can not create new one';
-                    return response()->json([ 'status' => false, 'error' => $error ], 401);
-                }
+                // $is_exist = Cart::where('user_id', $request->user_id)->first();
+                // if (isset($is_exist->id)) {
+                //     $error = 'Another Cart is already exist.So that you can not create new one';
+                //     return response()->json([ 'status' => false, 'error' => $error ], 401);
+                // }
 
                 $cart_obj            = new Cart($request->all());
                 $cart_obj->user_id   = $request->user_id;
