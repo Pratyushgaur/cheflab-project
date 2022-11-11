@@ -168,6 +168,7 @@
                                                         class="ms-checkbox-check"></i>
                                                 </label> <span> Non Veg </span>
                                             </li>
+
                                             <li>
                                                 <label class="ms-checkbox-wrap ms-checkbox-warning">
                                                     <input type="radio" value="eggs" name="product_type"> <i
@@ -287,7 +288,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <label>Type</label>
                                     <div class="input-group">
 
@@ -302,7 +303,7 @@
                                         @endif
 
                                     </div>
-                                </div>
+                                </div> -->
 
                                 {{--                                <div class="col-md-6 mb-3">--}}
                                 {{--                                    <label for="validationCustom23">Chili Level</label>--}}

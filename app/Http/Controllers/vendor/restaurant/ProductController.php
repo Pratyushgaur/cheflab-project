@@ -78,7 +78,7 @@ class ProductController extends Controller
             $product->chili_level          = $request->chili_level;
             $product->menu_id              = $request->menu_id;
             $product->dis                  = $request->dis;
-            $product->type                 = $request->product_type;
+            //$product->type                 = $request->product_type;
             $product->primary_variant_name = $request->primary_variant_name;
             $product->product_price        = $request->item_price;
             $product->customizable         = $request->custimization;
