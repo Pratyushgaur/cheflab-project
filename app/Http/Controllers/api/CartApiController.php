@@ -29,12 +29,12 @@ class CartApiController extends Controller
                 [
                     'user_id'                           => 'required|numeric',
                     'vendor_id'                         => 'required|numeric',
-                    'products.*.product_id'             => 'required|numeric',
-                    'products.*.product_qty'            => 'required|numeric',
-                    'products.*.variants.*.variant_id'  => 'numeric|nullable',
-                    'products.*.variants.*.variant_qty' => 'string|nullable',
-                    'products.*.addons.*.addon_id'      => 'numeric|nullable',
-                    'products.*.addons.*.addon_qty'     => 'string|nullable',
+                    'products.product_id'             => 'required|numeric',
+                    // 'products.product_qty'            => 'required|numeric',
+                    // 'products.variants.*.variant_id'  => 'numeric|nullable',
+                    // 'products.variants.*.variant_qty' => 'string|nullable',
+                    // 'products.addons.*.addon_id'      => 'numeric|nullable',
+                    // 'products.addons.*.addon_qty'     => 'string|nullable',
 
                     // 'addons.*.id' => 'numeric|nullable',
                     // 'addons.*.addon_qty' => "numeric|nullable"
@@ -47,50 +47,52 @@ class CartApiController extends Controller
                 return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
             }
             global $cart_id;
-            try {
-                DB::beginTransaction();
-                // database queries here
-                $is_exist = Cart::where('user_id', $request->user_id)->first();
-                if (isset($is_exist->id)) {
-                    $error = 'Another Cart is already exist.So that you can not create new one';
-                    return response()->json([ 'status' => false, 'error' => $error ], 401);
-                }
+            return response()->json([ 'status' => true, 'mess' => "success" ], 401);
+            
+            // try {
+            //     DB::beginTransaction();
+            //     // database queries here
+            //     $is_exist = Cart::where('user_id', $request->user_id)->first();
+            //     if (isset($is_exist->id)) {
+            //         $error = 'Another Cart is already exist.So that you can not create new one';
+            //         return response()->json([ 'status' => false, 'error' => $error ], 401);
+            //     }
 
-                $cart_obj            = new Cart($request->all());
-                $cart_obj->user_id   = $request->user_id;
-                $cart_obj->vendor_id = $request->vendor_id;
-                $cart_obj->saveOrFail();
-                $cart_id = $cart_obj->id;
-                foreach ($request->products as $k => $p) {
-                    $cart_products = new CartProduct($p);
-                    $cart_obj->products()->save($cart_products);
-                    if (isset($p['variants']))
-                        foreach ($p['variants'] as $k => $v) {
-                            $CartProductVariant                  = new CartProductVariant();
-                            $CartProductVariant->cart_product_id = $cart_products->id;
-                            $CartProductVariant->variant_id      = $v['variant_id'];
-                            $CartProductVariant->variant_qty     = $v['variant_qty'];
-                            $CartProductVariant->save();
-                        }
+            //     $cart_obj            = new Cart($request->all());
+            //     $cart_obj->user_id   = $request->user_id;
+            //     $cart_obj->vendor_id = $request->vendor_id;
+            //     $cart_obj->saveOrFail();
+            //     $cart_id = $cart_obj->id;
+            //     foreach ($request->products as $k => $p) {
+            //         $cart_products = new CartProduct($p);
+            //         $cart_obj->products()->save($cart_products);
+            //         if (isset($p['variants']))
+            //             foreach ($p['variants'] as $k => $v) {
+            //                 $CartProductVariant                  = new CartProductVariant();
+            //                 $CartProductVariant->cart_product_id = $cart_products->id;
+            //                 $CartProductVariant->variant_id      = $v['variant_id'];
+            //                 $CartProductVariant->variant_qty     = $v['variant_qty'];
+            //                 $CartProductVariant->save();
+            //             }
 
-                    if (isset($p['addons']))
-                        foreach ($p['addons'] as $k => $a) {
-                            $CartProductAddon                  = new CartProductAddon();
-                            $CartProductAddon->cart_product_id = $cart_products->id;
-                            $CartProductAddon->addon_id        = $a['addon_id'];
-                            $CartProductAddon->addon_qty       = $a['addon_qty'];
-                            $CartProductAddon->save();
-                        }
-                }
+            //         if (isset($p['addons']))
+            //             foreach ($p['addons'] as $k => $a) {
+            //                 $CartProductAddon                  = new CartProductAddon();
+            //                 $CartProductAddon->cart_product_id = $cart_products->id;
+            //                 $CartProductAddon->addon_id        = $a['addon_id'];
+            //                 $CartProductAddon->addon_qty       = $a['addon_qty'];
+            //                 $CartProductAddon->save();
+            //             }
+            //     }
 
-                DB::commit();
+            //     DB::commit();
 
-                return response()->json([ 'status' => true, 'message' => 'Data Get Successfully', 'response' => [ "cart_id" => $cart_id ] ], 200);
-            } catch (PDOException $e) {
-                // Woopsy
-                DB::rollBack();
-                return response()->json([ 'status' => false, 'error' => $e->getMessage() ], 500);
-            }
+            //     return response()->json([ 'status' => true, 'message' => 'Data Get Successfully', 'response' => [ "cart_id" => $cart_id ] ], 200);
+            // } catch (PDOException $e) {
+            //     // Woopsy
+            //     DB::rollBack();
+            //     return response()->json([ 'status' => false, 'error' => $e->getMessage() ], 500);
+            // }
         } catch (Throwable $th) {
             return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
         }
