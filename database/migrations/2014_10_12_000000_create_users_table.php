@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('mobile_number',15)->unique();
             $table->string('alternative_number',15)->unique()->nullable();
+            $table->string('image');
             $table->string('referralCode',)->unique()->nullable();
             $table->string('referby',)->nullable();
 //            $table->softDeletes();
