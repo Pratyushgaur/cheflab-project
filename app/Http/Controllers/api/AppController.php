@@ -1457,7 +1457,7 @@ class AppController extends Controller
 
             $update = User::where('id', '=', request()->user()->id)->update(['name' => $request->name, 'email' => $request->email, 'alternative_number' => $request->alternative_number]);
             if ($request->has('image')) {
-                $filename = time() . '-document-' . rand(100, 999) . '.' . $request->image->extension();
+                $filename = time() . '-image-' . rand(100, 999) . '.' . $request->image->extension();
                 $request->image->move(public_path('user-profile'), $filename);
                 $vendors->image = $filename;
             }
