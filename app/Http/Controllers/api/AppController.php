@@ -1455,13 +1455,15 @@ class AppController extends Controller
             }
             //$user = User::find(request()->user()->id);
 
-            $update = User::where('id', '=', request()->user()->id)->update(['name' => $request->name, 'email' => $request->email, 'alternative_number' => $request->alternative_number]);
+            
             if($request->has('image')){
                 $filename = $image = $request->file('image');
                 $request->image->move(public_path('user-profile'),$filename);
               // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
-                $kyc->image  = $filename;
+                $request->image  = $filename;
+
             }
+            $update = User::where('id', '=', request()->user()->id)->update(['name' => $request->name, 'email' => $request->email, 'alternative_number' => $request->alternative_number,'image' => $filename]);
             return response()->json([
                 'status'  => true,
                 'message' => 'User Updated Successfully'
