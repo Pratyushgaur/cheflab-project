@@ -144,17 +144,21 @@ class CartApiController extends Controller
             }
           
             $cart_users = Cart::where('user_id', $request->user_id)->first();
+            
             if (!isset($cart_users->id))
                 return response()->json([ 'status' => false, 'error' => "your cart is empty" ], 401);
             $cart_id = $cart_users->id;
+            
             $e = Cart::where('id', $cart_id)->exists();
             if (!$e)
                 return response()->json([ 'status' => false, 'error' => 'Cart does not exists.' ], 401);
 
             $wallet_amount = 0;
             $u             = User::select('wallet_amount')->find($request->user_id);
+            $platform = AdminMasters::select('platform_charges')->get();
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
+                $platform_charges = $platform->platform_charges;
 
             $pro      = Product_master::select('cart_products.product_qty', 'products.product_name', 'products.product_image', 'products.category', 'products.menu_id',
                 'products.dis', 'products.type', 'products.product_price', 'products.customizable', 'products.product_for', 'products.product_rating', 'products.cuisines',
@@ -224,6 +228,7 @@ class CartApiController extends Controller
                                       'message'  => 'Data Get Successfully',
                                       'response' => [ "cart"           => $r,
                                                       'wallet_amount'  => $wallet_amount,
+                                                      'platform_charges' => $platform_charges,
                                                       'max_cod_amount' => @$admin_setting->max_cod_amount ] ], 200);
         } catch (Throwable $th) {
             return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
@@ -345,6 +350,8 @@ class CartApiController extends Controller
 
             $wallet_amount = 0;
             $u             = User::select('wallet_amount')->find($request->user_id);
+            $platform = AdminMasters::select('platform_charges')->get();
+            $platform_charges = $platform->platform_charges;
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
@@ -414,7 +421,7 @@ class CartApiController extends Controller
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
 
             return response()->json([ 'status' => true, 'message' => 'Data Get Successfully',
-            'response' => [ "cart" => $r, 'wallet_amount' => $wallet_amount,'max_cod_amount'=>@$admin_setting->max_cod_amount ] ], 200);
+            'response' => [ "cart" => $r, 'wallet_amount' => $wallet_amount,'platform' => $platform_charges,'max_cod_amount'=>@$admin_setting->max_cod_amount ] ], 200);
         } catch (Throwable $th) {
             return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
         }

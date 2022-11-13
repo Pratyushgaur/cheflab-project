@@ -1440,7 +1440,32 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function getReferAmmoun(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'user_id'  => 'required'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $user = User::whare('id',request()->user()->id)->select('referralCode','by_earn')->get();
+           
+            return response()->json([
+                'status'  => true,
+                'message' => 'User Updated Successfully',
+                'response' => $user
 
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
     public function updateUserInfo(Request $request)
     {
         try {
