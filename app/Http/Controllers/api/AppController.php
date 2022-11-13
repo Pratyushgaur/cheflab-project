@@ -1202,7 +1202,38 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function add_to_like_product_chef(Request $request)
+    {
+        try {
 
+            $validateUser = Validator::make($request->all(), [
+                'user_id'    => 'required|numeric',
+                'product_id' => 'required|numeric'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            UserProductLike::updateOrCreate([
+                'user_id'    => $request->user_id,
+                'product_id' => $request->product_id
+            ]);
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Liked Successfully',
+                'response' => true
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 
     public function create_order(Request $request)
     {
@@ -1353,8 +1384,39 @@ class AppController extends Controller
     }
 
 
-    public
-    function deleteLikeProduct(Request $request)
+    public function deleteLikeProduct(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'user_id'    => 'required|numeric',
+                'product_id' => 'required|numeric'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            UserProductLike::where([
+                'user_id'    => $request->user_id,
+                'product_id' => $request->product_id
+            ])->delete();
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Dislike Successfully',
+                'response' => true
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function deleteLikeProductChef(Request $request)
     {
         try {
 
@@ -1388,6 +1450,38 @@ class AppController extends Controller
     }
 
     public function deleteLikeVendor(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'user_id'   => 'required|numeric',
+                'vendor_id' => 'required|numeric'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            UserVendorLike::where([
+                'user_id'   => $request->user_id,
+                'vendor_id' => $request->vendor_id
+            ])->delete();
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Dislike Successfully',
+                'response' => true
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function deleteLikeChef(Request $request)
     {
         try {
 
@@ -1455,6 +1549,31 @@ class AppController extends Controller
                 'status'  => true,
                 'message' => 'User Updated Successfully',
                 'response' => $user
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function getReferAmmount(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'user_id'               => 'required'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $user = User::where('id','=',request()->user()->id)->select('referralCode','by_earn')->get();
+            return response()->json([
+                'status'  => true,
+                'message' => 'User Updated Successfully',
+                'respons' => $user
 
             ], 200);
 
