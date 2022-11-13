@@ -84,6 +84,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
+    Route::post('delivery-address-update',[App\Http\Controllers\api\DeliveryAddressController::class,'updateAdress']);
+    Route::post('delivery-address-delete',[App\Http\Controllers\api\DeliveryAddressController::class,'deleteAddres']);
     // FAQ
     Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
     // Privacy Polic TAD User
