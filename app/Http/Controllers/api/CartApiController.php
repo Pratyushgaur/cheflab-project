@@ -155,7 +155,7 @@ class CartApiController extends Controller
 
             $wallet_amount = 0;
             $u             = User::select('wallet_amount')->find($request->user_id);
-            $platform = AdminMasters::select('platform_charges')->get();
+            $platform = AdminMasters::select('platform_charges')->first();
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
                 $platform_charges = $platform->platform_charges;
@@ -350,7 +350,7 @@ class CartApiController extends Controller
 
             $wallet_amount = 0;
             $u             = User::select('wallet_amount')->find($request->user_id);
-            $platform = AdminMasters::select('platform_charges')->get();
+            $platform = AdminMasters::select('platform_charges')->first();
             $platform_charges = $platform->platform_charges;
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
