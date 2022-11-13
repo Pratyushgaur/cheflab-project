@@ -70,6 +70,7 @@ class DeliveryAddressController extends Controller
             $validateUser = Validator::make($request->all(), 
             [
                 'user_id' => 'required',
+                'address_type' => 'required',
                 'house_no' => 'required',
                 'contact_no' => 'numeric',  
                 'lat' => 'required',  
@@ -79,15 +80,8 @@ class DeliveryAddressController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $address = DeliveryAddress::find(request()->user()->id);
-            $address->house_no =$request->house_no;
-            $address->user_id = $request->user_id;
-            $address->reach =$request->reach;
-            $address->contact_no =$request->contact_no;
-            $address->address_type =$request->address_type;
-            $address->lat = $request->lat;
-            $address->long = $request->long;
-            $address->save();
+           // $address = DeliveryAddress::find(request()->user()->id);
+            $update = DeliveryAddress::where('user_id', '=', $request->user_id)->where('address_type', '=', $request->address_type)->update(['house_no' => $request->house_no, 'reach' => $request->reach, 'contact_no' => $request->contact_no]);
             return response()->json([
                 'status' => true,
                 'message'=>'Address Update Successfully'
@@ -103,13 +97,13 @@ class DeliveryAddressController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
-                'user_id' => 'required',
+                'id' => 'required',
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            DeliveryAddress::where('id',$request->user_id)->delete();
+            DeliveryAddress::where('id',$request->id)->delete();
           //  DB::table('users')->delete($id);
            // $address->save();
             return response()->json([
