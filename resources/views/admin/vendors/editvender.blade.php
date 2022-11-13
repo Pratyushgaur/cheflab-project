@@ -182,7 +182,43 @@
                                 </div>
 
                                 <div class="row">
+                                <div class="col-md-6">
+                                        <div>
+                                          <label for="">Restaurant Images ( Ratio 1:1 )</label>
+                                        </div>
+                                        <div class="image-upload">
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    @if($vendor->image == null)
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    @else
+                                                    <img class="icon2" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
+                                                    @endif
+                                                </div>
+                                            </label>
+                                            <input id="file-input" type="file" name="image" required/>
+                                        </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                        <div>
+                                          <label for="">Banner Image (Ratio 3:1)</label>
 
+                                        </div>
+                                        <div class="image-upload">
+
+                                            <label for="file-input4">
+                                                <div class="upload-icon4">
+                                                    @if($vendor->banner_image == null)
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    @else
+                                                    <img class="icon2" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                    @endif
+                                                </div>
+                                            </label>
+                                            <input id="file-input4"  type="file" name="banner_image"/>
+
+                                        </div>
+                                  </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
@@ -193,7 +229,7 @@
                                   <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Restaurant Owner <span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->owner_name}}" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Owner Name">
+                                        <input type="text" value="{{$vendor->owner_name}}" name="owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Owner Name">
                                     </div>
                                   </div>
                                   <div class="col-md-3">
@@ -215,6 +251,12 @@
                                         <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
+                                            <input type="text" name="password" value="{{$vendor->password}}" class="form-control"  id="" placeholder="Enter Password">
+                                        </div>
+                                    </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
