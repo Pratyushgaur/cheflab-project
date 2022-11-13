@@ -20,15 +20,37 @@ use Illuminate\Support\Facades\Crypt;
 
 class ProductController extends Controller
 {
-    function index()
+    function index(Request $request)
     {
+        \DB::enableQueryLog();
         $products = Product_master::join('categories', 'products.category', '=', 'categories.id')
             ->select('products.*', 'categories.name as categoryName')
-            ->where('products.userId', '=', Auth::guard('vendor')->user()->id)->paginate(4);
-        $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name','id');
+            ->where('products.userId', '=', Auth::guard('vendor')->user()->id);
+
+        $products->where(function ($q) use ($request) {
+
+            if ($request->name != '')
+                $q->orWhere('product_name', 'like', "%" . $request->name . "%");
+
+            if ($request->price != '')
+                $q->orWhere('product_price', '=', $request->price);
+
+            if ($request->status != '')
+                $q->orWhere('status', '=', $request->status);
+
+            if ($request->approve != '')
+                $q->orWhere('product_approve', '=', $request->approve);
+
+            if ($request->category != '')
+                $q->orWhere('category', '=', $request->category);
+
+        });
+        $products = $products->paginate(15);
+//dd(\DB::getqueryLog());
+        $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name', 'id');
 
 //dd($products);
-        return view('vendor.restaurant.products.list',compact('products','categories'));
+        return view('vendor.restaurant.products.list', compact('products', 'categories'));
     }
 
     function addons()
@@ -61,12 +83,11 @@ class ProductController extends Controller
         ]);
         try {
 
-            if($request->custimization == 'true')
-            {
-                if($request->addons=='')
-                foreach ($request->variant_name as $k => $v)
-                    if($v=='' || $request->price[$k]=='')
-                        return redirect()->back()->with('error', 'variant or addon, at least one of the filed must be required.');
+            if ($request->custimization == 'true') {
+                if ($request->addons == '')
+                    foreach ($request->variant_name as $k => $v)
+                        if ($v == '' || $request->price[$k] == '')
+                            return redirect()->back()->with('error', 'variant or addon, at least one of the filed must be required.');
             }
 
             //  dd($request->all());
@@ -83,7 +104,8 @@ class ProductController extends Controller
             $product->product_price        = $request->item_price;
             $product->customizable         = $request->custimization;
             $product->preparation_time     = $request->preparation_time;
-            $product->type                 = $request->type;
+            if (isset($request->product_type))
+                $product->type = $request->product_type;
 
             // if($request->custimization == 'true'){
             //     $data = [];
@@ -105,8 +127,8 @@ class ProductController extends Controller
             Variant::create(['product_id' => $product->id, 'variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
             if ($request->custimization == 'true')
                 foreach ($request->variant_name as $k => $v) {
-                    if($v!='' && $request->price[$k]!='')
-                    Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
+                    if ($v != '' && $request->price[$k] != '')
+                        Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
                 }
             $subscribers = Superadmin::get();
             foreach ($subscribers as $k => $admin)
@@ -132,11 +154,10 @@ class ProductController extends Controller
             'preparation_time' => 'required',
         ]);
 //dd($request->all());
-        if($request->custimization == 'true')
-        {
-            if($request->addons=='')
+        if ($request->custimization == 'true') {
+            if ($request->addons == '')
                 foreach ($request->variant_name as $k => $v)
-                    if($v=='' || $request->price[$k]=='')
+                    if ($v == '' || $request->price[$k] == '')
                         return redirect()->back()->with('error', 'variant or addon, at least one of the filed must be required.');
         }
 
@@ -154,7 +175,8 @@ class ProductController extends Controller
         $product->chili_level          = $request->chili_level;
         $product->primary_variant_name = $request->primary_variant_name;
         $product->product_approve      = 2;
-        $product->type                 = $request->type;
+        if (isset($request->product_type))
+            $product->type = $request->product_type;
 //        if ($request->status == '0') {
 //            $product->status = 2;
 //        }

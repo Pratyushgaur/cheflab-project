@@ -284,9 +284,7 @@
             $('#price').empty().append();
         });
         $('#datepicker').datepicker({
-
             dateFormat: "yy-mm-dd",
-            maxDate: '+7d',
             minDate: -0
         });
 

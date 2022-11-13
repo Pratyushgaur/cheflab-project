@@ -53,4 +53,7 @@ return [
     'vendor_type' => ['restaurant' => "Restaurant", 'chef' => "Chef"],//table :products column:type
 
     'vendor_food_type' => [1 => 'Veg', 3 => 'Veg + Non Veg'],
+
+    "product_approve"=>[1=>'Approved', 2=>'pending' ,3=>'Reject'],//product : table, column name :product_approve
+    "product_status"=>[1=>"Active", 0=>"in-active"]//tabe: products ,column name :status
 ];

@@ -166,14 +166,14 @@
                                                 <label class="ms-checkbox-wrap ms-checkbox-danger">
                                                     <input type="radio" value="non_veg" name="product_type"> <i
                                                         class="ms-checkbox-check"></i>
-                                                </label> <span> Non Veg </span>
+                                                </label> <span>Veg + Non Veg </span>
                                             </li>
-                                            <li>
-                                                <label class="ms-checkbox-wrap ms-checkbox-warning">
-                                                    <input type="radio" value="eggs" name="product_type"> <i
-                                                        class="ms-checkbox-check"></i>
-                                                </label> <span> Eggitarian </span>
-                                            </li>
+{{--                                            <li>--}}
+{{--                                                <label class="ms-checkbox-wrap ms-checkbox-warning">--}}
+{{--                                                    <input type="radio" value="eggs" name="product_type"> <i--}}
+{{--                                                        class="ms-checkbox-check"></i>--}}
+{{--                                                </label> <span> Eggitarian </span>--}}
+{{--                                            </li>--}}
                                         </ul>
                                     </div>
                                 </div>
@@ -287,22 +287,22 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
-                                    <label>Type</label>
-                                    <div class="input-group">
+{{--                                <div class="col-md-4 mb-3">--}}
+{{--                                    <label>Type</label>--}}
+{{--                                    <div class="input-group">--}}
 
-                                        <label>{!! Form ::radio('type','veg',true) !!} Veg</label>
+{{--                                        <label>{!! Form ::radio('type','veg',true) !!} Veg</label>--}}
 
-                                        <label>{!! Form ::radio('type','non_veg',true,['style'=>"margin-left: 10px;"]) !!}
-                                            Non-veg</label>
+{{--                                        <label>{!! Form ::radio('type','non_veg',true,['style'=>"margin-left: 10px;"]) !!}--}}
+{{--                                            Non-veg</label>--}}
 
-                                        @if ($errors->has('type'))
-                                            <span
-                                                class="ms-text-danger"><strong>{{ $errors->first('type') }}</strong></span>
-                                        @endif
+{{--                                        @if ($errors->has('type'))--}}
+{{--                                            <span--}}
+{{--                                                class="ms-text-danger"><strong>{{ $errors->first('type') }}</strong></span>--}}
+{{--                                        @endif--}}
 
-                                    </div>
-                                </div>
+{{--                                    </div>--}}
+{{--                                </div>--}}
 
                                 {{--                                <div class="col-md-6 mb-3">--}}
                                 {{--                                    <label for="validationCustom23">Chili Level</label>--}}

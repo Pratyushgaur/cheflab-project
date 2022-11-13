@@ -110,8 +110,8 @@ class VendorController extends Controller
             'address'           => 'required',
             'fssai_lic_no'      => 'required',
             'vendor_commission' => 'required',
-            'categories'        => 'required',
-            'deal_cuisines'     => 'required',
+//            'categories'        => 'required',
+//            'deal_cuisines'     => 'required',
             'tax'               => 'required',
         ]);
         $vendors                   = Vendors::find(\Auth::guard('vendor')->user()->id);
@@ -126,8 +126,8 @@ class VendorController extends Controller
         $vendors->tax              = $request->tax;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
-        $vendors->deal_categories  = implode(',', $request->categories);
-        $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+//        $vendors->deal_categories  = implode(',', $request->categories);
+//        $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
 //
         if ($request->has('image')) {
             $vendors_old=$vendors->image;
@@ -159,7 +159,6 @@ class VendorController extends Controller
             $request->banner_image->move(public_path('vendor-banner'), $filename);
             $files[]               = $filename;
             $vendors->banner_image = json_encode($files);
-
         }
         $vendors->save();
 //        dd($vendors);

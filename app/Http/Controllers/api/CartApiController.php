@@ -199,26 +199,29 @@ class CartApiController extends Controller
                     }
                 }
             }
-            dd($responce);
-            foreach ($responce as $i => $p) {
+//            dd($responce);
+            if(is_array($responce) && !empty($responce)) {
+                foreach ($responce as $i => $p) {
 
-                if (isset($p['variants']))
-                    $r[$i]['variants'] = array_values($p['variants']);
+                    if (isset($p['variants']))
+                        $r[$i]['variants'] = array_values($p['variants']);
 
-                if (isset($p['cuisines']))
-                    $r[$i]['cuisines'] = array_values($p['cuisines']);
+                    if (isset($p['cuisines']))
+                        $r[$i]['cuisines'] = array_values($p['cuisines']);
 
-                if ($p['addons'] != '') {
-                    $addons          = explode(',', $p['addons']);
-                    $r[$i]['addons'] = \App\Models\Addons::select('id', 'addon', 'price')->whereIn('id', $addons)->get()->toArray();
+                    if ($p['addons'] != '') {
+                        $addons          = explode(',', $p['addons']);
+                        $r[$i]['addons'] = \App\Models\Addons::select('id', 'addon', 'price')->whereIn('id', $addons)->get()->toArray();
+                    }
+                    unset($p['variants']);
+                    unset($p['cuisines']);
+                    unset($p['addons']);
+                    $r[$i] = array_merge($r[$i], $p);
+
                 }
-                unset($p['variants']);
-                unset($p['cuisines']);
-                unset($p['addons']);
-                $r[$i] = array_merge($r[$i], $p);
-            }
-            $r = array_values($r);
-
+                $r = array_values($r);
+            }else
+                $r=[];
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
             return response()->json([ 'status'   => true,
                                       'message'  => 'Data Get Successfully',
@@ -226,7 +229,7 @@ class CartApiController extends Controller
                                                       'wallet_amount'  => $wallet_amount,
                                                       'max_cod_amount' => @$admin_setting->max_cod_amount ] ], 200);
         } catch (Throwable $th) {
-            return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
+            return response()->json([ 'status' => False, 'error' => $th->getTrace() ], 500);
         }
     }
 

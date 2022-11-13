@@ -1,5 +1,5 @@
 <?php
-$urlbanners='';
+$urlbanners = '';
 $vendor_food_type = config('custom_app_setting.vendor_food_type');
 //echo $resturant->vendor_type;
 //dd($vendor_type);
@@ -29,26 +29,26 @@ if (is_array($banners))
                     {{--                <a href="#" class="btn btn-light"> <i class="material-icons">file_download</i> Download Resume</a>--}}
                 </div>
             </div>
-            <ul class="ms-profile-navigation nav nav-tabs tabs-bordered" role="tablist">
-                <li role="presentation">
-                    <a href="#tab1" aria-controls="tab1" class="active show" role="tab" data-toggle="tab"> Overview </a>
-                </li>
-                <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"> Professional
-                        Skills </a></li>
-                <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">
-                        Portfolio </a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane" id="tab1">
+            {{--            <ul class="ms-profile-navigation nav nav-tabs tabs-bordered" role="tablist">--}}
+            {{--                <li role="presentation">--}}
+            {{--                    <a href="#tab1" aria-controls="tab1" class="active show" role="tab" data-toggle="tab"> Overview </a>--}}
+            {{--                </li>--}}
+            {{--                <li role="presentation"><a href="#tab2" aria-controls="tab2" role="tab" data-toggle="tab"> Professional--}}
+            {{--                        Skills </a></li>--}}
+            {{--                <li role="presentation"><a href="#tab3" aria-controls="tab3" role="tab" data-toggle="tab">--}}
+            {{--                        Portfolio </a></li>--}}
+            {{--            </ul>--}}
+            {{--            <div class="tab-content">--}}
+            {{--                <div class="tab-pane" id="tab1">--}}
 
-                </div>
-                <div class="tab-pane" id="tab2">
+            {{--                </div>--}}
+            {{--                <div class="tab-pane" id="tab2">--}}
 
-                </div>
-                <div class="tab-pane" id="tab3">
+            {{--                </div>--}}
+            {{--                <div class="tab-pane" id="tab3">--}}
 
-                </div>
-            </div>
+            {{--                </div>--}}
+            {{--            </div>--}}
         </div>
 
         <div class="row">
@@ -130,12 +130,12 @@ if (is_array($banners))
                                 <th scope="row">Email</th>
                                 <td>{{$resturant->email}}</td>
                             </tr>
-
-                            <tr>
-                                <th scope="row">Experience</th>
-                                <td>{{$resturant->experience}}</td>
-                            </tr>
-
+                            @if($resturant->experience!='')
+                                <tr>
+                                    <th scope="row">Experience</th>
+                                    <td>{{$resturant->experience}}</td>
+                                </tr>
+                            @endif
                             <tr>
                                 <th scope="row">Mobile</th>
                                 <td>{{$resturant->mobile}}</td>
@@ -164,7 +164,7 @@ if (is_array($banners))
 
                             <tr>
                                 <th scope="row">Food Type</th>
-                                <td>{{$vendor_food_type[$resturant->vendor_food_type]}}</td>
+                                <td>{{isset($vendor_food_type[$resturant->vendor_food_type]) ? $vendor_food_type[$resturant->vendor_food_type] : ''}}</td>
                             </tr>
 
                             <tr>
@@ -172,6 +172,18 @@ if (is_array($banners))
                                 <td><?php echo ($resturant->table_service) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-dark">Not Active</span>'; ?></td>
                             </tr>
 
+                            <tr>
+                                <th scope="row">GST NO.</th>
+                                <td><?php echo ($resturant->gst_no != '') ? $resturant->gst_no : ''; ?></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Tax</th>
+                                <td><?php echo $resturant->tax; ?></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">FSSAI</th>
+                                <td><?php echo $resturant->fssai_lic_no; ?></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -221,20 +233,20 @@ if (is_array($banners))
                                         <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control" id="" placeholder="Enter Mobile Number">
                                     </div>
                                 </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Deal With Categories
-                                            <span class="text-danger">*</span></label>
-                                        {{ Form::select('categories[]',$categories,@explode(',',$vendor->deal_categories),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Categories",'style'=>"width: 100%;"]) }}
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Deal With Cuisines
-                                            <span class="text-danger">*</span></label>
-                                        {{ Form::select('deal_cuisines[]',$cuisines,@explode(',',$vendor->deal_cuisines),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Cuisines" ,'style'=>"width: 100%;"]) }}
-                                    </div>
-                                </div>
+                                {{--                                <div class="col-md-12">--}}
+                                {{--                                    <div class="form-group">--}}
+                                {{--                                        <label for="exampleInputEmail1">Deal With Categories--}}
+                                {{--                                            <span class="text-danger">*</span></label>--}}
+                                {{--                                        {{ Form::select('categories[]',$categories,@explode(',',$vendor->deal_categories),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Categories",'style'=>"width: 100%;"]) }}--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
+                                {{--                                <div class="col-md-12">--}}
+                                {{--                                    <div class="form-group">--}}
+                                {{--                                        <label for="exampleInputEmail1">Deal With Cuisines--}}
+                                {{--                                            <span class="text-danger">*</span></label>--}}
+                                {{--                                        {{ Form::select('deal_cuisines[]',$cuisines,@explode(',',$vendor->deal_cuisines),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Cuisines" ,'style'=>"width: 100%;"]) }}--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address
@@ -242,27 +254,27 @@ if (is_array($banners))
                                         <input type="text" name="address" value="{{$vendor->address}}" class="form-control" id="" placeholder="Enter Restaurant Address">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
+                                {{--                                <div class="col-md-6">--}}
+                                {{--                                    <div class="form-group">--}}
 
-                                        <label for="exampleInputEmail1">Vendor Food Type</label><br>
+                                {{--                                        <label for="exampleInputEmail1">Vendor Food Type</label><br>--}}
 
-                                        <div class="form-group clearfix">
-                                            <div class="icheck-success d-inline">
+                                {{--                                        <div class="form-group clearfix">--}}
+                                {{--                                            <div class="icheck-success d-inline">--}}
 
-                                                <input type="radio" id="veg" name="type" value="1" {{($vendor->vendor_food_type==1) ? 'checked' : ''}}>
-                                                <label for="veg">Veg</label>
-                                            </div>
+                                {{--                                                <input type="radio" id="veg" name="type" value="1" {{($vendor->vendor_food_type==1) ? 'checked' : ''}}>--}}
+                                {{--                                                <label for="veg">Veg</label>--}}
+                                {{--                                            </div>--}}
 
-                                            <div class="icheck-danger d-inline">
-                                                <input type="radio" id="non_veg" name="type" value="3" {{($vendor->vendor_food_type==3) ? 'checked' : ''}}>
-                                                <label for="non_veg">Veg + Non Veg</label>
-                                            </div>
+                                {{--                                            <div class="icheck-danger d-inline">--}}
+                                {{--                                                <input type="radio" id="non_veg" name="type" value="3" {{($vendor->vendor_food_type==3) ? 'checked' : ''}}>--}}
+                                {{--                                                <label for="non_veg">Veg + Non Veg</label>--}}
+                                {{--                                            </div>--}}
 
 
-                                        </div>
-                                    </div>
-                                </div>
+                                {{--                                        </div>--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">FSSAI Lic. No.
@@ -284,26 +296,26 @@ if (is_array($banners))
                                         <input type="text" name="tax" value="{{$vendor->tax}}" class="form-control" id="" placeholder="Tax">
                                     </div>
                                 </div>
-{{--                                <div class="col-md-3">--}}
-{{--                                    <div class="form-group">--}}
-{{--                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>--}}
-{{--                                        <select class="form-control gstavailable" name="gst_available">--}}
-{{--                                            @if($vendor->gst_available == '0')--}}
-{{--                                                <option value="0">Not Available</option>--}}
-{{--                                            @else--}}
-{{--                                                <option value="1">Available</option>--}}
-{{--                                            @endif--}}
-{{--                                        </select>--}}
-{{--                                    </div>--}}
-{{--                                </div>--}}
+                                {{--                                <div class="col-md-3">--}}
+                                {{--                                    <div class="form-group">--}}
+                                {{--                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>--}}
+                                {{--                                        <select class="form-control gstavailable" name="gst_available">--}}
+                                {{--                                            @if($vendor->gst_available == '0')--}}
+                                {{--                                                <option value="0">Not Available</option>--}}
+                                {{--                                            @else--}}
+                                {{--                                                <option value="1">Available</option>--}}
+                                {{--                                            @endif--}}
+                                {{--                                        </select>--}}
+                                {{--                                    </div>--}}
+                                {{--                                </div>--}}
                                 @if($vendor->gst_available == '1')
-{{--                                    <div class="col-md-6 custmization-block">--}}
-{{--                                        <div class="form-group">--}}
-{{--                                            <label for="exampleInputEmail1">GST--}}
-{{--                                                No<span class="text-danger">*</span></label>--}}
-{{--                                            <input type="password" name="gst_no" class="form-control" id="" placeholder="Enter Confirm Password">--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
+                                    {{--                                    <div class="col-md-6 custmization-block">--}}
+                                    {{--                                        <div class="form-group">--}}
+                                    {{--                                            <label for="exampleInputEmail1">GST--}}
+                                    {{--                                                No<span class="text-danger">*</span></label>--}}
+                                    {{--                                            <input type="password" name="gst_no" class="form-control" id="" placeholder="Enter Confirm Password">--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                    </div>--}}
                                 @endif
                             </div>
                             <div class="card card-default">
@@ -318,10 +330,10 @@ if (is_array($banners))
                                                 <label for="file-input">
                                                     <div class="upload-icon">
                                                         @if($vendor->image == null)
-                                                            <?php $is_require=true;?>
+                                                            <?php $is_require = true;?>
                                                             <img class="icon" src="{{asset('add-image.png')}}">
                                                         @else
-                                                            <?php $is_require=false;?>
+                                                            <?php $is_require = false;?>
                                                             <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
                                                         @endif
                                                     </div>
@@ -337,10 +349,10 @@ if (is_array($banners))
                                                 <label for="file-input2">
                                                     <div class="upload-icon2">
                                                         @if($vendor->licence_image == null)
-                                                            <?php $is_require=true;?>
+                                                            <?php $is_require = true;?>
                                                             <img class="icon2" src="{{asset('add-image.png')}}">
                                                         @else
-                                                            <?php $is_require=false;?>
+                                                            <?php $is_require = false;?>
                                                             <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->licence_image ) }}">
                                                         @endif
                                                     </div>
@@ -359,10 +371,10 @@ if (is_array($banners))
                                                 <label for="file-input3">
                                                     <div class="upload-icon3">
                                                         @if($vendor->other_document_image == null)
-                                                            <?php $is_require=true;?>
+                                                            <?php $is_require = true;?>
                                                             <img class="icon3" src="{{asset('add-image.png')}}">
                                                         @else
-                                                            <?php $is_require=false;?>
+                                                            <?php $is_require = false;?>
                                                             <img class="icon3" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">
                                                         @endif
                                                     </div>
@@ -384,11 +396,12 @@ if (is_array($banners))
                                                         @if($vendor->banner_image == null)
                                                             <img class="icon4" src="{{asset('add-image.png')}}">
                                                         @else
-                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                            <?php $b = json_decode($vendor->banner_image);?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$b[0]) }}">
                                                         @endif
                                                     </div>
                                                 </label>
-                                                <input id="file-input4" type="file" name="banner_image" />
+                                                <input id="file-input4" type="file" name="banner_image"/>
 
                                             </div>
 
