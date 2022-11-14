@@ -10,6 +10,7 @@ use App\Models\CartProductAddon;
 use App\Models\CartProductVariant;
 use App\Models\Product_master;
 use App\Models\User;
+use App\Models\Vendors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -44,7 +45,7 @@ class CartApiController extends Controller
 
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             global $cart_id;
             try {
@@ -53,7 +54,7 @@ class CartApiController extends Controller
                 $is_exist = Cart::where('user_id', $request->user_id)->first();
                 if (isset($is_exist->id)) {
                     $error = 'Another Cart is already exist.So that you can not create new one';
-                    return response()->json([ 'status' => false, 'error' => $error ], 401);
+                    return response()->json(['status' => false, 'error' => $error], 401);
                 }
 
                 $cart_obj            = new Cart($request->all());
@@ -62,6 +63,9 @@ class CartApiController extends Controller
                 $cart_obj->saveOrFail();
                 $cart_id = $cart_obj->id;
                 foreach ($request->products as $k => $p) {
+                    if (!Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->exists()) {
+                        return response()->json(['status' => false, 'error' => 'provided product not available under given vendor.'], 401);
+                    }
                     $cart_products = new CartProduct($p);
                     $cart_obj->products()->save($cart_products);
                     if (isset($p['variants']))
@@ -85,14 +89,14 @@ class CartApiController extends Controller
 
                 DB::commit();
 
-                return response()->json([ 'status' => true, 'message' => 'Data Get Successfully', 'response' => [ "cart_id" => $cart_id ] ], 200);
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
-                return response()->json([ 'status' => false, 'error' => $e->getMessage() ], 500);
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
             }
         } catch (Throwable $th) {
-            return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
+            return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -100,10 +104,10 @@ class CartApiController extends Controller
     public function empty_cart(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), [ 'user_id' => 'required|numeric' ]);
+            $validateUser = Validator::make($request->all(), ['user_id' => 'required|numeric']);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             global $cart_id;
             try {
@@ -118,38 +122,37 @@ class CartApiController extends Controller
                     $cart_obj->delete();
                 }
                 DB::commit();
-                return response()->json([ 'status' => true, 'message' => 'Successfully' ], 200);
+                return response()->json(['status' => true, 'message' => 'Successfully'], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
-                return response()->json([ 'status' => false, 'error' => $e->getMessage() ], 500);
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
             }
         } catch (Throwable $th) {
-            return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
+            return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
 
 
     public function view_cart(Request $request)
     {
-
         try {
             $validateUser = Validator::make($request->all(), [
                 'user_id' => 'required|numeric'
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
-            $cart_users = Cart::where('user_id', $request->user_id)->first();
+            $cart_users = Cart::select('user_id','vendor_id','id')->where('user_id', $request->user_id)->first();
             if (!isset($cart_users->id))
-                return response()->json([ 'status' => false, 'error' => "your cart is empty" ], 401);
+                return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
             $cart_id = $cart_users->id;
 
             $e = Cart::where('id', $cart_id)->exists();
             if (!$e)
-                return response()->json([ 'status' => false, 'error' => 'Cart does not exists.' ], 401);
+                return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
 
             $wallet_amount = 0;
             $u             = User::select('wallet_amount')->find($request->user_id);
@@ -200,7 +203,7 @@ class CartApiController extends Controller
                 }
             }
 //            dd($responce);
-            if(is_array($responce) && !empty($responce)) {
+            if (is_array($responce) && !empty($responce)) {
                 foreach ($responce as $i => $p) {
 
                     if (isset($p['variants']))
@@ -217,19 +220,24 @@ class CartApiController extends Controller
                     unset($p['cuisines']);
                     unset($p['addons']);
                     $r[$i] = array_merge($r[$i], $p);
-
+//                    dd($r);
                 }
                 $r = array_values($r);
-            }else
-                $r=[];
+            } else
+                $r = [];
+
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
-            return response()->json([ 'status'   => true,
-                                      'message'  => 'Data Get Successfully',
-                                      'response' => [ "cart"           => $r,
-                                                      'wallet_amount'  => $wallet_amount,
-                                                      'max_cod_amount' => @$admin_setting->max_cod_amount ] ], 200);
+
+            $vendor = Vendors::find($cart_users->vendor_id);
+            return response()->json(['status'   => true,
+                                     'message'  => 'Data Get Successfully',
+                                     'response' => ["cart_id"        => $cart_id,
+                                                    "cart"           => $r,
+                                                    "vendor"         => $vendor,
+                                                    'wallet_amount'  => $wallet_amount,
+                                                    'max_cod_amount' => @$admin_setting->max_cod_amount]], 200);
         } catch (Throwable $th) {
-            return response()->json([ 'status' => False, 'error' => $th->getTrace() ], 500);
+            return response()->json(['status' => False, 'error' => $th->getTrace()], 500);
         }
     }
 
@@ -245,16 +253,17 @@ class CartApiController extends Controller
                     'products.*.product_id'             => 'required|numeric',
                     'products.*.product_qty'            => 'required|numeric',
                     'products.*.variants.*.variant_id'  => 'numeric|nullable',
-                    'products.*.variants.*.variant_qty' => 'string|nullable',
+                    'products.*.variants.*.variant_qty' => 'numeric|nullable',
                     'products.*.addons.*.addon_id'      => 'numeric|nullable',
-                    'products.*.addons.*.addon_qty'     => 'string|nullable',
+                    'products.*.addons.*.addon_qty'     => 'numeric|nullable',
                 ]
-
             );
+
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+//            dd($request->all());
             global $cart_id;
             try {
                 DB::beginTransaction();
@@ -262,7 +271,7 @@ class CartApiController extends Controller
                 $cart_products_addons_id = [];
                 $cart_obj                = Cart::find($request->cart_id);
                 if (!$cart_obj) {
-                    return response()->json([ 'status' => false, 'error' => 'Cart not found' ], 401);
+                    return response()->json(['status' => false, 'error' => 'Cart not found'], 401);
                 }
 
                 $cart_obj->user_id   = $request->user_id;
@@ -270,6 +279,10 @@ class CartApiController extends Controller
                 $cart_obj->saveOrFail();
                 $cart_id = $cart_obj->id;
                 foreach ($request->products as $k => $p) {
+                    if (!Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->exists()) {
+                        return response()->json(['status' => false, 'error' => 'provided product not available under given vendor.'], 401);
+                    }
+
                     $cart_products = CartProduct::where('product_id', $p['product_id'])->where('cart_id', $cart_id)->first();
 
 
@@ -316,14 +329,14 @@ class CartApiController extends Controller
 
                 DB::commit();
 
-                return response()->json([ 'status' => true, 'message' => 'Data Get Successfully', 'response' => [ "cart_id" => $cart_id ] ], 200);
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
-                return response()->json([ 'status' => false, 'error' => $e->getMessage() ], 500);
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
             }
         } catch (Throwable $th) {
-            return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
+            return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
 
@@ -337,13 +350,13 @@ class CartApiController extends Controller
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
-                return response()->json([ 'status' => false, 'error' => $validateUser->errors()->all() ], 401);
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
             \DB::enableQueryLog();
-            $cart_users = Cart::where([ 'vendor_id' => $request->vendor_id, 'user_id' => $request->user_id ])->first();
+            $cart_users = Cart::where(['vendor_id' => $request->vendor_id, 'user_id' => $request->user_id])->first();
             if (!isset($cart_users->id))
-                return response()->json([ 'status' => false, 'error' => "your cart is empty" ], 401);
+                return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
             $cart_id = $cart_users->id;
 
             $wallet_amount = 0;
@@ -413,13 +426,13 @@ class CartApiController extends Controller
                 unset($p['addons']);
                 $r[$i] = array_merge($r[$i], $p);
             }
-            $r = array_values($r);
+            $r             = array_values($r);
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
 
-            return response()->json([ 'status' => true, 'message' => 'Data Get Successfully',
-            'response' => [ "cart" => $r, 'wallet_amount' => $wallet_amount,'max_cod_amount'=>@$admin_setting->max_cod_amount ] ], 200);
+            return response()->json(['status'   => true, 'message' => 'Data Get Successfully',
+                                     'response' => ["cart" => $r, 'wallet_amount' => $wallet_amount, 'max_cod_amount' => @$admin_setting->max_cod_amount]], 200);
         } catch (Throwable $th) {
-            return response()->json([ 'status' => False, 'error' => $th->getMessage() ], 500);
+            return response()->json(['status' => False, 'error' => $th->getMessage()], 500);
         }
     }
 

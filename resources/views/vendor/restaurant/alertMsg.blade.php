@@ -29,7 +29,7 @@
                         type: 'warning',
                         title: "{{ Session::get('notice') }}",
                         showConfirmButton: true,
-                        // timer: 15000
+                        timer: 200
                     }
                 );
             })(jQuery);
@@ -37,41 +37,42 @@
     @endif
 
     @if (Session::has('poup_success'))
-    <script>
-        (function ($) {
-            Swal.fire({
-                    // position: 'top-end',
-                    type: 'success',
-                    title: "{{ Session::get('poup_success') }}",
-                    showConfirmButton: true,
-                    // timer: 15000
-                }
-            );
-        })(jQuery);
-    </script>
-@endif
+        <script>
+            (function ($) {
+                Swal.fire({
+                        // position: 'top-end',
+                        type: 'success',
+                        title: "{{ Session::get('poup_success') }}",
+                        showConfirmButton: true,
+                        timer: 200
+                    }
+                );
+            })(jQuery);
+        </script>
+    @endif
 
     <script>
         (function ($) {
             'use strict';
 
-            toastr.options = {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": true,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "50000",
-                "extendedTimeOut": "10000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
+            toastr.options =
+                {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": false,
+                    "onclick": null,
+                    "showDuration": "300",
+                    "hideDuration": "1000",
+                    "timeOut": "5000",
+                    "extendedTimeOut": "1000",
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
+                }
 
             @if (Session::has('error'))
             toastr.error('{{ Session::get('error') }}', 'Danger');

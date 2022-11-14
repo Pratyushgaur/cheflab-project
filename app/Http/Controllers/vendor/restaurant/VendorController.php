@@ -11,6 +11,7 @@ use App\Models\VendorOffline;
 use App\Models\vendors;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VendorController extends Controller
 {
@@ -84,7 +85,7 @@ class VendorController extends Controller
     public function restaurent_get_status(Request $request)
     {
 
-        $v    = vendors::find(Auth::guard('vendor')->user()->id);
+        $v    = vendors::find(\Auth::guard('vendor')->user()->id);
         $data = ['status' => 'success', 'rest_status' => $v->is_online];
 
         return response()->json($data, 200);
