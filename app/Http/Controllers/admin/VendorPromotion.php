@@ -21,7 +21,7 @@ class VendorPromotion extends Controller
         return view('admin/promotion/app-blog');
     }
     public function store(Request $request){
-//        dd($request->all());
+      //  dd($request->all());
         $this->validate($request, [
             'position' => 'required',
             'blog_type' => 'required',

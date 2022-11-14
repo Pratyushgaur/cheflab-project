@@ -251,12 +251,12 @@
                                         <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
-                                  <div class="col-md-3">
+                                  <!-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
                                             <input type="text" name="password" value="{{$vendor->password}}" class="form-control"  id="" placeholder="Enter Password">
                                         </div>
-                                    </div>
+                                    </div> -->
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
@@ -323,13 +323,6 @@
                                     </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
-                                        <input type="text" name="fssai_lic_no" value="{{$vendor->fssai_lic_no}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
-                                    </div>
-                                  </div>
-
-                                  <div class="col-md-3">
-                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Vendor Commission Persentage<span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->commission}}" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>
@@ -356,7 +349,7 @@
                                   <div class="col-md-6 custmization-block">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="password" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                        <input type="text" value="{{$vendor->gst_no}}" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
                                     </div>
                                   </div>
                                   @endif
@@ -374,26 +367,15 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                  <div class="col-sm-3">
-                                        <div>
-                                          <label for="">Restaurant Images</label>
-                                        </div>
-                                        <div class="image-upload">
-                                            <label for="file-input">
-                                                <div class="upload-icon">
-                                                    @if($vendor->image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
-                                                    @else
-                                                    <img class="icon2" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
-                                                    @endif
-                                                </div>
-                                            </label>
-                                            <input id="file-input" type="file" name="image" required/>
-                                        </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$vendor->fssai_lic_no}}" name="fssai_lic_no" value="{{$vendor->fssai_lic_no}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                    </div>
                                   </div>
                                   <div class="col-sm-3">
                                         <div>
-                                          <label for="">FSSAI Registration </label>
+                                          <label for="">FSSAI Image </label>
                                         </div>
                                         <div class="image-upload">
                                             <label for="file-input2">
@@ -410,46 +392,47 @@
                                         </div>
                                   </div>
                                   <div class="col-sm-3">
-                                        <div>
-                                          <label for="">Other Document </label>
-
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Pan Card Number. </label>
+                                            <input type="text" value="{{$vendor->pancard_number}}"  name="pancard_number" class="form-control" placeholder="Pan Card Number">
                                         </div>
-                                        <div class="image-upload">
-
-                                            <label for="file-input3">
-                                                <div class="upload-icon3">
-                                                    @if($vendor->other_document_image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
-                                                    @else
-                                                    <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">
-                                                    @endif
-                                                </div>
-                                            </label>
-                                            <input id="file-input3" type="file" name="other_document"/>
-
-                                        </div>
-                                        <input type="text" name="other_document_name" value="{{$vendor->other_document_name}}" class="form-control" placeholder="Document Name">
                                   </div>
                                   <div class="col-sm-3">
-                                        <div>
-                                          <label for="">Banner Image </label>
-
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Pan Card Image. </label>
+                                            <input type="file" name="pancard_image" value="{{$vendor->pancard_image}}" class="form-control" placeholder="Pan Card Image">
                                         </div>
-                                        <div class="image-upload">
-
-                                            <label for="file-input4">
-                                                <div class="upload-icon4">
-                                                    @if($vendor->banner_image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
-                                                    @else
-                                                    <img class="icon2" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
-                                                    @endif
-                                                </div>
-                                            </label>
-                                            <input id="file-input4"  type="file" name="banner_image"/>
-
+                                  </div>
+                                  <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Document Name. </label>
+                                            <input type="text" name="other_document_name" value="{{$vendor->other_document_name}}" class="form-control" placeholder="Document Name">
                                         </div>
-
+                                  </div>
+                                  <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Document Number. </label>
+                                            <input type="text" name="other_document_no" value="{{$vendor->other_document_no}}" class="form-control" placeholder="Document Number">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Other Document.</label>
+                                            <input type="file" name="other_document" value="{{$vendor->other_document}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                        
+                                  </div>
+                                  <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Aadhar Number. </label>
+                                            <input type="text" name="aadhar_number" value="{{$vendor->aadhar_number}}" class="form-control" placeholder="Addhar Number">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-2">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Aadhar Image. </label>
+                                            <input type="file" name="aadhar_card_image" value="{{$vendor->aadhar_card_image}}" class="form-control" placeholder="Addhar Number">
+                                        </div>
                                   </div>
                                 </div>
                                 <!-- div row -->
