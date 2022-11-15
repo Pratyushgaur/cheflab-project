@@ -145,7 +145,23 @@
                                 </div>
 
                                 <div class="row">
-
+                                <div class="col-sm-6">
+                                        <div>
+                                          <label for="">Logo</label>
+                                        </div>
+                                        <div class="image-upload">
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    @if($vendor->image == null)
+                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    @else
+                                                    <img class="icon2" src="{{ asset('dliver-boy'.'/'.$city_data->image ) }}">
+                                                    @endif
+                                                </div>
+                                            </label>
+                                            <input id="file-input" type="file" name="image" required/>
+                                        </div>
+                                  </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Deliver Boy <span class="text-danger">*</span></label>
@@ -171,17 +187,6 @@
                                         <input type="text" name="phone" value="{{$city_data->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
-{{--                                  <div class="col-md-12">--}}
-{{--                                    <div class="form-group">--}}
-{{--                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>--}}
-{{--                                        <input type="text" name="address" value="{{$city_data->address}}" class="form-control"  id="" placeholder="Enter Restaurant Address">--}}
-{{--                                    </div>  --}}
-{{--                                  </div>--}}
-
-
-
-
-
                                 </div>
 
                               </div>
@@ -196,37 +201,38 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                  <div class="col-sm-3">
-                                        <div>
-                                          <label for="">Deliver Boy Images</label>
-                                        </div>
-                                        <div class="image-upload">
-                                            <label for="file-input">
-                                                <div class="upload-icon">
-                                                    <img class="icon" src="{{ asset('dliver-boy'.'/'.$city_data->image ) }}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input" type="file" name="image" required/>
-                                        </div>
-                                  </div>
-
-                                  <div class="col-sm-3">
-                                        <div>
-                                          <label for="">Other Document </label>
-
-                                        </div>
-                                        <div class="image-upload">
-
-                                            <label for="file-input3">
-                                                <div class="upload-icon3">
-                                                    <img class="icon3" src="{{asset('add-image.png')}}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input3" type="file" name="other_document"/>
-
-                                        </div>
-                                        <input type="text" name="other_document_name" value="{{$city_data->other_document_name}}" class="form-control" placeholder="Document Name">
-                                  </div>
+                                  <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
+                                          <select name="identity_type"  class="form-control">
+                                            @if($city_data->identity_type == '1')
+                                            <option value="1">Passport</option>
+                                            <option value="2">Driving License</option>
+                                            <option value="3">Aadhar Card</option>
+                                            @elseif($city_data->identity_type)
+                                            <option value="2">Driving License</option>
+                                            <option value="1">Passport</option>
+                                            <option value="3">Aadhar Card</option>
+                                            @else
+                                            <option value="3">Aadhar Card</option>
+                                            <option value="2">Driving License</option>
+                                            <option value="1">Passport</option>
+                                            @end
+                                          </select>
+                                      </div>  
+                                    </div>
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
+                                          <input type="text" name="identity_number" value="{{$city_data->identity_number}}" class="form-control"  id="" placeholder="Enter Identity Number">
+                                      </div>  
+                                    </div>
+                                    <div class="col-sm-4">
+                                          <div class="form-group">
+                                              <label for="exampleInputEmail1">Identity Image. </label>
+                                              <input type="file" name="identity_image" value="{{$city_data->identity_image}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                          </div>
+                                    </div>
                                 </div>
                                 <!-- div row -->
                               </div>

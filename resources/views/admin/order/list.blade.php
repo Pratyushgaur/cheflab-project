@@ -67,6 +67,7 @@
                                     <th>Order-id</th>
                                     <th>Vendor</th>
                                     <th>Customer</th>
+                                    <th>Mobile</th>
                                     <th>Status</th>
                                     <th>Order Amount</th>
                                     <th>payment Type</th>
@@ -123,6 +124,7 @@
             {data: 'id', name: 'id'},
             {data: 'vendor_name', name: 'vendor_name'},
             {data: 'customer_name', name: 'customer_name'},
+            {data: 'mobile', name: 'mobile'},
             {data: 'order_status', name: 'status'},
             {data: 'net_amount', name: 'net_amount'},
             {data: 'payment_type', name: 'payment_type'},
