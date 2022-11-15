@@ -528,9 +528,9 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         if ('serviceWorker' in navigator) {
             window.addEventListener("load", function () {
                 // navigator.serviceWorker.register("firebase-messaging-sw.js");
-{{--                alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
-                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js11111111111111')}}");
-                navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js22222222'}}");
+                {{--alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
+{{--                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js')}}");--}}
+                navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js'}}");
             });
 
             window.addEventListener('flutter-first-frame', function () {

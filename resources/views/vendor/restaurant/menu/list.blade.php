@@ -10,12 +10,12 @@
                 <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Menus</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Menu Catalogue</li>
-                
+
 
               </ol>
             </nav>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="ms-panel">
             <div class="ms-panel-header">
               <div class="d-flex justify-content-between">
@@ -37,20 +37,20 @@
                       </tr>
                     </thead>
                     <tbody>
-                    
+
                     </tbody>
                   </table>
               </div>
             </div>
           </div>
         </div>
-          
 
-        
+
+
 
       </div>
     </div>
-  
+
 @endsection
 
 @section('page-js')
@@ -64,7 +64,7 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'menuName', name: 'name'},
             {data: 'date', name: 'date'},
-          
+
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

@@ -159,7 +159,7 @@ class AppController extends Controller
             $userid  = request()->user()->id;
             $where   = ['vendor_type' => 'restaurant'];
             $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
-            $vendors = $vendors->addSelect('deal_cuisines','banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+            $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
             $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);//not need to pass offset; limit set on products
             //get productd's shoud display in pagination
@@ -1921,6 +1921,7 @@ class AppController extends Controller
             $vendor_ids = UserVendorLike::where('user_id', $request->user()->id)->pluck('vendor_id');
             if (!empty($vendor_ids)) {
                 $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id, null, null)
+                    ->addSelect('speciality')
                     ->whereIn('vendors.id', $vendor_ids)->get();
                 foreach ($data as $key => $value) {
                     $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
@@ -1953,7 +1954,8 @@ class AppController extends Controller
                     'lat'           => 'required|numeric',
                     'lng'           => 'required|numeric',
                     'vendor_offset' => 'required|numeric',
-                    'vendor_limit'  => 'required|numeric'
+                    'vendor_limit'  => 'required|numeric',
+                    "by"            => "require|in(['order','rating'])"
                 ]
             );
             if ($validateUser->fails()) {
@@ -1965,12 +1967,16 @@ class AppController extends Controller
                 ], 401);
             }
             DB::enableQueryLog();
-            $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id)
+            $vendors = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id)
                 ->join('orders', 'vendors.id', '=', 'orders.vendor_id')
-                ->addSelect('deal_cuisines', DB::raw('COUNT(*) as order_count'))
+                ->addSelect('deal_cuisines');
+
+//            if($request->by=='order'){
+            $vendors->addSelect(DB::raw('COUNT(*) as order_count'))
                 ->groupBy('orders.vendor_id')
-                ->orderBy('order_count', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)
-                ->get();
+                ->orderBy('order_count', 'desc');
+            $vendors->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+
 
             foreach ($data as $key => $value) {
                 $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
