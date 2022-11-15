@@ -16,13 +16,14 @@ use Config;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Redirect;
 
 
 class ProductController extends Controller
 {
     function index(Request $request)
     {
-        \DB::enableQueryLog();
+
         $products = Product_master::join('categories', 'products.category', '=', 'categories.id')
             ->select('products.*', 'categories.name as categoryName')
             ->where('products.userId', '=', Auth::guard('vendor')->user()->id);
@@ -47,6 +48,9 @@ class ProductController extends Controller
         });
         $products = $products->paginate(15);
 //dd(\DB::getqueryLog());
+//        dd($_GET);
+        $request->session()->put('product_last_param', $_GET);
+//        $request->session()->put('product_last_url', url()->full());
         $product_count=Product_master::where('userId',\Auth::guard('vendor')->user()->id)->count();
         $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name', 'id');
 
@@ -227,6 +231,11 @@ class ProductController extends Controller
             }
         }
 //dd($product);
+
+        $product_last_url=$request->session()->get('product_last_param');
+        if($product_last_url!='')
+            return redirect()->route('restaurant.product.list',$product_last_url)->with('success', 'Congratulation Product is Published.');
+//        return redirect()->back()->with('success', 'Congratulation Product is Published.');
         return redirect()->route('restaurant.product.list')->with('success', 'Congratulation Product is Published.');
 
     }
@@ -375,7 +384,7 @@ class ProductController extends Controller
         $catogory->addon = $request->name;
         $catogory->price = $request->price;
         $catogory->save();
-        return redirect()->route('restaurant.product.addon')->with('message', 'Addon Update Successfully.');
+        return redirect()->route('restaurant.product.addon')->with('success', 'Addon Update Successfully.');
     }
     public function editAddon($encrypt_id){
         try {
