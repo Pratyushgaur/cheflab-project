@@ -82,8 +82,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('getHomeBanner', [App\Http\Controllers\api\BannerController::class, 'getHomepageBanner']);
     Route::post('getPromotionBanner', [App\Http\Controllers\api\BannerController::class, 'getPromotionBanner']);
     // Review Rating
-    Route::get('getReviewRating', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
-    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
+    Route::post('save-vendor-rating-review', [App\Http\Controllers\api\VendorReviewController::class, 'saveReviewData']);
+    Route::post('get-vendor-rating-review', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
+    Route::post('save-product-rating-review', [App\Http\Controllers\api\ProductReviewController::class, 'saveReviewData']);
+    Route::post('get-product-rating-review', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
+//    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
@@ -121,7 +124,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-all-liked-products', [\App\Http\Controllers\api\AppController::class, 'getAllLikeProducts']);
     Route::post('get-all-liked-restaurant', [\App\Http\Controllers\api\AppController::class, 'getAllLikerestaurants']);
 
-    Route::post('get-restaurant-by-order', [\App\Http\Controllers\api\AppController::class, 'getRestuarantByOrders']);
+    Route::post('get-restaurant-by', [\App\Http\Controllers\api\AppController::class, 'getRestuarantBy']);
     Route::post('cancel-order', [\App\Http\Controllers\api\AppController::class, 'cancel_order']);
     //blog promotion
     Route::post('get-blog-promotion', [\App\Http\Controllers\api\BlogPromotionController::class, 'getBlogPromotion']);
