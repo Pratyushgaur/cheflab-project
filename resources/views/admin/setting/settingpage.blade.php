@@ -369,13 +369,9 @@
                               <div class="row">
                                 <div class="col-md-12">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Base Delivery Charges<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->delivery_charges_fix}}" name="delivery_charges_fix" class="form-control"  id="exampleInputEmail1" placeholder="Enter Fix Charge">
+                                      <label for="exampleInputEmail1">Platform Delivery Charges<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->platform_charges}}" name="platform_charges" class="form-control"  id="exampleInputEmail1" placeholder="Enter Fix Charge">
                                       <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
-                                  </div> 
-                                  <div class="form-group">
-                                      <label for="exampleInputEmail1">Deliver Charges Per KM <span class="text-danger">*</span></label>
-                                      <input type="text" name="delivery_charges_per_km" value="{{$data->delivery_charges_per_km}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div>  
                                 </div>
                               </div>

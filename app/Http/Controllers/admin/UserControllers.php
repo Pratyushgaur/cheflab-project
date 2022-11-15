@@ -181,6 +181,7 @@ class UserControllers extends Controller
         ]);
         $vendors                   = new Vendors;
         $vendors->name             = $request->restaurant_name;
+        $vendors->owner_name             = $request->restourant_owner_name;
         $vendors->email            = $request->email;
         $vendors->password         = Hash::make($request->password);
         $vendors->vendor_type      = 'restaurant';
@@ -265,6 +266,7 @@ class UserControllers extends Controller
         $vendors->email               = $request->email;
         $vendors->dob                 = $request->dob;
         $vendors->experience          = $request->experience;
+        $vendors->origin          = $request->origin;
         $vendors->deal_categories     = implode(',', $request->deal_categories);
         $vendors->deal_cuisines       = implode(',', $request->deal_cuisines);
         $vendors->password            = Hash::make($request->password);
@@ -273,6 +275,7 @@ class UserControllers extends Controller
         $vendors->speciality          = implode(',', $request->speciality);
         $vendors->pincode             = $request->pincode;
         $vendors->address             = $request->address;
+        $vendors->tax                 = $request->tax;
         $vendors->bio                 = $request->bio;
         $vendors->is_all_setting_done = 1;
         $vendors->lat                 = $request->lat;
@@ -343,6 +346,7 @@ class UserControllers extends Controller
         $vendors = Vendors::find($request->id);
         //  dd($vendors);
         $vendors->name             = $request->restaurant_name;
+        $vendors->owner_name             = $request->restourant_owner_name;
         $vendors->email            = $request->email;
         $vendors->vendor_type      = 'restaurant';
         $vendors->mobile           = $request->phone;
@@ -408,6 +412,7 @@ class UserControllers extends Controller
         $vendors->pincode          = $request->pincode;
         $vendors->address          = $request->address;
         $vendors->fssai_lic_no     = $request->fssai_lic_no;
+        $vendors->tax             = $request->tax;
         $vendors->commission       = $request->vendor_commission;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
@@ -420,6 +425,11 @@ class UserControllers extends Controller
         } else {
             if (!file_exists(public_path('vendors') . '/' . $vendors->image))
                 $vendors->image = 'default_restourant_image.jpg';
+        }
+        if ($request->has('profile_image')) {
+            $filename = time() . '-document-' . rand(100, 999) . '.' . $request->profile_image->extension();
+            $request->profile_image->move(public_path('vendor-profile'), $filename);
+            $vendors->profile_image = $filename;
         }
         if ($request->has('fassai_image')) {
             $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
