@@ -26,7 +26,7 @@ return [
     'promotion_banner_for'                   => ['chef'       => "Chef Promotion",
                                                  'restaurant' => "Restaurant Promotion",
                                                  'dineout'    => "Dine-out Promotion"],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
-    'promotion_banner_for_only_values'       => ['chef', 'restaurant', 'dineout'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
+    'promotion_banner_for_only_values'       => ['cheflab','chef', 'restaurant', 'dineout'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
 
     //blog promotion "app_promotion_blog_setting" table column :"blog_promotion_date_frame"

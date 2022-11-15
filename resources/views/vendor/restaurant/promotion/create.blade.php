@@ -98,7 +98,7 @@
 
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Date *</label>
+                                    <label for="validationCustom10">Start Time *</label>
                                     <div class="input-group">
                                         <input type="text" name="date" class="form-control" id="datepicker"
                                                placeholder="Enter Date">

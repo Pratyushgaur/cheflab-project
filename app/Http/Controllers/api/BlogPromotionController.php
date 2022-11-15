@@ -26,21 +26,20 @@ class BlogPromotionController extends Controller
 
                 ], 401);
             }
-            $data=[];
-            $Blogs = AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
+            $Blogs         = AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
 //                ->where(function ($p) {
 //                    $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
 //                })
                 ->where('vendor_type', $request->vendor_type)
                 ->get();
-
+            $data          = [];
             $product_count = 0;
 //            dd($Blogs->toArray());
             if (isset($Blogs[0])) {
                 foreach ($Blogs as $k => $blog) {
-                    $data1=null;
+                    $data1            = null;
                     $data[$k]['blog'] = $blog;
-                    $blog_id = $blog->id;
+                    $blog_id          = $blog->id;
                     //$blog->blog_type 1: vendor 2:product
                     if ($blog->blog_type == '1') {
 
@@ -63,8 +62,8 @@ class BlogPromotionController extends Controller
                             ->where('app_promotion_blog_settings.is_active', 1)
                             ->where('app_promotion_blog_bookings.payment_status', 1)
                             ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
-                        $resturant = $resturant->get();
-                        $data1   = $resturant;
+                        $resturant           = $resturant->get();
+                        $data1               = $resturant;
                         $data[$k]['vendors'] = $data1;
                     }
                     if ($blog->blog_type == '2') {

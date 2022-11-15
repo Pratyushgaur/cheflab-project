@@ -89,11 +89,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
     // FAQ
     Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
-    // Privacy Polic TAD
-    Route::post('terms-and-condition-userapp', [App\Http\Controllers\api\AppController::class, 'getTACusers']);
-    Route::post('privacy-and-policy', [App\Http\Controllers\api\AppController::class, 'getPrivacyPolicy']);
-    Route::post('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getCancellationPolicy']);
-    Route::post('aboutus', [App\Http\Controllers\api\AppController::class, 'getAboutUs']);
+    // Privacy Polic TAD User
+    Route::get('terms-and-condition-userapp', [App\Http\Controllers\api\AppController::class, 'getTACusers']);
+    Route::get('privacy-and-policy', [App\Http\Controllers\api\AppController::class, 'getUserPrivacyPolicy']);
+    Route::get('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getUserCancellationPolicy']);
+    Route::get('aboutus', [App\Http\Controllers\api\AppController::class, 'getAboutUs']);
+    Route::get('socialmedia', [App\Http\Controllers\api\AppController::class, 'getSocialmedia']);
+    
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutApiController::class, 'get_dine_out_slot']);
     Route::post('dine-out-booking', [App\Http\Controllers\api\DineoutApiController::class, 'dine_out_booking']);
@@ -101,10 +103,15 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-booked-dine-out-details', [App\Http\Controllers\api\DineoutApiController::class, 'get_booked_dineout_detail']);
 
     Route::get('chelfleb-products', [\App\Http\Controllers\api\AppController::class, 'chelfleb_produst']);
-
-    Route::post('save-user-feedback', [App\Http\Controllers\api\FeedbackApiController::class, 'save_feedback']);
-
-
+    // User Rechar 
+    Route::post('get-user-wallet', [App\Http\Controllers\api\Userwallet::class, 'getUserwallet']);
+    Route::post('recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'Recharge']);
+    Route::post('user-all-transaction', [App\Http\Controllers\api\Userwallet::class, 'allTransactions']);
+    // Try once
+    Route::post('get-user-tryonce', [App\Http\Controllers\api\AppController::class, 'getTryonce']);
+    //  filter by restourant
+    Route::post('get-filter-restourant', [App\Http\Controllers\api\AppController::class, 'filterByRestaurant']);
+    Route::post('get-filter-chef', [App\Http\Controllers\api\AppController::class, 'filterByChef']);
     //firbase
     Route::patch('/user-fcm-token', [\App\Http\Controllers\API\FirebaseApiController::class, 'updateTokenUser'])->name('fcmToken_user');
     Route::get('/user-send-notification',[\App\Http\Controllers\API\FirebaseApiController::class,'notification'])->name('notification_user');
@@ -116,6 +123,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('cancel-order', [\App\Http\Controllers\api\AppController::class, 'cancel_order']);
     //blog promotion
     Route::post('get-blog-promotion', [\App\Http\Controllers\api\BlogPromotionController::class, 'getBlogPromotion']);
+    // refer ammount
+    Route::post('refer-amount', [\App\Http\Controllers\api\AppController::class, 'getReferAmmount']);
 
 });
 
@@ -129,4 +138,3 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
-

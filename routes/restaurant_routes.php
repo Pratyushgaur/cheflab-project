@@ -24,6 +24,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('product/addon/datatable', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'getAddonData'])->name('restaurant.product.addon.datatable');
             Route::get('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'createAddon'])->name('restaurant.product.addon.create');
             Route::post('product/addon/create', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'storeAddon'])->name('restaurant.product.addon.store');
+            Route::get('product/addon/edit/{id}', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'editAddon'])->name('restaurant.product.addon.edit');
+            Route::post('product/addon/update', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'updateAddon'])->name('restaurant.product.addon.update');
             Route::post('product/inactive', [App\Http\Controllers\vendor\restaurant\ProductController::class,'inActive'])->name('restaurant.product.inactive');
             Route::post('product/active', [App\Http\Controllers\vendor\restaurant\ProductController::class,'Active'])->name('restaurant.product.active');
             Route::get('product/edit/{id}', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'fun_edit_product'])->name('vendor.product.edit');

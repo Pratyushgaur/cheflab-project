@@ -126,7 +126,83 @@
                         Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
                     </div>
                 </div>
+                <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
+                    <button id="button">publish </button>
+                    <button id="signal">signal </button>
+                </div>
             </div>
         </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+        <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.7.1.2.js"></script>
+        <script> 
+            (function() {
+                var channel = 'test-pratyush';
+                const button = document.getElementById('button');
+                const signal = document.getElementById('signal');
+                
+                var pubnub = new PubNub({
+                    publishKey: 'pub-c-bbd42474-d9bf-4f58-9513-f43d15ea43f0',
+                    subscribeKey: 'sub-c-e537cc94-5b6a-4953-9100-41a05a9319b3',
+                    uuid:'test-123'
+                });
+                
+                
+                pubnub.subscribe({
+                    channels: [channel]
+                });
+                button.addEventListener('click', function(e) {
+                    pubnub.publish({
+                        channel: channel,
+                        message: 'helo hi',
+                        meta: {
+                        uuid: pubnub.getUUID()
+                        }
+                    });
+                });
+                signal.addEventListener('click', function(e) {
+                    pubnub.signal({
+                        channel: channel,
+                        message: 'testing signal',
+                        // meta: {
+                        //     uuid: pubnub.getUUID()
+                        // }
+                    });
+                });
+            })();
+        </script>                                 
+        <script>
+            
+            
+            // const pubnub = new PubNub({
+            //     publishkey: "pub-c-bbd42474-d9bf-4f58-9513-f43d15ea43f0",
+            //     subscribeKey:"sub-c-e537cc94-5b6a-4953-9100-41a05a9319b3",
+            //     uuid:'sldfhlsdkfhkl'
+            // });
+            // const button = document.getElementById('button');
+            // pubnub.subscribe({
+            //     channel : ['test-pratyush']
+            // });
+            // pubnub.addListener({
+            //     message:function(event){
+            //         console.log(event);
+            //     }
+            // });
+            
+            // button.addEventListener('click',() =>{
+    
+
+            //       pubnub.publish({
+            //         message:{
+            //             mytime:"my time is :"+ new Date().toString()
+            //         },
+            //         channel : 'test-pratyush',
+            //         sendByPost: false,
+            //     }, function(status,response){
+            //         console.log(status);
+            //     });
+            // })
+            
+        </script>
     </body>
 </html>

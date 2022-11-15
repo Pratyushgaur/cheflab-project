@@ -11,6 +11,9 @@ use App\Models\Cuisines;
 use App\Models\User_faq;
 use App\Models\vendors;
 use App\Models\UserFeedback;
+use App\Models\VendorFeedback;
+use App\Models\DeliveryboyFeedback;
+use App\Models\Social_media;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -37,7 +40,9 @@ class GlobleSetting extends Controller
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } */
-        return view('admin/setting/settingpage');
+        $id = '1';
+        $data = AdminMasters::findOrFail($id);
+        return view('admin/setting/settingpage',compact('data'));
     }
     public function delivery_charge(){
         $id = '1';
@@ -59,11 +64,43 @@ class GlobleSetting extends Controller
         $data = AdminMasters::findOrFail($id);
         return view('admin/setting/payment',compact('data'));
     }
+    public function defaulttimeset(){
+        $id = '1';
+        $data = AdminMasters::findOrFail($id);
+        return view('admin/setting/defaulttimeset',compact('data'));
+    }
     public function user_faq(){
         return view('admin/setting/faq');
     }
     public function feedbacklist(){
         return view('admin/setting/feedbacklist');
+    }
+    public function vendorfeedbacklist(){
+        return view('admin/setting/vendorfeedback');
+    }
+    public function DeliveryBoyfeedbacklist(){
+        return view('admin/setting/deliveryboyfeedback');
+    }
+    public function social_media(){
+        return view('admin/setting/social_media');
+    }
+    public function social_media_add(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+            'link' => 'required',
+        ]);
+        $faq = new Social_media;
+        $faq->name = $request->name;
+        $faq->link = $request->link;
+        $faq->save();
+        return redirect()->route('admin.globle.socialmedia')->with('message', 'Socila Media Create Successfully');
+    }
+    public function storeDefaultTime(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->default_cooking_time = $request->default_cooking_time;
+        $general->default_delivery_time = $request->default_delivery_time;
+        $general->save();
+        return redirect()->route('admin.globle.setting')->with('message', 'Default Time Update Successfully');
     }
     public function store_faq(Request $request){
         $this->validate($request, [
@@ -81,19 +118,27 @@ class GlobleSetting extends Controller
         $general->razorpay_publish_key = $request->razorpay_publish_key;
         $general->paytm_publish_key = $request->paytm_publish_key;
         $general->save();
-        return redirect()->route('admin.globle.storePaytm')->with('message', 'Update Payment setting Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Payment setting Successfully');
     }
     public function storeDelivery(Request $request){
         $general = AdminMasters::find($request->id);
         $general->delivery_charges_fix = $request->delivery_charges_fix;
         $general->delivery_charges_per_km = $request->delivery_charges_per_km;
         $general->save();
-        return redirect()->route('admin.globle.payment.setting')->with('message', 'Update Chargs Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Chargs Successfully');
     }
     public function storeGernel(Request $request){
         $general = AdminMasters::find($request->id);
         $general->company_name = $request->company_name;
+        $general->email = $request->email;
+        $general->phone = $request->phone;
+        $general->suport_phone = $request->suport_phone;
+        $general->office_addres = $request->office_addres;
+        $general->gstno = $request->gstno;
         $general->goofle_map_key = $request->goofle_map_key;
+        $general->facebook_link = $request->facebook_link;
+        $general->instagram_link = $request->instagram_link;
+        $general->youtube_link = $request->youtube_link;
         $general->aboutus = $request->aboutus;
         $general->order_limit_amout = $request->order_limit_amout;
         if($request->has('logo')){
@@ -107,19 +152,19 @@ class GlobleSetting extends Controller
             $general->favicon  = $filename;
         }
         $general->save();
-        return redirect()->route('admin.globle.general')->with('message', 'Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Successfully');
     }
     public function storePrivacy(Request $request){
         $general = AdminMasters::find($request->id);
         $general->privacy_policy = $request->privacy_policy;
         $general->save();
-        return redirect()->route('admin.globle.staticpage')->with('message', 'Privacy Policy  Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Privacy Policy  Update Successfully');
     }
     public function storeVendorTC(Request $request){
         $general = AdminMasters::find($request->id);
         $general->terms_conditions_vendor = $request->terms_conditions_vendor;
         $general->save();
-        return redirect()->route('admin.globle.staticpage')->with('message', 'Vendor Terms & Condition  Update Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Vendor Terms & Condition  Update Successfully');
     }
     public function storeCheflabTC(Request $request){
         $general = AdminMasters::find($request->id);
@@ -189,7 +234,57 @@ class GlobleSetting extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'.route('admin.user.faqedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'.route('admin.user.feedbackedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+                
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+               
+               
+                ->rawColumns(['date','action-js'])
+                ->rawColumns(['action-js'])
+                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function getVendorFeedback(Request $request){
+        if ($request->ajax()) {
+            
+            $data = VendorFeedback::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="'.route('admin.user.feedbackedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+                
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+               
+               
+                ->rawColumns(['date','action-js'])
+                ->rawColumns(['action-js'])
+                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function getDeliveryboyFeedback(Request $request){
+        if ($request->ajax()) {
+            
+            $data = DeliveryboyFeedback::latest()->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function($data){
+                    $btn = '<a href="'.route('admin.user.feedbackedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
 
@@ -207,14 +302,14 @@ class GlobleSetting extends Controller
                 ->make(true);
         }
     }
-    public function getFaq(Request $request){
+    public function getSocialMedia(Request $request){
         if ($request->ajax()) {
-
-            $data = User_faq::latest()->get();
+            
+            $data = Social_media::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'.route('admin.user.faqedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    $btn = '<a href="'.route('admin.social.mediaedit',Crypt::encryptString($data->id)).'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="FAQ" table="' . Crypt::encryptString('user_faq') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
 
@@ -230,6 +325,16 @@ class GlobleSetting extends Controller
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
+        }
+    }
+    public function fun_edit_socialmedia($encrypt_id){
+        try {
+            $id =  Crypt::decryptString($encrypt_id);
+            $social  = Social_media::findOrFail($id);
+           // dd($city_data);
+            return view('admin/setting/social_media_edit',compact('social'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
         }
     }
     public function fun_edit_category($encrypt_id)
@@ -264,6 +369,17 @@ class GlobleSetting extends Controller
         $faq->faq_answer = $request->faq_answer;
         $faq->save();
         return redirect()->route('admin.user.faq')->with('message', 'FAQ Update Successfully');
+    }
+    public function social_media_update(Request $request){
+        $this->validate($request, [
+            'name' => 'required',
+            'link' => 'required',
+        ]);
+        $faq = Social_media::find($request->id);
+        $faq->name = $request->name;
+        $faq->link = $request->link;
+        $faq->save();
+        return redirect()->route('admin.globle.socialmedia')->with('message', 'Socila Media Update Successfully');
     }
     public function soft_delete(Request $request)
     {
@@ -367,7 +483,12 @@ class GlobleSetting extends Controller
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
-
+        
     }
-
+    public function product_active(){
+       Product_master::where('status','=', '2')->update( ['status' => 1 ,'product_approve' => 1]);
+       return redirect()->route('admin.dashboard')->with('message', 'Product Active Successfully');
+    }
+    
+    
 }

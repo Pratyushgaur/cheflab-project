@@ -163,7 +163,7 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Update Deliver charge </h3>
+                      <h3 class="card-title">Update Delivery Charges </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
@@ -184,14 +184,14 @@
                                 <div class="row">
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Fix Charge<span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Base Delivery Charges<span class="text-danger">*</span></label>
                                         <input type="text" value="{{$data->delivery_charges_fix}}" name="delivery_charges_fix" class="form-control"  id="exampleInputEmail1" placeholder="Enter Fix Charge">
                                         <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
                                     </div>  
                                   </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Deliver Charge Per KM <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Deliver Charges Per KM <span class="text-danger">*</span></label>
                                         <input type="text" name="delivery_charges_per_km" value="{{$data->delivery_charges_per_km}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                     </div>  
                                   </div>

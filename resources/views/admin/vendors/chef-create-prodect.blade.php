@@ -131,13 +131,13 @@
                     </div>
                     <div class="card-body pad table-responsive">
                       <form id="restaurant-form" action="{{route('admin.chef.store_product')}}" method="post" enctype="multipart/form-data">
-                      @if ($errors->any())
-                          @foreach ($errors->all() as $error)
-                              <div class="alert alert-danger">{{$error}}</div>
-                          @endforeach
-                      @endif
-                      @csrf
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        @if ($errors->any())
+                            @foreach ($errors->all() as $error)
+                                <div class="alert alert-danger">{{$error}}</div>
+                            @endforeach
+                        @endif
+                        @csrf
+                          <inpu`t type="hidden" name="_token" value="{{ csrf_token() }}" />
                        <div class="card card-default">
                               <div class="card-header">
                                     <h3 class="card-title">Product Information</h3>
@@ -148,9 +148,10 @@
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Name of Product</label>
                                           <input type="text" name="product_name" class="form-control" data-rule-required="true" id="exampleInputEmail1" placeholder="Enter Product Name">
-                                          <input type="hidden" name="userId " value="{{$vendor->id}}" class="form-control">
-                                        
-                                      </div>  
+                                          <input type="hidden" name="userId" value="{{$vendor->id}}" class="form-control" data-rule-required="true" id="exampleInputEmail1" placeholder="Enter Product Name">
+  
+
+                                      </div>
                                     </div>
                                     <div class="col-md-4">
                                       <div class="form-group">
@@ -160,7 +161,7 @@
                                                   <option value="{{$value->id}}">{{$value->name}}</option>
                                                 @endforeach
                                           </select>
-                                      </div>  
+                                      </div>
                                     </div>
 
 
@@ -174,8 +175,8 @@
                                         </select>
                                       </div>
                                     </div>
-                                    
-                                    
+
+
 
                                     <div class="col-md-12">
                                       <div class="form-group">
@@ -186,9 +187,9 @@
 
                                     <div class="col-md-3">
                                       <div class="form-group">
-                                        
+
                                           <label for="exampleInputEmail1">Product Type</label><br>
-                                          
+
                                           <div class="form-group clearfix">
                                             <div class="icheck-success d-inline">
                                               <input type="radio" id="veg" name="type" value="veg" checked>
@@ -202,29 +203,40 @@
                                               <input type="radio" id="eggs" name="type" value="eggs">
                                               <label for="eggs">Eggs</label>
                                             </div>
-                                            
+
                                           </div>
-                                      </div>  
+                                      </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-3">
                                       <div class="form-group">
                                           <label for="">Product Price</label>
                                           <input type="text" name="product_price" class="form-control"  id="product_owner" placeholder="Product Price">
                                       </div>
                                     </div>
 
-                                    <div class="col-md-12">
+                                <div class="col-md-3 mb-3">
+                                    <label>Preparation Time</label>
+                                    <div class="input-group">
+                                        {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),null,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','reuired']) }}
+
+                                        @if ($errors->has('preparation_time'))
+                                            <span class="ms-text-danger"><strong>{{ $errors->first('preparation_time') }}</strong></span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                    <div class="col-md-3">
                                       <div class="form-group">
                                           <label for="">Customizable Availablity</label>
 
-                                          
+
                                           <select name="customizable" id="custimization" name="customizable" class="form-control">
                                             <option value="false">No</option>
                                             <option value="true">Yes</option>
                                           </select>
                                       </div>
                                     </div>
-                                
+
                                   </div>
                                   <div class="col-md-12 mb-3 custmization-block" style="">
                                         <div class="row">
@@ -253,8 +265,8 @@
                                                 </div>
                                             </div> -->
                                         </div>
-                                        
-                                        
+
+
                                         <div class="row">
                                           <div class="col-md-4"><a href="javascript:void(0)" class="add">+ Add More Variant</a></div>
                                         </div>
@@ -276,32 +288,32 @@
                                             </div>
                                         </div>
                                             <br>
-                                        <div class="variant-container"> 
+                                        <div class="variant-container">
                                         </div>
-                                  
+
                                     </div> -->
-                                 </div> 
+                                 </div>
                                     <div class="col-sm-3">
                                         <div>
                                           <label for="">Product Image </label>
-                                          
+
                                         </div>
                                         <div class="image-upload">
-                                          
-                                            <label for="file-input3">
-                                                <div class="upload-icon3">
-                                                    <img class="icon3" src="{{asset('add-image.png')}}">
+
+                                            <label for="file-input">
+                                                <div class="upload-icon">
+                                                    <img class="icon" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
-                                            <input id="file-input3" type="file" name="product_image"/>
-                                            
-                                        </div>   
-                                    
+                                            <input id="file-input" type="file" name="product_image"/>
+
+                                        </div>
+
                                   </div>
                                 </div>
-                               
-                                
-                                
+
+
+
 
                               </div>
                               <div class="card-footer">

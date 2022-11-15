@@ -11,7 +11,7 @@ use Config;
 use DB;
 class AdminRootBannerController extends Controller
 {
-    
+ //test vikas   
     public function index(){
 
         return view('admin/banner/root/list');

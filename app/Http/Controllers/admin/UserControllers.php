@@ -11,6 +11,9 @@ use App\Models\Product_master;
 use App\Models\User;
 use App\Models\Variant;
 use App\Models\Vendors;
+use App\Models\Deliver_boy;
+use App\Models\AdminMasters;
+use App\Models\Orders;
 use App\Rules\VendorOrderTimeRule;
 use DataTables;
 use Illuminate\Http\Request;
@@ -35,7 +38,16 @@ class UserControllers extends Controller
             });
         }
         $vendors = $v->paginate(15);
-        return view('admin/vendors/list', compact('vendors'));
+        $wordlist = Vendors::where('vendor_type', '=','restaurant')->get();
+        $restaurant = $wordlist->count();
+        $re_avtive = Vendors::where('vendor_type', '=','restaurant')->where('status', '=','1')->get();
+        $active_resto = $re_avtive->count();
+        $delivery = Deliver_boy::all();
+        $delivery_boy = $delivery->count();
+        $chef = Vendors::where('vendor_type', '=','chef')->get();
+        $chef = $chef->count();
+        //Orders::where('vendor_id','=', $vendors->id)->where('order_status','=',)select('order_status')->get();
+        return view('admin/vendors/list', compact('vendors','restaurant','active_resto','delivery_boy','chef'));
     }
 
     public function create_restourant()
@@ -71,13 +83,15 @@ class UserControllers extends Controller
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
 
 
-                                        <a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>
+                                        
                                         <a class="dropdown-item text-info" href="' . route('admin.vendor.view', Crypt::encryptString($data->id)) . '"><i class="fa fa-eye"></i> View More</a>
-                                        <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="Vendor"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a>';
-
-                    if ($data->vendor_type == 'chef') {
-                        $btn .= '<a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
-                    }
+                                        <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> ';
+                    if($data->vendor_type == 'restaurant'){
+                        $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>';
+                    }elseif($data->vendor_type == 'chef'){
+                        $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.editchef', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit Chef</a><a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
+                    }                    
+                   
 
 
                     $btn .= '</div>
@@ -160,6 +174,10 @@ class UserControllers extends Controller
             'categories'        => 'required',
             'deal_cuisines'     => 'required',
             'tax'               => 'required',
+            'pancard_number'   => 'required',
+            'pancard_image'   => 'required',
+            'aadhar_number'   => 'required',
+            'aadhar_card_image'   => 'required',
         ]);
         $vendors                   = new Vendors;
         $vendors->name             = $request->restaurant_name;
@@ -173,6 +191,8 @@ class UserControllers extends Controller
         $vendors->commission       = $request->vendor_commission;
         $vendors->vendor_food_type = $request->type;
         $vendors->tax              = $request->tax;
+        $vendors->pancard_number = $request->pancard_number;
+        $vendors->aadhar_number = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
@@ -189,6 +209,16 @@ class UserControllers extends Controller
             $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
             $request->fassai_image->move(public_path('vendor-documents'), $filename);
             $vendors->licence_image = $filename;
+        }
+        if ($request->has('pancard_image')) {
+            $filename = time() . '-pancard_image-' . rand(100, 999) . '.' . $request->pancard_image->extension();
+            $request->pancard_image->move(public_path('pancard'), $filename);
+            $vendors->pancard_image = $filename;
+        }
+        if ($request->has('aadhar_card_image')) {
+            $filename = time() . '-addar-' . rand(100, 999) . '.' . $request->aadhar_card_image->extension();
+            $request->aadhar_card_image->move(public_path('aadhar'), $filename);
+            $vendors->aadhar_card_image = $filename;
         }
         if ($request->has('other_document')) {
             $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
@@ -355,7 +385,62 @@ class UserControllers extends Controller
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
 
     }
+    public function chef_update(Request $request)
+    {
+//        return $request->input();die;
+        $this->validate($request, [
+            'restaurant_name'   => 'required',
+            'email'             => 'required',
+            'pincode'           => 'required',
+            'phone'             => 'required',
+            'address'           => 'required',
+            'fssai_lic_no'      => 'required',
+            'vendor_commission' => 'required',
+            //    'categories' => 'required',
+            //  'deal_cuisines' => 'required',
+        ]);
+        $vendors = Vendors::find($request->id);
+        //  dd($vendors);
+        $vendors->name             = $request->restaurant_name;
+        $vendors->email            = $request->email;
+        $vendors->vendor_type      = 'chef';
+        $vendors->mobile           = $request->phone;
+        $vendors->pincode          = $request->pincode;
+        $vendors->address          = $request->address;
+        $vendors->fssai_lic_no     = $request->fssai_lic_no;
+        $vendors->commission       = $request->vendor_commission;
+        $vendors->deal_categories  = implode(',', $request->categories);
+        $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+        $vendors->speciality    = implode(',', $request->speciality);
+        if ($request->has('image')) {
+            $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();
+            $request->image->move(public_path('vendors'), $filename);
+            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
+            $vendors->image = $filename;
+        } else {
+            if (!file_exists(public_path('vendors') . '/' . $vendors->image))
+                $vendors->image = 'default_restourant_image.jpg';
+        }
+        if ($request->has('fassai_image')) {
+            $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
+            $request->fassai_image->move(public_path('vendor-documents'), $filename);
+            $vendors->licence_image = $filename;
+        }
+        if ($request->has('other_document')) {
+            $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
+            $request->other_document->move(public_path('vendor-documents'), $filename);
+            $vendors->other_document_image = $filename;
+            $vendors->other_document       = $request->other_document_name;
+        }
+        if ($request->has('banner_image')) {
+            $filename = time() . '-banner-' . rand(100, 999) . '.' . $request->banner_image->extension();
+            $request->banner_image->move(public_path('vendor-banner'), $filename);
+            $vendors->banner_image = $filename;
+        }
+        $vendors->save();
+        return redirect()->route('admin.vendors.list')->with('message', 'Chef Details Update  Successfully');
 
+    }
     public function addVideo(Request $request)
     {
         $this->validate($request, [
@@ -431,33 +516,69 @@ class UserControllers extends Controller
         $user = $request->id;
         //    dd($user);
         if ($request->ajax()) {
-            $data = Product_master::where('userId', $user)->select('id', 'product_name', 'product_image', 'product_price', 'type', 'created_at')->get();
+            $data = Product_master::where('userId', $user)->select('id', 'product_name', 'product_image', 'product_price', 'type', 'created_at','status')->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
                     $btn = '<a href="' . route("admin.chef.productedit", Crypt::encryptString($data->id)) . '" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>
-                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
                 ->addColumn('product_image', function ($data) {
                     return "<img src=" . asset('products') . '/' . $data->product_image . "  style='width: 50px;' />";
                 })
+                ->addColumn('status', function ($data) {
+                    if ($data->status == 1) {
+                        $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-success btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="">Active</a>';
+                    } elseif ($data->status == 2) {
+                        $btn = '<span class="badge badge-primary">Pending</span>';
+                    } elseif ($data->status == 0) {
+                        $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-danger btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="">Active</a>';
+                    } else {
+                        $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
+                    }
+                    return $btn;
+                  /*  $btn = '<a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive"  data-action-url="" title="Delete" >Active</a> 
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" >Inactive</a> ';
+                    return $btn;*/
+                })
+                ->addColumn('date', function ($data) {
+                    $date_with_format = date('d M Y', strtotime($data->created_at));
+                    return $date_with_format;
+                })
+                ->rawColumns([ 'date','status' ])
+                ->rawColumns([ 'action-js', 'product_image','status' ]) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+    }
+    public function order_list(Request $request, $id){
+        $vendor_id = $request->id;
+        //    dd($user);
+        if ($request->ajax()) {
+            $data = Orders::where('vendor_id', $vendor_id)->select('id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'created_at')->get();
+
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function ($data) {
+                    $btn = '<a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.product.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                    return $btn;
+                })
+               
                 ->addColumn('date', function ($data) {
                     $date_with_format = date('d M Y', strtotime($data->created_at));
                     return $date_with_format;
                 })
                 ->rawColumns([ 'date' ])
-                ->rawColumns([ 'action-js', 'product_image' ]) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->rawColumns([ 'action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
     }
-
-    public function chef_videolist(Request $request, $encrypt_id)
+    public function chef_videolist(Request $request, $id)
     {
-        $user = Crypt::decryptString($encrypt_id);
+        $vendor_id = $request->id;  
         if ($request->ajax()) {
-            $data = Chef_video::where('userId', '=', $user)->select('id', 'userId', 'title', 'sub_title', 'link', 'created_at')->get();
+            $data = Chef_video::where('userId', '=', $vendor_id)->select('id', 'userId', 'title', 'sub_title', 'link', 'created_at')->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -512,7 +633,20 @@ class UserControllers extends Controller
             return dd($e->getMessage());
         }
     }
-
+    public function chef_editchef($encrypt_id){
+        try {
+            $id = Crypt::decryptString($encrypt_id);
+            //  dd($id);die;
+            $vendor = Vendors::findOrFail($id);
+            // $vendor =  Vendors::where('vendors.id','=',$id)->join('categories', 'vendors.deal_categories', '=', 'categories.id')->join('cuisines', 'vendors.deal_cuisines', '=', 'cuisines.id')->select('vendors.*', 'categories.name as categoryName','cuisines.name as cuisinesName')->get()->first();
+            //dd($vendor);die;
+            $categories = @Catogory_master::where('is_active', '=', '1')->pluck('name', 'id')->toArray();;//->get();
+            $cuisines = @Cuisines::where('is_active', '=', '1')->pluck('name', 'id')->toArray();          //->get();
+            return view('admin/vendors/editchef', compact('vendor', 'categories', 'cuisines'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        }
+    }
     public function chef_product_edit($encrypt_id)
     {
         $id         = Crypt::decryptString($encrypt_id);
@@ -543,23 +677,24 @@ class UserControllers extends Controller
 
     public function store_chef_product(Request $request)
     {
-
+     //   echo 'ok';die;
+  //   return $request->input();die;
         $this->validate($request, [
             'product_name'  => 'required',
             'dis'           => 'required',
             'product_price' => 'required',
             'product_image' => 'required',
         ]);
-        $product                = new Product_master;
+        $product  = new Product_master;
         $product->product_name  = $request->product_name;
-        $product->userId        = $request->userId_;
+        $product->userId        = $request->userId;
         $product->cuisines      = $request->cuisines;
         $product->category      = $request->category;
+        $product->status           = '1';
         $product->dis           = $request->dis;
         $product->product_price = $request->product_price;
+        $product->preparation_time = $request->preparation_time;
         $product->product_for   = 2;
-
-
         $product->type         = $request->type;
         $product->customizable = $request->customizable;
 
@@ -570,14 +705,11 @@ class UserControllers extends Controller
         }
 
         $product->save();
-        if ($request->customizable == 'true') {
+        if ($request->custimization == 'true')
             foreach ($request->variant_name as $k => $v) {
-                Variant::create([ 'product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->variant_price[$k] ]);
-            }
-
-
+                Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
         }
-        return redirect()->route('admin.vendor.view', Crypt::encryptString($request->userId_))->with('message', 'Cheflab Product  Registration Successfully');
+        return redirect()->route('admin.vendor.view', Crypt::encryptString($request->userId))->with('message', 'Cheflab Product  Registration Successfully');
 
     }
 
@@ -592,8 +724,6 @@ class UserControllers extends Controller
             } else {
                 return \Response::json([ 'error' => true, 'success' => false, 'error_message' => 'Finding data error' ], 200);
             }
-
-
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json([ 'error' => true, 'success' => false, 'error_message' => $e->getMessage() ], 200);
@@ -624,7 +754,31 @@ class UserControllers extends Controller
         $users = User::orderBy('id', 'desc')->paginate(15);
         return view('admin/vendors/user_list', compact('users'));
     }
-
+    public function user_inactive($id){
+        $id   = decrypt($id);
+        $user = User::find($id);
+        User::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
+    }
+    public function user_active($id){
+        $id   = decrypt($id);
+        $user = User::find($id);
+        User::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
+    }
+    public function vendor_inactive($id){
+        $id   = decrypt($id);
+        $user = Vendors::find($id);
+        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Inactive Successfully' ], 200);
+    }
+    public function vendor_active($id){
+        $id   = decrypt($id);
+        $user = Vendors::find($id);
+        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Active Successfully' ], 200);
+        return redirect()->back()->with('message', 'User Active Successfully.');
+    }
     public function user_delete($id)
     {
         $id   = decrypt($id);
@@ -634,5 +788,29 @@ class UserControllers extends Controller
         $user->delete();
         return redirect()->back()->with('message', 'Successfully deleted.');
     }
-
+    public function user_view($id){
+        $id = decrypt($id);
+        $user = User::find($id);
+        $order    = Orders::where('user_id','=',$id)->select('customer_name','delivery_address','city','total_amount')->get();
+       //  var_dump($user);die;
+        return view('admin/vendors/user_view',compact('user','order'));
+    }
+    public function refer()
+    {
+        $user = User::all();
+        return view('admin/vendors/refer',compact('user'));
+    }
+    public function referamount()
+    {   
+        $id ='1';
+        $refer_amount = AdminMasters::find($id);
+        return view('admin/vendors/referamount',compact('refer_amount'));
+    }
+    public function referamountUpdate(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->refer_amount = $request->refer_amount;
+        $general->refer_earn_msg = $request->refer_earn_msg;
+        $general->save();
+        return redirect()->route('admin.globle.setting')->with('message', 'Refer Amount  Update Successfully');
+    }
 }

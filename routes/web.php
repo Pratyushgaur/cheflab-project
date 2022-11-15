@@ -99,3 +99,6 @@ Route::get('/send-notification',[\App\Http\Controllers\FirebaseController::class
 
 
 
+Route::get('event-registration', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'register']);
+Route::get('payment', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'order']);
+Route::post('payment/status', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'paymentCallback']);

@@ -7,9 +7,12 @@ use App\Models\Catogory_master;
 use App\Models\Cuisines;
 use App\Models\Product_master;
 use App\Models\Deliver_boy;
+use App\Models\DeliveryboySetting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
+
 use DataTables;
 use Illuminate\Support\Facades\Hash;
 class Deliveryboy extends Controller
@@ -21,32 +24,52 @@ class Deliveryboy extends Controller
     public function create_deliverboy(){
         return view('admin/deliveryboy/deliverboy_create');
     }
-    public function store_deliverboy(Request $request)
+    public function deliverboy_reviews(){
+        return view('admin/deliveryboy/deliverboy_reviews');
+    }
+    public function setting(Request $request){
+        $id = '1';
+        $data = DeliveryboySetting::findOrFail($id);
+        return view('admin/deliveryboy/setting',compact('data'));
+    }
+    /*public function store_deliverboy(Request $request)
     {
-//        return $request->input();die;
+     //   $code = $name.rand('aplha',6);
+        // $code = Str::random(4);
+        // $uname  =  $request->name;
+        // $ridercode =  $uname.$code;
+        // var_dump($ridercode);die;
+       //return $request->input();die;
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|unique:vendors,email',
             'city' => 'required',
             'pincode' => 'required',
+            'password'  => 'required',
+            'confirm_password'  => 'required',
             'phone' => 'required|unique:vendors,mobile',
             'identity_image' => 'required',
             'identity_number' => 'required',
         ]);
+      //  $code = $name.rand('aplha',6);
+        //$code = str_random('aplha',6);
+        //$uname  =  $request->name;
+        //$ridercode =  $uname.$code;
         $vendors = new Deliver_boy;
         $vendors->name = $request->name;
+        dd($vendors);
+        //$vendors = $ridercode;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
+        $vendors->password   = Hash::make($request->password);
         $vendors->pincode  = $request->pincode;
         $vendors->city  = $request->city;
 //        $vendors->address  = $request->address;
-//        dd($vendors);
+
         if($request->has('image')){
             $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('dliver-boy'),$filename);
             $vendors->image  = $filename;
-        }else{
-            $vendors->image  = 'deliver-boy.png';
         }
         if($request->has('identity_image')){
             $filename = time().'-other-document-'.rand(100,999).'.'.$request->identity_image->extension();
@@ -57,6 +80,63 @@ class Deliveryboy extends Controller
         $vendors->save();
 
         return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
+    }*/
+    public function store_deliverboy(Request $request)
+    {
+      // echo 'ok';die;
+     // return $request->input();die;
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'required|unique:vendors,email',
+            'city' => 'required',
+            'pincode' => 'required',
+            'password'  => 'required',
+            'confirm_password'  => 'required',
+            'phone' => 'required|unique:vendors,mobile',
+            'identity_image' => 'required',
+            'identity_number' => 'required',
+        ]);
+        $code = Str::random(4);
+        $uname  =  $request->name;
+        $vendors = new Deliver_boy;
+        $ridercode =  $uname.$code;
+        $vendors->ridercode   = $ridercode;
+        $vendors->name = $request->name;
+        $vendors->email = $request->email;
+        $vendors->mobile  = $request->phone;
+        $vendors->password   = Hash::make($request->password);
+        $vendors->pincode  = $request->pincode;
+        $vendors->city  = $request->city;
+        $vendors->identity_number  = $request->identity_number;
+//        $vendors->address  = $request->address;
+
+        if($request->has('image')){
+            $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
+            $request->image->move(public_path('dliver-boy'),$filename);
+            $vendors->image  = $filename;
+        }
+       
+        if($request->has('identity_image')){
+            $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
+            $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->identity_image  = $filename;
+            $vendors->identity_number  = $request->identity_number;
+        }
+        $vendors->save();
+        return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
+        
+
+    }
+    public function storeDelivercharge(Request $request){
+        $general = DeliveryboySetting::find($request->id);
+        $general->a_to_b_charge = $request->a_to_b_charge;
+        $general->b_to_c_charge = $request->b_to_c_charge;
+        $general->fix_charge_1 = $request->fix_charge_1;
+        $general->fix_charge_2 = $request->fix_charge_2;
+        $general->incentive_one = $request->incentive_one;
+        $general->incentive_to = $request->incentive_to;
+        $general->save();
+        return redirect()->route('admin.deliverboy.setting')->with('message', 'Update Chargs Successfully');
     }
     public function get_data_table_of_deliverboy(Request $request)
     {
@@ -123,7 +203,6 @@ class Deliveryboy extends Controller
     }
     public function checkEmailExist(Request $request,$id=null)
     {
-
         if (Deliver_boy::where('email','=',$request->email)->exists()) {
             return \Response::json(false);
         } else {

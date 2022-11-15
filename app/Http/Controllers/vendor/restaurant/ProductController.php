@@ -100,7 +100,7 @@ class ProductController extends Controller
             $product->chili_level          = $request->chili_level;
             $product->menu_id              = $request->menu_id;
             $product->dis                  = $request->dis;
-            $product->type                 = $request->product_type;
+            //$product->type                 = $request->product_type;
             $product->primary_variant_name = $request->primary_variant_name;
             $product->product_price        = $request->item_price;
             $product->customizable         = $request->custimization;
@@ -169,7 +169,7 @@ class ProductController extends Controller
         $product->category             = $request->category;
         $product->menu_id              = $request->menu_id;
         $product->dis                  = $request->dis;
-        $product->type                 = $request->product_type;
+   //     $product->type                 = $request->product_type;
         $product->product_price        = $request->item_price;
         $product->customizable         = $request->custimization;
         $product->preparation_time     = $request->preparation_time;
@@ -352,7 +352,7 @@ class ProductController extends Controller
         return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action-js', function ($data) {
-                $btn = '<a href="#"><i class="fa fa-edit"></i></a>
+                $btn = '<a href="'. route("restaurant.product.addon.edit",Crypt::encryptString($data->id)) .'"><i class="fa fa-edit"></i></a>
                         <a  href="#"><i class="fa fa-trash"></i></a>
                 ';
                 return $btn;
@@ -365,7 +365,31 @@ class ProductController extends Controller
             ->rawColumns(['action-js'])
             ->make(true);
     }
+    public function updateAddon(Request $request){
+        $this->validate($request, [
+            'name'  => 'required',
+            'price' => 'required|integer'
 
+        ]);
+        $catogory = Addons::find($request->id);
+        $catogory->addon = $request->name;
+        $catogory->price = $request->price;
+        $catogory->save();
+        return redirect()->route('restaurant.product.addon')->with('message', 'Addon Update Successfully.');
+    }
+    public function editAddon($encrypt_id){
+        try {
+
+            $id = Crypt::decryptString($encrypt_id);
+//            dd($id);
+            // $product = Product_master::findOrFail($id);
+            $addons    = Addons::findOrFail($id);
+//            dd($menus);
+            return view('vendor.restaurant.addons.edit', compact('addons'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        }
+    }
     public function createAddon()
     {
 

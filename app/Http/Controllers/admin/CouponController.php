@@ -46,6 +46,8 @@ class CouponController extends Controller
         $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
+        $coupon->promo_redeem_count  = $request->promo_redeem_count;
+        $coupon->promocode_use  = $request->promocode_use;
         $coupon->create_by  = $request->create_by;
         $coupon->from  = $request->from;
         $coupon->to  = $request->to;
@@ -61,13 +63,22 @@ class CouponController extends Controller
     public function get_data_table_of_coupon(Request $request)
     {
       //  echo 'ok';die;
+    //   if(Carbon::now()->between(Carbon::createFromFormat('Y-m-d', $data->from), Carbon::createFromFormat('Y-m-d', $data->to)->addDay())){
+    //     echo 'ok';die;
+    //      return  $btn =  '<button class="btn btn-xs btn-success">active</button>'; 
+
+    //  }else{
+    //      Coupon::where('id','=', $data->id)->limit(1)->update( ['status' => 0]);
+    //      return  $btn =  '<button class="btn btn-xs btn-danger">In active</button>'; 
+    //  }
         if ($request->ajax()) {
             
             $data = Coupon::latest()->get();
+            
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.coupon.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>  
+                    $btn = '<a href="'. route("admin.coupon.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a>  
                     <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="Category"  data-action-url="' . route('admin.coupon.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
@@ -150,24 +161,36 @@ class CouponController extends Controller
     }
     public function update(Request $request){
         $this->validate($request, [
+            'name' => 'required',
             'code' => 'required',
             'discount_type' => 'required',
             'discount' => 'required',
-            'maximum_order_value' => 'required',
-            'minimum_order_value' => 'required',
-            'expires_coupon' => 'required',
+            'maxim_dis_amount' => 'required',
+            'minimum_order_amount' => 'required',
+            'promo_redeem_count' => 'required',
+            'promocode_use' => 'required',
+            'from' => 'required',
+            'to' => 'required',
+            'description' => 'required',
         ]);
-        $coupon = Coupon::find($request->id);
+        $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
-      //  $coupon->vendor_type = 'restaurant';
         $coupon->discount  = $request->discount;
         $coupon->description  = $request->description;
-        $coupon->type  = $request->type;
-        $coupon->maximum_order_value  = $request->maximum_order_value;
-        $coupon->minimum_order_value  = $request->minimum_order_value;
-        $coupon->type  = $request->type;
-        $coupon->expires_coupon  = $request->expires_coupon;
+        $coupon->show_in  = $request->show_in;
+        $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
+        $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
+        $coupon->minimum_order_amount  = $request->minimum_order_amount;
+        $coupon->create_by  = $request->create_by;
+        $coupon->from  = $request->from;
+        $coupon->to  = $request->to;
+        if($request->has('image')){
+            $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
+            $request->image->move(public_path('coupon-admin'),$filename);
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+            $coupon->image  = $filename;
+        }
         $coupon->save();
         return redirect()->route('admin.coupon.list')->with('message', 'Coupon Update Successfully');
     }

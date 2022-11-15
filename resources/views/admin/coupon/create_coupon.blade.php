@@ -192,7 +192,7 @@
                                   </div>-->
                                   <div class="col-md-3">
                                    <div class="form-check" style="margin-top:40px;">
-                                        <input class="form-check-input" name="show_in" type="checkbox" value="1" id="flexCheckDefault">
+                                        <input class="form-check-input" name="show_in" type="checkbox" value="1" id="flexCheckDefault" checked>
                                         <label for="flexCheckDefault">
                                             Show In Customer App
                                         </label>

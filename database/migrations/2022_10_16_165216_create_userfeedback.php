@@ -16,6 +16,7 @@ class CreateUserfeedback extends Migration
         Schema::create('userfeedback', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('userID');
             $table->string('mobile');
             $table->string('email');
             $table->string('subject');

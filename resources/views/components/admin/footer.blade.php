@@ -134,6 +134,152 @@
             }
         })
     })
+    $(document).on('click','.inactive-record',function(){
+      
+
+      Swal.fire({
+          title: 'Are you sure?',
+          text: $(this).attr('data-alert-message'),
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, inactive it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            var id = $(this).attr('data-id');
+            var action = $(this).attr('data-action-url');
+            var table = $(this).attr('data-table');
+            //
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: action,
+                type: 'POST',
+                // dataType: "JSON",
+                data: {
+                    "id": id,
+                },
+                success: function (response)
+                {
+                    //console.log();
+                    if (response.success == true) {
+                      Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                      //$('#example').DataTable().ajax.reload();
+                      location.reload();
+                    } else {
+                      Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
+                    }
+                },
+                error: function(xhr) {
+                console.log(xhr.responseText); 
+                
+              }
+            });
+
+          }
+      })
+  })
+  $(document).on('click','.active-record',function(){
+      
+
+      Swal.fire({
+          title: 'Are you sure?',
+          text: $(this).attr('data-alert-message'),
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, active it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            var id = $(this).attr('data-id');
+            var action = $(this).attr('data-action-url');
+            var table = $(this).attr('data-table');
+            //
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: action,
+                type: 'POST',
+                // dataType: "JSON",
+                data: {
+                    "id": id,
+                },
+                success: function (response)
+                {
+                    //console.log();
+                    if (response.success == true) {
+                      Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                     // $('#example').DataTable().ajax.reload();
+                     location.reload();
+                    } else {
+                      Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
+                    }
+                },
+                error: function(xhr) {
+                console.log(xhr.responseText); 
+                
+              }
+            });
+
+          }
+      })
+  })
+  $(document).on('click','.vendor-delete',function(){
+      
+
+      Swal.fire({
+          title: 'Are you sure?',
+          text: $(this).attr('data-alert-message'),
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, Delete it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+            var id = $(this).attr('data-id');
+            var action = $(this).attr('data-action-url');
+            var table = $(this).attr('data-table');
+            //
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                url: action,
+                type: 'POST',
+                // dataType: "JSON",
+                data: {
+                    "id": id,
+                },
+                success: function (response)
+                {
+                    //console.log();
+                    if (response.success == true) {
+                      Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                      $('#example').DataTable().ajax.reload();
+                    } else {
+                      Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
+                    }
+                },
+                error: function(xhr) {
+                console.log(xhr.responseText); 
+                
+              }
+            });
+
+          }
+      })
+  })
     $('.select2').select2()
 
     //Initialize Select2 Elements

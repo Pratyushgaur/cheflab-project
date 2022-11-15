@@ -80,6 +80,12 @@
 						</a>
 					</li>
 					<li class="nav-item">
+						<a href="{{route('admin.deliverboy.review')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Delivery Boy Review</p>
+						</a>
+					</li>
+					<li class="nav-item">
 						<a href="{{route('admin.user.list')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>App Users</p>
@@ -87,7 +93,35 @@
 					</li>
 				</ul>
 			</li>
-
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+				  <i class="nav-icon fas fa-users"></i>
+				  <p>
+					 Deliveryboy Management
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+					<li class="nav-item">
+						<a href="{{route('admin.deliverboy.list')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>All Delivery Boy</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.deliverboy.review')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Delivery Boy Review</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.deliverboy.setting')}}" class="nav-link">
+						<i class="nav-icon fa fa-cog"></i>
+						  <p>Setting</p>
+						</a>
+					</li>
+				</ul>
+			</li>
 			<li class="nav-item">
 				<a href="{{route('admin.product.cheflabProduct')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
@@ -186,9 +220,9 @@
 				</a>
 			</li>
 			<li class="nav-item">
-				<a href="{{route('admin.coupon.list')}}" class="nav-link">
+				<a href="{{route('admin.refe.earn')}}" class="nav-link">
 				  <i class="far fa-user nav-icon"></i>
-				  <p>Reffer & Earn</p>
+				  <p>Refer & Earn</p>
 				</a>
 			</li>
 
@@ -225,9 +259,51 @@
 				</a>
 				<ul class="nav nav-treeview">
 				    <li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="{{route('admin.user.contentmanagement')}}" class="nav-link">
 						  <i class="far fa-circle nav-icon"></i>
-						  <p>All Orders</p>
+						  <p>User Content</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.vendor.contentmanagement')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Vendor Content</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.dliveryboy.contentmanagement')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Deliveryboy Content</p>
+						</a>
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+
+				  <i class="far fa-user nav-icon"></i>
+				  <p>
+					 Feed Back
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+				    <li class="nav-item">
+						<a href="{{route('admin.app.feedbacklist')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>App Feedback</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.app.vendorfeedbacklist')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Vendor Feedback</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.app.deliveryfeedbacklist')}}" class="nav-link">
+						  <i class="far fa-circle nav-icon"></i>
+						  <p>Delivery Boy Feedback</p>
 						</a>
 					</li>
 				</ul>
@@ -238,6 +314,12 @@
 				  <p>GlobleSetting</p>
 				</a>
 			</li>
+			<!--<li class="nav-item">
+				<a href="{{route('admin.globle.productactive')}}" class="nav-link">
+				  <i class="nav-icon fa fa-cog"></i>
+				  <p>Product Active</p>
+				</a>
+			</li>-->
 			<li class="nav-item">
 				<a href="{{route('admin.logout')}}" class="nav-link">
 				  <i class="nav-icon fas fa-power-off"></i>

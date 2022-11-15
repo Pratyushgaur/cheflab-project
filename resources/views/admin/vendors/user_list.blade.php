@@ -32,9 +32,10 @@
                                         <th> Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
-                                        <th>Alternate mobile no</th>
+                                        <th>Total Order</th>
                                         <th>Wallet</th>
-{{--                                        <th>Action</th>--}}
+                                        <th>Active/Inactive</th>
+                                        <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -47,9 +48,18 @@
                                             <td>{{$user->mobile_number}}</td>
                                             <td>{{$user->alternative_number}}</td>
                                             <td><?php echo front_end_currency($user->wallet_amount)?></td>
-{{--                                            <td>--}}
-{{--                                                <a href="javascript:void(0);" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City" data-action-url="{{route('admin.user.delete',['id'=>encrypt($user->id)])}}" title="Delete"><i class="fa fa-trash"></i></a>--}}
-{{--                                            </td>--}}
+                                            <td> 
+                                                @if($user->status == '1')
+                                                <!--<a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="{{route('admin.user.inactive',['id'=>encrypt($user->id)])}}" title="Inactive">Active</a>-->
+                                                <a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="{{route('admin.user.inactive',['id'=>encrypt($user->id)])}} " title="Inactive">Active</a>
+                                                @else
+                                                 <a href="javascript:void(0);" class="btn btn-danger btn-xs active-record"  data-alert-message="Are You Sure to Active this User" flash="User" data-action-url="{{route('admin.user.active',['id'=>encrypt($user->id)])}} " title="Active">Inactive</a>
+                                                @endif
+                                            </td>
+                                             <td>
+                                               <a href="{{route('admin.user.view',['id'=>encrypt($user->id)])}}"><i class="fa fa-eye"></i></a>
+                                               <a href="javascript:void(0);" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City" data-action-url="{{route('admin.user.delete',['id'=>encrypt($user->id)])}}" title="Delete"><i class="fa fa-trash"></i></a>
+                                            </td>
 
 
                                         </tr>

@@ -119,7 +119,7 @@
                             <div class="form-group">
                                 <label for="blog_position">Blog Position <span class="text-danger">*</span></label>
                                 <select name="position" class="form-control" id="blog_position">
-                                  <option value="1">Restaurent</option>
+                                  <option value="1">Restaurant</option>
                                   <option value="2">Chef</option>
                                 </select>
                             </div>
@@ -195,7 +195,7 @@
                                         <tr role="row">
                                           <th  class="text-center">Sr No.</th>
                                           <th >Name of Blog</th>
-                                          <th >App Position</th>
+                                          <th >Blog Position</th>
                                           <th >Blog For</th>
                                           <th >Status</th>
                                           <th >Action</th>
@@ -233,19 +233,19 @@
 <script type="text/javascript">
    (function($) {
   // $(function () {
-    /*let table = $('#example').dataTable({
+    let table = $('#example').dataTable({
         processing: true,
         serverSide: true,
         ajax: "{{route('admin.vendorstore.data')}}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},
-            {data: 'app_position', name: 'app_position'},
+            {data: 'vendor_type', name: 'vendor_type'},
             {data: 'blog_type', name: 'blog_type'},
             {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
-    });*/
+    });
     $("#banner-form").validate({
       rules: {
             blog_position: {

@@ -22,8 +22,11 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('vendors-restourant-store', [App\Http\Controllers\admin\UserControllers::class, 'store_restourant'])->name('admin.restourant.store');
     Route::post('vendors-chef-store-product', [App\Http\Controllers\admin\UserControllers::class, 'store_chef_product'])->name('admin.chef.store_product');
     Route::get('admin.chef.edit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_edit'])->name('admin.chef.edit');
+    Route::get('admin.chef.editchef/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_editchef'])->name('admin.chef.editchef');
     Route::post('vendors/delete', [App\Http\Controllers\admin\UserControllers::class, 'soft_delete'])->name('admin.vendors.ajax.delete');
     Route::post('vendors/product/delete', [App\Http\Controllers\admin\ProductController::class, 'soft_delete'])->name('admin.product.ajax.delete');
+    Route::post('vendors/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'vendor_inactive'])->name('admin.vendors.inactive');
+    Route::post('vendors/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'vendor_active'])->name('admin.vendors.active');
     //
     Route::get('vendors-view/{id}', [App\Http\Controllers\admin\UserControllers::class, 'view_vendor'])->name('admin.vendor.view');
     Route::get('vendors-chef-product/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_product'])->name('admin.cherf.product');
@@ -32,15 +35,20 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('vendors-chef-video-edit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_videoedit'])->name('admin.chef.videoedit');
     Route::post('vendors-chef-video-update', [App\Http\Controllers\admin\UserControllers::class, 'updateVideo'])->name('admin.chef.video.update');
     Route::post('vendors-chef-video-delete', [App\Http\Controllers\admin\UserControllers::class, 'soft_delete_video'])->name('admin.chef.video.ajax.delete');
-    //
+    // Refer Earn
+    Route::get('refer-earn', [App\Http\Controllers\admin\UserControllers::class, 'refer'])->name('admin.refe.earn');
+    Route::get('refer-amount-update', [App\Http\Controllers\admin\UserControllers::class, 'referamount'])->name('admin.refer.referamount');
+    Route::post('refer-amount-store', [App\Http\Controllers\admin\UserControllers::class, 'referamountUpdate'])->name('admin.refer.amountUpdate');
     //chef route
     Route::get('vendors-chef-create', [App\Http\Controllers\admin\UserControllers::class, 'create_chef'])->name('admin.chef.create');
     Route::post('vendors-chef-store', [App\Http\Controllers\admin\UserControllers::class, 'store_chef'])->name('admin.chef.store');
     Route::post('vendors-update', [App\Http\Controllers\admin\UserControllers::class, 'vendors_update'])->name('admin.vendors.update');
+    Route::post('chef-update', [App\Http\Controllers\admin\UserControllers::class, 'chef_update'])->name('admin.chef.update');
     Route::get('vendors-chef-duplicatemail', [App\Http\Controllers\admin\UserControllers::class, 'checkEmailExistUpdate'])->name('admin.restourant.Email');
     Route::post('vendors-chef-video', [App\Http\Controllers\admin\UserControllers::class, 'addVideo'])->name('admin.chef.video.add');
     Route::get('vendors-chef-productlist/{userId}', [App\Http\Controllers\admin\UserControllers::class, 'chef_product_list'])->name('admin.chef.productlist');
     Route::get('vendors-chef-productlists/{id}', [App\Http\Controllers\admin\UserControllers::class, 'product_list'])->name('admin.chef.productlists');
+    Route::get('vendors-order-list/{id}', [App\Http\Controllers\admin\UserControllers::class, 'order_list'])->name('admin.user.orderlist');
     Route::get('vendors-chef-productedit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_product_edit'])->name('admin.chef.productedit');
     // categoryies
     Route::get('category', [App\Http\Controllers\admin\Category::class, 'index'])->name('admin.category.create');
@@ -51,6 +59,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('category-update', [App\Http\Controllers\admin\Category::class, 'update'])->name('admin.category.update');
     Route::get('check-duplicate-category', [App\Http\Controllers\admin\Category::class, 'check_duplicate_category'])->name('check-duplicate-category');
     Route::get('check-edit_duplicate-category/{id}', [App\Http\Controllers\admin\Category::class, 'check_edit_duplicate_category'])->name('check-edit_duplicate-category');
+    Route::post('category-inactive/{id}', [App\Http\Controllers\admin\Category::class, 'inactive'])->name('admin.category.inactive');
+    Route::post('category-active/{id}', [App\Http\Controllers\admin\Category::class, 'active'])->name('admin.category.active');
     // cuisiness
     Route::get('cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'index'])->name('admin.cuisines.create');
     Route::post('cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'store_cuisines'])->name('admin.cuisines.store');
@@ -60,11 +70,14 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('cuisines/delete', [App\Http\Controllers\admin\CuisinesController::class, 'soft_delete'])->name('admin.cuisines.ajax.delete');
     Route::get('check-duplicate-cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'check_duplicate_cuisines'])->name('check-duplicate-cuisines');
     Route::get('check-edit_duplicate-cuisines/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'check_edit_duplicate_cuisines'])->name('check-edit_duplicate-cuisines');
-
+    Route::post('cuisines-inactive/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'inactive'])->name('admin.cuisines.inactive');
+    Route::post('cuisines-active/{id}', [App\Http\Controllers\admin\CuisinesController::class, 'active'])->name('admin.cuisines.active');
     // product routes
     Route::get('products', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.product.create');
     Route::get('vendor/products/create/{id}', [App\Http\Controllers\admin\ProductController::class, 'index'])->name('admin.vendor.product.create');
     Route::get('vendors-chef-product-list/{id}', [App\Http\Controllers\admin\UserControllers::class, 'view_chefproduct'])->name('admin.chefproduct.view');
+    Route::post('products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'active'])->name('admin.product.active');
+    Route::post('products-reject/{id}', [App\Http\Controllers\admin\ProductController::class, 'reject'])->name('aadmin.product.reject');
     //chef lAB PRODUCT
     Route::get('cheflab-products', [App\Http\Controllers\admin\ProductController::class, 'cheflabProduct'])->name('admin.product.cheflabProduct');
     Route::get('cheflab-products-create', [App\Http\Controllers\admin\ProductController::class, 'createChefLabProduct'])->name('admin.product.cheflabProduct.create');
@@ -73,6 +86,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Delivery Boy
     Route::get('delivery-boy', [App\Http\Controllers\admin\Deliveryboy::class, 'index'])->name('admin.deliverboy.list');
     Route::get('delivery-boy-create', [App\Http\Controllers\admin\Deliveryboy::class, 'create_deliverboy'])->name('admin.deliverboy.create');
+    Route::get('delivery-boy-review', [App\Http\Controllers\admin\Deliveryboy::class, 'deliverboy_reviews'])->name('admin.deliverboy.review');
     Route::post('delivery-boy-store', [App\Http\Controllers\admin\Deliveryboy::class, 'store_deliverboy'])->name('admin.diliverboy.store');
     Route::get('deliverboy-datatable', [App\Http\Controllers\admin\Deliveryboy::class, 'get_data_table_of_deliverboy'])->name('admin.deliverboy.datatable');
     Route::get('edit-deliverboy/{id}', [App\Http\Controllers\admin\Deliveryboy::class, 'fun_edit_deliverboy'])->name('admin.deliverboy.view');
@@ -82,6 +96,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('delivery-boy-mobilecheck-update/{id}', [App\Http\Controllers\admin\Deliveryboy::class, 'checkMobileExistUpdate'])->name('admin.deliverboy.mobilecheck.update');
     Route::post('delivery-boy-update', [App\Http\Controllers\admin\Deliveryboy::class, 'update'])->name('admin.deliverboy.update');
     Route::post('delivery-boy/delete', [App\Http\Controllers\admin\Deliveryboy::class, 'soft_delete'])->name('admin.deliverboy.ajax.delete');
+    Route::get('delivery-boy-setting', [App\Http\Controllers\admin\Deliveryboy::class, 'setting'])->name('admin.deliverboy.setting');
+    Route::post('delivery-boy/chargse', [App\Http\Controllers\admin\Deliveryboy::class, 'storeDelivercharge'])->name('admin.deliveryboy.storeDelivercharge');
     //Coupons
     Route::get('coupon', [App\Http\Controllers\admin\CouponController::class, 'index'])->name('admin.coupon.list');
     Route::get('coupon-list', [App\Http\Controllers\admin\CouponController::class, 'get_data_table_of_coupon'])->name('admin.coupon.data');
@@ -137,32 +153,77 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('order-list', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order'])->name('admin.order.data');
     Route::post('get-vendor-byrole', [App\Http\Controllers\admin\OrderController::class, 'getVendorByRole'])->name('admin.vendor.byRole');
     Route::get('orders-view/{id}', [App\Http\Controllers\admin\OrderController::class, 'vieworder'])->name('admin.order.view');
+    Route::get('orders-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoice'])->name('admin.order.invoice');
     Route::get('orders-product/{id}', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_product'])->name('admin.order.product');
     // Globle Setting
     Route::get('globle-setting', [App\Http\Controllers\admin\GlobleSetting::class,'index'])->name('admin.globle.setting');
     Route::get('globle-privacy-general', [App\Http\Controllers\admin\GlobleSetting::class,'general'])->name('admin.globle.general');
     Route::post('globle-general-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeGernel'])->name('admin.globle.storeGernel');
     Route::get('globle-static-page', [App\Http\Controllers\admin\GlobleSetting::class,'staticpage'])->name('admin.globle.staticpage');
-    Route::post('globle-static-storePrivacy', [App\Http\Controllers\admin\GlobleSetting::class,'storePrivacy'])->name('admin.globle.storePrivacy');
-    Route::post('globle-static-storeVendorTC', [App\Http\Controllers\admin\GlobleSetting::class,'storeVendorTC'])->name('admin.globle.storeVendorTC');
-    Route::post('globle-static-storeCheflabTC', [App\Http\Controllers\admin\GlobleSetting::class,'storeCheflabTC'])->name('admin.globle.storeCheflabTC');
-    Route::post('globle-static-storeDeliveryTC', [App\Http\Controllers\admin\GlobleSetting::class,'storeDeliveryTC'])->name('admin.globle.storeDeliveryTC');
-    Route::post('globle-static-storeRefund', [App\Http\Controllers\admin\GlobleSetting::class,'storeRefund'])->name('admin.globle.storeRefund');
-    Route::get('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'user_faq'])->name('admin.user.faq');
-    Route::get('globle-setting-data', [App\Http\Controllers\admin\GlobleSetting::class,'getFaq'])->name('admin.user.faqdata');
-    Route::post('globle-setting-faq', [App\Http\Controllers\admin\GlobleSetting::class,'store_faq'])->name('admin.globle.store_faq');
+   
     Route::get('globle-delivery-charge', [App\Http\Controllers\admin\GlobleSetting::class,'delivery_charge'])->name('admin.globle.delivery_charge');
     Route::post('globle-store-deliverycharge', [App\Http\Controllers\admin\GlobleSetting::class,'storeDelivery'])->name('admin.globle.storeDelivercharge');
     Route::get('globle-payment-setting', [App\Http\Controllers\admin\GlobleSetting::class,'payment'])->name('admin.globle.payment.setting');
     Route::post('globle-payment-store', [App\Http\Controllers\admin\GlobleSetting::class,'storePaytm'])->name('admin.globle.storePaytm');
-    Route::get('globle-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.globle.feedbacklist');
+    Route::get('app-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.app.feedbacklist');
+    Route::get('app-vendor-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'vendorfeedbacklist'])->name('admin.app.vendorfeedbacklist');
+    Route::get('app-deliverboy-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'DeliveryBoyfeedbacklist'])->name('admin.app.deliveryfeedbacklist');
     Route::get('globle-user-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedback'])->name('admin.globle.feedbackdata');
+    Route::get('globle-vendor-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getVendorFeedback'])->name('admin.vendor.feedbackdata');
+    Route::get('globle-deliveryboy-feedbackdata', [App\Http\Controllers\admin\GlobleSetting::class,'getDeliveryboyFeedback'])->name('admin.deliveryboy.feedbackdata');
+    Route::get('globle-user-feedbackedit', [App\Http\Controllers\admin\GlobleSetting::class,'getFeedbackEdit'])->name('admin.user.feedbackedit');
+    Route::get('globle-defualtime', [App\Http\Controllers\admin\GlobleSetting::class,'defaulttimeset'])->name('admin.globle.defaulttime');
+    Route::post('globle-setting-storeDefaultTime', [App\Http\Controllers\admin\GlobleSetting::class,'storeDefaultTime'])->name('admin.globle.storeDefaultTime'); 
+    
+    
+    Route::get('globle-social-media', [App\Http\Controllers\admin\GlobleSetting::class,'social_media'])->name('admin.globle.socialmedia');
+    Route::post('globle-social-media-add', [App\Http\Controllers\admin\GlobleSetting::class,'social_media_add'])->name('admin.globle.socialmedia_add');
+    Route::get('globle-social-media-data', [App\Http\Controllers\admin\GlobleSetting::class,'getSocialMedia'])->name('admin.globle.socilamediadata');
+    Route::get('globle-social-media-edit/{id}', [App\Http\Controllers\admin\GlobleSetting::class, 'fun_edit_socialmedia'])->name('admin.social.mediaedit');
+    Route::post('globle-social-media-update', [App\Http\Controllers\admin\GlobleSetting::class,'social_media_update'])->name('admin.globle.socialmedia_update');
+    Route::get('globle-product-active', [App\Http\Controllers\admin\GlobleSetting::class,'product_active'])->name('admin.globle.productactive');
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
+    // Contant Managemnt 
+    Route::get('content-menegement-user', [App\Http\Controllers\admin\Contantmanagement::class,'index'])->name('admin.user.contentmanagement');
+    Route::post('content-static-user-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'storePrivacy'])->name('admin.user.storePrivacy');
+    Route::post('content-static-storeVendorTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeVendorTC'])->name('admin.user.storeVendorTC');
+  //  Route::post('content-static-storeCheflabTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeCheflabTC'])->name('admin.globle.storeCheflabTC');
+    //Route::post('content-static-storeDeliveryTC', [App\Http\Controllers\admin\Contantmanagement::class,'storeDeliveryTC'])->name('admin.globle.storeDeliveryTC');
+    Route::post('content-static-storeRefund', [App\Http\Controllers\admin\Contantmanagement::class,'storeRefund'])->name('admin.user.storeRefund');
+    Route::get('content-static-faquser', [App\Http\Controllers\admin\Contantmanagement::class,'user_faq'])->name('admin.user.faq');
+    Route::get('content-static-data', [App\Http\Controllers\admin\Contantmanagement::class,'getFaq'])->name('admin.user.faqdata');
+    Route::get('content-static-faqedit/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq'])->name('admin.user.faqedit');
+    Route::post('content-static-faqupdate', [App\Http\Controllers\admin\Contantmanagement::class,'update_faq'])->name('admin.globle.update_faq');   
+    Route::post('content-static-faq', [App\Http\Controllers\admin\Contantmanagement::class,'store_faq'])->name('admin.user.store_faq');
+
+    Route::get('content-menegement-vendor', [App\Http\Controllers\admin\Contantmanagement::class,'vendor'])->name('admin.vendor.contentmanagement');
+    Route::post('content-static-vendore-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'vendorPrivacy'])->name('admin.vendor.storePrivacy');
+    Route::post('content-static-VendorTC', [App\Http\Controllers\admin\Contantmanagement::class,'VendorTC'])->name('admin.vendore.storeVendorTC');
+    Route::post('content-static-vendorRefund', [App\Http\Controllers\admin\Contantmanagement::class,'vendorRefund'])->name('admin.vendore.storeRefund');
+    Route::get('content-static-faqvendor', [App\Http\Controllers\admin\Contantmanagement::class,'vendor_faq'])->name('admin.vendor.faq');
+    Route::get('content-static-vendor-data', [App\Http\Controllers\admin\Contantmanagement::class,'getVendorFaq'])->name('admin.vendor.faqdata');
+    Route::post('content-static-faq-vendor', [App\Http\Controllers\admin\Contantmanagement::class,'vendorstore_faq'])->name('admin.vendor.store_faq');
+    Route::get('content-static-faqedit-vendor/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq_vendor'])->name('admin.vendor.faqedit');
+    Route::post('content-static-vendor-faqupdate', [App\Http\Controllers\admin\Contantmanagement::class,'update_vendorfaq'])->name('admin.vendor.update_faq');  
+    
+    Route::get('content-menegement-dliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'dliveryboy'])->name('admin.dliveryboy.contentmanagement');
+    Route::post('content-static-deliveryboy-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboyPrivacy'])->name('admin.deliveryboy.storePrivacy');
+    Route::post('content-static-dliveryboy-storePrivacy', [App\Http\Controllers\admin\Contantmanagement::class,'dliveryboyPrivacy'])->name('admin.deliveryboy.storeVendorTC');
+    Route::post('content-static-dliveryboyRefund', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboyRefund'])->name('admin.deliveryboy.storeRefund');
+    Route::get('content-static-faqdliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboy_faq'])->name('admin.deliveryboy.faq');
+    Route::get('content-static-deliveryboy-data', [App\Http\Controllers\admin\Contantmanagement::class,'getDeliverboyFaq'])->name('admin.deliveryboy.faqdata');
+    Route::post('content-static-faq-deliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'deliveryboystore_faq'])->name('admin.deliveryboy.store_faq');
+    Route::get('content-static-faqedit-deliveryboy/{id}', [App\Http\Controllers\admin\Contantmanagement::class,'fun_edit_faq_deliveryboy'])->name('admin.deliveryboy.faqedit');
+    Route::post('content-static-vendor-faqdeliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'update_deliveryboyfaq'])->name('admin.deliveryboy.update_faq');  
+    //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
 
 
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
+    Route::post('users/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
+    Route::post('users/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
     Route::post('user/delete/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_delete'])->name('admin.user.delete');
+    Route::get('users/view/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_view'])->name('admin.user.view');
 
 });

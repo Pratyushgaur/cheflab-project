@@ -216,7 +216,6 @@ class AppController extends Controller
                     'lng'           => 'required|numeric',
                     'vendor_offset' => 'required|numeric',
                     'vendor_limit'  => 'required|numeric',
-
                 ]
             );
             if ($validateUser->fails()) {
@@ -1354,7 +1353,9 @@ class AppController extends Controller
         }
     }
 
-    public function deleteLikeProduct(Request $request)
+
+    public
+    function deleteLikeProduct(Request $request)
     {
         try {
 
@@ -1624,7 +1625,8 @@ class AppController extends Controller
         }
     }
 
-    public function chelfleb_produst(Request $request)
+    public
+    function chelfleb_produst(Request $request)
     {
         try {
 //            $validateUser = Validator::make(

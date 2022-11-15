@@ -125,7 +125,7 @@
 							<div class="card-body">
 							  <div class="form-group">
                   <label for="category_name">Cuisines Name</label>
-                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Cuisines Name">
+                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Enter  Cuisines">
                   <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
                 </div>
                 <div class="form-group">
@@ -173,7 +173,7 @@
                                     <th >Cuisines Name</th>
                                     <th >Position</th>
                                     <th  >Image</th>
-                                  
+                                    <th  >Status</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
@@ -269,6 +269,7 @@
             {data: 'name', name: 'name'},
             {data: 'position', name: 'position'},
             {data: 'cuisinesImage', name: 'cuisinesImage'},
+            {data: 'is_active', name: 'is_active'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

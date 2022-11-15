@@ -117,7 +117,7 @@
 							<div class="card-body">
 							  <div class="form-group">
                   <label for="category_name">Cuisines Name</label>
-                  <input type="text" id="name" name="name" value="{{$city_data->name}}" class="form-control" placeholder="Cuisines Name">
+                  <input type="text" id="name" name="name" value="{{$city_data->name}}" class="form-control" placeholder="Edit Cuisines">
                   <input type="hidden" name="id" id="id" value="{{$city_data->id}}">
                   <input type="hidden" name="txtpkey" id="txtpkey" value="{{$city_data->id}}">
                 </div>
