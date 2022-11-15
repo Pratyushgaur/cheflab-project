@@ -31,6 +31,7 @@ $product_status = config('custom_app_setting.product_status');
                         </div>
                     </div>
                     <div class="ms-panel-body">
+                        <code>You have total products: {{$product_count}}</code>
                         <div class="table-responsive">
                             <table id="" class="table thead-primary">
                                 <thead>

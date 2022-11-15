@@ -47,10 +47,11 @@ class ProductController extends Controller
         });
         $products = $products->paginate(15);
 //dd(\DB::getqueryLog());
+        $product_count=Product_master::where('userId',\Auth::guard('vendor')->user()->id)->count();
         $categories = Catogory_master::where('is_active', '=', '1')->whereIn('id', explode(',', \Auth::guard('vendor')->user()->deal_categories))->orderby('position', 'ASC')->pluck('name', 'id');
 
 //dd($products);
-        return view('vendor.restaurant.products.list', compact('products', 'categories'));
+        return view('vendor.restaurant.products.list', compact('products', 'categories','product_count'));
     }
 
     function addons()
