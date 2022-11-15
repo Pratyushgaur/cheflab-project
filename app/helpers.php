@@ -3,6 +3,10 @@
 use App\Models\Orders;
 use App\Models\Product_master;
 use Carbon\Carbon;
+function front_end_short_date_time($datetime)
+{
+    return date('d-M-y h:i a', strtotime($datetime));
+}
 
 function front_end_date_time($datetime)
 {

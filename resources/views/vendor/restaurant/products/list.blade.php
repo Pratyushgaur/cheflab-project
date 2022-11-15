@@ -1,3 +1,7 @@
+<?php
+$product_approve = config('custom_app_setting.product_approve');
+$product_status = config('custom_app_setting.product_status');
+?>
 @extends('vendor.restaurants-layout')
 @section('main-content')
 
@@ -43,57 +47,68 @@
                                 </thead>
                                 <tbody>
 
-{{--                                <tr>--}}
-{{--                                    <td scope="col">#</td>--}}
-{{--                                    <td scope="col"><input type=""></td>--}}
-{{--                                    <td scope="col"></td>--}}
-{{--                                    <td scope="col">{{ Form::select('categories', $categories,null, ['class' => 'form-control select2', 'placeholder' => 'Select category ','required','id'=>'validationCustom22']) }}</td>--}}
-{{--                                    <td scope="col">Status</td>--}}
-{{--                                    <td scope="col">Admin Review</td>--}}
-{{--                                    <td scope="col">Created at</td>--}}
-{{--                                    <td scope="col">Action</td>--}}
-{{--                                </tr>--}}
-                                <?php $count=1;?>
-                                @foreach($products as $k=>$product)
-                                    <tr>
-                                        <td>{{$count++}}</td>
-                                        <td>{{$product->product_name}}</td>
-                                        <td>{{$product->product_price}}</td>
-                                        <td>{{$product->categoryName}}</td>
-                                        <td>
-                                            <?php if ($product->product_approve == 1) {
-                                                $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $product->id . '"></span></label>';
-                                            } elseif ($product->product_approve == 0) {
-                                                $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round onProduct" data-id="' . $product->id . '"></span></label>';
-                                            } else {
-                                                $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round"></span></label>';
-                                            }
-                                            echo $btn;
-                                            ?>
+                                <tr>
+                                    <form action="{{route('restaurant.product.list')}}" method="get">
+                                        <td scope="col">#</td>
+                                        <td scope="col">{{ Form::text('name', app()->request->name, ['class' => 'form-control', 'placeholder' => 'Name']) }}</td>
+                                        <td scope="col">{{ Form::number('price', app()->request->price, ['class' => 'form-control', 'placeholder' => 'price']) }}</td>
+                                        <td scope="col">{{ Form::select('categories', $categories,app()->request->categories, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
+                                        <td scope="col">{{ Form::select('status', $product_status,app()->request->status, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
+                                        <td scope="col">{{ Form::select('approve', $product_approve,null, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
+                                        <td scope="col"><a href="{{route('restaurant.product.list')}}" class="btn-info btn-sm">Reset</a></td>
+                                        <td scope="col">
+                                            <button type="submit" class="btn-primary btn-sm">Search</button>
                                         </td>
-                                        <td><?php if ($product->status == 1) {
-                                                $btn = '<span class="badge badge-success">Active</span>';
-                                            } elseif ($product->status == 2) {
-                                                $btn = '<span class="badge badge-primary">Pending</span>';
-                                            } elseif ($product->status == 0) {
-                                                $btn = '<span class="badge badge-primary">Inactive</span>';
-                                            } else {
-                                                $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $product->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
-                                            }
-                                            echo $btn;?></td>
-                                        <td>{{front_end_date_time($product->created_at)}}</td>
-
-                                        <td><?php if ($product->status == '1') {?>
-                                            <a href="{{route('vendor.product.edit', ['id' => Crypt::encryptString($product->id)])}}"><i class="fa fa-edit"></i></a>
-                                            <a href="{{route('restaurant.product.delete', ['id' => Crypt::encryptString($product->id)])}}"  onclick="return confirm('Are you sure you want to delete this item?');" ><i class="fa fa-trash"></i></a>
-                                            <?php } else {?>
-                                            <a onclick="return confirm('Are you sure you want to delete this item?');" href="{{route('restaurant.product.delete', ['id' => Crypt::encryptString($product->id)])}}" ><i class="fa fa-trash"></i></a>
-                                            <?php } ?></td>
+                                    </form>
+                                </tr>
+                                <?php $count = 1;
+                                ?>
+                                @if(count($products)<=0)
+                                    <tr>
+                                        <td colspan="8">No record found</td>
                                     </tr>
-                                @endforeach
+                                @else
+                                    @foreach($products as $k=>$product)
+                                        <tr>
+                                            <td>{{$count++}}</td>
+                                            <td>{{$product->product_name}}</td>
+                                            <td>{{$product->product_price}}</td>
+                                            <td>{{$product->categoryName}}</td>
+                                            <td>
+                                                <?php if ($product->product_approve == 1) {
+                                                    $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $product->id . '"></span></label>';
+                                                } elseif ($product->product_approve == 0) {
+                                                    $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round onProduct" data-id="' . $product->id . '"></span></label>';
+                                                } else {
+                                                    $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round"></span></label>';
+                                                }
+                                                echo $btn;
+                                                ?>
+                                            </td>
+                                            <td><?php if ($product->status == 1) {
+                                                    $btn = '<span class="badge badge-success">Active</span>';
+                                                } elseif ($product->status == 2) {
+                                                    $btn = '<span class="badge badge-primary">Pending</span>';
+                                                } elseif ($product->status == 0) {
+                                                    $btn = '<span class="badge badge-primary">Inactive</span>';
+                                                } else {
+                                                    $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $product->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
+                                                }
+                                                echo $btn;?></td>
+                                            <td>{{front_end_short_date_time($product->created_at)}}</td>
+
+                                            <td><?php if ($product->status == '1') {?>
+                                                <a href="{{route('vendor.product.edit', ['id' => Crypt::encryptString($product->id)])}}"><i class="fa fa-edit"></i></a>
+                                                <a href="{{route('restaurant.product.delete', ['id' => Crypt::encryptString($product->id)])}}" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa fa-trash"></i></a>
+                                                <?php } else {?>
+                                                <a onclick="return confirm('Are you sure you want to delete this item?');" href="{{route('restaurant.product.delete', ['id' => Crypt::encryptString($product->id)])}}"><i class="fa fa-trash"></i></a>
+                                                <?php } ?></td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                                 </tbody>
                             </table>
-                            <div class = "">{{ $products->links('vendor.pagination.bootstrap-4') }}</div>
+                            <div class="">{{ $products->links('vendor.pagination.bootstrap-4') }}</div>
                         </div>
 
 

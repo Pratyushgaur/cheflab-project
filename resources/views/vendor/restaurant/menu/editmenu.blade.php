@@ -11,12 +11,12 @@
               <li class="breadcrumb-item"><a href="#">Menus</a></li>
               <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Menu Catalogue</a></li>
               <li class="breadcrumb-item active" aria-current="page">Edit Menu Catalogue</li>
-              
+
 
             </ol>
           </nav>
         </div>
-        <div class="col-xl-6 col-md-12">
+        <div class="col-xl-12 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
               <h6>Edit  Menu</h6>
@@ -24,7 +24,7 @@
             <div class="ms-panel-body">
               <form class=" clearfix " id="menu-form" action="{{route('restaurant.menu.update')}}"  method="post">
                 @csrf
-                
+
                 @if ($errors->any())
                     @foreach ($errors->all() as $error)
                         <div class="alert alert-danger">{{$error}}</div>
@@ -43,8 +43,8 @@
                       </p>
                     @enderror
                   </div>
-                    
-                  
+
+
                 </div>
                 <button class="btn btn-primary float-right" type="submit">Submit</button>
               </form>
@@ -54,7 +54,7 @@
 
       </div>
     </div>
-  
+
 @endsection
 
 @section('page-js')
@@ -68,19 +68,19 @@
                   maxlength: 25,
                   remote: '{{route("restaurant.menu.check_duplicate.edit",$menu_data->id)}}',
               },
-              
+
           },
           messages: {
               name:{
                 remote:"Menu Name Already Exist"
               }
-              
+
           }
     });
 </script>
 <script>
   (function($) {
-    
+
   })(jQuery);
 </script>
 @endsection
