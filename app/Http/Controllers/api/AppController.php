@@ -1805,9 +1805,8 @@ class AppController extends Controller
                     'lng'           => 'required|numeric',
                     'vendor_offset' => 'required|numeric',
                     'vendor_limit'  => 'required|numeric',
-//                    "by"            => 'require'
-//                                        ,Rule::in(['orders','rating'])
-
+                    "by"            => 'required',
+                    "for"=>"required"
                 ]
             );
 
@@ -1820,9 +1819,12 @@ class AppController extends Controller
                 ], 401);
             }
 //            DB::enableQueryLog();
-            $vendors = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id)
+
+            $where=['vendor_type'=>$request->for];
+            $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, $request->user()->id)
                 ->join('orders', 'vendors.id', '=', 'orders.vendor_id')
                 ->addSelect('deal_cuisines');
+
 
             if($request->by=='order') {
                 $vendors->addSelect(DB::raw('COUNT(*) as order_count'))

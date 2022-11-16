@@ -195,13 +195,16 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     //dd($product->toArray());
     //    dd(\DB::getQueryLog());
     $variant = [];
-
+//dd($user_id);
     $cart = \App\Models\Cart::where('user_id', $user_id)->first();
+//    dd($cart);
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
-            $qty = 0;
+            $qty = 0;//dd("sdf");
             if (isset($cart->id) && $cart->id != '') {
-                $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
+
+                $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
+                    ->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
                 if(isset($cart_p[0]->product_qty))
                     $qty=$cart_p[0]->product_qty;
             }

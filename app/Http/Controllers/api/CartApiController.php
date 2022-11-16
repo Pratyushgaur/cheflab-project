@@ -254,19 +254,19 @@ class CartApiController extends Controller
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '') {
 
-                    $responce[$product['product_id']]['product_id']              = $product['product_id'];
-                    $responce[$product['product_id']]['product_name']            = $product['product_name'];
-                    $responce[$product['product_id']]['product_qty']             = $product['product_qty'];
-                    $responce[$product['product_id']]['product_image']           = asset('products') . '/' . $product['product_image'];
-                    $responce[$product['product_id']]['category']                = $product['category'];
-                    $responce[$product['product_id']]['menu_id']                 = $product['menu_id'];
-                    $responce[$product['product_id']]['dis']                     = $product['dis'];
-                    $responce[$product['product_id']]['type']                    = $product['type'];
-                    $responce[$product['product_id']]['product_price']           = $product['product_price'];
-                    $responce[$product['product_id']]['customizable']            = $product['customizable'];
-                    $responce[$product['product_id']]['product_for']             = $product['product_for'];
-                    $responce[$product['product_id']]['product_rating']          = $product['product_rating'];
-                    $responce[$product['product_id']]['addons']                  = $product['addons'];
+                    $responce[$product['product_id']]['product_id']     = $product['product_id'];
+                    $responce[$product['product_id']]['product_name']   = $product['product_name'];
+                    $responce[$product['product_id']]['product_qty']    = $product['product_qty'];
+                    $responce[$product['product_id']]['product_image']  = asset('products') . '/' . $product['product_image'];
+                    $responce[$product['product_id']]['category']       = $product['category'];
+                    $responce[$product['product_id']]['menu_id']        = $product['menu_id'];
+                    $responce[$product['product_id']]['dis']            = $product['dis'];
+                    $responce[$product['product_id']]['type']           = $product['type'];
+                    $responce[$product['product_id']]['product_price']  = $product['product_price'];
+                    $responce[$product['product_id']]['customizable']   = $product['customizable'];
+                    $responce[$product['product_id']]['product_for']    = $product['product_for'];
+                    $responce[$product['product_id']]['product_rating'] = $product['product_rating'];
+                    $responce[$product['product_id']]['addons']         = $product['addons'];
 //                    $responce[$product['product_id']]['cart_product_id']         = $product['cart_product_id'];
 //                    $responce[$product['product_id']]['cart_product_addon_id']   = $product['cart_product_addon_id'];
 //                    $responce[$product['product_id']]['cart_product_variant_id'] = $product['cart_product_variant_id'];
@@ -560,19 +560,19 @@ class CartApiController extends Controller
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '') {
 
-                    $responce[$product['product_id']]['product_id']              = $product['product_id'];
-                    $responce[$product['product_id']]['product_name']            = $product['product_name'];
-                    $responce[$product['product_id']]['product_qty']             = $product['product_qty'];
-                    $responce[$product['product_id']]['product_image']           = asset('products') . '/' . $product['product_image'];
-                    $responce[$product['product_id']]['category']                = $product['category'];
-                    $responce[$product['product_id']]['menu_id']                 = $product['menu_id'];
-                    $responce[$product['product_id']]['dis']                     = $product['dis'];
-                    $responce[$product['product_id']]['type']                    = $product['type'];
-                    $responce[$product['product_id']]['product_price']           = $product['product_price'];
-                    $responce[$product['product_id']]['customizable']            = $product['customizable'];
-                    $responce[$product['product_id']]['product_for']             = $product['product_for'];
-                    $responce[$product['product_id']]['product_rating']          = $product['product_rating'];
-                    $responce[$product['product_id']]['addons']                  = $product['addons'];
+                    $responce[$product['product_id']]['product_id']     = $product['product_id'];
+                    $responce[$product['product_id']]['product_name']   = $product['product_name'];
+                    $responce[$product['product_id']]['product_qty']    = $product['product_qty'];
+                    $responce[$product['product_id']]['product_image']  = asset('products') . '/' . $product['product_image'];
+                    $responce[$product['product_id']]['category']       = $product['category'];
+                    $responce[$product['product_id']]['menu_id']        = $product['menu_id'];
+                    $responce[$product['product_id']]['dis']            = $product['dis'];
+                    $responce[$product['product_id']]['type']           = $product['type'];
+                    $responce[$product['product_id']]['product_price']  = $product['product_price'];
+                    $responce[$product['product_id']]['customizable']   = $product['customizable'];
+                    $responce[$product['product_id']]['product_for']    = $product['product_for'];
+                    $responce[$product['product_id']]['product_rating'] = $product['product_rating'];
+                    $responce[$product['product_id']]['addons']         = $product['addons'];
 //                    $responce[$product['product_id']]['cart_product_id']         = $product['cart_product_id'];
 //                    $responce[$product['product_id']]['cart_product_addon_id']   = $product['cart_product_addon_id'];
 //                    $responce[$product['product_id']]['cart_product_variant_id'] = $product['cart_product_variant_id'];
@@ -622,15 +622,15 @@ class CartApiController extends Controller
     public function get_cart(Request $request)
     {
         try {
-            $validateUser = Validator::make($request->all(), [
-                'user_id' => 'required|numeric'
-            ]);
-            if ($validateUser->fails()) {
-                $error = $validateUser->errors();
-                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
-            }
+//            $validateUser = Validator::make($request->all(), [
+//                'user_id' => 'required|numeric'
+//            ]);
+//            if ($validateUser->fails()) {
+//                $error = $validateUser->errors();
+//                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+//            }
 
-            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->with(['products'])->where('user_id', $request->user_id)->first();
+            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->with(['products'])->where('user_id', $request->user()->id)->first();
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
@@ -642,6 +642,32 @@ class CartApiController extends Controller
                                      'response' => [
                                          "cart" => $r,
                                      ]], 200);
+        } catch (Throwable $th) {
+            return response()->json(['status' => False, 'error' => $th->getTrace()], 500);
+        }
+    }
+
+    public function delete_product_from_cart(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'product_id' => 'required|numeric'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+
+            $cart_users = Cart::where('user_id', $request->user()->id)->first();
+            if (!isset($cart_users->id))
+                return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
+
+            $r        = $cart_users->toArray();
+            $cart_pro = CartProduct::where('cart_id', $cart_users->id)->where('product_id', $request->product_id)->delete();
+
+            return response()->json(['status'  => true,
+                                     'message' => 'Data Get Successfully',
+            ], 200);
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getTrace()], 500);
         }
