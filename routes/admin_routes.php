@@ -155,6 +155,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('orders-view/{id}', [App\Http\Controllers\admin\OrderController::class, 'vieworder'])->name('admin.order.view');
     Route::get('orders-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoice'])->name('admin.order.invoice');
     Route::get('orders-product/{id}', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_product'])->name('admin.order.product');
+    // Order Dineout
+    Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');
+    Route::get('order-list-dineout', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order_dineout'])->name('admin.order.dineoutdata');
     // Globle Setting
     Route::get('globle-setting', [App\Http\Controllers\admin\GlobleSetting::class,'index'])->name('admin.globle.setting');
     Route::get('globle-privacy-general', [App\Http\Controllers\admin\GlobleSetting::class,'general'])->name('admin.globle.general');
