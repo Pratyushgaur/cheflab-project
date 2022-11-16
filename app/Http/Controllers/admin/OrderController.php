@@ -22,7 +22,7 @@ class OrderController extends Controller
     {
         if ($request->ajax()) {
         
-           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->select('orders.id','orders.customer_name','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
+           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','orders.customer_name','users.mobile_number as mobile','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
            if($request->status != ''){
             $data = $data->where('payment_status','=',$request->status);
            }
@@ -37,13 +37,13 @@ class OrderController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'"><i class="fa fa-eye"></i></a>';
+                    $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'"><i class="fa fa-eye"></i></a> <a href="#"><i class="fa fa-print"></i></a>';
                     
                     return $btn;
                 })
                 
                 ->addColumn('date', function($data){
-                    $date_with_format = date('d M Y',strtotime($data->created_at));
+                    $date_with_format = date('d M Y hh:mm',strtotime($data->created_at));
                     return $date_with_format;
                 })
                 // ->addColumn('status', function($data){

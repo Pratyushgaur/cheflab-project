@@ -309,6 +309,12 @@
 				</ul>
 			</li>
 			<li class="nav-item">
+				<a href="{{route('admin.refund.list')}}" class="nav-link">
+				  <i class="nav-icon fa fa-cog"></i>
+				  <p>Refund</p>
+				</a>
+			</li>
+			<li class="nav-item">
 				<a href="{{route('admin.globle.setting')}}" class="nav-link">
 				  <i class="nav-icon fa fa-cog"></i>
 				  <p>GlobleSetting</p>

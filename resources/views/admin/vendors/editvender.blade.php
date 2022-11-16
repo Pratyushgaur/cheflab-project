@@ -335,24 +335,32 @@
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">GST Available</label>
                                         <select class="form-control gstavailable" name="gst_available">
-                                            @if($vendor->gst_available == '0')
+                                          @if($vendor->gst_available == '0')
                                             <option value="0">Not Available</option>
-                                            @else
                                             <option value="1">Available</option>
-                                            @endif
+                                          @elseif($vendor->gst_available == '1')
+                                          <option value="1">Available</option>
+                                          @endif
                                         </select>
                                     </div>
                                   </div>
                                   @if($vendor->gst_available == '1')
-                                  <div class="col-md-6 custmization-block">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->gst_no}}" name="gst_no" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                        <input type="text" value="{{$vendor->gst_no}}" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
                                     </div>
                                   </div>
                                   @endif
+                                  <div class="col-md-6 custmization-block">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
+                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
+                                    </div>
+                                  </div>
+                                 
                                 </div>
 
                               </div>
@@ -485,11 +493,11 @@
 </script>
 
 <script type="text/javascript">
-  $(document).ready(function() {
+ $(document).ready(function() {
     $('.select2').select2();
     $('.custmization-block').hide();
     $('.gstavailable').change(function(){
-      if ($(this).val()  == 'yes') {
+      if ($(this).val()  == '1') {
         $('.custmization-block').show();
       } else {
         $('.custmization-block').hide();
