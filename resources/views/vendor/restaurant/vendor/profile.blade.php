@@ -111,7 +111,7 @@ if (is_array($banners))
                             </li>
 
                             <li>
-                                <h3 class="ms-count"><?php echo ($resturant->review_count != 0) ? ($resturant->vendor_ratings / $resturant->review_count) : '0';?></h3>
+                                <h3 class="ms-count"><?php echo $resturant->vendor_ratings;?></h3>
                                 <span>Rating</span>
                             </li>
                         </ul>

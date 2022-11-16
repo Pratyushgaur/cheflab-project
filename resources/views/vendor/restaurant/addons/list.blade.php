@@ -55,6 +55,7 @@
 @endsection
 
 @section('page-js')
+
 <script>
   (function($) {
     let table = $('#menu-catalogue-table').dataTable({
@@ -62,12 +63,12 @@
         serverSide: true,
         ajax: "{{ route('restaurant.product.addon.datatable') }}",
         columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'addon', name: 'name'},
-            {data: 'price', name: 'price'},
-            {data: 'date', name: 'date'},
+            {data: 'DT_RowIndex', name: 'DT_RowIndex',"searchable":true},
+            {data: 'addon', name: 'name',"searchable":true},
+            {data: 'price', name: 'price',"searchable":true},
+            {data: 'date', name: 'date',"searchable":true},
 
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+            {data: 'action-js', name: 'action-js'},
         ]
     });
   })(jQuery);
