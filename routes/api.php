@@ -52,6 +52,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('view-cart', [App\Http\Controllers\api\CartApiController::class, 'view_cart']);
     Route::post('view-cart-vendor', [App\Http\Controllers\api\CartApiController::class, 'view_cart_vendor']);
     Route::post('update-cart', [App\Http\Controllers\api\CartApiController::class, 'update_cart']);
+    Route::post('get-cart', [App\Http\Controllers\api\CartApiController::class, 'get_cart']);
 
     // like dislike
     Route::post('like-vendor', [App\Http\Controllers\api\AppController::class, 'add_to_like_vendor']);
@@ -95,7 +96,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('cancellation-policy', [App\Http\Controllers\api\AppController::class, 'getUserCancellationPolicy']);
     Route::get('aboutus', [App\Http\Controllers\api\AppController::class, 'getAboutUs']);
     Route::get('socialmedia', [App\Http\Controllers\api\AppController::class, 'getSocialmedia']);
-    
+
     //Dine out
     Route::post('get-dine-out-slot', [App\Http\Controllers\api\DineoutApiController::class, 'get_dine_out_slot']);
     Route::post('dine-out-booking', [App\Http\Controllers\api\DineoutApiController::class, 'dine_out_booking']);
@@ -103,7 +104,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-booked-dine-out-details', [App\Http\Controllers\api\DineoutApiController::class, 'get_booked_dineout_detail']);
 
     Route::get('chelfleb-products', [\App\Http\Controllers\api\AppController::class, 'chelfleb_produst']);
-    // User Rechar 
+    // User Rechar
     Route::post('get-user-wallet', [App\Http\Controllers\api\Userwallet::class, 'getUserwallet']);
     Route::post('recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'Recharge']);
     Route::post('user-all-transaction', [App\Http\Controllers\api\Userwallet::class, 'allTransactions']);
