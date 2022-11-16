@@ -485,7 +485,11 @@ class CartApiController extends Controller
                             $CartProductVariant->save();
                             $cart_products_variant_id[] = $CartProductVariant->id;
                         }
-                        $cart_obj->cart_product_variants()->whereNotIn('cart_product_variants.id', $cart_products_variant_id)->delete();
+                        if(isset($cart_products_variant_id) && !empty($cart_products_variant_id) && is_array($cart_products_variant_id)){
+                            $cart_obj->cart_product_variants()->whereNotIn('cart_product_variants.id', $cart_products_variant_id)->delete();
+                            unset($cart_products_variant_id);
+                        }
+
                     }
                     if (isset($p['addons']) && $p['addons'] != '')
                         foreach ($p['addons'] as $k => $a) {

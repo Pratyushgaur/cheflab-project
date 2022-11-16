@@ -11,7 +11,7 @@
               <li class="breadcrumb-item"><a href="#">Products</a></li>
               <li class="breadcrumb-item" aria-current="page" ><a href="{{route('restaurant.product.addon')}}">Addons List</a></li>
               <li class="breadcrumb-item active" aria-current="page">Edit  Addons</li>
-              
+
 
             </ol>
           </nav>
@@ -40,7 +40,7 @@
                   <div class="col-xl-12 col-md-12 mb-3">
                     <label for="validationCustom10">Price</label>
                     <div class="input-group">
-                      <input type="text" class="form-control" name="price" value="{{$addons->price}}" id="validationCustom03" placeholder="Enter Price" >
+                      <input type="number" class="form-control" name="price" value="{{(int)$addons->price}}" id="validationCustom03" placeholder="Enter Price" >
                     </div>
                     @error('price')
                       <p class="text-danger">
@@ -48,8 +48,8 @@
                       </p>
                     @enderror
                   </div>
-                    
-                  
+
+
                 </div>
                 <button class="btn btn-primary float-right" type="submit">Update</button>
               </form>
@@ -59,13 +59,13 @@
 
       </div>
     </div>
-  
+
 @endsection
 
 @section('page-js')
 <script>
   (function($) {
-    
+
   })(jQuery);
 </script>
 @endsection

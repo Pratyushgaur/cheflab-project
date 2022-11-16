@@ -443,4 +443,25 @@ class ProductController extends Controller
         }
     }
 
+
+    public function delete_addon(Request $request)
+    {
+        try {
+            $id   = Crypt::decryptString($request->id);
+            $data = Addons::findOrFail($id);
+            if ($data) {
+                $data->delete();
+                return redirect()->route('restaurant.product.list')->with('success', 'Product deleted successfully.');
+            } else {
+
+                return redirect()->route('restaurant.product.list')->with('error', 'Something wen wrong.');
+            }
+
+
+        } catch (DecryptException $e) {
+            //return redirect('city')->with('error', 'something went wrong');
+            return redirect()->route('restaurant.product.list')->with('error', 'Something wen wrong.');
+        }
+    }
+
 }
