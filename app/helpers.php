@@ -162,7 +162,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product->whereIn('products.id', $product_ids);
     if ($with_restaurant_name) {
         $product->join('vendors', 'products.userId', '=', 'vendors.id');
-        $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'banner_image');
+        $product->addSelect('vendors.name as restaurantName' ,'vendors.image as vendor_image','vendors.profile_image as vendor_profile_image', 'banner_image');
     }
 
 
@@ -172,6 +172,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
         $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
             $join->on('products.id', '=', 'user_product_like.product_id');
+            $join->where('products.cuisines', '=', 'cuisines.id');
+            $join->where('products.category', '=', 'categories.id');
             $join->where('user_product_like.user_id', '=', $user_id);
         });
     }
@@ -190,7 +192,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-        'products.id as product_id', 'product_rating', 'primary_variant_name')
+        'products.id as product_id', 'product_rating','dis','chili_level', 'primary_variant_name')
         ->get();
     //dd($product->toArray());
     //    dd(\DB::getQueryLog());
@@ -218,12 +220,14 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                                               'image'                => $p['image'],
                                               'type'                 => $p['type'],
                                               'product_rating'       => $p['product_rating'],
-                                              'categoryName'         => $p['categoryName'],
+                                              'category'         => $p['categoryName'],
                                               'is_like'              => $p['is_like'],
                                               'primary_variant_name' => $p['primary_variant_name'],
                                               'preparation_time'     => $p['preparation_time'],
                                               'vendor_id'            => $p['vendor_id'],
                                               'chili_level'          => $p['chili_level'],
+                                              'cuisines'          => $p['cuisinesName'],
+                                              'categorie'          => $p['categorieName'],
                                               'cart_qty'             => $qty
                 ];
                 if ($with_restaurant_name) {

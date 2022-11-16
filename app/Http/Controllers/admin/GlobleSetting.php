@@ -122,10 +122,9 @@ class GlobleSetting extends Controller
     }
     public function storeDelivery(Request $request){
         $general = AdminMasters::find($request->id);
-        $general->delivery_charges_fix = $request->delivery_charges_fix;
-        $general->delivery_charges_per_km = $request->delivery_charges_per_km;
+        $general->platform_charges = $request->platform_charges;
         $general->save();
-        return redirect()->route('admin.globle.setting')->with('message', 'Update Chargs Successfully');
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Platform Chargs Successfully');
     }
     public function storeGernel(Request $request){
         $general = AdminMasters::find($request->id);

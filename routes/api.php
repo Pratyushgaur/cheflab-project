@@ -60,7 +60,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('like-product', [App\Http\Controllers\api\AppController::class, 'add_to_like_product']);
     Route::post('dislike-product', [App\Http\Controllers\api\AppController::class, 'deleteLikeProduct']);
     Route::post('dislike-vendor', [App\Http\Controllers\api\AppController::class, 'deleteLikeVendor']);
-
+    // Chef like dislike
+    Route::post('like-chef', [App\Http\Controllers\api\AppController::class, 'add_to_like_product_chef']);
+    Route::post('dislike-product-chef', [App\Http\Controllers\api\AppController::class, 'deleteLikeProductChef']);
+    Route::post('dislike-vendor-chef', [App\Http\Controllers\api\AppController::class, 'deleteLikeChef']);
     // coupon
     Route::post('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
     Route::post('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
@@ -89,6 +92,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
     Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
+    Route::post('delivery-address-update',[App\Http\Controllers\api\DeliveryAddressController::class,'updateAdress']);
+    Route::post('delivery-address-delete',[App\Http\Controllers\api\DeliveryAddressController::class,'deleteAddres']);
     // FAQ
     Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
     // Privacy Polic TAD User
