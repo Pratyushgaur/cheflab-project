@@ -13,28 +13,13 @@
 
           <!-- Main content -->
           <section class="content">
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="card card-primary card-outline">
-                      <div class="card-header">
-                          <div class="row">
-                            <div class="col-md-10">
-                                <a href="{{route('admin.deliverboy.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-building"> </i> Create New Deliver Boy</a>
-                                <!-- <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style=" color:#fff;"><i class="fa fa-search"> </i> Filter</a> -->
-                            </div>
-                          </div>
-                          
-                      </div>
-                  </div>
-                </div>
-              </div>
+            
               <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Listing of Registered Delivery Boy </h3>
+                      <h3 class="card-title">Listing of Refund  </h3>
                       
                       
                     </div>
@@ -44,9 +29,9 @@
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
                                     <th >Name</th>
-                                    <th  >Email</th>
-                                    <th> Status</th>
-                                    <th> Image</th>
+                                    <th  >Order Id</th>
+                                    <th> Ammount</th>
+                                    <th> Date</th>
                                     <th  >Wallet</th>
                                     <th  >created at</th>
                                     <th  >Action</th>
@@ -83,21 +68,21 @@
 
 <script type="text/javascript">
   // $(function () {
-    let table = $('#example').dataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.deliverboy.datatable') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {data: 'status', name: 'status',orderable: false, searchable: false},
-            {data: 'image', name: 'image',orderable: false, searchable: false},
-            {data: 'wallet', name: 'wallet'},
-            {data: 'date', name: 'created_at'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-        ]
-    });
+    // let table = $('#example').dataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     ajax: "{{ route('admin.deliverboy.datatable') }}",
+    //     columns: [
+    //         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+    //         {data: 'name', name: 'name'},
+    //         {data: 'email', name: 'email'},
+    //         {data: 'status', name: 'status',orderable: false, searchable: false},
+    //         {data: 'image', name: 'image',orderable: false, searchable: false},
+    //         {data: 'wallet', name: 'wallet'},
+    //         {data: 'date', name: 'created_at'},
+    //         {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+    //     ]
+    // });
   // });
 
   function reload_table() {

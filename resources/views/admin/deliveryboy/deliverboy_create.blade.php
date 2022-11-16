@@ -286,7 +286,7 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                <div class="col-md-4">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
                                         <select name="identity_type"  class="form-control">

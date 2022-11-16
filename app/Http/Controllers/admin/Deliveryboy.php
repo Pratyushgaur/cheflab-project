@@ -141,8 +141,8 @@ class Deliveryboy extends Controller
     public function get_data_table_of_deliverboy(Request $request)
     {
         //echo 'ok';die;
+        
         if ($request->ajax()) {
-
             $data = Deliver_boy::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -154,7 +154,8 @@ class Deliveryboy extends Controller
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item text-info" href="'.route('admin.deliverboy.view',Crypt::encryptString($data->id)).'"><i class="fas fa-edit"></i> Edit</a>
-                                    <a class="dropdown-item text-danger" href="' . route('admin.category.ajax.delete') . '"><i class="fa fa-trash"></i> Delete</a>
+                                    
+                                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Delivery Boy" flash="City"  data-action-url="' . route('admin.deliverboy.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i> Delete</a> 
                                     <a class="dropdown-item text-info" href="'.route('admin.vendor.view',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View More</a>';
 
                                     if($data->vendor_type == 'chef'){
@@ -250,22 +251,24 @@ class Deliveryboy extends Controller
         $vendors = Deliver_boy::find($request->id);
         $vendors->name = $request->name;
         $vendors->email = $request->email;
-        $vendors->password = Hash::make($request->password);
         $vendors->mobile  = $request->phone;
+        $vendors->password   = Hash::make($request->password);
         $vendors->pincode  = $request->pincode;
-        $vendors->address  = $request->address;
+        $vendors->city  = $request->city;
+        $vendors->identity_number  = $request->identity_number;
+//        $vendors->address  = $request->address;
+
         if($request->has('image')){
-            $filename = time().'-profile-'.rand(100,999).'.'.$request->image->extension();
+            $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('dliver-boy'),$filename);
             $vendors->image  = $filename;
-        }else{
-            $vendors->image  = 'deliver-boy.png';
         }
-        if($request->has('other_document')){
-            $filename = time().'-other-document-'.rand(100,999).'.'.$request->other_document->extension();
-            $request->other_document->move(public_path('dliver-boy-documents'),$filename);
-            $vendors->other_document_image  = $filename;
-            $vendors->other_document  = $request->other_document_name;
+       
+        if($request->has('identity_image')){
+            $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
+            $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->identity_image  = $filename;
+            $vendors->identity_number  = $request->identity_number;
         }
         $vendors->save();
         return redirect()->route('admin.deliverboy.list')->with('message', 'Vendor Registration Successfully');

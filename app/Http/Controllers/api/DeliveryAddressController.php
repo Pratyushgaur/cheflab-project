@@ -45,14 +45,14 @@ class DeliveryAddressController extends Controller
         }
     }
 
-    public function getDeliverAddress(Type $var = null)
+    public function getDeliverAddress(Request $request)
     {
         try {
             $user = 1;
-            $data = DeliveryAddress::where('user_id',request()->user()->id);
+            $data = DeliveryAddress::where('user_id',$request->user_id)->select('*')->get();
             //$data = $data->select(\DB::raw('(CASE  WHEN delivery_address == 1 THEN Home WHEN delivery_address = 2 THEN Office ELSE Other END) AS NewQuantity'));
             
-            $data = $data->get();
+            //$data = $data->get();
             return response()->json([
                 'status' => true,
                 'message'=>'Address Saved Successfully',

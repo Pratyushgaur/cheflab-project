@@ -356,23 +356,34 @@ class UserControllers extends Controller
         $vendors->commission       = $request->vendor_commission;
         $vendors->vendor_food_type = $request->type;
         $vendors->tax              = $request->tax;
+        $vendors->pancard_number = $request->pancard_number;
+        $vendors->aadhar_number = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+
         if ($request->has('image')) {
             $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();
             $request->image->move(public_path('vendors'), $filename);
-            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
             $vendors->image = $filename;
         } else {
-            if (!file_exists(public_path('vendors') . '/' . $vendors->image))
-                $vendors->image = 'default_restourant_image.jpg';
+            //$vendors->image  = 'default_restourant_image.jpg';
         }
         if ($request->has('fassai_image')) {
             $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
             $request->fassai_image->move(public_path('vendor-documents'), $filename);
             $vendors->licence_image = $filename;
+        }
+        if ($request->has('pancard_image')) {
+            $filename = time() . '-pancard_image-' . rand(100, 999) . '.' . $request->pancard_image->extension();
+            $request->pancard_image->move(public_path('pancard'), $filename);
+            $vendors->pancard_image = $filename;
+        }
+        if ($request->has('aadhar_card_image')) {
+            $filename = time() . '-addar-' . rand(100, 999) . '.' . $request->aadhar_card_image->extension();
+            $request->aadhar_card_image->move(public_path('aadhar'), $filename);
+            $vendors->aadhar_card_image = $filename;
         }
         if ($request->has('other_document')) {
             $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
@@ -383,7 +394,8 @@ class UserControllers extends Controller
         if ($request->has('banner_image')) {
             $filename = time() . '-banner-' . rand(100, 999) . '.' . $request->banner_image->extension();
             $request->banner_image->move(public_path('vendor-banner'), $filename);
-            $vendors->banner_image = $filename;
+            $files[]               = $filename;
+            $vendors->banner_image = json_encode($files);
         }
         $vendors->save();
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
@@ -822,5 +834,8 @@ class UserControllers extends Controller
         $general->refer_earn_msg = $request->refer_earn_msg;
         $general->save();
         return redirect()->route('admin.globle.setting')->with('message', 'Refer Amount  Update Successfully');
+    }
+    public function refundlist(){
+        return view('admin/vendors/refundlist');
     }
 }
