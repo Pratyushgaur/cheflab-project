@@ -19,6 +19,7 @@ class CreateAddonsTable extends Migration
             $table->decimal('price', 5,2);
             $table->integer('vendorId');
             $table->dateTime('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
