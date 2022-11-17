@@ -362,8 +362,8 @@ class ProductController extends Controller
             ->addIndexColumn()
             ->addColumn('action-js', function ($data) {
                 $btn = '<a href="'. route("restaurant.product.addon.edit",Crypt::encryptString($data->id)) .'"><i class="fa fa-edit"></i></a>
-                        <a  href="#"><i class="fa fa-trash"></i></a>
-                ';
+                        <a  href="'. route("restaurant.product.addon.delete",Crypt::encryptString($data->id)) .'"
+                        onclick="return confirm('."'Are you sure!You wnt to delete this addon?'".')"><i class="fa fa-trash"></i></a>';
                 return $btn;
             })
             ->addColumn('date', function ($data) {
@@ -433,7 +433,7 @@ class ProductController extends Controller
                 return redirect()->route('restaurant.product.list')->with('success', 'Product deleted successfully.');
             } else {
 
-                return redirect()->route('restaurant.product.list')->with('error', 'Something wen wrong.');
+                return redirect()->route('restaurant.product.list')->with('error', 'Something went wrong.');
             }
 
 
@@ -451,10 +451,10 @@ class ProductController extends Controller
             $data = Addons::findOrFail($id);
             if ($data) {
                 $data->delete();
-                return redirect()->route('restaurant.product.list')->with('success', 'Product deleted successfully.');
+                return redirect()->route('restaurant.product.addon')->with('success', 'Addon deleted successfully.');
             } else {
 
-                return redirect()->route('restaurant.product.list')->with('error', 'Something wen wrong.');
+                return redirect()->route('restaurant.product.addon')->with('error', 'Something went wrong.');
             }
 
 
