@@ -27,7 +27,7 @@ class CouponController extends Controller
                         
                     ], 401);
                 }
-                $date = today()->format('Y-m-d');
+                $date = today()->format('m/d/Y');
                 $coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('*')->get();
                 return response()->json([
                     'status' => true,
@@ -61,7 +61,7 @@ class CouponController extends Controller
 
                 ], 401);
             }
-                //$date = today()->format('Y-m-d');
+                //$date = today()->format('m/d/Y');
                 $date = today()->format('m/d/Y');
                 $coupon =  Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','id','from','to','code','discount_type','discount','maxim_dis_amount','minimum_order_amount','promo_redeem_count','promocode_use','coupon_valid_x_user','description')->first();
                 return response()->json([
@@ -92,7 +92,7 @@ class CouponController extends Controller
                     
                 ], 401);
             }
-            //$date = today()->format('Y-m-d');
+            //$date = today()->format('m/d/Y');Y-m-d
             $date = today()->format('m/d/Y');
             $vendor_coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','discount_type','coupon_valid_x_user','description','id')->get();
           //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
@@ -132,22 +132,22 @@ class CouponController extends Controller
              $coupon =  Coupon::where('code','=',strtoupper($request->code));
              if($coupon->exists()){
                 $coupon = $coupon->first();
-                if(Carbon::now()->between(Carbon::createFromFormat('Y-m-d', $coupon->from), Carbon::createFromFormat('Y-m-d', $coupon->to)->addDay())){
+                if(Carbon::now()->between(Carbon::createFromFormat('m/d/Y', $coupon->from), Carbon::createFromFormat('m/d/Y', $coupon->to)->addDay())){
                     // check coupon use Limit
                     if(CouponHistory::where('coupon_id','=',$coupon->id)->count() < $coupon->coupon_valid_x_user){
                         // check redom count
                         
                         if($coupon->promocode_use != 4){
                             if($coupon->promocode_use == 1){
-                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->format('Y-m-d'))->whereDate('created_at', '<=', today()->format('Y-m-d'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
+                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->format('m/d/Y'))->whereDate('created_at', '<=', today()->format('m/d/Y'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
                                 $msg = 'You Can Use This Coupon Only '.$coupon->promo_redeem_count.' times in a day';
                             }
                             if($coupon->promocode_use == 2){ // week
-                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->subDays(7)->format('Y-m-d'))->whereDate('created_at', '<=', today()->format('Y-m-d'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
+                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->subDays(7)->format('m/d/Y'))->whereDate('created_at', '<=', today()->format('m/d/Y'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
                                 $msg = 'You Can Use This Coupon Only '.$coupon->promo_redeem_count.' times in a Week';
                             }
                             if($coupon->promocode_use == 3){ // Month
-                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->subDays(7)->format('Y-m-d'))->whereDate('created_at', '<=', today()->format('Y-m-d'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
+                                $count = CouponHistory::whereDate('created_at', '>=', Carbon::today()->subDays(7)->format('m/d/Y'))->whereDate('created_at', '<=', today()->format('m/d/Y'))->where('user_Id','=',request()->user()->id)->where('coupon_id','=',$coupon->id)->count() ;   
                                 $msg = 'You Can Use This Coupon Only '.$coupon->promo_redeem_count.' times in a Month';
                             }
                             //check edom count qual to use

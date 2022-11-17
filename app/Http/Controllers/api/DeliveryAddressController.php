@@ -69,7 +69,7 @@ class DeliveryAddressController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
-                'user_id' => 'required',
+                'id' => 'required',
                 'address_type' => 'required',
                 'house_no' => 'required',
                 'contact_no' => 'numeric',  
@@ -81,7 +81,7 @@ class DeliveryAddressController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
            // $address = DeliveryAddress::find(request()->user()->id);
-            $update = DeliveryAddress::where('user_id', '=', $request->user_id)->where('address_type', '=', $request->address_type)->update(['house_no' => $request->house_no, 'reach' => $request->reach, 'contact_no' => $request->contact_no]);
+            $update = DeliveryAddress::where('id', '=', $request->id)->where('address_type', '=', $request->address_type)->update(['house_no' => $request->house_no, 'reach' => $request->reach, 'contact_no' => $request->contact_no]);
             return response()->json([
                 'status' => true,
                 'message'=>'Address Update Successfully'

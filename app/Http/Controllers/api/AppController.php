@@ -26,7 +26,6 @@ use App\Models\AdminMasters;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 use PDOException;
 use Throwable;
 use URL;
@@ -1946,7 +1945,7 @@ class AppController extends Controller
         }
     }
 
-    public function getRestuarantBy(Request $request)
+    public function getRestuarantByOrders(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -1956,35 +1955,27 @@ class AppController extends Controller
                     'lng'           => 'required|numeric',
                     'vendor_offset' => 'required|numeric',
                     'vendor_limit'  => 'required|numeric',
-//                    "by"            => 'require'
-//                                        ,Rule::in(['orders','rating'])
-
+                    "by"            => "require|in(['order','rating'])"
                 ]
             );
-
             if ($validateUser->fails()) {
-//                $error = $validateUser->errors();
+                $error = $validateUser->errors();
                 return response()->json([
                     'status' => false,
                     'error'  => $validateUser->errors()->all()
 
                 ], 401);
             }
-//            DB::enableQueryLog();
+            DB::enableQueryLog();
             $vendors = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id)
                 ->join('orders', 'vendors.id', '=', 'orders.vendor_id')
                 ->addSelect('deal_cuisines');
 
-            if($request->by=='order') {
-                $vendors->addSelect(DB::raw('COUNT(*) as order_count'))
-                    ->groupBy('orders.vendor_id')
-                    ->orderBy('order_count', 'desc');
-            }else{
-                $vendors->addSelect('vendor_ratings')
-                    ->groupBy('orders.vendor_id')
-                    ->orderBy('vendor_ratings', 'desc');
-            }
-            $data=$vendors->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+//            if($request->by=='order'){
+            $vendors->addSelect(DB::raw('COUNT(*) as order_count'))
+                ->groupBy('orders.vendor_id')
+                ->orderBy('order_count', 'desc');
+            $vendors->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
 
             foreach ($data as $key => $value) {
@@ -2003,7 +1994,7 @@ class AppController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error'  => $th->getTrace()
+                'error'  => $th->getMessage()
             ], 500);
         }
 
