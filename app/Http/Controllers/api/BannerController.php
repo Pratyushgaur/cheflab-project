@@ -143,7 +143,7 @@ class BannerController extends Controller
             $response = [];
             foreach ($slots as $k => $slot) {
                 if ($slot->slot_id != '')
-                    $response[] = [ 'image' => $slot->slot_image, 'position' => $slot->banner_position,'vendor_id'=> $slot->slot_image];
+                    $response[] = [ 'image' => $slot->slot_image, 'position' => $slot->banner_position,'vendor_id'=> $slot->vendor_id];
                 else
                     $response[] = [ 'image' => $slot->bannerImage, 'position' => $slot->banner_position ,'vendor_id'=>''];
             }
