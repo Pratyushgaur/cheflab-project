@@ -168,8 +168,8 @@ class AppController extends Controller
             // product details
             $products = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, false, $products_ids);
             // total products
-            
-            
+
+
 
 
             foreach ($vendors as $key => $value) {
@@ -1383,7 +1383,7 @@ class AppController extends Controller
                         if(!empty($OrderProductAddon->toArray())){
                             $products[$k]->addons = $OrderProductAddon;
                         }
-                        
+
                     }
                     $order[$key]->products = $products;
                 }
@@ -1572,7 +1572,7 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             $user = User::whare('id',request()->user()->id)->select('referralCode','by_earn')->get();
-           
+
             return response()->json([
                 'status'  => true,
                 'message' => 'User Updated Successfully',
@@ -1629,7 +1629,7 @@ class AppController extends Controller
             if($request->has('image')){
                 $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
                 $request->image->move(public_path('user-profile'),$filename);
-               // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+               // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
                 $user->image  = $filename;
             }
             $user->save();
@@ -1999,7 +1999,7 @@ class AppController extends Controller
             $where=['vendor_type'=>$request->for];
             $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, $request->user()->id)
                 ->join('orders', 'vendors.id', '=', 'orders.vendor_id')
-                ->addSelect('deal_cuisines');
+                ->addSelect('deal_cuisines','vendors.id as vendor_id');
 
 
             if($request->by=='order') {
@@ -2079,7 +2079,7 @@ class AppController extends Controller
     }
     // public function getTryonce(Request $request){
     //     try {
-    
+
     // <<<<<<< HEAD
     //         $validateUser = Validator::make($request->all(), [
     //             'user_id' => 'required|numeric',
@@ -2098,10 +2098,10 @@ class AppController extends Controller
     //             'status' => true,
     //             'message' => 'data get Successfully',
     //             'response' => $order
-    
+
     //         ], 200);
-    
-    
+
+
     //     } catch (Throwable $th) {
     //         return response()->json([
     //             'status' => false,
@@ -2123,96 +2123,96 @@ class AppController extends Controller
     //             return response()->json([
     //                 'status' => false,
     //                 'error' => $validateUser->errors()->all()
-    
+
     //             ], 401);
     //         }
     //         if($request->value == '1'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
     //         if($request->value == '2'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
     //         if($request->value == '3'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $where = [ 'vendor_food_type' => '1'];
     //             $vendors = get_restaurant_near_me_filertyrestourant($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
     //         if($request->value == '4'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $where = [ 'vendor_food_type' => '3'];
     //             $vendors = get_restaurant_filerty_nonveg($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
-           
+
     //     } catch (Throwable $th) {
     //         return response()->json([
     //             'status' => false,
@@ -2235,96 +2235,96 @@ class AppController extends Controller
     //             return response()->json([
     //                 'status' => false,
     //                 'error' => $validateUser->errors()->all()
-    
+
     //             ], 401);
     //         }
     //         if($request->value == '1'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'chef'];
     //             $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
     //         if($request->value == '2'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $vendors = get_restaurant_near_me($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
     //         if($request->value == '3'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $where = [ 'vendor_food_type' => '1'];
     //             $vendors = get_restaurant_near_me_filertyrestourant($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
     //         if($request->value == '4'){
     //             $userid = request()->user()->id;
-    
+
     //             $where = [ 'vendor_type' => 'restaurant'];
     //             $where = [ 'vendor_food_type' => '3'];
     //             $vendors = get_restaurant_filerty_nonveg($request->lat, $request->lng,$where, request()->user()->id);
     //             $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
     //             $vendor_ids=get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);
     //            // $products=get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc',true,false,$vendor_ids);
-    
+
     //             foreach ($vendors as $key => $value) {
     //                 $category = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
     //                 $vendors[$key]->categories = $category;
     //             }
-    
+
     //             return response()->json([
     //                 'status' => true,
     //                 'message' => 'Data Get Successfully',
     //                 'response' => ['vendors' => $vendors]
-    
+
     //             ], 200);
     //         }
-           
+
     //     } catch (Throwable $th) {
     //         return response()->json([
     //             'status' => false,

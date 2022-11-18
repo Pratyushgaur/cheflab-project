@@ -190,7 +190,7 @@ class CartApiController extends Controller
                 DB::beginTransaction();
                 // database queries here
 
-                $cart_objs = Cart::where('user_id', $request->user_id)->get();
+                $cart_objs = Cart::where('user_id', $request->user()->id)->get();
                 foreach ($cart_objs as $k => $cart_obj) {
                     $cart_obj->cart_product_variants()->delete();
                     $cart_obj->cart_product_addons()->delete();
@@ -221,7 +221,7 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
-            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->where('user_id', $request->user_id)->first();
+            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->where('user_id', $request->user()->id)->first();
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
             $cart_id = $cart_users->id;
@@ -231,7 +231,7 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
 
             $wallet_amount = 0;
-            $u             = User::select('wallet_amount')->find($request->user_id);
+            $u             = User::select('wallet_amount')->find($request->user()->id);
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
@@ -461,7 +461,11 @@ class CartApiController extends Controller
                     }
 
                     $cart_products = CartProduct::where('product_id', $p['product_id'])->where('cart_id', $cart_id)->first();
-
+                    if ($p['product_qty'] <= 0) {
+                        if(isset($cart_products->id))
+                        @$cart_products->delete();
+                        continue;
+                    }
 
                     if (!$cart_products)
                         $cart_products = new CartProduct($p);
@@ -475,6 +479,12 @@ class CartApiController extends Controller
                     if (isset($p['variants'])) {
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant = CartProductVariant::where('cart_product_id', $cart_products->id)->where('variant_id', $v['variant_id'])->first();
+                            if ($v['variant_qty'] <= 0) {
+                                if(isset($CartProductVariant->id))
+                                    @$CartProductVariant->delete();
+                                continue;
+                            }
+
 
                             if (!$CartProductVariant) {
                                 $CartProductVariant                  = new CartProductVariant();
@@ -494,6 +504,12 @@ class CartApiController extends Controller
                     if (isset($p['addons']) && $p['addons'] != '')
                         foreach ($p['addons'] as $k => $a) {
                             $CartProductAddon = CartProductAddon::where('cart_product_id', $cart_products->id)->where('addon_id', $a['addon_id'])->first();
+                            if ($a['addon_qty'] <= 0) {
+                                if(isset($CartProductAddon->id))
+                                    @$CartProductAddon->delete();
+                                continue;
+                            }
+
                             if (!$CartProductAddon) {
                                 $CartProductAddon                  = new CartProductAddon();
                                 $CartProductAddon->cart_product_id = $cart_products->id;
@@ -638,8 +654,16 @@ class CartApiController extends Controller
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
-            $r                          = $cart_users->toArray();
-            $cart_pro                   = CartProduct::where(['status'=>'1','product_approve'=>'1','cart_id'=>$cart_users->id])->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
+            $r = $cart_users->toArray();
+//            dd($r);
+//            $cart_pro                   = CartProduct::where(['status' => '1', 'product_approve' => '1', 'cart_id' => $cart_users->id])->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
+            $cart_id  = $cart_users->id;
+            $cart_pro = Product_master::join('cart_products', function ($q) use ($cart_id) {
+                $q->where('cart_id', $cart_id);
+                $q->on('products.id','=','product_id');
+            })->where(['status' => '1', 'product_approve' => '1'])
+                ->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
+
             $r['total_product_in_cart'] = $cart_pro[0]->total_product_qty;
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
