@@ -1255,6 +1255,7 @@ class AppController extends Controller
                     'total_amount'    => 'required|numeric',
                     'gross_amount'    => 'required|numeric',
                     'net_amount'      => 'required|numeric',
+                    'wallet_apply'    => 'required',
                     'discount_amount' => 'required|numeric',
                     'coupon_id'       => 'nullable|numeric',
                     'payment_type'    => 'nullable|string',
