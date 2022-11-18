@@ -139,7 +139,7 @@ class BannerController extends Controller
                 ->orderBy('cheflab_banner_image.position', 'asc')
                 ->limit($number_of_slides)
                 ->get();
-dd($slots->toArray());
+//dd($slots->toArray());
             $response = [];
             foreach ($slots as $k => $slot) {
                 if ($slot->slot_id != '')
