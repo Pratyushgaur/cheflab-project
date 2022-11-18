@@ -35,17 +35,41 @@ class AppMasterController extends Controller
                 ->addSelect('p.category', \DB::raw('COUNT(*) as product_count'))
                 ->groupBy('p.category')->having('product_count', '>',0)->pluck('p.category');
 
-            if ($category_ids != '' && $category_ids != null)
-                $data = \App\Models\Catogory_master::whereIn('id', $category_ids)->where(['is_active' => '1'])->select('categories.name', \DB::raw('CONCAT("' . asset('categories') . '/", categoryImage) AS image'), 'id')
+            if ($category_ids != '' && $category_ids != null){
+                $vendorCatIds = [];
+                foreach ($category_ids as $ids){
+                    $vendor_count = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], null, null, null)
+                    ->whereRaw('FIND_IN_SET(' . $ids . ',deal_categories)')->count();
+                    if($vendor_count > 0){
+                        $vendorCatIds[] = $ids;
+                    }  
+                }
+                if (!empty($vendorCatIds)) {
+                    $data = \App\Models\Catogory_master::whereIn('id', $vendorCatIds)->where(['is_active' => '1'])->select('categories.name', \DB::raw('CONCAT("' . asset('categories') . '/", categoryImage) AS image'), 'id')
                     ->orderBy('position', 'ASC')->get();
-            else
-                $data = [];
-            return response()->json([
-                'status'   => true,
-                'message'  => 'Data Get Successfully',
-                'response' => $data
+                } else {
+                    $data = [];
+                }
 
-            ], 200);
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => $data
+
+                ], 200);
+            }
+            else{
+                $data = [];
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => $data
+
+                ], 200);
+            }
+                
+                
+            
 
 
         } catch (\Throwable $th) {
@@ -82,14 +106,37 @@ class AppMasterController extends Controller
                 ->where('p.status','=','1')
                 ->where('p.product_approve','=','1')
                 ->groupBy('p.cuisines')->having('product_count', '>',0)->pluck('p.cuisines');
+            if ($cuisines_ids != '' && $cuisines_ids != null){
+                $vendorCuisIds = [];
+                foreach ($cuisines_ids as $ids){
+                    $vendor_count = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], null, null, null)
+                    ->whereRaw('FIND_IN_SET(' . $ids . ',deal_cuisines)')->count();
+                    if($vendor_count > 0){
+                        $vendorCuisIds[] = $ids;
+                    }  
+                }
+                if (!empty($vendorCuisIds)) {
+                    $data = \App\Models\Cuisines::whereIn('id',$vendorCuisIds)->where(['is_active' => '1'])->select('cuisines.name', \DB::raw('CONCAT("' . asset('cuisines') . '/", cuisinesImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
+                    
+                } else {
+                    $data = [];
+                }
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => $data
 
-            $data = \App\Models\Cuisines::whereIn('id',$cuisines_ids)->where(['is_active' => '1'])->select('cuisines.name', \DB::raw('CONCAT("' . asset('cuisines') . '/", cuisinesImage) AS image'), 'id')->orderBy('position', 'ASC')->get();
-            return response()->json([
-                'status'   => true,
-                'message'  => 'Data Get Successfully',
-                'response' => $data
-
-            ], 200);
+                ], 200);
+            }else{
+                $data = [];
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => $data
+    
+                ], 200);
+            }
+            
 
 
         } catch (\Throwable $th) {

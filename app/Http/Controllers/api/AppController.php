@@ -168,8 +168,8 @@ class AppController extends Controller
             // product details
             $products = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, false, $products_ids);
             // total products
-            $products_count = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, true);
-            $vendor_count   = count($vendor_ids);
+            
+            
 
 
             foreach ($vendors as $key => $value) {
@@ -191,8 +191,6 @@ class AppController extends Controller
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
                 'response' => [
-                    'product_total_records' => $products_count,
-                    'vendor_total_records'  => $vendor_count,
                     'vendors'               => $vendors,
                     'products'              => $products]
 
@@ -1351,7 +1349,7 @@ class AppController extends Controller
             }
             if ($request->order_for == 'restaurant') {
                 $order = Order::where('user_id', '=', request()->user()->id);
-                $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"));
+                $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"),'delivery_address','orders.lat','orders.long','vendors.lat as vendor_lat','vendors.long as vendor_lng','vendors.fssai_lic_no');
                 $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
                 $order = $order->where('vendors.vendor_type', '=', 'restaurant');
                 $order = $order->orderBy('orders.id', 'desc');
@@ -1359,7 +1357,18 @@ class AppController extends Controller
                 $order = $order->get();
 
                 foreach ($order as $key => $value) {
-                    $products              = OrderProduct::where('order_id', '=', $value->order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty')->get();
+                    $products              = OrderProduct::where('order_id', '=', $value->order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty','order_products.id as order_product_id')->get();
+                    foreach($products as $k => $v){
+                        $OrderProductAddon = OrderProductAddon::where('order_product_id','=',$v->order_product_id)->select('addon_name','addon_price','addon_qty')->get();
+                        $OrderProductVariant = OrderProductVariant::where('order_product_id','=',$v->order_product_id)->select('variant_name','variant_price','variant_qty')->first();
+                        if(!empty($OrderProductVariant)){
+                            $products[$k]->variant = $OrderProductVariant;
+                        }
+                        if(!empty($OrderProductAddon->toArray())){
+                            $products[$k]->addons = $OrderProductAddon;
+                        }
+                        
+                    }
                     $order[$key]->products = $products;
                 }
 

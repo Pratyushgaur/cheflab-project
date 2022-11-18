@@ -170,12 +170,14 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 
     if ($user_id != '') {
         $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+        
         $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
             $join->on('products.id', '=', 'user_product_like.product_id');
-            $join->where('products.cuisines', '=', 'cuisines.id');
-            $join->where('products.category', '=', 'categories.id');
+            //$join->where('products.cuisines', '=', 'cuisines.id');
+            //$join->where('products.category', '=', 'categories.id');
             $join->where('user_product_like.user_id', '=', $user_id);
         });
+       
     }
 
     $product = $product->leftJoin('variants', 'variants.product_id', 'products.id')

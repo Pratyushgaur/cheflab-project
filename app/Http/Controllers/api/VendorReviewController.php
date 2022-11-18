@@ -102,10 +102,12 @@ class VendorReviewController extends Controller
 
                 ], 401);
             }
-            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)
-                ->join('vendor_review_rating','vendors.id','=','vendor_review_rating.vendor_id')
-                ->where('vendor_review_rating.user_id', '=', $request->user()->id)
-                ->addSelect('vendor_review_rating.id','vendor_review_rating.user_id','vendor_review_rating.vendor_id','vendor_review_rating.rating as rating_given_by_me','vendor_review_rating.review')->get();
+            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)->orderBy('vendor_ratings','DESC');
+            //$review = $review->leftjoin('vendor_review_rating','vendors.id','=','vendor_review_rating.vendor_id');
+            $review = $review->addSelect('vendors.id as vendor_id');
+            $review = $review->orderBy('vendor_ratings','DESC')->get();
+            ///$review = $review->addSelect('vendor_review_rating.id','vendor_review_rating.user_id','vendor_review_rating.vendor_id','vendor_review_rating.rating as rating_given_by_me','vendor_review_rating.review')->get();
+            
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',

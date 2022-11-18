@@ -639,7 +639,7 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
             $r                          = $cart_users->toArray();
-            $cart_pro                   = CartProduct::where('cart_id', $cart_users->id)->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
+            $cart_pro                   = CartProduct::where(['status'=>'1','product_approve'=>'1','cart_id'=>$cart_users->id])->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
             $r['total_product_in_cart'] = $cart_pro[0]->total_product_qty;
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
