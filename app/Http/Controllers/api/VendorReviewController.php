@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
 use App\Models\VendorReview;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use Carbon\Carbon;
 // this is vikas testing
@@ -93,6 +94,7 @@ class VendorReviewController extends Controller
             [
                 'lat' => 'required',
                 'lng' => 'required',
+                'offset'=>'required','limit'=>'required',
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();
@@ -102,12 +104,19 @@ class VendorReviewController extends Controller
 
                 ], 401);
             }
-            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)->orderBy('vendor_ratings','DESC');
+//\DB::enableQueryLog();
+            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)
+                ->orderBy('vendor_ratings','DESC');
             //$review = $review->leftjoin('vendor_review_rating','vendors.id','=','vendor_review_rating.vendor_id');
             $review = $review->addSelect('vendors.id as vendor_id');
-            $review = $review->orderBy('vendor_ratings','DESC')->get();
+
+            $review = $review
+//                ->skip($request->offset)
+//                ->take($request->limit)
+//                ->offset($request->offset)->limit($request->limit)
+                ->get();
             ///$review = $review->addSelect('vendor_review_rating.id','vendor_review_rating.user_id','vendor_review_rating.vendor_id','vendor_review_rating.rating as rating_given_by_me','vendor_review_rating.review')->get();
-            
+//dd(DB::getQueryLog());
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
