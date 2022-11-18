@@ -1289,10 +1289,26 @@ class AppController extends Controller
                 if (!Vendors::is_avaliavle($request->vendor_id))
                     return response()->json(['status' => False, 'error' => "Vendor not available"], 401);
                 $data = $request->all();
+                $user = User::where('id','=',$request->user_id)->first();
+                if($request->wallet_apply){
+                    if($user->wallet_amount <= 0){
+                        return response()->json(['status' => False, 'error' => "No Wallet Balance available"], 401);
+                    }
+                    if($user->wallet_amount <= $request->net_amount){
+                        $walletCut = $user->wallet_amount;
+                    }else{
+                        $walletCut = $request->net_amount;
+                    }
+                    
+                }else{
+                    $walletCut = 0;
+                }
+                //
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);
-
-                $Order = new Order($request->all());
+                $insertData = $request->all();
+                $insertData['wallet_cut'] = $walletCut;
+                $Order = new Order($insertData);
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {

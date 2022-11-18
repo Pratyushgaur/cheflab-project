@@ -27,6 +27,8 @@ class CreateOrders extends Migration
             $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
             $table->float('gross_amount', 8, 2)->comment('after tax deduction ');
             $table->float('net_amount', 8, 2)->comment('after discount and other deduction, this amount will payed  by customer');
+            $table->enum('wallet_apply',['0','1'])->default('0')->comment('0= no and 1 =yes');
+            $table->float('wallet_cut',8, 2)->default(0);
             $table->float('discount_amount', 6, 2)->default(0);
             $table->unsignedBigInteger('coupon_id')->nullable()->default(null);
             $table->enum('payment_type',['COD','online'])->default('COD');

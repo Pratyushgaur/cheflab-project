@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $fillable=['vendor_id', 'user_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'coupon_id', 'payment_type', 'payment_status', 'transaction_id', 'payment_string', 'order_time','lat','long','pincode','city'];
+    protected $fillable=['vendor_id', 'user_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'coupon_id', 'payment_type', 'payment_status', 'transaction_id', 'payment_string', 'order_time','lat','long','pincode','city','wallet_apply','wallet_cut'];
 
 
     public function products()
