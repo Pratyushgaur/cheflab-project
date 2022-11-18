@@ -1297,10 +1297,12 @@ class AppController extends Controller
                     }
                     if($user->wallet_amount <= $request->net_amount){
                         $walletCut = $user->wallet_amount;
+                        $available = 0;
                     }else{
                         $walletCut = $request->net_amount;
+                        $available = $user->wallet_amount-$request->net_amount;
                     }
-                    
+                    User::where('id','=',$request->user_id)->update(['wallet_amount'=>$available]);
                 }else{
                     $walletCut = 0;
                 }
