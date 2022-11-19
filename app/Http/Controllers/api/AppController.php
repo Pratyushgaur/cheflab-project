@@ -23,6 +23,7 @@ use App\Models\VendorMenus;
 use App\Models\VendorOrderTime;
 use App\Models\Vendors;
 use App\Models\AdminMasters;
+use App\Models\RiderAssignOrders;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -290,7 +291,7 @@ class AppController extends Controller
             }
 
             $vendor_obj = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id);
-            $vendor_obj->addSelect('deal_cuisines', 'banner_image', 'table_service')->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
+            $vendor_obj->addSelect('deal_cuisines', 'banner_image','fssai_lic_no', 'table_service','vendor_food_type')->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
             $vendor_obj1  = $vendor_obj;
             $vendor_count = $vendor_obj1->count();
             $data         = $vendor_obj->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
@@ -1329,7 +1330,8 @@ class AppController extends Controller
                             $order_products->order_product_addons()->save($OrderProductAddon);
                         }
                 }
-
+                $riderAssign = new RiderAssignOrders(array('rider_id'=>'1','order_id'=>$order_id));
+                $riderAssign->saveOrFail();
                 DB::commit();
 
                 event(new OrderCreateEvent($order_id, $request->user_id, $request->vendor_id));
