@@ -221,7 +221,8 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
 
-            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->where('user_id', $request->user()->id)->first();
+            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->where('user_id', $request->user_id)->first();
+
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
             $cart_id = $cart_users->id;
@@ -231,7 +232,7 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
 
             $wallet_amount = 0;
-            $u             = User::select('wallet_amount')->find($request->user()->id);
+            $u             = User::select('wallet_amount')->find($request->user_id);
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
