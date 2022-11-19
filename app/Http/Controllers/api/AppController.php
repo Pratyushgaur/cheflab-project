@@ -291,7 +291,7 @@ class AppController extends Controller
             }
 
             $vendor_obj = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id);
-            $vendor_obj->addSelect('deal_cuisines', 'banner_image','fssai_lic_no', 'table_service','vendor_food_type')->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
+            $vendor_obj->addSelect('deal_cuisines', 'banner_image','fssai_lic_no', 'table_service')->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
             $vendor_obj1  = $vendor_obj;
             $vendor_count = $vendor_obj1->count();
             $data         = $vendor_obj->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
