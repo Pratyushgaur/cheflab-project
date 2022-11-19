@@ -494,12 +494,7 @@ class CartApiController extends Controller
                             }
                             $CartProductVariant->variant_qty = $v['variant_qty'];
                             $CartProductVariant->save();
-//                            $cart_products_variant_id[] = $CartProductVariant->id;
                         }
-//                        if(isset($cart_products_variant_id) && !empty($cart_products_variant_id) && is_array($cart_products_variant_id)){
-//                            $cart_obj->cart_product_variants()->whereNotIn('cart_product_variants.id', $cart_products_variant_id)->delete();
-//                            unset($cart_products_variant_id);
-//                        }
 
                     }
                     if (isset($p['addons']) && $p['addons'] != '')
@@ -520,11 +515,11 @@ class CartApiController extends Controller
                             $CartProductAddon->save();
 //                            $cart_products_addons_id[] = $CartProductAddon->id;
                         }
-//                    $cart_obj->cart_product_addons()->whereNotIn('cart_product_addons.id', $cart_products_addons_id)->delete();
                 }
-
-//                $cart_obj->products()->whereNotIn('id', $cart_products_id)->delete();
-
+                if(!CartProduct::where('cart_id', $cart_id)->exists()){
+                    Cart::find($cart_id)->delete();
+                    CartProduct::where('cart_id', $cart_id)->delete();
+                }
                 DB::commit();
 
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
