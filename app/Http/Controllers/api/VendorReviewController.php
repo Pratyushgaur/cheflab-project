@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Validator;
 use Carbon\Carbon;
 use App\Models\Cuisines;
+use App\Models\Catogory_master;
+
 use URL;
 // this is vikas testing
 class VendorReviewController extends Controller
