@@ -131,5 +131,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
         Route::post('user/profile/update', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'update'])->name('restaurant.update');
 
+        Route::post('user/profile/category/update',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_profile_categories'])->name('restaurant.profile.update.category');
+        Route::post('user/profile/cuisines/update',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_profile_cuisines'])->name('restaurant.profile.update.cuisines');
     });
 });

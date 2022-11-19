@@ -176,13 +176,13 @@
 
                                             <li>
                                                 <label class="ms-checkbox-wrap ms-checkbox-success">
-                                                    <input type="radio" value="veg" name="product_type" checked> <i
+                                                    <input type="radio" value="veg" name="product_type" <?php if($product->type == 'veg'){echo 'checked';} ?>> <i
                                                         class="ms-checkbox-check"></i>
                                                 </label> <span> Veg </span>
                                             </li>
                                             <li>
                                                 <label class="ms-checkbox-wrap ms-checkbox-danger">
-                                                    <input type="radio" value="non_veg" name="product_type"> <i
+                                                    <input type="radio" value="non_veg" name="product_type" <?php if($product->type == 'non_veg'){echo 'checked';} ?>> <i
                                                         class="ms-checkbox-check"></i>
                                                 </label> <span> Veg + Non Veg </span>
                                             </li>

@@ -149,6 +149,7 @@ class ProductController extends Controller
 
     public function update(Request $request)
     {
+        
         $this->validate($request, [
             'product_name'     => 'required',
             'dis'              => 'required',
@@ -180,6 +181,8 @@ class ProductController extends Controller
         $product->chili_level          = $request->chili_level;
         $product->primary_variant_name = $request->primary_variant_name;
         $product->product_approve      = 2;
+        
+        
         if (isset($request->product_type))
             $product->type = $request->product_type;
 //        if ($request->status == '0') {
@@ -199,6 +202,7 @@ class ProductController extends Controller
             @unlink($old_image);
         }
         $product->product_for = '3';
+        
         $product->save();
         if ($request->custimization == 'true') {
 //            Flight::upsert([

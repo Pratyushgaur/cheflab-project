@@ -133,6 +133,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // refer ammount
     Route::post('refer-amount', [\App\Http\Controllers\api\AppController::class, 'getReferAmmount']);
 
+
+
+
+    //
+    
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
@@ -145,3 +150,10 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
+
+
+//
+
+Route::post('rider-otp-send',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']);
+Route::post('rider-otp-verify',[App\Http\Controllers\api\rider\LoginApiController::class,'login_verify_otp']);
+Route::post('rider-order-history',[App\Http\Controllers\api\rider\OrderApiController::class,'orderhistory']);
