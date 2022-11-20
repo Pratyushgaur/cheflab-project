@@ -668,31 +668,33 @@ class CartApiController extends Controller
 //                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
 //            }
 
-            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->with(['products'])->where('user_id', $request->user_id)->first();
+            $cart_users = Cart::select( 'vendor_id', 'id')->withCount(['products'])->where('user_id', $request->user_id)->first();
+            
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
             $r = $cart_users->toArray();
-//            dd($r);
-//            $cart_pro                   = CartProduct::where(['status' => '1', 'product_approve' => '1', 'cart_id' => $cart_users->id])->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
             $cart_id  = $cart_users->id;
-            $cart_pro = Product_master::join('cart_products', function ($q) use ($cart_id) {
-                $q->where('cart_id', $cart_id);
-                $q->on('products.id','=','product_id');
-            })->where(['status' => '1', 'product_approve' => '1'])
-                ->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
-
-            $r['total_product_in_cart'] = $cart_pro[0]->total_product_qty;
-            //
             $cartTotal = CartProduct::where('cart_id','=',$cart_id);
-            $cartTotal = $cartTotal->join('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id');
-            $cartTotal = $cartTotal->join('variants','cart_product_variants.variant_id','=','variants.id');
-            $cartTotal = $cartTotal->select(DB::raw('SUM(variants.variant_price * cart_product_variants.variant_qty) as total'));
-            $cartTotal = $cartTotal->get();
-            $r['total'] = $cartTotal;
-
-
+            $cartVarintProduct = $cartTotal->join('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id');
+            $cartVarintProduct = $cartVarintProduct->join('variants','cart_product_variants.variant_id','=','variants.id');
+            $cartVarintProduct = $cartVarintProduct->select(DB::raw('IFNULL(SUM(variants.variant_price*cart_product_variants.variant_qty),0) as total'));
+            $cartVarintProduct = $cartVarintProduct->first();
             //
+            $cartWithOutVariant = CartProduct::where('cart_id','=',$cart_id);
+            $cartWithOutVariant = $cartWithOutVariant->leftJoin('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id');
+            $cartWithOutVariant = $cartWithOutVariant->join('products','cart_products.product_id','=','products.id');
+            $cartWithOutVariant = $cartWithOutVariant->whereNull('cart_product_variants.id');
+            $cartWithOutVariant = $cartWithOutVariant->select(DB::raw('IFNULL(SUM(products.product_price*cart_products.product_qty),0) as total'));
+            $cartWithOutVariant =  $cartWithOutVariant->first();
+            //
+            $cartAddon = CartProduct::where('cart_id','=',$cart_id);
+            $cartAddon = $cartAddon->join('cart_product_addons','cart_products.id','=','cart_product_addons.cart_product_id');
+            $cartAddon = $cartAddon->join('addons','cart_product_addons.addon_id','=','addons.id');
+            $cartAddon = $cartAddon->select(DB::raw('IFNULL(SUM(addons.price*cart_product_addons.addon_qty),0) as total'));
+            $cartAddon =  $cartAddon->first();
+            $total =  $cartVarintProduct->total+$cartWithOutVariant->total+$cartAddon->total;
+            $r['total'] = $total;
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
                                      'response' => [
