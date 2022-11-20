@@ -240,7 +240,7 @@ class CartApiController extends Controller
 
             $pro      = Product_master::select('cart_products.product_qty', 'products.product_name', 'products.product_image', 'products.category', 'products.menu_id',
                 'products.dis', 'products.type', 'products.product_price', 'products.customizable', 'products.product_for', 'products.product_rating', 'products.cuisines',
-                'products.addons', 'variants.id as variant_id', 'variants.*', 'cuisines.*', 'cuisines.id as cuisine_id', 'addons',
+                'products.addons', 'variants.id as variant_id', 'variants.*', 'addons',
                 'cart_product_variants.*',
                 'products.id as product_id',
 //                'cart_products.id as cart_product_id', 'cart_product_addons.id as cart_product_addon_id', 'cart_product_variants.id as cart_product_variant_id'
@@ -250,7 +250,7 @@ class CartApiController extends Controller
                 ->where('cart_products.cart_id', $cart_id)
                 ->leftJoin('variants', 'products.id', 'variants.product_id')
                 ->leftJoin('cart_product_variants', 'variants.id', 'cart_product_variants.variant_id')
-                ->leftJoin('cuisines', 'products.cuisines', 'cuisines.id')
+                
                 ->get()->toArray();
             $responce = [];
             
@@ -293,10 +293,7 @@ class CartApiController extends Controller
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
                     // }
                     $responce[$product['product_id']]['variants'] = $variants;
-                    if ($product['cuisine_id'] != '') {
-                        $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['name']          = $product['name'];
-                        $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['cuisinesImage'] = $product['cuisinesImage'];
-                    }
+                    
                 }
             }
             
@@ -308,8 +305,7 @@ class CartApiController extends Controller
                     // if (isset($p['variants']))
                     //     
 
-                    if (isset($p['cuisines']))
-                        $r[$i]['cuisines'] = array_values($p['cuisines']);
+                    
 
                     if ($p['addons'] != '') {
                         $addons          = explode(',', $p['addons']);
