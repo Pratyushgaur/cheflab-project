@@ -334,7 +334,7 @@ class CartApiController extends Controller
                 $r = array_values($r);
             } else
                 $r = [];
-                return $r;
+                
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
 
             $vendor = Vendors::find($cart_users->vendor_id);
