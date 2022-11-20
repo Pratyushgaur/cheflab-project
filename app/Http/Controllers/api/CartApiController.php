@@ -8,6 +8,8 @@ use App\Models\Cart;
 use App\Models\CartProduct;
 use App\Models\CartProductAddon;
 use App\Models\CartProductVariant;
+use App\Models\Variant;
+
 use App\Models\Product_master;
 use App\Models\User;
 use App\Models\Vendors;
@@ -251,7 +253,7 @@ class CartApiController extends Controller
                 ->leftJoin('cuisines', 'products.cuisines', 'cuisines.id')
                 ->get()->toArray();
             $responce = [];
-
+            
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '') {
 
@@ -272,43 +274,67 @@ class CartApiController extends Controller
 //                    $responce[$product['product_id']]['cart_product_addon_id']   = $product['cart_product_addon_id'];
 //                    $responce[$product['product_id']]['cart_product_variant_id'] = $product['cart_product_variant_id'];
 
-
-                    if ($product['variant_id'] != '') {
-                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_name']  = $product['variant_name'];
-                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price'] = $product['variant_price'];
-                        $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
+                    $variants = Variant::where('product_id','=',$product['product_id'])->select('variant_name','variant_price','id as variant_id')->get();
+                    foreach($variants as $vkey =>$vvalue){
+                        $exist=CartProduct::where('cart_id','=',$cart_id)->where('product_id','=',$product['product_id'])->leftJoin('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id')->where('cart_product_variants.variant_id','=',$vvalue['variant_id'])->first();
+                        if(!empty($exist)){
+                            $variants[$vkey]['added'] = true;
+                            $variants[$vkey]['qty'] = $exist->variant_qty;
+                        }else{
+                            $variants[$vkey]['added'] = false;
+                        }
                     }
-
+                    
+                    //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price'] = $product['variant_price'];
+                    //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
+                    // if ($product['variant_id'] != '') {
+                    //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_name']  = $product['variant_name'];
+                    //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price'] = $product['variant_price'];
+                    //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
+                    // }
+                    $responce[$product['product_id']]['variants'] = $variants;
                     if ($product['cuisine_id'] != '') {
                         $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['name']          = $product['name'];
                         $responce[$product['product_id']]['cuisines'][$product['cuisine_id']]['cuisinesImage'] = $product['cuisinesImage'];
                     }
                 }
             }
+            
 //            dd($responce);
             if (is_array($responce) && !empty($responce)) {
                 foreach ($responce as $i => $p) {
-
-                    if (isset($p['variants']))
-                        $r[$i]['variants'] = array_values($p['variants']);
+                    
+                    $r[$i]['variants'] = $p['variants'];
+                    // if (isset($p['variants']))
+                    //     
 
                     if (isset($p['cuisines']))
                         $r[$i]['cuisines'] = array_values($p['cuisines']);
 
                     if ($p['addons'] != '') {
                         $addons          = explode(',', $p['addons']);
-                        $r[$i]['addons'] = \App\Models\Addons::select('id', 'addon', 'price')->whereIn('id', $addons)->get()->toArray();
+                        $productAddons = \App\Models\Addons::select('id', 'addon', 'price')->whereIn('addons.id', $addons)->get()->toArray();
+                        foreach($productAddons as $akey =>$avalue){
+                            $exist=CartProduct::where('cart_id','=',$cart_id)->where('product_id','=',$p['product_id'])->leftJoin('cart_product_addons','cart_products.id','=','cart_product_addons.cart_product_id')->where('cart_product_addons.addon_id','=',$avalue['id'])->first();
+                            if(!empty($exist)){
+                                $productAddons[$akey]['added'] = true;
+                                $productAddons[$akey]['qty'] = $exist->addon_qty;
+                            }else{
+                                $productAddons[$akey]['added'] = false;
+                            }
+                        }
+                        
+                        $r[$i]['addons'] = $productAddons;
                     }
                     unset($p['variants']);
                     unset($p['cuisines']);
                     unset($p['addons']);
                     $r[$i] = array_merge($r[$i], $p);
-//                    dd($r);
                 }
                 $r = array_values($r);
             } else
                 $r = [];
-
+                return $r;
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
 
             $vendor = Vendors::find($cart_users->vendor_id);
@@ -646,7 +672,7 @@ class CartApiController extends Controller
 //                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
 //            }
 
-            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->with(['products'])->where('user_id', $request->user()->id)->first();
+            $cart_users = Cart::select('user_id', 'vendor_id', 'id')->with(['products'])->where('user_id', $request->user_id)->first();
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
@@ -661,6 +687,16 @@ class CartApiController extends Controller
                 ->select(DB::raw('SUM(product_qty) as total_product_qty'))->groupBy('cart_id')->get();
 
             $r['total_product_in_cart'] = $cart_pro[0]->total_product_qty;
+            //
+            $cartTotal = CartProduct::where('cart_id','=',$cart_id);
+            $cartTotal = $cartTotal->join('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id');
+            $cartTotal = $cartTotal->join('variants','cart_product_variants.variant_id','=','variants.id');
+            $cartTotal = $cartTotal->select(DB::raw('SUM(variants.variant_price * cart_product_variants.variant_qty) as total'));
+            $cartTotal = $cartTotal->get();
+            $r['total'] = $cartTotal;
+
+
+            //
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
                                      'response' => [
