@@ -99,6 +99,10 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+        'your_channel_name' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/request_API.log'),
+        ],
     ],
 
 ];

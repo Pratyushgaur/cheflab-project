@@ -89,6 +89,30 @@ class BannerSeeder extends Seeder
                     'is_active'   => '1',
                     'price'       => '200',
                     'banner_for'  => 'dineout',
+                ],
+                [
+                    'name'        => 'Banner order tracking 1',
+                    'bannerImage' => 'banner2.jpg',
+                    'position'    => '1',
+                    'is_active'   => '1',
+                    'price'       => '400',
+                    'banner_for'  => 'order_traking',
+                ],
+                [
+                    'name'        => 'Banner order tracking 2',
+                    'bannerImage' => 'banner3.jpg',
+                    'position'    => '2',
+                    'is_active'   => '1',
+                    'price'       => '300',
+                    'banner_for'  => 'order_traking',
+                ],
+                [
+                    'name'        => 'Banner order tracking 3',
+                    'bannerImage' => 'banner4.jpg',
+                    'position'    => '3',
+                    'is_active'   => '1',
+                    'price'       => '200',
+                    'banner_for'  => 'order_traking',
                 ]
             ]
         );

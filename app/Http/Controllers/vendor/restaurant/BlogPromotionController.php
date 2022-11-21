@@ -69,6 +69,7 @@ class BlogPromotionController extends Controller
 
         //get "to_date" : add munber of days
         if (isset($promotion_time_frame_add_days[$request->time_frame])) {
+            $date_frame=$promotion_time_frame_add_days[$request->time_frame];
             $date_to = mysql_add_days($date_from, $promotion_time_frame_add_days[$request->time_frame]);
             $date_to = mysql_date_time_marge($date_to, $AppPromotionBlogs->to);
         } else
@@ -115,13 +116,15 @@ class BlogPromotionController extends Controller
             ->whereIn('vendor_id', $vendor_ids)
             ->pluck('app_promotion_blog_setting_id');
 //dd($booked_slot_ids);
-        $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_position`, ' ( Price:', `blog_price`, ' ) ') AS name"), 'id')
+        $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_position`, ' ( Price:', `blog_price`, ' ) ','For ',`blog_promotion_date_frame`,'Days') AS name"), 'id')
             ->where('app_promotion_blog_id', $request->app_promotion_blog_id)->where('is_active', 1);
 
         if (!empty($booked_slot_ids)) {
             $slotMaster->whereNotIn('id', $booked_slot_ids);
         }
-        $slot = $slotMaster->limit(config('custom_app_setting.blog_promotion_banner_number_of_slides'))->get();
+        $slot = $slotMaster->where('blog_promotion_date_frame',$date_frame)
+//            ->limit(config('custom_app_setting.blog_promotion_banner_number_of_slides'))
+            ->get();
 //dd($slot);
         if (isset($slot[0]))
             return \Response::json($slot);

@@ -137,7 +137,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
     //
-    
+
 });
 
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);

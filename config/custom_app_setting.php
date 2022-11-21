@@ -23,10 +23,13 @@ return [
 
     //number of banner slides shows
     'promotion_banner_number_of_slides'      => 3,
-    'promotion_banner_for'                   => ['chef'       => "Chef Home Slider Banner",
-                                                 'restaurant' => "Restaurant Home Slider Banner",
-                                                 'dineout'    => "Dine-out Promotion"],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
-    'promotion_banner_for_only_values'       => ['cheflab','chef', 'restaurant', 'dineout'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
+    'promotion_banner_for'                   => ['chef'          => "Chef Home Slider Banner",
+                                                 'restaurant'    => "Restaurant Home Slider Banner",
+                                                 'dineout'       => "Dine-out Promotion",
+                                                 "order_traking" => "Order Tracking Banner"
+    ],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
+
+    'promotion_banner_for_only_values'       => ['cheflab', 'chef', 'restaurant', 'dineout','order_traking'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
 
     //blog promotion "app_promotion_blog_setting" table column :"blog_promotion_date_frame"
@@ -54,6 +57,6 @@ return [
 
     'vendor_food_type' => [1 => 'Veg', 3 => 'Veg + Non Veg'],
 
-    "product_approve"=>[1=>'Approved', 2=>'pending' ,3=>'Reject'],//product : table, column name :product_approve
-    "product_status"=>[1=>"Active", 0=>"in-active"]//tabe: products ,column name :status
+    "product_approve" => [1 => 'Approved', 2 => 'pending', 3 => 'Reject'],//product : table, column name :product_approve
+    "product_status"  => [1 => "Active", 0 => "in-active"]//tabe: products ,column name :status
 ];
