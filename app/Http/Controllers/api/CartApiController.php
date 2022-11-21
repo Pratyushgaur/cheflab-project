@@ -279,7 +279,7 @@ class CartApiController extends Controller
                         $exist=CartProduct::where('cart_id','=',$cart_id)->where('product_id','=',$product['product_id'])->leftJoin('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id')->where('cart_product_variants.variant_id','=',$vvalue['variant_id'])->first();
                         if(!empty($exist)){
                             $variants[$vkey]['added'] = true;
-                            $variants[$vkey]['qty'] = $exist->variant_qty;
+                            $variants[$vkey]['qty'] = $exist->product_qty;
                         }else{
                             $variants[$vkey]['added'] = false;
                         }
@@ -473,7 +473,7 @@ class CartApiController extends Controller
                 DB::beginTransaction();
                 // database queries here
                 $cart_products_addons_id = [];
-                $cart_obj                = Cart::find($request->cart_id);
+                $cart_obj = Cart::find($request->cart_id);
                 if (!$cart_obj) {
                     return response()->json(['status' => false, 'error' => 'Cart not found'], 401);
                 }
