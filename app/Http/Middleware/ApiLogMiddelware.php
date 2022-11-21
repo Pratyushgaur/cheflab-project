@@ -18,11 +18,21 @@ class ApiLogMiddelware
      */
     public function handle(Request $request, Closure $next)
     {
-//        if ($request->expectsJson()) {
+//        if (strpos(URL::full(),'cart')>0) {
+//            Log::channel('your_channel_name')->info('\n\n----------------\n');
+//            Log::channel('your_channel_name')->info(URL::full());
+//            Log::channel('your_channel_name')->info($request->all());
+//        }
+        return $next($request);
+    }
+    public function terminate($request, $response)
+    {
+        if (strpos(URL::full(),'cart')>0) {
             Log::channel('your_channel_name')->info('\n\n----------------\n');
             Log::channel('your_channel_name')->info(URL::full());
             Log::channel('your_channel_name')->info($request->all());
-//        }
-        return $next($request);
+            Log::channel('your_channel_name')->info('\n reponce \n');
+            Log::channel('your_channel_name')->info($response);
+        }
     }
 }

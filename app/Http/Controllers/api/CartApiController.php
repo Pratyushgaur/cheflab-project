@@ -250,10 +250,10 @@ class CartApiController extends Controller
                 ->where('cart_products.cart_id', $cart_id)
                 ->leftJoin('variants', 'products.id', 'variants.product_id')
                 ->leftJoin('cart_product_variants', 'variants.id', 'cart_product_variants.variant_id')
-                
+
                 ->get()->toArray();
             $responce = [];
-            
+
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '') {
 
@@ -284,7 +284,7 @@ class CartApiController extends Controller
                             $variants[$vkey]['added'] = false;
                         }
                     }
-                    
+
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price'] = $product['variant_price'];
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
                     // if ($product['variant_id'] != '') {
@@ -293,19 +293,19 @@ class CartApiController extends Controller
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
                     // }
                     $responce[$product['product_id']]['variants'] = $variants;
-                    
+
                 }
             }
-            
+
 //            dd($responce);
             if (is_array($responce) && !empty($responce)) {
                 foreach ($responce as $i => $p) {
-                    
+
                     $r[$i]['variants'] = $p['variants'];
                     // if (isset($p['variants']))
-                    //     
+                    //
 
-                    
+
 
                     if ($p['addons'] != '') {
                         $addons          = explode(',', $p['addons']);
@@ -319,7 +319,7 @@ class CartApiController extends Controller
                                 $productAddons[$akey]['added'] = false;
                             }
                         }
-                        
+
                         $r[$i]['addons'] = $productAddons;
                     }
                     unset($p['variants']);
@@ -330,7 +330,7 @@ class CartApiController extends Controller
                 $r = array_values($r);
             } else
                 $r = [];
-                
+
             $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
 
             $vendor = Vendors::find($cart_users->vendor_id);
@@ -493,6 +493,7 @@ class CartApiController extends Controller
                     if (!$cart_products)
                         $cart_products = new CartProduct($p);
                     else {
+
                         $cart_products->product_id  = $p['product_id'];
                         $cart_products->product_qty = $p['product_qty'];
                     }
@@ -669,7 +670,7 @@ class CartApiController extends Controller
 //            }
 
             $cart_users = Cart::select( 'vendor_id', 'id')->withCount(['products'])->where('user_id', $request->user_id)->first();
-            
+
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
