@@ -678,7 +678,7 @@ class CartApiController extends Controller
             $cartTotal = CartProduct::where('cart_id','=',$cart_id);
             $cartVarintProduct = $cartTotal->join('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id');
             $cartVarintProduct = $cartVarintProduct->join('variants','cart_product_variants.variant_id','=','variants.id');
-            $cartVarintProduct = $cartVarintProduct->select(DB::raw('IFNULL(SUM(variants.variant_price*cart_product_variants.variant_qty),0) as total'));
+            $cartVarintProduct = $cartVarintProduct->select(DB::raw('IFNULL(SUM(variants.variant_price*cart_products.product_qty),0) as total'));
             $cartVarintProduct = $cartVarintProduct->first();
             //
             $cartWithOutVariant = CartProduct::where('cart_id','=',$cart_id);
