@@ -348,7 +348,15 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
+            $category = VendorMenus::query()
+                ->select('menuName','vendor_menus.id', \DB::raw('count(*) as count'))
+                ->join('products as c', 'vendor_menus.id', 'c.menu_id')
+                ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
+                ->where('product_approve', 1)
+                ->where('status', 1)
+                ->groupBy('menuName')
+                ->get();
+           // $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->groupBy('menuName')->get();
             $date     = today()->format('Y-m-d');
             $coupon   = Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=', 1)->where('from', '<=', $date)->where('to', '>=', $date)->select('*')->get();
             $catData  = [];
@@ -421,7 +429,7 @@ class AppController extends Controller
                 $variant = get_product_with_variant_and_addons(['product_for' => '3', 'menu_id' => $value->id], request()->user()->id, '', '', false);
                 if (!empty($variant)) {
                     $catData[] = ['menuName' => $value->menuName,
-                                  'id'       => $value->id,
+                                  'menu_id'       => $value->id,
                                   'products' => $variant];
                 }
 
@@ -522,7 +530,7 @@ class AppController extends Controller
             }
             //
             $category = VendorMenus::query()
-                ->select('menuName', \DB::raw('count(*) as count'))
+                ->select('menuName', \DB::raw('count(*) as count'),'vendor_menus.id as menu_id')
                 ->join('products as c', 'vendor_menus.id', 'c.menu_id')
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
                 ->where('product_approve', 1)
