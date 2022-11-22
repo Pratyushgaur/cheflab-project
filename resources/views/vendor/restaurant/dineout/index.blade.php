@@ -73,12 +73,9 @@ $breadcrumb[] = ["name"  => "Booking Request List",
                                                     </button>
                                                     <div class="dropdown-menu">
                                                         <a class="dropdown-item ms-text-success" onclick="ajax_post_on_link('{{route('restaurant.dineout.accept',[$TableServiceBooking->id])}}',{{$TableServiceBooking->id}})">Accept</a>
-                                                        <a class="dropdown-item ms-text-danger" onclick="ajax_post_on_link('{{route('restaurant.dineout.reject',[$TableServiceBooking->id])}}',{{$TableServiceBooking->id}})">Reject</a>
+{{--                                                        <a class="dropdown-item ms-text-danger" onclick="ajax_post_on_link('{{route('restaurant.dineout.reject',[$TableServiceBooking->id])}}',{{$TableServiceBooking->id}})">Reject</a>--}}
 
-                                                        <a data-toggle="modal" data-target="#modal-5" class="dropdown-item"
-                                                           onclick="preparation_form('{{route('restaurant.dineout.reject',[$TableServiceBooking->id])}}',
-                                                           {{$TableServiceBooking->id}},
-                                                               '{{"#".$TableServiceBooking->id." request for ".$TableServiceBooking->booked_no_guest." guest, Time: ".front_end_date_time($TableServiceBooking->booked_slot_time_from)."-".front_end_date_time($TableServiceBooking->booked_slot_time_to)}}')">Reject</a>
+                                                        <a data-toggle="modal" data-target="#modal-5" class="dropdown-item  ms-text-danger" onclick="preparation_form('{{route('restaurant.dineout.reject',[$TableServiceBooking->id])}}', {{$TableServiceBooking->id}}, '{{"#".$TableServiceBooking->id." request for ".$TableServiceBooking->booked_no_guest." guest, Time: ".front_end_date_time($TableServiceBooking->booked_slot_time_from)."-".front_end_date_time($TableServiceBooking->booked_slot_time_to)}}')">Reject</a>
                                                     </div>
                                                 </div>
 
@@ -116,7 +113,7 @@ $breadcrumb[] = ["name"  => "Booking Request List",
 
                     <div class="modal-body">
                         <p id="dine-out-msg"></p>
-                        <textarea name="reject_reason"></textarea>
+                        <textarea class="form-control" name="reject_reason">{{$admin_master->dine_out_reject_reason}}</textarea>
                     </div>
 
                     <div class="modal-footer">

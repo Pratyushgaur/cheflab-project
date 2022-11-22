@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminMasters;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
@@ -29,11 +30,12 @@ class DineoutController extends Controller
      */
     public function index()
     {
+        $admin_master=AdminMasters::select('dine_out_reject_reason')->find(config('custom_app_setting.admin_master_id'));
         $TableServiceBookings = TableServiceBooking::select('table_service_bookings.*', 'users.name')
             ->join('users', 'user_id', '=', 'users.id')
-            ->where('vendor_id', \Auth::guard('vendor')->user()->id)->orderBy('id','desc')->paginate(15);
+            ->where('vendor_id', \Auth::guard('vendor')->user()->id)->orderBy('id', 'desc')->paginate(15);
 
-        return view('vendor.restaurant.dineout.index', compact('TableServiceBookings'));
+        return view('vendor.restaurant.dineout.index', compact('TableServiceBookings','admin_master'));
     }
 
     public function dine_out_accept($id)
@@ -49,12 +51,11 @@ class DineoutController extends Controller
     }
 
 
-    public function dine_out_reject(Request $request,$id)
+    public function dine_out_reject(Request $request, $id)
     {
-//        dd($request->all());
         $booking                 = TableServiceBooking::find($id);
         $booking->booking_status = 'rejected';
-        $booking->reject_reason = $request->reject_reason;
+        $booking->reject_reason  = $request->reject_reason;
         $booking->save();
         return redirect()->route('restaurant.dineout.index')->with('success', 'Dien-out booking request rejected');
 //        return response()->json([
@@ -154,8 +155,8 @@ class DineoutController extends Controller
 //        dd($request->all());
         $request->validate(
             [
-                'no_guest'      => 'required|numeric',
-                'slot_time'     => 'required|numeric',
+                'no_guest'           => 'required|numeric',
+                'slot_time'          => 'required|numeric',
                 'discount_percent.*' => 'required|numeric'
             ]
         );
@@ -165,11 +166,11 @@ class DineoutController extends Controller
             'slot_time' => $request->slot_time,
             'vendor_id' => Auth::guard('vendor')->user()->id
         ];
-        TableService::updateOrCreate([ 'vendor_id' => Auth::guard('vendor')->user()->id ], $data);
+        TableService::updateOrCreate(['vendor_id' => Auth::guard('vendor')->user()->id], $data);
         foreach ($request->discount_percent as $k => $d) {
-            $discount = [ 'discount_percent' => $d ];
+            $discount = ['discount_percent' => $d];
 
-            TableServiceDiscount::updateOrCreate([ 'vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $k ], $discount);
+            TableServiceDiscount::updateOrCreate(['vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $k], $discount);
         }
         return redirect()->route('restaurant.dineout.index')->with('success', 'Dien-out settings update successfully');
 

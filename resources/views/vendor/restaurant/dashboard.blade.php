@@ -2,59 +2,133 @@
 @section('main-content')
 
     <div class="ms-content-wrapper">
-      <div class="row">
-        <div class="col-md-12">
-          <h1 class="db-header-title">Welcome, {{ucfirst(Auth::guard('vendor')->user()->name)}}</h1>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-md-6">
-          <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <!-- <span class="ms-chart-label bg-black"><i class="material-icons">arrow_upward</i> 3.2%</span> -->
-            <div class="ms-card-body media">
-              <div class="media-body">
-                <span class="black-text"><strong>Today Order's</strong></span>
-                <h2>{{vendorTodayOrderCount(Auth::guard('vendor')->user()->id)}}</h2>
-              </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h1 class="db-header-title">Welcome, {{ucfirst(Auth::guard('vendor')->user()->name)}}</h1>
             </div>
-            <canvas id="line-chart"></canvas>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-md-6">
-          <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <!-- <span class="ms-chart-label bg-red"><i class="material-icons">arrow_downward</i> 4.5%</span> -->
-            <div class="ms-card-body media">
-              <div class="media-body">
-                <span class="black-text"><strong>Total Order's</strong></span>
-                <h2>{{vendorTotalOrderCount(Auth::guard('vendor')->user()->id)}}</h2>
-              </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Total Confirmed</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
+                            <p class="fs-12">Today</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
             </div>
-            <canvas id="line-chart-2"></canvas>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-md-6">
-          <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <!-- <span class="ms-chart-label bg-black"><i class="material-icons">arrow_upward</i> 12.5%</span> -->
-            <div class="ms-card-body media">
-              <div class="media-body">
-                <span class="black-text"><strong>Today Revenue</strong></span>
-                <h2> <i class="fas fa-rupee-sign" ></i>  7,333</h2>
-              </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Preparing</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
+                            <p class="fs-12">Today</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
             </div>
-            <canvas id="line-chart-3"></canvas>
-          </div>
-        </div>
-        <div class="col-xl-3 col-lg-6 col-md-6">
-          <div class="ms-card ms-widget has-graph-full-width ms-infographics-widget">
-            <!-- <span class="ms-chart-label bg-red"><i class="material-icons">arrow_upward</i> 9.5%</span> -->
-            <div class="ms-card-body media">
-              <div class="media-body">
-                <span class="black-text"><strong>Total Revenue</strong></span>
-                <h2> <i class="fas fa-rupee-sign" ></i>  7,333</h2>
-              </div>
+
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Ready for delivered</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
+                            <p class="fs-12">Today</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
             </div>
-            <canvas id="line-chart-4"></canvas>
-          </div>
-        </div>
-        <!-- Recent Orders Requested -->
+
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Food on the way</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
+                            <p class="fs-12">Today</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <a href="#">
+                    <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
+                        <div class="ms-panel-body media">
+                            <i class="fa fa-truck fa-6" aria-hidden="true"></i>
+                            <div class="media-body">
+                                <h6>10</h6>
+                                <span>Delivered</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <a href="#">
+                    <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
+                        <div class="ms-panel-body media">
+                            <i class="material-icons">cached</i>
+                            <div class="media-body">
+                                <h6>10</h6>
+                                <span>Refund</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-xl-3 col-md-6">
+                <a href="#">
+                    <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
+                        <div class="ms-panel-body media">
+                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                            <div class="media-body">
+                                <h6>10</h6>
+                                <span>Scheduled</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+
+            <div class="col-xl-3 col-md-6">
+                <a href="#">
+                    <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
+                        <div class="ms-panel-body media">
+                            <i class="material-icons">cached</i>
+                            <div class="media-body">
+                                <h6>{{vendorTotalOrderCount(Auth::guard('vendor')->user()->id)}}</h6>
+                                <span>Total order</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+
+            <div class="col-xl-12 col-md-12">
+                <div class="ms-panel">
+                    <div class="ms-panel-header">
+                        <h6>Line Chart</h6>
+                    </div>
+                    <div class="ms-panel-body">
+                        <canvas id="line-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders Requested -->
         <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel">
             <div class="ms-panel-header">
@@ -87,7 +161,7 @@
                       <td>789393819</td>
                     </tr>
 
-                    
+
 
                   </tbody>
                 </table>
@@ -134,36 +208,36 @@
             </div>
           </div>
         </div> -->
-        <!-- Food Orders -->
-        <div class="col-md-12">
-          <div class="ms-panel">
-            <div class="ms-panel-header">
-              <h6>Top Products</h6>
-            </div>
-            <div class="ms-panel-body">
-              <div class="row">
-                @foreach($product as $key =>$value)
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-img">
-                      <img src="{{asset('products')}}/{{$value->product_image}}" alt="card_img" style="width: 530px; height: 240px;">
+            <!-- Food Orders -->
+            <div class="col-md-12">
+                <div class="ms-panel">
+                    <div class="ms-panel-header">
+                        <h6>Top Selling Products</h6>
                     </div>
-                    <div class="ms-card-body">
-                      <div class="ms-card-heading-title">
-                        <h6>{{$value->name}} </h6>
-                        <span class="green-text"><strong><i class="fas fa-rupee-sign"></i> {{$value->product_price}}</strong></span>
-                      </div>
+                    <div class="ms-panel-body">
+                        <div class="row">
+                            @foreach($product as $key =>$value)
+                                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                    <div class="ms-card no-margin">
+                                        <div class="ms-card-img">
+                                            <img src="{{asset('products')}}/{{$value->product_image}}" alt="card_img" style="width: 530px; height: 240px;">
+                                        </div>
+                                        <div class="ms-card-body">
+                                            <div class="ms-card-heading-title">
+                                                <h6>{{$value->name}} </h6>
+                                                <span class="green-text"><strong><i class="fas fa-rupee-sign"></i> {{$value->product_price}}</strong></span>
+                                            </div>
 
-                      <div class="ms-card-heading-title">
-                        <p>Orders <span class="red-text">{{$value->orderTotal}}</span></p>
-                        
-                      </div>
-                    
-                    </div>
-                  </div>
-                </div>
-                @endforeach
-                <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                                            <div class="ms-card-heading-title">
+                                                <p>Orders <span class="red-text">{{$value->orderTotal}}</span></p>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                        @endforeach
+                        <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                   <div class="ms-card no-margin">
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-5.jpg" alt="card_img">
@@ -176,12 +250,12 @@
 
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">15</span></p>
-                        
+
                       </div>
                     </div>
                   </div>
                 </div> -->
-                 <!--<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
+                        <!--<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                   <div class="ms-card no-margin">
                     <div class="ms-card-img">
                       <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
@@ -194,7 +268,7 @@
 
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">75</span></p>
-                        
+
                       </div>
                     </div>
                   </div>
@@ -212,7 +286,7 @@
 
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">85</span></p>
-                        
+
                       </div>
                     </div>
                   </div>
@@ -229,549 +303,466 @@
                       </div>
                       <div class="ms-card-heading-title">
                         <p>Orders <span class="red-text">175</span></p>
-                        
+
                       </div>
                     </div>
                   </div>
                 </div> -->
 
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- END/Food Orders -->
-        <!-- Recent Orders Requested -->
-        <div class="col-xl-12 col-md-12">
-          <div class="ms-panel ms-panel-fh">
-            <div class="ms-panel-header">
-              <div class="d-flex justify-content-between">
-                <div class="ms-header-text">
-                  <h6>Recent Order </h6>
-                </div>
-              </div>
-
-            </div>
-            <div class="ms-panel-body pt-0">
-            <div class="table-responsive">
-                <table class="table table-hover thead-primary">
-                  <thead>
-                    <tr>
-                      <th scope="col">Order ID</th>
-                      <th scope="col">Order Name</th>
-                      <th scope="col">Customer Name</th>
-                      <th scope="col">Location</th>
-                      <th scope="col">Order Status</th>
-                      <th scope="col">Delivered Time</th>
-                      <th scope="col">Price</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <!-- <tr>
-                      <th scope="row">1</th>
-                      <td>French Fries</td>
-                      <td>Jhon Leo</td>
-                      <td>New Town</td>
-                      <td><span class="badge badge-primary">Pending</span>
-                      </td>
-                      <td>10:05</td>
-                      <td>$10</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">2</th>
-                      <td>Mango Pie</td>
-                      <td>Kristien</td>
-                      <td>Old Town</td>
-                      <td><span class="badge badge-dark">Cancelled</span>
-                      </td>
-                      <td>14:05</td>
-                      <td>$9</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">3</th>
-                      <td>FrieD Egg Sandwich</td>
-                      <td>Jack Suit</td>
-                      <td>Oxford Street</td>
-                      <td><span class="badge badge-success">Delivered</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$19</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">4</th>
-                      <td>Lemon Yogurt Parfait</td>
-                      <td>Alesdro Guitto</td>
-                      <td>Church hill</td>
-                      <td><span class="badge badge-success">Delivered</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$18</td>
-                    </tr>
-                    <tr>
-                      <th scope="row">5</th>
-                      <td>Spicy Grill Sandwich</td>
-                      <td>Jacob Sahwny</td>
-                      <td>palace Road</td>
-                      <td><span class="badge badge-success">Delivered</span>
-                      </td>
-                      <td>12:05</td>
-                      <td>$21</td>
-                    </tr> -->
-                    
-                  </tbody>
-                </table>
-              </div>
-              <!-- <canvas id="youtube-subscribers"></canvas> -->
-            </div>
-          </div>
-        </div>
-
-        <!-- Favourite Products -->
-        <div class="col-xl-5 col-md-12">
-          <!-- <div class="ms-panel ms-widget ms-crypto-widget">
-            <div class="ms-panel-header">
-              <h6>Favourite charts</h6>
-            </div>
-            <div class="ms-panel-body p-0">
-              <ul class="nav nav-tabs nav-justified has-gap px-4 pt-4" role="tablist">
-                <li role="presentation" class="fs-12"><a href="#btc" aria-controls="btc" class="active show" role="tab" data-toggle="tab"> Mon </a></li>
-                <li role="presentation" class="fs-12"><a href="#xrp" aria-controls="xrp" role="tab" data-toggle="tab"> Tue </a></li>
-                <li role="presentation" class="fs-12"><a href="#ltc" aria-controls="ltc" role="tab" data-toggle="tab"> Wed </a></li>
-                <li role="presentation" class="fs-12"><a href="#eth" aria-controls="eth" role="tab" data-toggle="tab"> Thu </a></li>
-                <li role="presentation" class="fs-12"><a href="#zec" aria-controls="zec" role="tab" data-toggle="tab"> Fri </a></li>
-              </ul>
-              <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active show fade in" id="btc">
-                  <div class="table-responsive">
-                    <table class="table table-hover thead-light">
-                      <thead>
-                        <tr>
-                          <th scope="col">Restaurant Names</th>
-                          <th scope="col">Qty</th>
-                          <th scope="col">Orders</th>
-                          <th scope="col">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Hunger House</td>
-                          <td>8528</td>
-                          <td class="ms-text-success">+17.24%</td>
-                          <td>7.65%</td>
-                        </tr>
-                        <tr>
-                          <td>Food Lounge</td>
-                          <td>4867</td>
-                          <td class="ms-text-danger">-12.24%</td>
-                          <td>9.12%</td>
-                        </tr>
-                        <tr>
-                          <td>Delizious</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                        <tr>
-                          <td>Netherfood</td>
-                          <td>1614</td>
-                          <td class="ms-text-danger">-20.75%</td>
-                          <td>12.25%</td>
-                        </tr>
-                        <tr>
-                          <td>Rusmiz</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="xrp">
-                  <div class="table-responsive">
-                    <table class="table table-hover thead-light">
-                      <thead>
-                        <tr>
-                          <th scope="col">Restaurant Name</th>
-                          <th scope="col">Qty</th>
-                          <th scope="col">Orders</th>
-                          <th scope="col">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Hunger House</td>
-                          <td>8528</td>
-                          <td class="ms-text-success">+17.24%</td>
-                          <td>7.65%</td>
-                        </tr>
-                        <tr>
-                          <td>Food Lounge</td>
-                          <td>4867</td>
-                          <td class="ms-text-danger">-12.24%</td>
-                          <td>9.12%</td>
-                        </tr>
-                        <tr>
-                          <td>Delizious</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                        <tr>
-                          <td>Netherfood</td>
-                          <td>1614</td>
-                          <td class="ms-text-danger">-20.75%</td>
-                          <td>12.25%</td>
-                        </tr>
-                        <tr>
-                          <td>Rusmiz</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="ltc">
-                  <div class="table-responsive">
-                    <table class="table table-hover thead-light">
-                      <thead>
-                        <tr>
-                          <th scope="col">Restaurant Name</th>
-                          <th scope="col">Qty</th>
-                          <th scope="col">Orders</th>
-                          <th scope="col">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Hunger House</td>
-                          <td>8528</td>
-                          <td class="ms-text-success">+17.24%</td>
-                          <td>7.65%</td>
-                        </tr>
-                        <tr>
-                          <td>Food Lounge</td>
-                          <td>4867</td>
-                          <td class="ms-text-danger">-12.24%</td>
-                          <td>9.12%</td>
-                        </tr>
-                        <tr>
-                          <td>Delizious</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                        <tr>
-                          <td>Netherfood</td>
-                          <td>1614</td>
-                          <td class="ms-text-danger">-20.75%</td>
-                          <td>12.25%</td>
-                        </tr>
-                        <tr>
-                          <td>Rusmiz</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="eth">
-                  <div class="table-responsive">
-                    <table class="table table-hover thead-light">
-                      <thead>
-                        <tr>
-                          <th scope="col">Restaurant Name</th>
-                          <th scope="col">Qty</th>
-                          <th scope="col">Orders</th>
-                          <th scope="col">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Hunger House</td>
-                          <td>8528</td>
-                          <td class="ms-text-success">+17.24%</td>
-                          <td>7.65%</td>
-                        </tr>
-                        <tr>
-                          <td>Food Lounge</td>
-                          <td>4867</td>
-                          <td class="ms-text-danger">-12.24%</td>
-                          <td>9.12%</td>
-                        </tr>
-                        <tr>
-                          <td>Delizious</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                        <tr>
-                          <td>Netherfood</td>
-                          <td>1614</td>
-                          <td class="ms-text-danger">-20.75%</td>
-                          <td>12.25%</td>
-                        </tr>
-                        <tr>
-                          <td>Rusmiz</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <div role="tabpanel" class="tab-pane fade" id="zec">
-                  <div class="table-responsive">
-                    <table class="table table-hover thead-light">
-                      <thead>
-                        <tr>
-                          <th scope="col">Restaurant Name</th>
-                          <th scope="col">Qty</th>
-                          <th scope="col">Orders</th>
-                          <th scope="col">Profit</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Hunger House</td>
-                          <td>8528</td>
-                          <td class="ms-text-success">+17.24%</td>
-                          <td>7.65%</td>
-                        </tr>
-                        <tr>
-                          <td>Food Lounge</td>
-                          <td>4867</td>
-                          <td class="ms-text-danger">-12.24%</td>
-                          <td>9.12%</td>
-                        </tr>
-                        <tr>
-                          <td>Delizious</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                        <tr>
-                          <td>Netherfood</td>
-                          <td>1614</td>
-                          <td class="ms-text-danger">-20.75%</td>
-                          <td>12.25%</td>
-                        </tr>
-                        <tr>
-                          <td>Rusmiz</td>
-                          <td>7538</td>
-                          <td class="ms-text-success">+32.04%</td>
-                          <td>14.29%</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div> -->
-          <!-- Favourite Products -->
-          <!-- Total Earnings -->
-          
-        </div>
-        <!-- Total Earnings -->
-        
-
-        <div class="col-md-12">
-          <div class="ms-panel">
-            <div class="ms-panel-header">
-              <h6>Top Rating and Reviews for You</h6>
-
-            </div>
-            <div class="ms-panel-body">
-              <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-body">
-                      <div class="media fs-14">
-                        <div class="mr-2 align-self-center">
-                          <img src="{{asset('frontend')}}/assets/img/costic/customer-1.jpg" class="ms-img-round" alt="people">
                         </div>
-                        <div class="media-body">
-                          <h6>Hunger House </h6>
-                          <div class="dropdown float-right">
-                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                              <li class="ms-dropdown-list">
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Sales</span>
-                                  </div>
-                                </a>
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Details</span>
-                                  </div>
-                                </a>
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Remove</span>
-                                  </div>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
-                        </div>
-
-                      </div>
-                      <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                        <li class="ms-rating-item"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                      </ul>
-                      
                     </div>
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-1.jpg" alt="card_img">
-                    </div>
-                    <!-- <div class="ms-card-footer text-disabled d-flex">
-                      <div class="ms-card-options">
-                        <i class="material-icons">favorite</i> 982
-                      </div>
-                      <div class="ms-card-options">
-                        <i class="material-icons">comment</i> 785
-                      </div>
-                    </div> -->
-                  </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-body">
-                      <div class="media fs-14">
-                        <div class="mr-2 align-self-center">
-                          <img src="{{asset('frontend')}}/assets/img/costic/customer-2.jpg" class="ms-img-round" alt="people">
-                        </div>
-                        <div class="media-body">
-                          <h6>Food Lounge</h6>
-                          <div class="dropdown float-right">
-                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                              <li class="ms-dropdown-list">
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Sales</span>
-                                  </div>
-                                </a>
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Details</span>
-                                  </div>
-                                </a>
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Remove</span>
-                                  </div>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
-                        </div>
-
-                      </div>
-                      <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                        <li class="ms-rating-item"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                      </ul>
-                      
-                    </div>
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
-                    </div>
-                    <!-- <div class="ms-card-footer text-disabled d-flex">
-                      <div class="ms-card-options">
-                        <i class="material-icons">favorite</i> 982
-                      </div>
-                      <div class="ms-card-options">
-                        <i class="material-icons">comment</i> 785
-                      </div>
-                    </div> -->
-                  </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-body">
-                      <div class="media fs-14">
-                        <div class="mr-2 align-self-center">
-                          <img src="{{asset('frontend')}}/assets/img/costic/customer-6.jpg" class="ms-img-round" alt="people">
-                        </div>
-                        <div class="media-body">
-                          <h6>Delizious </h6>
-                          <div class="dropdown float-right">
-                            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <i class="material-icons">more_vert</i>
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                              <li class="ms-dropdown-list">
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Sales</span>
-                                  </div>
-                                </a>
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Details</span>
-                                  </div>
-                                </a>
-                                <a class="media p-2" href="#">
-                                  <div class="media-body">
-                                    <span>Remove</span>
-                                  </div>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
-                        </div>
-
-                      </div>
-                      <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                        <li class="ms-rating-item"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                        <li class="ms-rating-item rated"> <i class="material-icons">star</i> </li>
-                      </ul>
-                      
-                    </div>
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-3.jpg" alt="card_img">
-                    </div>
-                    <!-- <div class="ms-card-footer text-disabled d-flex">
-                      <div class="ms-card-options">
-                        <i class="material-icons">favorite</i> 982
-                      </div>
-                      <div class="ms-card-options">
-                        <i class="material-icons">comment</i> 785
-                      </div>
-                    </div> -->
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-        </div>
+            <!-- END/Food Orders -->
 
-        <!-- Recent Support Tickets -->
+            <div class="col-md-12">
+                <div class="ms-panel">
+                    <div class="ms-panel-header">
+                        <h6>Top Rating and Reviews Product</h6>
+
+                    </div>
+                    <div class="ms-panel-body">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="ms-card no-margin">
+                                    <div class="ms-card-body">
+                                        <div class="media fs-14">
+                                            <div class="mr-2 align-self-center">
+                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-1.jpg" class="ms-img-round" alt="people">
+                                            </div>
+                                            <div class="media-body">
+                                                <h6>Hunger House </h6>
+                                                <div class="dropdown float-right">
+                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="material-icons">more_vert</i>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li class="ms-dropdown-list">
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Sales</span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Details</span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Remove</span>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
+                                            </div>
+
+                                        </div>
+                                        <ul class="ms-star-rating rating-fill rating-circle ratings-new">
+                                            <li class="ms-rating-item"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                        </ul>
+
+                                    </div>
+                                    <div class="ms-card-img">
+                                        <img src="{{asset('frontend')}}/assets/img/costic/food-1.jpg" alt="card_img">
+                                    </div>
+                                    <!-- <div class="ms-card-footer text-disabled d-flex">
+                                      <div class="ms-card-options">
+                                        <i class="material-icons">favorite</i> 982
+                                      </div>
+                                      <div class="ms-card-options">
+                                        <i class="material-icons">comment</i> 785
+                                      </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="ms-card no-margin">
+                                    <div class="ms-card-body">
+                                        <div class="media fs-14">
+                                            <div class="mr-2 align-self-center">
+                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-2.jpg" class="ms-img-round" alt="people">
+                                            </div>
+                                            <div class="media-body">
+                                                <h6>Food Lounge</h6>
+                                                <div class="dropdown float-right">
+                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="material-icons">more_vert</i>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li class="ms-dropdown-list">
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Sales</span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Details</span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Remove</span>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
+                                            </div>
+
+                                        </div>
+                                        <ul class="ms-star-rating rating-fill rating-circle ratings-new">
+                                            <li class="ms-rating-item"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                        </ul>
+
+                                    </div>
+                                    <div class="ms-card-img">
+                                        <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
+                                    </div>
+                                    <!-- <div class="ms-card-footer text-disabled d-flex">
+                                      <div class="ms-card-options">
+                                        <i class="material-icons">favorite</i> 982
+                                      </div>
+                                      <div class="ms-card-options">
+                                        <i class="material-icons">comment</i> 785
+                                      </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="ms-card no-margin">
+                                    <div class="ms-card-body">
+                                        <div class="media fs-14">
+                                            <div class="mr-2 align-self-center">
+                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-6.jpg" class="ms-img-round" alt="people">
+                                            </div>
+                                            <div class="media-body">
+                                                <h6>Delizious </h6>
+                                                <div class="dropdown float-right">
+                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <i class="material-icons">more_vert</i>
+                                                    </a>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li class="ms-dropdown-list">
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Sales</span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Details</span>
+                                                                </div>
+                                                            </a>
+                                                            <a class="media p-2" href="#">
+                                                                <div class="media-body">
+                                                                    <span>Remove</span>
+                                                                </div>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
+                                            </div>
+
+                                        </div>
+                                        <ul class="ms-star-rating rating-fill rating-circle ratings-new">
+                                            <li class="ms-rating-item"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                        </ul>
+
+                                    </div>
+                                    <div class="ms-card-img">
+                                        <img src="{{asset('frontend')}}/assets/img/costic/food-3.jpg" alt="card_img">
+                                    </div>
+                                    <!-- <div class="ms-card-footer text-disabled d-flex">
+                                      <div class="ms-card-options">
+                                        <i class="material-icons">favorite</i> 982
+                                      </div>
+                                      <div class="ms-card-options">
+                                        <i class="material-icons">comment</i> 785
+                                      </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Favourite Products -->
+            <div class="col-xl-5 col-md-12">
+                <!-- <div class="ms-panel ms-widget ms-crypto-widget">
+                  <div class="ms-panel-header">
+                    <h6>Favourite charts</h6>
+                  </div>
+                  <div class="ms-panel-body p-0">
+                    <ul class="nav nav-tabs nav-justified has-gap px-4 pt-4" role="tablist">
+                      <li role="presentation" class="fs-12"><a href="#btc" aria-controls="btc" class="active show" role="tab" data-toggle="tab"> Mon </a></li>
+                      <li role="presentation" class="fs-12"><a href="#xrp" aria-controls="xrp" role="tab" data-toggle="tab"> Tue </a></li>
+                      <li role="presentation" class="fs-12"><a href="#ltc" aria-controls="ltc" role="tab" data-toggle="tab"> Wed </a></li>
+                      <li role="presentation" class="fs-12"><a href="#eth" aria-controls="eth" role="tab" data-toggle="tab"> Thu </a></li>
+                      <li role="presentation" class="fs-12"><a href="#zec" aria-controls="zec" role="tab" data-toggle="tab"> Fri </a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane active show fade in" id="btc">
+                        <div class="table-responsive">
+                          <table class="table table-hover thead-light">
+                            <thead>
+                              <tr>
+                                <th scope="col">Restaurant Names</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Orders</th>
+                                <th scope="col">Profit</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Hunger House</td>
+                                <td>8528</td>
+                                <td class="ms-text-success">+17.24%</td>
+                                <td>7.65%</td>
+                              </tr>
+                              <tr>
+                                <td>Food Lounge</td>
+                                <td>4867</td>
+                                <td class="ms-text-danger">-12.24%</td>
+                                <td>9.12%</td>
+                              </tr>
+                              <tr>
+                                <td>Delizious</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                              <tr>
+                                <td>Netherfood</td>
+                                <td>1614</td>
+                                <td class="ms-text-danger">-20.75%</td>
+                                <td>12.25%</td>
+                              </tr>
+                              <tr>
+                                <td>Rusmiz</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="xrp">
+                        <div class="table-responsive">
+                          <table class="table table-hover thead-light">
+                            <thead>
+                              <tr>
+                                <th scope="col">Restaurant Name</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Orders</th>
+                                <th scope="col">Profit</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Hunger House</td>
+                                <td>8528</td>
+                                <td class="ms-text-success">+17.24%</td>
+                                <td>7.65%</td>
+                              </tr>
+                              <tr>
+                                <td>Food Lounge</td>
+                                <td>4867</td>
+                                <td class="ms-text-danger">-12.24%</td>
+                                <td>9.12%</td>
+                              </tr>
+                              <tr>
+                                <td>Delizious</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                              <tr>
+                                <td>Netherfood</td>
+                                <td>1614</td>
+                                <td class="ms-text-danger">-20.75%</td>
+                                <td>12.25%</td>
+                              </tr>
+                              <tr>
+                                <td>Rusmiz</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="ltc">
+                        <div class="table-responsive">
+                          <table class="table table-hover thead-light">
+                            <thead>
+                              <tr>
+                                <th scope="col">Restaurant Name</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Orders</th>
+                                <th scope="col">Profit</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Hunger House</td>
+                                <td>8528</td>
+                                <td class="ms-text-success">+17.24%</td>
+                                <td>7.65%</td>
+                              </tr>
+                              <tr>
+                                <td>Food Lounge</td>
+                                <td>4867</td>
+                                <td class="ms-text-danger">-12.24%</td>
+                                <td>9.12%</td>
+                              </tr>
+                              <tr>
+                                <td>Delizious</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                              <tr>
+                                <td>Netherfood</td>
+                                <td>1614</td>
+                                <td class="ms-text-danger">-20.75%</td>
+                                <td>12.25%</td>
+                              </tr>
+                              <tr>
+                                <td>Rusmiz</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="eth">
+                        <div class="table-responsive">
+                          <table class="table table-hover thead-light">
+                            <thead>
+                              <tr>
+                                <th scope="col">Restaurant Name</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Orders</th>
+                                <th scope="col">Profit</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Hunger House</td>
+                                <td>8528</td>
+                                <td class="ms-text-success">+17.24%</td>
+                                <td>7.65%</td>
+                              </tr>
+                              <tr>
+                                <td>Food Lounge</td>
+                                <td>4867</td>
+                                <td class="ms-text-danger">-12.24%</td>
+                                <td>9.12%</td>
+                              </tr>
+                              <tr>
+                                <td>Delizious</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                              <tr>
+                                <td>Netherfood</td>
+                                <td>1614</td>
+                                <td class="ms-text-danger">-20.75%</td>
+                                <td>12.25%</td>
+                              </tr>
+                              <tr>
+                                <td>Rusmiz</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                      <div role="tabpanel" class="tab-pane fade" id="zec">
+                        <div class="table-responsive">
+                          <table class="table table-hover thead-light">
+                            <thead>
+                              <tr>
+                                <th scope="col">Restaurant Name</th>
+                                <th scope="col">Qty</th>
+                                <th scope="col">Orders</th>
+                                <th scope="col">Profit</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td>Hunger House</td>
+                                <td>8528</td>
+                                <td class="ms-text-success">+17.24%</td>
+                                <td>7.65%</td>
+                              </tr>
+                              <tr>
+                                <td>Food Lounge</td>
+                                <td>4867</td>
+                                <td class="ms-text-danger">-12.24%</td>
+                                <td>9.12%</td>
+                              </tr>
+                              <tr>
+                                <td>Delizious</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                              <tr>
+                                <td>Netherfood</td>
+                                <td>1614</td>
+                                <td class="ms-text-danger">-20.75%</td>
+                                <td>12.25%</td>
+                              </tr>
+                              <tr>
+                                <td>Rusmiz</td>
+                                <td>7538</td>
+                                <td class="ms-text-success">+32.04%</td>
+                                <td>14.29%</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div> -->
+                <!-- Favourite Products -->
+                <!-- Total Earnings -->
+
+            </div>
+            <!-- Total Earnings -->
+
+
+
+            <!-- Recent Support Tickets -->
         <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
@@ -851,8 +842,8 @@
             </div>
           </div>
         </div> -->
-        <!-- Recent Support Tickets -->
-        <!-- client chat -->
+            <!-- Recent Support Tickets -->
+            <!-- client chat -->
         <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel ms-panel-fh ms-widget ms-chat-conversations">
             <div class="ms-panel-header">
@@ -932,8 +923,84 @@
             </div>
           </div>
         </div> -->
-      <!-- client chat -->
-      </div>
+            <!-- client chat -->
+        </div>
     </div>
-  
+
 @endsection
+
+@push('scripts')
+    <script>
+        //Line Chart
+        var ctx = document.getElementById('line-chart').getContext("2d");
+        var gradientStroke = ctx.createLinearGradient(0, 0, 0, 450);
+        gradientStroke.addColorStop(0, '#ff0018');
+
+        var gradientFill = ctx.createLinearGradient(0, 0, 0, 450);
+        gradientFill.addColorStop(0, "rgba(53,127,250,0.4)");
+        gradientFill.addColorStop(1, "rgba(255,255,255,0)");
+
+        // all data
+        var data_1 = [1800, 1600, 2300, 2800, 3600, 2900, 3000, 3800, 3600];
+        var data_2 = [4100, 3800, 3200, 3400, 2700, 2600, 3300, 3000, 2900];
+        var labels = ["Jan-11", "Jan-12", "Jan-13", "Jan-14", "Jan-15", "Jan-16", "Jan-17", "Jan-18", "Jan-19"];
+
+        var lineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "Data",
+                    borderColor: gradientStroke,
+                    pointBorderColor: gradientStroke,
+                    pointBackgroundColor: gradientStroke,
+                    pointHoverBackgroundColor: gradientStroke,
+                    pointHoverBorderColor: gradientStroke,
+                    pointBorderWidth: 1,
+                    pointHoverRadius: 4,
+                    pointHoverBorderWidth: 1,
+                    pointRadius: 2,
+                    fill: true,
+                    backgroundColor: gradientFill,
+                    borderWidth: 1,
+                    data: data_1
+                }]
+            },
+            options: {
+                legend: {
+                    display: false,
+                    position: "bottom"
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            fontColor: "rgba(0,0,0,0.5)",
+                            fontStyle: "bold",
+                            beginAtZero: true,
+                            maxTicksLimit: 200,
+                            padding: 20
+                        },
+                        gridLines: {
+                            drawTicks: false,
+                            display: false
+                        }
+
+                    }],
+                    xAxes: [{
+                        gridLines: {
+                            zeroLineColor: "transparent"
+                        },
+                        ticks: {
+                            padding: 20,
+                            fontColor: "rgba(0,0,0,0.5)",
+                            fontStyle: "bold"
+                        }
+                    }]
+                }
+            }
+        });
+
+
+    </script>
+@endpush
+
