@@ -127,6 +127,165 @@ function in_between_equal_to($check_number, $from, $to)
     return ($from <= $check_number && $check_number <= $to);
 }
 
+// function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = null, $limit = null, $return_total_count = false, $product_ids = null)
+// {
+//     DB::enableQueryLog();
+//     //for pagination
+    
+//     $product = Product_master::where(['products.status' => '1'])
+//         ->where(['products.product_approve' => '1'])->where(['products.status' => '1']);
+
+
+//     if (!empty($product_where))
+//         $product->where($product_where);
+
+//     //    if (!empty($where_vendor_in))
+//     if ($where_vendor_in != null && is_array($where_vendor_in))
+//         $product->whereIn('vendors.id', $where_vendor_in);
+//     if ($is_chefleb_product)
+//         $product->where(['product_for' => '1']);
+
+
+//     if ($return_total_count) {
+//         $product2 = $product;
+//         return $product2->count();
+//     }
+
+
+//     if (!is_null($offset) && !is_null($limit)) {
+        
+//         $product->offset($offset)->limit($limit);
+        
+//     }
+
+//     if ($product_ids != null)
+//         $product->whereIn('products.id', $product_ids);
+//     if ($with_restaurant_name) {
+//         $product->join('vendors', 'products.userId', '=', 'vendors.id');
+//         $product->leftJoin('user_vendor_like', function ($join) use ($user_id) {
+//             $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+//             $join->where('user_vendor_like.user_id', '=', $user_id);
+//         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
+//         $product->addSelect('vendors.name as restaurantName' ,'vendors.image as vendor_image','vendors.profile_image as vendor_profile_image', 'banner_image','review_count', 'deal_cuisines','fssai_lic_no','vendor_food_type','table_service');
+//     }
+
+
+//     $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
+
+//     if ($user_id != '') {
+//         $product->addSelect('user_product_like.user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+        
+//         $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
+//             $join->on('products.id', '=', 'user_product_like.product_id');
+//             //$join->where('products.cuisines', '=', 'cuisines.id');
+//             //$join->where('products.category', '=', 'categories.id');
+//             $join->where('user_product_like.user_id', '=', $user_id);
+//         });
+       
+//     }
+
+//     $product = $product->leftJoin('variants', 'variants.product_id', 'products.id')
+//         ->leftJoin('addons', function ($join) {
+//             $join->whereRaw(DB::raw("FIND_IN_SET(addons.id, products.addons)"));
+//             $join->whereNull('addons.deleted_at');
+//         });
+//     $product = $product->orderBy('variants.id', 'ASC');
+//     if ($order_by_column != '' && $order_by_order != '')
+//         $product->orderBy($order_by_column, $order_by_order);
+//     //    dd($product->get()->toArray());
+//     $qty     = '0';
+//     $product = $product->addSelect(DB::raw('products.userId as vendor_id'),
+//         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
+//         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
+//         'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
+//         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
+//         'products.id as product_id', 'product_rating','dis','chili_level', 'primary_variant_name')
+//         ->get();
+//     //dd($product->toArray());
+//     //    dd(\DB::getQueryLog());
+//     $variant = [];
+// //dd($user_id);
+//     $cart = \App\Models\Cart::where('user_id', $user_id)->first();
+// //    dd($cart);
+//     if (count($product->toArray())) {
+//         foreach ($product as $i => $p) {
+//             $qty = 0;//dd("sdf");
+//             if (isset($cart->id) && $cart->id != '') {
+
+//                 $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
+//                     ->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
+//                 if(isset($cart_p[0]->product_qty))
+//                     $qty=$cart_p[0]->product_qty;
+//             }
+
+//             if (!isset($variant[$p['product_id']])) {
+//                 $variant[$p['product_id']] = ['product_id'           => $p['product_id'],
+//                                               'product_name'         => $p['product_name'],
+//                                               'product_price'        => $p['product_price'],
+//                                               'dis'                  => $p['dis'],
+//                                               'customizable'         => $p['customizable'],
+//                                               'image'                => $p['image'],
+//                                               'type'                 => $p['type'],
+//                                               'product_rating'       => $p['product_rating'],
+//                                               'category'         => $p['categoryName'],
+//                                               'is_like'              => $p['is_like'],
+//                                               'primary_variant_name' => $p['primary_variant_name'],
+//                                               'preparation_time'     => $p['preparation_time'],
+//                                               'vendor_id'            => $p['vendor_id'],
+//                                               'chili_level'          => $p['chili_level'],
+//                                               'cuisines'          => $p['cuisinesName'],
+//                                               'categorie'          => $p['categorieName'],
+//                                               'cart_qty'             => $qty
+//                 ];
+//                 if ($with_restaurant_name) {
+//                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
+//                     $variant[$p['product_id']] ['vendor_image'] = asset('vendors') . $p['vendor_image'];
+//                     $variant[$p['product_id']] ['review_count'] = $p['review_count'];
+//                     $variant[$p['product_id']] ['deal_cuisines'] = $p['deal_cuisines'];
+//                     $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
+//                     $variant[$p['product_id']] ['vendor_food_type'] = $p['vendor_food_type'];
+//                     $variant[$p['product_id']] ['table_service'] = $p['table_service'];
+
+//                     $banners = json_decode($p['banner_image']);
+                    
+//                     $variant[$p['product_id']] ['cuisines'] = App\Models\Cuisines::whereIn('cuisines.id', explode(',', $p['deal_cuisines']))->pluck('name');
+//                     $variant[$p['product_id']]['imageUrl']       = \URL::to('vendor-banner/') . '/';
+//                     $variant[$p['product_id']]['next_available'] = next_available_day($p['vendor_id']);
+//                     $variant[$p['product_id']]['is_vendor_like'] = $p['is_vendor_like'];
+                    
+//                     if (is_array($banners))
+//                         $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
+//                             return URL::to('vendor-banner/') . '/' . $banner;
+//                         }, $banners);
+//                     else
+//                         $variant[$p['product_id']] ['banner_image'] = [];
+
+//                 }
+
+
+//             }
+//             if ($p->variant_id != '') {
+//                 $variant[$p['product_id']]['options'][$p->variant_id] = ['id'            => $p->variant_id,
+//                                                                          'variant_name'  => $p->variant_name,
+//                                                                          'variant_price' => $p->variant_price];
+//             }
+//             if ($p->addon_id != '')
+//                 $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'    => $p->addon_id,
+//                                                                       'addon' => $p->addon,
+//                                                                       'price' => $p->addon_price];
+//         }
+//     }
+//     foreach ($variant as $i => $v) {
+//         if (isset($variant[$i]['options']))
+//             $variant[$i]['options'] = array_values($variant[$i]['options']);
+//         if (isset($variant[$i]['addons']))
+//             $variant[$i]['addons'] = array_values($variant[$i]['addons']);
+//     }
+//     $product = array_values($variant);
+//     //dd($product);
+//     return $product;
+// }
+//
 function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = null, $limit = null, $return_total_count = false, $product_ids = null)
 {
     DB::enableQueryLog();
@@ -273,7 +432,6 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     //dd($product);
     return $product;
 }
-
 function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = null, $limit = null, $group_by = true)
 {
 
@@ -337,6 +495,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 {
     date_default_timezone_set('Asia/Kolkata');
     $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+    
 
     $vendors->leftJoin('vendor_order_time', function ($join) {
         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')

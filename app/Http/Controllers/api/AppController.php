@@ -348,7 +348,15 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
+            $category = VendorMenus::query()
+                ->select('menuName','vendor_menus.id', \DB::raw('count(*) as count'))
+                ->join('products as c', 'vendor_menus.id', 'c.menu_id')
+                ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
+                ->where('product_approve', 1)
+                ->where('status', 1)
+                ->groupBy('menuName')
+                ->get();
+           // $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->groupBy('menuName')->get();
             $date     = today()->format('Y-m-d');
             $coupon   = Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=', 1)->where('from', '<=', $date)->where('to', '>=', $date)->select('*')->get();
             $catData  = [];
@@ -421,7 +429,7 @@ class AppController extends Controller
                 $variant = get_product_with_variant_and_addons(['product_for' => '3', 'menu_id' => $value->id], request()->user()->id, '', '', false);
                 if (!empty($variant)) {
                     $catData[] = ['menuName' => $value->menuName,
-                                  'id'       => $value->id,
+                                  'menu_id'       => $value->id,
                                   'products' => $variant];
                 }
 
@@ -522,7 +530,7 @@ class AppController extends Controller
             }
             //
             $category = VendorMenus::query()
-                ->select('menuName', \DB::raw('count(*) as count'))
+                ->select('menuName', \DB::raw('count(*) as count'),'vendor_menus.id as menu_id')
                 ->join('products as c', 'vendor_menus.id', 'c.menu_id')
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
                 ->where('product_approve', 1)
@@ -625,25 +633,42 @@ class AppController extends Controller
 
             if ($request->search_for == 'restaurant') {
                 $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id)
-                    ->addSelect('review_count', 'deal_cuisines')
+                    ->addSelect('review_count', 'deal_cuisines','fssai_lic_no','banner_image','vendor_food_type','table_service')
+                    
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
 //                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
 //                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
 //                    ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                // foreach ($data as $key => $value) {
+                //     $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                //     $data[$key]->categories     = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                //     $data[$key]->next_available = next_available_day($value->id);
+                // }
+
+                $baseurl = URL::to('vendor-banner/') . '/';
                 foreach ($data as $key => $value) {
+                    $banners = json_decode($value->banner_image);
+                    if (is_array($banners))
+                        $urlbanners = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                        $urlbanners = [];
+
                     $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
-                    $data[$key]->categories     = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $category                   = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $data[$key]->categories     = $category;
+                    $data[$key]->imageUrl       = $baseurl;
+                    $data[$key]->banner_image   = $urlbanners;
                     $data[$key]->next_available = next_available_day($value->id);
                 }
 
             } elseif ($request->search_for == 'dishes') {
-//                $data = Product_master::where(['products.status' => '1', 'product_for' => '3'])
-//                    ->join('vendors', 'products.userId', '=', 'vendors.id')
-//                    ->select('products.product_name', \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image', 'vendors.name as restaurantName'), 'product_price', 'type')
-//                    ->where('vendors.name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
                 $user_id = request()->user()->id;
-
-                $data = get_product_with_variant_and_addons([['product_name', 'like', '%' . $request->keyword . '%'], ['products.status', '=', '1'], ['product_for', '=', '3']], $user_id, '', '', true);
+                //$data = get_product_with_variant_and_addons([['product_name', 'like', '%' . $request->keyword . '%'], ['products.status', '=', '1'], ['product_for', '=', '3']], $user_id, '', '', true);
+                $data = get_product_with_variant_and_addons([['product_name', 'like', '%' . $request->keyword . '%'], ['products.status', '=', '1'], ['product_for', '=', '3']], $request->user()->id, $order_by_column = '', $order_by_order = '',true , $is_chefleb_product = false, null,$offset = null, $limit = null, $return_total_count = false,null);
+                
+                
             } else {
                 $data = [];
             }

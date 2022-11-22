@@ -241,8 +241,7 @@ class CartApiController extends Controller
             $pro      = Product_master::select('cart_products.product_qty', 'products.product_name', 'products.product_image', 'products.category', 'products.menu_id',
                 'products.dis', 'products.type', 'products.product_price', 'products.customizable', 'products.product_for', 'products.product_rating', 'products.cuisines',
                 'products.addons', 'variants.id as variant_id', 'variants.*', 'addons',
-                'cart_product_variants.*',
-                'products.id as product_id',
+                'cart_product_variants.*','products.id as product_id'
 //                'cart_products.id as cart_product_id', 'cart_product_addons.id as cart_product_addon_id', 'cart_product_variants.id as cart_product_variant_id'
             )
                 ->where('products.status', 1)->where('products.product_approve', 1)
@@ -279,7 +278,7 @@ class CartApiController extends Controller
                         $exist=CartProduct::where('cart_id','=',$cart_id)->where('product_id','=',$product['product_id'])->leftJoin('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id')->where('cart_product_variants.variant_id','=',$vvalue['variant_id'])->first();
                         if(!empty($exist)){
                             $variants[$vkey]['added'] = true;
-                            $variants[$vkey]['qty'] = $exist->variant_qty;
+                            $variants[$vkey]['qty'] = $exist->product_qty;
                         }else{
                             $variants[$vkey]['added'] = false;
                         }
@@ -473,7 +472,7 @@ class CartApiController extends Controller
                 DB::beginTransaction();
                 // database queries here
                 $cart_products_addons_id = [];
-                $cart_obj                = Cart::find($request->cart_id);
+                $cart_obj = Cart::find($request->cart_id);
                 if (!$cart_obj) {
                     return response()->json(['status' => false, 'error' => 'Cart not found'], 401);
                 }
