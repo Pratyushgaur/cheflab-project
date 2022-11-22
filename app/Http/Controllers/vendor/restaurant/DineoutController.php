@@ -31,8 +31,8 @@ class DineoutController extends Controller
     {
         $TableServiceBookings = TableServiceBooking::select('table_service_bookings.*', 'users.name')
             ->join('users', 'user_id', '=', 'users.id')
-            ->where('vendor_id', \Auth::guard('vendor')->user()->id)->get();
-//dd($TableServiceBookings);
+            ->where('vendor_id', \Auth::guard('vendor')->user()->id)->orderBy('id','desc')->paginate(15);
+
         return view('vendor.restaurant.dineout.index', compact('TableServiceBookings'));
     }
 
@@ -49,16 +49,19 @@ class DineoutController extends Controller
     }
 
 
-    public function dine_out_reject($id)
+    public function dine_out_reject(Request $request,$id)
     {
+//        dd($request->all());
         $booking                 = TableServiceBooking::find($id);
         $booking->booking_status = 'rejected';
+        $booking->reject_reason = $request->reject_reason;
         $booking->save();
-        return response()->json([
-            'status'         => 'success',
-            'booking_status' => 'Rejected',
-            'msg'            => "# $id rejected"
-        ], 200);
+        return redirect()->route('restaurant.dineout.index')->with('success', 'Dien-out booking request rejected');
+//        return response()->json([
+//            'status'         => 'success',
+//            'booking_status' => 'Rejected',
+//            'msg'            => "# $id rejected"
+//        ], 200);
     }
 
     /**

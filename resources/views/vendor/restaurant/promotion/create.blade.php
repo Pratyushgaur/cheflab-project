@@ -1,3 +1,12 @@
+<?php
+$breadcrumb[] = ["name"  => "Home",
+                 "icon"  => '<i class = "material-icons">home</i>',
+                 'route' => route("restaurant.dashboard")];
+$breadcrumb[] = ["name"  => "Promotion management",
+                 'route' => route("restaurant.promotion.list")];
+$breadcrumb[] = ["name"  => "Create Promotion",
+                 'route' => ""];
+?>
 @extends('vendor.restaurants-layout')
 @section('main-content')
 
@@ -60,15 +69,8 @@
         <div class="row">
 
             <div class="col-md-12">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb pl-0">
-                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Promotion</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="#">Create Promotion</a></li>
+                @include('vendor.vendor_breadcrumbs',['breadcrumb'=>$breadcrumb])
 
-
-                    </ol>
-                </nav>
             </div>
             <div class="col-xl-12 col-md-12">
                 <div class="ms-panel ms-panel-fh">
@@ -98,7 +100,7 @@
 
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Start Time *</label>
+                                    <label for="validationCustom10">Start Date *</label>
                                     <div class="input-group">
                                         <input type="text" name="date" class="form-control" id="datepicker"
                                                placeholder="Enter Date">
@@ -124,10 +126,9 @@
 
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select Place *</label>
+                                    <label for="validationCustom10">Select Position *</label>
                                     <div class="input-group">
-                                        {{ Form::select('position', [], null,
- ['class'=>"form-control", 'id' => 'validationCustom22','placeholder'=>'Select Slide Position']) }}
+                                        {{ Form::select('position', [], null, ['class'=>"form-control", 'id' => 'validationCustom22','placeholder'=>'Select Slide Position']) }}
                                         {{--                                        <select class="form-control" name="position" id="validationCustom22">--}}
 
                                         {{--                                        </select>--}}
