@@ -155,7 +155,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     if (!is_null($offset) && !is_null($limit)) {
         
         $product->offset($offset)->limit($limit);
-        return $product->toSql();
+        
     }
 
     if ($product_ids != null)
