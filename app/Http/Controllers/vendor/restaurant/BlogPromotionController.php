@@ -96,7 +96,7 @@ class BlogPromotionController extends Controller
 
         //if no vendor found, that means all slotes available for current vendor
         if (empty($vendor_ids)) {
-            $slot = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_position`, ' ( Price:', `blog_price`, ' ) ') AS name"), 'blog_position')
+            $slot = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_name`, ' Place ( Price:', `blog_price`, ' ) ') AS name"), 'blog_position')
                 ->where('app_promotion_blog_id', $request->app_promotion_blog_id)->where('is_active', 1)->pluck('name', 'blog_position');
             return \Response::json($slot);
         }
@@ -116,7 +116,7 @@ class BlogPromotionController extends Controller
             ->whereIn('vendor_id', $vendor_ids)
             ->pluck('app_promotion_blog_setting_id');
 //dd($booked_slot_ids);
-        $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_position`, ' ( Price:', `blog_price`, ' ) ','For ',`blog_promotion_date_frame`,'Days') AS name"), 'id')
+        $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_name`, ' Place ( Price:', `blog_price`, ' ) ','For ',`blog_promotion_date_frame`,'Days') AS name"), 'id')
             ->where('app_promotion_blog_id', $request->app_promotion_blog_id)->where('is_active', 1);
 
         if (!empty($booked_slot_ids)) {
@@ -192,7 +192,7 @@ class BlogPromotionController extends Controller
             $admin->notify(new CreateSlotBookingToAdminNotification($msg, \Auth::guard('vendor')->user()->name, $link)); //With new post
 //dd($slot);
 //        event(new CreateSlotBooki7ungEvent($slot));
-        return redirect()->route('restaurant.shop.promotion')->with('message', 'Successfully booked');
+        return redirect()->route('restaurant.shop.promotion')->with('success', 'Successfully booked');
     }
 
     public function save_product_promotion(Request $request)
@@ -240,7 +240,7 @@ class BlogPromotionController extends Controller
         $slot->vendor_id                     = \Auth::guard('vendor')->user()->id;
         $slot->save();
 
-        return redirect()->route('restaurant.product.promotion')->with('message', 'Successfully booked');
+        return redirect()->route('restaurant.product.promotion')->with('success', 'Successfully booked');
     }
 
 }

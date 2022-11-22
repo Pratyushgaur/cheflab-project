@@ -31,6 +31,7 @@ class CreateAdminMasters extends Migration
             $table->string('favicon');
             $table->text('goofle_map_key');
             $table->text('razorpay_publish_key');
+            $table->text('dine_out_reject_reason');
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

@@ -1,20 +1,20 @@
+<?php
+$breadcrumb[] = ["name"  => "Home",
+                 "icon"  => '<i class = "material-icons">home</i>',
+                 'route' => route("restaurant.dashboard")];
+$breadcrumb[] = ["name"  => "Product Promotion management",
+                 'route' => route("restaurant.product.promotion")];
+$breadcrumb[] = ["name"  => "Create",
+                 'route' => ''];
+
+?>
 @extends('vendor.restaurants-layout')
 @section('main-content')
     <div class="ms-content-wrapper">
         <div class="row">
 
             <div class="col-md-12">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb pl-0">
-                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Promotion management</a></li>
-                        <li class="breadcrumb-item "><a href="{{route('restaurant.shop.promotion')}}">Shop Promotion</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">Create Product Promotion</li>
-
-
-                    </ol>
-                </nav>
+                @include('vendor.vendor_breadcrumbs',['breadcrumb'=>$breadcrumb])
             </div>
             <div class="col-xl-12 col-md-12">
                 <div class="ms-panel ms-panel-fh">
