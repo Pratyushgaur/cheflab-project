@@ -153,10 +153,9 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 
 
     if (!is_null($offset) && !is_null($limit)) {
-        // $product1 = $product;
-        // return $product_ids = $product1->offset($offset)->limit($limit)->pluck('id');
-        // $product->whereIn('products.id', $product_ids);
-        $product = $product->offset($offset)->limit($limit);
+        
+        $product->offset($offset)->limit($limit);
+        return $product->toSql();
     }
 
     if ($product_ids != null)
@@ -349,7 +348,7 @@ function get_delivery_boy_near_me($lat, $lng)
 function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
 {
     date_default_timezone_set('Asia/Kolkata');
-     return $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+    $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
     
 
     $vendors->leftJoin('vendor_order_time', function ($join) {
