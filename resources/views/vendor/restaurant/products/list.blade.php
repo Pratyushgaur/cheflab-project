@@ -1,4 +1,12 @@
 <?php
+$breadcrumb[] = ["name"  => "Home",
+                 "icon"  => '<i class = "material-icons">home</i>',
+                 'route' => route("restaurant.dashboard")];
+$breadcrumb[] = ["name"  => "Product",
+                 'route' => route("restaurant.product.list")];
+$breadcrumb[] = ["name"  => "Items",
+                 'route' => route("restaurant.product.list")];
+
 $product_approve = config('custom_app_setting.product_approve');
 $product_status = config('custom_app_setting.product_status');
 ?>
@@ -9,15 +17,16 @@ $product_status = config('custom_app_setting.product_status');
         <div class="row">
 
             <div class="col-md-12">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb pl-0">
-                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Products</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Items</li>
+                @include('vendor.vendor_breadcrumbs',['breadcrumb'=>$breadcrumb])
+{{--                <nav aria-label="breadcrumb">--}}
+{{--                    <ol class="breadcrumb pl-0">--}}
+{{--                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>--}}
+{{--                        <li class="breadcrumb-item"><a href="#">Products</a></li>--}}
+{{--                        <li class="breadcrumb-item active" aria-current="page">Items</li>--}}
 
 
-                    </ol>
-                </nav>
+{{--                    </ol>--}}
+{{--                </nav>--}}
             </div>
             <div class="col-md-12">
                 <div class="ms-panel">
@@ -56,7 +65,9 @@ $product_status = config('custom_app_setting.product_status');
                                         <td scope="col">{{ Form::select('categories', $categories,app()->request->categories, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
                                         <td scope="col">{{ Form::select('status', $product_status,app()->request->status, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
                                         <td scope="col">{{ Form::select('approve', $product_approve,null, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
-                                        <td scope="col"><a href="{{route('restaurant.product.list')}}" class="btn-info btn-sm">Reset</a></td>
+                                        <td scope="col">
+                                            <a href="{{route('restaurant.product.list')}}" class="btn-info btn-sm">Reset</a>
+                                        </td>
                                         <td scope="col">
                                             <button type="submit" class="btn-primary btn-sm">Search</button>
                                         </td>

@@ -23,8 +23,8 @@ return [
 
     //number of banner slides shows
     'promotion_banner_number_of_slides'      => 3,
-    'promotion_banner_for'                   => ['chef'       => "Chef Promotion",
-                                                 'restaurant' => "Restaurant Promotion",
+    'promotion_banner_for'                   => ['chef'       => "Chef Home Slider Banner",
+                                                 'restaurant' => "Restaurant Home Slider Banner",
                                                  'dineout'    => "Dine-out Promotion"],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
     'promotion_banner_for_only_values'       => ['cheflab','chef', 'restaurant', 'dineout'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
