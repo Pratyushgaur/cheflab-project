@@ -30,8 +30,8 @@ class CreateCouponsTable extends Migration
             $table->string('product_id')->nullable();
             $table->enum('show_in', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->string('coupon_valid_x_user');
-            $table->string('from');
-            $table->string('to');
+            $table->dateTime('from');
+            $table->dateTime('to');
             $table->string('description');
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->timestamp('created_at')->useCurrent();

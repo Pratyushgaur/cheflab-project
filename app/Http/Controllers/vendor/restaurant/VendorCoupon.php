@@ -42,6 +42,7 @@ class VendorCoupon extends Controller
             'from' => 'required',
             'to' => 'required',
             'description' => 'required',
+            'coupon_valid_x_user'=>'required'
         ]);
         $coupon = new Coupon;
         $coupon->name = $request->name;
@@ -55,8 +56,8 @@ class VendorCoupon extends Controller
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
         $coupon->create_by  = $request->create_by;
-        $coupon->from  = $request->from;
-        $coupon->to  = $request->to;
+        $coupon->from  = mysql_date_time($request->from);
+        $coupon->to  = mysql_date_time($request->to);
         $coupon->save();
 
         // $subscribers = Superadmin::get();
