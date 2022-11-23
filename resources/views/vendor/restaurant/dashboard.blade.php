@@ -3,10 +3,14 @@
 
     <div class="ms-content-wrapper">
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <h1 class="db-header-title">Welcome, {{ucfirst(Auth::guard('vendor')->user()->name)}}</h1>
             </div>
-
+            <div class="col-md-4">
+                {{ Form::select('filter',[1=>'Today',2=>'This Month'],null,['class' => 'select2 form-control','placeholder' => 'Filter']) }}
+            </div>
+        </div>
+        <div class="row">
             <div class="col-xl-3 col-md-6">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
@@ -964,7 +968,23 @@
                     backgroundColor: gradientFill,
                     borderWidth: 1,
                     data: data_1
-                }]
+                },
+                    {
+                        label: "Data",
+                        borderColor: gradientStroke,
+                        pointBorderColor: gradientStroke,
+                        pointBackgroundColor: gradientStroke,
+                        pointHoverBackgroundColor: gradientStroke,
+                        pointHoverBorderColor: gradientStroke,
+                        pointBorderWidth: 1,
+                        pointHoverRadius: 4,
+                        pointHoverBorderWidth: 1,
+                        pointRadius: 2,
+                        fill: true,
+                        backgroundColor: gradientFill,
+                        borderWidth: 1,
+                        data: data_2
+                    }]
             },
             options: {
                 legend: {
