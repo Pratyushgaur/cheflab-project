@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('view-cart-vendor', [App\Http\Controllers\api\CartApiController::class, 'view_cart_vendor']);
     Route::post('update-cart', [App\Http\Controllers\api\CartApiController::class, 'update_cart']);
     Route::post('get-cart', [App\Http\Controllers\api\CartApiController::class, 'get_cart']);
+    Route::post('delete-product-from-cart', [App\Http\Controllers\api\CartApiController::class, 'delete_product_from_cart']);
 
     // like dislike
     Route::post('like-vendor', [App\Http\Controllers\api\AppController::class, 'add_to_like_vendor']);
@@ -144,3 +145,5 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
+// Rider
+Route::post('login-otp-verify-rider',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']); 

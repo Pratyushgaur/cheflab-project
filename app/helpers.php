@@ -133,7 +133,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     //for pagination
 
     $product = Product_master::where(['products.status' => '1'])
-        ->where(['products.product_approve' => '1']);
+        ->where(['products.product_approve' => '1'])->where(['products.status' => '1']);
 
 
     if (!empty($product_where))
@@ -181,6 +181,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     $product = $product->leftJoin('variants', 'variants.product_id', 'products.id')
         ->leftJoin('addons', function ($join) {
             $join->whereRaw(DB::raw("FIND_IN_SET(addons.id, products.addons)"));
+            $join->whereNull('addons.deleted_at');
         });
     $product = $product->orderBy('variants.id', 'ASC');
     if ($order_by_column != '' && $order_by_order != '')
@@ -197,13 +198,16 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     //dd($product->toArray());
     //    dd(\DB::getQueryLog());
     $variant = [];
-
+//dd($user_id);
     $cart = \App\Models\Cart::where('user_id', $user_id)->first();
+//    dd($cart);
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
-            $qty = 0;
+            $qty = 0;//dd("sdf");
             if (isset($cart->id) && $cart->id != '') {
-                $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
+
+                $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
+                    ->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
                 if(isset($cart_p[0]->product_qty))
                     $qty=$cart_p[0]->product_qty;
             }
@@ -275,7 +279,7 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
     $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
     $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
-
+    $vendors->where("vendors.is_all_setting_done",1)->where('vendors.status',1);
     if ($group_by)
         $vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
 

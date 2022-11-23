@@ -100,7 +100,7 @@
     <section class="content">
 		<div class="row">
 			
-				<div class="col-md-4">
+				<div class="col-md-12">
         <form id="restaurant-form" action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
           @if ($errors->any())
               @foreach ($errors->all() as $error)
@@ -152,7 +152,39 @@
 					</form>
 				  <!-- /.card -->
 				</div>
-				<div class="card card-info col-md-8">
+        <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+
+                            <div class="card-header">
+                                <h3 class="card-title">Listing of Registered Restaurant And Chef </h3>
+
+
+                            </div>
+                            <div class="card-body pad table-responsive">
+                                <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                                    <thead>
+                                    <tr role="row">
+                                    <th  class="text-center">Sr No.</th>
+                                    <th >Category Name</th>
+                                    <th >Position</th>
+                                    <th  >Image</th>
+                                    <th  >Status</th>
+                                    <th  >Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                   
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+				<!-- <div class="card card-info col-md-12">
             <div class="card-header">
               <h3 class="card-title">List of Food Categories</h3>
 
@@ -162,22 +194,23 @@
               </div>
             </div>
             <div class="card-body pad table-responsive">
-                        <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
-                            <thead>
-                                  <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th >Category Name</th>
-                                    <th >Position</th>
-                                    <th  >Image</th>
-                                    <th  >Status</th>
-                                    <th  >Action</th>
-                                  </tr>
-                            </thead>
-                            
-                        </table>
-                    </div>
-            <!-- /.card-body -->
-          </div>
+                <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                    <tr role="row">
+                        <th  class="text-center">Sr No.</th>
+                        <th >Category Name</th>
+                        <th >Position</th>
+                        <th  >Image</th>
+                        <th  >Status</th>
+                        <th  >Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                               
+            </div>
+          </div> -->
           <!-- /.card -->
 		</div>
     </section>
@@ -204,19 +237,32 @@
 
 <script type="text/javascript">
   // $(function () {
-    let table = $('#example').dataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{ route('admin.category.datatable') }}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'city_name'},
-            {data: 'position', name: 'position'},
-            {data: 'categoryImage', name: 'categoryImage'},
-            {data: 'is_active', name: 'is_active'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-        ]
-    });
+    let table = $('#example1').dataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('admin.category.datatable') }}",
+            columns: [
+              {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+              {data: 'name', name: 'city_name'},
+              {data: 'position', name: 'position'},
+              {data: 'categoryImage', name: 'categoryImage'},
+              {data: 'is_active', name: 'is_active'},
+              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+            ]
+        });
+    // let table = $('#example1').dataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     ajax: "{{ route('admin.category.datatable') }}",
+    //     columns: [
+    //         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+    //         {data: 'name', name: 'city_name'},
+    //         {data: 'position', name: 'position'},
+    //         {data: 'categoryImage', name: 'categoryImage'},
+    //         {data: 'is_active', name: 'is_active'},
+    //         {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+    //     ]
+    // });
     $("#restaurant-form").validate({
       rules: {
             name: {

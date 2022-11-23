@@ -45,7 +45,7 @@ class Category extends Controller
     {
         if ($request->ajax()) {
             
-            $data = Catogory_master::latest()->get();
+            $data = Catogory_master::latest()->orderBy('id','desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
