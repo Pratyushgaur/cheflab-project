@@ -466,7 +466,7 @@ class DineoutApiController extends Controller
 
             $where        = ['table_service' => '1', 'vendor_type' => 'restaurant'];
             $vendors      = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id)
-                ->addSelect('table_service_discounts.discount_percent', 'deal_cuisines')
+                ->addSelect('table_service_discounts.discount_percent')
                 ->join('table_services', function ($join) {
                     $join->on('table_services.vendor_id', '=', 'vendors.id')
                         ->where('table_services.is_active', '=', 1);

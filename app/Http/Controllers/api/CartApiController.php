@@ -373,13 +373,8 @@ class CartApiController extends Controller
                                                     'max_cod_amount' => @$admin_setting->max_cod_amount,
                                                     'platform_charges' => @$admin_setting->platform_charges,
                                                     'tax' => 5
-<<<<<<< HEAD
                                      ]
             ], 200);
-=======
-                                                    ]
-                                    ], 200);
->>>>>>> bd5d166c0aaf33bddada3be4a8256d532ec48a5c
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getTrace()], 500);
         }

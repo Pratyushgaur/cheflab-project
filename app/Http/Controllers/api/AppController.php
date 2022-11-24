@@ -318,17 +318,14 @@ class AppController extends Controller
             }
             \DB::enableQueryLog();
             $vendor_obj = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id);
-            $vendor_obj->addSelect('deal_cuisines', 'banner_image')
-                ->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
+            $vendor_obj->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
             if (!empty($request->filter)) {
                 if (in_array("1", $request->filter)) {
-
                     $vendor_obj->orderBy('vendor_ratings', 'DESC');
                 }
                 $vendor_obj->where(function ($q) use ($request) {
                     if (in_array("2", $request->filter)) {
                         $q->orWhere(['vendor_food_type' => '1']);
-
                     }
                     if (in_array("3", $request->filter)) {
                         $q->orWhere(['vendor_food_type' => '3']);
@@ -2070,8 +2067,7 @@ class AppController extends Controller
         }
     }
 
-    public
-    function chelfleb_produst(Request $request)
+    public function chelfleb_produst(Request $request)
     {
         try {
 //            $validateUser = Validator::make(
