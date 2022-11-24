@@ -537,7 +537,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed'),
-        "fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id'
+        "vendors.fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id'
     );
 
     if (!empty($limit) && !empty($offset))

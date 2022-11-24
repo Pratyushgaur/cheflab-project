@@ -10,7 +10,7 @@ use App\Models\Chef_video;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
-use DataTables; 
+use DataTables;
 use Illuminate\Support\Facades\Hash;
 class CouponController extends Controller
 {
@@ -49,12 +49,12 @@ class CouponController extends Controller
         $coupon->promo_redeem_count  = $request->promo_redeem_count;
         $coupon->promocode_use  = $request->promocode_use;
         $coupon->create_by  = $request->create_by;
-        $coupon->from  = $request->from;
-        $coupon->to  = $request->to;
+        $coupon->from  = mysql_date_time($request->from);
+        $coupon->to  = mysql_date_time($request->to);
         if($request->has('image')){
             $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('coupon-admin'),$filename);
-           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
             $coupon->image  = $filename;
         }
         $coupon->save();
@@ -65,24 +65,24 @@ class CouponController extends Controller
       //  echo 'ok';die;
     //   if(Carbon::now()->between(Carbon::createFromFormat('Y-m-d', $data->from), Carbon::createFromFormat('Y-m-d', $data->to)->addDay())){
     //     echo 'ok';die;
-    //      return  $btn =  '<button class="btn btn-xs btn-success">active</button>'; 
+    //      return  $btn =  '<button class="btn btn-xs btn-success">active</button>';
 
     //  }else{
     //      Coupon::where('id','=', $data->id)->limit(1)->update( ['status' => 0]);
-    //      return  $btn =  '<button class="btn btn-xs btn-danger">In active</button>'; 
+    //      return  $btn =  '<button class="btn btn-xs btn-danger">In active</button>';
     //  }
         if ($request->ajax()) {
-            
+
             $data = Coupon::latest()->get();
-            
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.coupon.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a>  
+                    $btn = '<a href="'. route("admin.coupon.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a>
                     <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="Category"  data-action-url="' . route('admin.coupon.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
@@ -93,14 +93,14 @@ class CouponController extends Controller
                     } else {
                         $btn = '<i class="fas fa-rupee-sign"></i>';
                     }
-                    
-                    
+
+
                     return $btn;
                 })
                 ->addColumn('status', function($data){
-                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'; 
+                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>';
                 })
-               
+
                 ->rawColumns(['date','action-js','status','discount_type'])
                 ->rawColumns(['action-js','discount_type','status'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -110,7 +110,7 @@ class CouponController extends Controller
     }
     public function fun_edit_coupon($encrypt_id){
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $coupon = Coupon::findOrFail($id);
            // dd($city_data);
             return view('admin.coupon.editcoupon',compact('coupon'));
@@ -127,12 +127,12 @@ class CouponController extends Controller
              //  echo $v->to;die;
                if($v->to > $date){
                   return \Response::json(false);
-                   
+
                 }else{
                     return \Response::json(true);
                 }
             }
-            
+
            // return \Response::json(false);
         } else {
             return \Response::json(true);
@@ -146,7 +146,7 @@ class CouponController extends Controller
         }else{
             return \Response::json(true);
         }
-        
+
         //return strtoupper($value);
     }
     public function checkCouponUpdate(Request $request,$id){
@@ -188,7 +188,7 @@ class CouponController extends Controller
         if($request->has('image')){
             $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('coupon-admin'),$filename);
-           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
+           // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
             $coupon->image  = $filename;
         }
         $coupon->save();
@@ -204,10 +204,10 @@ class CouponController extends Controller
                 return \Response::json(['error' => false,'success' => true , 'message' => 'City Deleted Successfully'], 200);
             }else{
                 return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
-            } 
-            
-            
-            
+            }
+
+
+
         } catch (DecryptException $e) {
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
