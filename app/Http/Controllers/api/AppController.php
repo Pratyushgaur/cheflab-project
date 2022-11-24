@@ -318,7 +318,7 @@ class AppController extends Controller
             }
             \DB::enableQueryLog();
             $vendor_obj = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id);
-            $vendor_obj->addSelect('deal_cuisines', 'banner_image', 'fssai_lic_no', 'table_service')
+            $vendor_obj->addSelect('deal_cuisines', 'banner_image')
                 ->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
             if (!empty($request->filter)) {
                 if (in_array("1", $request->filter)) {
@@ -339,7 +339,7 @@ class AppController extends Controller
             $vendor_count = $vendor_obj1->count();
             $data         = $vendor_obj->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
-            dd(DB::getQueryLog());
+            
             $baseurl = URL::to('vendor-banner/') . '/';
             foreach ($data as $key => $value) {
                 $banners = json_decode($value->banner_image);
