@@ -340,7 +340,7 @@ class CartApiController extends Controller
             } else
                 $r = [];
 
-            $admin_setting = AdminMasters::select('max_cod_amount')->find(config('custom_app_setting.admin_master_id'));
+            $admin_setting = AdminMasters::select('max_cod_amount','platform_charges')->find(config('custom_app_setting.admin_master_id'));
 
             $vendors = get_restaurant_near_me('','',['vendors.id'=>$cart_users->vendor_id],$request->user()->id)
                 ->get();
@@ -360,6 +360,7 @@ class CartApiController extends Controller
                 $vendors[$key]->categories     = $category;
                 $vendors[$key]->next_available = next_available_day($value->id);
             }
+            $vendors=$vendors[0];
 
 
             return response()->json(['status'   => true,
@@ -370,8 +371,10 @@ class CartApiController extends Controller
                                                     "vendor"         => $vendors,
                                                     'wallet_amount'  => $wallet_amount,
                                                     'max_cod_amount' => @$admin_setting->max_cod_amount,
-                                                    'platform_charges' => @$admin_setting->platform_charges
-                                         ]], 200);
+                                                    'platform_charges' => @$admin_setting->platform_charges,
+                                                    'tax' => 5
+                                     ]
+            ], 200);
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getTrace()], 500);
         }
