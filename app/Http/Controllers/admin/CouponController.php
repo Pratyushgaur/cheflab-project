@@ -183,8 +183,8 @@ class CouponController extends Controller
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
         $coupon->create_by  = $request->create_by;
-        $coupon->from  = $request->from;
-        $coupon->to  = $request->to;
+        $coupon->from  = mysql_date_time($request->from);
+        $coupon->to  = mysql_date_time($request->to);
         if($request->has('image')){
             $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
             $request->image->move(public_path('coupon-admin'),$filename);
