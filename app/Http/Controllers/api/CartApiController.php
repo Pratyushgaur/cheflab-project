@@ -368,7 +368,8 @@ class CartApiController extends Controller
                                                     "vendor"         => $vendors,
                                                     'wallet_amount'  => $wallet_amount,
                                                     'max_cod_amount' => @$admin_setting->max_cod_amount,
-                                                    'platform_charges' => @$admin_setting->platform_charges
+                                                    'platform_charges' => @$admin_setting->platform_charges,
+                                                    'tax' => 5
                                                     ]
                                     ], 200);
         } catch (Throwable $th) {
