@@ -342,7 +342,8 @@ class CartApiController extends Controller
 
             $admin_setting = AdminMasters::select('max_cod_amount','platform_charges')->find(config('custom_app_setting.admin_master_id'));
 
-            $vendors = get_restaurant_near_me('','',['vendors.id'=>$cart_users->vendor_id],$request->user()->id)->get();
+            $vendors = get_restaurant_near_me('','',['vendors.id'=>$cart_users->vendor_id],$request->user()->id)
+                ->get();
 
             foreach ($vendors as $key => $value) {
                 $banners = json_decode($value->banner_image);
@@ -352,6 +353,7 @@ class CartApiController extends Controller
                     }, $banners);
                 else
                     $urlbanners = [];
+
                 $vendors[$key]->banner_image   = $urlbanners;
                 $vendors[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                 $category                      = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');

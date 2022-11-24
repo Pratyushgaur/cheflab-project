@@ -339,7 +339,7 @@ class AppController extends Controller
             $vendor_count = $vendor_obj1->count();
             $data         = $vendor_obj->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
-            
+
             $baseurl = URL::to('vendor-banner/') . '/';
             foreach ($data as $key => $value) {
                 $banners = json_decode($value->banner_image);
@@ -708,7 +708,10 @@ class AppController extends Controller
             } elseif ($request->search_for == 'dishes') {
                 $user_id = request()->user()->id;
                 //$data = get_product_with_variant_and_addons([['product_name', 'like', '%' . $request->keyword . '%'], ['products.status', '=', '1'], ['product_for', '=', '3']], $user_id, '', '', true);
-                $product = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%');
+                $product_ids = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%')
+                    ->skip($request->offset)->take(5)->pluck('products.id');
+
+                $product = Product_master::whereIn('products.id',$product_ids);
                 $product->join('vendors', 'products.userId', '=', 'vendors.id');
                 $product->leftJoin('user_vendor_like', function ($join) use ($user_id) {
                     $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
@@ -733,9 +736,9 @@ class AppController extends Controller
                     ->leftJoin('addons', function ($join) {
                         $join->whereRaw(DB::raw("FIND_IN_SET(addons.id, products.addons)"));
                         $join->whereNull('addons.deleted_at');
-                        $join->orderBy('product_id');
-                    })->orderBy('products.id');
-                    
+                        $join->selectRaw('DISTINCT addons.id');
+                    });
+                $product = $product->orderBy('products.id', 'ASC');
                 $product = $product->Select(DB::raw('products.userId as vendor_id'),
                     'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
                     'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
@@ -745,18 +748,25 @@ class AppController extends Controller
                 $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
                 $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
                 $product = $product->addSelect('user_product_like.user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
-                $product = $product->skip(0)->take(5);
+
                 $data    = $product->get();
                 
                 $cart    = \App\Models\Cart::where('user_id', $user_id)->first();
+//                dd($data->toArray());
                 if (count($data->toArray())) {
                     foreach ($data as $i => $p) {
                         $qty = 0;//dd("sdf");
                         if (isset($cart->id) && $cart->id != '') {
-
-                            $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
-                            if (isset($cart_p[0]->product_qty))
-                                $qty = $cart_p[0]->product_qty;
+                            $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
+                                ->selectRaw('SUM(product_qty) as product_qty,id')->groupBy('product_id')->first();
+                            if (isset($cart_p->product_qty)) {
+                                $qty          = $cart_p->product_qty;
+                                $cart_variant = \App\Models\CartProductVariant::where('cart_product_id', $cart_p->id)->pluck('variant_qty', 'variant_id');
+                                $cart_addons  = \App\Models\CartProductAddon::where('cart_product_id', $cart_p->id)->pluck('addon_qty', 'addon_id');
+                            }
+//                            $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])->selectRaw('SUM(product_qty) as product_qty')->groupBy('product_id')->get();
+//                            if (isset($cart_p[0]->product_qty))
+//                                $qty = $cart_p[0]->product_qty;
                         }
 
                         if (!isset($variant[$p['product_id']])) {
@@ -791,14 +801,30 @@ class AppController extends Controller
 
                         }
                         if ($p->variant_id != '') {
-                            $variant[$p['product_id']]['options'][$p->variant_id] = ['id'            => $p->variant_id,
-                                                                                     'variant_name'  => $p->variant_name,
-                                                                                     'variant_price' => $p->variant_price];
+                            $v_qty = 0;
+                            if (isset($cart_variant[$p->variant_id]))
+                                $v_qty = $cart_variant[$p->variant_id];
+                            $variant[$p['product_id']]['options'][$p->variant_id] = ['id'               => $p->variant_id,
+                                                                                     'variant_name'     => $p->variant_name,
+                                                                                     'variant_price'    => $p->variant_price,
+                                                                                     'cart_variant_qty' => $v_qty];
+//                            $variant[$p['product_id']]['options'][$p->variant_id] = ['id'            => $p->variant_id,
+//                                                                                     'variant_name'  => $p->variant_name,
+//                                                                                     'variant_price' => $p->variant_price];
                         }
-                        if ($p->addon_id != '')
-                            $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'    => $p->addon_id,
-                                                                                  'addon' => $p->addon,
-                                                                                  'price' => $p->addon_price];
+                        if ($p->addon_id != '') {
+                            $a_qty = 0;
+                            if (isset($cart_addons[$p->addon_id]))
+                                $a_qty = $cart_addons[$p->addon_id];
+
+                            $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'             => $p->addon_id,
+                                                                                  'addon'          => $p->addon,
+                                                                                  'price'          => $p->addon_price,
+                                                                                  "cart_addon_qty" => $a_qty];
+//                            $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'    => $p->addon_id,
+//                                                                                  'addon' => $p->addon,
+//                                                                                  'price' => $p->addon_price];
+                        }
                     }
                 }
                 foreach ($variant as $i => $v) {
@@ -808,7 +834,7 @@ class AppController extends Controller
                         $variant[$i]['addons'] = array_values($variant[$i]['addons']);
                 }
                 $data = array_values($variant);
-                //dd($product);
+//                dd($data);
 
 
             } else {
