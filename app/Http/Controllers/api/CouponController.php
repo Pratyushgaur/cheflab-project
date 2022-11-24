@@ -62,7 +62,7 @@ class CouponController extends Controller
                 ], 401);
             }
                 //$date = today()->format('Y-m-d');
-                $date = today()->format('m/d/Y');
+                $date = mysql_date_time();
                 $coupon =  Coupon::where('id', '=', $request->id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('name','id','from','to','code','discount_type','discount','maxim_dis_amount','minimum_order_amount','promo_redeem_count','promocode_use','coupon_valid_x_user','description')->first();
                 return response()->json([
                     'status' => true,
