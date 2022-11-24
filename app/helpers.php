@@ -427,7 +427,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
             if ($p->addon_id != '') {
                 $a_qty = 0;
                 if (isset($cart_addons[$p->addon_id]))
-                    $v_qty = $cart_addons[$p->addon_id];
+                    $a_qty = $cart_addons[$p->addon_id];
 
                 $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'             => $p->addon_id,
                                                                       'addon'          => $p->addon,
