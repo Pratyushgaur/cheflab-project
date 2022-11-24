@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // chef home page api
     Route::post('chef-home', [App\Http\Controllers\api\AppController::class, 'chefHomePage']);
     Route::post('getChefByCategory', [App\Http\Controllers\api\AppController::class, 'getChefByCategory']);
+    Route::post('getChefByCuisines', [App\Http\Controllers\api\AppController::class, 'getChefByCuisines']);
     Route::post('getChefDetailPage', [App\Http\Controllers\api\AppController::class, 'getChefDetailPage']);
     Route::post('getChefProfile', [App\Http\Controllers\api\AppController::class, 'getChefProfile']);
     //
@@ -139,7 +140,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //
 
 });
-
+Route::get('login',function(){
+    return response()->json([
+        'status' => false,
+        'error'  => "Need To Use Token for this route"
+    ], 500);
+})->name('login');
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
 Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::class,'register_verify_otp']);
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
