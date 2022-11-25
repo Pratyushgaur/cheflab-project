@@ -28,6 +28,9 @@ class ApiLogMiddelware
     public function terminate($request, $response)
     {
         if (strpos(URL::full(),'cart')>0) {
+            
+            Log::channel('your_channel_name')->info('\n\n----------------\n');
+            Log::channel('your_channel_name')->info('\n\n----------------\n');
             Log::channel('your_channel_name')->info('\n\n----------------\n');
             Log::channel('your_channel_name')->info(URL::full());
             Log::channel('your_channel_name')->info($request->all());

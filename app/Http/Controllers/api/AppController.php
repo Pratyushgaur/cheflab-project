@@ -673,7 +673,7 @@ class AppController extends Controller
 
             if ($request->search_for == 'restaurant') {
                 $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id)
-                    ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service')
+                    ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service','start_time','end_time','table_service',)
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
 //                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
 //                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')

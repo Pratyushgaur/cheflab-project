@@ -142,11 +142,24 @@ class CartApiController extends Controller
                 $cart_obj->saveOrFail();
                 $cart_id = $cart_obj->id;
                 foreach ($request->products as $k => $p) {
-                    if (!Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->exists()) {
+                    $product=Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->first();
+                    if (!isset($product->id)) {
                         return response()->json(['status' => false, 'error' => 'provided product not available under given vendor.'], 401);
                     }
                     $cart_products = new CartProduct($p);
                     $cart_obj->products()->save($cart_products);
+
+                    if($product->customizable=='false'){//if product is not customizable ,then product qty=primary variant qty
+                        $verint_obj=Variant::where('product_id',$product->id)->first();
+                        if(isset($verint_obj->id)){
+                            $CartProductVariant                  = new CartProductVariant();
+                            $CartProductVariant->cart_product_id = $cart_products->id;
+                            $CartProductVariant->variant_id      = $verint_obj->id;
+                            $CartProductVariant->variant_qty     = $p['product_qty'];
+                            $CartProductVariant->save();
+                        }
+                    }
+
                     if (isset($p['variants']))
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant                  = new CartProductVariant();
@@ -513,7 +526,8 @@ class CartApiController extends Controller
                 }
                 $cart_id = $cart_obj->id;
                 foreach ($request->products as $k => $p) {
-                    if (!Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->exists()) {
+                    $product=Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->first();
+                    if (!isset($product->id)) {
                         return response()->json(['status' => false, 'error' => 'provided product not available under given vendor.'], 401);
                     }
 
@@ -534,6 +548,22 @@ class CartApiController extends Controller
 
                     $cart_obj->products()->save($cart_products);
                     $cart_products_id[] = $cart_products->id;
+
+
+                    if($product->customizable=='false'){//if product is not customizable ,then product qty=primary variant qty
+                        $verint_obj=Variant::where('product_id',$product->id)->first();
+                        if(isset($verint_obj->id)){
+                            $CartProductVariant = CartProductVariant::where('cart_product_id', $cart_products->id)->where('variant_id', $verint_obj->id)->first();
+                            if (!$CartProductVariant) {
+                                $CartProductVariant                  = new CartProductVariant();
+                                $CartProductVariant->cart_product_id = $cart_products->id;
+                                $CartProductVariant->variant_id      = $verint_obj->id;
+                            }
+                            $CartProductVariant->variant_qty = $p['product_qty'];
+                            $CartProductVariant->save();
+                        }
+                    }
+
                     if (isset($p['variants'])) {
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant = CartProductVariant::where('cart_product_id', $cart_products->id)->where('variant_id', $v['variant_id'])->first();
