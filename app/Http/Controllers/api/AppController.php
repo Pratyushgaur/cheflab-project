@@ -16,7 +16,6 @@ use App\Models\OrderProduct;
 use App\Models\OrderProductAddon;
 use App\Models\OrderProductVariant;
 use App\Models\Product_master;
-use App\Models\RiderAssignOrders;
 use App\Models\User;
 use App\Models\UserProductLike;
 use App\Models\UserVendorLike;
@@ -673,7 +672,7 @@ class AppController extends Controller
 
             if ($request->search_for == 'restaurant') {
                 $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id)
-                    ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service','start_time','end_time','table_service',)
+                    ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service', 'start_time', 'end_time', 'table_service')
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
 //                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
 //                    ->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'review_count')
@@ -708,7 +707,7 @@ class AppController extends Controller
                 $product_ids = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%')
                     ->skip($request->offset)->take(5)->pluck('products.id');
 
-                $product = Product_master::whereIn('products.id',$product_ids);
+                $product = Product_master::whereIn('products.id', $product_ids);
                 $product->join('vendors', 'products.userId', '=', 'vendors.id');
                 $product->leftJoin('user_vendor_like', function ($join) use ($user_id) {
                     $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
@@ -735,20 +734,30 @@ class AppController extends Controller
                         $join->whereNull('addons.deleted_at');
                         $join->selectRaw('DISTINCT addons.id');
                     });
+                $product->leftJoin('vendor_order_time', function ($join) {
+                    $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                        ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+                        //--------------commented, we are sending is open and is_closed
+//            ->where('start_time', '<=', mysql_time())
+//            ->where('end_time', '>', mysql_time())
+                        ->where('available', '=', 1);
+                });
+
                 $product = $product->orderBy('products.id', 'ASC');
                 $product = $product->Select(DB::raw('products.userId as vendor_id'),
                     'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
                     'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
                     'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
                     DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
-                    'products.id as product_id', 'product_rating', 'dis', 'chili_level', 'primary_variant_name');
+                    'products.id as product_id', 'product_rating', 'dis', 'chili_level', 'primary_variant_name',
+                    'start_time', 'end_time', DB::raw('if(available,false,true)  as isClosed'));
                 $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
                 $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
                 $product = $product->addSelect('user_product_like.user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
 
-                $data    = $product->get();
+                $data = $product->get();
 
-                $cart    = \App\Models\Cart::where('user_id', $user_id)->first();
+                $cart = \App\Models\Cart::where('user_id', $user_id)->first();
 //                dd($data->toArray());
                 if (count($data->toArray())) {
                     foreach ($data as $i => $p) {
@@ -783,8 +792,13 @@ class AppController extends Controller
                                                                              'chili_level'          => $p['chili_level'],
                                                                              'cuisines'             => $p['cuisinesName'],
                                                                              'categorie'            => $p['categorieName'],
+                                                                             'start_time'           => $p['start_time'],
+                                                                             'end_time'             => $p['end_time'],
+                                                                             'isClosed'             => $p['isClosed'],
+                                                                             'vendor_food_type'     => $p['vendor_food_type'],
+                                                                             'fssai_lic_no'         => $p['fssai_lic_no'],
                                                                              'cart_qty'             => $qty
-                            ];
+                            ];//'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
                             $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
                             $banners                                      = json_decode($p['banner_image']);
@@ -824,7 +838,7 @@ class AppController extends Controller
                         }
                     }
                 }
-                if(isset($variant)) {
+                if (isset($variant)) {
                     foreach ($variant as $i => $v) {
                         if (isset($variant[$i]['options']))
                             $variant[$i]['options'] = array_values($variant[$i]['options']);
@@ -848,7 +862,7 @@ class AppController extends Controller
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error'  => $th->getTrace()
+                'error'  => $th->getMessage()
             ], 500);
         }
     }
@@ -923,7 +937,7 @@ class AppController extends Controller
             }
             //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
             $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
-            $data   = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'vendors.id as chef_id', 'experience', 'fssai_lic_no', \DB::raw("0 as order_served"), "vendor_food_type", "review_count", \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'),'deal_categories','address');
+            $data   = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'vendors.id as chef_id', 'experience', 'fssai_lic_no', \DB::raw("0 as order_served"), "vendor_food_type", "review_count", \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'), 'deal_categories', 'address');
             $data   = $data->selectRaw("ROUND({$select},1) AS distance");
             $data   = $data->addSelect(DB::raw('(SELECT name FROM cuisines WHERE  cuisines.id IN (vendors.speciality) ) AS food_specility'));
             $data   = $data->where(['vendors.status' => '1', 'vendor_type' => 'chef', 'is_all_setting_done' => '1'])->whereRaw('FIND_IN_SET("' . $request->category_id . '",deal_categories)');
@@ -984,7 +998,7 @@ class AppController extends Controller
             }
             //$data = \App\Models\Product_master::distinct('userId')->select('userId','vendors.name','')->join('vendors','products.userId','=','vendors.id')->where(['products.status'=>'1','product_for'=>'3','category' => $request->category_id])->get();
             $select = "( 3959 * acos( cos( radians($request->lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($request->lng) ) + sin( radians($request->lat) ) * sin( radians( vendors.lat ) ) ) ) ";
-            $data   = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'vendors.id as chef_id', 'experience', 'fssai_lic_no', \DB::raw("0 as order_served"), "vendor_food_type", "review_count", \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'),'deal_cuisines','address');
+            $data   = Vendors::select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), \DB::raw("DATE_FORMAT(FROM_DAYS(DATEDIFF(now(),dob)), '%Y')+0 AS Age"), 'vendor_ratings', 'speciality', 'deal_categories', 'vendors.id as chef_id', 'experience', 'fssai_lic_no', \DB::raw("0 as order_served"), "vendor_food_type", "review_count", \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'), 'deal_cuisines', 'address');
             $data   = $data->selectRaw("ROUND({$select},1) AS distance");
             $data   = $data->addSelect(DB::raw('(SELECT name FROM cuisines WHERE  cuisines.id IN (vendors.speciality) ) AS food_specility'));
             $data   = $data->where(['vendors.status' => '1', 'vendor_type' => 'chef', 'is_all_setting_done' => '1'])->whereRaw('FIND_IN_SET("' . $request->cuisines_id . '",deal_cuisines)');
@@ -1008,7 +1022,7 @@ class AppController extends Controller
                     $data[$key]->isClosed = true;
                 }
                 $data[$key]->cuisines = $category;
-                $data[$key]->is_like    = true;
+                $data[$key]->is_like  = true;
             }
             return response()->json([
                 'status'   => true,
