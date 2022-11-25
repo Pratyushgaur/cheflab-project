@@ -160,7 +160,7 @@ class CartApiController extends Controller
                         }
                     }
 
-                    if (isset($p['variants']))
+                    if (isset($p['variants']) && $product->customizable=='true')
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant                  = new CartProductVariant();
                             $CartProductVariant->cart_product_id = $cart_products->id;
@@ -564,7 +564,7 @@ class CartApiController extends Controller
                         }
                     }
 
-                    if (isset($p['variants'])) {
+                    if (isset($p['variants']) && $product->customizable=='true') {
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant = CartProductVariant::where('cart_product_id', $cart_products->id)->where('variant_id', $v['variant_id'])->first();
                             if ($v['variant_qty'] <= 0) {
