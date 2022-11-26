@@ -790,7 +790,7 @@ class AppController extends Controller
                                                                              'preparation_time'     => $p['preparation_time'],
                                                                              'vendor_id'            => $p['vendor_id'],
                                                                              'chili_level'          => $p['chili_level'],
-                                                                             'cuisines'             => $p['cuisinesName'],
+                                                                             'product_cuisines'     => $p['cuisinesName'],
                                                                              'categorie'            => $p['categorieName'],
                                                                              'start_time'           => $p['start_time'],
                                                                              'end_time'             => $p['end_time'],
@@ -798,7 +798,7 @@ class AppController extends Controller
                                                                              'vendor_food_type'     => $p['vendor_food_type'],
                                                                              'fssai_lic_no'         => $p['fssai_lic_no'],
                                                                              'cart_qty'             => $qty,
-                                                                             'vendorCuisines'         => $dealCuisines
+                                                                             'cuisines'         => $dealCuisines
                             ];//'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
                             $variant[$p['product_id']] ['vendor_image']   = asset('vendors') .'/'. $p['vendor_image'];
