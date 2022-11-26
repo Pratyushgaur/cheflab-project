@@ -165,7 +165,7 @@ class CartApiController extends Controller
                             $CartProductVariant                  = new CartProductVariant();
                             $CartProductVariant->cart_product_id = $cart_products->id;
                             $CartProductVariant->variant_id      = $v['variant_id'];
-                            $CartProductVariant->variant_qty     = $v['variant_qty'];
+                            $CartProductVariant->variant_qty     = $p['product_qty'];
                             $CartProductVariant->save();
                         }
 
@@ -579,7 +579,7 @@ class CartApiController extends Controller
                                 $CartProductVariant->cart_product_id = $cart_products->id;
                                 $CartProductVariant->variant_id      = $v['variant_id'];
                             }
-                            $CartProductVariant->variant_qty = $v['variant_qty'];
+                            $CartProductVariant->variant_qty = $p['product_qty'];
                             $CartProductVariant->save();
                         }
 
