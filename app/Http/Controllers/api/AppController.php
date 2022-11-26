@@ -774,7 +774,7 @@ class AppController extends Controller
 //                            if (isset($cart_p[0]->product_qty))
 //                                $qty = $cart_p[0]->product_qty;
                         }
-
+                       $dealCuisines =  Cuisines::whereIn('cuisines.id', explode(',', $p->deal_cuisines))->pluck('name');
                         if (!isset($variant[$p['product_id']])) {
                             $variant[$p['product_id']]                    = ['product_id'           => $p['product_id'],
                                                                              'product_name'         => $p['product_name'],
@@ -797,7 +797,8 @@ class AppController extends Controller
                                                                              'isClosed'             => $p['isClosed'],
                                                                              'vendor_food_type'     => $p['vendor_food_type'],
                                                                              'fssai_lic_no'         => $p['fssai_lic_no'],
-                                                                             'cart_qty'             => $qty
+                                                                             'cart_qty'             => $qty,
+                                                                             'vendorCuisines'         => $dealCuisines
                             ];//'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
                             $variant[$p['product_id']] ['vendor_image']   = asset('vendors') .'/'. $p['vendor_image'];
