@@ -800,7 +800,7 @@ class AppController extends Controller
                                                                              'cart_qty'             => $qty
                             ];//'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
-                            $variant[$p['product_id']] ['vendor_image']   = asset('vendors') . $p['vendor_image'];
+                            $variant[$p['product_id']] ['vendor_image']   = asset('vendors') .'/'. $p['vendor_image'];
                             $banners                                      = json_decode($p['banner_image']);
                             if (is_array($banners))
                                 $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
