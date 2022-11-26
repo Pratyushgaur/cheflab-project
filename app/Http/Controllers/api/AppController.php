@@ -5,7 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Events\OrderCreateEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Addons;
-use App\Models\cart;
+use App\Models\Cart;
 use App\Models\AdminMasters;
 use App\Models\Catogory_master;
 use App\Models\Chef_video;
