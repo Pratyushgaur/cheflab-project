@@ -294,7 +294,7 @@ class CartApiController extends Controller
                             if (!empty($exist)) {//if product have variants get and add qty and price
 //                                echo "$cart_sub_toatl_amount    += ".$vvalue['variant_price']." -----------";
 //                                echo "<br/>$cart_sub_toatl_amount+ $exist->variant_qty*".$vvalue['variant_price'];
-                                $cart_sub_toatl_amount    += ($vvalue['variant_price']*$exist->variant_qty);
+                                $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
 //                                echo "=$cart_sub_toatl_amount";
                                 $variants[$vkey]['added'] = true;
 //                            $variants[$vkey]['qty'] = $exist->product_qty;
