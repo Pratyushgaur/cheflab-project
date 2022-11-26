@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Events\OrderCreateEvent;
 use App\Http\Controllers\Controller;
 use App\Models\Addons;
+use App\Models\cart;
 use App\Models\AdminMasters;
 use App\Models\Catogory_master;
 use App\Models\Chef_video;
@@ -610,18 +611,47 @@ class AppController extends Controller
             }
             //
             $product = Product_master::where('id', '=', $request->product_id)->select('addons', 'customizable')->first();
-
+            $user_id = request()->user()->id;
             if (@$product->customizable == 'true') {
                 $options = unserialize($product->variants);
                 if ($product->addons == null) {
                     $data = ['addons' => []];
                 } else {
-                    $addon = Addons::whereIn('id', explode(',', $product->addons))->select('id', 'addon', 'price')->get()->toArray();
+                    $addonAdded = Cart::where('user_id','=',$user_id)->join('cart_products','carts.id','=','cart_products.cart_id')->join('cart_product_addons','cart_products.id','=','cart_product_addons.cart_product_id')->where('cart_products.product_id','=',$request->product_id)->select('addon_id','addon_qty')->get();
+                    $addonIds = $addonAdded->pluck('addon_id')->toArray();
+                    $addonQtys = $addonAdded->pluck('addon_qty')->toArray();
+                    //
+                    $addon = Addons::whereIn('id', explode(',', $product->addons))->select('id', 'addon', 'price')->get()->toArray();   
+                    //return explode(',', $product->addons);
+                   
+                    foreach ($addon as $key => $value) {
+                        if (in_array($value['id'],$addonIds)) {
+                            $addon[$key]['added'] = true;
+                            $addon[$key]['qty'] = $addonQtys[array_search($value['id'],$addonIds)];
+                        } else {
+                            $addon[$key]['added'] = false;
+                            $addon[$key]['qty'] = 1;
+                        }
+                        
+                    }
+                    
                     $data  = ['addons' => $addon];
                 }
 
                 $v = Variant::select('variant_name', 'variant_price', 'id')->where('product_id', $request->product_id)->get();
+                $variantAdded = Cart::where('user_id','=',$user_id)->join('cart_products','carts.id','=','cart_products.cart_id')->join('cart_product_variants','cart_products.id','=','cart_product_variants.cart_product_id')->where('cart_products.product_id','=',$request->product_id)->select('variant_id','variant_qty')->get();
+                $variantIds = $variantAdded->pluck('variant_id')->toArray();
+                $variantQtys = $variantAdded->pluck('variant_qty')->toArray();
                 // dd($v->toArray());
+                foreach($v as $k =>$value){
+                    if (in_array($value->id,$variantIds)) {
+                        $v[$k]['added'] = true;
+                        $v[$k]['qty'] = $variantQtys[array_search($value->id,$variantIds)];
+                    } else {
+                        $v[$k]['added'] = false;
+                        $v[$k]['qty'] = 1;
+                    }
+                }
                 if (isset($v))
                     $data['options'] = $v->toArray();
 
