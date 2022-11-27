@@ -96,11 +96,11 @@ class CouponController extends Controller
             $date = today()->format('m/d/Y');
             $vendor_coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)
                 ->where('from', '<=',mysql_date_time($date))->where('to', '>=',mysql_date_time($date))
-                ->select('*')->get();
+                ->select('*',\DB::raw("DATE_FORMAT(FROM_DAYS(to, '%d %M Y') AS to"))->get();
           //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
             $admin_coupon = Coupon::where(['create_by' => 'admin'])
                 ->where('from', '<=',mysql_date_time($date))->where('to', '>=',mysql_date_time($date))
-                ->select('*',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'),'id')
+                ->select('*',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'),'id',\DB::raw("DATE_FORMAT(FROM_DAYS(to, '%d %M Y') AS to"))
                 ->get();
             return response()->json([
                 'status' => true,
