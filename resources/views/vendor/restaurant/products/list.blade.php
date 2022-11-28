@@ -48,7 +48,7 @@ $product_status = config('custom_app_setting.product_status');
                                     <th scope="col">#</th>
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Product Price</th>
-                                    <th scope="col">Category</th>
+                                    <!-- <th scope="col">Category</th> -->
                                     <th scope="col">Status</th>
                                     <th scope="col">Admin Review</th>
                                     <th scope="col">Created at</th>
@@ -62,7 +62,7 @@ $product_status = config('custom_app_setting.product_status');
                                         <td scope="col">#</td>
                                         <td scope="col">{{ Form::text('name', app()->request->name, ['class' => 'form-control', 'placeholder' => 'Name']) }}</td>
                                         <td scope="col">{{ Form::number('price', app()->request->price, ['class' => 'form-control', 'placeholder' => 'price']) }}</td>
-                                        <td scope="col">{{ Form::select('categories', $categories,app()->request->categories, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
+                                        <!-- <td scope="col">{{ Form::select('categories', $categories,app()->request->categories, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td> -->
                                         <td scope="col">{{ Form::select('status', $product_status,app()->request->status, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
                                         <td scope="col">{{ Form::select('approve', $product_approve,null, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
                                         <td scope="col">
@@ -85,7 +85,7 @@ $product_status = config('custom_app_setting.product_status');
                                             <td>{{$count++}}</td>
                                             <td>{{$product->product_name}}</td>
                                             <td>{{$product->product_price}}</td>
-                                            <td>{{$product->categoryName}}</td>
+                                            <!-- <td>{{$product->categoryName}}</td> -->
                                             <td>
                                                 <?php if ($product->product_approve == 1) {
                                                     $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $product->id . '"></span></label>';

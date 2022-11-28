@@ -20,8 +20,8 @@ class Products extends Migration
              $table->foreign('userId')->references('id')->on('vendors')->nullable();
             $table->string('product_name');
             $table->string('product_image')->nullable();
-            $table->unsignedBigInteger('cuisines')->references('id')->on('cuisines');
-            $table->unsignedBigInteger('category')->references('id')->on('categories');
+            $table->unsignedBigInteger('cuisines')->references('id')->on('cuisines')->nullable();
+            $table->unsignedBigInteger('category')->references('id')->on('categories')->nullable();
             $table->unsignedBigInteger('menu_id')->references('id')->on('vendor_menus')->nullable();
             $table->string('dis');
             $table->string('chili_level');

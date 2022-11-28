@@ -96,7 +96,7 @@
                                     <span class="product_name_error text-danger"></span>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <label for="validationCustom22">Select Cuisines Category <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
@@ -121,7 +121,7 @@
 
                                     </div>
                                     <span class="category_error text-danger"></span>
-                                </div>
+                                </div> -->
                                 <div class="col-md-4 mb-3">
                                     <label for="validationCustom24">Select Product Catalogue <span
                                             class="text-danger">*</span></label>
@@ -431,12 +431,12 @@
                         required: true,
                         maxlength: 120,
                     },
-                    cuisines: {
-                        required: true
-                    },
-                    category: {
-                        required: true
-                    },
+                    // cuisines: {
+                    //     required: true
+                    // },
+                    // category: {
+                    //     required: true
+                    // },
                     menu_id: {
                         required: true
                     },
@@ -462,12 +462,12 @@
                         required: "Item Name is required",
                         maxlength: "Item  name cannot be more than 120 characters"
                     },
-                    cuisines: {
-                        required: "Cuisines is Required",
-                    },
-                    category: {
-                        required: "Category is required",
-                    },
+                    // cuisines: {
+                    //     required: "Cuisines is Required",
+                    // },
+                    // category: {
+                    //     required: "Category is required",
+                    // },
                     menu_id: {
                         required: "Product Should be in Catalogue",
                     },

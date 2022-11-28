@@ -325,7 +325,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     }
 
 
-    $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
+    //$product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
 
     if ($user_id != '') {
         $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
@@ -353,7 +353,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
+        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'dis as description',
         'products.id as product_id', 'product_rating', 'dis', 'chili_level', 'primary_variant_name')
         ->get();
     //dd($product->toArray());

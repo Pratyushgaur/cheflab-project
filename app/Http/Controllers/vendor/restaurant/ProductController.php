@@ -23,7 +23,6 @@ class ProductController extends Controller
 {
     function index(Request $request)
     {
-
         $products = Product_master::join('categories', 'products.category', '=', 'categories.id')
             ->select('products.*', 'categories.name as categoryName')
             ->where('products.userId', '=', Auth::guard('vendor')->user()->id);
@@ -81,8 +80,8 @@ class ProductController extends Controller
             'dis'                  => 'required',
             'item_price'           => 'required|integer',
             //  'product_image' => 'required',
-            'cuisines'             => 'required',
-            'category'             => 'required',
+            //'cuisines'             => 'required',
+            //'category'             => 'required',
             'menu_id'              => 'required',
             'primary_variant_name' => 'required',
         ]);
@@ -99,8 +98,8 @@ class ProductController extends Controller
             $product                       = new Product_master;
             $product->product_name         = $request->product_name;
             $product->userId               = Auth::guard('vendor')->user()->id;
-            $product->cuisines             = $request->cuisines;
-            $product->category             = $request->category;
+            //$product->cuisines             = $request->cuisines;
+            //$product->category             = $request->category;
             $product->chili_level          = $request->chili_level;
             $product->menu_id              = $request->menu_id;
             $product->dis                  = $request->dis;
@@ -154,8 +153,8 @@ class ProductController extends Controller
             'product_name'     => 'required',
             'dis'              => 'required',
             'item_price'       => 'required',
-            'cuisines'         => 'required',
-            'category'         => 'required',
+            //'cuisines'         => 'required',
+            //'category'         => 'required',
             'menu_id'          => 'required',
             'preparation_time' => 'required',
         ]);
@@ -170,8 +169,8 @@ class ProductController extends Controller
         $product                       = Product_master::find($request->id);
         $product->product_name         = $request->product_name;
         $product->userId               = Auth::guard('vendor')->user()->id;
-        $product->cuisines             = $request->cuisines;
-        $product->category             = $request->category;
+       // $product->cuisines             = $request->cuisines;
+        //$product->category             = $request->category;
         $product->menu_id              = $request->menu_id;
         $product->dis                  = $request->dis;
    //     $product->type                 = $request->product_type;
