@@ -2232,6 +2232,49 @@ class AppController extends Controller
     }
 
 
+    // public function getAllLikeProducts(Request $request)
+    // {
+    //     try {
+
+    //         $validateUser = Validator::make(
+    //             $request->all(),
+    //             [
+    //                 'lat' => 'required|numeric',
+    //                 'lng' => 'required|numeric'
+    //             ]
+    //         );
+    //         if ($validateUser->fails()) {
+    //             $error = $validateUser->errors();
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'error'  => $validateUser->errors()->all()
+
+    //             ], 401);
+    //         }
+    //         $where_vendor_in = get_restaurant_ids_near_me($request->lat, $request->lng, null, $request->user()->id, null, null);
+
+
+    //         $product_ids = UserProductLike::where('user_id', $request->user()->id)->pluck('product_id');
+
+    //         $data = get_product_with_variant_and_addons(null, $request->user()->id, $order_by_column = '', $order_by_order = '',
+    //             $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in,
+    //             $offset = null, $limit = null, $return_total_count = false, $product_ids);
+
+    //         return response()->json([
+    //             'status'   => true,
+    //             'message'  => 'Successfully',
+    //             'products' => $data
+    //         ], 200);
+
+
+    //     } catch (\Throwable $th) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'error'  => $th->getMessage()
+    //         ], 500);
+    //     }
+    // }
+
     public function getAllLikeProducts(Request $request)
     {
         try {
@@ -2251,14 +2294,135 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $where_vendor_in = get_restaurant_ids_near_me($request->lat, $request->lng, null, $request->user()->id, null, null);
+            //$where_vendor_in = get_restaurant_ids_near_me($request->lat, $request->lng, null, $request->user()->id, null, null);
 
 
             $product_ids = UserProductLike::where('user_id', $request->user()->id)->pluck('product_id');
+            $user_id = request()->user()->id;
+            $product = Product_master::whereIn('products.id', $product_ids);
+            $product->join('vendors', 'products.userId', '=', 'vendors.id');
+            $product->leftJoin('user_vendor_like', function ($join) use ($user_id) {
+                    $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+                    $join->where('user_vendor_like.user_id', '=', $user_id);
+            });
+            if ($user_id != '') {
 
-            $data = get_product_with_variant_and_addons(null, $request->user()->id, $order_by_column = '', $order_by_order = '',
-                $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in,
-                $offset = null, $limit = null, $return_total_count = false, $product_ids);
+
+                $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
+                    $join->on('products.id', '=', 'user_product_like.product_id');
+                    //$join->where('products.cuisines', '=', 'cuisines.id');
+                    //$join->where('products.category', '=', 'categories.id');
+                    $join->where('user_product_like.user_id', '=', $user_id);
+                });
+
+            }
+            //
+            $product = $product->leftJoin('variants', 'variants.product_id', 'products.id')
+            ->leftJoin('addons', function ($join) {
+                    $join->whereRaw(DB::raw("FIND_IN_SET(addons.id, products.addons)"));
+                    $join->whereNull('addons.deleted_at');
+                    $join->selectRaw('DISTINCT addons.id');
+            });
+            $product->leftJoin('vendor_order_time', function ($join) {
+                $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                    ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+                    ->where('available', '=', 1);
+            });
+
+            $product = $product->orderBy('user_product_like.id', 'DESC');
+            $product = $product->Select(DB::raw('products.userId as vendor_id'),
+                'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
+                'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
+                'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
+                DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'dis as description',
+                'products.id as product_id', 'product_rating', 'dis', 'chili_level', 'primary_variant_name',
+                'start_time', 'end_time', DB::raw('if(available,false,true)  as isClosed'));
+            $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
+            $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
+            $product = $product->addSelect('user_product_like.user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+            $data = $product->get();
+            $cart = \App\Models\Cart::where('user_id', $user_id)->first();
+//                dd($data->toArray());
+                if (count($data->toArray())) {
+                    foreach ($data as $i => $p) {
+                        $qty = 0;//dd("sdf");
+                        if (isset($cart->id) && $cart->id != '') {
+                            $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
+                                ->selectRaw('SUM(product_qty) as product_qty,id')->groupBy('product_id')->first();
+                            if (isset($cart_p->product_qty)) {
+                                $qty          = $cart_p->product_qty;
+                                $cart_variant = \App\Models\CartProductVariant::where('cart_product_id', $cart_p->id)->pluck('variant_qty', 'variant_id');
+                                $cart_addons  = \App\Models\CartProductAddon::where('cart_product_id', $cart_p->id)->pluck('addon_qty', 'addon_id');
+                            }
+                        }
+                       $dealCuisines =  Cuisines::whereIn('cuisines.id', explode(',', $p->deal_cuisines))->pluck('name');
+                        if (!isset($variant[$p['product_id']])) {
+                            $variant[$p['product_id']]                    = ['product_id'           => $p['product_id'],
+                                                                             'product_name'         => $p['product_name'],
+                                                                             'product_price'        => $p['product_price'],
+                                                                             'dis'                  => $p['dis'],
+                                                                             'customizable'         => $p['customizable'],
+                                                                             'image'                => $p['image'],
+                                                                             'type'                 => $p['type'],
+                                                                             'product_rating'       => $p['product_rating'],
+                                                                             'category'             => $p['categoryName'],
+                                                                             'is_like'              => $p['is_like'],
+                                                                             'primary_variant_name' => $p['primary_variant_name'],
+                                                                             'preparation_time'     => $p['preparation_time'],
+                                                                             'vendor_id'            => $p['vendor_id'],
+                                                                             'chili_level'          => $p['chili_level'],
+                                                                             'product_cuisines'     => $p['cuisinesName'],
+                                                                             'categorie'            => $p['categorieName'],
+                                                                             'start_time'           => $p['start_time'],
+                                                                             'end_time'             => $p['end_time'],
+                                                                             'isClosed'             => $p['isClosed'],
+                                                                             'vendor_food_type'     => $p['vendor_food_type'],
+                                                                             'fssai_lic_no'         => $p['fssai_lic_no'],
+                                                                             'cart_qty'             => $qty,
+                                                                             'cuisines'         => $dealCuisines
+                            ];//'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
+                            $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
+                            $variant[$p['product_id']] ['vendor_image']   = asset('vendors') .'/'. $p['vendor_image'];
+                            $banners                                      = json_decode($p['banner_image']);
+                            if (is_array($banners))
+                                $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
+                                    return URL::to('vendor-banner/') . '/' . $banner;
+                                }, $banners);
+                            else
+                                $variant[$p['product_id']] ['banner_image'] = [];
+
+
+                        }
+                        if ($p->variant_id != '') {
+                            $v_qty = 0;
+                            if (isset($cart_variant[$p->variant_id]))
+                                $v_qty = $cart_variant[$p->variant_id];
+                            $variant[$p['product_id']]['options'][$p->variant_id] = ['id'               => $p->variant_id,
+                                                                                     'variant_name'     => $p->variant_name,
+                                                                                     'variant_price'    => $p->variant_price,
+                                                                                     'cart_variant_qty' => $v_qty];
+                        }
+                        if ($p->addon_id != '') {
+                            $a_qty = 0;
+                            if (isset($cart_addons[$p->addon_id]))
+                                $a_qty = $cart_addons[$p->addon_id];
+
+                            $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'             => $p->addon_id,
+                                                                                  'addon'          => $p->addon,
+                                                                                  'price'          => $p->addon_price,
+                                                                                  "cart_addon_qty" => $a_qty];
+                        }
+                    }
+                }
+                if (isset($variant)) {
+                    foreach ($variant as $i => $v) {
+                        if (isset($variant[$i]['options']))
+                            $variant[$i]['options'] = array_values($variant[$i]['options']);
+                        if (isset($variant[$i]['addons']))
+                            $variant[$i]['addons'] = array_values($variant[$i]['addons']);
+                    }
+                    $data = array_values($variant);
+                }
 
             return response()->json([
                 'status'   => true,
