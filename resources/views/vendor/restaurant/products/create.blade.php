@@ -139,8 +139,7 @@
 
 
                                 <div class="col-md-12 mb-3">
-                                    <label for="validationCustom12">Description <span
-                                            class="text-danger">*</span></label>
+                                    <label for="validationCustom12">Description</label>
                                     <div class="input-group">
                                         <textarea rows="5" id="validationCustom12" name="dis" class="form-control"
                                                   placeholder="Message"></textarea>
