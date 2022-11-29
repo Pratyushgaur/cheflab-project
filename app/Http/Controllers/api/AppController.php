@@ -2009,7 +2009,7 @@ class AppController extends Controller
             "vendors.fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id','banner_image','deal_cuisines','review_count','fssai_lic_no','banner_image');
             //
             $data = $vendors->orderBy('vendors.id', 'desc')->get();
-
+            return $data;
             $baseurl = URL::to('vendor-banner/') . '/';
                 foreach ($data as $key => $value) {
                     $banners = json_decode($value->banner_image);
@@ -2297,11 +2297,22 @@ class AppController extends Controller
             $vendor_ids = UserVendorLike::where('user_id', $request->user()->id)->pluck('vendor_id');
             if (!empty($vendor_ids)) {
                 $data = get_restaurant_near_me($request->lat, $request->lng, null, $request->user()->id, null, null)
-                    ->addSelect('speciality')
+                ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service', 'start_time', 'end_time', 'table_service')
                     ->whereIn('vendors.id', $vendor_ids)->get();
+                    $baseurl = URL::to('vendor-banner/') . '/';
                 foreach ($data as $key => $value) {
+                    $banners = json_decode($value->banner_image);
+                    if (is_array($banners))
+                        $urlbanners = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                    $urlbanners = [];
                     $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
-                    $data[$key]->categories     = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $category                   = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $data[$key]->categories     = $category;
+                    $data[$key]->imageUrl       = $baseurl;
+                    $data[$key]->banner_image   = $urlbanners;
                     $data[$key]->next_available = next_available_day($value->id);
                 }
             }
