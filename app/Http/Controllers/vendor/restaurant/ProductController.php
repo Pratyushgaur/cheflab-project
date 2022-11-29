@@ -23,9 +23,8 @@ class ProductController extends Controller
 {
     function index(Request $request)
     {
-        $products = Product_master::join('categories', 'products.category', '=', 'categories.id')
-            ->select('products.*', 'categories.name as categoryName')
-            ->where('products.userId', '=', Auth::guard('vendor')->user()->id);
+        //$products = Product_master::join('categories', 'products.category', '=', 'categories.id')
+        $products = Product_master::where('products.userId', '=', Auth::guard('vendor')->user()->id);
 
         $products->where(function ($q) use ($request) {
 
