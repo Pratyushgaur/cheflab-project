@@ -467,18 +467,18 @@
                         required: true,
                         maxlength: 120,
                     },
-                    cuisines: {
-                        required: true
-                    },
-                    category: {
-                        required: true
-                    },
+                    // cuisines: {
+                    //     required: true
+                    // },
+                    // category: {
+                    //     required: true
+                    // },
                     menu_id: {
                         required: true
                     },
-                    dis: {
-                        required: true,
-                    },
+                    // dis: {
+                    //     required: true,
+                    // },
                     item_price: {
                         required: true,
                         number: true,

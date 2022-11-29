@@ -76,7 +76,7 @@ class ProductController extends Controller
     {
         $this->validate($request, [
             'product_name'         => 'required',
-            'dis'                  => 'required',
+            //'dis'                  => 'required',
             'item_price'           => 'required|integer',
             //  'product_image' => 'required',
             //'cuisines'             => 'required',
@@ -150,7 +150,7 @@ class ProductController extends Controller
         
         $this->validate($request, [
             'product_name'     => 'required',
-            'dis'              => 'required',
+            //'dis'              => 'required',
             'item_price'       => 'required',
             //'cuisines'         => 'required',
             //'category'         => 'required',

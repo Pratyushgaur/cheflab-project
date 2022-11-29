@@ -440,9 +440,9 @@
                     menu_id: {
                         required: true
                     },
-                    dis: {
-                        required: true,
-                    },
+                    // dis: {
+                    //     required: true,
+                    // },
                     item_price: {
                         required: true,
                         number: true,
@@ -471,9 +471,9 @@
                     menu_id: {
                         required: "Product Should be in Catalogue",
                     },
-                    dis: {
-                        required: "Item Description is Required For Detail of Product",
-                    },
+                    // dis: {
+                    //     required: "Item Description is Required For Detail of Product",
+                    // },
                     item_price: {
                         required: "Please Give The Price of Product",
                         number: "Price Should be in Number"
