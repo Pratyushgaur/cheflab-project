@@ -24,6 +24,8 @@ use App\Models\Variant;
 use App\Models\VendorMenus;
 use App\Models\VendorOrderTime;
 use App\Models\Vendors;
+use App\Models\RiderAssignOrders;
+
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -1538,6 +1540,7 @@ class AppController extends Controller
     public function create_order(Request $request)
     {
 //        date_default_timezone_set(config('app.timezone'));
+       // return '#'.str_pad(1 + 100, 8, "0", STR_PAD_LEFT);
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -1606,11 +1609,17 @@ class AppController extends Controller
                     $walletCut = 0;
                 }
                 //
+               
+                //
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);
                 $insertData               = $request->all();
                 $insertData['wallet_cut'] = $walletCut;
+                $insertData['order_id'] = getOrderId();
+                $insertData['landmark_address'] = $request->reach;
+                
                 $Order                    = new Order($insertData);
+                
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
@@ -1628,8 +1637,8 @@ class AppController extends Controller
                             $order_products->order_product_addons()->save($OrderProductAddon);
                         }
                 }
-                // $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
-                // $riderAssign->saveOrFail();
+                 $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
+                 $riderAssign->saveOrFail();
                 DB::commit();
 
                 event(new OrderCreateEvent($order_id, $request->user_id, $request->vendor_id));
@@ -1986,12 +1995,43 @@ class AppController extends Controller
             $vendors = $vendors->where(['vendors.status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1']);
             $vendors = $vendors->select('name', \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'vendor_ratings', 'vendors.id', 'lat', 'long', 'deal_categories');
             $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance");
-            $vendors = $vendors->orderBy('vendors.id', 'desc')->get();
+            //
+            $vendors->leftJoin('vendor_order_time', function ($join) {
+                $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                    ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+                    ->where('available', '=', 1);
+            });
+            //
+            //
+            $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', "vendor_food_type",
+            \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
+            DB::raw('if(available,false,true)  as isClosed'),
+            "vendors.fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id','banner_image','deal_cuisines','review_count','fssai_lic_no','banner_image');
+            //
+            $data = $vendors->orderBy('vendors.id', 'desc')->get();
+
+            $baseurl = URL::to('vendor-banner/') . '/';
+                foreach ($data as $key => $value) {
+                    $banners = json_decode($value->banner_image);
+                    if (is_array($banners))
+                        $urlbanners = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                        $urlbanners = [];
+
+                    $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                    $category                   = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $data[$key]->categories     = $category;
+                    $data[$key]->imageUrl       = $baseurl;
+                    $data[$key]->banner_image   = $urlbanners;
+                    $data[$key]->next_available = next_available_day($value->id);
+                }
 
             return response()->json([
                 'status'   => true,
                 'message'  => 'data get Successfully',
-                'response' => $vendors
+                'response' => $data
 
             ], 200);
 
