@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\AdminMasters;
 use App\Models\Mobileotp;
 use Validator;
+use Illuminate\Support\Facades\Http;
+
 
 class LoginApiController extends Controller
 {
@@ -187,6 +189,9 @@ class LoginApiController extends Controller
             }
             if (User::where(['mobile_number' => $request->mobile_number])->exists()) {
                 $otp = $this->otp_generate($request->mobile_number);
+                $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";  
+                $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$request->mobile_number&message=".urlencode($msg)."&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507166723953585920";
+                Http::get($url);
                 return response()->json([
                     'status' => true,
                     'message'=>'Otp Send Successfully',
