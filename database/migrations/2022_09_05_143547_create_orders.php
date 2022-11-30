@@ -15,10 +15,13 @@ class CreateOrders extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_id');
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('user_id');
             $table->string('customer_name');
             $table->text('delivery_address')->comment('this addres also have deliver to customer name');
+            $table->text('landmark_address')->comment('landmark address');
+            $table->string('mobile_number')->comment('landmark address');
             $table->float('lat',8,6);
             $table->float('long',8,6);
             $table->string('pincode')->nullable()->default(null);

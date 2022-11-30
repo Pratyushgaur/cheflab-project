@@ -96,11 +96,11 @@ class Deliveryboy extends Controller
             'identity_image' => 'required',
             'identity_number' => 'required',
         ]);
-        $code = Str::random(4);
+        $code = generateDriverUniqueCode();
         $uname  =  $request->name;
         $vendors = new Deliver_boy;
-        $ridercode =  $uname.$code;
-        $vendors->ridercode   = $ridercode;
+        
+        $vendors->username   = $code;
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;

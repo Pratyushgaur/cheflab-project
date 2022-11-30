@@ -162,4 +162,15 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 
 Route::post('rider-otp-send',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']);
 Route::post('rider-otp-verify',[App\Http\Controllers\api\rider\LoginApiController::class,'login_verify_otp']);
+// home
+
+Route::post('rider-home',[App\Http\Controllers\api\rider\AppController::class,'home']);
+Route::post('rider-profile',[App\Http\Controllers\api\rider\AppController::class,'profile']);
+Route::post('rider-register-token',[App\Http\Controllers\api\rider\AppController::class,'register_token']);
+Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
+
+
+//
+
 Route::post('rider-order-history',[App\Http\Controllers\api\rider\OrderApiController::class,'orderhistory']);
+Route::get('getDistance',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance']);

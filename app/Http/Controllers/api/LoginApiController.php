@@ -103,6 +103,7 @@ class LoginApiController extends Controller
 
                 'mobile_number' => 'required|numeric|digits:10|unique:users,mobile_number',
                 'name' => 'required|max:20',
+                'lastname' => 'required|max:20',
                 'email' => 'required|email|unique:users,email',
                 'alternative_mobile' => 'nullable|sometimes|numeric|digits:10|unique:users,alternative_number',
 
@@ -137,6 +138,7 @@ class LoginApiController extends Controller
 
 
                 $user->name =$request->name;
+                $user->surname =$request->lastname;
                 $user->email =$request->email;
                 $user->mobile_number =$request->mobile_number;
               //  $user->by_earn = $refer_amount;

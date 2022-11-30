@@ -1860,7 +1860,7 @@ class AppController extends Controller
     {
         try {
 
-            $user = User::where('id', '=', request()->user()->id)->select('id', 'name', 'email', 'alternative_number', DB::raw('CONCAT("' . asset('user-profile') . '/", image) AS image'))->first();
+            $user = User::where('id', '=', request()->user()->id)->select('id', 'name', 'surname', 'email', 'alternative_number', DB::raw('CONCAT("' . asset('user-profile') . '/", image) AS image'))->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data get Successfully',
@@ -1938,6 +1938,7 @@ class AppController extends Controller
         try {
             $validateUser = Validator::make($request->all(), [
                 'name'               => 'required',
+                'lastname'               => 'required',
                 'email'              => 'required',
                 'alternative_number' => 'required',
             ]);
@@ -1953,7 +1954,7 @@ class AppController extends Controller
                 $user->image = $filename;
             }
             $user->save();
-            $update = User::where('id', '=', request()->user()->id)->update(['name' => $request->name, 'email' => $request->email, 'alternative_number' => $request->alternative_number]);
+            $update = User::where('id', '=', request()->user()->id)->update(['name' => $request->name,'surname' => $request->lastname, 'email' => $request->email, 'alternative_number' => $request->alternative_number]);
             return response()->json([
                 'status'  => true,
                 'message' => 'User Updated Successfully'

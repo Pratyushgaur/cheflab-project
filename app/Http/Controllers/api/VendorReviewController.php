@@ -74,9 +74,10 @@ class VendorReviewController extends Controller
             $review->review	 =$request->review	;
             $review->save();
 
-            $rating=VendorReview::select(\DB::raw('AVG(rating) as rating'))->where('vendor_id',$request->vendor_id)->first();
+            $rating=VendorReview::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('vendor_id',$request->vendor_id)->first();
             $vendor=Vendors::find($request->vendor_id);
             $vendor->vendor_ratings=$rating->rating;
+            $vendor->review_count=$rating->total_review;
             $vendor->save();
             return response()->json([
                 'status' => true,

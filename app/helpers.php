@@ -607,3 +607,42 @@ function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id
     return $vendors;
 
 }
+function generateDriverUniqueCode()
+{
+    $number = rand(1000000000, 9999999999);
+    if (\App\Models\Deliver_boy::where('username','=',$number)->exists()) {
+        $number = rand(1000000000, 9999999999);
+    }
+    return $number;
+}
+function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K') 
+    { 
+        $theta = $lon1 - $lon2; 
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)); 
+        $dist = acos($dist); 
+        $dist = rad2deg($dist); 
+        $miles = $dist * 60 * 1.1515;
+        $unit = strtoupper($unit);
+
+        if ($unit == "K") 
+        {
+            return ($miles * 1.609344); 
+        } 
+        else if ($unit == "N") 
+        {
+        return ($miles * 0.8684);
+        } 
+        else 
+        {
+        return $miles;
+      }
+    }   
+    function getOrderId(){
+        $order = \App\Models\Order::orderBy('id','DESC');
+        if($order->exists()){
+            $id = $order->first()->id;
+        }else{
+            $id = 0;
+        }
+        return str_pad(1 +$id, 8, "0", STR_PAD_LEFT);
+    }
