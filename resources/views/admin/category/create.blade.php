@@ -165,106 +165,69 @@
                                 <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
                                     <thead>
                                     <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th >Category Name</th>
-                                    <th >Position</th>
-                                    <th  >Image</th>
-                                    <th  >Status</th>
-                                    <th  >Action</th>
+                                        <th class="text-center">Sr No.</th>
+                                        <th >Category Name</th>
+                                        <th >Position</th>
+                                        <th  >Image</th>
+                                        <th  >Status</th>
+                                        <th  >Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                    
                                     </tbody>
                                 </table>
-                                
+                               
                             </div>
                         </div>
 
                     </div>
 
                 </div>
-				<!-- <div class="card card-info col-md-12">
-            <div class="card-header">
-              <h3 class="card-title">List of Food Categories</h3>
-
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                  <i class="fas fa-minus"></i></button>
-              </div>
             </div>
-            <div class="card-body pad table-responsive">
-                <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
-                    <thead>
-                    <tr role="row">
-                        <th  class="text-center">Sr No.</th>
-                        <th >Category Name</th>
-                        <th >Position</th>
-                        <th  >Image</th>
-                        <th  >Status</th>
-                        <th  >Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                               
-            </div>
-          </div> -->
-          <!-- /.card -->
-		</div>
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
- 
-  <!-- /.content-wrapper -->
 
-  <!-- /.content-wrapper -->
 
-<!-- /.row -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- /.content-wrapper -->
+
+    <!-- /.row -->
 @endsection
 
 
 @section('js_section')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-<script type="text/javascript">
-    $(".s_meun").removeClass("active");
-    $(".city_cityadmin").addClass("active");
-    $(".city_menu").addClass("active");
-</script>
+    <script>
+        $("input[data-bootstrap-switch]").each(function () {
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
+    </script>
 
-<script type="text/javascript">
-  // $(function () {
-    let table = $('#example1').dataTable({
-            processing: true,
-            serverSide: true,
-            ajax: "{{ route('admin.category.datatable') }}",
-            columns: [
-              {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-              {data: 'name', name: 'city_name'},
-              {data: 'position', name: 'position'},
-              {data: 'categoryImage', name: 'categoryImage'},
-              {data: 'is_active', name: 'is_active'},
-              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+    <script type="text/javascript">
+        // $(function () {
+          let table = $('#example1').dataTable({
+              processing: true,
+              serverSide: true,
+              ajax: "{{ route('admin.category.datatable') }}",
+              columns: [
+                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'name', name: 'city_name'},
+                {data: 'position', name: 'position'},
+                {data: 'categoryImage', name: 'categoryImage'},
+                {data: 'is_active', name: 'is_active'},
+                {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
             ]
-        });
-    // let table = $('#example1').dataTable({
-    //     processing: true,
-    //     serverSide: true,
-    //     ajax: "{{ route('admin.category.datatable') }}",
-    //     columns: [
-    //         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-    //         {data: 'name', name: 'city_name'},
-    //         {data: 'position', name: 'position'},
-    //         {data: 'categoryImage', name: 'categoryImage'},
-    //         {data: 'is_active', name: 'is_active'},
-    //         {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-    //     ]
-    // });
-    $("#restaurant-form").validate({
-      rules: {
+          });
+
+        // });
+
+        function reload_table() {
+            table.DataTable().ajax.reload(null, false);
+        }
+        $("#restaurant-form").validate({
+        rules: {
             name: {
                 required: true,
                 maxlength: 20,
@@ -300,11 +263,5 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
-  
-      
-  function reload_table() {
-      table.DataTable().ajax.reload(null, false);
-   }
-
- </script>
+    </script>
 @endsection

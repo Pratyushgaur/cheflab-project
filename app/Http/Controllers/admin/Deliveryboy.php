@@ -158,9 +158,7 @@ class Deliveryboy extends Controller
                                     <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Delivery Boy" flash="City"  data-action-url="' . route('admin.deliverboy.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i> Delete</a> 
                                     <a class="dropdown-item text-info" href="'.route('admin.vendor.view',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View More</a>';
 
-                                    if($data->vendor_type == 'chef'){
-                                        $btn .= '<a class="dropdown-item text-danger" href="'.route('admin.chefproduct.view',Crypt::encryptString($data->id)).'"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
-                                    }
+                                    
 
 
 
@@ -195,9 +193,9 @@ class Deliveryboy extends Controller
     public function fun_edit_deliverboy($encrypt_id){
         try {
             $id =  Crypt::decryptString($encrypt_id);
-            $city_data = Deliver_boy::findOrFail($id);
+            $deliveryboy = Deliver_boy::findOrFail($id);
            // dd($city_data);
-            return view('admin/deliveryboy/editdeliverboy',compact('city_data'));
+            return view('admin/deliveryboy/editdeliverboy',compact('deliveryboy'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         }

@@ -283,7 +283,7 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                       <label for="exampleInputEmail1">Youtube Link<span class="text-danger">*</span></label>
-                                      <textarea name="youtube_link" class="form-control" value="{{$data->youtube_link}}"  id="" placeholder="Youtube Link..">{{$data->tiweeter_link}}</textarea>
+                                      <textarea name="youtube_link" class="form-control" value="{{$data->youtube_link}}"  id="" placeholder="Youtube Link..">{{$data->youtube_link}}</textarea>
                                     </div>
                                   </div>
                                   
