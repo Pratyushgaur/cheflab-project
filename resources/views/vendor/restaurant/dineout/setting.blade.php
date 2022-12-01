@@ -3,7 +3,7 @@ $breadcrumb[] = ["name"  => " Home",
                  "icon"  => '<i class = "material-icons">home</i>',
                  'route' => route("restaurant.dashboard")];
 $breadcrumb[] = ["name"  => "Globle Setting",
-                 'route' => ""];
+                 'route' => route('restaurant.globleseting.ordertime')];
 $breadcrumb[] = ["name"  => "Dining",
                  'route' => ""];
 ?>

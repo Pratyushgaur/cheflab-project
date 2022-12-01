@@ -234,21 +234,14 @@
                 <form method="post" id="preparation_form">
                     @csrf
                     <div class="modal-header bg-primary">
-                        <h3 class="modal-title has-icon text-white">Order preparation </h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span></button>
+                        <h3 class="modal-title has-icon text-white"> Order Preparation</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                     </div>
-                    <input type="hidden" name="orignel_preparation_time" value="" id="orignel_preparation_time">
+
                     <div class="modal-body">
                         <div class="ms-form-group has-icon">
                             <label>Order preparation time</label>
-                            <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time">
-                            <i class="material-icons">timer</i>
-                        </div>
-
-                        <div class="ms-form-group has-icon" id="extend_time_div">
-                            <label>Order preparation time Extend(in minutes)</label>
-                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">
+                            <input type="number" placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="2" min="10">
                             <i class="material-icons">timer</i>
                         </div>
 
@@ -256,9 +249,9 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary shadow-none" {{--data-dismiss="modal"--}} id="submit_model">
-                            Submit
-                        </button>
+                        <button type="submit" class="btn btn-primary shadow-none"
+                                {{--                            data-dismiss="modal"--}}
+                                id="submit_model" >Submit</button>
                     </div>
                 </form>
             </div>
@@ -266,6 +259,7 @@
     </div>
 
 @endpush
+
 
 @push('scripts')
     <script>
@@ -302,43 +296,15 @@
         }
 
         $('#modal-7').modal({ show: false})
+
+        // $( "#modal-7" ).on('shown', function(){
+        //     alert("I want this to appear after the modal has opened!");
+        // });
+
         function preparation_form(url, id) {
             $('#preparation_form').attr('action', url);
-
-            $.ajax({
-                url: '{{route('restaurant.order.get_preparation_time')}}',
-                type: 'post',
-                cache: false,
-                data: {
-                    "_token": "{{ csrf_token() }}",
-                    "order_id": id
-                },
-                success: function (data) {
-
-                    if (data.total_preparation_time != '') {
-                        $("#orignel_preparation_time").val(data.total_preparation_time);
-                        $("#preparation_time").val(data.total_preparation_time);
-                    }
-
-                    $("#extend_time_div").hide();
-                    if (data.is_extend_time) {
-                        $("#extend_time_div").show();
-                        $("#extend_preparation_time").prop('max', data.max_preparation_time);
-                        $("#extend_preparation_time").attr('placeholder', "maximum value " + data.max_preparation_time);
-                    }
-                },
-                error: function (xhr, textStatus, thrownError) {
-                    // toastr.info('Something went wrong', 'Info');
-                }
-            });
             $('#myModal').modal('show');
         }
-
-        function extend_time() {
-            var pre_time = parseInt($("#orignel_preparation_time").val());
-            $("#preparation_time").val((pre_time + parseInt($("#extend_preparation_time").val())));
-        }
-
 
     </script>
 

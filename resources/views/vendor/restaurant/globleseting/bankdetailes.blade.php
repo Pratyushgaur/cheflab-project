@@ -6,9 +6,9 @@
             <div class="col-md-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb pl-0">
-                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Globle Setting</a></li>
-                        <li class="breadcrumb-item"><a href="#">Order Time</a></li>
+                        <li class="breadcrumb-item"><a href="{{route("restaurant.dashboard")}}"><i class="material-icons">home</i> Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('restaurant.globleseting.ordertime')}}">Globle Setting</a></li>
+                        <li class="breadcrumb-item">Bank and other documents</li>
                     </ol>
                 </nav>
             </div>
@@ -18,7 +18,7 @@
             <div class="col-md-9">
                 <div class="ms-panel">
                     <div class="ms-panel-header">
-                        <h6>Order Time Setting</h6>
+                        <h6>Bank and other documents Setting</h6>
                     </div>
                     <div class="ms-panel-body">
 

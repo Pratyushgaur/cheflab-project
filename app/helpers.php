@@ -34,7 +34,7 @@ function mysql_date_time($datetime = '')
 
 function mysql_date($datetime='')
 {
-    if ($datetime != '')
+    if ($datetime == '')
         return date('Y-m-d');
     else
     return date('Y-m-d', strtotime($datetime));
@@ -618,28 +618,28 @@ function generateDriverUniqueCode()
     }
     return $number;
 }
-function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K') 
-    { 
-        $theta = $lon1 - $lon2; 
-        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)); 
-        $dist = acos($dist); 
-        $dist = rad2deg($dist); 
+function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K')
+    {
+        $theta = $lon1 - $lon2;
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+        $dist = acos($dist);
+        $dist = rad2deg($dist);
         $miles = $dist * 60 * 1.1515;
         $unit = strtoupper($unit);
 
-        if ($unit == "K") 
+        if ($unit == "K")
         {
-            return ($miles * 1.609344); 
-        } 
-        else if ($unit == "N") 
+            return ($miles * 1.609344);
+        }
+        else if ($unit == "N")
         {
         return ($miles * 0.8684);
-        } 
-        else 
+        }
+        else
         {
         return $miles;
       }
-    }   
+    }
     function getOrderId(){
         $order = \App\Models\Order::orderBy('id','DESC');
         if($order->exists()){
