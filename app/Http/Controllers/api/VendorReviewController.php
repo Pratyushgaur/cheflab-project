@@ -74,9 +74,10 @@ class VendorReviewController extends Controller
             $review->review	 =$request->review	;
             $review->save();
 
-            $rating=VendorReview::select(\DB::raw('AVG(rating) as rating'))->where('vendor_id',$request->vendor_id)->first();
+            $rating=VendorReview::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('vendor_id',$request->vendor_id)->first();
             $vendor=Vendors::find($request->vendor_id);
             $vendor->vendor_ratings=$rating->rating;
+            $vendor->review_count=$rating->total_review;
             $vendor->save();
             return response()->json([
                 'status' => true,
@@ -133,6 +134,41 @@ class VendorReviewController extends Controller
                 'status' => true,
                 'message'=>'Data Get Successfully',
                 'response'=>$data
+
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getVendorReviews(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(),
+            [
+                'vendor_id' => 'required',
+                'offset' => 'required',
+                'limit' => 'required'
+            ]);
+            if($validateUser->fails()){
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'=>$validateUser->errors()->all()
+
+                ], 401);
+            }
+            //
+            $review = VendorReview::join('users','vendor_review_rating.user_id','=','users.id')->where('vendor_id','=',$request->vendor_id)
+            ->skip($request->offset)->take($request->limit)
+            ->orderBy('vendor_review_rating.id','desc')
+            ->select('users.name',\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image') , 'vendor_review_rating.rating','review',\DB::raw("DATE_FORMAT(vendor_review_rating.created_at, '%d %b %Y at %H:%i %p') as date"))->get();
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$review
 
             ], 200);
         } catch (\Throwable $th) {

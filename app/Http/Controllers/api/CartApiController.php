@@ -160,7 +160,7 @@ class CartApiController extends Controller
                         }
                     }
 
-                    if (isset($p['variants']))
+                    if (isset($p['variants']) && $product->customizable=='true')
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant                  = new CartProductVariant();
                             $CartProductVariant->cart_product_id = $cart_products->id;
@@ -294,7 +294,7 @@ class CartApiController extends Controller
                             if (!empty($exist)) {//if product have variants get and add qty and price
 //                                echo "$cart_sub_toatl_amount    += ".$vvalue['variant_price']." -----------";
 //                                echo "<br/>$cart_sub_toatl_amount+ $exist->variant_qty*".$vvalue['variant_price'];
-                                $cart_sub_toatl_amount    += ($vvalue['variant_price']*$exist->variant_qty);
+                                $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
 //                                echo "=$cart_sub_toatl_amount";
                                 $variants[$vkey]['added'] = true;
 //                            $variants[$vkey]['qty'] = $exist->product_qty;
@@ -564,7 +564,7 @@ class CartApiController extends Controller
                         }
                     }
 
-                    if (isset($p['variants'])) {
+                    if (isset($p['variants']) && $product->customizable=='true') {
                         foreach ($p['variants'] as $k => $v) {
                             $CartProductVariant = CartProductVariant::where('cart_product_id', $cart_products->id)->where('variant_id', $v['variant_id'])->first();
                             if ($v['variant_qty'] <= 0) {
@@ -739,7 +739,9 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
             $r                 = $cart_users->toArray();
+            $ven = Vendors::where('id','=',$r['vendor_id'])->select('name')->first();
             $cart_id           = $cart_users->id;
+            $r['restaurant_name'] = $ven->name;
             $cartTotal         = CartProduct::where('cart_id', '=', $cart_id);
             $cartVarintProduct = $cartTotal->join('cart_product_variants', 'cart_products.id', '=', 'cart_product_variants.cart_product_id');
             $cartVarintProduct = $cartVarintProduct->join('variants', 'cart_product_variants.variant_id', '=', 'variants.id');

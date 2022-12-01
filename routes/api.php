@@ -88,7 +88,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('save-vendor-rating-review', [App\Http\Controllers\api\VendorReviewController::class, 'saveReviewData']);
     Route::post('get-vendor-rating-review', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
     Route::post('save-product-rating-review', [App\Http\Controllers\api\ProductReviewController::class, 'saveReviewData']);
-    Route::post('get-product-rating-review', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
+    Route::post('get-vendor-all-review', [App\Http\Controllers\api\VendorReviewController::class, 'getVendorReviews']);
+    
 //    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
     // Delivery Address
     Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
@@ -162,4 +163,15 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 
 Route::post('rider-otp-send',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']);
 Route::post('rider-otp-verify',[App\Http\Controllers\api\rider\LoginApiController::class,'login_verify_otp']);
+// home
+
+Route::post('rider-home',[App\Http\Controllers\api\rider\AppController::class,'home']);
+Route::post('rider-profile',[App\Http\Controllers\api\rider\AppController::class,'profile']);
+Route::post('rider-register-token',[App\Http\Controllers\api\rider\AppController::class,'register_token']);
+Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
+
+
+//
+
 Route::post('rider-order-history',[App\Http\Controllers\api\rider\OrderApiController::class,'orderhistory']);
+Route::get('getDistance',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance']);

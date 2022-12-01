@@ -275,11 +275,11 @@ class ProductController extends Controller
        // $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName')->get();
        // echo $data1;die;
         if ($request->ajax()) {
-            $data = Product_master::where('product_for','=','3')->where('products.status','=','2')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
+            $data = Product_master::where('product_for','=','3')->where('products.status','=','2')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName')->get();
             if($request->rolename != ''){
-                $data =  Product_master::where('products.status','=',$request->rolename)->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
+                $data =  Product_master::where('products.status','=',$request->rolename)->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName')->get();
              }elseif($request->restaurant != ''){
-                $data =  Product_master::where('userId','=',$request->restaurant)->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName','vendors.name as restaurantName')->get();
+                $data =  Product_master::where('userId','=',$request->restaurant)->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName')->get();
              }
             return Datatables::of($data)
             ->addIndexColumn()
@@ -287,23 +287,7 @@ class ProductController extends Controller
                 $btn = '
                 <a href="javascript:void(0)" data-id="' . $data->id . '" class="btn btn-danger btn-xs openModal" data-toggle="modal" data-target=".bd-example-modal-lg">
                     View
-                </a>
-                           ';
-                //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
-                //<ul class="navbar-nav">
-                  //          <li class="nav-item dropdown">
-                    //
-                      //          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        //
-                          //          <a class="dropdown-item text-info" href="'.route('admin.vendor.product',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View Product</a>
-                            //        ';
-
-
-
-
-                              //  $btn .= '</div>
-                           // </li>
-                        //</ul>-->
+                </a>';
                 return $btn;
             })
 

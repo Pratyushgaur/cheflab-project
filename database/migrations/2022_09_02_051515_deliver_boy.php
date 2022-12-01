@@ -18,6 +18,7 @@ class DeliverBoy extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('username')->unique();
             $table->string('password');
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->string('mobile',20)->unique();
@@ -29,6 +30,7 @@ class DeliverBoy extends Migration
             $table->string('image')->nullable();
             $table->decimal('wallet',8,2)->default('0');
             $table->enum('type', ['1', '2','3'])->default('1')->comment('1-Pure Commission 2-Rent_Commission 3-in_house');
+            $table->enum('is_online', ['0', '1'])->default('0')->comment('0=offline 1=online');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -328,7 +328,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     }
 
 
-    $product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
+    //$product = $product->join('cuisines', 'products.cuisines', '=', 'cuisines.id');
 
     if ($user_id != '') {
         $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
@@ -356,7 +356,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
         'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
         'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'cuisines.name as cuisinesName', 'dis as description',
+        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'dis as description',
         'products.id as product_id', 'product_rating', 'dis', 'chili_level', 'primary_variant_name')
         ->get();
     //dd($product->toArray());
@@ -610,3 +610,42 @@ function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id
     return $vendors;
 
 }
+function generateDriverUniqueCode()
+{
+    $number = rand(1000000000, 9999999999);
+    if (\App\Models\Deliver_boy::where('username','=',$number)->exists()) {
+        $number = rand(1000000000, 9999999999);
+    }
+    return $number;
+}
+function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K') 
+    { 
+        $theta = $lon1 - $lon2; 
+        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta)); 
+        $dist = acos($dist); 
+        $dist = rad2deg($dist); 
+        $miles = $dist * 60 * 1.1515;
+        $unit = strtoupper($unit);
+
+        if ($unit == "K") 
+        {
+            return ($miles * 1.609344); 
+        } 
+        else if ($unit == "N") 
+        {
+        return ($miles * 0.8684);
+        } 
+        else 
+        {
+        return $miles;
+      }
+    }   
+    function getOrderId(){
+        $order = \App\Models\Order::orderBy('id','DESC');
+        if($order->exists()){
+            $id = $order->first()->id;
+        }else{
+            $id = 0;
+        }
+        return str_pad(1 +$id, 8, "0", STR_PAD_LEFT);
+    }
