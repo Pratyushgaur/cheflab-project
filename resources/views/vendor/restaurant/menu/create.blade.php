@@ -7,8 +7,8 @@
         <div class="col-md-12">
           <nav aria-label="breadcrumb">
             <ol class="breadcrumb pl-0">
-              <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-              <li class="breadcrumb-item"><a href="#">Menus</a></li>
+              <li class="breadcrumb-item"><a href="{{route("restaurant.dashboard")}}"><i class="material-icons">home</i> Home</a></li>
+              <li class="breadcrumb-item"><a href="{{route("restaurant.menu.list")}}">Menus</a></li>
               <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Menu Catalogue</a></li>
               <li class="breadcrumb-item active" aria-current="page">Create Menu Catalogue</li>
 

@@ -103,6 +103,10 @@ return [
             'driver' => 'single',
             'path' => storage_path("logs/".$date."_request_API.log"),
         ],
+        'vendor_change_status' => [
+            'driver' => 'single',
+            'path' => storage_path("logs/".$date."_vendor_change_status.log"),
+        ],
     ],
 
 ];

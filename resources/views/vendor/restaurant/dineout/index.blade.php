@@ -2,7 +2,7 @@
 $breadcrumb[] = ["name"  => " Home",
                  "icon"  => '<i class = "material-icons">home</i>',
                  'route' => route("restaurant.dashboard")];
-$breadcrumb[] = ["name"  => "Dine Out",
+$breadcrumb[] = ["name"  => "Dining",
                  'route' => route("restaurant.dineout.setting")];
 $breadcrumb[] = ["name"  => "Booking Request List",
                  'route' => ""];
@@ -21,7 +21,7 @@ $breadcrumb[] = ["name"  => "Booking Request List",
                     <div class="ms-panel-header">
                         <div class="d-flex justify-content-between">
                             <div class="align-self-center align-left">
-                                <h6>Dine Out</h6>
+                                <h6>Dining</h6>
                             </div>
                         </div>
                     </div>

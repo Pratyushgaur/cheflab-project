@@ -1,7 +1,7 @@
 <aside id="ms-side-nav" class="side-nav fixed ms-aside-scrollable ms-aside-left">
     <!-- Logo -->
     <div class="logo-sn ms-d-block-lg">
-      <a class="pl-0 ml-0 text-center" href="index.html" style="padding:0px !important;">
+      <a class="pl-0 ml-0 text-center" href="{{route('restaurant.dashboard')}}" style="padding:0px !important;">
         <!-- <img src="{{asset('frontend')}}/assets/img/costic/costic-logo-216x62.png" alt="logo"> -->
         <img src="{{asset('commonarea')}}/logo.png" alt="logo" style="height: 70px;">
       </a>
@@ -61,7 +61,7 @@
       <hr>
 @if(\Auth::guard('vendor')->user()->table_service==1)
         <li class="menu-item">
-            <a href="{{route('restaurant.dineout.index')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Dine Out</span>
+            <a href="{{route('restaurant.dineout.index')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Dining</span>
             </a>
         </li>
         <hr>
@@ -70,18 +70,17 @@
         <a href="{{route('notification.view')}}" class=""> <span><i class="nav-icon fa fa-bell fs-16 "></i>Notification</span>
         </a>
       </li>
+{{--      <li class="menu-item ">--}}
+{{--        <a href="" class=""> <span><i class="fas fa-rupee-sign fs-16 "></i>Payment</span>--}}
+{{--        </a>--}}
+{{--      </li>--}}
       <li class="menu-item ">
-        <a href="" class=""> <span><i class="fas fa-rupee-sign fs-16 "></i>Payment</span>
-        </a>
-      </li>
-      <li class="menu-item ">
-        <a href="{{route('restaurant.globleseting')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
+        <a href="{{route('restaurant.globleseting.ordertime')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
         </a>
         <ul id="setting" class="collapse " aria-labelledby="setting" data-parent="#side-nav-accordion">
           <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Globel Setting</a>
           </li>
-          <li> <a href="" class="">Add Catalogue</a>
-          </li>
+
         </ul>
       </li>
 

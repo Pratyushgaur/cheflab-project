@@ -7,7 +7,7 @@
         <div class="col-md-12">
             <nav aria-label="breadcrumb">
               <ol class="breadcrumb pl-0">
-                <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
+                <li class="breadcrumb-item"><a href="{{route("restaurant.dashboard")}}"><i class="material-icons">home</i> Home</a></li>
                 <li class="breadcrumb-item"><a href="#">Menus</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Menu Catalogue</li>
 
@@ -57,8 +57,7 @@
 <script>
   (function($) {
     let table = $('#menu-catalogue-table').dataTable({
-        processing: true,
-        serverSide: true,
+        ext:{errMode:'throw'},
         ajax: "{{ route('restaurant.menu.datatable') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},

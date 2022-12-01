@@ -1,16 +1,26 @@
+<?php
+$breadcrumb[] = ["name"  => " Home",
+                 "icon"  => '<i class = "material-icons">home</i>',
+                 'route' => route("restaurant.dashboard")];
+$breadcrumb[] = ["name"  => "Globle Setting",
+                 'route' => ""];
+$breadcrumb[] = ["name"  => "Dining",
+                 'route' => ""];
+?>
 @extends('vendor.restaurants-layout')
 @section('main-content')
     <!-- Body Content Wrapper -->
     <div class="ms-content-wrapper">
         <div class="row">
             <div class="col-md-12">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb pl-0">
-                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Globle Setting</a></li>
-                        <li class="breadcrumb-item"><a href="#">Dine Out</a></li>
-                    </ol>
-                </nav>
+                @include('vendor.vendor_breadcrumbs',['breadcrumb'=>$breadcrumb])
+{{--                <nav aria-label="breadcrumb">--}}
+{{--                    <ol class="breadcrumb pl-0">--}}
+{{--                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>--}}
+{{--                        <li class="breadcrumb-item"><a href="#">Globle Setting</a></li>--}}
+{{--                        <li class="breadcrumb-item"><a href="#">Dining</a></li>--}}
+{{--                    </ol>--}}
+{{--                </nav>--}}
             </div>
 
             @include('vendor.restaurant.globleseting.setting_menu')
@@ -20,7 +30,7 @@
                     @csrf
                     <div class="ms-panel">
                         <div class="ms-panel-header">
-                            <h6>Enable Dine Out Setting
+                            <h6>Enable Dining Setting
                                 <label class="ms-switch right" style="float: right">
                                     <input name="vendor_table_service" id="vendor_table_service" type="checkbox"
                                            value="1"

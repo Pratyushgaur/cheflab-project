@@ -215,10 +215,10 @@ class GlobleSetting extends Controller
 
     public function bank_details()
     {
-        $hideSidebar = false;
+
         $bankDetail  = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();
 
-        return view('vendor.restaurant.globleseting.bankdetailes', compact('bankDetail', 'hideSidebar'));
+        return view('vendor.restaurant.globleseting.bankdetailes', compact('bankDetail'));
     }
 
     public function save_bank_details(Request $request)

@@ -32,8 +32,11 @@ function mysql_date_time($datetime = '')
         return date('Y-m-d H:i:s');
 }
 
-function mysql_date($datetime)
+function mysql_date($datetime='')
 {
+    if ($datetime != '')
+        return date('Y-m-d');
+    else
     return date('Y-m-d', strtotime($datetime));
 }
 
@@ -400,7 +403,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
                     //  $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
                     // $variant[$p['product_id']] ['tax'] = $p['tax'];
-                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') . $p['vendor_image'];
+                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') .'/'. $p['vendor_image'];
 
                     $banners = json_decode($p['banner_image']);
 
@@ -454,7 +457,7 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
     $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
     $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
-    $vendors->where("vendors.is_all_setting_done", 1)->where('vendors.status', 1);
+    $vendors->where("vendors.is_all_setting_done", 1)->where('vendors.status', 1)->where('vendors.is_online', 1);
     if ($group_by)
         $vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
 

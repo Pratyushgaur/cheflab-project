@@ -169,7 +169,7 @@ class VendorController extends Controller
 
     public function update_profile_categories(Request $request)
     {
-        
+
         $vendors                   = Vendors::find(\Auth::guard('vendor')->user()->id);
         $vendors->deal_categories = implode(',',$request->categoriesArray);
         $vendors->save();
@@ -182,5 +182,6 @@ class VendorController extends Controller
         $vendors->save();
         return redirect()->route('restaurant.profile')->with('message', 'Vendor Deals Cuisines Update  Successfully');
     }
-    
+
+
 }

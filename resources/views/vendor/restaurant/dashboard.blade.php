@@ -6,8 +6,11 @@
             <div class="col-md-8">
                 <h1 class="db-header-title">Welcome, {{ucfirst(Auth::guard('vendor')->user()->name)}}</h1>
             </div>
+
             <div class="col-md-4">
-                {{ Form::select('filter',[1=>'Today',2=>'This Month'],null,['class' => 'select2 form-control','placeholder' => 'Filter']) }}
+                <form   action="{{route('restaurant.dashboard')}}">
+                {{ Form::select('filter',[1=>'Today',2=>'This Week',3=>'This Month'],request()->filter,['class' => 'select2 form-control','placeholder' => 'Filter','id'=>'dashboard_input']) }}
+                </form>
             </div>
         </div>
         <div class="row">
@@ -16,8 +19,9 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Total Confirmed</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
-                            <p class="fs-12">Today</p>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_confirmed}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
                         </div>
                     </div>
                     <i class="flaticon-statistics"></i>
@@ -29,8 +33,9 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Preparing</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
-                            <p class="fs-12">Today</p>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_prepairing}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
                         </div>
                     </div>
                     <i class="flaticon-statistics"></i>
@@ -42,8 +47,9 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Ready for delivered</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
-                            <p class="fs-12">Today</p>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_completed}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
                         </div>
                     </div>
                     <i class="flaticon-statistics"></i>
@@ -55,8 +61,9 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Food on the way</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> 4567</p>
-                            <p class="fs-12">Today</p>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_dispatched}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
                         </div>
                     </div>
                     <i class="flaticon-statistics"></i>
@@ -69,7 +76,7 @@
                         <div class="ms-panel-body media">
                             <i class="fa fa-truck fa-6" aria-hidden="true"></i>
                             <div class="media-body">
-                                <h6>10</h6>
+                                <h6>{{$total_completed}}</h6>
                                 <span>Delivered</span>
                             </div>
                         </div>
@@ -83,8 +90,8 @@
                         <div class="ms-panel-body media">
                             <i class="material-icons">cached</i>
                             <div class="media-body">
-                                <h6>10</h6>
-                                <span>Refund</span>
+                                <h6>{{$total_refund}}</h6>
+                                <span>no. of order Refunded </span>
                             </div>
                         </div>
                     </div>
@@ -95,10 +102,10 @@
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
-                            <i class="fa fa-refresh" aria-hidden="true"></i>
+                            <i class="material-icons">timer</i>
                             <div class="media-body">
-                                <h6>10</h6>
-                                <span>Scheduled</span>
+                                <h6>{{$total_ready_to_dispatch}}</h6>
+                                <span>Ready to dispatch</span>
                             </div>
                         </div>
                     </div>
@@ -110,9 +117,9 @@
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
-                            <i class="material-icons">cached</i>
+                            <i class="material-icons">functions</i>
                             <div class="media-body">
-                                <h6>{{vendorTotalOrderCount(Auth::guard('vendor')->user()->id)}}</h6>
+                                <h6>{{$total_order}}</h6>
                                 <span>Total order</span>
                             </div>
                         </div>
@@ -224,11 +231,11 @@
                                 <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                                     <div class="ms-card no-margin">
                                         <div class="ms-card-img">
-                                            <img src="{{asset('products')}}/{{$value->product_image}}" alt="card_img" style="width: 530px; height: 240px;">
+                                            <img src="{{asset('products').'/'.$value->product_image}}" alt="card_img" style="width: 530px; height: 240px;">
                                         </div>
                                         <div class="ms-card-body">
                                             <div class="ms-card-heading-title">
-                                                <h6>{{$value->name}} </h6>
+                                                <h6>{{$value->product_name}} </h6>
                                                 <span class="green-text"><strong><i class="fas fa-rupee-sign"></i> {{$value->product_price}}</strong></span>
                                             </div>
 
@@ -327,54 +334,35 @@
                     </div>
                     <div class="ms-panel-body">
                         <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-6">
+                            @foreach($top_rated_products as $k=>$product)
+                            <div class="col-lg-3 col-md-6 col-sm-6">
                                 <div class="ms-card no-margin">
                                     <div class="ms-card-body">
                                         <div class="media fs-14">
-                                            <div class="mr-2 align-self-center">
-                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-1.jpg" class="ms-img-round" alt="people">
-                                            </div>
+{{--                                            <div class="mr-2 align-self-center">--}}
+{{--                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-1.jpg" class="ms-img-round" alt="people">--}}
+{{--                                            </div>--}}
                                             <div class="media-body">
-                                                <h6>Hunger House </h6>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="material-icons">more_vert</i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li class="ms-dropdown-list">
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Sales</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Details</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Remove</span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
+                                                <h6>{{$product->product_name}} </h6>
                                             </div>
 
                                         </div>
                                         <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                                            <li class="ms-rating-item"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
+                                            <?php
+                                            $black_star=5-$product->product_rating;
+                                            for ($i=$black_star;$i<=5;$i++){
+                                            echo '<li class="ms-rating-item"><i class="material-icons">star</i></li>';
+                                            }
+                                            for ($i=$product->product_rating;$i<=5;$i++){
+                                                echo '<li class="ms-rating-item rated"><i class="material-icons">star</i></li>';
+                                            }
+                                            ?>
+
                                         </ul>
 
                                     </div>
                                     <div class="ms-card-img">
-                                        <img src="{{asset('frontend')}}/assets/img/costic/food-1.jpg" alt="card_img">
+                                        <img src="{{asset('products').'/'.$product->product_image}}" alt="card_img">
                                     </div>
                                     <!-- <div class="ms-card-footer text-disabled d-flex">
                                       <div class="ms-card-options">
@@ -386,124 +374,7 @@
                                     </div> -->
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="ms-card no-margin">
-                                    <div class="ms-card-body">
-                                        <div class="media fs-14">
-                                            <div class="mr-2 align-self-center">
-                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-2.jpg" class="ms-img-round" alt="people">
-                                            </div>
-                                            <div class="media-body">
-                                                <h6>Food Lounge</h6>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="material-icons">more_vert</i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li class="ms-dropdown-list">
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Sales</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Details</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Remove</span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
-                                            </div>
-
-                                        </div>
-                                        <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                                            <li class="ms-rating-item"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                        </ul>
-
-                                    </div>
-                                    <div class="ms-card-img">
-                                        <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
-                                    </div>
-                                    <!-- <div class="ms-card-footer text-disabled d-flex">
-                                      <div class="ms-card-options">
-                                        <i class="material-icons">favorite</i> 982
-                                      </div>
-                                      <div class="ms-card-options">
-                                        <i class="material-icons">comment</i> 785
-                                      </div>
-                                    </div> -->
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6">
-                                <div class="ms-card no-margin">
-                                    <div class="ms-card-body">
-                                        <div class="media fs-14">
-                                            <div class="mr-2 align-self-center">
-                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-6.jpg" class="ms-img-round" alt="people">
-                                            </div>
-                                            <div class="media-body">
-                                                <h6>Delizious </h6>
-                                                <div class="dropdown float-right">
-                                                    <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <i class="material-icons">more_vert</i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-right">
-                                                        <li class="ms-dropdown-list">
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Sales</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Details</span>
-                                                                </div>
-                                                            </a>
-                                                            <a class="media p-2" href="#">
-                                                                <div class="media-body">
-                                                                    <span>Remove</span>
-                                                                </div>
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                <p class="fs-12 my-1 text-disabled">30 seconds ago</p>
-                                            </div>
-
-                                        </div>
-                                        <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                                            <li class="ms-rating-item"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                            <li class="ms-rating-item rated"><i class="material-icons">star</i></li>
-                                        </ul>
-
-                                    </div>
-                                    <div class="ms-card-img">
-                                        <img src="{{asset('frontend')}}/assets/img/costic/food-3.jpg" alt="card_img">
-                                    </div>
-                                    <!-- <div class="ms-card-footer text-disabled d-flex">
-                                      <div class="ms-card-options">
-                                        <i class="material-icons">favorite</i> 982
-                                      </div>
-                                      <div class="ms-card-options">
-                                        <i class="material-icons">comment</i> 785
-                                      </div>
-                                    </div> -->
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -765,7 +636,6 @@
             <!-- Total Earnings -->
 
 
-
             <!-- Recent Support Tickets -->
         <!-- <div class="col-xl-6 col-md-12">
           <div class="ms-panel ms-panel-fh">
@@ -945,16 +815,34 @@
         gradientFill.addColorStop(1, "rgba(255,255,255,0)");
 
         // all data
-        var data_1 = [1800, 1600, 2300, 2800, 3600, 2900, 3000, 3800, 3600];
-        var data_2 = [4100, 3800, 3200, 3400, 2700, 2600, 3300, 3000, 2900];
-        var labels = ["Jan-11", "Jan-12", "Jan-13", "Jan-14", "Jan-15", "Jan-16", "Jan-17", "Jan-18", "Jan-19"];
+        // var data_1 = [1800, 1600, 2300, 2800, 3600, 2900, 3000, 3800, 3600];
+        // var data_2 = [4100, 3800, 3200, 3400, 2700, 2600, 3300, 3000, 2900];
+        // var labels = ["Jan-11", "Jan-12", "Jan-13", "Jan-14", "Jan-15", "Jan-16", "Jan-17", "Jan-18", "Jan-19"];
+
+        var data_1 = [
+            @foreach($graph_data as $k=>$v)
+            {{$v['total_net_amount']}},
+            @endforeach];
+
+        var data_2 = [
+            @foreach($graph_data as $k=>$v)
+            {{$v['order_count']}},
+            @endforeach];
+
+
+        var labels =[
+            @foreach($graph_data as $k=>$v)
+            "{{ date('F-Y', strtotime($v['created_at']))}}" ,
+            @endforeach];
+
+
 
         var lineChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: "Data",
+                    label: "Total earning Rs.",
                     borderColor: gradientStroke,
                     pointBorderColor: gradientStroke,
                     pointBackgroundColor: gradientStroke,
@@ -970,7 +858,7 @@
                     data: data_1
                 },
                     {
-                        label: "Data",
+                        label: "No. of orders completed",
                         borderColor: gradientStroke,
                         pointBorderColor: gradientStroke,
                         pointBackgroundColor: gradientStroke,
@@ -1020,7 +908,9 @@
             }
         });
 
-
+        $("#dashboard_input").change(function() {
+            this.form.submit();
+        });
     </script>
 @endpush
 

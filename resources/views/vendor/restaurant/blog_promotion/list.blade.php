@@ -4,10 +4,12 @@ $breadcrumb[] = ["name"  => "Home",
                  'route' => route("restaurant.dashboard")];
 $breadcrumb[] = ["name"  => "Shop Promotion management",
                  'route' => route("restaurant.shop.promotion")];
+$breadcrumb[] = ["name"  => "List",
+                 'route' => ""];
+
 ?>
 @extends('vendor.restaurants-layout')
 @section('main-content')
-
     <div class="ms-content-wrapper">
         <div class="row">
 

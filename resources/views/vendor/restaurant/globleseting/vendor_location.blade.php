@@ -18,43 +18,67 @@
             <div class="col-md-9">
                 <div class="ms-panel">
                     <div class="ms-panel-header">
-                        <h6>Order Time Setting</h6>
+                        <h6>Location Setting</h6>
                     </div>
                     <div class="ms-panel-body">
                         @include('vendor.restaurant.alertMsg')
 
-                        <form class="validation-fill clearfix " id="menu-form" action="{{ route('restaurant.globleseting.vendor_location')}}" method="post">
+                        <form class="validation-fill clearfix " id="menu-form" action="{{ route('restaurant.globleseting.vendor_location') }}" method="post">
                             @csrf
 
-                             {{-- Location form start --}}
-                             <div class="form-row">
+                            {{-- Location form start --}}
+                            <div class="form-row">
                                 <div class="col-md-12 mb-3">
-                                  <label>Restaurent Latitude</label>
-                                  <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Restaurent Latitude" step="0.000001" name="lat" value="{{number_format(@$Vendor->lat,6)}}">
-                                    @if ($errors->has('lat'))
-                                            <span class="ms-text-danger">
-                                                <strong>{{ $errors->first('lat') }}</strong>
-                                            </span>
-                                        @endif
-                                  </div>
+                                    <label>Location</label>
+                                    <div class="input-group">
+                                        <input type="text" id="address-input" name="location" class="form-control map-input" value="" >
+                                    </div>
+
                                 </div>
-                                <div class="col-md-12 mb-2">
-                                  <label>Restaurent Longitude</label>
-                                  <div class="input-group">
-                                    <input type="number" class="form-control" placeholder="Restaurent Latitude" step="0.000001" name="long"  value="{{number_format(@$Vendor->long,6)}}">
-                                    @if ($errors->has('long'))
-                                            <span class="ms-text-danger">
-                                                <strong>{{ $errors->first('long') }}</strong>
-                                            </span>
-                                        @endif
-                                  </div>
+                                <div class="col-md-12 mb-3">
+                                    <div id="address-map-container" style="width:100%;height:400px; ">
+                                        <div style="width: 100%; height: 100%" id="address-map"></div>
+                                        <input type="hidden" name="address_latitude" id="" value="{{@$Vendor->lat }}" />
+                                        <input type="hidden" name="address_longitude" id="" value="{{@$Vendor->long }}" />
+                                    </div>
+
                                 </div>
-                              </div>
+                                <div class="col-md-6 mb-3">
+                                    <label>Restaurent Latitude</label>
+                                    <div class="input-group">
+                                        <input id="address-latitude" type="text" class="form-control" placeholder="Latitude"
+                                               step="" name="lat"
+                                               value="{{@$Vendor->lat}}" readonly required><br>
+                                        @if ($errors->has('lat'))
+                                            <span class="ms-text-danger">
+                                                        <strong>{{ $errors->first('lat') }}</strong>
+                                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-2">
+                                    <label>Restaurent Longitude</label>
+                                    <div class="input-group">
+                                        <input id="address-longitude" type="text" class="form-control" placeholder="Latitude"
+                                               step="" name="long"
+                                               value="{{@$Vendor->long}}" readonly required><br>
+                                        @if ($errors->has('long'))
+                                            <span class="ms-text-danger">
+                                                        <strong>{{ $errors->first('long') }}</strong>
+                                                    </span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                             {{-- Location form end --}}
 
                             <div class="form-row">
-                                <button class="btn btn-primary" type="submit">Submit</button>
+                                <div class="col-md-6 mb-6">
+                                    <a class="btn btn-light " href="{{route('restaurant.require.ordertime')}}" >Back</a>
+                                </div>
+                                <div class="col-md-6 mb-6">
+                                    <button class="btn btn-primary" type="submit"  style="float: right">Submit</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -66,4 +90,85 @@
 
         </div>
     </div>
+@endsection
+
+@section('page-js')
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize&language=en&region=GB" async defer></script>
+    <script>
+
+        function initialize(){
+            var map = new google.maps.Map(document.getElementById('address-map'),{
+                center:{
+                    lat:<?php echo (isset($Vendor->lat) && $Vendor->lat!='') ? $Vendor->lat : 51.5073509;?>,
+                    lng:<?php echo (isset($Vendor->long) && $Vendor->long!='') ? $Vendor->long : -0.12775829999998223;?>
+                },
+                zoom:15
+
+            });
+            var marker = new google.maps.Marker({
+                position:{
+                    lat:<?php echo (isset($Vendor->lat) && $Vendor->lat!='') ? $Vendor->lat : 51.5073509;?>,
+                    lng:<?php echo (isset($Vendor->long) && $Vendor->long!='') ? $Vendor->long : -0.12775829999998223;?>
+                },
+                map:map,
+                draggable:true
+            });
+            var searchBox = new google.maps.places.SearchBox(document.getElementById("address-input"));
+            map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('address-input'));
+
+            google.maps.event.addListener(searchBox, 'places_changed', function(event) {
+                searchBox.set('map', null);
+
+
+
+                var places = searchBox.getPlaces();
+
+                setLocationCoordinates(places[0].geometry.location.lat(),places[0].geometry.location.lng());
+                var bounds = new google.maps.LatLngBounds();
+                var i, place;
+                for (i = 0; place = places[i]; i++) {
+                    (function(place) {
+                        var marker = new google.maps.Marker({
+
+                            position: place.geometry.location,
+                            draggable:true
+
+
+                        });
+                        marker.bindTo('map', searchBox, 'map');
+                        google.maps.event.addListener(marker,'dragend',function(event) {
+                            setLocationCoordinates(event.latLng.lat(),event.latLng.lng());
+                        });
+                        google.maps.event.addListener(marker, 'map_changed', function() {
+                            if (!this.getMap()) {
+                                this.unbindAll();
+                            }
+                        });
+
+                        bounds.extend(place.geometry.location);
+
+
+                    }(place));
+
+
+
+
+                }
+                map.fitBounds(bounds);
+                searchBox.set('map', map);
+                map.setZoom(Math.min(map.getZoom(),15));
+
+            });
+            google.maps.event.addListener(marker,'dragend',function(event) {
+                setLocationCoordinates(event.latLng.lat(),event.latLng.lng());
+            });
+            function setLocationCoordinates( lat, lng) {
+                const latitudeField = document.getElementById("address-latitude");
+                const longitudeField = document.getElementById("address-longitude");
+                latitudeField.value = lat;
+                longitudeField.value = lng;
+            }
+        }
+
+    </script>
 @endsection
