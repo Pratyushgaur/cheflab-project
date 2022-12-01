@@ -733,7 +733,7 @@ class CartApiController extends Controller
 //                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
 //            }
 
-            $cart_users = Cart::select('vendor_id', 'id')->withCount(['products'])->where('user_id', $request->user_id)->first();
+            $cart_users = Cart::select('vendor_id', 'id','name')->withCount(['products'])->where('user_id', $request->user_id)->first();
 
             if (!isset($cart_users->id))
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
