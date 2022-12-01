@@ -739,7 +739,9 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => "your cart is empty"], 401);
 
             $r                 = $cart_users->toArray();
+            $ven = Vendors::where('id','=',$r['vendor_id'])->select('name')->first();
             $cart_id           = $cart_users->id;
+            $r['restaurant_name'] = $ven->name;
             $cartTotal         = CartProduct::where('cart_id', '=', $cart_id);
             $cartVarintProduct = $cartTotal->join('cart_product_variants', 'cart_products.id', '=', 'cart_product_variants.cart_product_id');
             $cartVarintProduct = $cartVarintProduct->join('variants', 'cart_product_variants.variant_id', '=', 'variants.id');
