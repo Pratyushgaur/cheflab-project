@@ -143,4 +143,39 @@ class VendorReviewController extends Controller
             ], 500);
         }
     }
+
+    public function getVendorReviews(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(),
+            [
+                'vendor_id' => 'required',
+                'offset' => 'required',
+                'limit' => 'required'
+            ]);
+            if($validateUser->fails()){
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'=>$validateUser->errors()->all()
+
+                ], 401);
+            }
+            //
+            $review = VendorReview::join('users','vendor_review_rating.user_id','=','users.id')->where('vendor_id','=',$request->vendor_id)
+            ->skip($request->offset)->take($request->limit)
+            ->orderBy('vendor_review_rating.id','desc')
+            ->select('users.name',\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image') , 'vendor_review_rating.rating','review',\DB::raw("DATE_FORMAT(vendor_review_rating.created_at, '%d %b %Y at %H:%i %p') as date"))->get();
+            return response()->json([
+                'status' => true,
+                'message'=>'Data Get Successfully',
+                'response'=>$review
+
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

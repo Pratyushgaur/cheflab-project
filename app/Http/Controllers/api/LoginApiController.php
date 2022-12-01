@@ -40,6 +40,9 @@ class LoginApiController extends Controller
                 ], 401);
             }else{
                 $otp = $this->otp_generate($request->mobile_number);
+                $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";  
+                $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$request->mobile_number&message=".urlencode($msg)."&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507166723953585920";
+                Http::get($url);
                 return response()->json([
                     'status' => true,
                     'message'=>'otp Generated',
