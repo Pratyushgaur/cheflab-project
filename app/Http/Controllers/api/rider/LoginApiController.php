@@ -17,7 +17,7 @@ class LoginApiController extends Controller
         try {
             $validateUser = Validator::make($request->all(),
             [
-                'mobile_number' => 'required|numeric|digits:10'
+                'username' => 'required|numeric|digits:10'
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();
@@ -27,17 +27,20 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
-            if (Deliver_boy::where(['mobile' => $request->mobile_number])->exists()) {
-                $otp = $this->otp_generate($request->mobile_number);
+            $deliveryBoy =  Deliver_boy::where(['mobile' => $request->username])->orWhere('username','=',$request->username);
+            if ($deliveryBoy->exists()) {
+                $data =  $deliveryBoy->first();
+                $otp = $this->otp_generate($data->mobile);
                 return response()->json([
                     'status' => true,
                     'message'=>'Otp Send Successfully',
-                    'otp'=>$otp
+                    'otp'=>$otp,
+                    'mobile' =>$data->mobile
                 ], 200);
             } else {
                 return response()->json([
                     'status' => false,
-                    'error'=>'Mobile Number Not Found'
+                    'error'=>'User Not Found'
 
                 ], 401);
             }
@@ -70,12 +73,12 @@ class LoginApiController extends Controller
             $insertedOtp = RiderMobileOtp::where(['mobile_number' =>$request->mobile_number])->first();
             if($insertedOtp->otp == $request->otp){
                 RiderMobileOtp::where(['mobile_number' =>$request->mobile_number])->update(['status' =>'1']);
-                $user = Deliver_boy::where('mobile','=',$request->mobile_number)->select('id','name','mobile','email')->first();
-                $token = $user->createToken('cheflab-app-token')->plainTextToken;
+                $user = Deliver_boy::where('mobile','=',$request->mobile_number)->select('id','name','mobile','email','type')->first();
+                ///$token = $user->createToken('cheflab-app-token')->plainTextToken;
                 return response()->json([
                     'status' => true,
                     'message'=>'User Login Successfully',
-                    'token'=>array('name' =>$user->name,'email'=>$user->email,'mobile'=>$user->mobile,'user_id'=>$user->id,'token'=>$token)
+                    'user'=>array('name' =>$user->name,'email'=>$user->email,'mobile'=>$user->mobile,'user_id'=>$user->id,'type'=>$user->type)
                 ], 200);
             }else{
                 return response()->json([
@@ -103,5 +106,10 @@ class LoginApiController extends Controller
         }
         return $Otp_no;
 
+    }
+    public function getDistance()
+    {
+        //return round(point2point_distance(24.466551,74.884048,24.464050432928225,74.86669534531778,'K'),2);
+        //24.464050432928225, 74.86669534531778
     }
 }
