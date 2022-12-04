@@ -194,7 +194,7 @@
                                  <div class="card card-default">
                                     <div class="card-body">
                                         <input type="hidden" name="id" value="{{$data->id}}">
-                                        <textarea id="summernote" name="user_privacy_policy">
+                                        <textarea type="text" class="form-control" name="user_privacy_policy">
                                             {{$data->user_privacy_policy}}
                                         </textarea>
                                     </div>
