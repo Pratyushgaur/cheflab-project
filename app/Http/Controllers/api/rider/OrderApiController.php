@@ -23,7 +23,8 @@ class OrderApiController extends Controller
             $validateUser = Validator::make($request->all(),
             [
                 'offset' => 'required|numeric',
-                'user_id' => 'required|numeric'
+                'user_id' => 'required|numeric',
+                'status' => 'required'
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();
@@ -35,11 +36,18 @@ class OrderApiController extends Controller
             }
         
             $order = RiderAssignOrders::where('rider_id','=',$request->user_id);
+            if($request->status == 'completed'){
+                $order = $order->where('action','=','3');
+                
+            }
+            if($request->status == 'cancelled'){
+                $order = $order->where('action','=','2');
+            }
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
             $order = $order->skip($request->offset)->take(10);
-            $order = $order->select('orders.customer_name',\DB::raw("DATE_FORMAT(orders.created_at, '%d/%b/%y %H:%i %p') as order_date"),'orders.id as order_id');
-            
+            $order = $order->select('orders.customer_name',\DB::raw("DATE_FORMAT(orders.created_at, '%d/%b/%y %H:%i %p') as order_date"),'orders.order_id','orders.id as order_row_id','net_amount','rider_assign_orders.cancel_reason');
+            $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile');
 
             // $order = Order::where('user_id', '=', request()->user()->id);
             // $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"),'delivery_address','orders.lat','orders.long','vendors.lat as vendor_lat','vendors.long as vendor_lng','vendors.fssai_lic_no','vendors.address as vendor_address');
@@ -50,23 +58,12 @@ class OrderApiController extends Controller
             $order = $order->get();
 
             foreach ($order as $key => $value) {
-                $products              = OrderProduct::where('order_id', '=', $value->order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty','order_products.id as order_product_id')->get();
-                foreach($products as $k => $v){
-                    $OrderProductAddon = OrderProductAddon::where('order_product_id','=',$v->order_product_id)->select('addon_name','addon_price','addon_qty')->get();
-                    $OrderProductVariant = OrderProductVariant::where('order_product_id','=',$v->order_product_id)->select('variant_name','variant_price','variant_qty')->first();
-                    if(!empty($OrderProductVariant)){
-                        $products[$k]->variant = $OrderProductVariant;
-                    }
-                    if(!empty($OrderProductAddon->toArray())){
-                        $products[$k]->addons = $OrderProductAddon;
-                    }
-
-                }
+                $products              = OrderProduct::where('order_id','=',$value->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
                 $order[$key]->products = $products;
             }
             return response()->json([
                 'status' => true,
-                'message'=>'Otp Send Successfully',
+                'message'=>'data Get Successfully',
                 'response'=>$order
             ], 200);
 

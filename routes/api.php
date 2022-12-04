@@ -168,7 +168,10 @@ Route::post('rider-otp-verify',[App\Http\Controllers\api\rider\LoginApiControlle
 Route::post('rider-home',[App\Http\Controllers\api\rider\AppController::class,'home']);
 Route::post('rider-profile',[App\Http\Controllers\api\rider\AppController::class,'profile']);
 Route::post('rider-register-token',[App\Http\Controllers\api\rider\AppController::class,'register_token']);
+Route::post('rider-chage-status',[App\Http\Controllers\api\rider\AppController::class,'change_status']);
+
 Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
+Route::post('rider-analytics',[App\Http\Controllers\api\rider\AppController::class,'analytics']);
 
 
 //
