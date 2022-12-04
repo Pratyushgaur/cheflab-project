@@ -118,7 +118,6 @@
                                     <th >Restaurant Name</th>
                                     <th >Product Name</th>
                                     <th  >Image</th>
-                                    <th  >Category</th>
                                     <th> Type</th>
                                     <th> Price</th>
                                     <th  >status</th>
@@ -187,7 +186,7 @@
                       <th >Product Name</th>
                       <th> Image</th>
                       <th  >Cuisines </th>
-                      <th  > Category</th>
+                      
                       <th  > Catalogue </th>
                       <th  >Product Price</th>
                       <th  >Type</th>
@@ -287,7 +286,7 @@
           {data: 'restaurantName', name: 'restaurantName'},
           {data: 'product_name', name: 'product_name'},
           {data: 'product_image', name: 'product_image',orderable: false, searchable: false},
-          {data: 'categoryName', name: 'categoryName'},
+          
           {data: 'type', name: 'type'},
           {data: 'product_price', name: 'product_price'},
           {data: 'status', name: 'status',orderable: false, searchable: false},

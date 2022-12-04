@@ -29,6 +29,8 @@ class VendorPromotionController extends Controller
         if (@Auth::guard('vendor')->user()->table_service == 1)
             $for['dineout'] = "Dine-out Promotion";
 
+        $for["order_traking"]= "Order Tracking Banner";
+
         $slot = RootImage::where('is_active', '=', '1')->select('id', 'price')->get();
         return view('vendor.restaurant.promotion.create', compact('slot', 'for'));
     }

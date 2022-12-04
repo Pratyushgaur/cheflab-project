@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\AdminMasters;
 use App\Models\Mobileotp;
 use Validator;
+use Illuminate\Support\Facades\Http;
+
 
 class LoginApiController extends Controller
 {
@@ -103,6 +105,7 @@ class LoginApiController extends Controller
 
                 'mobile_number' => 'required|numeric|digits:10|unique:users,mobile_number',
                 'name' => 'required|max:20',
+                'lastname' => 'required|max:20',
                 'email' => 'required|email|unique:users,email',
                 'alternative_mobile' => 'nullable|sometimes|numeric|digits:10|unique:users,alternative_number',
 
@@ -137,6 +140,7 @@ class LoginApiController extends Controller
 
 
                 $user->name =$request->name;
+                $user->surname =$request->lastname;
                 $user->email =$request->email;
                 $user->mobile_number =$request->mobile_number;
               //  $user->by_earn = $refer_amount;
@@ -185,6 +189,9 @@ class LoginApiController extends Controller
             }
             if (User::where(['mobile_number' => $request->mobile_number])->exists()) {
                 $otp = $this->otp_generate($request->mobile_number);
+                $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";  
+                $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$request->mobile_number&message=".urlencode($msg)."&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507166723953585920";
+                Http::get($url);
                 return response()->json([
                     'status' => true,
                     'message'=>'Otp Send Successfully',

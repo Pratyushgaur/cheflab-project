@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // chef home page api
     Route::post('chef-home', [App\Http\Controllers\api\AppController::class, 'chefHomePage']);
     Route::post('getChefByCategory', [App\Http\Controllers\api\AppController::class, 'getChefByCategory']);
+    Route::post('getChefByCuisines', [App\Http\Controllers\api\AppController::class, 'getChefByCuisines']);
     Route::post('getChefDetailPage', [App\Http\Controllers\api\AppController::class, 'getChefDetailPage']);
     Route::post('getChefProfile', [App\Http\Controllers\api\AppController::class, 'getChefProfile']);
     //
@@ -133,8 +134,18 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // refer ammount
     Route::post('refer-amount', [\App\Http\Controllers\api\AppController::class, 'getReferAmmount']);
 
-});
 
+
+
+    //
+
+});
+Route::get('login',function(){
+    return response()->json([
+        'status' => false,
+        'error'  => "Need To Use Token for this route"
+    ], 500);
+})->name('login');
 Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
 Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::class,'register_verify_otp']);
 Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
@@ -145,5 +156,17 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
-// Rider
-Route::post('login-otp-verify-rider',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']); 
+Route::post('rider-otp-send',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']);
+Route::post('rider-otp-verify',[App\Http\Controllers\api\rider\LoginApiController::class,'login_verify_otp']);
+// home
+
+Route::post('rider-home',[App\Http\Controllers\api\rider\AppController::class,'home']);
+Route::post('rider-profile',[App\Http\Controllers\api\rider\AppController::class,'profile']);
+Route::post('rider-register-token',[App\Http\Controllers\api\rider\AppController::class,'register_token']);
+Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
+
+
+//
+
+Route::post('rider-order-history',[App\Http\Controllers\api\rider\OrderApiController::class,'orderhistory']);
+Route::get('getDistance',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance']);

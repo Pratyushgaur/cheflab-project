@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ApiLogMiddelware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
@@ -45,6 +46,7 @@ class Kernel extends HttpKernel
 //            'throttle:api',//https://startutorial.com/view/fixing-429-too-many-requests-in-laravel
             'throttle:600,1',//You can delete this middleware or change limits. In the first parameter, set the maximum number of requests per minute to be processed. The second parameter should include the number of minutes you need to wait before completing other requests when the limit of requests from the first parameter is exceeded.
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            ApiLogMiddelware::class,
         ],
         'isAdmin' => [
             \App\Http\Middleware\isAdmin::class,
@@ -87,6 +89,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'isadminloginAuth' => \App\Http\Middleware\isAdminLoginAuth::class,
         'isVendorloginAuth' => \App\Http\Middleware\isVendorLoginAuth::class,
-        'isChefLoginAuth' => \App\Http\Middleware\isChefLoginAuth::class
+        'isChefLoginAuth' => \App\Http\Middleware\isChefLoginAuth::class,
+//        'ApiLogMiddelware'=>\Illuminate\Routing\Middleware\ApiLogMiddelware::class,
     ];
 }

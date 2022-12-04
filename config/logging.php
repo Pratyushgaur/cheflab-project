@@ -3,7 +3,7 @@
 use Monolog\Handler\NullHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogUdpHandler;
-
+$date=date('Y-m-d',time());
 return [
 
     /*
@@ -98,6 +98,10 @@ return [
 
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
+        ],
+        'your_channel_name' => [
+            'driver' => 'single',
+            'path' => storage_path("logs/".$date."_request_API.log"),
         ],
     ],
 

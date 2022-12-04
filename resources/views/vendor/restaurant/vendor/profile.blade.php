@@ -60,29 +60,31 @@ if (is_array($banners))
                         <p>{{$resturant->bio}} </p>
 
                         <div class="ms-profile-skills">
-                            <h2 class="section-title">Deals with categories</h2>
+                            <h2 class="section-title">Deals with categories &nbsp;<a href="javascript:void(0)"  data-toggle="modal" data-target="#edit-category-model" data-title="Edit"><i class="fa fa-edit"></i></a></h2>
                             <ul class="ms-skill-list">
                                 <?php
                                 $categories_id = explode(',', $resturant->deal_categories);
 
                                 $deals = \App\Models\Catogory_master::whereIn('id', $categories_id)->get();
-
+                                $dealsIds = [];
                                 ?>
                                 @foreach($deals as $k=>$category)
+                                    <?php $dealsIds[] = $category->id; ?>
                                     <li class="ms-skill">{{$category->name}}</li>
                                 @endforeach
                             </ul>
                         </div>
                         <div class="ms-profile-skills">
-                            <h2 class="section-title">Deals with Cuisines</h2>
+                            <h2 class="section-title">Deals with Cuisines &nbsp;<a href="javascript:void(0)"  data-toggle="modal" data-target="#edit-cuisines-model" data-title="Edit"><i class="fa fa-edit"></i></a></h2>
                             <ul class="ms-skill-list">
                                 <?php
                                 $cusines_id = explode(',', $resturant->deal_cuisines);
 
                                 $deals = \App\Models\Cuisines::whereIn('id', $cusines_id)->where('is_active', '1')->orderBy('position', 'asc')->get();
-
+                                $cuisIds = [];
                                 ?>
                                 @foreach($deals as $k=>$cusine)
+                                    <?php $cuisIds[] = $cusine->id; ?>
                                     <li class="ms-skill">{{$cusine->name}}</li>
                                 @endforeach
                             </ul>
@@ -421,7 +423,95 @@ if (is_array($banners))
 
 
         </div>
+    <!-- model -->
+    <div class="modal fade" id="edit-category-model" tabindex="-1" role="dialog" aria-labelledby="modal-10">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
 
+                <div class="modal-header">
+                    <h3 class="modal-title has-icon ms-icon-round ">Edit Restaurant Categories</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="" method="POST" action="{{route('restaurant.profile.update.category')}}">
+                    {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Categories</label>
+                            <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
+                                @foreach($categories as $k =>$value)
+                                    <?php 
+                                    
+                                        if(in_array($k, $dealsIds)){
+                                            ?>
+                                            <option value="{{$k}}" selected>{{$value}}</option>
+                                            <?php
+                                        }else{
+                                            ?>
+                                            <option value="{{$k}}">{{$value}}</option>
+                                            <?php
+                                        }
+                                    ?>
+                                    
+                                @endforeach
+                            </select>
+                        </div>  
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary shadow-none">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--  -->
+    <div class="modal fade" id="edit-cuisines-model" tabindex="-1" role="dialog" aria-labelledby="modal-10">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h3 class="modal-title has-icon ms-icon-round ">Edit Cuisines</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                </div>
+                <form id="" method="POST" action="{{route('restaurant.profile.update.cuisines')}}">
+                    {{ csrf_field() }}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Cuisines</label>
+                            <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
+                                @foreach($cuisines as $k =>$value)
+                                    <?php 
+                                    
+                                        if(in_array($k, $cuisIds)){
+                                            ?>
+                                            <option value="{{$k}}" selected>{{$value}}</option>
+                                            <?php
+                                        }else{
+                                            ?>
+                                            <option value="{{$k}}">{{$value}}</option>
+                                            <?php
+                                        }
+                                    ?>
+                                    
+                                @endforeach
+                            </select>
+                        </div>  
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary shadow-none">
+                            Update
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 
     </div>
 @endsection

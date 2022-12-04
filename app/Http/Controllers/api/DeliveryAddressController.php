@@ -32,7 +32,11 @@ class DeliveryAddressController extends Controller
             $address->address_type =$request->address_type;
             $address->lat = $request->lat;
             $address->long = $request->long;
+            $address->primary_key = $request->is_primary;
             $address->save();
+            if($address->primary_key){
+                DeliveryAddress::where('user_id',$request->user_id)->where('id','!=',$address->id)->update(['primary_key'=>'0']);
+            }
             return response()->json([
                 'status' => true,
                 'message'=>'Address Saved Successfully'
@@ -69,6 +73,7 @@ class DeliveryAddressController extends Controller
         try {
             $validateUser = Validator::make($request->all(), 
             [
+                'user_id' => 'required',
                 'id' => 'required',
                 'address_type' => 'required',
                 'house_no' => 'required',
@@ -81,7 +86,10 @@ class DeliveryAddressController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
            // $address = DeliveryAddress::find(request()->user()->id);
-            $update = DeliveryAddress::where('id', '=', $request->id)->where('address_type', '=', $request->address_type)->update(['house_no' => $request->house_no, 'reach' => $request->reach, 'contact_no' => $request->contact_no]);
+            $update = DeliveryAddress::where('id', '=', $request->id)->where('address_type', '=', $request->address_type)->update(['house_no' => $request->house_no, 'reach' => $request->reach, 'contact_no' => $request->contact_no,'primary_key'=>$request->is_primary]);
+            if($request->is_primary){
+                DeliveryAddress::where('user_id',$request->user_id)->where('id','!=',$request->id)->update(['primary_key'=>'0']);
+            }
             return response()->json([
                 'status' => true,
                 'message'=>'Address Update Successfully'

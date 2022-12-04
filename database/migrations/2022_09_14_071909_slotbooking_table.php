@@ -15,7 +15,8 @@ class SlotbookingTable extends Migration
     {
         //
         Schema::create('slotbooking_table', function (Blueprint $table) {
-            $table->bigIncrements('id');
+//            $table->bigIncrements('id');
+            $table->id();
             $table->unsignedBigInteger('cheflab_banner_image_id');
             $table->string('vendor_id');
             $table->datetime('from_date');

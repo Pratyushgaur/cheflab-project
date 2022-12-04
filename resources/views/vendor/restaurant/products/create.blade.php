@@ -96,7 +96,7 @@
                                     <span class="product_name_error text-danger"></span>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <label for="validationCustom22">Select Cuisines Category <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
@@ -121,7 +121,7 @@
 
                                     </div>
                                     <span class="category_error text-danger"></span>
-                                </div>
+                                </div> -->
                                 <div class="col-md-4 mb-3">
                                     <label for="validationCustom24">Select Product Catalogue <span
                                             class="text-danger">*</span></label>
@@ -139,8 +139,7 @@
 
 
                                 <div class="col-md-12 mb-3">
-                                    <label for="validationCustom12">Description <span
-                                            class="text-danger">*</span></label>
+                                    <label for="validationCustom12">Description</label>
                                     <div class="input-group">
                                         <textarea rows="5" id="validationCustom12" name="dis" class="form-control"
                                                   placeholder="Message"></textarea>
@@ -431,18 +430,18 @@
                         required: true,
                         maxlength: 120,
                     },
-                    cuisines: {
-                        required: true
-                    },
-                    category: {
-                        required: true
-                    },
+                    // cuisines: {
+                    //     required: true
+                    // },
+                    // category: {
+                    //     required: true
+                    // },
                     menu_id: {
                         required: true
                     },
-                    dis: {
-                        required: true,
-                    },
+                    // dis: {
+                    //     required: true,
+                    // },
                     item_price: {
                         required: true,
                         number: true,
@@ -462,18 +461,18 @@
                         required: "Item Name is required",
                         maxlength: "Item  name cannot be more than 120 characters"
                     },
-                    cuisines: {
-                        required: "Cuisines is Required",
-                    },
-                    category: {
-                        required: "Category is required",
-                    },
+                    // cuisines: {
+                    //     required: "Cuisines is Required",
+                    // },
+                    // category: {
+                    //     required: "Category is required",
+                    // },
                     menu_id: {
                         required: "Product Should be in Catalogue",
                     },
-                    dis: {
-                        required: "Item Description is Required For Detail of Product",
-                    },
+                    // dis: {
+                    //     required: "Item Description is Required For Detail of Product",
+                    // },
                     item_price: {
                         required: "Please Give The Price of Product",
                         number: "Price Should be in Number"

@@ -6,8 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
 use App\Models\VendorReview;
+use Illuminate\Support\Facades\DB;
 use Validator;
 use Carbon\Carbon;
+use App\Models\Cuisines;
+use App\Models\Catogory_master;
+
+use URL;
 // this is vikas testing
 class VendorReviewController extends Controller
 {
@@ -69,9 +74,10 @@ class VendorReviewController extends Controller
             $review->review	 =$request->review	;
             $review->save();
 
-            $rating=VendorReview::select(\DB::raw('AVG(rating) as rating'))->where('vendor_id',$request->vendor_id)->first();
+            $rating=VendorReview::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('vendor_id',$request->vendor_id)->first();
             $vendor=Vendors::find($request->vendor_id);
             $vendor->vendor_ratings=$rating->rating;
+            $vendor->review_count=$rating->total_review;
             $vendor->save();
             return response()->json([
                 'status' => true,
@@ -93,6 +99,7 @@ class VendorReviewController extends Controller
             [
                 'lat' => 'required',
                 'lng' => 'required',
+                'offset'=>'required','limit'=>'required',
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();
@@ -102,14 +109,31 @@ class VendorReviewController extends Controller
 
                 ], 401);
             }
-            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)
-                ->join('vendor_review_rating','vendors.id','=','vendor_review_rating.vendor_id')
-                ->where('vendor_review_rating.user_id', '=', $request->user()->id)
-                ->addSelect('vendor_review_rating.id','vendor_review_rating.user_id','vendor_review_rating.vendor_id','vendor_review_rating.rating as rating_given_by_me','vendor_review_rating.review')->get();
+            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)->orderBy('vendor_ratings','DESC');
+            $review = $review->addSelect('vendors.id as vendor_id');
+            $review = $review->addSelect('deal_cuisines')->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service');
+            $data = $review->get();
+            $baseurl = URL::to('vendor-banner/') . '/';
+            foreach ($data as $key => $value) {
+                $banners = json_decode($value->banner_image);
+                if (is_array($banners))
+                    $urlbanners = array_map(function ($banner) {
+                        return URL::to('vendor-banner/') . '/' . $banner;
+                    }, $banners);
+                else
+                    $urlbanners = [];
+
+                $data[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                $category                   = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $data[$key]->categories     = $category;
+                $data[$key]->imageUrl       = $baseurl;
+                $data[$key]->banner_image   = $urlbanners;
+                $data[$key]->next_available = next_available_day($value->id);
+            }
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
-                'response'=>$review
+                'response'=>$data
 
             ], 200);
         } catch (\Throwable $th) {

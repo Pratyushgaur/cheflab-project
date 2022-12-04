@@ -19,7 +19,7 @@ class CreateCheflabBannerImage extends Migration
             $table->string('bannerImage');
             $table->tinyInteger('position');
             $table->string('price');
-            $table->enum('banner_for', ['cheflab','chef', 'restaurant', 'dineout'])->comment('in mobile app where banner should be displayed');
+            $table->enum('banner_for', ['cheflab','chef', 'restaurant', 'dineout','order_traking'])->comment('in mobile app where banner should be displayed');
             $table->enum('is_active', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->softDeletes();
 

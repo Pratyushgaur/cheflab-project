@@ -23,6 +23,7 @@ class TableServiceBookings extends Migration
 
             $table->enum('booking_status', ['pending', 'accepted','rejected'])->default('pending')->comment('this flag for vendor; is vendor accept the booking?');
             $table->integer('booked_no_guest')->default(0);
+            $table->text('reject_reason')->nullable()->default(null);
             $table->dateTime('booked_slot_time_from');
             $table->dateTime('booked_slot_time_to');
             $table->integer('booked_slot_discount')->default(0);

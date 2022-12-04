@@ -69,6 +69,7 @@ class BlogPromotionController extends Controller
 
         //get "to_date" : add munber of days
         if (isset($promotion_time_frame_add_days[$request->time_frame])) {
+            $date_frame=$promotion_time_frame_add_days[$request->time_frame];
             $date_to = mysql_add_days($date_from, $promotion_time_frame_add_days[$request->time_frame]);
             $date_to = mysql_date_time_marge($date_to, $AppPromotionBlogs->to);
         } else
@@ -95,7 +96,7 @@ class BlogPromotionController extends Controller
 
         //if no vendor found, that means all slotes available for current vendor
         if (empty($vendor_ids)) {
-            $slot = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_position`, ' ( Price:', `blog_price`, ' ) ') AS name"), 'blog_position')
+            $slot = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_name`, ' Place ( Price:', `blog_price`, ' ) ') AS name"), 'blog_position')
                 ->where('app_promotion_blog_id', $request->app_promotion_blog_id)->where('is_active', 1)->pluck('name', 'blog_position');
             return \Response::json($slot);
         }
@@ -115,13 +116,15 @@ class BlogPromotionController extends Controller
             ->whereIn('vendor_id', $vendor_ids)
             ->pluck('app_promotion_blog_setting_id');
 //dd($booked_slot_ids);
-        $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_position`, ' ( Price:', `blog_price`, ' ) ') AS name"), 'id')
+        $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_name`, ' Place ( Price:', `blog_price`, ' ) ','For ',`blog_promotion_date_frame`,'Days') AS name"), 'id')
             ->where('app_promotion_blog_id', $request->app_promotion_blog_id)->where('is_active', 1);
 
         if (!empty($booked_slot_ids)) {
             $slotMaster->whereNotIn('id', $booked_slot_ids);
         }
-        $slot = $slotMaster->limit(config('custom_app_setting.blog_promotion_banner_number_of_slides'))->get();
+        $slot = $slotMaster->where('blog_promotion_date_frame',$date_frame)
+//            ->limit(config('custom_app_setting.blog_promotion_banner_number_of_slides'))
+            ->get();
 //dd($slot);
         if (isset($slot[0]))
             return \Response::json($slot);
@@ -189,7 +192,7 @@ class BlogPromotionController extends Controller
             $admin->notify(new CreateSlotBookingToAdminNotification($msg, \Auth::guard('vendor')->user()->name, $link)); //With new post
 //dd($slot);
 //        event(new CreateSlotBooki7ungEvent($slot));
-        return redirect()->route('restaurant.shop.promotion')->with('message', 'Successfully booked');
+        return redirect()->route('restaurant.shop.promotion')->with('success', 'Successfully booked');
     }
 
     public function save_product_promotion(Request $request)
@@ -237,7 +240,7 @@ class BlogPromotionController extends Controller
         $slot->vendor_id                     = \Auth::guard('vendor')->user()->id;
         $slot->save();
 
-        return redirect()->route('restaurant.product.promotion')->with('message', 'Successfully booked');
+        return redirect()->route('restaurant.product.promotion')->with('success', 'Successfully booked');
     }
 
 }

@@ -15,10 +15,13 @@ class CreateOrders extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('order_id');
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('user_id');
             $table->string('customer_name');
             $table->text('delivery_address')->comment('this addres also have deliver to customer name');
+            $table->text('landmark_address')->comment('landmark address');
+            $table->string('mobile_number')->comment('landmark address');
             $table->float('lat',8,6);
             $table->float('long',8,6);
             $table->string('pincode')->nullable()->default(null);
@@ -27,6 +30,8 @@ class CreateOrders extends Migration
             $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
             $table->float('gross_amount', 8, 2)->comment('after tax deduction ');
             $table->float('net_amount', 8, 2)->comment('after discount and other deduction, this amount will payed  by customer');
+            $table->enum('wallet_apply',['0','1'])->default('0')->comment('0= no and 1 =yes');
+            $table->float('wallet_cut',8, 2)->default(0);
             $table->float('discount_amount', 6, 2)->default(0);
             $table->unsignedBigInteger('coupon_id')->nullable()->default(null);
             $table->enum('payment_type',['COD','online'])->default('COD');

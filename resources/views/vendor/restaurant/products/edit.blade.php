@@ -101,7 +101,7 @@
                                     <span class="product_name_error text-danger"></span>
                                 </div>
 
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <label for="validationCustom22">Select Cuisines Category <span
                                             class="text-danger">*</span></label>
                                     <div class="input-group">
@@ -140,7 +140,7 @@
 
                                     </div>
                                     <span class="category_error text-danger"></span>
-                                </div>
+                                </div> -->
 
                                 <div class="col-md-4 mb-3">
                                     <label for="validationCustom24">Select Menu <span
@@ -158,8 +158,7 @@
 
 
                                 <div class="col-md-12 mb-3">
-                                    <label for="validationCustom12">Description <span
-                                            class="text-danger">*</span></label>
+                                    <label for="validationCustom12">Description </label>
                                     <div class="input-group">
                                         <textarea rows="5" id="validationCustom12" name="dis" value="{{$product->dis}}" class="form-control" placeholder="Message">{{$product->dis}}</textarea>
 
@@ -176,13 +175,13 @@
 
                                             <li>
                                                 <label class="ms-checkbox-wrap ms-checkbox-success">
-                                                    <input type="radio" value="veg" name="product_type" checked> <i
+                                                    <input type="radio" value="veg" name="product_type" <?php if($product->type == 'veg'){echo 'checked';} ?>> <i
                                                         class="ms-checkbox-check"></i>
                                                 </label> <span> Veg </span>
                                             </li>
                                             <li>
                                                 <label class="ms-checkbox-wrap ms-checkbox-danger">
-                                                    <input type="radio" value="non_veg" name="product_type"> <i
+                                                    <input type="radio" value="non_veg" name="product_type" <?php if($product->type == 'non_veg'){echo 'checked';} ?>> <i
                                                         class="ms-checkbox-check"></i>
                                                 </label> <span> Veg + Non Veg </span>
                                             </li>
@@ -467,18 +466,18 @@
                         required: true,
                         maxlength: 120,
                     },
-                    cuisines: {
-                        required: true
-                    },
-                    category: {
-                        required: true
-                    },
+                    // cuisines: {
+                    //     required: true
+                    // },
+                    // category: {
+                    //     required: true
+                    // },
                     menu_id: {
                         required: true
                     },
-                    dis: {
-                        required: true,
-                    },
+                    // dis: {
+                    //     required: true,
+                    // },
                     item_price: {
                         required: true,
                         number: true,

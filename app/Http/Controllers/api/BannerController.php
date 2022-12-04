@@ -125,7 +125,6 @@ class BannerController extends Controller
             $slots = \App\Models\SloteBook::rightJoin('cheflab_banner_image', 'cheflab_banner_image.id', '=', 'slotbooking_table.cheflab_banner_image_id')
                 ->where([ 'cheflab_banner_image.is_active' => '1' ])
                 ->where([ 'cheflab_banner_image.banner_for' =>  $request->for])
-                ->where([ 'slotbooking_table.for' =>  $request->for])
                 ->whereOr(function ($q) use ($vendor_ids, $current_date, $current_time) {
                     $q->whereIn('vendor_id', $vendor_ids)
                         ->where('from_date', '<=', $current_date)
@@ -136,17 +135,17 @@ class BannerController extends Controller
                 })
                 ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('slot-vendor-image') . '/", bannerImage) AS bannerImage,'
 //        .'from_date,to_date,name,slotbooking_table.id as slot_id,cheflab_banner_image.id as banner_id,slotbooking_table.price as slot_price,cheflab_banner_image.price as banner_price,'
-                    . 'cheflab_banner_image.position as banner_position')
+                    . 'cheflab_banner_image.position as banner_position,slotbooking_table.vendor_id')
                 ->orderBy('cheflab_banner_image.position', 'asc')
                 ->limit($number_of_slides)
                 ->get();
-
+//dd($slots->toArray());
             $response = [];
             foreach ($slots as $k => $slot) {
                 if ($slot->slot_id != '')
-                    $response[] = [ 'image' => $slot->slot_image, 'position' => $slot->banner_position ];
+                    $response[] = [ 'image' => $slot->slot_image, 'position' => $slot->banner_position,'vendor_id'=> $slot->vendor_id];
                 else
-                    $response[] = [ 'image' => $slot->bannerImage, 'position' => $slot->banner_position ];
+                    $response[] = [ 'image' => $slot->bannerImage, 'position' => $slot->banner_position ,'vendor_id'=>''];
             }
 
             return response()->json([
