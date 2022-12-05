@@ -64,7 +64,7 @@
                     "positionClass": "toast-top-left",
                     "preventDuplicates": false,
                     "onclick": null,
-                    "showDuration": "300",
+                    "showDuration": "5000",
                     "hideDuration": "1000",
                     "timeOut": "5000",
                     "extendedTimeOut": "1000",

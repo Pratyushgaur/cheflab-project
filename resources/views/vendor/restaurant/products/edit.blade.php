@@ -58,7 +58,6 @@
     </style>
     <div class="ms-content-wrapper">
         <div class="row">
-
             <div class="col-md-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb pl-0">
@@ -67,8 +66,6 @@
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.product.list')}}">Items</a>
                         </li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Item</li>
-
-
                     </ol>
                 </nav>
             </div>
@@ -215,15 +212,15 @@
 
                                     <span class="primary_variant_name_error text-danger"></span>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="">Primary Item Price <span class="text-danger">*</span></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="product_price" id="price" placeholder="Enter Price" value="{{$product->product_price}}">
+{{--                                <div class="col-md-4 mb-3">--}}
+{{--                                    <label for="">Primary Item Price <span class="text-danger">*</span></label>--}}
+{{--                                    <div class="input-group">--}}
+{{--                                        <input type="text" class="form-control" name="product_price" id="price" placeholder="Enter Price" value="{{$product->product_price}}">--}}
 
-                                    </div>
+{{--                                    </div>--}}
 
-                                    <span class="item_price_error text-danger"></span>
-                                </div>
+{{--                                    <span class="item_price_error text-danger"></span>--}}
+{{--                                </div>--}}
                                 <div class="col-md-4 mb-3">
                                     <label for="validationCustom23">Custmization Availablity</label>
                                     <div class="input-group">

@@ -84,7 +84,10 @@
         </ul>
       </li>
 
+        <li class="menu-item ">
+            <a href="{{route('restaurant.vendor.change_password')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Update Password</span></a>
 
+        </li>
       <!-- /Dashboard -->
       <!-- product -->
 

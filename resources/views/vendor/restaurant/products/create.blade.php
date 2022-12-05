@@ -187,7 +187,7 @@
                                     <span class="primary_variant_name_error text-danger"></span>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="">Primary Item Price <span class="text-danger">*</span></label>
+                                    <label for="">Item Price <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control" name="item_price" id="price"
                                                placeholder="Enter Price" value="">

@@ -184,4 +184,41 @@ class VendorController extends Controller
     }
 
 
+    public function change_password(Request $request){
+        return view('vendor.restaurant.vendor.change_password');
+    }
+    public function update_password(Request $request){
+        $this->validate($request, [
+            'old_password' => 'required',
+            'new_password' => 'min:6|required|same:confirm_password',
+//            'new_password' => 'min:6|required_with:confirm_password|same:confirm_password',
+            'confirm_password' => 'min:6'
+        ]);
+
+        $hashedPassword = \Auth::guard('vendor')->user()->password;
+        if (\Hash::check($request->old_password , $hashedPassword)) {
+            if (\Hash::check($request->new_password , $hashedPassword)) {
+//dd("dsfsd");
+                $users = Vendors::find(\Auth::guard('vendor')->user()->id);;
+                $users->password = bcrypt($request->new_password);
+                $users->save();
+//dd($users);
+//                session()->flash('message','password updated successfully');
+//                \Session::flush();
+//                \Auth::logout();
+//                return redirect('vendor/login');
+                return redirect()->back();
+            }
+            else{
+                session()->flash('message','new password can not be the old password!');
+                return redirect()->back();
+            }
+        }
+        else{
+            session()->flash('message','old password doesnt matched');
+            return redirect()->back();
+        }
+        return redirect()->route('restaurant.profile')->with('message', 'Vendor Details Update  Successfully');
+
+    }
 }

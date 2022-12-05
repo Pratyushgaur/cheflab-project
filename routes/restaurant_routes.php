@@ -1,4 +1,5 @@
-<?php // vendor auth route
+<?php
+// vendor auth route
 Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
     // restaurant route
     Route::group([
@@ -130,6 +131,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('user/profile', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'profile'])->name('restaurant.profile');
 
         Route::post('user/profile/update', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'update'])->name('restaurant.update');
+        Route::get('user/password', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'change_password'])->name('restaurant.vendor.change_password');
+        Route::post('user/password', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_password'])->name('restaurant.vendor.update_password');
 
         Route::post('user/profile/category/update',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_profile_categories'])->name('restaurant.profile.update.category');
         Route::post('user/profile/cuisines/update',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_profile_cuisines'])->name('restaurant.profile.update.cuisines');
