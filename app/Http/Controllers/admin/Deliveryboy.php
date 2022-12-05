@@ -87,12 +87,12 @@ class Deliveryboy extends Controller
      // return $request->input();die;
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|unique:vendors,email',
+            'email' => 'required|unique:deliver_boy,email',
             'city' => 'required',
             'pincode' => 'required',
             'password'  => 'required',
             'confirm_password'  => 'required',
-            'phone' => 'required|unique:vendors,mobile',
+            'phone' => 'required|unique:deliver_boy,mobile',
             'identity_image' => 'required',
             'identity_number' => 'required',
         ]);

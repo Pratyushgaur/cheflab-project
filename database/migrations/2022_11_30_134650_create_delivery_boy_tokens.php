@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRiderAssignOrders extends Migration
+class CreateDeliveryBoyTokens extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,11 @@ class CreateRiderAssignOrders extends Migration
      */
     public function up()
     {
-        Schema::create('rider_assign_orders', function (Blueprint $table) {
+        Schema::create('delivery_boy_tokens', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('rider_id');
             $table->foreign('rider_id')->references('id')->on('deliver_boy');
-            $table->unsignedBigInteger('order_id');
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->string('distance')->nullable();
-            $table->float('earning', 8, 2)->nullable();
-            $table->text('cancel_reason')->nullable()->commnet('if driver cancel the order then they put reason');
-            $table->enum('action',['0','1','2','3'])->default('0')->comment('0=pending 1= accept 2= reject 3=delivered');
+            $table->text('token');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -35,6 +30,6 @@ class CreateRiderAssignOrders extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rider_assign_orders');
+        Schema::dropIfExists('delivery_boy_tokens');
     }
 }
