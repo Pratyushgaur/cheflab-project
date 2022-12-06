@@ -204,7 +204,6 @@ $breadcrumb[] = ["name"  => "Create",
         $('#datepicker').datepicker({
 
             dateFormat: "yy-mm-dd",
-            maxDate: '+7d',
             minDate: -0
         });
         // min="2022-09-23" max="2022-09-28"

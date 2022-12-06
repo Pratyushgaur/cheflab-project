@@ -35,7 +35,6 @@ class Products extends Migration
 //            $table->enum('status', ['1','0','2','3'])->default('2')->comment('1-active 0-inactive 2=pending 3=reject');
             $table->enum('status', ['1','0'])->default('0')->comment('1-active 0-inactive; Mobile app product visibility');
             $table->enum('product_approve', ['1','0','2','3'])->default('2')->comment('1-approve 2-pending 3-reject, Admin will aprove product first then it will goes to mobile app');
-            $table->enum('refund', ['1','0','2'])->default('0')->comment('1-refund pending 2-refunded 0-no need of refund');
 
             $table->string('product_rating',10)->default('0');
             $table->dateTime('created_at')->useCurrent();

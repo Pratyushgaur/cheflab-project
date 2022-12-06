@@ -26,8 +26,8 @@ class VendorPromotionController extends Controller
             $for = [ 'chef' => "Chef Promotion" ];
         else if (@Auth::guard('vendor')->user()->vendor_type == 'restaurant')
             $for = [ 'restaurant' => "Restaurant Promotion" ];
-        if (@Auth::guard('vendor')->user()->table_service == 1)
-            $for['dineout'] = "Dine-out Promotion";
+//        if (@Auth::guard('vendor')->user()->table_service == 1)
+//            $for['dineout'] = "Dine-out Promotion";
 
         $for["order_traking"]= "Order Tracking Banner";
 

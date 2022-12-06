@@ -37,7 +37,8 @@ class BlogPromotionController extends Controller
 
     public function create_shop_promotion()
     {
-        $app_promotion = AppPromotionBlogs::select(\DB::raw("CONCAT(`name`, ' ( ', `from`, ' - ', `to`, ' ) ') AS display_name"), 'id')
+
+        $app_promotion = AppPromotionBlogs::select(\DB::raw("CONCAT(`name`, ' ( ', TIME_FORMAT(`from`, '%h:%i %p'), ' - ', TIME_FORMAT(`to`, '%h:%i %p'), ' ) ') AS display_name"), 'id')
             ->where('vendor_type', '1')->where('blog_type', '1')->pluck('display_name', 'id');
         return view('vendor.restaurant.blog_promotion.create_shop_promotion', compact('app_promotion'));
     }
