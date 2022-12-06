@@ -173,6 +173,7 @@
                                     <th >Cuisines Name</th>
                                     <th >Position</th>
                                     <th  >Image</th>
+                                    <th  >No Of Res</th>
                                     <th  >Status</th>
                                     <th  >Action</th>
                                   </tr>
@@ -269,6 +270,7 @@
             {data: 'name', name: 'name'},
             {data: 'position', name: 'position'},
             {data: 'cuisinesImage', name: 'cuisinesImage'},
+            {data: 'no_of_res', name: 'no_of_res'},
             {data: 'is_active', name: 'is_active'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
