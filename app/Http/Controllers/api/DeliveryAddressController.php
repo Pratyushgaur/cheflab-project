@@ -87,9 +87,9 @@ class DeliveryAddressController extends Controller
             }
            // $address = DeliveryAddress::find(request()->user()->id);
             $update = DeliveryAddress::where('id', '=', $request->id)->where('address_type', '=', $request->address_type)->update(['house_no' => $request->house_no, 'reach' => $request->reach, 'contact_no' => $request->contact_no,'primary_key'=>$request->is_primary]);
-            if($request->is_primary){
-                DeliveryAddress::where('user_id',$request->user_id)->where('id','!=',$request->id)->update(['primary_key'=>'0']);
-            }
+            // if($request->is_primary){
+            //     DeliveryAddress::where('user_id',$request->user_id)->where('id','!=',$request->id)->update(['primary_key'=>'0']);
+            // }
             return response()->json([
                 'status' => true,
                 'message'=>'Address Update Successfully'

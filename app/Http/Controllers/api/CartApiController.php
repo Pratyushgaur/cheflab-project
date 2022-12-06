@@ -14,6 +14,7 @@ use App\Models\Product_master;
 use App\Models\User;
 use App\Models\Variant;
 use App\Models\Vendors;
+use App\Models\DeliveryAddress;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Throwable;
@@ -374,18 +375,20 @@ class CartApiController extends Controller
                 $vendors[$key]->next_available = next_available_day($value->id);
             }
             $vendors=$vendors[0];
-
+            $address = DeliveryAddress::where(['user_id'=>$request->user_id,'primary_key'=>'1'])->select('id','house_no','reach','contact_no','address_type','lat','long','primary_key')->get();
 
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
                                      'response' => ["cart_id"        => $cart_id,
                                                     'cart_sub_toatl_amount'=>$cart_sub_toatl_amount,
-                                                    "cart"           => $r,
-                                                    "vendor"         => $vendors,
-                                                    'wallet_amount'  => $wallet_amount,
-                                                    'max_cod_amount' => @$admin_setting->max_cod_amount,
+                                                    "cart"             => $r,
+                                                    "vendor"           => $vendors,
+                                                    'wallet_amount'    => $wallet_amount,
+                                                    'max_cod_amount'   => @$admin_setting->max_cod_amount,
                                                     'platform_charges' => @$admin_setting->platform_charges,
-                                                    'tax' => 5
+                                                    'tax'              => 5,
+                                                    'delivery_charge'  => 40,
+                                                    'address'          => $address
                                      ]
             ], 200);
         } catch (Throwable $th) {
