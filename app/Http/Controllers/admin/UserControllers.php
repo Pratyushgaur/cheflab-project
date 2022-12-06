@@ -619,7 +619,7 @@ class UserControllers extends Controller
                         $btn = '<a href="javascript:void(0)" data-id="' . $data->comment_reason . '" class="btn btn-danger btn-xs inactive-record"  data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive" data-action-url="">Active</a>';
                     } else {
                         $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $data->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
-                    }
+                    }         
                     return $btn;
                   /*  $btn = '<a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this Vendor" flash="Inactive"  data-action-url="" title="Delete" >Active</a> 
                             <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" >Inactive</a> ';
