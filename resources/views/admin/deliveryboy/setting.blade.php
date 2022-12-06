@@ -185,7 +185,7 @@
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                         <div class="card card-default">
                             <div class="card-header">
-                                <h3 class="card-title text-bold" >Basic Information</h3>
+                                <h3 class="card-title text-bold" >User To Admin</h3><h3 class="card-title text-bold" style="margin-left:600px;">Admin To Rider</h3>
                             </div>
                             <div class="card-body">
                               <div class="error">
@@ -194,33 +194,134 @@
                                 @endif
                               </div>
                               <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Base Delivery Charges<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->a_to_b_charge}}" name="a_to_b_charge" class="form-control"  id="exampleInputEmail1" placeholder="Enter Fix Charge">
+                                      <label for="exampleInputEmail1">First three KM Charges (0-3)<span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$data->a_to_b_charge}}" name="first_three_km_charge_user" class="form-control"  id="exampleInputEmail1" placeholder="Enter Fix Charge">
                                       <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
                                   </div> 
+                                </div>
+                                <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">B To C Charges <span class="text-danger">*</span></label>
-                                      <input type="text" name="b_to_c_charge" value="{{$data->b_to_c_charge}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                      <label for="exampleInputEmail1">First three KM Charges (0-3) <span class="text-danger">*</span></label>
+                                      <input type="text" name="first_three_km_charge_admin" value="{{$data->b_to_c_charge}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div> 
+                                </div>
+                                <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Base Delivery Charges <span class="text-danger">*</span></label>
-                                      <input type="text" name="fix_charge_1" value="{{$data->fix_charge_1}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
-                                  </div> 
-                                  <div class="form-group">
-                                      <label for="exampleInputEmail1">Deliver Charges Per KM <span class="text-danger">*</span></label>
-                                      <input type="text" name="fix_charge_2" value="{{$data->fix_charge_2}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                      <label for="exampleInputEmail1">3-6 Kms (per km)<span class="text-danger">*</span></label>
+                                      <input type="text" name="three_km_to_six_user" value="{{$data->fix_charge_1}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div>
+                                </div> 
+                                <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Incentive 4.3 to 4.7 <span class="text-danger">*</span></label>
-                                      <input type="text" name="incentive_one" value="{{$data->incentive_one}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                      <label for="exampleInputEmail1">3-6 Kms (per km) <span class="text-danger">*</span></label>
+                                      <input type="text" name="three_km_to_six_admin" value="{{$data->fix_charge_2}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div>
+                                </div>
+                                <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Incentive 4.8 to 5.0 <span class="text-danger">*</span></label>
-                                      <input type="text" name="incentive_to" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                      <label for="exampleInputEmail1">6 and above Kms (per km) <span class="text-danger">*</span></label>
+                                      <input type="text" name="six_km_above_user" value="{{$data->incentive_one}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">6 and above Kms (per km) <span class="text-danger">*</span></label>
+                                      <input type="text" name="six_km_above_admin" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div>  
                                 </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">Extra charges (per order) <span class="text-danger">*</span></label>
+                                      <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input" id="customSwitch1">
+                                        <label class="custom-control-label" for="customSwitch1">Toggle this custom switch element</label>
+                                      </div>
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">Extra charges <span class="text-danger">*</span></label>
+                                      <input type="text" name="extra_charges_admin" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                </div>
+                                <hr>
+                          <!-- schedule information start -->
+                            <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">Rating Incentive weekly basis</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                <div class="card-header">
+                                    <h3 class="card-title text-bold" >4.3 to 4.7</h3><h3 class="card-title text-bold" style="margin-left:600px;">4.8 To 5.0</h3>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">50 orders<span class="text-danger">*</span></label>
+                                      <input type="text" name="fifteen_order_incentive_4" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">50 orders <span class="text-danger">*</span></label>
+                                      <input type="text" name="fifteen_order_incentive_5" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">75 orders <span class="text-danger">*</span></label>
+                                      <input type="text" name="sentientfive_order_incentive_4" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">75 orders <span class="text-danger">*</span></label>
+                                      <input type="text" name="sentientfive_order_incentive_5" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">100 orders <span class="text-danger">*</span></label>
+                                      <input type="text" name="hundred_order_incentive_4" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">100 orders <span class="text-danger">*</span></label>
+                                      <input type="text" name="hundred_order_incentive_5" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">No of order cancel <span class="text-danger">*</span></label>
+                                      <input type="text" name="no_of_order_cancel" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="card-header">
+                                    <h3 class="card-title text-bold" >Rider to restourant distance payout (per km)</h3><h3 class="card-title text-bold" style="margin-left:600px;"></h3>
+                                </div>
+                               
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">Below 1.5 km <span class="text-danger">*</span></label>
+                                      <input type="text" name="below_one_five_km" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-group">
+                                      <label for="exampleInputEmail1">Above 1.5 km <span class="text-danger">*</span></label>
+                                      <input type="text" name="above_one_five_km" value="{{$data->incentive_to}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
+                                  </div>  
+                                </div>
+                                </div>  
+                              </div>
+                            </div>
+
+
+
                               </div>
                             </div>
                         </div>
@@ -322,4 +423,9 @@
    }
 
  </script>
+ <script>
+    $(function () {
+      bsCustomFileInput.init();
+    });
+</script>
 @endsection
