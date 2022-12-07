@@ -320,12 +320,12 @@
 				  <p>GlobleSetting</p>
 				</a>
 			</li>
-			<!--<li class="nav-item">
+			<li class="nav-item">
 				<a href="{{route('admin.globle.productactive')}}" class="nav-link">
 				  <i class="nav-icon fa fa-cog"></i>
 				  <p>Product Active</p>
 				</a>
-			</li>-->
+			</li>
 			<li class="nav-item">
 				<a href="{{route('admin.logout')}}" class="nav-link">
 				  <i class="nav-icon fas fa-power-off"></i>
