@@ -223,6 +223,8 @@ class ProductController extends Controller
                 $ids = Variant::where('product_id', $product->id)->whereNotIn('id', array_values($ids))->delete();
 //                dd(\DB::getQueryLog ());
 
+            }else{
+                $ids = Variant::where('product_id', $product->id)->whereNotIn('id', array_values($ids))->delete();
             }
         }
 //dd($product);
