@@ -37,7 +37,12 @@ class MenuController extends Controller
     {
         if ($request->ajax()) {
             
-            $data = VendorMenus::latest()->where('vendor_id','=',\Auth::guard('vendor')->user()->id)->get();
+            $data = VendorMenus::latest()
+            ->leftJoin('products as c', 'vendor_menus.id', 'c.menu_id')
+            ->select('vendor_menus.*',\DB::raw('count(*) as count'))
+            ->where('vendor_id','=',\Auth::guard('vendor')->user()->id)
+            ->groupBy('vendor_menus.id')
+            ->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){

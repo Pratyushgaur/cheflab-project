@@ -32,6 +32,7 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Menu</th>
+                        <th scope="col">No Of Products</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                       </tr>
@@ -62,6 +63,7 @@
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'menuName', name: 'name'},
+            {data: 'count', name: 'count'},
             {data: 'date', name: 'date'},
 
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
