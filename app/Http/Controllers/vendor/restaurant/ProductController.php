@@ -208,12 +208,19 @@ class ProductController extends Controller
                     $save[$count] = ['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]];
                     if (isset($request->variant_id[$k])) {
 //                        dd($request->variant_id[$k]);
-                        Variant::where('id', $request->variant_id[$k])->update($save[$count]);
+                        if($v!='' && $request->price[$k]!=''){
+                            Variant::where('id', $request->variant_id[$k])->update($save[$count]);
+                        }
+                        
                         $ids[] = (int)$request->variant_id[$k];
 //                        print_r($save[$count]);
                     } else {
-                        $vari  = Variant::create($save[$count]);
-                        $ids[] = (int)$vari->id;
+                        if($v!='' && $request->price[$k]!=''){
+                            $vari  = Variant::create($save[$count]);
+                            $ids[] = (int)$vari->id;
+                        }
+                        
+                        
 //                        print_r($vari);
                     }
                     $count++;
