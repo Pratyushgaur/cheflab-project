@@ -244,7 +244,7 @@
                                     <div class="variant-input-container">
                                         @if($product->customizable=='true')
                                             @foreach($product->product_variants as $k=>$vri)
-
+                                                @if($k > 0)
                                                 <input type="hidden" name="variant_id[]" value="{{$vri->id}}">
                                                 <div class="row input-container" style="padding-bottom:15px;">
                                                     <div class="col-md-4">
@@ -257,6 +257,7 @@
                                                         <a class="" href="javascript:void(0)"><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>
                                                     </div>
                                                 </div>
+                                                @endif
                                             @endforeach
 
                                         @else
