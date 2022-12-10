@@ -107,9 +107,9 @@
                                 </div>
                                 </form>
                             </div>
-                            
+
                           </div>
-                          
+
                       </div>
                   </div>
                 </div>
@@ -162,13 +162,13 @@
                                                         </a>
                                                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                                          @if($vendor->vendor_type == 'restaurant')
-                                                            <a class="dropdown-item text-info" href="{{route('admin.chef.edit',Crypt::encryptString($vendor->id))}}'"><i class="fas fa-edit"></i> Edit</a>
+                                                            <a class="dropdown-item text-info" href="{{route('admin.chef.edit',Crypt::encryptString($vendor->id))}}'"><i class="fas fa-edit"></i> Edit Restaurant</a>
                                                             @endif
                                                             <a class="dropdown-item text-info" href="{{route('admin.vendor.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i> View More</a>
-                                                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i>Delete</a> 
+                                                            <a class="dropdown-item text-info delete-record"  href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" > <i class="fa fa-trash"></i> Delete</a>
                                                             @if($vendor->vendor_type == 'chef')
                                                                <a class="dropdown-item text-info" href="{{route('admin.chef.editchef', Crypt::encryptString($vendor->id))}}"><i class="fas fa-edit"></i> Edit Chef</a>
-                                                              <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i>Add/View  Product</a>
+                                                              <a class="dropdown-item text-danger" href="{{route('admin.chefproduct.view',Crypt::encryptString($vendor->id))}}"><i class="fa fa-eye"></i> Add/View  Product</a>
                                                             @endif
                                                         </div>
                                                     </li>

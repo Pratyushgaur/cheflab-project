@@ -211,7 +211,10 @@
                                                     @if($vendor->banner_image == null)
                                                     <img class="icon2" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                        <?php
+                                                        $baner=json_decode($vendor->banner_image);
+                                                        ?>
+                                                    <img class="icon2" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
                                                     @endif
                                                 </div>
                                             </label>
@@ -312,7 +315,7 @@
                                               <label for="non_veg">Veg + Non Veg</label>
                                               @elseif($vendor->vendor_food_type != '3')
                                               <input type="radio" id="non_veg" name="type" value="3">
-                                              
+
                                               <label for="non_veg">Veg + Non Veg</label>
                                               @endif
                                             </div>
@@ -337,30 +340,37 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST Available</label>
                                         <select class="form-control gstavailable" name="gst_available">
-                                          @if($vendor->gst_available == '0')
+{{--                                          @if($vendor->gst_available == '0')--}}
+{{--                                            <option value="0">Not Available</option>--}}
+{{--                                            <option value="1">Available</option>--}}
+{{--                                          @elseif($vendor->gst_available == '1')--}}
+{{--                                          <option value="1">Available</option>--}}
+{{--                                          @endif--}}
+                                            <?php if($vendor->gst_available == '1'){?>
+                                            <option value="1">Available</option>
+                                            <?php } else{?>
                                             <option value="0">Not Available</option>
                                             <option value="1">Available</option>
-                                          @elseif($vendor->gst_available == '1')
-                                          <option value="1">Available</option>
-                                          @endif
+                                                         <?php } ?>
                                         </select>
                                     </div>
                                   </div>
-                                  @if($vendor->gst_available == '1')
+
+{{--                                  @if($vendor->gst_available == '1')--}}
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->gst_no}}" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
+                                        <input type="text" value="{{($vendor->gst_no!='') ? $vendor->gst_no : null}}" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
                                     </div>
                                   </div>
-                                  @endif
-                                  <div class="col-md-6 custmization-block">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
-                                    </div>
-                                  </div>
-                                 
+{{--                                  @endif--}}
+{{--                                  <div class="col-md-6 custmization-block">--}}
+{{--                                    <div class="form-group">--}}
+{{--                                        <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>--}}
+{{--                                        <input type="text" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">--}}
+{{--                                    </div>--}}
+{{--                                  </div>--}}
+
                                 </div>
 
                               </div>
@@ -414,21 +424,21 @@
                                   <div class="col-sm-3">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Document Name. </label>
-                                            <input type="text" name="other_document_name" value="{{$vendor->other_document_name}}" class="form-control" placeholder="Document Name">
+                                            <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">
                                         </div>
                                   </div>
-                                  <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Document Number. </label>
-                                            <input type="text" name="other_document_no" value="{{$vendor->other_document_no}}" class="form-control" placeholder="Document Number">
-                                        </div>
-                                  </div>
+{{--                                  <div class="col-sm-3">--}}
+{{--                                        <div class="form-group">--}}
+{{--                                            <label for="exampleInputEmail1">Document Number. </label>--}}
+{{--                                            <input type="text" name="other_document_no" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Number">--}}
+{{--                                        </div>--}}
+{{--                                  </div>--}}
                                   <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Other Document.</label>
                                             <input type="file" name="other_document" value="{{$vendor->other_document}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
                                         </div>
-                                        
+
                                   </div>
                                   <div class="col-sm-2">
                                         <div class="form-group">

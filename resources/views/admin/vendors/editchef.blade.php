@@ -185,14 +185,14 @@
 
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Restaurant <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Chef Kitchen Name <span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->name}}" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                         <input type="hidden" value="{{$vendor->id}}" name="id" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Restaurant Owner <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Chef name <span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->owner_name}}" name="owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Owner Name">
                                     </div>
                                   </div>
@@ -206,13 +206,13 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">DOB <span class="text-danger">*</span></label>
                                         <input type="date" name="dob" class="form-control"   value="{{$vendor->dob}}" id="" placeholder="Enter Chef Email">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Cooking Exp <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Cooking experience (in years)<span class="text-danger">*</span></label>
                                         <input type="number" name="experience" class="form-control"   value="{{$vendor->experience}}" id="" placeholder="Enter Cooking Experence ">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
@@ -289,7 +289,7 @@
                                               <label for="non_veg">Veg + Non Veg</label>
                                               @elseif($vendor->vendor_food_type != '3')
                                               <input type="radio" id="non_veg" name="type" value="3">
-                                              
+
                                               <label for="non_veg">Veg + Non Veg</label>
                                               @endif
                                             </div>
@@ -339,9 +339,9 @@
                                             <label for="file-input">
                                                 <div class="upload-icon">
                                                     @if($vendor->image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    <img class="icon" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
+                                                    <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
                                                     @endif
                                                 </div>
                                             </label>
@@ -353,16 +353,16 @@
                                           <label for="">Profile Images</label>
                                         </div>
                                         <div class="image-upload">
-                                            <label for="file-input">
+                                            <label for="file-input1">
                                                 <div class="upload-icon">
                                                     @if($vendor->profile_image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    <img class="icon1" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
+                                                    <img class="icon1" src="{{ asset('vendor-profile'.'/'.$vendor->profile_image ) }}">
                                                     @endif
                                                 </div>
                                             </label>
-                                            <input id="file-input" type="file" name="profile_image" required/>
+                                            <input id="file-input1" type="file" name="profile_image" required/>
                                         </div>
                                   </div>
                                   <div class="col-sm-3">
@@ -393,16 +393,16 @@
                                             <label for="file-input3">
                                                 <div class="upload-icon3">
                                                     @if($vendor->other_document_image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    <img class="icon3" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">
+                                                    <img class="icon3" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">
                                                     @endif
                                                 </div>
                                             </label>
                                             <input id="file-input3" type="file" name="other_document"/>
 
                                         </div>
-                                        <input type="text" name="other_document_name" value="{{$vendor->other_document_name}}" class="form-control" placeholder="Document Name">
+                                        <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">
                                   </div>
                                   <div class="col-sm-3">
                                         <div>
@@ -414,9 +414,9 @@
                                             <label for="file-input4">
                                                 <div class="upload-icon4">
                                                     @if($vendor->banner_image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    <img class="icon4" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                    <img class="icon4" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
                                                     @endif
                                                 </div>
                                             </label>
@@ -567,6 +567,11 @@
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');
       });
+      $('#file-input1').change( function(event) {
+          $("img.icon1").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon1").parents('.upload-icon1').addClass('has-img1');
+      });
+
       $('#file-input2').change( function(event) {
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
