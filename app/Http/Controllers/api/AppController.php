@@ -578,6 +578,7 @@ class AppController extends Controller
                 ->where('product_approve', 1)
                 ->where('status', 1)
                 ->groupBy('menuName')
+                ->having('count','>','0')
                 ->get();
             //
             return response()->json([

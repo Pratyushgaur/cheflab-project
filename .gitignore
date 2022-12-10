@@ -22,7 +22,9 @@ yarn-error.log
 .idea/.gitignore
 .gitignore
 /public/products
-public/vendor-banner
-public/vendors
-public/slot-vendor-image
+/public/vendor-banner
+/public/vendors
+/public/slot-vendor-image
+/public
+/public/error_log
 
