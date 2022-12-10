@@ -183,13 +183,7 @@ class ProductController extends Controller
 
         if (isset($request->product_type))
             $product->type = $request->product_type;
-//        if ($request->status == '0') {
-//            $product->status = 2;
-//        }
-//        if (!empty($request->addons)) {
-        $product->addons = @implode(',', @$request->addons);
-//        }
-
+            $product->addons = @implode(',', @$request->addons);
         if ($request->has('product_image')) {
             $old_image = public_path('products/') . $product->product_image;
             $filename  = time() . '-product_image-' . rand(100, 999) . '.' . $request->product_image->extension();
@@ -203,24 +197,30 @@ class ProductController extends Controller
 
         $product->save();
         if ($request->custimization == 'true') {
-//            Flight::upsert([
-////                ['departure' => 'Oakland', 'destination' => 'San Diego', 'price' => 99],
-////                ['departure' => 'Chicago', 'destination' => 'New York', 'price' => 150]
-////            ], ['departure', 'destination'], ['price']);
             $save  = [];
             $count = 0;
-//            echo "<pre>";
+//           
+            $primary = Variant::where('product_id','=',$product->id)->orderBy('id','ASC')->limit(1)->select('id')->first();
+            Variant::where('id','=',$primary->id)->update(['variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
+            $ids[] = $primary->id;
             if (isset($request->variant_name) && count($request->variant_name) > 0) {
                 foreach ($request->variant_name as $k => $v) {
                     $save[$count] = ['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]];
                     if (isset($request->variant_id[$k])) {
 //                        dd($request->variant_id[$k]);
-                        Variant::where('id', $request->variant_id[$k])->update($save[$count]);
+                        if($v!='' && $request->price[$k]!=''){
+                            Variant::where('id', $request->variant_id[$k])->update($save[$count]);
+                        }
+                        
                         $ids[] = (int)$request->variant_id[$k];
 //                        print_r($save[$count]);
                     } else {
-                        $vari  = Variant::create($save[$count]);
-                        $ids[] = (int)$vari->id;
+                        if($v!='' && $request->price[$k]!=''){
+                            $vari  = Variant::create($save[$count]);
+                            $ids[] = (int)$vari->id;
+                        }
+                        
+                        
 //                        print_r($vari);
                     }
                     $count++;
@@ -230,6 +230,8 @@ class ProductController extends Controller
                 $ids = Variant::where('product_id', $product->id)->whereNotIn('id', array_values($ids))->delete();
 //                dd(\DB::getQueryLog ());
 
+            }else{
+                $ids = Variant::where('product_id', $product->id)->whereNotIn('id', array_values($ids))->delete();
             }
         }
 //dd($product);

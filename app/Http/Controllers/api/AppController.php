@@ -1613,7 +1613,7 @@ class AppController extends Controller
                
                 //
                 if (is_array($request->payment_string))
-                    $data['payment_string'] = serialize($request->payment_string);
+                $data['payment_string'] = serialize($request->payment_string);
                 $insertData               = $request->all();
                 $insertData['wallet_cut'] = $walletCut;
                 $insertData['order_id'] = getOrderId();

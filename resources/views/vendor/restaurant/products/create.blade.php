@@ -215,24 +215,12 @@
                                         </div>
                                     </div>
                                     <div class="variant-input-container">
-                                        <div class="row input-container" style="padding-bottom:15px;">
+                                        <!-- <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
                                                 <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name">
                                             </div>
                                             <div class="col-md-2">
                                                 <input type="text" name="price[]" id="myInput" class="form-control price" placeholder="Enter Price">
-                                            </div>
-{{--                                            <span class="custimization_error text-danger"></span>--}}
-                                        </div>
-                                        <!-- <div class="row input-container" style="padding-bottom:15px;">
-                                            <div class="col-md-4">
-                                                <input type="text" name="variant_name[]" class="form-control variant_name"  placeholder="Enter Variant Name">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <a class="" href="javascript:void(0)" ><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>
                                             </div>
                                         </div> -->
 
@@ -377,6 +365,7 @@
                 } else {
                     $('.custmization-block').hide();
                 }
+                $(this).focusout();
             })
             $('#price').on("input", function () {
                 var price = document.getElementById('price').value;

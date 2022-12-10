@@ -194,9 +194,10 @@
                                  <div class="card card-default">
                                     <div class="card-body">
                                         <input type="hidden" name="id" value="{{$data->id}}">
-                                        <textarea id="summernote" name="user_privacy_policy">
+                                        <!-- <textarea id="summernote" name="user_privacy_policy">
                                             {{$data->user_privacy_policy}}
-                                        </textarea>
+                                        </textarea> -->
+                                        <textarea name="user_privacy_policy" class="form-control" value="{{$data->user_privacy_policy}}" col="" rows="10"  id="" placeholder="Privacy Policy ..">{{$data->user_privacy_policy}}</textarea>
                                     </div>
                                     <div class="card-footer">
                                         <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
@@ -222,9 +223,10 @@
                                   <div class="card card-default">
                                       <div class="card-body">
                                           <input type="hidden" name="id" value="{{$data->id}}">
-                                          <textarea id="privacy_policy" name="terms_conditions_user">
+                                          <!-- <textarea id="privacy_policy" name="terms_conditions_user">
                                               {{$data->terms_conditions_user}}
-                                          </textarea>
+                                          </textarea> -->
+                                          <textarea name="terms_conditions_user" class="form-control" value="{{$data->terms_conditions_user}}" col="" rows="10"  id="" placeholder="Terms & Condition">{{$data->terms_conditions_user}}</textarea>
                                       </div>
                                       <div class="card-footer">
                                           <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
@@ -251,9 +253,10 @@
                                  <div class="card card-default">
                                     <div class="card-body">
                                         <input type="hidden" name="id" value="{{$data->id}}">
-                                        <textarea id="deliveryboy" name="refund_cancellation_user">
+                                        <!-- <textarea id="deliveryboy" name="refund_cancellation_user">
                                             {{$data->refund_cancellation_user}}
-                                        </textarea>
+                                        </textarea> -->
+                                        <textarea name="refund_cancellation_user" class="form-control" value="{{$data->refund_cancellation_user}}" col="" rows="10"  id="" placeholder="Cancellation Policy">{{$data->refund_cancellation_user}}</textarea>
                                     </div>
                                     <div class="card-footer">
                                         <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>

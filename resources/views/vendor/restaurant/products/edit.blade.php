@@ -244,7 +244,7 @@
                                     <div class="variant-input-container">
                                         @if($product->customizable=='true')
                                             @foreach($product->product_variants as $k=>$vri)
-
+                                                @if($k > 0)
                                                 <input type="hidden" name="variant_id[]" value="{{$vri->id}}">
                                                 <div class="row input-container" style="padding-bottom:15px;">
                                                     <div class="col-md-4">
@@ -257,17 +257,18 @@
                                                         <a class="" href="javascript:void(0)"><i class="fa fa-trash delete-variant" style="margin-top:10px;"></i></a>
                                                     </div>
                                                 </div>
+                                                @endif
                                             @endforeach
 
                                         @else
-                                            <div class="row input-container" style="padding-bottom:15px;">
+                                            <!-- <div class="row input-container" style="padding-bottom:15px;">
                                                 <div class="col-md-4">
                                                     <input type="text" name="variant_name[]" class="form-control variant_name" placeholder="Enter Variant Name">
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input type="text" name="price[]" class="form-control price" placeholder="Enter Price">
                                                 </div>
-                                            </div>
+                                            </div> -->
                                     @endif
                                     <!-- <div class="row input-container" style="padding-bottom:15px;">
                                             <div class="col-md-4">
@@ -411,6 +412,7 @@
                 } else {
                     $('.custmization-block').hide();
                 }
+                $(this).focusout();
             })
             $('#price').on("input", function () {
                 var price = document.getElementById('price').value;

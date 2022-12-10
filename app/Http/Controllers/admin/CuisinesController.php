@@ -5,6 +5,7 @@ namespace App\Http\Controllers\admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Cuisines;
+use App\Models\Vendors;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
 use Config;
@@ -74,6 +75,9 @@ class CuisinesController extends Controller
                         $btn = '<a href="javascript:void(0);" data-action-url="'. route("admin.cuisines.active",Crypt::encryptString($data->id)) .'" class="btn btn-danger btn-xs active-record" data-alert-message="Are You Sure to Active this Cuisines" flash="Category"   title="Active" >Inactive</a> ';
                     }
                     return $btn;
+                })
+                ->addColumn('no_of_res', function($data){
+                    return Vendors::whereRaw(DB::raw("FIND_IN_SET(".$data->id.", vendors.deal_cuisines)"))->get()->count();
                 })
                 ->rawColumns(['date','action-js','status'])
                 ->rawColumns(['action-js','cuisinesImage','is_active'])

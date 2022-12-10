@@ -61,10 +61,11 @@ class OrderApiController extends Controller
                 $products              = OrderProduct::where('order_id','=',$value->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
                 $order[$key]->products = $products;
             }
+            $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
             return response()->json([
                 'status' => true,
                 'message'=>'data Get Successfully',
-                'response'=>$order
+                'response'=>['order'=>$order,'profile'=>$profile]
             ], 200);
 
 
