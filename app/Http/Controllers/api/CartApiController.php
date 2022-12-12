@@ -376,6 +376,12 @@ class CartApiController extends Controller
             }
             $vendors=$vendors[0];
             $address = DeliveryAddress::where(['user_id'=>$request->user_id,'primary_key'=>'1'])->select('id','house_no','reach','contact_no','address_type','lat','long','primary_key')->get();
+            // calculate delivery charge
+            if($request->lat != '' && $request->lng != ''){
+                $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+            }else{
+                $deliveryCharge = 40;
+            }
 
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
@@ -387,7 +393,7 @@ class CartApiController extends Controller
                                                     'max_cod_amount'   => @$admin_setting->max_cod_amount,
                                                     'platform_charges' => @$admin_setting->platform_charges,
                                                     'tax'              => 5,
-                                                    'delivery_charge'  => 40,
+                                                    'delivery_charge'  => $deliveryCharge,
                                                     'address'          => $address
                                      ]
             ], 200);

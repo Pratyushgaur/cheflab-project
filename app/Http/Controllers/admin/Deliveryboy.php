@@ -128,13 +128,32 @@ class Deliveryboy extends Controller
 
     }
     public function storeDelivercharge(Request $request){
+
+        //echo '<pre>'; print_r($request->all());die;
         $general = DeliveryboySetting::find($request->id);
-        $general->a_to_b_charge = $request->a_to_b_charge;
-        $general->b_to_c_charge = $request->b_to_c_charge;
-        $general->fix_charge_1 = $request->fix_charge_1;
-        $general->fix_charge_2 = $request->fix_charge_2;
-        $general->incentive_one = $request->incentive_one;
-        $general->incentive_to = $request->incentive_to;
+        $general->first_three_km_charge_admin = $request->first_three_km_charge_admin;
+        $general->first_three_km_charge_user = $request->first_three_km_charge_user;
+        $general->first_three_km_charge_admin = $request->first_three_km_charge_admin;
+        $general->three_km_to_six_user = $request->three_km_to_six_user;
+        $general->three_km_to_six_admin = $request->three_km_to_six_admin;
+        $general->six_km_above_user = $request->six_km_above_user;
+        $general->six_km_above_admin = $request->six_km_above_admin;
+        $general->extra_charges_admin = $request->extra_charges_admin;
+        $general->extra_charges_user = $request->extra_charges_user;
+        if(isset($request->extra_charge_active)){
+            $general->extra_charge_active = '1';
+        }else{
+            $general->extra_charge_active = '0';
+        }
+        $general->fifteen_order_incentive_4 = $request->fifteen_order_incentive_4;
+        $general->fifteen_order_incentive_5 = $request->fifteen_order_incentive_5;
+        $general->sentientfive_order_incentive_4 = $request->sentientfive_order_incentive_4;
+        $general->sentientfive_order_incentive_5 = $request->sentientfive_order_incentive_5;
+        $general->hundred_order_incentive_4 = $request->hundred_order_incentive_4;
+        $general->hundred_order_incentive_5 = $request->hundred_order_incentive_5;
+        $general->no_of_order_cancel = $request->no_of_order_cancel;
+        $general->below_one_five_km = $request->below_one_five_km;
+        $general->above_one_five_km = $request->above_one_five_km;
         $general->save();
         return redirect()->route('admin.deliverboy.setting')->with('message', 'Update Chargs Successfully');
     }

@@ -8,6 +8,7 @@ use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\Vendors;
+use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
 use Config;
@@ -81,16 +82,42 @@ class OrderController extends Controller
             $id =  Crypt::decryptString($encrypt_id);  
             $order_id =$id;
             $order = Orders::findOrFail($id);
+
+            // echo '<pre>'; print_r($order);die;
             $vendor_id = $order->vendor_id;
+            $user_id = $order->user_id;
             $orderProduct = OrderProduct::findOrFail($order_id);
             $product_id = $orderProduct->product_id;
-            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price')->get();
+            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
             $vendor = Vendors::findOrFail($vendor_id);
-            return view('admin.order.view',compact('order','orderProduct','product','vendor'));
+            $users = User::findOrFail($user_id);
+            
+            return view('admin.order.view',compact('order','orderProduct','product','vendor','users'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 
     }
+    public function invoiceorder($order_id){
+        $order = Orders::where('order_id',$order_id)->first();
+        $vendor = Vendors::findOrFail($order->vendor_id);
+        $users = User::findOrFail($order->user_id);
+        $orderProduct = OrderProduct::findOrFail($order_id);
+            $product_id = $orderProduct->product_id;
+            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
+        return view('admin.order.invoice',compact('order','vendor','users','product'));
+        // echo '<pre>'; print_r($order);die;
+    }
+    public function status_update(Request $request){
+      
+        $status = $request->status;
+        $id = $request->id;
+        $orders = Orders::where('id', '=',  $id)->first();
+        $orders->order_status = $status;
+        $orders->save();
+       
+        return ;
+    }
+
     public function invoice($encrypt_id){
         try {
             $id =  Crypt::decryptString($encrypt_id);  

@@ -227,4 +227,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('users/view/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_view'])->name('admin.user.view');
     //Refund
     Route::get('refund-list',[\App\Http\Controllers\admin\UserControllers::class,'refundlist'])->name('admin.refund.list');
+    //
+    Route::post('get-status-update', [App\Http\Controllers\admin\OrderController::class, 'status_update'])->name('admin.status.update');
+Route::get('order/generate-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoiceorder'])->name('admin.order.invoice');
 });

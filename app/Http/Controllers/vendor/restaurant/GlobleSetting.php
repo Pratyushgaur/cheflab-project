@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Crypt;
 
 class GlobleSetting extends Controller
 {
@@ -24,7 +25,7 @@ class GlobleSetting extends Controller
     }
 
     public function requireOrderTime()
-    {
+    {  
         $VendorOrderTime = [];
         $hideSidebar     = true;
         $order_time      = VendorOrderTime::where('vendor_id', Auth::guard('vendor')->user()->id)->get();
@@ -34,12 +35,33 @@ class GlobleSetting extends Controller
     }
 
     public function order_time()
-    {
+    {  
+        
         $VendorOrderTime = [];
-        $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
-        foreach ($order_time as $v) $VendorOrderTime[$v->day_no] = $v->toArray();
-        // dd($VendorOrderTime);
+        $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
+        foreach ($order_time as $v) $VendorOrderTime[$v->day_no][$v->key] = $v->toArray();
+        // echo '<pre>'; print_r($order_time);die;
         return view('vendor.restaurant.globleseting.ordertime', compact('VendorOrderTime'));
+    }
+
+    public function time_delete(Request $request)
+    {
+        try {
+            $id   = Crypt::decryptString($request->id);
+            $data = VendorOrderTime::findOrFail($id);
+            if ($data) {
+                $data->delete();
+                return redirect()->route('restaurant.globleseting.ordertime')->with('success', 'Times deleted successfully.');
+            } else {
+
+                return redirect()->route('restaurant.globleseting.ordertime')->with('error', 'Something went wrong.');
+            }
+
+
+        } catch (DecryptException $e) {
+            
+            return redirect()->route('restaurant.globleseting.ordertime')->with('error', 'Something wen wrong.');
+        }
     }
 
     public function store(Request $request)
@@ -47,20 +69,54 @@ class GlobleSetting extends Controller
 
         // dd($request->routeIs('restaurant.ordertime.first_store'));
         // dd($request->all());
-        $request->validate(['start_time.*' => 'nullable|date_format:H:i', 'end_time.*' => 'nullable|date_format:H:i', 'available.*' => ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],]);
+        // $request->validate(['start_time.*' => 'nullable|date_format:H:i', 'end_time.*' => 'nullable|date_format:H:i', 'available.*' => ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],]);
+ 
+  $start_time = $request->start_time;
+  $end_time = $request->end_time;
+  $available = $request->available;
+        foreach ($start_time as $key => $val) {
+                foreach ($val as $key1 => $time) {
+                    if($available[$key] == 1){                   
 
-        foreach ($request->start_time as $key => $val) {
-            if ($request->available[$key] == 1) $data[] = ['vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $key, 'start_time' => date('H:i:s', strtotime($request->start_time[$key])), 'end_time' => date('H:i:s', strtotime($request->end_time[$key])), 'available' => $request->available[$key],]; else
-                $data[] = ['vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $key, 'start_time' => null, 'end_time' => null, 'available' => 0,];
+                    $data = array(
+                        'vendor_id' =>  Auth::guard('vendor')->user()->id,
+                        'day_no' =>  $key,
+                        'start_time' =>  $time,
+                        'row_keys' =>  $key1,
+                        'end_time' =>  $end_time[$key][$key1],
+                        'available' =>  $available[$key],
+
+                    ); 
+                    $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no',$key)->where('key',$key1)->exists();
+                     if($exist){                      
+                        Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('key',$key1)->update($data);
+                     }else{                                       
+                       Order_time::insert($data);
+                     }
+                    }
+                 }
+           
         }
 
-        // Order_time::upsert($data,['vendor_id','day_no'],['start_time','end_time','available']);
-        $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->exists();
 
-        if ($exist) foreach ($request->start_time as $key => $val) Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->update($data[$key]); else {
-            Order_time::insert($data);
-            event(new IsAllSettingDoneEvent());
-        }
+
+
+        // foreach ($request->start_time as $key => $val) {
+        //     if ($request->available[$key] == 1) {
+        //         $data[] = ['vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $key, 'start_time' => date('H:i:s', strtotime($request->start_time[$key])), 'end_time' => date('H:i:s', strtotime($request->end_time[$key])), 'available' => $request->available[$key],];
+        //     } else{
+        //         $data[] = ['vendor_id' => Auth::guard('vendor')->user()->id, 'day_no' => $key, 'start_time' => null, 'end_time' => null, 'available' => 0,];
+        //     }
+        // }
+
+        // // Order_time::upsert($data,['vendor_id','day_no'],['start_time','end_time','available']);
+        // $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->exists();
+        // echo '<pre>'; print_r($exist);die; 
+
+        // if ($exist) foreach ($request->start_time as $key => $val) Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->update($data[$key]); else {
+        //     Order_time::insert($data);
+        //     event(new IsAllSettingDoneEvent());
+        // }
         //dd($request->routeIs('restaurant.ordertime.first_store'));
         if ($request->routeIs('restaurant.ordertime.first_store')) //if first time save setting
             return redirect()->route('restaurant.dashboard')->with('poup_success', 'Your Restaurant timing update Successfully'); else return redirect()->route('restaurant.globleseting.ordertime')->with('success', 'Settings update Successfully');

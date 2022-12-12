@@ -31,6 +31,8 @@ class DeliverBoy extends Migration
             $table->decimal('wallet',8,2)->default('0');
             $table->enum('type', ['1', '2','3'])->default('1')->comment('1-Pure Commission 2-Rent_Commission 3-in_house');
             $table->enum('is_online', ['0', '1'])->default('0')->comment('0=offline 1=online');
+            $table->string('time')->nullable();
+            $table->string('boy_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
