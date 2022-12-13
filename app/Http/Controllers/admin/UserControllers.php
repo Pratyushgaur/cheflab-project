@@ -166,14 +166,14 @@ class UserControllers extends Controller
             'categories'        => 'required',
             'deal_cuisines'     => 'required',
             'tax'               => 'required',
-            'pancard_number'   => 'required',
-            'pancard_image'   => 'required',
-            'aadhar_number'   => 'required',
-            'aadhar_card_image'   => 'required',
+            'pancard_number'    => 'required',
+            'pancard_image'     => 'required',
+            'aadhar_number'     => 'required',
+            'aadhar_card_image' => 'required',
         ]);
         $vendors                   = new Vendors;
         $vendors->name             = $request->restaurant_name;
-        $vendors->owner_name             = $request->restourant_owner_name;
+        $vendors->owner_name       = $request->restourant_owner_name;
         $vendors->email            = $request->email;
         $vendors->password         = Hash::make($request->password);
         $vendors->vendor_type      = 'restaurant';
@@ -184,8 +184,8 @@ class UserControllers extends Controller
         $vendors->commission       = $request->vendor_commission;
         $vendors->vendor_food_type = $request->type;
         $vendors->tax              = $request->tax;
-        $vendors->pancard_number = $request->pancard_number;
-        $vendors->aadhar_number = $request->aadhar_number;
+        $vendors->pancard_number   = $request->pancard_number;
+        $vendors->aadhar_number    = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
@@ -258,7 +258,7 @@ class UserControllers extends Controller
         $vendors->email               = $request->email;
         $vendors->dob                 = $request->dob;
         $vendors->experience          = $request->experience;
-        $vendors->origin          = $request->origin;
+        $vendors->address             = $request->address;
         $vendors->deal_categories     = implode(',', $request->deal_categories);
         $vendors->deal_cuisines       = implode(',', $request->deal_cuisines);
         $vendors->password            = Hash::make($request->password);

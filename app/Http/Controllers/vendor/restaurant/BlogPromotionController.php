@@ -138,6 +138,7 @@ class BlogPromotionController extends Controller
 
     public function save_shop_promotion(Request $request)
     {
+//        dd($request->all());
         $this->validate($request, [
             'date'                  => 'required|after:tomorrow',
             'app_promotion_blog_id' => 'required',

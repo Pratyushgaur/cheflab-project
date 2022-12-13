@@ -360,7 +360,7 @@
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">GST No<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{($vendor->gst_no!='') ? $vendor->gst_no : null}}" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO">
+                                        <input type="text" value="{{($vendor->gst_no!='') ? $vendor->gst_no : null}}" name="gst_no" class="form-control"  id="" placeholder="Enter GST NO" {{($vendor->gst_available!='1') ? '"required"' : ''}}>
                                     </div>
                                   </div>
 {{--                                  @endif--}}

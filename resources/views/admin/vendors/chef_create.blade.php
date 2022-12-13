@@ -22,23 +22,23 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
-        
-        
+
+
+
         .upload-icon img{
           width: 100px;
           height: 100px;
           margin:19px;
           cursor: pointer;
         }
-        
-        
+
+
         .upload-icon.has-img {
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon.has-img img {
             /*width: 100%;
             height: auto;*/
@@ -55,20 +55,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon2 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon2.has-img2{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon2.has-img2 img {
             /*width: 100%;
             height: auto;*/
@@ -85,20 +85,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon3 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon3.has-img3{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon3.has-img3 img {
             /*width: 100%;
             height: auto;*/
@@ -115,20 +115,20 @@
           border-style: dotted;
           border-radius: 18px;
         }
-        
+
         .upload-icon4 img{
             width: 100px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
-        
+
         .upload-icon4.has-img4{
             width: 150px;
             height: 150px;
             border: none;
         }
-        
+
         .upload-icon4.has-img4 img {
             /*width: 100%;
             height: auto;*/
@@ -147,7 +147,7 @@
           <!-- Content Header (Page header) -->
           <section class="content-header">
             <div class="container-fluid">
-              
+
             </div><!-- /.container-fluid -->
           </section>
 
@@ -155,12 +155,12 @@
           <section class="content">
             <div class="container-fluid">
               <div class="row">
-                <div class="col-md-12"> 
+                <div class="col-md-12">
                   <div class="card card-primary card-outline">
-                    
+
                     <div class="card-header">
                       <h3 class="card-title">Create New Chef </h3>
-                      
+
                     </div>
                     <div class="card-body pad table-responsive">
                       <form id="restaurant-form" action="{{route('admin.chef.store')}}" method="post" enctype="multipart/form-data">
@@ -176,45 +176,45 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Chef <span class="text-danger">*</span></label>
                                         <input type="text" name="restourant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Chef Name">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Chef Email">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">DOB <span class="text-danger">*</span></label>
                                         <input type="date" name="dob" class="form-control"  id="" placeholder="Enter Chef Email">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Origin <span class="text-danger">*</span></label>
-                                        <input type="text" name="origin" class="form-control"  id="" placeholder="Enter Chef Origin">
-                                    </div>  
+                                        <label for="exampleInputEmail1">Origin/Address <span class="text-danger">*</span></label>
+                                        <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Origin">
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Cooking Exp <span class="text-danger">*</span></label>
                                         <input type="number" name="experience" class="form-control"  id="" placeholder="Enter Cooking Experence ">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
-                                    </div>  
+                                    </div>
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-12">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
                                           <select name="deal_categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
@@ -222,9 +222,9 @@
                                               <option value="{{$v->id}}">{{$v->name}}</option>
                                               @endforeach
                                             </select>
-                                      </div> 
+                                      </div>
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
                                         <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
@@ -232,9 +232,9 @@
                                             <option value="{{$v->id}}">{{$v->name}}</option>
                                             @endforeach
                                           </select>
-                                    </div>  
+                                    </div>
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-12">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Speciality <span class="text-danger">*</span></label>
                                           <select name="speciality[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
@@ -242,7 +242,7 @@
                                               <option value="{{$v->id}}">{{$v->name}}</option>
                                               @endforeach
                                             </select>
-                                      </div> 
+                                      </div>
                                   </div>
                                   <div class="col-md-4">
                                       <div class="form-group">
@@ -267,31 +267,31 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Address">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">FSSAI Lic. No. <span class="text-danger">*</span></label>
                                         <input type="text" name="fssai_lic_no" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
                                         <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
                                         <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Vendor Commission Persentage <span class="text-danger">*</span></label>
                                         <input type="text" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
-                                    </div>  
+                                    </div>
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
@@ -299,11 +299,11 @@
                                         <input type="text" name="tax" class="form-control"  id="" placeholder="Tax">
                                     </div>
                                   </div>
-                                  
+
                                 </div>
-                                
+
                               </div>
-                              
+
                           </div>
                           <!-- basic information end -->
                           <hr>
@@ -325,7 +325,7 @@
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="image">
-                                        </div>        
+                                        </div>
                                   </div>
                                   <div class="col-sm-3">
                                         <div>
@@ -338,7 +338,7 @@
                                                 </div>
                                             </label>
                                             <input id="file-input4" type="file" name="profile_image">
-                                        </div>        
+                                        </div>
                                   </div>
                                   <div class="col-sm-3">
                                         <div>
@@ -351,32 +351,32 @@
                                                 </div>
                                             </label>
                                             <input id="file-input2" type="file" name="fassai_image"/>
-                                            
-                                        </div>       
+
+                                        </div>
                                   </div>
                                   <div class="col-sm-3">
                                         <div>
                                           <label for="">Other Document </label>
-                                          
+
                                         </div>
                                         <div class="image-upload">
-                                          
+
                                             <label for="file-input3">
                                                 <div class="upload-icon3">
                                                     <img class="icon3" src="{{asset('add-image.png')}}">
                                                 </div>
                                             </label>
                                             <input id="file-input3" type="file" name="other_document"/>
-                                            
-                                        </div>   
-                                        <input type="text" name="other_document_name" class="form-control" placeholder="Document Name">    
+
+                                        </div>
+                                        <input type="text" name="other_document_name" class="form-control" placeholder="Document Name">
                                   </div>
-                                  
+
                                 </div>
                                 <!-- div row -->
                             </div>
-                              
-                              
+
+
                           </div>
                           <div class="card card-default">
                               <div class="card-header">
@@ -388,16 +388,16 @@
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Bio</label>
                                           <textarea name="bio" rows="10" col="10" class="form-control" ></textarea>
-                                      </div>         
+                                      </div>
                                   </div>
-                                  
-                                  
-                                  
+
+
+
                                 </div>
                                 <!-- div row -->
                               </div>
-                              
-                              
+
+
                           </div>
                           <!-- time setup -->
                           <div class="card card-default">
@@ -449,7 +449,7 @@
                                               @endif
                                           </div>
                                       </div>
-                                    </div>   
+                                    </div>
                                       <!--  -->
                                       <div class="form-row">
                                         <div class="col-md-3 mb-4">
@@ -698,15 +698,15 @@
 
                                   </div>
                                   <!--  -->
-                                  
-                                  
-                                  
-                                  
+
+
+
+
                                 </div>
                                 <!-- div row -->
                               </div>
-                              
-                              
+
+
                           </div>
                           <div class="card card-default">
                               <div class="card-header">
@@ -714,10 +714,10 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-12 mb-3"> 
+                                    <div class="col-md-12 mb-3">
                                           <label>Location</label>
                                           <div class="input-group">
-                                              <input type="text" id="address-input" name="location" class="form-control map-input" value="" placeholder="Enter Location">    
+                                              <input type="text" id="address-input" name="location" class="form-control map-input" value="" placeholder="Enter Location">
                                           </div>
                                     </div>
                                     <div class="col-sm-12">
@@ -727,32 +727,32 @@
                                             <input type="hidden" name="address_longitude" id="" value="{{ old('address_longitude') ?? '0' }}" />
                                             <input id="address-latitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="lat" value="" readonly required>
                                             <input id="address-longitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="long" value="" readonly required>
-                                        </div>       
+                                        </div>
                                     </div>
-                                  
-                                  
-                                  
+
+
+
                                 </div>
                                 <!-- div row -->
                               </div>
-                              
-                              
+
+
                           </div>
                           <div class="card-footer">
                             <button class="btn btn-success" ><i class="fa fa-save"></i>Register Chef </button>
                           </div>
                       </form>
-                      
+
                     </div>
 
                   </div>
 
                 </div>
-                
+
               </div>
             </div>
 
-          
+
           </section>
           <!-- /.content -->
         </div>
@@ -774,7 +774,7 @@
 
 
 
-    
+
 
 <script type="text/javascript">
     $(".s_meun").removeClass("active");
@@ -785,7 +785,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('.select2').select2();
-        
+
       $("#restaurant-form").validate({
           rules: {
               restourant_name: {
@@ -833,9 +833,9 @@
               },
               password:{
                 required: true,
-                maxlength: 20,  
+                maxlength: 20,
                 minlength: 5,
-                
+
               },
               confirm_password:{
                  required: true,
@@ -857,8 +857,8 @@
                 //checkLocation: true
                 checkLocation:true
               },
-              
-              
+
+
           },
           messages: {
               restourant_name: {
@@ -897,8 +897,8 @@
               'speciality[]':{
                 required:"Select Your speciality of chef"
               }
-              
-              
+
+
           }
       });
 
@@ -934,9 +934,9 @@
             }else{
                 Swal.fire({icon: 'error',title: 'Oops...',text: "Please Select Location Properly", footer: ''});
             }
-        
-        
-        
+
+
+
 
     },'Please Select Location Properly ');
     function initialize() {

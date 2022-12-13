@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a94f0d9856a98f2e5b77c04c5f5b0e08",
+    "content-hash": "ecf60315c6b617dd9bbf9387a079544d",
     "packages": [
         {
             "name": "anandsiddharth/laravel-paytm-wallet",
@@ -4076,6 +4076,71 @@
                 }
             ],
             "time": "2021-09-25T23:10:38+00:00"
+        },
+        {
+            "name": "razorpay/razorpay",
+            "version": "2.8.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/razorpay/razorpay-php.git",
+                "reference": "31027cfb689b9480d67419dbec7c203097e9d9ac"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/razorpay/razorpay-php/zipball/31027cfb689b9480d67419dbec7c203097e9d9ac",
+                "reference": "31027cfb689b9480d67419dbec7c203097e9d9ac",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "php": ">=7.3",
+                "rmccue/requests": "^2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9",
+                "raveren/kint": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "Deprecated.php"
+                ],
+                "psr-4": {
+                    "Razorpay\\Api\\": "src/",
+                    "Razorpay\\Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Abhay Rana",
+                    "email": "nemo@razorpay.com",
+                    "homepage": "https://captnemo.in",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Shashank Kumar",
+                    "email": "shashank@razorpay.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Razorpay PHP Client Library",
+            "homepage": "https://docs.razorpay.com",
+            "keywords": [
+                "api",
+                "client",
+                "php",
+                "razorpay"
+            ],
+            "support": {
+                "email": "contact@razorpay.com",
+                "issues": "https://github.com/Razorpay/razorpay-php/issues",
+                "source": "https://github.com/Razorpay/razorpay-php"
+            },
+            "time": "2022-10-19T07:41:27+00:00"
         },
         {
             "name": "riverline/multipart-parser",

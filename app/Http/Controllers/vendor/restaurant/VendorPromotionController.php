@@ -23,13 +23,13 @@ class VendorPromotionController extends Controller
     {
         $for = [];
         if (@Auth::guard('vendor')->user()->vendor_type == 'chef')
-            $for = [ 'chef' => "Chef Promotion" ];
+            $for = ['chef' => "Chef Promotion"];
         else if (@Auth::guard('vendor')->user()->vendor_type == 'restaurant')
-            $for = [ 'restaurant' => "Restaurant Promotion" ];
+            $for = ['restaurant' => "Restaurant Promotion"];
 //        if (@Auth::guard('vendor')->user()->table_service == 1)
 //            $for['dineout'] = "Dine-out Promotion";
 
-        $for["order_traking"]= "Order Tracking Banner";
+        $for["order_traking"] = "Order Tracking Banner";
 
         $slot = RootImage::where('is_active', '=', '1')->select('id', 'price')->get();
         return view('vendor.restaurant.promotion.create', compact('slot', 'for'));
@@ -42,7 +42,7 @@ class VendorPromotionController extends Controller
         // var_dump($id);die;
         $data = SloteMaster::where('id', '=', $id)->select('id', 'price')->get();
         // dd($slot);
-        return response()->json([ $data ]);
+        return response()->json([$data]);
         //return $data;
     }
 
@@ -112,12 +112,12 @@ class VendorPromotionController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('is_active', function ($data) {
-                    if(!empty($data->is_active) && ($data->is_active==1))
-                        $return='<span class="badge badge-success">Active</span>';
-                    else if(!empty($data->is_active) && ($data->is_active==2))
-                        $return='<span class="badge badge-danger">Rejected</span>';
+                    if (!empty($data->is_active) && ($data->is_active == 1))
+                        $return = '<span class="badge badge-success">Active</span>';
+                    else if (!empty($data->is_active) && ($data->is_active == 2))
+                        $return = '<span class="badge badge-danger">Rejected</span>';
                     else
-                        $return='<span class="badge badge-primary">Pending</span>';
+                        $return = '<span class="badge badge-primary">Pending</span>';
                     return $return;
 //                    return $status_class = (!empty($data->is_active)) && ($data->is_active) ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-primary">Pending</span>';
                     return '<input type="checkbox" name="my-checkbox" checked data-bo/otstrap-switch data-off-color="danger" data-on-color="success">';
@@ -125,8 +125,30 @@ class VendorPromotionController extends Controller
                 ->addColumn('slot_image', function ($data) {
                     return "<img src=" . asset('slot-vendor-image') . '/' . $data->slot_image . "  style='width: 50px;' />";
                 })
+//                ->addColumn('payment', function ($appPromotionBlogBooking) {
+//                    if (!$appPromotionBlogBooking->payment_status) {
+//                        return '<form action = "' . route("payment") . '" method = "POST" >
+//                                                    <script src              = "https://checkout.razorpay.com/v1/checkout.js"
+//                                                            data-key         = "' . env('RAZOR_KEY') . '"
+//                                                            data-amount      = "' . ($appPromotionBlogBooking->app_promotion_setting->blog_price * 100) . '"
+//                                                            data-buttontext  = "Pay ' . ($appPromotionBlogBooking->app_promotion_setting->blog_price) . ' INR"
+//                                                            data-name        = "' . env('APP_NAME') . '"
+//                                                            data-description = "Payment for Promotion :'.$appPromotionBlogBooking->app_promotion_blog->name . ' for position '. $appPromotionBlogBooking->app_promotion_setting->blog_position.'
+//                                                            data-prefill.name = "'.$appPromotionBlogBooking->app_promotion_blog->name.'"
+//                                                            data-prefill.email = "'. \Auth::guard('vendor')->user()->email.'"
+//                                                            data-prefill.contact = "'.\Auth::guard('vendor')->user()->mobile.'"
+//                                                            data-theme.color = "#ff7529">
+//                                                    </script >
+//                                                    <input type = "hidden" name = "_token" value = "'.csrf_token().'" >
+//                                                    <input type = "hidden" name = "id" value = "'.$appPromotionBlogBooking->id.'" >
+//
+//                                                </form >';
+//                    }
+//
+//                })
+//
 //                ->rawColumns([ 'from_date', 'is_active', 'slot_image' ])
-                ->rawColumns([ 'is_active', 'slot_image', 'from_date', 'to_date', 'from_time', 'to_time', 'is_active', 'slot_image', 'position' ])
+                ->rawColumns(['is_active', 'slot_image', 'from_date', 'to_date', 'from_time', 'to_time', 'is_active', 'slot_image', 'position'])
                 ->make(true);
         }
     }
@@ -205,12 +227,12 @@ class VendorPromotionController extends Controller
 
 
         //eliminate already booked slots
-        $booked_slot_ids = SloteBook::where('for', '=', $request->banner_for)->where(function ($q) use ($date_to, $date_from,$time) {
+        $booked_slot_ids = SloteBook::where('for', '=', $request->banner_for)->where(function ($q) use ($date_to, $date_from, $time) {
             $q->where(function ($q) use ($date_to, $date_from) {
-                $q->where([ [ 'from_date', '>=', $date_from ], [ 'from_date', '<=', $date_to ] ])
-                    ->orWhere([ [ 'to_date', '>=', $date_from ], [ 'to_date', '<=', $date_to ] ]);
+                $q->where([['from_date', '>=', $date_from], ['from_date', '<=', $date_to]])
+                    ->orWhere([['to_date', '>=', $date_from], ['to_date', '<=', $date_to]]);
             })
-            ->where('from_time',$time[0])->where('to_time',$time[1]);
+                ->where('from_time', $time[0])->where('to_time', $time[1]);
         })->where('is_active', '=', '1')
             ->whereIn('vendor_id', $vendor_ids)->pluck('cheflab_banner_image_id');
 

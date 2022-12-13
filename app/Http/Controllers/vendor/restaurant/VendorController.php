@@ -162,7 +162,7 @@ class VendorController extends Controller
             $vendors->banner_image = json_encode($files);
         }
         $vendors->save();
-//        dd($vendors);
+
         return redirect()->route('restaurant.profile')->with('message', 'Vendor Details Update  Successfully');
 
     }
@@ -197,16 +197,11 @@ class VendorController extends Controller
 
         $hashedPassword = \Auth::guard('vendor')->user()->password;
         if (\Hash::check($request->old_password , $hashedPassword)) {
-            if (\Hash::check($request->new_password , $hashedPassword)) {
-//dd("dsfsd");
+            if (!\Hash::check($request->new_password , $hashedPassword)) {
+
                 $users = Vendors::find(\Auth::guard('vendor')->user()->id);;
                 $users->password = bcrypt($request->new_password);
                 $users->save();
-//dd($users);
-//                session()->flash('message','password updated successfully');
-//                \Session::flush();
-//                \Auth::logout();
-//                return redirect('vendor/login');
                 return redirect()->back();
             }
             else{
@@ -218,7 +213,7 @@ class VendorController extends Controller
             session()->flash('message','old password doesnt matched');
             return redirect()->back();
         }
-        return redirect()->route('restaurant.profile')->with('message', 'Vendor Details Update  Successfully');
+        return redirect()->route('restaurant.profile')->with('success', 'Vendor Details Update  Successfully');
 
     }
 }

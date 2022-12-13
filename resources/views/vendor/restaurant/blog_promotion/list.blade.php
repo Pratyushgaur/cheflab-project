@@ -43,12 +43,13 @@ $breadcrumb[] = ["name"  => "List",
                                     <th scope="col">Time Slot</th>
                                     <th scope="col">Status</th>
                                     <th scope="col">Payment</th>
-
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php $blog_type = config('custom_app_setting.blog_type')?>
                                 @foreach($appPromotionBlogBookings as $k=>$appPromotionBlogBooking)
+
                                     <tr>
                                         <td>{{$k+1}}</td>
                                         <td><img
@@ -72,6 +73,27 @@ $breadcrumb[] = ["name"  => "List",
                                                 <span class="badge badge-success">Paid</span>
                                             @else
                                                 <span class="badge badge-danger">Pending</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                        @if(!$appPromotionBlogBooking->payment_status)
+                                            <!-- <div class="panel-body text-center"> -->
+                                                <form action="{!!route('payment')!!}" method="POST">
+                                                    <script src="https://checkout.razorpay.com/v1/checkout.js"
+                                                            data-key="{{ env('RAZOR_KEY') }}"
+                                                            data-amount="{{($appPromotionBlogBooking->app_promotion_setting->blog_price*100)}}"
+                                                            data-buttontext="Pay {{($appPromotionBlogBooking->app_promotion_setting->blog_price)}} INR"
+                                                            data-name="{{ env('APP_NAME') }}"
+                                                            data-description="Payment for Promotion :{{"'".$appPromotionBlogBooking->app_promotion_blog->name."' for position ".$appPromotionBlogBooking->app_promotion_setting->blog_position}}"
+                                                            data-prefill.name="{{$appPromotionBlogBooking->app_promotion_blog->name}}"
+                                                            data-prefill.email="{{\Auth::guard('vendor')->user()->email}}"
+                                                            data-prefill.contact="{{\Auth::guard('vendor')->user()->mobile}}"
+                                                            data-theme.color="#ff7529">
+                                                    </script>
+                                                    <input type="hidden" name="_token" value="{!!csrf_token()!!}">
+                                                    <input type="hidden" name="id" value="{{$appPromotionBlogBooking->id}}">
+
+                                                </form>
                                             @endif
                                         </td>
                                     </tr>

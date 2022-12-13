@@ -368,6 +368,7 @@ if (is_array($banners))
                                                 <label for="">Other Document </label>
 
                                             </div>
+{{--                                            {{dd($vendor)}}--}}
                                             <div class="image-upload">
 
                                                 <label for="file-input3">
@@ -384,7 +385,7 @@ if (is_array($banners))
                                                 <input id="file-input3" type="file" name="other_document" {{($is_require) ? 'required' : ''}} />
 
                                             </div>
-                                            <input type="text" name="other_document_name" value="{{$vendor->other_document_name}}" class="form-control" placeholder="Document Name">
+                                            <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">
                                         </div>
                                         <div class="col-sm-3">
                                             <div>
@@ -440,8 +441,8 @@ if (is_array($banners))
                             <label for="exampleInputEmail1">Categories</label>
                             <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
                                 @foreach($categories as $k =>$value)
-                                    <?php 
-                                    
+                                    <?php
+
                                         if(in_array($k, $dealsIds)){
                                             ?>
                                             <option value="{{$k}}" selected>{{$value}}</option>
@@ -452,10 +453,10 @@ if (is_array($banners))
                                             <?php
                                         }
                                     ?>
-                                    
+
                                 @endforeach
                             </select>
-                        </div>  
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -484,8 +485,8 @@ if (is_array($banners))
                             <label for="exampleInputEmail1">Cuisines</label>
                             <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
                                 @foreach($cuisines as $k =>$value)
-                                    <?php 
-                                    
+                                    <?php
+
                                         if(in_array($k, $cuisIds)){
                                             ?>
                                             <option value="{{$k}}" selected>{{$value}}</option>
@@ -496,10 +497,10 @@ if (is_array($banners))
                                             <?php
                                         }
                                     ?>
-                                    
+
                                 @endforeach
                             </select>
-                        </div>  
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -511,7 +512,7 @@ if (is_array($banners))
             </div>
         </div>
     </div>
-    
+
 
     </div>
 @endsection

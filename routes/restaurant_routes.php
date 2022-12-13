@@ -108,6 +108,13 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('globle/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'bank_details'])->name('restaurant.globleseting.bank_details');
             Route::post('globle/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_bank_details'])->name('restaurant.globleseting.save_bank_details');
 
+            Route::get('razorpay', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorpay'])->name('razorpay');
+            Route::post('razorpaypayment', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'payment'])->name('payment');
+
+//            Route::get('product', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'index']);
+//            Route::get('paysuccess', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorPaySuccess']);
+//            Route::get('razor-thank-you', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'RazorThankYou']);
+
         });
         Route::get('globle', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'index'])->name('restaurant.globleseting');
 
