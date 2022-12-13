@@ -155,8 +155,8 @@ Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::cla
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
+Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion']);
 
-Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
 
 //
