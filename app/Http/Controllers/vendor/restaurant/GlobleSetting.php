@@ -28,8 +28,9 @@ class GlobleSetting extends Controller
     {  
         $VendorOrderTime = [];
         $hideSidebar     = true;
-        $order_time      = VendorOrderTime::where('vendor_id', Auth::guard('vendor')->user()->id)->get();
-        foreach ($order_time as $v) $VendorOrderTime[$v->day_no] = $v->toArray();
+        $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
+        foreach ($order_time as $v) 
+        $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
 
         return view('vendor.restaurant.globleseting.require_ordertime', compact('hideSidebar', 'VendorOrderTime'));
     }
@@ -39,7 +40,10 @@ class GlobleSetting extends Controller
         
         $VendorOrderTime = [];
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
-        foreach ($order_time as $v) $VendorOrderTime[$v->day_no][$v->key] = $v->toArray();
+        foreach ($order_time as $v) 
+        $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
+
+        //echo '<pre>';var_dump($VendorOrderTime);echo '</pre>';die;
         // echo '<pre>'; print_r($order_time);die;
         return view('vendor.restaurant.globleseting.ordertime', compact('VendorOrderTime'));
     }
@@ -87,9 +91,9 @@ class GlobleSetting extends Controller
                         'available' =>  $available[$key],
 
                     ); 
-                    $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no',$key)->where('key',$key1)->exists();
+                    $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no',$key)->where('row_keys',$key1)->exists();
                      if($exist){                      
-                        Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('key',$key1)->update($data);
+                        Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys',$key1)->update($data);
                      }else{                                       
                        Order_time::insert($data);
                      }
