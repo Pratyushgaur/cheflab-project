@@ -346,7 +346,67 @@
 
                   </div>
                 </div>
+                
                 <!-- End of Payemnt Setting -->
+                <!-- application version and update setting  -->
+                <div class="col-lg-12 col-6">
+                    <!-- small box -->
+                  <div class="card card-primary card-outline">
+                    
+                    <div class="card-header">
+                      <h3 class="card-title">Application (User) Version And Update Setup </h3>
+                      
+                    </div>
+                    <div class="card-body pad table-responsive">
+                      <form id="restaurant-form" action="{{route('admin.globle.store_user_app_version')}}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title text-bold" >User Application Update</h3>
+                            </div>
+                            <div class="card-body">
+                              <div class="error">
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Current Version of User App<span class="text-danger">*</span></label>
+                                    <input type="text" value="{{$data->user_app_current_version}}" name="user_app_current_version" class="form-control"  id="exampleInputEmail1" placeholder="User App Current Version" required>
+                                    <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Soft Update</label>
+                                    
+                                    <select name="soft_update" class="form-control soft_update">
+                                      <option value="0" @if($data->user_app_soft_update == "0") selected @endif  >false</option>
+                                      <option value="1" @if($data->user_app_soft_update == "1") selected @endif>True</option>
+                                    </select>
+                                  </div>
+                                  <!--  -->
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Force Update</label>
+                                    
+                                    <select name="force_update" class="form-control force_update">
+                                      <option value="0" @if($data->user_app_force_update == "0") selected @endif>false</option>
+                                      <option value="1" @if($data->user_app_force_update == "1") selected @endif>True</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                         <div class="card-footer">
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
+                          </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+                <!-- end of version setting -->
                 <div class="col-lg-12 col-6">
                     <!-- small box -->
                   <div class="card card-primary card-outline">
@@ -553,6 +613,21 @@
             nr++;
         }
         }); 
+    $('.soft_update').change(function(){
+      if($(this).val() == '0'){
+        $('.force_update').val('1');
+      }else{
+        $('.force_update').val('0');
+      }
+    });
+    $('.force_update').change(function(){
+      if($(this).val() == '0'){
+        $('.soft_update').val('1');
+      }else{
+        $('.soft_update').val('0');
+      }
+    });
+        
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }

@@ -22,6 +22,9 @@ class CreareDeliveryBoySetiingTable extends Migration
             $table->decimal('six_km_above_user', 10,2);
             $table->decimal('six_km_above_admin', 10,2);
             $table->decimal('extra_charges_admin', 10,2);
+            $table->decimal('extra_charges_user', 10,2);
+            $table->string('extra_charge_active',10)->default('0');
+            
             $table->decimal('fifteen_order_incentive_4', 10,2);
             $table->decimal('fifteen_order_incentive_5', 10,2);
             $table->decimal('sentientfive_order_incentive_4', 10,2);

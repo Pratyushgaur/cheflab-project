@@ -120,6 +120,14 @@ class GlobleSetting extends Controller
         $general->save();
         return redirect()->route('admin.globle.setting')->with('message', 'Update Payment setting Successfully');
     }
+    public function storeUserAppVersion(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->user_app_current_version = $request->user_app_current_version;
+        $general->user_app_force_update = $request->force_update;
+        $general->user_app_soft_update = $request->soft_update;
+        $general->save();
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Application Version Setup Successfully');
+    }
     public function storeDelivery(Request $request){
         $general = AdminMasters::find($request->id);
         $general->platform_charges = $request->platform_charges;

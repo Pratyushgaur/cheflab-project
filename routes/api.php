@@ -155,8 +155,8 @@ Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::cla
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
+Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion']);
 
-Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
 
 //
@@ -178,3 +178,4 @@ Route::post('rider-analytics',[App\Http\Controllers\api\rider\AppController::cla
 
 Route::post('rider-order-history',[App\Http\Controllers\api\rider\OrderApiController::class,'orderhistory']);
 Route::get('getDistance',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance']);
+Route::get('getDistance2',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance2']);

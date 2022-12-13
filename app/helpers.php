@@ -640,6 +640,25 @@ function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K')
         return $miles;
       }
     }
+    function GetDrivingDistance($lat1, $long1, $lat2, $long2)
+    {
+        $key =  env('GOOGLE_MAPS_API_KEY');
+        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$lat1.",".$long1."&destinations=".$lat2.",".$long2."&mode=driving&language=pl-PL&key=$key";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+         $response = curl_exec($ch);
+        curl_close($ch);
+        $response_a = json_decode($response, true);
+        $dist = $response_a['rows'][0]['elements'][0]['distance']['text'];
+        $time = $response_a['rows'][0]['elements'][0]['duration']['text'];
+        $dist = str_replace(',', '.', $dist) ;
+        return $dist = str_replace('km', '', $dist) ;
+        //return array('distance' => $dist, 'time' => $time);
+    }
     function getOrderId(){
         $order = \App\Models\Order::orderBy('id','DESC');
         if($order->exists()){
@@ -648,4 +667,35 @@ function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K')
             $id = 0;
         }
         return str_pad(1 +$id, 8, "0", STR_PAD_LEFT);
+    }
+    function userToVendorDeliveryCharge($userLat,$userLng,$vendorLat,$vendorLng)
+    {
+        $distance = GetDrivingDistance($userLat,$userLng,$vendorLat,$vendorLng);
+        //$distance = 3.9;
+        $distance = floatval($distance);
+        //$distance = 10;
+        $setting = App\Models\DeliveryboySetting::first();
+        $charge = $setting->first_three_km_charge_user; // 30
+        if($distance > 3){
+             $remainingkm = $distance-3.0;
+            if($remainingkm >= 3){
+                $secondCharge = 3*$setting->three_km_to_six_user;
+            }else{
+                $secondCharge = $remainingkm*$setting->three_km_to_six_user;
+            }
+             $charge = $charge+$secondCharge;
+            //
+            $remainingkm = $remainingkm-3.0;
+            
+            if($remainingkm > 0){
+                $thirdCharge = $remainingkm*$setting->six_km_above_user;
+                $charge = $charge+$thirdCharge;
+            }
+
+        }
+        if($setting->extra_charge_active){
+            $charge = $charge+$setting->extra_charges_user;
+        }
+        return  round($charge);
+        
     }

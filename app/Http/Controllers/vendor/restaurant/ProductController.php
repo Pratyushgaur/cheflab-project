@@ -196,40 +196,31 @@ class ProductController extends Controller
         $product->product_for = '3';
 
         $product->save();
+        $primary = Variant::where('product_id','=',$product->id)->orderBy('id','ASC')->limit(1)->select('id')->first();
+        Variant::where('id','=',$primary->id)->update(['variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
         if ($request->custimization == 'true') {
             $save  = [];
-            $count = 0;
-//           
-            $primary = Variant::where('product_id','=',$product->id)->orderBy('id','ASC')->limit(1)->select('id')->first();
-            Variant::where('id','=',$primary->id)->update(['variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
+            $count = 0;           
             $ids[] = $primary->id;
             if (isset($request->variant_name) && count($request->variant_name) > 0) {
                 foreach ($request->variant_name as $k => $v) {
                     $save[$count] = ['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]];
                     if (isset($request->variant_id[$k])) {
-//                        dd($request->variant_id[$k]);
                         if($v!='' && $request->price[$k]!=''){
                             Variant::where('id', $request->variant_id[$k])->update($save[$count]);
                         }
                         
                         $ids[] = (int)$request->variant_id[$k];
-//                        print_r($save[$count]);
                     } else {
                         if($v!='' && $request->price[$k]!=''){
                             $vari  = Variant::create($save[$count]);
                             $ids[] = (int)$vari->id;
                         }
-                        
-                        
-//                        print_r($vari);
                     }
                     $count++;
                 }
                 \DB::enableQueryLog();
-//dd($ids);
                 $ids = Variant::where('product_id', $product->id)->whereNotIn('id', array_values($ids))->delete();
-//                dd(\DB::getQueryLog ());
-
             }else{
                 $ids = Variant::where('product_id', $product->id)->whereNotIn('id', array_values($ids))->delete();
             }

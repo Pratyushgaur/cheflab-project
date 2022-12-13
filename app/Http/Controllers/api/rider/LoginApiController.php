@@ -112,4 +112,12 @@ class LoginApiController extends Controller
         //return round(point2point_distance(24.466551,74.884048,24.464050432928225,74.86669534531778,'K'),2);
         //24.464050432928225, 74.86669534531778
     }
+    public function getDistance2()
+    {
+        //return GetDrivingDistance(22.7533,75.8937,22.6977, 75.8333);
+        return userToVendorDeliveryCharge(22.7533,75.8937,22.6977, 75.8333);
+        //24.464050432928225, 74.86669534531778
+        //24.54764088976084, 74.83816149442208
+        //24.258000662713282, 74.93817489405903
+    }
 }

@@ -165,6 +165,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('globle-store-deliverycharge', [App\Http\Controllers\admin\GlobleSetting::class,'storeDelivery'])->name('admin.globle.storeDelivercharge');
     Route::get('globle-payment-setting', [App\Http\Controllers\admin\GlobleSetting::class,'payment'])->name('admin.globle.payment.setting');
     Route::post('globle-payment-store', [App\Http\Controllers\admin\GlobleSetting::class,'storePaytm'])->name('admin.globle.storePaytm');
+    Route::post('globle-userapp-setup-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeUserAppVersion'])->name('admin.globle.store_user_app_version');
     Route::get('app-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.app.feedbacklist');
     Route::get('app-vendor-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'vendorfeedbacklist'])->name('admin.app.vendorfeedbacklist');
     Route::get('app-deliverboy-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'DeliveryBoyfeedbacklist'])->name('admin.app.deliveryfeedbacklist');
@@ -227,4 +228,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('users/view/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_view'])->name('admin.user.view');
     //Refund
     Route::get('refund-list',[\App\Http\Controllers\admin\UserControllers::class,'refundlist'])->name('admin.refund.list');
+    //
+    Route::post('get-status-update', [App\Http\Controllers\admin\OrderController::class, 'status_update'])->name('admin.status.update');
+Route::get('order/generate-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoiceorder'])->name('admin.order.invoice');
 });
