@@ -561,8 +561,8 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
             ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
             //--------------commented, we are sending is open and is_closed
-//            ->where('start_time', '<=', mysql_time())
-//            ->where('end_time', '>', mysql_time())
+            ->where('start_time', '<=', mysql_time())
+            ->where('end_time', '>', mysql_time())
             ->where('available', '=', 1);
     });
 
@@ -580,7 +580,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed'),
-        "vendors.fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id','banner_image','deal_cuisines');
+        "vendors.fssai_lic_no", 'review_count', 'table_service','vendors.id as vendor_id','banner_image','deal_cuisines');
 
     if (!empty($limit) && !empty($offset))
         $vendors->offset($offset)->limit($limit);
@@ -593,14 +593,50 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 function next_available_day($vendor_id, $return_obj = false)
 {
     $today = \Carbon\Carbon::now()->dayOfWeek;
-//    $today=6;
-    if ($today == 6)
-        $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
-    else
-        $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', $today)->where('available', 1)->orderBy('day_no')->first();
+    //$today = 3;
+    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+    if (!isset($next_available_day->id)){
+        $exit = 'false';
+        while ($exit == 'false') {
+            $today++;
+            if($today == 6) $today=0;
+            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+            if(!empty($next_available_day)){
+                $exit = 'true';
+            }else{
+                $exit = 'false';
+            }
+        }
+    }
 
-    if (!isset($next_available_day->id))
-        $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
+//    $today=6;
+    //return \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->get();
+    // if ($today == 6){
+    //     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('vendor_id','=',$vendor_id)->where('available', 1)->orderBy('day_no')->orderBy('start_time','ASC')->first();
+    // }
+        
+    // else{
+    //     return $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->toSql();   
+    // }
+        
+        //$next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', $today)->where('available', 1)->orderBy('day_no')->first();
+    
+    // if (!isset($next_available_day->id)){
+        
+    //     while ($exit == 'false') {
+    //         $today++;
+    //         if($today == 6) $today=0;
+    //         $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+    //         if(!empty($next_available_day)){
+    //             $exit = 'true';
+    //         }else{
+    //             $exit = 'false';
+    //         }
+    //     }
+    // }
+        
+
+       // $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
     if (isset($next_available_day->id))
         if ($return_obj)
             return $next_available_day;
