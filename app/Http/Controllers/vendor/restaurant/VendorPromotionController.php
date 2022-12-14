@@ -126,14 +126,15 @@ class VendorPromotionController extends Controller
                     return "<img src=" . asset('slot-vendor-image') . '/' . $data->slot_image . "  style='width: 50px;' />";
                 })
 //                ->addColumn('payment', function ($appPromotionBlogBooking) {
+//                    $btn='';
 //                    if (!$appPromotionBlogBooking->payment_status) {
-//                        return '<form action = "' . route("payment") . '" method = "POST" >
+//                        $btn= '<form action = "' . route("payment") . '" method = "POST" >
 //                                                    <script src              = "https://checkout.razorpay.com/v1/checkout.js"
 //                                                            data-key         = "' . env('RAZOR_KEY') . '"
 //                                                            data-amount      = "' . ($appPromotionBlogBooking->app_promotion_setting->blog_price * 100) . '"
 //                                                            data-buttontext  = "Pay ' . ($appPromotionBlogBooking->app_promotion_setting->blog_price) . ' INR"
 //                                                            data-name        = "' . env('APP_NAME') . '"
-//                                                            data-description = "Payment for Promotion :'.$appPromotionBlogBooking->app_promotion_blog->name . ' for position '. $appPromotionBlogBooking->app_promotion_setting->blog_position.'
+//                                                            data-description = "Payment for Promotion :'.$appPromotionBlogBooking->app_promotion_blog->name . ' for position '. $appPromotionBlogBooking->app_promotion_setting->blog_position.'"
 //                                                            data-prefill.name = "'.$appPromotionBlogBooking->app_promotion_blog->name.'"
 //                                                            data-prefill.email = "'. \Auth::guard('vendor')->user()->email.'"
 //                                                            data-prefill.contact = "'.\Auth::guard('vendor')->user()->mobile.'"
@@ -144,6 +145,7 @@ class VendorPromotionController extends Controller
 //
 //                                                </form >';
 //                    }
+//                    return $btn;
 //
 //                })
 //

@@ -5,7 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-//use Kutia\Larafirebase\Messages\FirebaseMessage;
+use Kutia\Larafirebase\Messages\FirebaseMessage;
 
 class RequestSendToDeliveryBoyNotification extends Notification
 {
@@ -38,7 +38,7 @@ class RequestSendToDeliveryBoyNotification extends Notification
     public function via($notifiable)
     {
         return ['database'
-//                , 'firebase'
+               , 'firebase'
         ];
     }
 
@@ -73,23 +73,23 @@ class RequestSendToDeliveryBoyNotification extends Notification
         ];
     }
 
-//    public function toFirebase($notifiable)
-//    {
-//        if ($this->fcmTokens != '') {
-//            return (new FirebaseMessage)
-//                ->withTitle($this->title)
-//                ->withBody($this->msg)
-//                ->withSound('default')
-//                ->withClickAction( $this->accept_link)
-//                ->withAdditionalData([
-//                    'msg_type'     => 'info',
-//                    'link'         => '',
-//                    'accept_link'  => $this->accept_link,
-//                    'decline_link' => $this->decline_link
-//                ])
-//                ->withPriority('high')->asMessage($this->fcmTokens);
-//
-//        } else
-//            return false;
-//    }
+   public function toFirebase($notifiable)
+   {
+       if ($this->fcmTokens != '') {
+           return (new FirebaseMessage)
+               ->withTitle($this->title)
+               ->withBody($this->msg)
+               ->withSound('default')
+               ->withClickAction( $this->accept_link)
+               ->withAdditionalData([
+                   'msg_type'     => 'info',
+                   'link'         => '',
+                   'accept_link'  => $this->accept_link,
+                   'decline_link' => $this->decline_link
+               ])
+               ->withPriority('high')->asMessage($this->fcmTokens);
+
+       } else
+           return false;
+   }
 }

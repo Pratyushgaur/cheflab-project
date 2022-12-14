@@ -5,7 +5,7 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-//use Kutia\Larafirebase\Messages\FirebaseMessage;
+use Kutia\Larafirebase\Messages\FirebaseMessage;
 
 class OrderCreateNotification extends Notification
 {
@@ -38,7 +38,7 @@ class OrderCreateNotification extends Notification
     public function via($notifiable)
     {
         return ['database'
-//                , 'firebase'
+               , 'firebase'
         ];
     }
 
@@ -72,27 +72,27 @@ class OrderCreateNotification extends Notification
         ];
     }
 
-//    public function toFirebase($notifiable)
-//    {
-//
-//        if ($this->fcmTokens != ''){
-////            dd($this->fcmTokens);
-//            return (new FirebaseMessage)
-//                ->withTitle($this->title)
-//                ->withBody($this->msg)
-////            ->withImage('https://firebase.google.com/images/social.png')
-////            ->withIcon('https://seeklogo.com/images/F/firebase-logo-402F407EE0-seeklogo.com.png')
-//                ->withSound('default')
-//                ->withClickAction($this->link)
-//                ->withAdditionalData([
-//                    'msg_type' => 'info',
-//                    'link' => $this->link
-//                ])
-//                ->withPriority('high')->asMessage($this->fcmTokens);
-//
-//        }
-//
-//        else
-//            return false;
-//    }
+   public function toFirebase($notifiable)
+   {
+
+       if ($this->fcmTokens != ''){
+//            dd($this->fcmTokens);
+           return (new FirebaseMessage)
+               ->withTitle($this->title)
+               ->withBody($this->msg)
+//            ->withImage('https://firebase.google.com/images/social.png')
+//            ->withIcon('https://seeklogo.com/images/F/firebase-logo-402F407EE0-seeklogo.com.png')
+               ->withSound('default')
+               ->withClickAction($this->link)
+               ->withAdditionalData([
+                   'msg_type' => 'info',
+                   'link' => $this->link
+               ])
+               ->withPriority('high')->asMessage($this->fcmTokens);
+
+       }
+
+       else
+           return false;
+   }
 }

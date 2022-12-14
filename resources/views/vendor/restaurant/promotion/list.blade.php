@@ -75,6 +75,7 @@ $breadcrumb[] = ["name"  => "List",
                     {data: 'to_time', name: 'to_time'},
                     {data: 'position', name: 'position'},
                     {data: 'is_active', name: 'is_active'},
+                    // {data: 'payment', name: 'payment'},
 
                 ]
             });
