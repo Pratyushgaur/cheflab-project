@@ -592,6 +592,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 
 function next_available_day($vendor_id, $return_obj = false)
 {
+    if($vendor_id==null)return false;
     $today = \Carbon\Carbon::now()->dayOfWeek;
     //$today = 3;
     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   

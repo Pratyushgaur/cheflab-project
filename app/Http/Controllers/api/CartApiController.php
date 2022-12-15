@@ -358,7 +358,9 @@ class CartApiController extends Controller
 
             $vendors = get_restaurant_near_me('','',['vendors.id'=>$cart_users->vendor_id],$request->user()->id)
                 ->get();
-
+            if(empty($vendors)){
+                return response()->json(['status' => false, 'error' => 'Technical Error Vendor Not Found'], 401);
+            }
             foreach ($vendors as $key => $value) {
                 $banners = json_decode($value->banner_image);
                 if (is_array($banners))
