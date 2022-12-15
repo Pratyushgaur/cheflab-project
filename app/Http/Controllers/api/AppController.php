@@ -771,8 +771,8 @@ class AppController extends Controller
                     $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
                         ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
                         //--------------commented, we are sending is open and is_closed
-//            ->where('start_time', '<=', mysql_time())
-//            ->where('end_time', '>', mysql_time())
+                        ->where('start_time', '<=', mysql_time())
+                        ->where('end_time', '>', mysql_time())
                         ->where('available', '=', 1);
                 });
 

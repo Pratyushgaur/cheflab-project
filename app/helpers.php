@@ -510,6 +510,46 @@ function get_delivery_boy_near_me($lat, $lng)
     return [1];
 }
 
+// function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
+// {
+//     date_default_timezone_set('Asia/Kolkata');
+//     if ($lat != '' && $lat != '')
+//         $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+//     else
+//         $vendors=\App\Models\Vendors::where("vendors.is_all_setting_done", 1)->where('vendors.status', 1);
+
+//     $vendors->leftJoin('vendor_order_time', function ($join) {
+//         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+//             ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+//             //--------------commented, we are sending is open and is_closed
+// //            ->where('start_time', '<=', mysql_time())
+// //            ->where('end_time', '>', mysql_time())
+//             ->where('available', '=', 1);
+//     });
+
+//     if ($where != null && !empty($where)) {
+//         $vendors->where($where);
+//     }
+
+//     if ($current_user_id != null) {
+//         $vendors->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
+//             $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+//             $join->where('user_vendor_like.user_id', '=', $current_user_id);
+//         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
+//     }
+//     $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type",
+//         'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
+//         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
+//         DB::raw('if(available,false,true)  as isClosed'),
+//         "vendors.fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id','banner_image','deal_cuisines');
+
+//     if (!empty($limit) && !empty($offset))
+//         $vendors->offset($offset)->limit($limit);
+
+// //    dd($vendors->get()->toArray());
+//     return $vendors;
+
+// }
 function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
 {
     date_default_timezone_set('Asia/Kolkata');
@@ -522,8 +562,8 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
             ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
             //--------------commented, we are sending is open and is_closed
-//            ->where('start_time', '<=', mysql_time())
-//            ->where('end_time', '>', mysql_time())
+            ->where('start_time', '<=', mysql_time())
+            ->where('end_time', '>', mysql_time())
             ->where('available', '=', 1);
     });
 
@@ -541,7 +581,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed'),
-        "vendors.fssai_lic_no", 'review_count', 'table_service','vendor_order_time.vendor_id','banner_image','deal_cuisines');
+        "vendors.fssai_lic_no", 'review_count', 'table_service','vendors.id as vendor_id','banner_image','deal_cuisines');
 
     if (!empty($limit) && !empty($offset))
         $vendors->offset($offset)->limit($limit);
@@ -553,15 +593,52 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 
 function next_available_day($vendor_id, $return_obj = false)
 {
+    if($vendor_id==null)return false;
     $today = \Carbon\Carbon::now()->dayOfWeek;
-//    $today=6;
-    if ($today == 6)
-        $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
-    else
-        $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', $today)->where('available', 1)->orderBy('day_no')->first();
+    //$today = 3;
+    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+    if (!isset($next_available_day->id)){
+        $exit = 'false';
+        while ($exit == 'false') {
+            $today++;
+            if($today == 6) $today=0;
+            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+            if(!empty($next_available_day)){
+                $exit = 'true';
+            }else{
+                $exit = 'false';
+            }
+        }
+    }
 
-    if (!isset($next_available_day->id))
-        $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
+//    $today=6;
+    //return \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->get();
+    // if ($today == 6){
+    //     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('vendor_id','=',$vendor_id)->where('available', 1)->orderBy('day_no')->orderBy('start_time','ASC')->first();
+    // }
+        
+    // else{
+    //     return $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->toSql();   
+    // }
+        
+        //$next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', $today)->where('available', 1)->orderBy('day_no')->first();
+    
+    // if (!isset($next_available_day->id)){
+        
+    //     while ($exit == 'false') {
+    //         $today++;
+    //         if($today == 6) $today=0;
+    //         $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+    //         if(!empty($next_available_day)){
+    //             $exit = 'true';
+    //         }else{
+    //             $exit = 'false';
+    //         }
+    //     }
+    // }
+        
+
+       // $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
     if (isset($next_available_day->id))
         if ($return_obj)
             return $next_available_day;
