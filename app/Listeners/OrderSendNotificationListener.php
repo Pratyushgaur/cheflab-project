@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Events\OrderCreateEvent;
 use App\Models\User;
-use App\Models\vendors;
+use App\Models\Vendors;
 use App\Notifications\OrderCreateNotification;
 
 class OrderSendNotificationListener
@@ -28,7 +28,7 @@ class OrderSendNotificationListener
     public function handle(OrderCreateEvent $event)
     {
         $customer = User::find($event->user_id);
-        $vendor   = vendors::find($event->vendor_id);
+        $vendor   = Vendors::find($event->vendor_id);
 
 //        $customer->notify(new OrderCreateNotification($event->order_id, $vendor->name,
 //                'The order has been placed ',

@@ -1,3 +1,4 @@
+
 <!-- MODALS -->
 <!-- Quick bar -->
 <aside id="ms-quick-bar" class="ms-quick-bar fixed ms-d-block-lg">
@@ -504,9 +505,11 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
 @stack('model')
 
-
 <script>
+
+
     $(document).ready(function () {
+
         toastr.options =
             {
                 "closeButton": false,

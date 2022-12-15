@@ -40,11 +40,57 @@ $breadcrumb[] = ["name"  => "List",
                                     <th scope="col">To time</th>
                                     <th scope="col">Position</th>
                                     <th scope="col">Status</th>
-
+                                    <td>Payment</td>
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @if(count($banners)<0)
+                                    <tr>
+                                        <td colspan="6">No record found</td>
+                                    </tr>
+                                @endif
+                                @foreach($banners as $key=>$banner)
+                                    <tr>
+                                        <td>{{$banner->name}}</td>
+                                        <td>
+                                            <img src="{{ asset('slot-vendor-image').'/'.$banner->slot_image }}" style='width: 50px;'/>
+                                        </td>
+                                        <td>{{$banner->from_date}}</td>
+                                        <td>{{$banner->to_date}}</td>
+                                        <td>{{$banner->from_time}}</td>
+                                        <td>{{$banner->to_time}}</td>
+                                        <td>{{$banner->position}}</td>
+                                        <td><?php
+                                            if (!empty($banner->is_active) && ($banner->is_active == 1))
+                                                $return = '<span class="badge badge-success">Active</span>';
+                                            else if (!empty($banner->is_active) && ($banner->is_active == 2))
+                                                $return = '<span class="badge badge-danger">Rejected</span>';
+                                            else
+                                                $return = '<span class="badge badge-primary">Pending</span>';
+                                            ?></td>
+                                        <td>
+                                        @if($banner->payment_status!='0')
+                                            <!-- <div class="panel-body text-center"> -->
+                                                <form action="{!!route('payment')!!}" method="POST">
+                                                    <script src="https://checkout.razorpay.com/v1/checkout.js"
+                                                            data-key="{{ env('RAZOR_KEY') }}"
+                                                            data-amount="{{($banner->price*100)}}"
+                                                            data-buttontext="Pay {{($banner->price)}} INR"
+                                                            data-name="{{ env('APP_NAME') }}"
+                                                            data-description="Payment for Banner Promotion :{{"'".$banner->name."' for position ".$banner->position}}"
+                                                            data-prefill.name="{{$banner->name}}"
+                                                            data-prefill.email="{{\Auth::guard('vendor')->user()->email}}"
+                                                            data-prefill.contact="{{\Auth::guard('vendor')->user()->mobile}}"
+                                                            data-theme.color="#ff7529">
+                                                    </script>
+                                                    <input type="hidden" name="_token" value="{!!csrf_token()!!}">
+                                                    <input type="hidden" name="id" value="{{$banner->id}}">
 
+                                                </form>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
@@ -75,7 +121,7 @@ $breadcrumb[] = ["name"  => "List",
                     {data: 'to_time', name: 'to_time'},
                     {data: 'position', name: 'position'},
                     {data: 'is_active', name: 'is_active'},
-                    // {data: 'payment', name: 'payment'},
+                    {data: 'payment', name: 'payment'},
 
                 ]
             });

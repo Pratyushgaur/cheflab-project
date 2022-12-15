@@ -457,7 +457,8 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
     $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
     $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
-    $vendors->where("vendors.is_all_setting_done", 1)->where('vendors.status', 1)->where('vendors.is_online', 1);
+    $vendors->where("vendors.is_all_setting_done", 1)
+        ->where('vendors.status', 1)->where('vendors.is_online', 1);
     if ($group_by)
         $vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
 
@@ -686,7 +687,7 @@ function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K')
              $charge = $charge+$secondCharge;
             //
             $remainingkm = $remainingkm-3.0;
-            
+
             if($remainingkm > 0){
                 $thirdCharge = $remainingkm*$setting->six_km_above_user;
                 $charge = $charge+$thirdCharge;
@@ -697,5 +698,5 @@ function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K')
             $charge = $charge+$setting->extra_charges_user;
         }
         return  round($charge);
-        
+
     }

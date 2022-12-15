@@ -18,20 +18,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/test', function () {
-
-    $today=\Carbon\Carbon::now()->dayOfWeek;
-
-    if( $today==6)
-        $next_available_day=\App\Models\VendorOrderTime::where('day_no','>=',0)->where('available',1)->orderBy('day_no')->first();
-    else
-        $next_available_day=\App\Models\VendorOrderTime::where('day_no','>=',$today)->where('available',1)->orderBy('day_no')->first();
-
-    if(!isset($next_available_day->id))
-        $next_available_day=\App\Models\VendorOrderTime::where('day_no','>=',0)->where('available',1)->orderBy('day_no')->first();
-
-    return
-    dd($next_available_day);
-
+    $vendor=\App\Models\Vendors::find(1);
+    $vendor->notify(new SendPushNotification("title",'gdfgdfg',
+        $vendor->fcm_token
+    ));
 })->name('test');
 
 Route::get('/clear-cache', function() {
@@ -102,3 +92,5 @@ Route::get('/send-notification',[\App\Http\Controllers\FirebaseController::class
 Route::get('event-registration', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'register']);
 Route::get('payment', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'order']);
 Route::post('payment/status', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'paymentCallback']);
+
+
