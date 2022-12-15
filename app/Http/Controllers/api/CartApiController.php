@@ -374,7 +374,7 @@ class CartApiController extends Controller
                 $vendors[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                 $category                      = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 $vendors[$key]->categories     = $category;
-                $vendors[$key]->next_available = next_available_day($value->id);
+                $vendors[$key]->next_available = next_available_day($value->vendor_id);
             }
             $vendors=$vendors[0];
             $address = DeliveryAddress::where(['user_id'=>$request->user_id,'primary_key'=>'1'])->select('id','house_no','reach','contact_no','address_type','lat','long','primary_key')->get();
