@@ -1724,7 +1724,43 @@ class AppController extends Controller
         }
     }
 
+    public function checkVendorAvailable(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'vendor_id' => 'required'
+                ]
 
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $vendor = Vendors::where('id','=',$request->vendor_id)->select('status','is_all_setting_done')->first();
+            if($vendor->status && $vendor->is_all_setting_done && $vendor->is_online){                
+                if (!Vendors::is_avaliavle($request->vendor_id)){
+                    return response()->json(['status' => TRUE,
+                                            'is_available'  => false
+                    ], 200);
+                }else{
+                    return response()->json(['status' => TRUE,
+                                            'is_available'  => true
+                    ], 200);
+                }
+            }else{
+                return response()->json(['status' => TRUE,
+                                        'is_available'  => false
+                ], 200);
+            }
+
+        } catch (Throwable $th) {
+            return response()->json(['status' => False,
+                                     'error'  => $th->getMessage(),
+            ], 500);
+        }
+    }
     public function deleteLikeProduct(Request $request)
     {
         try {
