@@ -1642,8 +1642,8 @@ class AppController extends Controller
                 $riderAssign->saveOrFail();
                 DB::commit();
 
-                $on = \Carbon\Carbon::now()->addSecond(30);
-                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
+//                $on = \Carbon\Carbon::now()->addSecond(30);
+//                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
 //                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
                 sleep(30);
                 event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
@@ -1743,7 +1743,7 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             $vendor = Vendors::where('id','=',$request->vendor_id)->select('status','is_all_setting_done')->first();
-            if($vendor->status && $vendor->is_all_setting_done && $vendor->is_online){                
+            if($vendor->status && $vendor->is_all_setting_done && $vendor->is_online){
                 if (!Vendors::is_avaliavle($request->vendor_id)){
                     return response()->json(['status' => TRUE,
                                             'is_available'  => false
@@ -2616,7 +2616,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-        
+
             $order = Order::where('id', $request->order_id)
                 ->where('user_id', $request->user()->id)
                 ->first();
@@ -2631,7 +2631,7 @@ class AppController extends Controller
                 $user->wallet_amount = $user->$wallet_amount+$order->net_amount;
                 $user->save();
             }
-            
+
 
             return response()->json([
                 'status'  => true,
