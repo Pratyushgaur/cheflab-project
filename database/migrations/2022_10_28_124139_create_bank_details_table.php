@@ -23,6 +23,9 @@ class CreateBankDetailsTable extends Migration
             $table->string('ifsc')->nullable();
             $table->string('bank_name')->nullable();
             $table->string('cancel_check')->default(null)->nullable();
+            $table->string('licence_image')->default(null)->nullable();
+            $table->string('pancard_image')->default(null)->nullable();
+            $table->string('aadhar_card_image')->default(null)->nullable();
             $table->timestamps();
         });
     }

@@ -27,6 +27,9 @@ class OrderSendNotificationListener
      */
     public function handle(OrderCreateEvent $event)
     {
+        $event->order_obj->order_status='confirmed';
+        $event->order_obj->save();
+
         $customer = User::find($event->user_id);
         $vendor   = Vendors::find($event->vendor_id);
 

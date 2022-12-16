@@ -31,11 +31,11 @@ class VendorPromotionController extends Controller
     {
         $for = [];
         if (@Auth::guard('vendor')->user()->vendor_type == 'chef')
-            $for = ['chef' => "Chef Promotion"];
+            $for = ['chef' => "Chef Home Slider Banner"];
         else if (@Auth::guard('vendor')->user()->vendor_type == 'restaurant')
-            $for = ['restaurant' => "Restaurant Promotion"];
-//        if (@Auth::guard('vendor')->user()->table_service == 1)
-//            $for['dineout'] = "Dine-out Promotion";
+            $for = ['restaurant' => "Restaurant Home Slider Banner"];
+        if (@Auth::guard('vendor')->user()->table_service == 1)
+            $for['dineout'] = "Dining Home Slider Banner";
 
         $for["order_traking"] = "Order Tracking Banner";
 

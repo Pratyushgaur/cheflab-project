@@ -40,7 +40,7 @@ $breadcrumb[] = ["name"  => "List",
                                     <th scope="col">To time</th>
                                     <th scope="col">Position</th>
                                     <th scope="col">Status</th>
-                                    <td>Payment</td>
+                                    <td></td>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -51,6 +51,7 @@ $breadcrumb[] = ["name"  => "List",
                                 @endif
                                 @foreach($banners as $key=>$banner)
                                     <tr>
+                                        <td>{{$key}}</td>
                                         <td>{{$banner->name}}</td>
                                         <td>
                                             <img src="{{ asset('slot-vendor-image').'/'.$banner->slot_image }}" style='width: 50px;'/>
@@ -107,24 +108,25 @@ $breadcrumb[] = ["name"  => "List",
 @section('page-js')
     <script>
         (function ($) {
-            let table = $('#menu-catalogue-table').dataTable({
-                processing: true,
-                serverSide: true,
-                ajax: "{{ route('restaurant.slot.list') }}",
-                columns: [
-                    {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'name', name: 'name'},
-                    {data: 'slot_image', name: 'slot_image', orderable: false, searchable: false},
-                    {data: 'from_date', name: 'from_date'},
-                    {data: 'to_date', name: 'to_date'},
-                    {data: 'from_time', name: 'from_time'},
-                    {data: 'to_time', name: 'to_time'},
-                    {data: 'position', name: 'position'},
-                    {data: 'is_active', name: 'is_active'},
-                    {data: 'payment', name: 'payment'},
+            {{--let table = $('#menu-catalogue-table').dataTable({--}}
+            {{--    processing: true,--}}
+            {{--    serverSide: true,--}}
+            {{--    ajax: "{{ route('restaurant.slot.list') }}",--}}
+            {{--    columns: [--}}
+            {{--        {data: 'DT_RowIndex', name: 'DT_RowIndex'},--}}
+            {{--        {data: 'name', name: 'name'},--}}
+            {{--        {data: 'slot_image', name: 'slot_image', orderable: false, searchable: false},--}}
+            {{--        {data: 'from_date', name: 'from_date'},--}}
+            {{--        {data: 'to_date', name: 'to_date'},--}}
+            {{--        {data: 'from_time', name: 'from_time'},--}}
+            {{--        {data: 'to_time', name: 'to_time'},--}}
+            {{--        {data: 'position', name: 'position'},--}}
+            {{--        {data: 'is_active', name: 'is_active'},--}}
+            {{--        {data: 'payment', name: 'payment'},--}}
 
-                ]
-            });
+            {{--    ]--}}
+            {{--});--}}
+            $('#menu-catalogue-table').dataTable();
         })(jQuery);
     </script>
 @endsection

@@ -25,22 +25,22 @@ class GlobleSetting extends Controller
     }
 
     public function requireOrderTime()
-    {  
+    {
         $VendorOrderTime = [];
         $hideSidebar     = true;
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
-        foreach ($order_time as $v) 
+        foreach ($order_time as $v)
         $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
 
         return view('vendor.restaurant.globleseting.require_ordertime', compact('hideSidebar', 'VendorOrderTime'));
     }
 
     public function order_time()
-    {  
-        
+    {
+
         $VendorOrderTime = [];
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
-        foreach ($order_time as $v) 
+        foreach ($order_time as $v)
         $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
 
         //echo '<pre>';var_dump($VendorOrderTime);echo '</pre>';die;
@@ -63,7 +63,7 @@ class GlobleSetting extends Controller
 
 
         } catch (DecryptException $e) {
-            
+
             return redirect()->route('restaurant.globleseting.ordertime')->with('error', 'Something wen wrong.');
         }
     }
@@ -74,13 +74,13 @@ class GlobleSetting extends Controller
         // dd($request->routeIs('restaurant.ordertime.first_store'));
         // dd($request->all());
         // $request->validate(['start_time.*' => 'nullable|date_format:H:i', 'end_time.*' => 'nullable|date_format:H:i', 'available.*' => ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],]);
- 
+
   $start_time = $request->start_time;
   $end_time = $request->end_time;
   $available = $request->available;
         foreach ($start_time as $key => $val) {
                 foreach ($val as $key1 => $time) {
-                    if($available[$key] == 1){                   
+                    if($available[$key] == 1){
 
                     $data = array(
                         'vendor_id' =>  Auth::guard('vendor')->user()->id,
@@ -90,16 +90,16 @@ class GlobleSetting extends Controller
                         'end_time' =>  $end_time[$key][$key1],
                         'available' =>  $available[$key],
 
-                    ); 
+                    );
                     $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no',$key)->where('row_keys',$key1)->exists();
-                     if($exist){                      
+                     if($exist){
                         Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys',$key1)->update($data);
-                     }else{                                       
+                     }else{
                        Order_time::insert($data);
                      }
                     }
                  }
-           
+
         }
 
 
@@ -115,7 +115,7 @@ class GlobleSetting extends Controller
 
         // // Order_time::upsert($data,['vendor_id','day_no'],['start_time','end_time','available']);
         // $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->exists();
-        // echo '<pre>'; print_r($exist);die; 
+        // echo '<pre>'; print_r($exist);die;
 
         // if ($exist) foreach ($request->start_time as $key => $val) Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->update($data[$key]); else {
         //     Order_time::insert($data);
@@ -283,7 +283,7 @@ class GlobleSetting extends Controller
 
     public function save_bank_details(Request $request)
     {
-        //        dd($request->all());
+                dd($request->all());
         //        dd($request->routeIs('restaurant.globleseting.save_bank_details'));
         /*        if ($request->routeIs('restaurant.globleseting.save_bank_details'))
                     $request->validate([
@@ -333,6 +333,7 @@ class GlobleSetting extends Controller
             //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
             //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
             //            $bank['cancel_check'] = $filename;
+            dd($bank->cancel_check);
         }
 
         if ($request->has('fassi_image') && $request->fassi_image != '') {

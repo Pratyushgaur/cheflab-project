@@ -624,9 +624,9 @@ class AppController extends Controller
                     $addonIds = $addonAdded->pluck('addon_id')->toArray();
                     $addonQtys = $addonAdded->pluck('addon_qty')->toArray();
                     //
-                    $addon = Addons::whereIn('id', explode(',', $product->addons))->select('id', 'addon', 'price')->get()->toArray();   
+                    $addon = Addons::whereIn('id', explode(',', $product->addons))->select('id', 'addon', 'price')->get()->toArray();
                     //return explode(',', $product->addons);
-                   
+
                     foreach ($addon as $key => $value) {
                         if (in_array($value['id'],$addonIds)) {
                             $addon[$key]['added'] = true;
@@ -635,9 +635,9 @@ class AppController extends Controller
                             $addon[$key]['added'] = false;
                             $addon[$key]['qty'] = 1;
                         }
-                        
+
                     }
-                    
+
                     $data  = ['addons' => $addon];
                 }
 
@@ -1610,7 +1610,7 @@ class AppController extends Controller
                     $walletCut = 0;
                 }
                 //
-               
+
                 //
                 if (is_array($request->payment_string))
                 $data['payment_string'] = serialize($request->payment_string);
@@ -1618,9 +1618,9 @@ class AppController extends Controller
                 $insertData['wallet_cut'] = $walletCut;
                 $insertData['order_id'] = getOrderId();
                 $insertData['landmark_address'] = $request->reach;
-                
+
                 $Order                    = new Order($insertData);
-                
+
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
@@ -1638,11 +1638,15 @@ class AppController extends Controller
                             $order_products->order_product_addons()->save($OrderProductAddon);
                         }
                 }
-                 $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
-                 $riderAssign->saveOrFail();
+                $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
+                $riderAssign->saveOrFail();
                 DB::commit();
 
-                event(new OrderCreateEvent($order_id, $request->user_id, $request->vendor_id));
+                $on = \Carbon\Carbon::now()->addSecond(30);
+                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
+//                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
+                sleep(30);
+                event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy

@@ -18,10 +18,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/test', function () {
-    $vendor=\App\Models\Vendors::find(1);
-    $vendor->notify(new SendPushNotification("title",'gdfgdfg',
-        $vendor->fcm_token
-    ));
+
+    dispatch(function(){
+        echo mysql_date_time();
+    })->delay(now()->addSeconds(30));
+//    \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
 })->name('test');
 
 Route::get('/clear-cache', function() {
