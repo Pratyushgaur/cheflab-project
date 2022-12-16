@@ -2613,7 +2613,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-
+        
             $order = Order::where('id', $request->order_id)
                 ->where('user_id', $request->user()->id)
                 ->first();
@@ -2623,10 +2623,12 @@ class AppController extends Controller
 
             $order->order_status = 'cancelled_by_customer';
             $order->save();
-
-            $user                = User::find($request->user()->id);
-            $user->wallet_amount -= $order->net_amount;
-            $user->save();
+            if($request->isCancelledWithin30Second){
+                $user                = User::find($request->user()->id);
+                $user->wallet_amount = $user->$wallet_amount+$order->net_amount;
+                $user->save();
+            }
+            
 
             return response()->json([
                 'status'  => true,

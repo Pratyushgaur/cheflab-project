@@ -604,7 +604,6 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
         messaging.onMessage((payload) => {
             new Notification(payload.title, {body: payload.data.body});
-
             if (payload.data.link === void 0) {
                 // console.log("in if "+payload.link);
                 // Swal.fire({
