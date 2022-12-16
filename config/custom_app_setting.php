@@ -14,6 +14,7 @@ return [
     //slot booking
     'promotion_date_frame'                   => ['1' => "One Week", '2' => "Two Week", '3' => "One Month"],
     'promotion_date_frame_add_days'          => ['1' => 7, '2' => 14, '3' => 30],//this array keys map with "promotion_time_frame" and value : number of days we need to add for promotion_time_frame
+    'promotion_date_frame_admin'                   => [7 => "One Week", 14 => "Two Week", 30 => "One Month"],
 
     //Promotion time setting
     "promotion_restaurant_time"              => ["7:00:00-14:00:00"  => "7 AM - 2 PM",

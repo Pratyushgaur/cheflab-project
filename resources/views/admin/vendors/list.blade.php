@@ -79,23 +79,23 @@
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
-                                <form action="{{route('admin.vendors.list')}}">
+                                <!-- <form action="{{route('admin.vendors.list')}}"> -->
                                 <div class="row">
                                     <div class="col-md-2">
-                                        {{Form::select('rolename',['restaurant'=>'Restaurant','chef'=>'Chef'],request()->rolename,['class'=>'form-control','placeholder'=>'Filter By Role'])}}
-{{--                                        <select name="rolename" class="form-control">--}}
-{{--                                            <option value="">Filter By Role</option>--}}
-{{--                                            <option value="restaurant">Restaurant</option>--}}
-{{--                                            <option value="chef">Chef</option>--}}
-{{--                                        </select>--}}
+                                        
+                                        <select name="rolename" class="form-control" id="filter_by_role">
+                                            <option value="">Filter By Role</option>
+                                            <option value="restaurant">Restaurant</option>
+                                            <option value="chef">Chef</option>
+                                        </select>
                                     </div>
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <input type="text" name="search" class="form-control" placeholder="Search" value="{{request()->search}}">
-                                    </div>
+                                    </div> -->
 
                                     <div class="col-md-2">
-                                    <button type="submit" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fas fa-search"> </i> Search</button>
-                                        <a href="{{route('admin.vendors.list')}}" class="pull-right btn btn-sm btn-primary "><i class="fas fa-refresh"> </i> Reset</a>
+                                    <button type="button" class="pull-right btn btn-sm btn-success" onclick="reload_table();" style="color:#fff;"><i class="fas fa-search"> </i> Search</button>
+                                        <a href="" class="pull-right btn btn-sm btn-primary "><i class="fas fa-refresh"> </i> Reset</a>
 
                                     </div>
                                     <div class="col-md-3">
@@ -105,7 +105,7 @@
                                     <a href="{{route('admin.chef.create')}}" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-user"> </i> Create New Chef</a>
                                     </div>
                                 </div>
-                                </form>
+                                <!-- </form> -->
                             </div>
 
                           </div>
@@ -127,8 +127,8 @@
                                     <thead>
                                     <tr role="row">
                                         <th class="text-center">Sr No.</th>
-                                        <th>Vendor Name / Owner name</th>
-                                        <th>Email/Mobileno</th>
+                                        <th>Vendor name / Owner name</th>
+                                        <th>Email/Mobile</th>
                                         <th>Type</th>
                                         <th> Status</th>
                                         <th> Image</th>
@@ -138,11 +138,11 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($vendors as $k=>$vendor)
+                                    <!-- @foreach($vendors as $k=>$vendor)
                                         <tr>
                                             <td>{{$k+1}}</td>
-                                            <td>{{$vendor->name}} {{$vendor->owner_name}} </td>
-                                            <td>{{$vendor->email}} {{$vendor->mobile}}</td>
+                                            <td>{{$vendor->name}}</td>
+                                            <td>{{$vendor->email}}</td>
                                             <td>{{$vendor->vendor_type}}</td>
                                             <td>
                                                 @if($vendor->status == '1')
@@ -153,7 +153,7 @@
                                             </td>
                                             <td><img src="{{asset('vendors').'/'.$vendor->image}}"  style='width: 50px;' /></td>
                                             <td>{{$vendor->wallet}}</td>
-                                            <td>{{front_end_date_time($vendor->created_at)}}</td>
+                                            <td>{{front_end_date($vendor->created_at)}}</td>
                                             <td>
                                                 <ul class="navbar-nav">
                                                     <li class="nav-item dropdown">
@@ -175,10 +175,10 @@
                                                 </ul>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @endforeach -->
                                     </tbody>
                                 </table>
-                                <div class="">{{ $vendors->links('vendor.pagination.bootstrap-4') }}</div>
+                                <!-- <div class="">{{ $vendors->links('vendor.pagination.bootstrap-4') }}</div> -->
                             </div>
                         </div>
 
@@ -208,20 +208,21 @@
 
     <script type="text/javascript">
         // $(function () {
-        let table = $('#example').dataTable({
+        let table = $('#example1').dataTable({
             processing: true,
             serverSide: true,
             //ajax: "{{ route('admin.vendors.datatable') }}",
             ajax: {
                 url: "{{ route('admin.vendors.datatable') }}",
                 data: function (d) {
-                    d.rolename = $('#filter-by-role').val()
+                    d.rolename = $('#filter_by_role').val()
                 }
+
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                {data: 'name', name: 'name'},
-                {data: 'email', name: 'email'},
+                {data: 'userName', name: 'name'},
+                {data: 'userEmailMob', name: 'email'},
                 {data: 'vendor_type', name: 'vendor_type'},
                 {data: 'status', name: 'status', orderable: false, searchable: false},
                 {data: 'image', name: 'image', orderable: false, searchable: false},

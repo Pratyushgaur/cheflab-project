@@ -129,10 +129,14 @@ class ProductController extends Controller
             $product->save();
             Variant::create(['product_id' => $product->id, 'variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
             if ($request->custimization == 'true')
-                foreach ($request->variant_name as $k => $v) {
-                    if ($v != '' && $request->price[$k] != '')
-                        Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
+                if (isset($request->variant_name) && count($request->variant_name) > 0) {
+                    foreach ($request->variant_name as $k => $v) {
+                        if ($v != '' && $request->price[$k] != '')
+                            Variant::create(['product_id' => $product->id, 'variant_name' => $v, 'variant_price' => $request->price[$k]]);
+                    }
                 }
+                
+                
             $subscribers = Superadmin::get();
             foreach ($subscribers as $k => $admin)
                 $admin->notify(new ProductCreatedNotification($product->id, Auth::guard('vendor')->user()->name)); //With new post

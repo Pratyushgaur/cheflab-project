@@ -49,12 +49,13 @@
                                     <tr role="row">
                                         <th class="text-center">Sr No.</th>
                                         <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Mobile</th>
-                                        <th> Refer Code</th>
+                                        <th>Email/Mob No</th>
                                         <th> Refer By</th>
-                                        <th>By Earn</th>
+                                        <th>Email/Mob No</th>
+                                        <th> Refer Code</th>
+                                        <th>Earn Ammount</th>
                                         <th>created at</th>
+                                        <th>First Order Date</th>
                                     </tr>
                                     </thead>
                                     <tbody>

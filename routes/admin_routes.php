@@ -131,7 +131,12 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // application blog promotion
     Route::get('user-app-blog', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.application.blog');
     Route::post('user-app-blog-create', [App\Http\Controllers\admin\VendorPromotion::class, 'store'])->name('admin.application.blog.store');
-   // Root Banner
+    Route::get('user-app-blog-edit/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'fun_edit_blog'])->name('admin.application.blogedit');
+    Route::post('user-app-blog-update', [App\Http\Controllers\admin\VendorPromotion::class, 'update'])->name('admin.application.blog.update');
+    Route::post('user-app-blog-delete', [App\Http\Controllers\admin\VendorPromotion::class, 'soft_delete'])->name('admin.application.blog.ajax.delete');
+    Route::post('user-app-blog-inactive/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'inactive'])->name('admin.application.blog.inactive');
+    Route::post('user-app-blog-active/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'active'])->name('admin.application.blog.active');
+    // Root Banner
    Route::get('banner-root-banner', [App\Http\Controllers\admin\AdminRootBannerController::class, 'index'])->name('admin.root.banner');
    Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');
    Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit');
@@ -155,6 +160,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('orders-view/{id}', [App\Http\Controllers\admin\OrderController::class, 'vieworder'])->name('admin.order.view');
     Route::get('orders-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoice'])->name('admin.order.invoice');
     Route::get('orders-product/{id}', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_product'])->name('admin.order.product');
+    // Order Dineout
+    Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');
+    Route::get('order-list-dineout', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order_dineout'])->name('admin.order.dineoutdata');
     // Globle Setting
     Route::get('globle-setting', [App\Http\Controllers\admin\GlobleSetting::class,'index'])->name('admin.globle.setting');
     Route::get('globle-privacy-general', [App\Http\Controllers\admin\GlobleSetting::class,'general'])->name('admin.globle.general');

@@ -51,7 +51,7 @@ class CuisinesController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.cuisines.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a> <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Cuisines" flash="City"  data-action-url="' . route('admin.city.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>';
+                    $btn = '<a href="'. route("admin.cuisines.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a> <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Cuisines" flash="City"  data-action-url="' . route('admin.cuisines.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>';
                     return $btn;
                 })
                 
@@ -101,7 +101,7 @@ class CuisinesController extends Controller
         //return $request->input();die;
         
        $catogory = Cuisines::find($request->id);
-      // dd($catogory);
+       //dd($catogory);
        $catogory->name = $request->name;
        if($request->has('cuisinesImage')){
            $filename = time().'-cuisinesImage-'.rand(100,999).'.'.$request->cuisinesImage->extension();

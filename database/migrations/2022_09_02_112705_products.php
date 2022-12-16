@@ -40,6 +40,7 @@ class Products extends Migration
             $table->string('product_rating',10)->default('0');
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+
             //$table->foreign('userId')->references('id')->on('vendors')->onDelete('cascade');
         });
     }

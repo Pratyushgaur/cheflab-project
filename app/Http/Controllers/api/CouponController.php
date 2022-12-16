@@ -27,7 +27,7 @@ class CouponController extends Controller
 
                     ], 401);
                 }
-                $date = today()->format('Y-m-d');
+                $date = today()->format('m/d/Y');
                 $coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('from', '<=',$date)->where('to', '>=',$date)->select('*')->get();
                 return response()->json([
                     'status' => true,
@@ -92,7 +92,7 @@ class CouponController extends Controller
 
                 ], 401);
             }
-            //$date = today()->format('Y-m-d');
+            //$date = today()->format('m/d/Y');Y-m-d
             $date = today()->format('m/d/Y');
             $vendor_coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)
                 ->where('from', '<=',mysql_date_time($date))->where('to', '>=',mysql_date_time($date))
