@@ -100,7 +100,7 @@
     <section class="content">
 		<div class="row">
 			
-				<div class="col-md-4">
+				<div class="col-md-12">
         <form id="restaurant-form" action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
           @if ($errors->any())
               @foreach ($errors->all() as $error)
@@ -152,9 +152,34 @@
 					</form>
 				  <!-- /.card -->
 				</div>
-				<div class="card card-info col-md-8">
-            <div class="card-header">
-              <h3 class="card-title">List of Food Categories</h3>
+        <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+
+                            <div class="card-header">
+                                <h3 class="card-title">Listing of Registered Restaurant And Chef </h3>
+
+
+                            </div>
+                            <div class="card-body pad table-responsive">
+                                <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                                    <thead>
+                                    <tr role="row">
+                                        <th class="text-center">Sr No.</th>
+                                        <th >Category Name</th>
+                                        <th >Position</th>
+                                        <th  >Image</th>
+                                        <th  >Status</th>
+                                        <th  >Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                   
+                                    </tbody>
+                                </table>
+                               
+                            </div>
+                        </div>
 
               <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -177,31 +202,28 @@
                             
                         </table>
                     </div>
-            <!-- /.card-body -->
-          </div>
-          <!-- /.card -->
-		</div>
-    </section>
-    <!-- /.content -->
-  </div>
-  <!-- /.content-wrapper -->
- 
-  <!-- /.content-wrapper -->
 
-  <!-- /.content-wrapper -->
+                </div>
+            </div>
 
-<!-- /.row -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    <!-- /.content-wrapper -->
+
+    <!-- /.row -->
 @endsection
 
 
 @section('js_section')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
-<script type="text/javascript">
-    $(".s_meun").removeClass("active");
-    $(".city_cityadmin").addClass("active");
-    $(".city_menu").addClass("active");
-</script>
+    <script>
+        $("input[data-bootstrap-switch]").each(function () {
+            $(this).bootstrapSwitch('state', $(this).prop('checked'));
+        })
+    </script>
 
 <script type="text/javascript">
   // $(function () {
@@ -256,11 +278,5 @@
           $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon2").parents('.upload-icon2').addClass('has-img2');
       });
-  
-      
-  function reload_table() {
-      table.DataTable().ajax.reload(null, false);
-   }
-
- </script>
+    </script>
 @endsection

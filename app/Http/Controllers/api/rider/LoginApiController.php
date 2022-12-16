@@ -54,12 +54,25 @@ class LoginApiController extends Controller
             ], 500);
         }
     }
+    function otp_generate($mobile){
+        $Otp_no = random_int(1000, 9999);
+        if (Mobileotp::where('mobile', '=', $mobile)->exists()) {
+            Mobileotp::where('mobile', '=', $mobile)->update(['otp'=>$Otp_no,'status' =>'0']);
+        } else {
+            Mobileotp::insert([
+                    'mobile' =>$mobile,
+                    'otp' =>$Otp_no,
+            ]);
+        }
+        return $Otp_no;
+
+    }
     public function login_verify_otp(Request $request)
     {
         try {
             $validateUser = Validator::make($request->all(),
             [
-                'mobile_number' => 'required|numeric|digits:10',
+                'mobile' => 'required|numeric|digits:10',
                 'otp' => 'required|numeric|digits:4',
             ]);
             if($validateUser->fails()){
@@ -92,21 +105,9 @@ class LoginApiController extends Controller
                 'error' => $th->getMessage()
             ], 500);
         }
-
+    
     }
-    function otp_generate($mobile_number){
-        $Otp_no = random_int(1000, 9999);
-        if (RiderMobileOtp::where('mobile_number', '=', $mobile_number)->exists()) {
-            RiderMobileOtp::where('mobile_number', '=', $mobile_number)->update(['otp'=>$Otp_no,'status' =>'0']);
-        } else {
-            RiderMobileOtp::insert([
-                    'mobile_number' =>$mobile_number,
-                    'otp' =>$Otp_no,
-            ]);
-        }
-        return $Otp_no;
-
-    }
+    
     public function getDistance()
     {
         //return round(point2point_distance(24.466551,74.884048,24.464050432928225,74.86669534531778,'K'),2);

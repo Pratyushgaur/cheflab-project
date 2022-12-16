@@ -2534,7 +2534,7 @@ class AppController extends Controller
         }
     }
 
-    public function getRestuarantBy(Request $request)
+    public function getRestuarantByOrders(Request $request)
     {
         try {
             $validateUser = Validator::make(
@@ -2548,9 +2548,8 @@ class AppController extends Controller
                     "for"           => "required"
                 ]
             );
-
             if ($validateUser->fails()) {
-//                $error = $validateUser->errors();
+                $error = $validateUser->errors();
                 return response()->json([
                     'status' => false,
                     'error'  => $validateUser->errors()->all()
@@ -2593,7 +2592,7 @@ class AppController extends Controller
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
-                'error'  => $th->getTrace()
+                'error'  => $th->getMessage()
             ], 500);
         }
 

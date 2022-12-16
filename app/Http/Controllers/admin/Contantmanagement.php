@@ -28,6 +28,7 @@ class Contantmanagement extends Controller
         return view('admin/contentmangement/dliveryboy',compact('data'));
     }
     public function storePrivacy(Request $request){
+        //var_dump($request->user_privacy_policy);die;
         $general = Content_management::find($request->id);
         $general->user_privacy_policy = $request->user_privacy_policy;
         $general->save();

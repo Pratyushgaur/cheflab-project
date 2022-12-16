@@ -174,6 +174,12 @@
 						  <p>Vendor Orders</p>
 						</a>
 					</li>
+					<!-- <li class="nav-item">
+						<a href="{{route('admin.dineout.list')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Dineout Orders</p>
+						</a>
+					</li> -->
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">
@@ -190,7 +196,7 @@
 					<li class="nav-item">
 						<a href="{{route('admin.root.banner')}}" class="nav-link">
 							<i class="fa fa-arrow-right nav-icon"></i>
-							<p>Root Banner</p>
+							<p>Admin Banners</p>
 						</a>
 					</li>
 

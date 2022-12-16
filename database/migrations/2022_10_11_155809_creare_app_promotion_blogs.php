@@ -21,6 +21,7 @@ class CreareAppPromotionBlogs extends Migration
             $table->enum('duration', ['1','2'])->default('1')->comment('1-fullday 2-custom');
             $table->time('from')->nullable();
             $table->time('to')->nullable();
+            $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

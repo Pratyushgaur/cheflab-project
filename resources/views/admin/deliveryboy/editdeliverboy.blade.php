@@ -107,6 +107,74 @@
             border-radius: 18px;
             margin:0px;
         }
+
+
+
+
+
+        .upload-icon4{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+
+        .upload-icon4 img{
+            width: 100px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+
+        .upload-icon4.has-img4{
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+
+        .upload-icon4.has-img4 img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
+
+        /*  */
+        .upload-icon5{
+          width: 150px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+
+        .upload-icon5 img{
+            width: 100px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+
+        .upload-icon5.has-img5{
+            width: 150px;
+            height: 150px;
+            border: none;
+        }
+
+        .upload-icon5.has-img5 img {
+            /*width: 100%;
+            height: auto;*/
+            width: 150px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
+        .select2-selection__choice{
+          background:#007bff !important;
+        }
       </style>
       @endsection
       <!-- Content Wrapper. Contains page content -->
@@ -126,7 +194,7 @@
                   <div class="card card-primary card-outline">
 
                     <div class="card-header">
-                      <h3 class="card-title">Edit  Deliver Boy </h3>
+                      <h3 class="card-title">Edit  Deliveryboy </h3>
 
                     </div>
                     <div class="card-body pad table-responsive">
@@ -139,54 +207,75 @@
                               </div>
                               <div class="card-body">
                                 <div class="error">
-                                    @if($errors->any())
-                                      {{ implode('', $errors->all('message')) }}
-                                    @endif
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
                                 </div>
 
                                 <div class="row">
-                                <div class="col-sm-6">
+                                  <div class="col-md-12">
                                         <div>
-                                          <label for="">Logo</label>
+                                          <label for="">Logo Images</label>
                                         </div>
                                         <div class="image-upload">
                                             <label for="file-input">
                                                 <div class="upload-icon">
-                                                    @if($vendor->image == null)
+                                                  @if($deliveryboy->image == null)
                                                     <img class="icon2" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('dliver-boy'.'/'.$city_data->image ) }}">
+                                                    <img class="icon2" src="{{ asset('dliver-boy'.'/'.$deliveryboy->image ) }}">
                                                     @endif
                                                 </div>
                                             </label>
                                             <input id="file-input" type="file" name="image" required/>
                                         </div>
                                   </div>
+                            
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Name of Deliver Boy <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" value="{{$city_data->name}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter  Name">
+                                        <label for="exampleInputEmail1">Name  <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" value="{{$deliveryboy->name}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Deliveryboy Name">
                                     </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" value="{{$city_data->email}}" class="form-control"  id="" placeholder="Enter  Email">
+                                        <input type="email" name="email" value="{{$deliveryboy->email}}" class="form-control"  id="" placeholder="Enter Deliveryboy Email">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">City <span class="text-danger">*</span></label>
+                                        <input type="text" name="city" value="{{$deliveryboy->city}}" class="form-control"  id="" placeholder="Enter City">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
+                                        <input type="text" name="pincode" value="{{$deliveryboy->pincode}}"  class="form-control"  id="" placeholder="Enter Pincode">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
+                                        <input type="text" name="phone" value="{{$deliveryboy->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
 
-                                  <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
-                                        <input type="text" name="pincode" value="{{$city_data->pincode}}" class="form-control"  id="" placeholder="Enter Pincode">
+
+                                    <!-- <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
+                                        </div>
                                     </div>
-                                  </div>
-                                  <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
-                                        <input type="text" name="phone" value="{{$city_data->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
-                                    </div>
-                                  </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
+                                            <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
+                                        </div>
+                                    </div>      -->
+                                  
                                 </div>
 
                               </div>
@@ -202,14 +291,14 @@
                               <div class="card-body">
                                 <div class="row">
                                   <div class="col-md-4">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
-                                          <select name="identity_type"  class="form-control">
-                                            @if($city_data->identity_type == '1')
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
+                                        <select name="identity_type"  class="form-control">
+                                          @if($deliveryboy->identity_type == '1')
                                             <option value="1">Passport</option>
                                             <option value="2">Driving License</option>
                                             <option value="3">Aadhar Card</option>
-                                            @elseif($city_data->identity_type)
+                                            @elseif($deliveryboy->identity_type)
                                             <option value="2">Driving License</option>
                                             <option value="1">Passport</option>
                                             <option value="3">Aadhar Card</option>
@@ -217,31 +306,33 @@
                                             <option value="3">Aadhar Card</option>
                                             <option value="2">Driving License</option>
                                             <option value="1">Passport</option>
-                                            @end
-                                          </select>
-                                      </div>  
-                                    </div>
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
-                                          <input type="text" name="identity_number" value="{{$city_data->identity_number}}" class="form-control"  id="" placeholder="Enter Identity Number">
-                                      </div>  
-                                    </div>
-                                    <div class="col-sm-4">
-                                          <div class="form-group">
-                                              <label for="exampleInputEmail1">Identity Image. </label>
-                                              <input type="file" name="identity_image" value="{{$city_data->identity_image}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
-                                          </div>
-                                    </div>
+                                            @endif
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="identity_number" value="{{$deliveryboy->identity_number}}" class="form-control"  id="" placeholder="Enter Identity Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Identity Image. </label>
+                                            <input type="file" name="identity_image" value="{{$deliveryboy->identity_image}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
                                 </div>
                                 <!-- div row -->
                               </div>
 
 
                           </div>
+                          
+                          
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update Deliver Boy </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update Deliveryboy </button>
                           </div>
                       </form>
 
@@ -271,6 +362,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize&language=en&region=GB" async defer></script>
+
 
 
 
@@ -285,45 +378,62 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
-
+    $('.select2').select2();
+    $('.custmization-block').hide();
+    $('.gstavailable').change(function(){
+      if ($(this).val()  == '1') {
+        $('.custmization-block').show();
+      } else {
+        $('.custmization-block').hide();
+      }
+    })
       $("#restaurant-form").validate({
           rules: {
               name: {
                   required: true,
-                  maxlength: 25,
               },
               email: {
                   required: true,
-                  maxlength: 30,
+                  maxlength: 60,
                   email: true,
-                  remote: '{{route("admin.deliverboy.emailcheck_update",$city_data->id)}}',
-              },
-              address: {
-                  required: true,
-                  minlength: 5,
-                  maxlength: 60
+                  remote: '{{route("admin.deliverboy.emailcheck")}}',
               },
               phone: {
                   required: true,
                   minlength: 10,
                   maxlength: 10,
                   number: true,
-                  remote: '{{route("admin.deliverboy.mobilecheck.update",$city_data->id)}}',
+                  remote: '{{route("admin.deliverboy.mobilecheck")}}',
               },
               pincode: {
                   required: true,
                   minlength: 6,
                   maxlength: 6,
                   number: true
-              }
+              },
+              identity_number: {
+                required: true,
+              },
+              password:{
+                required: true,
+                maxlength: 20,
+                minlength: 5,
 
+              },
+              confirm_password:{
+                 required: true,
+                 equalTo : '[name="password"]'
+              },
+              identity_image: {
+                required: true,
+              }
 
 
           },
           messages: {
-                name: {
+              name: {
                   required: "Name is required",
-                  maxlength: "First name cannot be more than 20 characters"
+                  maxlength: "First name cannot be more than 40 characters"
               },
               email: {
                   required: "Please Enter Email",
@@ -331,20 +441,25 @@
                   email: "Email must be a valid email address",
                   remote:"This Email is Already has been Taken"
               },
-              address: {
-                  required: "Address is required",
-                  maxlength: "Address cannot be more than 60 characters",
-                  minlength: "Address cannot be Less than 5 characters"
-              },
               pincode: {
                   required: "pincode is required",
                   maxlength: "pincode cannot be more than 6 characters",
                   minlength: "pincode cannot be Less than 6 characters",
                   number: "Pincode must be an number"
               },
+              confirm_password:{
+                equalTo:"Field Not Match with Passowrd Field"
+              },
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
+              },
+              identity_image:{
+                remote:"identity  image is required"
+              },
+              identity_number:{
+                remote:"identity  number is required"
               }
+
 
           }
       });
@@ -361,6 +476,16 @@
           $("img.icon3").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon3").parents('.upload-icon3').addClass('has-img3');
       });
+      $('#file-input4').change( function(event) {
+          $("img.icon4").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon4").parents('.upload-icon4').addClass('has-img4');
+      });
+      $('#file-input5').change( function(event) {
+          $("img.icon5").attr('src',URL.createObjectURL(event.target.files[0]));
+          $("img.icon5").parents('.upload-icon5').addClass('has-img5');
+      });
   });
+
+  
  </script>
 @endsection
