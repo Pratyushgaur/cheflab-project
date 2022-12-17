@@ -13,7 +13,11 @@ class OrderCreateJob implements ShouldQueue
 {
     use Dispatchable, Queueable, SerializesModels, InteractsWithQueue;
 
-    public $order_obj;
+    //public $user;
+    public $order_id;
+    //public $user_id;
+    //public $vendor_id;
+
 //    public $order;
 
     /**
@@ -21,9 +25,13 @@ class OrderCreateJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Order $order_obj)
+    public function __construct(Order $order)
     {
-        $this->$order_obj = $order_obj;
+        // $this->order_id = $user->id;
+        // $this->user_id = $user->user_id;
+        // $this->vendor_id = $user->vendor_id;
+        // $this->$user = $user;
+        $this->order_id = $order->id;
     }
 
     /**
@@ -33,8 +41,9 @@ class OrderCreateJob implements ShouldQueue
      */
     public function handle()
     {
-
-        event(new \App\Events\OrderCreateEvent($this->order_obj, $this->order_obj->id, $this->order_obj->user_id, $this->order_obj->vendor_id));
+    
+        $orderdata = Order::where('id','=',$this->order_id)->first(); 
+        event(new \App\Events\OrderCreateEvent($orderdata, $orderdata->id, $orderdata->user_id, $orderdata->vendor_id));
 
     }
 }

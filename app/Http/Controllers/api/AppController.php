@@ -33,6 +33,7 @@ use PDOException;
 use Throwable;
 use URL;
 use Validator;
+use App\Notifications\SendPushNotification;
 
 
 class AppController extends Controller
@@ -1641,12 +1642,22 @@ class AppController extends Controller
                 $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 $riderAssign->saveOrFail();
                 DB::commit();
+                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(10));
 
 //                $on = \Carbon\Carbon::now()->addSecond(30);
 //                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
 //                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
-                sleep(30);
-                event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
+                //sleep(30);
+                
+
+                // dispatch(function () use ($order_id)   {
+                //     $order = new Order;
+                //     //$request = new Request;
+                //     $order->where('id','=',$order_id)->update(['order_status'=>'confirmed']);
+                //     //event(new OrderCreateEvent($this->Order,$order_id, $this->request->user_id, $this->request->vendor_id));
+                // })->delay(now()->addSeconds('10'));
+                //});
+                //event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy
