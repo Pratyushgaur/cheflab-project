@@ -789,7 +789,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
     function sendNotification($title,$body,$token,$data=null){
         $url = "https://fcm.googleapis.com/fcm/send";
         //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
-        $serverKey = env('FIREBASE_SERVER_KEY');
+        $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
         //$title = "Notification title";
         //$body = "Hello I am from Your php server";
         $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
