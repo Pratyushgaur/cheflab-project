@@ -33,10 +33,38 @@ use PDOException;
 use Throwable;
 use URL;
 use Validator;
+use App\Notifications\SendPushNotification;
 
 
 class AppController extends Controller
 {
+    function sendNotification(){
+        $url = "https://fcm.googleapis.com/fcm/send";
+        $token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
+        $serverKey = env('FIREBASE_SERVER_KEY');
+        $title = "Notification title";
+        $body = "Hello I am from Your php server";
+        $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
+        $arrayToSend = array('to' => $token, 'notification' => $notification,'priority'=>'high');
+        $json = json_encode($arrayToSend);
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key='. $serverKey;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        //Send the request
+        $response = curl_exec($ch);
+        //Close request
+        if ($response === FALSE) {
+        die('FCM Send Error: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        //return $noti = new SendPushNotification('test','msg','ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY');
+
+    }
     /*
         public function getProductDetail(Request $request)
         {
@@ -1641,12 +1669,22 @@ class AppController extends Controller
                 $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 $riderAssign->saveOrFail();
                 DB::commit();
-                sleep(30);
-                $on = \Carbon\Carbon::now()->addSecond(30);
-                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
-//                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
+                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(10));
 
-                event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
+//                $on = \Carbon\Carbon::now()->addSecond(30);
+//                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
+//                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
+                //sleep(30);
+
+
+                // dispatch(function () use ($order_id)   {
+                //     $order = new Order;
+                //     //$request = new Request;
+                //     $order->where('id','=',$order_id)->update(['order_status'=>'confirmed']);
+                //     //event(new OrderCreateEvent($this->Order,$order_id, $this->request->user_id, $this->request->vendor_id));
+                // })->delay(now()->addSeconds('10'));
+                //});
+                //event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy

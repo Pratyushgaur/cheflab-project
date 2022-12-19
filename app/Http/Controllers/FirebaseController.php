@@ -58,7 +58,9 @@ class FirebaseController extends Controller
     public function notification()
     {
         try {
-            event(new OrderCreateEvent(25, 1, 1));
+
+            $order = \App\Models\Order::find(1);
+            event(new OrderCreateEvent($order,25, 1, 1));
             dd("sdfdf");
 //            dd(\Auth::guard('vendor')->user()->fcm_token);
 //            $fcmTokens = User::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();

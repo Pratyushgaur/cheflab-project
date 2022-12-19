@@ -46,6 +46,7 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'accepted';
         $order->save();
+        \App\Jobs\OrderPreparationDoneJob::dispatch($order);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'Accepted',

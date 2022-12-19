@@ -510,7 +510,7 @@ function front_end_currency($number)
 function get_delivery_boy_near_me($lat, $lng)
 {
 
-    return [1];
+    return \App\Models\Deliver_boy::where('id','=',1)->first();
 }
 
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
@@ -596,17 +596,22 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 
 function next_available_day($vendor_id, $return_obj = false)
 {
-    if ($vendor_id == null) return false;
+    //return $vendor_id;
+    if($vendor_id==null)return false;
     $today = \Carbon\Carbon::now()->dayOfWeek;
+    ///return $today;
     //$today = 3;
-    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time', '>', mysql_time())->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
-    if (!isset($next_available_day->id)) {
+     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
+    if (!isset($next_available_day->id)){
         $exit = 'false';
         while ($exit == 'false') {
             $today++;
-            if ($today == 6) $today = 0;
-            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
-            if (!empty($next_available_day)) {
+            if($today > 6){
+              $today=0;
+            }
+
+            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
+            if(!empty($next_available_day)){
                 $exit = 'true';
             } else {
                 $exit = 'false';
@@ -780,7 +785,32 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
     }
     return round($charge);
 
-}
+    }
+    function sendNotification($title,$body,$token,$data=null){
+        $url = "https://fcm.googleapis.com/fcm/send";
+        //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
+        $serverKey = env('FIREBASE_SERVER_KEY');
+        //$title = "Notification title";
+        //$body = "Hello I am from Your php server";
+        $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
+        $arrayToSend = array('to' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+        $json = json_encode($arrayToSend);
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key='. $serverKey;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        //Send the request
+        $response = curl_exec($ch);
+        //Close request
+        if ($response === FALSE) {
+        die('FCM Send Error: ' . curl_error($ch));
+        }
+        curl_close($ch);
+    }
 
 
 function get_order_preparation_time($order_id)

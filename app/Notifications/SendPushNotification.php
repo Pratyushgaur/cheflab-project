@@ -39,6 +39,7 @@ class SendPushNotification extends Notification
 
    public function toFirebase($notifiable)
    {
+        
        return (new FirebaseMessage)
            ->withTitle($this->title)
            ->withBody($this->message)

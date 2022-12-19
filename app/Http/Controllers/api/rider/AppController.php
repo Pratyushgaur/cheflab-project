@@ -317,6 +317,42 @@ class AppController extends Controller
         }
     }
 
+    public function updateLatLng(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id',
+                    'lat' => 'required',
+                    'lng'   => 'required'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            Deliver_boy::where('id','=',$request->user_id)->update(['lat'=>$request->lat,'lng'=>$request->lng]);
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Lat Lng Updated'
+
+            ], 200);    
+            
+           
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
     // public function orderHistory(Request $request)
     // {
     //     try {
