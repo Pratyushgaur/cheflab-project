@@ -3052,4 +3052,33 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function updateTokenUser(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'fcm_token'    => 'required'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            User::where('id','=',$request->user()->id)->update(['fcm_token'    => $request->fcm_token]);
+            
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => true
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }
