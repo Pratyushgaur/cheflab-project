@@ -59,7 +59,7 @@ class FirebaseController extends Controller
     {
         try {
 
-            $order = \App\Models\Order::find(1);
+            $order = \App\Models\Order::find(2);
             event(new OrderCreateEvent($order,25, 1, 1));
             dd("sdfdf");
 //            dd(\Auth::guard('vendor')->user()->fcm_token);

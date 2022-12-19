@@ -44,7 +44,7 @@ class OrderPreparationDoneJob implements ShouldQueue
             $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id));
             $riderAssign->saveOrFail();
             //$riderAssign = RiderAssignOrders::where(['id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
-            
+
             $token = DeliveryBoyTokens::where('rider_id','=',$delivery_boy->id)->orderBy('id','desc')->first();
             if(!empty($token)){
                 $riderAssign = $riderAssign->join('orders','rider_assign_orders.order_id','=','orders.id');
@@ -57,18 +57,25 @@ class OrderPreparationDoneJob implements ShouldQueue
                 $title = 'New Delivery Request';
                 $body = "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address;
                 sendNotification($title,$body,$token->token,$riderAssign);
-                // $delivery_boy->notify(new RequestSendToDeliveryBoyNotification(
-                //     "New Delivery Request",
-                //     "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address,
-                //     $vendor->name,
-                //     $token->token,'',''));
+$d=DeliveryBoyTokens::find(1);
+
+                $d->notify(new RequestSendToDeliveryBoyNotification(
+                     "New Delivery Request",
+                     "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address,
+                     $vendor->name,
+                    $d->token,'',''));
+                $vendor->notify(new RequestSendToDeliveryBoyNotification(
+                    "New Delivery Request",
+                    "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address,
+                    $vendor->name,
+                    $vendor->fcm_token,'',''));
                 //     var_dump($d);
             }
 
-           
+
         }
 
-        
+
 
 //send request to delivery boy
     }

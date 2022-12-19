@@ -170,7 +170,7 @@ $breadcrumb[] = ["name"  => "List",
                                                                     $order->order_status != 'cancelled_by_customer_before_confirmed' &&
                                                                     $order->order_status != 'cancelled_by_customer_after_confirmed' &&
                                                                     $order->order_status != 'cancelled_by_vendor' &&
-                                                                    $order->order_status != 'dispatched'){?>
+                                                                    $order->order_status != 'dispatched' && $order->order_status != 'ready_to_dispatch'){?>
 
                                                                     <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
                                                                 <?php } ?>

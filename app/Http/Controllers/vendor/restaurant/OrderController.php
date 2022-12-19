@@ -75,6 +75,7 @@ class OrderController extends Controller
         $order->save();
 //        event(new OrderSendToPrepareEvent($id, $order->user_id, $order->vendor_id, $request->preparation_time));
         event(new OrderSendToPrepareEvent($order, $request->preparation_time));
+        \App\Jobs\OrderPreparationDoneJob::dispatch($order);
         return redirect()->back()->with('success', "# $id Order send for preparing");
 
     }
