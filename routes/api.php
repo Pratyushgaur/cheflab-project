@@ -174,6 +174,7 @@ Route::post('rider-chage-status',[App\Http\Controllers\api\rider\AppController::
 
 Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
 Route::post('rider-analytics',[App\Http\Controllers\api\rider\AppController::class,'analytics']);
+Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController::class,'updateLatLng']);
 
 
 //
