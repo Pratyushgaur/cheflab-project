@@ -159,6 +159,7 @@ Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, '
 Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion']);
 
 
+Route::post('send-notification',[App\Http\Controllers\api\AppController::class,'sendNotification']);
 
 //
 
