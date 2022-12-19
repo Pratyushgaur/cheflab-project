@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\OrderCreateEvent;
+use App\Events\OrderSendToPrepareEvent;
 use App\Models\User;
 use App\Models\Vendors;
 use App\Notifications\OrderCreateNotification;
@@ -27,23 +28,31 @@ class OrderSendNotificationListener
      */
     public function handle(OrderCreateEvent $event)
     {
-        $event->order_obj->order_status='confirmed';
+        //order_status ===>'pending' to 'confirmed'
+        $event->order_obj->order_status = 'confirmed';
         $event->order_obj->save();
 
+        //send notification
         $customer = User::find($event->user_id);
         $vendor   = Vendors::find($event->vendor_id);
-
-//        $customer->notify(new OrderCreateNotification($event->order_id, $vendor->name,
-//                'The order has been placed ',
-//                "Your have placed a Order #" . $event->order_id,
-//                '',
-//                $customer->fcm_token));
 
         $vendor->notify(new OrderCreateNotification($event->order_id, $customer->name,
             'New Order',
             "You have received new Order #" . $event->order_id . ' from ' . $customer->name,
-            route('restaurant.order.view', $event->order_id) ,
+            route('restaurant.order.view', $event->order_id),
             $vendor->fcm_token
         ));
+
+        //automatice send for prepration
+        //order_status ===>'confirmed' to 'preparing'
+        if ($vendor->is_auto_send_for_prepare) {
+            $products                                = get_order_preparation_time($event->order_obj->id);
+            $event->order_obj->order_status          = 'preparing';
+            $event->order_obj->preparation_time_from = mysql_date_time();
+            $event->order_obj->preparation_time_to   = mysql_add_time($event->order_obj->preparation_time_from, $products->total_preparation_time);
+            $event->order_obj->save();
+            event(new OrderSendToPrepareEvent($event->order_obj, $products->total_preparation_time));
+            $event->order_obj->save();
+        }
     }
 }

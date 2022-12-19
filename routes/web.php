@@ -4,27 +4,23 @@ use App\Http\Middleware\isVendorLoginAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-//use Auth;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/test', function () {
+    $Order=\App\Models\Order::find(3);
+//    dd($Order);
+//    $on = \Carbon\Carbon::now()->addSecond(3);
+//    dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
 
-    dispatch(function(){
-        echo mysql_date_time();
-    })->delay(now()->addSeconds(30));
-//    \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
+
+//    event(new \App\Events\OrderCreateEvent($Order,$Order->id, 1, 1));
+//    dispatch(function(){
+//        echo mysql_date_time();
+//    })->delay(now()->addSeconds(30));
+
+    \App\Jobs\OrderCreateJob::dispatch($Order)
+        ->delay(now()->addSeconds(3));
 })->name('test');
 
+Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 Route::get('/clear-cache', function() {
     Artisan::call('view:clear');
     echo Artisan::output();

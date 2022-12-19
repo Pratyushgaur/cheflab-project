@@ -1,4 +1,5 @@
 @extends('vendor.restaurants-layout')
+
 @section('main-content')
     <?php
     $status_class['pending'] = 'primary';
@@ -24,206 +25,266 @@
                     </ol>
                 </nav>
             </div>
-{{--            <div class="col-md-12">--}}
-{{--                <div class="ms-panel">--}}
-{{--                    <div class="ms-panel-header">--}}
-{{--                        <h6>Order Details</h6>--}}
-{{--                    </div>--}}
-{{--                    <div class="ms-panel-body">--}}
-
-{{--                        <div id="arrowSlider" class="ms-arrow-slider carousel slide" data-ride="carousel"--}}
-{{--                             data-interval="false">--}}
-{{--                            <div class="carousel-inner">--}}
-{{--                                @foreach($order->order_product_details as $k=>$order_product_details)--}}
-{{--                                    <div class="carousel-item">--}}
-{{--                                        <img class="d-block w-100"--}}
-{{--                                             src="{{asset('products')."/$order_product_details->product_image"}}"--}}
-{{--                                             alt="Second slide">--}}
-{{--                                        <div class="carousel-caption d-none d-md-block">--}}
-{{--                                            <h3 class="text-white">{{$order_product_details->name}}</h3>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
-{{--                                @endforeach--}}
-{{--                            </div>--}}
-{{--                            <a class="carousel-control-prev" href="#arrowSlider" role="button" data-slide="prev">--}}
-{{--                                <span class="material-icons" aria-hidden="true">keyboard_arrow_left</span>--}}
-{{--                                <span class="sr-only">Previous</span>--}}
-{{--                            </a>--}}
-{{--                            <a class="carousel-control-next" href="#arrowSlider" role="button" data-slide="next">--}}
-{{--                                <span class="material-icons" aria-hidden="true">keyboard_arrow_right</span>--}}
-{{--                                <span class="sr-only">Next</span>--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
 
 
-            <div class=" col-md-6">
-                <div class="ms-panel ms-panel-fh">
-                    <div class="ms-panel-header">
-                        <h4 class="section-title bold">Customer Detail</h4>
+            <div class="ms-panel col-md-8">
+                <div class="ms-panel-header header-mini">
+                    <div class="d-flex justify-content-between">
+                        <h6>Order Id</h6>
+                        <h6>#{{$order->order_id}}</h6>
                     </div>
-                    <div class="ms-panel-body">
+                </div>
+                <div class="ms-panel-body">
+                    <!-- Invoice To -->
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="invoice-address">
+                                <h3>Reciever: </h3>
+                                <h5>{{$order->customer_name}}</h5>
+                                <p>{{$order->mobile_number}}</p>
+                                @if (isset($order->lat) && isset($order->long))
+                                    <a target="_blank" href="http://maps.google.com/maps?z=12&t=m&q=loc:{{$order->lat }}+{{$order->long }}">
+                                        {{ trim($order->delivery_address) }}
+                                    </a>
+                                @else
+                                    <p>{{ $order->delivery_address }}</p>
+                                @endif
+                                <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
+                                <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
+                                <p class="mb-0"><b>City :</b> {{$order->pincode}}</p>
 
-                        <table class="table ms-profile-information">
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-md-right">
+                            <ul class="invoice-date">
+                                <li><b>Invoice Date :</b> {{front_end_date($order->created_at)}}</li>
+                                {{--                                <li>Due Date : Sunday, April 19 2020</li>--}}
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Invoice Table -->
+                    <div class="ms-invoice-table table-responsive mt-5">
+                        <table class="table table-hover text-right thead-light">
+                            <thead>
+                            <tr class="text-capitalize">
+                                <th class="text-center w-5">id</th>
+                                <th class="text-left">description</th>
+                                <th>qty</th>
+                                <th>Unit Cost</th>
+                                <th>total</th>
+                            </tr>
+                            </thead>
                             <tbody>
+                            @foreach($order->products as $k=>$product)
+
+                                <tr>
+                                    <td class="text-center">
+                                        <?php
+                                        //                                        dd($product->product_id);
+                                        $Product_master = \App\Models\Product_master::withTrashed()->find($product->product_id);
+
+                                        echo "<img style='max-width: 100px;max-hieght: 100px;' src='" . url('/') . '/products/' . $Product_master->product_image . "'>"; ?></td>
+                                    </td>
+                                    <td class="text-left">{{($k+1)}} <b>Product :</b> {{$product->product_name}}
+                                        <?php
+
+                                        $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->get();
+                                        if (!$OrderProductVariant) {
+                                            echo "<br/> <b>Variant :</b> $OrderProductVariant->variant_name";
+
+                                            $unit_price = $OrderProductVariant->variant_price / $OrderProductVariant->variant_qty;
+                                            $price      = $OrderProductVariant->variant_price;
+                                        } else {
+                                            $unit_price = @(@$product->product_price / @$product->product_qty);
+                                            $price      = $product->product_price;
+                                        }
+
+                                        ?>
+                                        <br/>
+
+                                    </td>
+                                    <td>{{$product->product_qty}}</td>
+                                    <td><?php echo "&#8377;" . $unit_price;?></td>
+                                    <td><?php echo "&#8377;" . $price;?></td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="4">Total:</td>
+                                <td><b><?php echo "&#8377;" . $order->total_amount;?></b></td>
+                            </tr>
 
                             <tr>
-                                <th style="border: 0 !important;" scope="row">Name</th>
-                                <td style="border: 0 !important;">{{$order->user->name}}</td>
+                                <td colspan="4">Discount:</td>
+                                <td>-<?php echo "&#8377; " . $order->discount_amount;?></td>
                             </tr>
-                            <tr>
-                                <th scope="row">Mobile no.</th>
-                                <td>{{$order->user->mobile_number.',',$order->user->alternative_number}}</td>
-                            </tr>
+
                             </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">Net Amount:</td>
+                                <td><b><?php echo "&#8377;" . $order->net_amount;?></b></td>
+                            </tr>
+                            </tfoot>
                         </table>
-                        {{--                        <div class="new">--}}
-                        {{--                            <button type="button" class="btn btn-primary">Edit</button>--}}
-                        {{--                            <button type="button" class="btn btn-secondary">Delete</button>--}}
-                        {{--                        </div>--}}
-
                     </div>
                 </div>
             </div>
-
-            <div class=" col-md-6">
-                <div class="ms-panel ms-panel-fh">
+            <div class="col-xl-4 col-md-12">
+                <div class="ms-panel {{--ms-panel-fh--}}">
                     <div class="ms-panel-header">
-                        <h4 class="section-title bold">Deliver To </h4>
+                        <h6>    <a style="width: 100%" href="{{route('restaurant.order.invoice',$order->id)}}" class="btn btn-primary">Send Invoice</a> </h6>
                     </div>
-                    <div class="ms-panel-body">
-                        <table class="table ms-profile-information">
-                            <tbody>
-                            <tr>
-                                <th style="border: 0 !important;" scope="row">Name</th>
-                                <td style="border: 0 !important;">{{$order->customer_name}}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">Mobile no.</th>
-                                <td>{{$order->delivery_address}}</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #dee2e6 !important;">
-                                <th scope="row">Pincode</th>
-                                <td>{{$order->pincode}}</td>
-                            </tr>
+                    <div class="ms-panel-body p-0">
+                        <ul class="ms-list ms-feed ms-twitter-feed">
 
-                            <tr>
-                                <th style="border-bottom: 0px  !important;" scope="row">Status</th>
-                                <td class="left-side" style="float: right;border-bottom: 0px  !important;">
-                                    <div class="input-group">
-                                        <div class="">
-                                            <button
-                                                class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm"
-                                                data-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false"
-                                                id="{{$order->id}}"
-                                                style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important;">{{ucfirst(str_replace('_',' ',$order->order_status))}} </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}"
-                                                   onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>
-                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}"
-                                                   onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
-                                                <a  data-toggle="modal" data-target="#modal-7"
-                                                    class="dropdown-item {{'ms-text-'.$status_class['preparing']}}"
-                                                    onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})"
-                                                >Preparing</a>
-                                                <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}"
-                                                   onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready
-                                                    To Dispatch</a>
-                                                <a class="dropdown-item {{'ms-text-'.$status_class['dispatched']}}"
-                                                   onclick="ajax_post_on_link('{{route('restaurant.order.dispatched',[$order->id])}}',{{$order->id}})">Dispatched</a>
+                            <li class="ms-list-item">
+                                <div class="media clearfix">
+                                    {{--                                        <img src="{{url('/').'/dliver-boy/'.$rider->image}}" class="ms-img-round ms-img-small" alt="people">--}}
+                                    <div class="media-body">
+                                        <p><b>Payment Methode : </b>{{$order->payment_type}}</p>
+                                        <p><b>Payment Staus : </b>
+                                            @if($order->payment_status=='pending')
+                                                <span class="badge badge-primary">Pending</span>
+                                            @endif
+                                            @if($order->payment_status=='paid')
+                                                <span class="badge badge-success">Paid</span>
+                                            @endif</p>
+                                        <p><b>Status : </b>
+                                        <div class="input-group">
+                                            <div class="">
+                                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}}</button>
+                                                <div class="dropdown-menu">
+                                                    <?php //if($order->order_status == 'pending') { ?>
+                                                    {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
+                                                    {{--                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept--}}
+                                                    {{--                                                                    and send for preparing</a>--}}
+                                                    {{--                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
+                                                    <?php
+                                                    //                                                                } else
+                                                    if($order->order_status == 'confirmed'){
+                                                    ?>
+                                                    <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
+                                                    <?php }
+                                                    if($order->order_status == 'preparing') {?>
+                                                    <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}" onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready
+                                                        To Dispatch</a>
+                                                    <?php }
+//                                                    if($order->order_status == 'ready_to_dispatch') { ?>
+{{--                                                    <a class="dropdown-item {{'ms-text-'.$status_class['dispatched']}}" onclick="ajax_post_on_link('{{route('restaurant.order.dispatched',[$order->id])}}',{{$order->id}})">Dispatched</a>--}}
+                                                    <?php //}
+                                                        if($order->order_status != 'completed' &&
+                                                        $order->order_status != 'cancelled_by_customer_before_confirmed' &&
+                                                        $order->order_status != 'cancelled_by_customer_after_confirmed' &&
+                                                        $order->order_status != 'cancelled_by_vendor' &&
+                                                        $order->order_status != 'dispatched'){?>
+
+                                                    <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
+                                                    <?php } ?>
+                                                </div>
                                             </div>
                                         </div>
 
+{{--                                        <div class="input-group">--}}
+{{--                                            <div class="">--}}
+{{--                                                <button--}}
+{{--                                                    class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm"--}}
+{{--                                                    data-toggle="dropdown" aria-haspopup="true"--}}
+{{--                                                    aria-expanded="false"--}}
+{{--                                                    id="{{$order->id}}"--}}
+{{--                                                    style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important;">{{ucfirst(str_replace('_',' ',$order->order_status))}} </button>--}}
+{{--                                                <div class="dropdown-menu">--}}
+{{--                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}"--}}
+{{--                                                       onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
+{{--                                                    <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}"--}}
+{{--                                                       onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
+{{--                                                    <a data-toggle="modal" data-target="#modal-7"--}}
+{{--                                                       class="dropdown-item {{'ms-text-'.$status_class['preparing']}}"--}}
+{{--                                                       onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})"--}}
+{{--                                                    >Preparing</a>--}}
+{{--                                                    <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}"--}}
+{{--                                                       onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready--}}
+{{--                                                        To Dispatch</a>--}}
+{{--                                                    <a class="dropdown-item {{'ms-text-'.$status_class['dispatched']}}"--}}
+{{--                                                       onclick="ajax_post_on_link('{{route('restaurant.order.dispatched',[$order->id])}}',{{$order->id}})">Dispatched</a>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+
+{{--                                        </div>--}}
+                                        </p>
                                     </div>
+                                </div>
+                            </li>
 
-                                </td>
+                        </ul>
+                    </div>
+                </div>
 
-                            </tr>
-                            </tbody>
-                        </table>
+
+                <div class="ms-panel {{--ms-panel-fh--}}">
+                    <div class="ms-panel-header">
+                        <h6>Rider</h6>
+                    </div>
+                    <div class="ms-panel-body p-0">
+                        <ul class="ms-list ms-feed ms-twitter-feed">
+                            @foreach($order->rider_assign_orders as $k=>$rider)
+
+                                <li class="ms-list-item">
+                                    <div class="media clearfix">
+                                        <img src="
+                                        @if($rider->image!='')
+                                        {{url('/').'/dliver-boy/'.$rider->image}}@else{{url('/').'/default_user.jpg'}} @endif
+" class="ms-img-round ms-img-small" alt="people">
+                                        <div class="media-body">
+                                            <h6 class="ms-feed-user"><b>Rider Name : </b>{{$rider->name}}</h6><br/>
+                                            <p><b>Email :</b> {{$rider->email}}</p>
+                                            <p><b>Mobile :</b> {{$rider->mobile}}</p>
+                                            @if($rider->action==0)
+                                                <span class="badge badge-primary">Pending</span>
+                                            @endif
+                                            @if($rider->action==1)
+                                                <span class="badge badge-success">Accepted</span>
+                                            @endif
+                                            @if($rider->action==2)
+                                                <span class="badge badge-dark">Rejected</span>
+                                                <p>Cancel Reason : {{$rider->cancel_reason}}</p>
+                                            @endif
+                                            @if($rider->action==3)
+                                                <span class="badge badge-info">Deliveered</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="ms-panel {{--ms-panel-fh--}}">
+                    <div class="ms-panel-header">
+                        <h6>Customer</h6>
+                    </div>
+                    <div class="ms-panel-body p-0">
+                        <ul class="ms-list ms-feed ms-twitter-feed">
+                            <li class="ms-list-item">
+                                <div class="media clearfix">
+                                    <img src="{{url('/').'/default_user.jpg'}}" class="ms-img-round ms-img-small" alt="people">
+                                    <div class="media-body">
+                                        <h6 class="ms-feed-user"><b>Customer Name : </b>{{$order->user->name}}</h6>
+                                        <p><b>Mobile :</b> {{$order->user->mobile_number.',',$order->user->alternative_number}} </p>
+
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
                     </div>
                 </div>
             </div>
+
+
+
         </div>
     </div>
-
-    {{--    <div class="ms-content-wrapper">--}}
-    {{--        <div class="row">--}}
-    <div class="col-md-12">
-        <div class="ms-panel">
-            <div class="ms-panel-header">
-                <h4 class="section-title bold">Order Detail</h4>
-            </div>
-            <div class="ms-panel-body">
-                <!-- Invoice Table -->
-                <div class="ms-invoice-table table-responsive mt-5">
-                    <table class="table table-hover text-right thead-light">
-                        <thead>
-                        <tr class="text-capitalize">
-                            <th class="text-center w-5">id</th>
-                            <th class="text-left">description</th>
-                            <th>qty</th>
-                            <th>Unit Cost</th>
-                            <th>total</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($order->products as $k=>$product)
-                            <tr>
-                                <td class="text-center">{{$k}}</td>
-                                <td class="text-left">Product : {{$product->product_name}}
-                                    <?php
-
-                                    $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->get();
-                                    if (!$OrderProductVariant) {
-                                        echo "<br/> Variant : $OrderProductVariant->variant_name";
-
-                                        $unit_price = $OrderProductVariant->variant_price / $OrderProductVariant->variant_qty;
-                                        $price = $OrderProductVariant->variant_price;
-                                    } else {
-                                        $unit_price = @(@$product->product_price / @$product->product_qty);
-                                        $price = $product->product_price;
-                                    }
-
-                                    ?>
-                                    <br/>
-
-                                </td>
-                                <td>{{$product->product_qty}}</td>
-                                <td><?php echo "&#8377;" . $unit_price;?></td>
-                                <td><?php echo "&#8377;" . $price;?></td>
-                            </tr>
-                        @endforeach
-                        <tr>
-                            <td colspan="4">Total:</td>
-                            <td><b><?php echo "&#8377;" . $order->total_amount;?></b></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="4">Discount:</td>
-                            <td>-<?php echo "&#8377; " . $order->discount_amount;?></td>
-                        </tr>
-
-                        </tbody>
-                        <tfoot>
-                        <tr>
-                            <td colspan="4">Net Amount:</td>
-                            <td><b><?php echo "&#8377;" . $order->net_amount;?></b></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <div class="modal-footer">
-                        <a href="{{route('restaurant.order.list')}}" class="btn btn-light" >Back</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {{--        </div>--}}
-    {{--    </div>--}}
 
 @endsection
 @push('model')
@@ -285,8 +346,8 @@
                         $if_stat = '';
                         foreach ($status_class as $status => $class) {
                             $remove_class = "btn-$class ";
-                            $if_stat .= "if(data.order_status=='$status')";
-                            $if_stat .= " $('#'+id).addClass('btn-$class');";
+                            $if_stat      .= "if(data.order_status=='$status')";
+                            $if_stat      .= " $('#'+id).addClass('btn-$class');";
 
                         }?>
                         $("#" + id).removeClass('{{$remove_class}}');
@@ -301,7 +362,8 @@
             });
         }
 
-        $('#modal-7').modal({ show: false})
+        $('#modal-7').modal({show: false})
+
         function preparation_form(url, id) {
             $('#preparation_form').attr('action', url);
 
@@ -346,9 +408,9 @@
     <link href="{{ asset('frontend') }}/assets/css/slick.css" rel="stylesheet">
 
     <!-- Page Specific Scripts Start -->
-    <script src="{{ asset('frontend') }}/assets/js/slick.min.js"> </script>
-    <script src="{{ asset('frontend') }}/assets/js/moment.js"> </script>
-    <script src="{{ asset('frontend') }}/assets/js/jquery.webticker.min.js"> </script>
-    <script src="{{ asset('frontend') }}/assets/js/Chart.bundle.min.js"> </script>
-    <script src="{{ asset('frontend') }}/assets/js/Chart.Financial.js"> </script>
+    <script src="{{ asset('frontend') }}/assets/js/slick.min.js"></script>
+    <script src="{{ asset('frontend') }}/assets/js/moment.js"></script>
+    <script src="{{ asset('frontend') }}/assets/js/jquery.webticker.min.js"></script>
+    <script src="{{ asset('frontend') }}/assets/js/Chart.bundle.min.js"></script>
+    <script src="{{ asset('frontend') }}/assets/js/Chart.Financial.js"></script>
 @endpush

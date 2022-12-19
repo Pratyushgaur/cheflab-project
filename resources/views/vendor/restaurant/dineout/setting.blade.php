@@ -90,15 +90,7 @@ $breadcrumb[] = ["name"  => "Dining",
                             <div class="input-group">
                                 {{ Form::select(
                                     'slot_time',
-                                    [
-                                        '30' => '30 Minutes',
-                                        '45' => '45 Minutes',
-                                        '60' => '1 Hour',
-                                        '75' => '1 Hour 15 Minutes',
-                                        '90' => '1 Hour 30 Minutes',
-                                        '105' => '1 Hour 45 Minutes',
-                                        '120' => '2 Hours',
-                                    ],
+                                    config('custom_app_setting.dine_out_slot_time'),
                                     null,
                                     ['class' => 'form-control', 'placeholder' => 'Select Slot Time '],
                                 ) }}

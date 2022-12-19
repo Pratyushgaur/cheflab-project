@@ -9,6 +9,7 @@ use App\Models\Cuisines;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
+use App\Models\VendorDineoutTime;
 use App\Models\VendorOrderTime;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -320,7 +321,7 @@ class DineoutApiController extends Controller
 
             $reponce = [];
 
-            $vendor_order_time = @VendorOrderTime::select('day_no', 'start_time', "end_time")
+            $vendor_order_time = @VendorDineoutTime::select('day_no', 'start_time', "end_time")
                 ->where('vendor_id', $request->vendor_id)
                 ->where('day_no', date('w', strtotime($request->date)))
                 ->where('available', 1)
@@ -357,7 +358,7 @@ class DineoutApiController extends Controller
                 $days[4] = "thursday";
                 $days[5] = "friday";
                 $days[6] = "saturday";
-
+                $all_all_slots=[];
                 foreach ($vendor_order_time as $k => $order_time) {
                     $start_time = mysql_date_time_marge($request->date, $order_time['start_time']); //$order_time['start_time'];
                     $end_time   = mysql_date_time_marge($request->date, $order_time['end_time']);   //$order_time['end_time'];
@@ -367,12 +368,13 @@ class DineoutApiController extends Controller
 
                         $break = show_time_slots($start_time, date('Y-m-d H:i'), $duration, []); //remove previous time slot
                         // $reponce['days']['date'] = date('Y-m-d H:i');
-                        $all_all_slots = show_time_slots($start_time, $end_time, $duration, $break);
+                        $all_all_slots1 = show_time_slots($start_time, $end_time, $duration, $break);
                     } else {
                         $break = [];
                         // $reponce['days']['date'] = date('Y-m-d H:i', strtotime('next ' . $days[$order_time['day_no']]));
-                        $all_all_slots = show_time_slots($start_time, $end_time, $duration, $break);
+                        $all_all_slots1 = show_time_slots($start_time, $end_time, $duration, $break);
                     }
+                    $all_all_slots=array_merge($all_all_slots,$all_all_slots1);
                 }
                 // dd($all_all_slots);
                 \DB::enableQueryLog();
@@ -391,6 +393,7 @@ class DineoutApiController extends Controller
                     ->get();
                 $i             = 0;
                 $carry_forword = 0;
+//                dd($all_all_slots);
                 foreach ($all_all_slots as $k => $slot_time) {
                     $i++;
                     $slot_time_to = mysql_add_time($slot_time, ($tableservice->slot_time - 1));

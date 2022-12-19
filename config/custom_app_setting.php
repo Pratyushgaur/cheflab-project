@@ -7,30 +7,30 @@ return [
     */
 
     //radius that should be cover by a restaurant
-    'near_by_distance'                       => 100,//in miles
+    'near_by_distance'                  => 100,//in miles
 
 
     //-----------------Promotion Settings---------------------------
     //slot booking
-    'promotion_date_frame'                   => ['1' => "One Week", '2' => "Two Week", '3' => "One Month"],
-    'promotion_date_frame_add_days'          => ['1' => 7, '2' => 14, '3' => 30],//this array keys map with "promotion_time_frame" and value : number of days we need to add for promotion_time_frame
-    'promotion_date_frame_admin'                   => [7 => "One Week", 14 => "Two Week", 30 => "One Month"],
+    'promotion_date_frame'              => ['1' => "One Week", '2' => "Two Week", '3' => "One Month"],
+    'promotion_date_frame_add_days'     => ['1' => 7, '2' => 14, '3' => 30],//this array keys map with "promotion_time_frame" and value : number of days we need to add for promotion_time_frame
+    'promotion_date_frame_admin'        => [7 => "One Week", 14 => "Two Week", 30 => "One Month"],
 
     //Promotion time setting
-    "promotion_restaurant_time"              => ["7:00:00-14:00:00"  => "7 AM - 2 PM",
-                                                 "14:00:00-21:00:00" => "2 PM - 9 PM",
-                                                 "21:00:00-4:00:00"  => "9 PM - 4 AM"
+    "promotion_restaurant_time"         => ["7:00:00-14:00:00"  => "7 AM - 2 PM",
+                                            "14:00:00-21:00:00" => "2 PM - 9 PM",
+                                            "21:00:00-4:00:00"  => "9 PM - 4 AM"
     ],
 
     //number of banner slides shows
-    'promotion_banner_number_of_slides'      => 3,
-    'promotion_banner_for'                   => ['chef'          => "Chef Home Slider Banner",
-                                                 'restaurant'    => "Restaurant Home Slider Banner",
-                                                 'dineout'       => "Dine-out Promotion",
-                                                 "order_traking" => "Order Tracking Banner"
+    'promotion_banner_number_of_slides' => 3,
+    'promotion_banner_for'              => ['chef'          => "Chef Home Slider Banner",
+                                            'restaurant'    => "Restaurant Home Slider Banner",
+                                            'dineout'       => "Dine-out Promotion",
+                                            "order_traking" => "Order Tracking Banner"
     ],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
-    'promotion_banner_for_only_values'       => ['cheflab', 'chef', 'restaurant', 'dineout','order_traking'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
+    'promotion_banner_for_only_values'       => ['cheflab', 'chef', 'restaurant', 'dineout', 'order_traking'],//slotbooking_table:"for" column enum values ,same "cheflab_banner_image" : banner_or column in mobile app where banner should be displed
 
 
     //blog promotion "app_promotion_blog_setting" table column :"blog_promotion_date_frame"
@@ -59,5 +59,12 @@ return [
     'vendor_food_type' => [1 => 'Veg', 3 => 'Veg + Non Veg'],
 
     "product_approve" => [1 => 'Approved', 2 => 'pending', 3 => 'Reject'],//product : table, column name :product_approve
-    "product_status"  => [1 => "Active", 0 => "in-active"]//tabe: products ,column name :status
+    "product_status"  => [1 => "Active", 0 => "in-active"],//tabe: products ,column name :status
+
+    'dine_out_slot_time' => [
+        '30'  => '30 Minutes',
+        '60'  => '1 Hour',
+        '120' => '2 Hours',
+        '180' => '3 Hours',
+    ]
 ];

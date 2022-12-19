@@ -1641,11 +1641,11 @@ class AppController extends Controller
                 $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 $riderAssign->saveOrFail();
                 DB::commit();
-
-//                $on = \Carbon\Carbon::now()->addSecond(30);
-//                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
-//                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
                 sleep(30);
+                $on = \Carbon\Carbon::now()->addSecond(30);
+                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
+//                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
+
                 event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {

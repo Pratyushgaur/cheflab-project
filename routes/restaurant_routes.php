@@ -36,7 +36,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('product/update', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'update'])->name('restaurant.product.update');
             Route::get('product/delete', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'delete'])->name('restaurant.product.delete');
             //vendor order linst
-            Route::get('orders', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
+            Route::get('orders/{order_status?}', [App\Http\Controllers\vendor\restaurant\OrderController::class, 'index'])->name('restaurant.order.list');
+//                ->whereIn('order_status', ['all','pending','confirmed','preparing','ready_to_dispatch','dispatched','cancelled_by_vendor','completed']);
             Route::post('order/accept/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_accept'])->name('restaurant.order.accept')->where('id', '[0-9]+');
             Route::post('order/vendor_reject/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_vendor_reject'])->name('restaurant.order.vendor_reject')->where('id', '[0-9]+');
             Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
@@ -44,7 +45,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
             Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
             Route::post('order/preparation_time', [App\Http\Controllers\vendor\restaurant\OrderController::class,'get_preparation_time'])->name('restaurant.order.get_preparation_time')->where('id', '[0-9]+');
-
+            Route::get('order/invoice/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'invoice'])->name('restaurant.order.invoice')->where('id', '[0-9]+');
 
             //coupon
             Route::get('coupon', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'index'])->name('restaurant.coupon.list');
@@ -63,6 +64,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             // vendor globle setting
             Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_time'])->name('restaurant.globleseting.ordertime');
             Route::post('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store'])->name('restaurant.ordertime.store');
+            Route::get('globle/auto_accept', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_auto_accept'])->name('restaurant.order.auto_accept');
+            Route::post('globle/auto_accept', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_order_auto_accept'])->name('restaurant.order.save_order_auto_accept');
+
             Route::post('offline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_offline'])->name('restaurant.set_offline');
             Route::post('online', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_online'])->name('restaurant.set_online');
             Route::get('isonline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'restaurent_get_status'])->name('restaurant.restaurent_get_status');
@@ -95,6 +99,11 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
 
             //dine out
+            Route::get('dine-out-order-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_order_time'])->name('restaurant.dineout.dine_out_order_time');
+            Route::post('dine-out-order-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update_dine_out_order_time'])->name('restaurant.dineout.update_dine_out_order_time');
+            Route::get('dineout/time/delete', [App\Http\Controllers\vendor\restaurant\DineoutController::class, 'time_delete'])->name('restaurant.dineout.time.delete');
+
+
             Route::get('dine-out-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_globle_setting'])->name('restaurant.dineout.setting');
             Route::post('dine-out-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update'])->name('restaurant.dineout.update');
             Route::post('dine-out-setting/vendor-table-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'vendor_table_setting'])->name('restaurant.dineout.vendor_table_setting');

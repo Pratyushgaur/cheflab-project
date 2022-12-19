@@ -21,9 +21,9 @@ class OrderCreateJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Order $order_obj)
+    public function __construct()
     {
-        $this->$order_obj = $order_obj;
+//        $this->$order_obj = $order_obj;
     }
 
     /**
@@ -31,10 +31,12 @@ class OrderCreateJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(Order $order_obj)
     {
-
-        event(new \App\Events\OrderCreateEvent($this->order_obj, $this->order_obj->id, $this->order_obj->user_id, $this->order_obj->vendor_id));
+        echo "sdfsdf";
+//        $this->$order_obj = $order_obj;
+//dd($this->order_obj);
+//        event(new \App\Events\OrderCreateEvent($this->order_obj, $this->order_obj->id, $this->order_obj->user_id, $this->order_obj->vendor_id));
 
     }
 }

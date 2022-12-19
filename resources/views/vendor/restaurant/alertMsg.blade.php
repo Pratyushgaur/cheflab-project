@@ -1,26 +1,4 @@
-{{-- @once --}}
-{{-- @if (Session::has('success'))
-<div class="alert alert-success" role="alert">
-    {{ Session::get('success') }}.
-</div>
-@endif
-@if (Session::has('message'))
-<div class="alert alert-info" role="alert">
-    {{ Session::get('message') }}.
-</div>
-@endif
-
-@if ($errors->any())
-@foreach ($errors->all() as $error)
-    <div class="alert alert-danger">{{ $error }}</div>
-@endforeach
-@endif --}}
-
-
-
-
 @push('scripts')
-
     @if (Session::has('notice'))
         <script>
             (function ($) {
@@ -29,7 +7,7 @@
                         type: 'warning',
                         title: "{{ Session::get('notice') }}",
                         showConfirmButton: true,
-                        timer: 200
+                        timer: 5000
                     }
                 );
             })(jQuery);
@@ -44,7 +22,7 @@
                         type: 'success',
                         title: "{{ Session::get('poup_success') }}",
                         showConfirmButton: true,
-                        timer: 200
+                        timer: 5000
                     }
                 );
             })(jQuery);

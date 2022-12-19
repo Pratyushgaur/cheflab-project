@@ -8,14 +8,13 @@ use App\Models\BankDetail;
 use App\Models\Order_time;
 use App\Models\VendorOrderTime;
 use App\Models\vendors;
-use App\Rules\VendorOrderTimeRule;
 use Config;
 use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Crypt;
 
 class GlobleSetting extends Controller
 {
@@ -30,7 +29,7 @@ class GlobleSetting extends Controller
         $hideSidebar     = true;
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
         foreach ($order_time as $v)
-        $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
+            $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
 
         return view('vendor.restaurant.globleseting.require_ordertime', compact('hideSidebar', 'VendorOrderTime'));
     }
@@ -41,7 +40,7 @@ class GlobleSetting extends Controller
         $VendorOrderTime = [];
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
         foreach ($order_time as $v)
-        $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
+            $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
 
         //echo '<pre>';var_dump($VendorOrderTime);echo '</pre>';die;
         // echo '<pre>'; print_r($order_time);die;
@@ -75,34 +74,32 @@ class GlobleSetting extends Controller
         // dd($request->all());
         // $request->validate(['start_time.*' => 'nullable|date_format:H:i', 'end_time.*' => 'nullable|date_format:H:i', 'available.*' => ['nullable', 'between:0,1', new VendorOrderTimeRule($request)],]);
 
-  $start_time = $request->start_time;
-  $end_time = $request->end_time;
-  $available = $request->available;
+        $start_time = $request->start_time;
+        $end_time   = $request->end_time;
+        $available  = $request->available;
         foreach ($start_time as $key => $val) {
-                foreach ($val as $key1 => $time) {
-                    if($available[$key] == 1){
+            foreach ($val as $key1 => $time) {
+                if ($available[$key] == 1) {
 
-                    $data = array(
-                        'vendor_id' =>  Auth::guard('vendor')->user()->id,
-                        'day_no' =>  $key,
-                        'start_time' =>  $time,
-                        'row_keys' =>  $key1,
-                        'end_time' =>  $end_time[$key][$key1],
-                        'available' =>  $available[$key],
+                    $data  = array(
+                        'vendor_id'  => Auth::guard('vendor')->user()->id,
+                        'day_no'     => $key,
+                        'start_time' => $time,
+                        'row_keys'   => $key1,
+                        'end_time'   => $end_time[$key][$key1],
+                        'available'  => $available[$key],
 
                     );
-                    $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no',$key)->where('row_keys',$key1)->exists();
-                     if($exist){
-                        Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys',$key1)->update($data);
-                     }else{
-                       Order_time::insert($data);
-                     }
+                    $exist = Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys', $key1)->exists();
+                    if ($exist) {
+                        Order_time::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys', $key1)->update($data);
+                    } else {
+                        Order_time::insert($data);
                     }
-                 }
+                }
+            }
 
         }
-
-
 
 
         // foreach ($request->start_time as $key => $val) {
@@ -276,14 +273,14 @@ class GlobleSetting extends Controller
     public function bank_details()
     {
 
-        $bankDetail  = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();
+        $bankDetail = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();
 
         return view('vendor.restaurant.globleseting.bankdetailes', compact('bankDetail'));
     }
 
     public function save_bank_details(Request $request)
     {
-                dd($request->all());
+//                dd($request->all());
         //        dd($request->routeIs('restaurant.globleseting.save_bank_details'));
         /*        if ($request->routeIs('restaurant.globleseting.save_bank_details'))
                     $request->validate([
@@ -321,6 +318,9 @@ class GlobleSetting extends Controller
         if ($request->has('cancel_check') && $request->cancel_check != '') {
             $img        = $request->cancel_check;
             $folderPath = "vendor-documents/"; //path location
+            //remove old img
+            if ($bank->cancel_check != '')
+                @unlink(public_path('vendor-documents') . '/' . $bank->cancel_check);
 
             $image_parts        = explode(";base64,", $img);
             $image_type_aux     = explode("image/", $image_parts[0]);
@@ -333,12 +333,16 @@ class GlobleSetting extends Controller
             //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
             //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
             //            $bank['cancel_check'] = $filename;
-            dd($bank->cancel_check);
+
+//            dd($bank->cancel_check);
         }
 
         if ($request->has('fassi_image') && $request->fassi_image != '') {
             $img        = $request->fassi_image;
             $folderPath = "vendor-documents/"; //path location
+            //remove old img
+            if ($vendor->licence_image != '')
+                @unlink(public_path('vendor-documents') . '/' . $vendor->licence_image);
 
             $image_parts           = explode(";base64,", $img);
             $image_type_aux        = explode("image/", $image_parts[0]);
@@ -356,6 +360,10 @@ class GlobleSetting extends Controller
         if ($request->has('pancard_image') && $request->pancard_image != '') {
             $img        = $request->pancard_image;
             $folderPath = "vendor-documents/"; //path location
+            //remove old img
+            if ($vendor->pancard_image != '')
+                @unlink(public_path('vendor-documents') . '/' . $vendor->pancard_image);
+
 
             $image_parts           = explode(";base64,", $img);
             $image_type_aux        = explode("image/", $image_parts[0]);
@@ -372,6 +380,10 @@ class GlobleSetting extends Controller
         if ($request->has('aadhar_card_image') && $request->aadhar_card_image != '') {
             $img        = $request->aadhar_card_image;
             $folderPath = "vendor-documents/"; //path location
+            //remove old img
+            if ($vendor->aadhar_card_image != '')
+                @unlink(public_path('vendor-documents') . '/' . $vendor->aadhar_card_image);
+
 
             $image_parts               = explode(";base64,", $img);
             $image_type_aux            = explode("image/", $image_parts[0]);
@@ -397,5 +409,34 @@ class GlobleSetting extends Controller
         $vendor->fssai_lic_no   = $request->fssai_lic_no;
         $vendor->save();
         return redirect()->route('restaurant.dashboard')->with('poup_success', 'Settings update Successfully');
+    }
+
+    public function order_auto_accept()
+    {
+
+        return view('vendor.restaurant.globleseting.order_auto_accept');
+    }
+
+    public function save_order_auto_accept(Request $request){
+        if (isset($request->is_auto_send_for_prepare) && $request->is_auto_send_for_prepare == 'true') {
+            $msg  = 'Now order automatic send for prepare.';
+            $data = '1';
+        } else {
+            $msg  = 'Order auto send for preparation disabled for your restaurant.';
+            $data = '0';
+        }
+
+        $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
+
+        $vendor->is_auto_send_for_prepare = $data;
+        $vendor->save();
+
+
+        return response()->json([
+            'status'      => 'success',
+            'rest_status' => $request->is_auto_send_for_prepare,
+            'msg'         => $msg
+        ], 200);
+
     }
 }

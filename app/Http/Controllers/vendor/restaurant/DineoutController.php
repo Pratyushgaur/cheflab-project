@@ -7,9 +7,11 @@ use App\Models\AdminMasters;
 use App\Models\TableService;
 use App\Models\TableServiceBooking;
 use App\Models\TableServiceDiscount;
+use App\Models\VendorDineoutTime;
 use App\Models\Vendors;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DineoutController extends Controller
 {
@@ -30,12 +32,12 @@ class DineoutController extends Controller
      */
     public function index()
     {
-        $admin_master=AdminMasters::select('dine_out_reject_reason')->find(config('custom_app_setting.admin_master_id'));
+        $admin_master         = AdminMasters::select('dine_out_reject_reason')->find(config('custom_app_setting.admin_master_id'));
         $TableServiceBookings = TableServiceBooking::select('table_service_bookings.*', 'users.name')
             ->join('users', 'user_id', '=', 'users.id')
             ->where('vendor_id', \Auth::guard('vendor')->user()->id)->orderBy('id', 'desc')->paginate(15);
 
-        return view('vendor.restaurant.dineout.index', compact('TableServiceBookings','admin_master'));
+        return view('vendor.restaurant.dineout.index', compact('TableServiceBookings', 'admin_master'));
     }
 
     public function dine_out_accept($id)
@@ -185,5 +187,79 @@ class DineoutController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function dine_out_order_time()
+    {
+
+        $VendorOrderTime = [];
+        $order_time      = VendorDineoutTime::select(DB::raw('available,DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_dineout_time.row_keys,vendor_dineout_time.id,day_no,vendor_id'))
+            ->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
+        foreach ($order_time as $v)
+            $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
+
+        //echo '<pre>';var_dump($VendorOrderTime);echo '</pre>';die;
+        // echo '<pre>'; print_r($order_time);die;
+        return view('vendor.restaurant.dineout.dineout_ordertime', compact('VendorOrderTime'));
+    }
+
+    public function time_delete(Request $request)
+    {
+        try {
+            $id   = Crypt::decryptString($request->id);
+            $data = VendorDineoutTime::findOrFail($id);
+            if ($data) {
+                $data->delete();
+                return redirect()->route('restaurant.dineout.dine_out_order_time')->with('success', 'Times deleted successfully.');
+            } else {
+
+                return redirect()->route('restaurant.dineout.dine_out_order_time')->with('error', 'Something went wrong.');
+            }
+
+
+        } catch (DecryptException $e) {
+
+            return redirect()->route('restaurant.dineout.dine_out_order_time')->with('error', 'Something wen wrong.');
+        }
+    }
+
+
+    public function update_dine_out_order_time(Request $request)
+    {
+
+        // dd($request->routeIs('restaurant.ordertime.first_store'));
+//         dd($request->all());
+        $request->validate(['start_time.*.*' => 'nullable|date_format:H:i',
+                            'end_time.*.*'   => 'nullable|date_format:H:i',
+                            'available.*'    => ['nullable', 'between:0,1'],
+        ]);
+
+        $start_time = $request->start_time;
+        $end_time   = $request->end_time;
+        $available  = $request->available;
+        foreach ($start_time as $key => $val) {
+            foreach ($val as $key1 => $time) {
+//                if ($available[$key] == 1) {
+
+                    $data = array(
+                        'vendor_id'  => Auth::guard('vendor')->user()->id,
+                        'day_no'     => $key,
+                        'start_time' => $time,
+                        'row_keys'   => $key1,
+                        'end_time'   => $end_time[$key][$key1],
+                        'available'  => $available[$key],
+                    );
+
+                    $exist = VendorDineoutTime::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys', $key1)->exists();
+                    if ($exist) {
+                        VendorDineoutTime::where('vendor_id', Auth::guard('vendor')->user()->id)->where('day_no', $key)->where('row_keys', $key1)->update($data);
+                    } else {
+                        VendorDineoutTime::insert($data);
+                    }
+//                }
+            }
+
+        }
+        return redirect()->route('restaurant.dineout.dine_out_order_time')->with('poup_success', 'Your Restaurant Dine-out timing update Successfully');
     }
 }

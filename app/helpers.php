@@ -32,12 +32,12 @@ function mysql_date_time($datetime = '')
         return date('Y-m-d H:i:s');
 }
 
-function mysql_date($datetime='')
+function mysql_date($datetime = '')
 {
     if ($datetime == '')
         return date('Y-m-d');
     else
-    return date('Y-m-d', strtotime($datetime));
+        return date('Y-m-d', strtotime($datetime));
 }
 
 function mysql_time($datetime = '')
@@ -112,6 +112,9 @@ function show_time_slots($start_time, $end_time, $duration, $break)
 
 function vendorOrderCountByStatus($vendor_id, $status)
 {
+    if($status=='')
+        return Orders::where(['vendor_id' => $vendor_id])->count();
+
     return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->count();
 }
 
@@ -403,7 +406,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
                     //  $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
                     // $variant[$p['product_id']] ['tax'] = $p['tax'];
-                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') .'/'. $p['vendor_image'];
+                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') . '/' . $p['vendor_image'];
 
                     $banners = json_decode($p['banner_image']);
 
@@ -556,7 +559,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
     if ($lat != '' && $lat != '')
         $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
     else
-        $vendors=\App\Models\Vendors::where("vendors.is_all_setting_done", 1)->where('vendors.status', 1);
+        $vendors = \App\Models\Vendors::where("vendors.is_all_setting_done", 1)->where('vendors.status', 1);
 
     $vendors->leftJoin('vendor_order_time', function ($join) {
         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
@@ -581,7 +584,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed'),
-        "vendors.fssai_lic_no", 'review_count', 'table_service','vendors.id as vendor_id','banner_image','deal_cuisines');
+        "vendors.fssai_lic_no", 'review_count', 'table_service', 'vendors.id as vendor_id', 'banner_image', 'deal_cuisines');
 
     if (!empty($limit) && !empty($offset))
         $vendors->offset($offset)->limit($limit);
@@ -593,19 +596,19 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 
 function next_available_day($vendor_id, $return_obj = false)
 {
-    if($vendor_id==null)return false;
+    if ($vendor_id == null) return false;
     $today = \Carbon\Carbon::now()->dayOfWeek;
     //$today = 3;
-    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
-    if (!isset($next_available_day->id)){
+    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time', '>', mysql_time())->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
+    if (!isset($next_available_day->id)) {
         $exit = 'false';
         while ($exit == 'false') {
             $today++;
-            if($today == 6) $today=0;
-            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
-            if(!empty($next_available_day)){
+            if ($today == 6) $today = 0;
+            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
+            if (!empty($next_available_day)) {
                 $exit = 'true';
-            }else{
+            } else {
                 $exit = 'false';
             }
         }
@@ -616,19 +619,19 @@ function next_available_day($vendor_id, $return_obj = false)
     // if ($today == 6){
     //     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('vendor_id','=',$vendor_id)->where('available', 1)->orderBy('day_no')->orderBy('start_time','ASC')->first();
     // }
-        
+
     // else{
-    //     return $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->toSql();   
+    //     return $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->toSql();
     // }
-        
-        //$next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', $today)->where('available', 1)->orderBy('day_no')->first();
-    
+
+    //$next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', $today)->where('available', 1)->orderBy('day_no')->first();
+
     // if (!isset($next_available_day->id)){
-        
+
     //     while ($exit == 'false') {
     //         $today++;
     //         if($today == 6) $today=0;
-    //         $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();   
+    //         $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
     //         if(!empty($next_available_day)){
     //             $exit = 'true';
     //         }else{
@@ -636,9 +639,9 @@ function next_available_day($vendor_id, $return_obj = false)
     //         }
     //     }
     // }
-        
 
-       // $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
+
+    // $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('available', 1)->orderBy('day_no')->first();
     if (isset($next_available_day->id))
         if ($return_obj)
             return $next_available_day;
@@ -688,92 +691,108 @@ function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id
     return $vendors;
 
 }
+
 function generateDriverUniqueCode()
 {
     $number = rand(1000000000, 9999999999);
-    if (\App\Models\Deliver_boy::where('username','=',$number)->exists()) {
+    if (\App\Models\Deliver_boy::where('username', '=', $number)->exists()) {
         $number = rand(1000000000, 9999999999);
     }
     return $number;
 }
-function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit='K')
-    {
-        $theta = $lon1 - $lon2;
-        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-        $dist = acos($dist);
-        $dist = rad2deg($dist);
-        $miles = $dist * 60 * 1.1515;
-        $unit = strtoupper($unit);
 
-        if ($unit == "K")
-        {
-            return ($miles * 1.609344);
-        }
-        else if ($unit == "N")
-        {
+function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit = 'K')
+{
+    $theta = $lon1 - $lon2;
+    $dist  = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+    $dist  = acos($dist);
+    $dist  = rad2deg($dist);
+    $miles = $dist * 60 * 1.1515;
+    $unit  = strtoupper($unit);
+
+    if ($unit == "K") {
+        return ($miles * 1.609344);
+    } else if ($unit == "N") {
         return ($miles * 0.8684);
-        }
-        else
-        {
+    } else {
         return $miles;
-      }
     }
-    function GetDrivingDistance($lat1, $long1, $lat2, $long2)
-    {
-        $key =  env('GOOGLE_MAPS_API_KEY');
-        $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=".$lat1.",".$long1."&destinations=".$lat2.",".$long2."&mode=driving&language=pl-PL&key=$key";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-         $response = curl_exec($ch);
-        curl_close($ch);
-        $response_a = json_decode($response, true);
-        $dist = $response_a['rows'][0]['elements'][0]['distance']['text'];
-        $time = $response_a['rows'][0]['elements'][0]['duration']['text'];
-        $dist = str_replace(',', '.', $dist) ;
-        return $dist = str_replace('km', '', $dist) ;
-        //return array('distance' => $dist, 'time' => $time);
-    }
-    function getOrderId(){
-        $order = \App\Models\Order::orderBy('id','DESC');
-        if($order->exists()){
-            $id = $order->first()->id;
-        }else{
-            $id = 0;
-        }
-        return str_pad(1 +$id, 8, "0", STR_PAD_LEFT);
-    }
-    function userToVendorDeliveryCharge($userLat,$userLng,$vendorLat,$vendorLng)
-    {
-        $distance = GetDrivingDistance($userLat,$userLng,$vendorLat,$vendorLng);
-        //$distance = 3.9;
-        $distance = floatval($distance);
-        //$distance = 10;
-        $setting = App\Models\DeliveryboySetting::first();
-        $charge = $setting->first_three_km_charge_user; // 30
-        if($distance > 3){
-             $remainingkm = $distance-3.0;
-            if($remainingkm >= 3){
-                $secondCharge = 3*$setting->three_km_to_six_user;
-            }else{
-                $secondCharge = $remainingkm*$setting->three_km_to_six_user;
-            }
-             $charge = $charge+$secondCharge;
-            //
-            $remainingkm = $remainingkm-3.0;
+}
 
-            if($remainingkm > 0){
-                $thirdCharge = $remainingkm*$setting->six_km_above_user;
-                $charge = $charge+$thirdCharge;
-            }
+function GetDrivingDistance($lat1, $long1, $lat2, $long2)
+{
+    $key = env('GOOGLE_MAPS_API_KEY');
+    $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" . $lat1 . "," . $long1 . "&destinations=" . $lat2 . "," . $long2 . "&mode=driving&language=pl-PL&key=$key";
+    $ch  = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    $response = curl_exec($ch);
+    curl_close($ch);
+    $response_a = json_decode($response, true);
+    $dist       = $response_a['rows'][0]['elements'][0]['distance']['text'];
+    $time       = $response_a['rows'][0]['elements'][0]['duration']['text'];
+    $dist       = str_replace(',', '.', $dist);
+    return $dist = str_replace('km', '', $dist);
+    //return array('distance' => $dist, 'time' => $time);
+}
 
+function getOrderId()
+{
+    $order = \App\Models\Order::orderBy('id', 'DESC');
+    if ($order->exists()) {
+        $id = $order->first()->id;
+    } else {
+        $id = 0;
+    }
+    return str_pad(1 + $id, 8, "0", STR_PAD_LEFT);
+}
+
+function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
+{
+    $distance = GetDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
+    //$distance = 3.9;
+    $distance = floatval($distance);
+    //$distance = 10;
+    $setting = App\Models\DeliveryboySetting::first();
+    $charge  = $setting->first_three_km_charge_user; // 30
+    if ($distance > 3) {
+        $remainingkm = $distance - 3.0;
+        if ($remainingkm >= 3) {
+            $secondCharge = 3 * $setting->three_km_to_six_user;
+        } else {
+            $secondCharge = $remainingkm * $setting->three_km_to_six_user;
         }
-        if($setting->extra_charge_active){
-            $charge = $charge+$setting->extra_charges_user;
+        $charge = $charge + $secondCharge;
+        //
+        $remainingkm = $remainingkm - 3.0;
+
+        if ($remainingkm > 0) {
+            $thirdCharge = $remainingkm * $setting->six_km_above_user;
+            $charge      = $charge + $thirdCharge;
         }
-        return  round($charge);
 
     }
+    if ($setting->extra_charge_active) {
+        $charge = $charge + $setting->extra_charges_user;
+    }
+    return round($charge);
+
+}
+
+
+function get_order_preparation_time($order_id)
+{
+    return \App\Models\OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')
+        ->join('products', 'order_products.product_id', '=', 'products.id')
+        ->where('order_id', $order_id)->first();
+}
+
+
+function vendorOrderCountByRefund($vendor_id, $status)
+{
+
+    return Orders::where(['vendor_id' => $vendor_id, 'refund' => $status])->count();
+}

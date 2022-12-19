@@ -12,7 +12,7 @@ $breadcrumb[] = ["name"  => "List",
 
     <?php
     $status_class['pending'] = 'primary';
-    $status_class['accepted'] = 'warning';
+    $status_class['confirmed'] = 'warning';
     $status_class['preparing'] = 'secondary';
     $status_class['ready_to_dispatch'] = 'info';
     $status_class['dispatched'] = 'success';
@@ -114,13 +114,16 @@ $breadcrumb[] = ["name"  => "List",
                                         {{--                                        <th scope="col">Order Status</th>--}}
                                         <th scope="col">Payment Type</th>
                                         <th scope="col">Payment Status</th>
-                                        <th scope="col">Order Status</th>
                                         <th scope="col">Remaining Time</th>
+                                        <th scope="col">Order Status</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
 
                                     <thbody>
+                                        @if(count($orders)<=0)
+                                            <tr><td colspan="5">No record found</td></tr>
+                                            @endif
                                         @foreach($orders as $k=>$order)
                                             <tr>
                                                 <td>{{$order->id}}</td>
@@ -133,7 +136,8 @@ $breadcrumb[] = ["name"  => "List",
                                                 <td>
                                                     <span class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span>
                                                 </td>
-                                                <td>@if($order->preparation_time_to!='')
+                                                <td>@if($order->order_status=='preparing' && $order->preparation_time_to!='')
+
                                                         <?php if (mysql_date_time($order->preparation_time_to) < mysql_date_time()) {
                                                             echo "time out";
                                                         }else{?>
@@ -146,13 +150,14 @@ $breadcrumb[] = ["name"  => "List",
                                                         <div class="">
                                                             <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}}</button>
                                                             <div class="dropdown-menu">
-                                                                <?php if($order->order_status == 'pending') { ?>
+                                                                <?php //if($order->order_status == 'pending') { ?>
                                                                 {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
-                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept
-                                                                    and send for preparing</a>
-                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
-                                                                <?php }
-                                                                else if($order->order_status == 'accepted'){
+{{--                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept--}}
+{{--                                                                    and send for preparing</a>--}}
+{{--                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
+                                                                <?php
+//                                                                } else
+                                                                    if($order->order_status == 'confirmed'){
                                                                 ?>
                                                                 <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
                                                                 <?php }
@@ -161,6 +166,13 @@ $breadcrumb[] = ["name"  => "List",
                                                                     To Dispatch</a>
                                                                 <?php }if($order->order_status == 'ready_to_dispatch') { ?>
                                                                 <a class="dropdown-item {{'ms-text-'.$status_class['dispatched']}}" onclick="ajax_post_on_link('{{route('restaurant.order.dispatched',[$order->id])}}',{{$order->id}})">Dispatched</a>
+                                                                <?php } if($order->order_status != 'completed' &&
+                                                                    $order->order_status != 'cancelled_by_customer_before_confirmed' &&
+                                                                    $order->order_status != 'cancelled_by_customer_after_confirmed' &&
+                                                                    $order->order_status != 'cancelled_by_vendor' &&
+                                                                    $order->order_status != 'dispatched'){?>
+
+                                                                    <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
                                                                 <?php } ?>
                                                             </div>
                                                         </div>
@@ -168,7 +180,8 @@ $breadcrumb[] = ["name"  => "List",
                                                 </td>
 
                                                 <td>
-                                                    <a href="{{route('restaurant.order.view',$order->id)}}"><i class="fa fa-eye text-secondary text-success"></i></a>
+                                                    <a href="{{route('restaurant.order.view',$order->id)}}"><i class="fa fa-eye text-success "></i></a>
+                                                    <a href="{{route('restaurant.order.invoice',$order->id)}}"><i class="fa fa-print text-info "></i></a>
                                                     {{--                                                    <a href="#"><i class="fas fa-pencil-alt text-secondary"></i></a>--}}
                                                     {{--                                                    <a href="a.html"><i class="far fa-trash-alt ms-text-danger"></i></a>--}}
                                                 </td>
@@ -214,6 +227,7 @@ $breadcrumb[] = ["name"  => "List",
                             <label>Order preparation time</label>
                             <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time">
                             <i class="material-icons">timer</i>
+                            <code>Sum of All Preparation Time of Products for particular Order will be order preparation time </code>
                         </div>
 
                         <div class="ms-form-group has-icon" id="extend_time_div">

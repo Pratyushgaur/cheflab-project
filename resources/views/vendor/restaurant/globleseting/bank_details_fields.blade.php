@@ -74,27 +74,42 @@
 {{--    <div class="col-sm-12"><h5>Aadhar scan image</h5><br></div>--}}
     <div class="col-sm-3 imgUp">
         <input type="hidden" class="imaage-data" name="aadhar_card_image">
-        <div class="imagePreview"></div>
+
+        <div class="imagePreview">
+            @if((auth()->guard('vendor')->user()->aadhar_card_image!=''))
+                <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}">
+            @endif
+        </div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->aadhar_card_image!='') ? "Aadhar Already uploaded" : 'Upload Aadhar Card'?><input accept="image/*" type="file" data-from="aadhar_card_image" class="uploadFile img" value="Upload Aadhar Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
 
     <div class="col-sm-3 imgUp">
         <input type="hidden" class="imaage-data" name="pancard_image">
-        <div class="imagePreview"></div>
+        <div class="imagePreview">
+            @if((auth()->guard('vendor')->user()->pancard_image!=''))
+                <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->pancard_image}}">
+            @endif</div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->pancard_image!='') ? "Pan card Already uploaded" : 'Pan card image'?><input accept="image/*" type="file" data-from="pancard_image" class="uploadFile img" value="Upload Pan Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
 
     <div class="col-sm-3 imgUp">
         <input type="hidden" class="imaage-data" name="fassi_image">
-        <div class="imagePreview"></div>
+        <div class="imagePreview">
+            @if((auth()->guard('vendor')->user()->licence_image!=''))
+                <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->licence_image}}">
+            @endif</div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->licence_image!='') ? "fassi Already uploaded" : 'fassi image'?><input accept="image/*" type="file" data-from="fassi_image" class="uploadFile img" value="Upload fassi" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
     <div class="col-sm-3 imgUp">
         <input type="hidden" class="imaage-data" name="cancel_check">
-        <div class="imagePreview"></div>
+        <div class="imagePreview">
+            @if(($bankDetail->cancel_check!=''))
+                <img src="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}">
+            @endif
+        </div>
         <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check!='') ? "Cancel Check Already uploaded" : 'Cancel Check'?><input accept="image/*" type="file" data-from="cancel_check" class="uploadFile img" value="Upload Cancel check " style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 </div>
