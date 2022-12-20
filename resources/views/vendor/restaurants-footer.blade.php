@@ -1,3 +1,7 @@
+<audio class="alert-audio" style="display:none" controls > 
+<source src="{{asset('alert.mp3')}}"  type="audio/mpeg">
+ </audio>
+ <audio id="beep__hover" src="{{asset('alert.mp3')}}"></audio>
 
 <!-- MODALS -->
 <!-- Quick bar -->
@@ -625,6 +629,8 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                 //     showConfirmButton: true
                 // });
                 toastr.info(payload.data.title, payload.data.body);
+               
+                //$('.alert-audio')[0].play();
             } else {
                 // console.log("in else "+payload.link);
                 // Swal.fire({
@@ -642,7 +648,9 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                     var win = window.open(payload.data.link, '_blank');
                     console.log('clicked');
                 }
-                toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="payload.data.link">View</a>', payload.data.title,);
+                
+                toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.data.title,);
+                $("#beep__hover").get(0).play();
             }
         });
     });
