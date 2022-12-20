@@ -45,7 +45,7 @@ class OrderPreparationDoneJob implements ShouldQueue
             $riderAssign->saveOrFail();
             //$riderAssign = RiderAssignOrders::where(['id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
 
-            $token = DeliveryBoyTokens::where('rider_id','=',$delivery_boy->id)->orderBy('id','desc')->first();
+            $token = DeliveryBoyTokens::where('rider_id','=',$delivery_boy->id)->orderBy('id','desc')->get()->pluck('token');
             if(!empty($token)){
                 $riderAssign = $riderAssign->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $riderAssign = $riderAssign->join('vendors','orders.vendor_id','=','vendors.id');
