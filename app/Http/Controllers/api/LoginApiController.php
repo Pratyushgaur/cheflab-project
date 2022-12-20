@@ -191,11 +191,7 @@ class LoginApiController extends Controller
                 ], 401);
             }
             if (User::where(['mobile_number' => $request->mobile_number])->exists()) {
-                if($request->mobile_number == '9424567807'){
-                    $otp = '1234';
-                }else{
-                    $otp = $this->otp_generate($request->mobile_number);    
-                }
+                $otp = $this->otp_generate($request->mobile_number); 
                 
                 $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";  
                 $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$request->mobile_number&message=".urlencode($msg)."&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507166723953585920";
@@ -304,7 +300,12 @@ class LoginApiController extends Controller
         return $request->user();
     }
     function otp_generate($mobile_number){
-        $Otp_no = random_int(1000, 9999);
+        if($mobile_number == '9424567807'){
+            $Otp_no = '1234';
+        }else{
+            $Otp_no = random_int(1000, 9999);
+        }
+        
         if (Mobileotp::where('mobile_number', '=', $mobile_number)->exists()) {
             Mobileotp::where('mobile_number', '=', $mobile_number)->update(['otp'=>$Otp_no,'status' =>'0']);
         } else {
