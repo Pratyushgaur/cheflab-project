@@ -56,11 +56,11 @@ class LoginApiController extends Controller
     }
     function otp_generate($mobile){
         $Otp_no = random_int(1000, 9999);
-        if (Mobileotp::where('mobile', '=', $mobile)->exists()) {
-            Mobileotp::where('mobile', '=', $mobile)->update(['otp'=>$Otp_no,'status' =>'0']);
+        if (RiderMobileOtp::where('mobile_number', '=', $mobile)->exists()) {
+            RiderMobileOtp::where('mobile_number', '=', $mobile)->update(['otp'=>$Otp_no,'status' =>'0']);
         } else {
-            Mobileotp::insert([
-                    'mobile' =>$mobile,
+            RiderMobileOtp::insert([
+                    'mobile_number' =>$mobile,
                     'otp' =>$Otp_no,
             ]);
         }
@@ -72,7 +72,7 @@ class LoginApiController extends Controller
         try {
             $validateUser = Validator::make($request->all(),
             [
-                'mobile' => 'required|numeric|digits:10',
+                'mobile_number' => 'required|numeric|digits:10',
                 'otp' => 'required|numeric|digits:4',
             ]);
             if($validateUser->fails()){
