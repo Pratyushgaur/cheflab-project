@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
     Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
     Route::post('check-vendor-available', [App\Http\Controllers\api\AppController::class, 'checkVendorAvailable']);
+    Route::post('re-order', [App\Http\Controllers\api\AppController::class, 'reOrder']);
 
     //profile
     Route::post('get-user-info', [App\Http\Controllers\api\AppController::class, 'getUserInfo']);
