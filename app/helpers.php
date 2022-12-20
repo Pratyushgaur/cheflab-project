@@ -804,7 +804,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
         //Send the request
-        $response = curl_exec($ch);
+       return  $response = curl_exec($ch);
         //Close request
         if ($response === FALSE) {
         die('FCM Send Error: ' . curl_error($ch));

@@ -36,12 +36,13 @@ class OrderSendNotificationListener
         $customer = User::find($event->user_id);
         $vendor   = Vendors::find($event->vendor_id);
 
-        $vendor->notify(new OrderCreateNotification($event->order_id, $customer->name,
+       $vendor->notify(new OrderCreateNotification($event->order_id, $customer->name,
             'New Order',
             "You have received new Order #" . $event->order_id . ' from ' . $customer->name,
             route('restaurant.order.view', $event->order_id),
             $vendor->fcm_token
         ));
+    
 
         //automatice send for prepration
         //order_status ===>'confirmed' to 'preparing'

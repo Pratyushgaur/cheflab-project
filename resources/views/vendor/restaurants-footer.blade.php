@@ -569,14 +569,23 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         // Your web app's Firebase configuration
         var firebaseConfig = {
 
-            apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
-            authDomain: "chef-leb.firebaseapp.com",
+            // apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
+            // authDomain: "chef-leb.firebaseapp.com",
+            // databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
+            // projectId: "chef-leb",
+            // storageBucket: "chef-leb.appspot.com",
+            // messagingSenderId: "307095509147",
+            // appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
+            // measurementId: "G-8Y9V6YWCWD"
+            // //
+            apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
+            authDomain: "cheflab-user.firebaseapp.com",
             databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
-            projectId: "chef-leb",
-            storageBucket: "chef-leb.appspot.com",
-            messagingSenderId: "307095509147",
-            appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
-            measurementId: "G-8Y9V6YWCWD"
+            projectId: "cheflab-user",
+            storageBucket: "cheflab-user.appspot.com",
+            messagingSenderId: "180746879110",
+            appId: "1:180746879110:web:8440a4aab32734182e5107",
+            measurementId: "G-CGNPVL7FKZ"
         };
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);

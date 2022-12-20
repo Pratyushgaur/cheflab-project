@@ -2662,12 +2662,26 @@ class AppController extends Controller
             if (!isset($order->id))
                 return response()->json(['status' => false, 'error' => "order not found.You can only cancel orders placed by you."], 401);
 
-            $order->order_status = 'cancelled_by_customer';
-            $order->save();
-            if($request->isCancelledWithin30Second){
+            
+
+            
+            if($request->isCancelledWithin30Second){ // if order cancel by user in 30 second
+                $order->order_status = 'cancelled_by_customer_before_confirmed';
+                $order->save();
                 $user                = User::find($request->user()->id);
                 $user->wallet_amount = $user->$wallet_amount+$order->net_amount;
                 $user->save();
+            }else{
+                if($order->order_status == 'confirmed'){ // if order cancel by user after  30 second and order arrived to vendor
+                    $order->order_status = 'cancelled_by_customer_after_confirmed';
+                }
+                if($order->order_status == 'preparing' || $order->order_status == 'ready_to_dispatch'){ // if order cancel by user after accpet by vendor or preparing the food or prepared food
+                    $order->order_status = 'cancelled_by_customer_during_prepare';
+                }
+                if($order->order_status == 'dispatched'){ //if order  cancel by user after dispatch 
+                    $order->order_status = 'cancelled_by_customer_after_disptch';
+                    
+                }
             }
 
 
@@ -3054,6 +3068,7 @@ class AppController extends Controller
     }
     public function updateTokenUser(Request $request)
     {
+       //return  sendNotification('test','body','ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY');
         try {
 
             $validateUser = Validator::make($request->all(), [
