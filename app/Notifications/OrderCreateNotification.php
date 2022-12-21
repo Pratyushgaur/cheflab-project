@@ -76,12 +76,9 @@ class OrderCreateNotification extends Notification
    {
 
        if ($this->fcmTokens != ''){
-//            dd($this->fcmTokens);
-           return (new FirebaseMessage)
+           $r =  (new FirebaseMessage)
                ->withTitle($this->title)
                ->withBody($this->msg)
-//            ->withImage('https://firebase.google.com/images/social.png')
-//            ->withIcon('https://seeklogo.com/images/F/firebase-logo-402F407EE0-seeklogo.com.png')
                ->withSound('default')
                ->withClickAction($this->link)
                ->withAdditionalData([
@@ -89,6 +86,7 @@ class OrderCreateNotification extends Notification
                    'link' => $this->link
                ])
                ->withPriority('high')->asMessage($this->fcmTokens);
+            return $r;
 
        }
 

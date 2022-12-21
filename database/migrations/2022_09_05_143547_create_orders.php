@@ -26,7 +26,7 @@ class CreateOrders extends Migration
             $table->float('long',8,6);
             $table->string('pincode')->nullable()->default(null);
             $table->string('city')->nullable()->default(null);
-            $table->enum('order_status',['pending','confirmed','preparing','ready_to_dispatch','dispatched','cancelled_by_customer_before_confirmed','cancelled_by_customer_after_confirmed','cancelled_by_vendor','completed'])->default('pending');
+            $table->enum('order_status',['pending','confirmed','preparing','ready_to_dispatch','dispatched','cancelled_by_customer_before_confirmed','cancelled_by_customer_after_confirmed','cancelled_by_customer_during_prepare','cancelled_by_customer_after_disptch','cancelled_by_vendor','completed'])->default('pending');
             $table->float('total_amount', 8, 2)->comment('the whole sum or amount');
             $table->float('gross_amount', 8, 2)->comment('after tax deduction ');
             $table->float('net_amount', 8, 2)->comment('after discount and other deduction, this amount will payed  by customer');

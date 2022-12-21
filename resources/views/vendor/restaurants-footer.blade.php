@@ -1,55 +1,55 @@
 <audio class="alert-audio" style="display:none" controls >
-    <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
-</audio>
-<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}"></audio>
+    <source src="{{asset('alert.mp3')}}"  type="audio/mpeg">
+     </audio>
+     <audio id="beep__hover" src="{{asset('alert.mp3')}}"></audio>
 
-<!-- MODALS -->
-<!-- Quick bar -->
-<aside id="ms-quick-bar" class="ms-quick-bar fixed ms-d-block-lg">
+    <!-- MODALS -->
+    <!-- Quick bar -->
+    <aside id="ms-quick-bar" class="ms-quick-bar fixed ms-d-block-lg">
 
-    <ul class="nav nav-tabs ms-quick-bar-list" role="tablist">
+        <ul class="nav nav-tabs ms-quick-bar-list" role="tablist">
 
-        {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
-        {{--            title="Launch To-do-list" data-title="To-do-list">--}}
-        {{--            <a href="#qa-toDo" aria-controls="qa-toDo" role="tab" data-toggle="tab"> <i class="flaticon-list"></i>--}}
+    {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+    {{--            title="Launch To-do-list" data-title="To-do-list">--}}
+    {{--            <a href="#qa-toDo" aria-controls="qa-toDo" role="tab" data-toggle="tab"> <i class="flaticon-list"></i>--}}
 
-        {{--            </a>--}}
-        {{--        </li>--}}
-        {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
-        {{--            title="Launch Reminders" data-title="Reminders">--}}
-        {{--            <a href="#qa-reminder" aria-controls="qa-reminder" role="tab" data-toggle="tab">--}}
-        {{--                <i class="flaticon-bell"></i>--}}
+    {{--            </a>--}}
+    {{--        </li>--}}
+    {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+    {{--            title="Launch Reminders" data-title="Reminders">--}}
+    {{--            <a href="#qa-reminder" aria-controls="qa-reminder" role="tab" data-toggle="tab">--}}
+    {{--                <i class="flaticon-bell"></i>--}}
 
-        {{--            </a>--}}
-        {{--        </li>--}}
-        {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
-        {{--            title="Launch Notes" data-title="Notes">--}}
-        {{--            <a href="#qa-notes" aria-controls="qa-notes" role="tab" data-toggle="tab"> <i class="flaticon-pencil"></i>--}}
+    {{--            </a>--}}
+    {{--        </li>--}}
+    {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+    {{--            title="Launch Notes" data-title="Notes">--}}
+    {{--            <a href="#qa-notes" aria-controls="qa-notes" role="tab" data-toggle="tab"> <i class="flaticon-pencil"></i>--}}
 
-        {{--            </a>--}}
-        {{--        </li>--}}
-        {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
-        {{--            title="Invite Members" data-title="Invite Members">--}}
-        {{--            <a href="#qa-invite" aria-controls="qa-invite" role="tab" data-toggle="tab">--}}
-        {{--                <i class="flaticon-share-1"></i>--}}
+    {{--            </a>--}}
+    {{--        </li>--}}
+    {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+    {{--            title="Invite Members" data-title="Invite Members">--}}
+    {{--            <a href="#qa-invite" aria-controls="qa-invite" role="tab" data-toggle="tab">--}}
+    {{--                <i class="flaticon-share-1"></i>--}}
 
-        {{--            </a>--}}
-        {{--        </li>--}}
-        {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
-        {{--            title="Settings" data-title="Settings">--}}
-        {{--            <a href="#qa-settings" aria-controls="qa-settings" role="tab" data-toggle="tab">--}}
-        {{--                <i class="flaticon-gear"></i>--}}
+    {{--            </a>--}}
+    {{--        </li>--}}
+    {{--        <li class="ms-quick-bar-item ms-has-qa" role="presentation" data-toggle="tooltip" data-placement="left"--}}
+    {{--            title="Settings" data-title="Settings">--}}
+    {{--            <a href="#qa-settings" aria-controls="qa-settings" role="tab" data-toggle="tab">--}}
+    {{--                <i class="flaticon-gear"></i>--}}
 
-        {{--            </a>--}}
-        {{--        </li>--}}
-    </ul>
-    <div class="ms-configure-qa" data-toggle="tooltip" data-placement="left" title="Configure Quick Access">
+    {{--            </a>--}}
+    {{--        </li>--}}
+        </ul>
+        <div class="ms-configure-qa" data-toggle="tooltip" data-placement="left" title="Configure Quick Access">
 
-        {{--        <a href="#"> <i class="flaticon-hammer"></i>--}}
+    {{--        <a href="#"> <i class="flaticon-hammer"></i>--}}
 
-        {{--        </a>--}}
+    {{--        </a>--}}
 
-    </div>
+        </div>
 
     {{--    <!-- Quick bar Content -->--}}
     {{--    <div class="ms-quick-bar-content">--}}
@@ -360,267 +360,301 @@
     {{--        </div>--}}
 
     {{--    </div>--}}
-</aside>
-<!-- Reminder Modal -->
-<div class="modal fade" id="reminder-modal" tabindex="-1" role="dialog" aria-labelledby="reminder-modal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-secondary">
-                <h5 class="modal-title has-icon text-white"> New Reminder</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form>
-                <div class="modal-body">
-                    <div class="ms-form-group">
-                        <label>Remind me about</label> <textarea class="form-control" name="reminder"></textarea>
-                    </div>
-                    <div class="ms-form-group"><span class="ms-option-name fs-14">Repeat Daily</span>
-                        <label class="ms-switch float-right"> <input type="checkbox">
-                            <span class="ms-switch-slider round"></span> </label>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="ms-form-group">
-                                <input type="text" class="form-control datepicker" name="reminder-date" value=""/>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="ms-form-group">
-                                <select class="form-control" name="reminder-time">
-                                    <option value="">12:00 pm</option>
-                                    <option value="">1:00 pm</option>
-                                    <option value="">2:00 pm</option>
-                                    <option value="">3:00 pm</option>
-                                    <option value="">4:00 pm</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-secondary shadow-none" data-dismiss="modal">Add Reminder
+    </aside>
+    <!-- Reminder Modal -->
+    <div class="modal fade" id="reminder-modal" tabindex="-1" role="dialog" aria-labelledby="reminder-modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary">
+                    <h5 class="modal-title has-icon text-white"> New Reminder</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- Notes Modal -->
-<div class="modal fade" id="notes-modal" tabindex="-1" role="dialog" aria-labelledby="notes-modal">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header bg-secondary">
-                <h5 class="modal-title has-icon text-white" id="NoteModal">New Note</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
+                <form>
+                    <div class="modal-body">
+                        <div class="ms-form-group">
+                            <label>Remind me about</label> <textarea class="form-control" name="reminder"></textarea>
+                        </div>
+                        <div class="ms-form-group"><span class="ms-option-name fs-14">Repeat Daily</span>
+                            <label class="ms-switch float-right"> <input type="checkbox">
+                                <span class="ms-switch-slider round"></span> </label>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="ms-form-group">
+                                    <input type="text" class="form-control datepicker" name="reminder-date" value=""/>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="ms-form-group">
+                                    <select class="form-control" name="reminder-time">
+                                        <option value="">12:00 pm</option>
+                                        <option value="">1:00 pm</option>
+                                        <option value="">2:00 pm</option>
+                                        <option value="">3:00 pm</option>
+                                        <option value="">4:00 pm</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary shadow-none" data-dismiss="modal">Add Reminder
+                        </button>
+                    </div>
+                </form>
             </div>
-            <form>
-                <div class="modal-body">
-                    <div class="ms-form-group">
-                        <label>Note Title</label> <input type="text" class="form-control" name="note-title" value="">
-                    </div>
-                    <div class="ms-form-group">
-                        <label>Note Description</label>
-                        <textarea class="form-control" name="note-description"></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-secondary shadow-none" data-dismiss="modal">Add Note</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
+    <!-- Notes Modal -->
+    <div class="modal fade" id="notes-modal" tabindex="-1" role="dialog" aria-labelledby="notes-modal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary">
+                    <h5 class="modal-title has-icon text-white" id="NoteModal">New Note</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form>
+                    <div class="modal-body">
+                        <div class="ms-form-group">
+                            <label>Note Title</label> <input type="text" class="form-control" name="note-title" value="">
+                        </div>
+                        <div class="ms-form-group">
+                            <label>Note Description</label>
+                            <textarea class="form-control" name="note-description"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary shadow-none" data-dismiss="modal">Add Note</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-<!-- SCRIPTS -->
-<!-- SCRIPTS -->
-<!-- Global Required Scripts Start -->
-<script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script>
-<script src="{{asset('frontend')}}/assets/js/popper.min.js"></script>
-<script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
-<script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">
-</script>
-<script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js">
-</script>
-<!-- Global Required Scripts End -->
-<!-- Page Specific Scripts Start -->
+    <!-- SCRIPTS -->
+    <!-- SCRIPTS -->
+    <!-- Global Required Scripts Start -->
+    <script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/popper.min.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">
+    </script>
+    <script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js">
+    </script>
+    <!-- Global Required Scripts End -->
+    <!-- Page Specific Scripts Start -->
 
-<script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js">
-</script>
-<script src="{{asset('frontend')}}/assets/js/widgets.js"></script>
-<script src="{{asset('frontend')}}/assets/js/clients.js"></script>
-<script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script>
-<script src="{{asset('frontend')}}/assets/js/d3.v3.min.js">
-</script>
-<script src="{{asset('frontend')}}/assets/js/topojson.v1.min.js">
-</script>
-<script src="{{asset('frontend')}}/assets/js/datatables.min.js">
-</script>
+    <script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js">
+    </script>
+    <script src="{{asset('frontend')}}/assets/js/widgets.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/clients.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/d3.v3.min.js">
+    </script>
+    <script src="{{asset('frontend')}}/assets/js/topojson.v1.min.js">
+    </script>
+    <script src="{{asset('frontend')}}/assets/js/datatables.min.js">
+    </script>
 
-<script src="{{asset('frontend')}}/assets/js/sweetalert2.min.js">
-</script>
-<script src="{{asset('frontend')}}/assets/js/sweet-alerts.js">
-</script>
-<!-- <script src="{{asset('frontend')}}/assets/js/data-tables.js">
-  </script> -->
-<!-- Page Specific Scripts Finish -->
-<!-- Costic core JavaScript -->
-<script src="{{asset('frontend')}}/assets/js/framework.js"></script>
-<!-- Settings -->
-<script src="{{asset('frontend')}}/assets/js/settings.js"></script>
-<script src="{{asset('frontend')}}/assets/js/jquery.prettyPhoto.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<style>
-    #toast-container > div {
-        opacity: 3 !important;
-    }
-</style>
-
-
-<link href="{{ asset('frontend') }}/assets/css/sweetalert2.min.css" rel="stylesheet">
-<!-- Page Specific Scripts Start -->
-<script src="{{ asset('frontend') }}/assets/js/promise.min.js">
-</script>
-<script src="{{ asset('frontend') }}/assets/js/sweetalert2.min.js"></script>
-
-<!-- Page Specific Scripts Start -->
-<script src="{{ asset('frontend') }}/assets/js/toastr.min.js"></script>
-
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
-
-{{--
-Firebase msg example
-
-https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-laravel-9-3095058c2155#:~:text=Push%20Notification%20with%20Laravel%20firebase%20is%20very%20important,are%20using%20or%20the%20browser%20they%20are%20using.--}}
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-{{--<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>--}}
-<!-- TODO: Add SDKs for Firebase products that you want to use
-    https://firebase.google.com/docs/web/setup#available-libraries -->
-<script>
-</script>
-@stack('scripts')
-@yield('page-js');
-
-@stack('model')
-
-<script>
-
-
-    $(document).ready(function () {
-        const playSound = (url) => {
-            const audio = new Audio(url);
-            audio.play();
+    <script src="{{asset('frontend')}}/assets/js/sweetalert2.min.js">
+    </script>
+    <script src="{{asset('frontend')}}/assets/js/sweet-alerts.js">
+    </script>
+    <!-- <script src="{{asset('frontend')}}/assets/js/data-tables.js">
+      </script> -->
+    <!-- Page Specific Scripts Finish -->
+    <!-- Costic core JavaScript -->
+    <script src="{{asset('frontend')}}/assets/js/framework.js"></script>
+    <!-- Settings -->
+    <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
+    <script src="{{asset('frontend')}}/assets/js/jquery.prettyPhoto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <style>
+        #toast-container > div {
+            opacity: 3 !important;
         }
-
-        {{--var r=playSound('{{url("/fcm_notification_sound.mp3")}}');--}}
-        {{--setTimeout(() => {--}}
-        {{--        playSound('{{url("/notification-sound.mp3")}}');--}}
-        {{--    }, 1000);--}}
+    </style>
 
 
-        toastr.options =
-            {
-                "closeButton": true,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": true,
-                "positionClass": "toast-top-left",
-                "preventDuplicates": false,
-                // "onclick": null,
-                "showDuration": "3000",
-                "hideDuration": "10000",
-                "timeOut": 0,
-                "extendedTimeOut": 0,
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-        if ('serviceWorker' in navigator) {
-            window.addEventListener("load", function () {
-                // navigator.serviceWorker.register("firebase-messaging-sw.js");
-                {{--alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
-                {{--                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js')}}");--}}
-                navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js'}}");
-            });
+    <link href="{{ asset('frontend') }}/assets/css/sweetalert2.min.css" rel="stylesheet">
+    <!-- Page Specific Scripts Start -->
+    <script src="{{ asset('frontend') }}/assets/js/promise.min.js">
+    </script>
+    <script src="{{ asset('frontend') }}/assets/js/sweetalert2.min.js"></script>
 
-            window.addEventListener('flutter-first-frame', function () {
-                navigator.serviceWorker.register('flutter_service_worker.js');
-                {{--                navigator.serviceWorker.register('{{URL::to("/")}}flutter_service_worker.js');--}}
-            });
-        }
+    <!-- Page Specific Scripts Start -->
+    <script src="{{ asset('frontend') }}/assets/js/toastr.min.js"></script>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+
+    {{--
+    Firebase msg example
+
+    https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-laravel-9-3095058c2155#:~:text=Push%20Notification%20with%20Laravel%20firebase%20is%20very%20important,are%20using%20or%20the%20browser%20they%20are%20using.--}}
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    {{--<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>--}}
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script>
+    </script>
+    @stack('scripts')
+    @yield('page-js');
+
+    @stack('model')
+
+    <script>
 
 
-        // Your web app's Firebase configuration
-        var firebaseConfig = {
+        $(document).ready(function () {
 
-            // apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
-            // authDomain: "chef-leb.firebaseapp.com",
-            // databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
-            // projectId: "chef-leb",
-            // storageBucket: "chef-leb.appspot.com",
-            // messagingSenderId: "307095509147",
-            // appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
-            // measurementId: "G-8Y9V6YWCWD"
-            // //
-            apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
-            authDomain: "cheflab-user.firebaseapp.com",
-            databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
-            projectId: "cheflab-user",
-            storageBucket: "cheflab-user.appspot.com",
-            messagingSenderId: "180746879110",
-            appId: "1:180746879110:web:8440a4aab32734182e5107",
-            measurementId: "G-CGNPVL7FKZ"
-        };
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-
-        const messaging = firebase.messaging();
-
-        function initFirebaseMessagingRegistration() {
-            messaging.requestPermission().then(function () {
-                return messaging.getToken()
-            }).then(function (token) {
-
-                axios.post("{{ route('fcmToken_vendor') }}", {
-                    _method: "PATCH",
-                    token
-                }).then(({data}) => {
-                    console.log(data);
-                }).catch(({response: {data}}) => {
-                    console.error(data)
-                })
-
-            }).catch(function (err) {
-
-                console.log(`Token Error :: ${err}`);
-            });
-        }
-
-        initFirebaseMessagingRegistration();
-
-        messaging.onMessage((payload) => {
-            new Notification(payload.title, {body: payload.data.body});
-            if (payload.data.link === void 0) {
-                toastr.success(payload.data.title, payload.data.body);
-
-            } else {
-                toastr.options.onclick = function () {
-                    var win = window.open(payload.data.link, '_blank');
-                    console.log('clicked');
+            toastr.options =
+                {
+                    "closeButton": false,
+                    "debug": false,
+                    "newestOnTop": false,
+                    "progressBar": true,
+                    "positionClass": "toast-top-left",
+                    "preventDuplicates": false,
+                    // "onclick": null,
+                    "showDuration": "3000",
+                    "hideDuration": "10000",
+                    "timeOut": 0,
+                    "extendedTimeOut": 0,
+                    "showEasing": "swing",
+                    "hideEasing": "linear",
+                    "showMethod": "fadeIn",
+                    "hideMethod": "fadeOut"
                 }
-                toastr.success(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.data.title,);
-            }
-            $("#beep__hover").get(0).play();
-        });
-    });
-</script>
+            if ('serviceWorker' in navigator) {
+                window.addEventListener("load", function () {
+                    // navigator.serviceWorker.register("firebase-messaging-sw.js");
+                    {{--alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
+    {{--                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js')}}");--}}
+                    navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js'}}");
+                });
 
-</body>
-</html>
+                window.addEventListener('flutter-first-frame', function () {
+                    navigator.serviceWorker.register('flutter_service_worker.js');
+    {{--                navigator.serviceWorker.register('{{URL::to("/")}}flutter_service_worker.js');--}}
+                });
+            }
+
+            // // Import the functions you need from the SDKs you need
+            // import { initializeApp } from "firebase/app";
+            // import { getAnalytics } from "firebase/analytics";
+            // // TODO: Add SDKs for Firebase products that you want to use
+            // // https://firebase.google.com/docs/web/setup#available-libraries
+            //
+            // // Your web app's Firebase configuration
+            // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            // const firebaseConfig = {
+            //   apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
+            //   authDomain: "chef-leb.firebaseapp.com",
+            //   databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
+            //   projectId: "chef-leb",
+            //   storageBucket: "chef-leb.appspot.com",
+            //   messagingSenderId: "307095509147",
+            //   appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
+            //   measurementId: "G-8Y9V6YWCWD"
+            // };
+            //
+            // // Initialize Firebase
+            // const app = initializeApp(firebaseConfig);
+            // const analytics = getAnalytics(app);
+
+
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+
+                // apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
+                // authDomain: "chef-leb.firebaseapp.com",
+                // databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
+                // projectId: "chef-leb",
+                // storageBucket: "chef-leb.appspot.com",
+                // messagingSenderId: "307095509147",
+                // appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
+                // measurementId: "G-8Y9V6YWCWD"
+                // //
+                apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
+                authDomain: "cheflab-user.firebaseapp.com",
+                databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
+                projectId: "cheflab-user",
+                storageBucket: "cheflab-user.appspot.com",
+                messagingSenderId: "180746879110",
+                appId: "1:180746879110:web:8440a4aab32734182e5107",
+                measurementId: "G-CGNPVL7FKZ"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+
+            const messaging = firebase.messaging();
+
+            function initFirebaseMessagingRegistration() {
+                messaging.requestPermission().then(function () {
+                    return messaging.getToken()
+                }).then(function (token) {
+
+                    axios.post("{{ route('fcmToken_vendor') }}", {
+                        _method: "PATCH",
+                        token
+                    }).then(({data}) => {
+                        console.log(data);
+                    }).catch(({response: {data}}) => {
+                        console.error(data)
+                    })
+
+                }).catch(function (err) {
+
+                    console.log(`Token Error :: ${err}`);
+                });
+            }
+
+            initFirebaseMessagingRegistration();
+
+            messaging.onMessage((payload) => {
+                new Notification(payload.title, {body: payload.data.body});
+                if (payload.data.link === void 0) {
+                    // console.log("in if "+payload.link);
+                    // Swal.fire({
+                    //     type: payload.data.msg_type,
+                    //     title: payload.data.title,
+                    //     text: payload.data.body,
+                    //     showConfirmButton: true
+                    // });
+                    toastr.info(payload.data.title, payload.data.body);
+
+                    //$('.alert-audio')[0].play();
+                } else {
+                    // console.log("in else "+payload.link);
+                    // Swal.fire({
+                    //     type: payload.data.msg_type,
+                    //     title: payload.data.title,
+                    //     text: payload.data.body,
+                    //     showConfirmButton: true
+                    // }).then(function () {
+                    //     var win = window.open(payload.data.link, '_blank');
+                    //     win.focus();
+                    //     // window.open(payload.data.link, "_blank");
+                    //     // window.location.href = payload.data.link;
+                    // });
+                    toastr.options.onclick = function () {
+                        var win = window.open(payload.data.link, '_blank');
+                        console.log('clicked');
+                    }
+
+                    toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.data.title,);
+                    $("#beep__hover").get(0).play();
+                }
+            });
+        });
+    </script>
+
+    </body>
+    </html>

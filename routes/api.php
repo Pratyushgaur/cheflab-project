@@ -76,6 +76,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
     Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
     Route::post('check-vendor-available', [App\Http\Controllers\api\AppController::class, 'checkVendorAvailable']);
+    Route::post('re-order', [App\Http\Controllers\api\AppController::class, 'reOrder']);
 
     //profile
     Route::post('get-user-info', [App\Http\Controllers\api\AppController::class, 'getUserInfo']);
@@ -123,7 +124,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-filter-restourant', [App\Http\Controllers\api\AppController::class, 'filterByRestaurant']);
     Route::post('get-filter-chef', [App\Http\Controllers\api\AppController::class, 'filterByChef']);
     //firbase
-    Route::patch('/user-fcm-token', [\App\Http\Controllers\API\FirebaseApiController::class, 'updateTokenUser'])->name('fcmToken_user');
+    Route::post('user-fcm-token', [App\Http\Controllers\api\AppController::class, 'updateTokenUser'])->name('fcmToken_user');
     Route::get('/user-send-notification',[\App\Http\Controllers\API\FirebaseApiController::class,'notification'])->name('notification_user');
     Route::post('save-contact-us', [\App\Http\Controllers\api\AppController::class, 'save_contact_us']);
     Route::post('get-all-liked-products', [\App\Http\Controllers\api\AppController::class, 'getAllLikeProducts']);

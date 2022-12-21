@@ -1652,14 +1652,24 @@ class AppController extends Controller
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
+                    $checkcustomizable = Product_master::where('products.id','=',$p['product_id'])->join('variants','products.id','=','variants.product_id')->select('customizable','variants.*')->orderBy('variants.id','ASC')->first();
                     $order_products = new OrderProduct($p);
-                    $Order->products()->save($order_products);
-                    if (isset($p['variants']))
-                        foreach ($p['variants'] as $k => $v) {
+                    $orderProductId =  $Order->products()->save($order_products)->id;
+                    if (!empty($checkcustomizable)) {
+                        if($checkcustomizable->customizable == 'false'){
+                            $v = array('variant_id'=>$checkcustomizable->id,'order_product_id'=>$orderProductId,'variant_name'=>$checkcustomizable->variant_name,'variant_price'=>$checkcustomizable->variant_price,'variant_qty'=>$p['product_qty']);
                             $orderProductVariant = new OrderProductVariant($v);
                             $order_products->order_product_variants()->save($orderProductVariant);
+                        }else{
+                            if (isset($p['variants']))
+                            foreach ($p['variants'] as $k => $v) {
+                                $orderProductVariant = new OrderProductVariant($v);
+                                $order_products->order_product_variants()->save($orderProductVariant);
+                            }
                         }
-
+                    } 
+                    
+                    
                     if (isset($p['addons']))
                         foreach ($p['addons'] as $k => $a) {
                             $OrderProductAddon = new OrderProductAddon($a);
@@ -2662,12 +2672,26 @@ class AppController extends Controller
             if (!isset($order->id))
                 return response()->json(['status' => false, 'error' => "order not found.You can only cancel orders placed by you."], 401);
 
-            $order->order_status = 'cancelled_by_customer';
-            $order->save();
-            if($request->isCancelledWithin30Second){
+            
+
+            
+            if($request->isCancelledWithin30Second){ // if order cancel by user in 30 second
+                $order->order_status = 'cancelled_by_customer_before_confirmed';
+                $order->save();
                 $user                = User::find($request->user()->id);
                 $user->wallet_amount = $user->$wallet_amount+$order->net_amount;
                 $user->save();
+            }else{
+                if($order->order_status == 'confirmed'){ // if order cancel by user after  30 second and order arrived to vendor
+                    $order->order_status = 'cancelled_by_customer_after_confirmed';
+                }
+                if($order->order_status == 'preparing' || $order->order_status == 'ready_to_dispatch'){ // if order cancel by user after accpet by vendor or preparing the food or prepared food
+                    $order->order_status = 'cancelled_by_customer_during_prepare';
+                }
+                if($order->order_status == 'dispatched'){ //if order  cancel by user after dispatch 
+                    $order->order_status = 'cancelled_by_customer_after_disptch';
+                    
+                }
             }
 
 
@@ -3049,6 +3073,123 @@ class AppController extends Controller
                 'status'     => false,
                 'error'      => $th->getMessage(),
                 'errortrace' => $th->getTrace()
+            ], 500);
+        }
+    }
+    public function updateTokenUser(Request $request)
+    {
+       //return  sendNotification('test','body','ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY');
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'fcm_token'    => 'required'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            User::where('id','=',$request->user()->id)->update(['fcm_token'    => $request->fcm_token]);
+            
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => true
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function reOrder(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'order_id'    => 'required|exists:orders,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            \DB::beginTransaction();
+            $cart            = Cart::where('user_id','=',$request->user()->id);
+            if($cart->exists()){
+                $cartProduct     =  CartProduct::where('cart_id','=',$cart->first()->id);
+                $cartProductIds  = $cartProduct->get()->pluck('id');
+                CartProductVariant::whereIn('cart_product_id',$cartProductIds)->delete();
+                CartProductAddon::whereIn('cart_product_id',$cartProductIds)->delete();
+                $cartProduct->delete();
+                $cart->delete();
+            }
+            
+
+            $vendor = Order::where('id','=',$request->order_id)->select('vendor_id')->first();
+            $products = OrderProduct::where('order_id','=',$request->order_id)->join('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('product_id','product_qty','variant_id','order_products.id as order_product_id')->get();
+            if(!empty($products->toArray())){
+                $cart = new Cart;
+                $cart->vendor_id = $vendor->vendor_id;
+                $cart->user_id = $request->user()->id;
+                $cart->save();
+                $cartId = $cart->id;
+                foreach ($products as $key => $value) {
+                    $productArray = Product_master::where(['products.id'=>$value->product_id,'variants.id'=>$value->variant_id])->join('variants','products.id','=','variants.product_id')->where(['products.status'=>'1','product_approve'=>'1'])->select('variant_price');
+                    if($productArray->exists()){
+                        $cartProduct = new \App\Models\CartProduct;
+                        $cartProduct->cart_id = $cartId;
+                        $cartProduct->product_id = $value->product_id;
+                        $cartProduct->product_qty = $value->product_qty;
+                        $cartProduct->save();
+                        $cartProductId= $cartProduct->id;
+                        $cartProductVariant = new \App\Models\CartProductVariant;
+                        $cartProductVariant->cart_product_id = $cartProductId;
+                        $cartProductVariant->variant_id = $value->variant_id;
+                        $cartProductVariant->variant_qty = $value->product_qty;
+                        $cartProductVariant->save();
+                        // check addons
+                        $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_id)->get();
+                        if(!empty($addons->toArray())){
+                            foreach ($addons as $addonkey => $addonvalue) {
+                                $addon = Addons::where('id','=',$addonvalue->addon_id)->first();
+                                if(!empty($addon)){
+                                    $cartProductAddon = new \App\Models\CartProductAddon;
+                                    $cartProductAddon->cart_product_id = $cartProductId;
+                                    $cartProductAddon->addon_id = $addonvalue->addon_id;
+                                    $cartProductAddon->addon_qty = $addonvalue->addon_qty;
+                                    $cartProductAddon->save();
+                                }
+                                
+                            }
+                        }
+                        
+                    }
+                    
+                }   
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'  => 'Products Not Found'
+                ], 500);
+            }
+
+            \DB::commit();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => true
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
             ], 500);
         }
     }
