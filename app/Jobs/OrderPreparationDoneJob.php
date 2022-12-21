@@ -57,18 +57,13 @@ class OrderPreparationDoneJob implements ShouldQueue
                 $title = 'New Delivery Request';
                 $body = "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address;
                 sendNotification($title,$body,$token->token,$riderAssign);
-$d=DeliveryBoyTokens::find(1);
+                $d=DeliveryBoyTokens::find(1);
 
                 $d->notify(new RequestSendToDeliveryBoyNotification(
                      "New Delivery Request",
                      "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address,
                      $vendor->name,
                     $d->token,'',''));
-                $vendor->notify(new RequestSendToDeliveryBoyNotification(
-                    "New Delivery Request",
-                    "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address,
-                    $vendor->name,
-                    $vendor->fcm_token,'',''));
                 //     var_dump($d);
             }
 

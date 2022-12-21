@@ -16,6 +16,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('menus/update', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'update'])->name('restaurant.menu.update');
             Route::get('menus/duplicate_menu', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'check_duplicate_menu'])->name('restaurant.menu.check_duplicate');
             Route::get('menus/edit/duplicate_menu/{id}', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'check_edit_duplicate_menu'])->name('restaurant.menu.check_duplicate.edit');
+            Route::get('menu-delete', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'soft_delete'])->name('restaurant.menu.delete');
+
             //vendor product
             Route::get('product', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'index'])->name('restaurant.product.list');
             Route::get('product/create', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'create'])->name('restaurant.product.create');
@@ -41,10 +43,12 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('order/accept/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_accept'])->name('restaurant.order.accept')->where('id', '[0-9]+');
             Route::post('order/vendor_reject/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_vendor_reject'])->name('restaurant.order.vendor_reject')->where('id', '[0-9]+');
             Route::post('order/preparing/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_preparing'])->name('restaurant.order.preparing')->where('id', '[0-9]+');
+            Route::post('order/extend-preparation-time/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_need_more_time'])->name('restaurant.order.order_need_more_time')->where('id', '[0-9]+');
             Route::post('order/ready_to_dispatch/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_ready_to_dispatch'])->name('restaurant.order.ready_to_dispatch')->where('id', '[0-9]+');
             Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
             Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
             Route::post('order/preparation_time', [App\Http\Controllers\vendor\restaurant\OrderController::class,'get_preparation_time'])->name('restaurant.order.get_preparation_time')->where('id', '[0-9]+');
+            Route::post('order/set_preparation_time', [Apsoft_deletep\Http\Controllers\vendor\restaurant\OrderController::class,'get_set_preparation_time'])->name('restaurant.order.get_set_preparation_time')->where('id', '[0-9]+');
             Route::get('order/invoice/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'invoice'])->name('restaurant.order.invoice')->where('id', '[0-9]+');
 
             //coupon
@@ -120,6 +124,10 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
             Route::get('razorpay', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorpay'])->name('razorpay');
             Route::post('razorpaypayment', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'payment'])->name('payment');
+
+
+            Route::get('reviews/vendors', [App\Http\Controllers\vendor\restaurant\ReviewController::class,'index'])->name('restaurant.vendor.reviews');
+            Route::get('reviews/products', [App\Http\Controllers\vendor\restaurant\ReviewController::class,'product_index'])->name('restaurant.product.reviews');
 
 //            Route::get('product', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'index']);
 //            Route::get('paysuccess', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorPaySuccess']);

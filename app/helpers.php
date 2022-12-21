@@ -4,6 +4,25 @@ use App\Models\Orders;
 use App\Models\Product_master;
 use Carbon\Carbon;
 
+function time_diffrence_in_minutes($datetime1, $datetime2)
+{
+    $dateTimeObject1 = date_create($datetime1);
+    $dateTimeObject2 = date_create($datetime2);
+
+// Calculating the difference between DateTime Objects
+    $interval = date_diff($dateTimeObject1, $dateTimeObject2);
+
+// Printing the result in days format
+
+
+    $min = $interval->days * 24 * 60;
+    $min += $interval->h * 60;
+    $min += $interval->i;
+
+// Printing the Result in Minutes format.
+    return $min;
+}
+
 function front_end_short_date_time($datetime)
 {
     return date('d-M-y h:i a', strtotime($datetime));

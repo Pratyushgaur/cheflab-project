@@ -25,18 +25,18 @@ class MenuController extends Controller
         $this->validate($request, [
             'name' => 'required'
         ]);
-        
+
         $VendorMenus = new VendorMenus;
         $VendorMenus->menuName = $request->name;
         $VendorMenus->vendor_id = \Auth::guard('vendor')->user()->id;
         $VendorMenus->save();
         return redirect()->route('restaurant.menu.list')->with('success', 'Menu Created Successfully');
-        
+
     }
     public function getData(Request $request)
     {
         if ($request->ajax()) {
-            
+
             $data = VendorMenus::latest()
             ->leftJoin('products as c', 'vendor_menus.id', 'c.menu_id')
             ->select('vendor_menus.*',\DB::raw('count(*) as count'))
@@ -47,17 +47,18 @@ class MenuController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '<a href="'. route("restaurant.menu.edit",Crypt::encryptString($data->id)) .'"><i class="fa fa-edit"></i></a>
-                            <a  href="#"><i class="fa fa-trash"></i></a>
+                            <a href="'.route('restaurant.menu.delete',['id'=>Crypt::encryptString($data->id)]).'" onclick="return confirm(\'Are you sure you want to delete this item?\');"><i class="fa fa-trash"></i></a>
+
                     ';
                     return $btn;
                 })
-                
+
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
 
-                
+
                 ->rawColumns(['date','action-js'])
                 ->rawColumns(['action-js'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -67,14 +68,14 @@ class MenuController extends Controller
     }
     public function menu_edit($encrypt_id){
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
+            $id =  Crypt::decryptString($encrypt_id);
             $menu_data = VendorMenus::findOrFail($id);
            // dd($city_data);
             return view('vendor.restaurant.menu.editmenu',compact('menu_data'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         }
-        
+
     }
     public function check_duplicate_menu(Request $request ,$id=null)
     {
@@ -111,16 +112,17 @@ class MenuController extends Controller
             $data = VendorMenus::findOrFail($id);
             if ($data ) {
                 $data->delete();
-                return \Response::json(['error' => false,'success' => true , 'message' => 'City Deleted Successfully'], 200);
+                return redirect()->back()->with('success', 'Menu Deleted.');
+//                return \Response::json(['error' => false,'success' => true , 'message' => 'City Deleted Successfully'], 200);
             }else{
                 return \Response::json(['error' => true,'success' => false , 'error_message' => 'Finding data error'], 200);
-            } 
-            
-            
-            
+            }
+
+
+
         } catch (DecryptException $e) {
-            //return redirect('city')->with('error', 'something went wrong');
-            return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
+            return redirect()->back()->with('error', 'something went wrong');
+//            return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
     }
 }

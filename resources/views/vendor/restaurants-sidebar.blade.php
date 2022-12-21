@@ -109,6 +109,13 @@
       </li>
 
         <li class="menu-item ">
+            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Vendor Review</span></a>
+        </li>
+
+        <li class="menu-item ">
+            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Product Review</span></a>
+        </li>
+        <li class="menu-item ">
             <a href="{{route('restaurant.vendor.change_password')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Update Password</span></a>
 
         </li>
