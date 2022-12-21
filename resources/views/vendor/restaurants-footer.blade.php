@@ -1,7 +1,7 @@
 <audio class="alert-audio" style="display:none" controls >
-    <source src="{{asset('alert.mp3')}}"  type="audio/mpeg">
+    <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
      </audio>
-     <audio id="beep__hover" src="{{asset('alert.mp3')}}"></audio>
+     <audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}"></audio>
 
     <!-- MODALS -->
     <!-- Quick bar -->
@@ -545,31 +545,6 @@
     {{--                navigator.serviceWorker.register('{{URL::to("/")}}flutter_service_worker.js');--}}
                 });
             }
-
-            // // Import the functions you need from the SDKs you need
-            // import { initializeApp } from "firebase/app";
-            // import { getAnalytics } from "firebase/analytics";
-            // // TODO: Add SDKs for Firebase products that you want to use
-            // // https://firebase.google.com/docs/web/setup#available-libraries
-            //
-            // // Your web app's Firebase configuration
-            // // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-            // const firebaseConfig = {
-            //   apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
-            //   authDomain: "chef-leb.firebaseapp.com",
-            //   databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
-            //   projectId: "chef-leb",
-            //   storageBucket: "chef-leb.appspot.com",
-            //   messagingSenderId: "307095509147",
-            //   appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
-            //   measurementId: "G-8Y9V6YWCWD"
-            // };
-            //
-            // // Initialize Firebase
-            // const app = initializeApp(firebaseConfig);
-            // const analytics = getAnalytics(app);
-
-
             // Your web app's Firebase configuration
             var firebaseConfig = {
 
@@ -621,37 +596,18 @@
             messaging.onMessage((payload) => {
                 new Notification(payload.title, {body: payload.data.body});
                 if (payload.data.link === void 0) {
-                    // console.log("in if "+payload.link);
-                    // Swal.fire({
-                    //     type: payload.data.msg_type,
-                    //     title: payload.data.title,
-                    //     text: payload.data.body,
-                    //     showConfirmButton: true
-                    // });
                     toastr.info(payload.data.title, payload.data.body);
 
-                    //$('.alert-audio')[0].play();
                 } else {
-                    // console.log("in else "+payload.link);
-                    // Swal.fire({
-                    //     type: payload.data.msg_type,
-                    //     title: payload.data.title,
-                    //     text: payload.data.body,
-                    //     showConfirmButton: true
-                    // }).then(function () {
-                    //     var win = window.open(payload.data.link, '_blank');
-                    //     win.focus();
-                    //     // window.open(payload.data.link, "_blank");
-                    //     // window.location.href = payload.data.link;
-                    // });
                     toastr.options.onclick = function () {
                         var win = window.open(payload.data.link, '_blank');
                         console.log('clicked');
                     }
 
                     toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.data.title,);
-                    $("#beep__hover").get(0).play();
+
                 }
+                $("#beep__hover").get(0).play();
             });
         });
     </script>
