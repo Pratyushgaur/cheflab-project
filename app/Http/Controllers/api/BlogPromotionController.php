@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\AppPromotionBlogs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class BlogPromotionController extends Controller
 {
@@ -64,8 +65,22 @@ class BlogPromotionController extends Controller
                             ->where('app_promotion_blog_bookings.payment_status', 1)
                             ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
                         $resturant = $resturant->get();
-                        $data1     = $resturant;
 
+
+                        foreach ($resturant as $key => $value) {
+                            if($value->banner_image!='') {
+                                $banners = @json_decode(@$value->banner_image);
+                                if (is_array($banners))
+                                    $urlbanners = array_map(function ($banner) {
+                                        return URL::to('vendor-banner/') . '/' . $banner;
+                                    }, $banners);
+                                else
+                                    $urlbanners = [];
+                                $resturant[$key]->banner_image = $urlbanners;
+                            }
+                        }
+
+                        $data1     = $resturant;
                         $reponce[$counter]['blog']['vendors'] = $data1;
                         unset($data1);unset($resturant);
                     } else if ($blog->blog_type == '2') {

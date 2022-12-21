@@ -35,7 +35,7 @@ $breadcrumb[] = ["name"  => "Create",
                                 <div class="col-xl-6 col-md-6 mb-3">
                                     <label for="validationCustom10">Date</label>
                                     <div class="input-group">
-                                        <input type="date" name="date" class="form-control" id="datepicker"
+                                        <input type="text" name="date" class="form-control" id="datepicker"
                                                placeholder="Promotion Date From">
 
                                     </div>
@@ -73,21 +73,21 @@ $breadcrumb[] = ["name"  => "Create",
                                     </div>
                                 </div>
 
-                                <div class="col-md-3 mb-3">
-                                    <div>
-                                        <label for="">Images</label>
-                                    </div>
-                                    <div class="image-upload">
-                                        <label for="file-input">
-                                            <div class="upload-icon">
-                                                <img class="icon" src="{{asset('add-image.png')}}">
-                                            </div>
-                                        </label>
-                                        <input id="file-input" type="file" name="slot_image" required>
-                                    </div>
-                                </div>
-                                <span class="image_error text-danger"></span>
-                                <!--  -->
+{{--                                <div class="col-md-3 mb-3">--}}
+{{--                                    <div>--}}
+{{--                                        <label for="">Images</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="image-upload">--}}
+{{--                                        <label for="file-input">--}}
+{{--                                            <div class="upload-icon">--}}
+{{--                                                <img class="icon" src="{{asset('add-image.png')}}">--}}
+{{--                                            </div>--}}
+{{--                                        </label>--}}
+{{--                                        <input id="file-input" type="file" name="slot_image" required>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <span class="image_error text-danger"></span>--}}
+{{--                                <!--  -->--}}
 
                             </div>
                             <button class="btn btn-primary float-right" type="submit">Submit</button>
@@ -124,18 +124,18 @@ $breadcrumb[] = ["name"  => "Create",
                 },
                 position: {
                     required: true
-                },
-                slot_image: {
-                    required: true
                 }
+                // slot_image: {
+                //     required: true
+                // }
             },
             messages: {
                 date: {
                     required: "Date is required"
-                },
-                slot_image: {
-                    required: "Image is Required"
                 }
+                // slot_image: {
+                //     required: "Image is Required"
+                // }
             }
             // ,
             // errorPlacement: function (error, element) {
@@ -199,11 +199,9 @@ $breadcrumb[] = ["name"  => "Create",
     </script>
     <script>
         $(function () {
-
             $('#datepicker').on('change', get_positions);
             $('#app_promotion_blog_id').on('change', get_positions);
             $('#time_frame').change(get_positions);
-
         });
     </script>
 @endsection

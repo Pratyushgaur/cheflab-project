@@ -61,7 +61,7 @@ class FirebaseController extends Controller
 
             $order = \App\Models\Order::find(2);
             event(new OrderCreateEvent($order,25, 1, 1));
-//            dd("sdfdf");
+            dd("sdfdf");
 //            dd(\Auth::guard('vendor')->user()->fcm_token);
 //            $fcmTokens = User::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
 //            $fcmTokens[] = auth()->user()->fcm_token;
@@ -70,13 +70,13 @@ class FirebaseController extends Controller
             /* or */
 
 //            auth()->user()->notify(new SendPushNotification($title,$message,$fcmTokens));
-            $r=Auth::guard('vendor')->user()->notify(new SendPushNotification("Test title","Description",\Auth::guard('vendor')->user()->fcm_token));
+//            $r=Auth::guard('vendor')->user()->notify(new SendPushNotification("Test title","Description",\Auth::guard('vendor')->user()->fcm_token));
             /* or */
 //            dd($fcmTokens);
 //            Larafirebase::withTitle('Title')
 //                ->withBody('msg')
 //                ->sendMessage($fcmTokens);
-dd($r);
+//dd($r);
 //            return redirect()->back()->with('success', 'Notification Sent Successfully!!');
 
         } catch (\Exception $e) {

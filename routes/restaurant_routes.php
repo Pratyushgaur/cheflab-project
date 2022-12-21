@@ -48,8 +48,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('order/dispatched/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'order_dispatched'])->name('restaurant.order.dispatched')->where('id', '[0-9]+');
             Route::get('order/view/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'view'])->name('restaurant.order.view')->where('id', '[0-9]+');
             Route::post('order/preparation_time', [App\Http\Controllers\vendor\restaurant\OrderController::class,'get_preparation_time'])->name('restaurant.order.get_preparation_time')->where('id', '[0-9]+');
-            Route::post('order/set_preparation_time', [Apsoft_deletep\Http\Controllers\vendor\restaurant\OrderController::class,'get_set_preparation_time'])->name('restaurant.order.get_set_preparation_time')->where('id', '[0-9]+');
+            Route::post('order/set_preparation_time', [App\Http\Controllers\vendor\restaurant\OrderController::class,'get_set_preparation_time'])->name('restaurant.order.get_set_preparation_time')->where('id', '[0-9]+');
             Route::get('order/invoice/{id}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'invoice'])->name('restaurant.order.invoice')->where('id', '[0-9]+');
+            Route::get('order/refresh_list/{staus_filter}', [App\Http\Controllers\vendor\restaurant\OrderController::class,'refresh_list'])->name('restaurant.order.refresh_list');
 
             //coupon
             Route::get('coupon', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'index'])->name('restaurant.coupon.list');

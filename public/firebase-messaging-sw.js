@@ -2,10 +2,10 @@ importScripts('https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js');
 
 firebase.initializeApp({
-    apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
-    projectId: "chef-leb",
-    messagingSenderId: "307095509147",
-    appId: "1:307095509147:web:c382e5e84230f9a27f8e3e"
+    apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
+    projectId: "cheflab-user",
+    messagingSenderId: "180746879110",
+    appId: "1:180746879110:web:8440a4aab32734182e5107"
 });
 
 const messaging = firebase.messaging();

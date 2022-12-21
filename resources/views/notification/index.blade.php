@@ -18,7 +18,11 @@
                 <div class="col-xl-12 col-md-12">
                     <div class="ms-panel ms-panel-fh">
                         <div class="ms-panel-body p-0">
+                            @if(count($notifications)<=0)
+                                No Record found
+                                @endif
                             <ul class="ms-list ms-feed ms-twitter-feed ms-recent-support-tickets">
+
                                 @foreach($notifications as $k=>$notification)
                                     <?php
 //                                    dd($notification);
@@ -45,10 +49,10 @@
                                                     ...</p>
                                                 <div class="d-flex justify-content-between align-items-end">
                                                     <div class="ms-feed-controls"> <span>
-                            <i class="material-icons">chat</i> 16
+{{--                            <i class="material-icons">chat</i> 16--}}
                           </span>
                                                         <span>
-                            <i class="material-icons">attachment</i> 3
+{{--                            <i class="material-icons">attachment</i> 3--}}
                           </span>
                                                     </div>
                                                 </div>
@@ -63,9 +67,9 @@
                         </div>
                     </div>
                     <div class="right">
-                        {{--                        @if(empty($notifications))--}}
-                        {{--                            {{ @$notifications->links('vendor.pagination.bootstrap-4') }}--}}
-                        {{--                        @endif--}}
+{{--                                                @if(empty($notifications))--}}
+                                                    {{ @$notifications->links('vendor.pagination.bootstrap-4') }}
+{{--                                                @endif--}}
                     </div>
 
                 </div>

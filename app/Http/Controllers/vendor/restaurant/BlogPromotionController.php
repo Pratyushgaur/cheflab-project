@@ -10,6 +10,7 @@ use App\Models\Product_master;
 use App\Models\Superadmin;
 use App\Notifications\CreateSlotBookingToAdminNotification;
 use Illuminate\Http\Request;
+use Razorpay\Api\Api;
 
 class BlogPromotionController extends Controller
 {
@@ -26,7 +27,7 @@ class BlogPromotionController extends Controller
     public function product_promotion(Request $request)
     {
         $ids                      = AppPromotionBlogs::where('blog_type', 2)->where('vendor_type', 1)->pluck('id');
-        $appPromotionBlogBookings = AppPromotionBlogBooking::with(['app_promotion_setting', 'app_promotion_blog','product'])
+        $appPromotionBlogBookings = AppPromotionBlogBooking::with(['app_promotion_setting', 'app_promotion_blog', 'product'])
             ->whereIn('app_promotion_blog_id', $ids)
             ->where('vendor_id', \Auth::guard('vendor')->user()->id)->paginate(25);
 //        dd($appPromotionBlogBookings);
@@ -70,9 +71,9 @@ class BlogPromotionController extends Controller
 
         //get "to_date" : add munber of days
         if (isset($promotion_time_frame_add_days[$request->time_frame])) {
-            $date_frame=$promotion_time_frame_add_days[$request->time_frame];
-            $date_to = mysql_add_days($date_from, $promotion_time_frame_add_days[$request->time_frame]);
-            $date_to = mysql_date_time_marge($date_to, $AppPromotionBlogs->to);
+            $date_frame = $promotion_time_frame_add_days[$request->time_frame];
+            $date_to    = mysql_add_days($date_from, $promotion_time_frame_add_days[$request->time_frame]);
+            $date_to    = mysql_date_time_marge($date_to, $AppPromotionBlogs->to);
         } else
             return response()->json([
                 'status'  => false,
@@ -105,12 +106,12 @@ class BlogPromotionController extends Controller
 //\DB::enableQueryLog();
         //eliminate already booked slots
         $booked_slot_ids = AppPromotionBlogBooking::where('app_promotion_blog_id', $request->app_promotion_blog_id)
-            ->where(function ($q) use ($date_to, $date_from,$AppPromotionBlogs) {
+            ->where(function ($q) use ($date_to, $date_from, $AppPromotionBlogs) {
                 $q->where(function ($q) use ($date_to, $date_from) {
                     $q->where([['from_date', '>=', $date_from], ['from_date', '<=', $date_to]])
                         ->orWhere([['to_date', '>=', $date_from], ['to_date', '<=', $date_to]]);
                 })
-                    ->where('from_time',mysql_time($AppPromotionBlogs->from))->where('to_time',mysql_time($AppPromotionBlogs->to));
+                    ->where('from_time', mysql_time($AppPromotionBlogs->from))->where('to_time', mysql_time($AppPromotionBlogs->to));
 
             })
             ->where('is_active', '=', '1')
@@ -123,7 +124,7 @@ class BlogPromotionController extends Controller
         if (!empty($booked_slot_ids)) {
             $slotMaster->whereNotIn('id', $booked_slot_ids);
         }
-        $slot = $slotMaster->where('blog_promotion_date_frame',$date_frame)
+        $slot = $slotMaster->where('blog_promotion_date_frame', $date_frame)
 //            ->limit(config('custom_app_setting.blog_promotion_banner_number_of_slides'))
             ->get();
 //dd($slot);
@@ -144,7 +145,7 @@ class BlogPromotionController extends Controller
             'app_promotion_blog_id' => 'required',
             'booked_for_time'       => 'required',
             'position'              => 'required',
-            'slot_image'            => 'required'
+            //            'slot_image'            => 'required'
         ]);
 //        dd($request->all());
         $AppPromotionBlogs = AppPromotionBlogs::find($request->app_promotion_blog_id);
@@ -166,12 +167,12 @@ class BlogPromotionController extends Controller
             return redirect()->back()->with('error', 'duplicate entry.');
         }
 
-        $AppPromotionBlogSetting             = AppPromotionBlogSetting::find($request->position);
-        $slot                                = new AppPromotionBlogBooking;
-        $slot->from_date                     = $date_from;
-        $slot->to_date                       = $date_to;
-        $slot->from_time                     = mysql_time($AppPromotionBlogs->from);
-        $slot->to_time                       = mysql_time($AppPromotionBlogs->to);
+        $AppPromotionBlogSetting = AppPromotionBlogSetting::find($request->position);
+        $slot                    = new AppPromotionBlogBooking;
+        $slot->from_date         = $date_from;
+        $slot->to_date           = $date_to;
+        $slot->from_time         = mysql_time($AppPromotionBlogs->from);
+        $slot->to_time           = mysql_time($AppPromotionBlogs->to);
 
         $slot->app_promotion_blog_id         = $request->app_promotion_blog_id;
         $slot->price                         = $AppPromotionBlogSetting->blog_price;
@@ -192,9 +193,27 @@ class BlogPromotionController extends Controller
         $subscribers = Superadmin::get();
         foreach ($subscribers as $k => $admin)
             $admin->notify(new CreateSlotBookingToAdminNotification($msg, \Auth::guard('vendor')->user()->name, $link)); //With new post
-//dd($slot);
+        $appPromotionBlogBooking = $slot;
+
+//        $api = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
+//
+//        $r=$api->order->create(array(
+//            'receipt'  => '123',
+//            'amount'   => $appPromotionBlogBooking->app_promotion_setting->blog_price * 100,
+//            'currency' => 'INR',
+////            'notes'    => [
+////                'name'        => env('APP_NAME'),
+////                'description' => "Payment for Promotion :" . $appPromotionBlogBooking->app_promotion_blog->name . " for position " . $appPromotionBlogBooking->app_promotion_setting->blog_position,
+////                'prefile'     => ['name'    => $appPromotionBlogBooking->app_promotion_blog->name,
+////                                  "email"   => \Auth::guard('vendor')->user()->email,
+////                                  "contact" => \Auth::guard('vendor')->user()->mobile
+////                ]],
+//        ));
+//        dd($r);
 //        event(new CreateSlotBooki7ungEvent($slot));
-        return redirect()->route('restaurant.shop.promotion')->with('success', 'Successfully booked');
+
+        return view('vendor.restaurant.blog_promotion.pay', compact('appPromotionBlogBooking'));
+//        return redirect()->route('restaurant.shop.promotion')->with('success', 'Successfully booked');
     }
 
     public function save_product_promotion(Request $request)
@@ -227,13 +246,13 @@ class BlogPromotionController extends Controller
             return redirect()->back()->with('error', 'duplicate entry.');
         }
 
-        $AppPromotionBlogSetting             = AppPromotionBlogSetting::find($request->position);
-        $slot                                = new AppPromotionBlogBooking;
-        $slot->product_id                    = $request->product_id;
-        $slot->from_date                     = $date_from;
-        $slot->to_date                       = $date_to;
-        $slot->from_time                     = mysql_time($AppPromotionBlogs->from);
-        $slot->to_time                       = mysql_time($AppPromotionBlogs->to);
+        $AppPromotionBlogSetting = AppPromotionBlogSetting::find($request->position);
+        $slot                    = new AppPromotionBlogBooking;
+        $slot->product_id        = $request->product_id;
+        $slot->from_date         = $date_from;
+        $slot->to_date           = $date_to;
+        $slot->from_time         = mysql_time($AppPromotionBlogs->from);
+        $slot->to_time           = mysql_time($AppPromotionBlogs->to);
 
         $slot->app_promotion_blog_id         = $request->app_promotion_blog_id;
         $slot->price                         = $AppPromotionBlogSetting->blog_price;
@@ -242,7 +261,9 @@ class BlogPromotionController extends Controller
         $slot->vendor_id                     = \Auth::guard('vendor')->user()->id;
         $slot->save();
 
-        return redirect()->route('restaurant.product.promotion')->with('success', 'Successfully booked');
+        $appPromotionBlogBooking = $slot;
+        return view('vendor.restaurant.blog_promotion.pay', compact('appPromotionBlogBooking'));
+//        return redirect()->route('restaurant.product.promotion')->with('success', 'Successfully booked');
     }
 
 }
