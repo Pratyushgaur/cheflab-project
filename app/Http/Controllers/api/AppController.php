@@ -3130,7 +3130,7 @@ class AppController extends Controller
             
 
             $vendor = Order::where('id','=',$request->order_id)->select('vendor_id')->first();
-            $products = OrderProduct::where('order_id','=',$request->order_id)->join('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('product_id','product_qty','variant_id','id as order_product_id')->get();
+            $products = OrderProduct::where('order_id','=',$request->order_id)->join('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('product_id','product_qty','variant_id','order_products.id as order_product_id')->get();
             if(!empty($products->toArray())){
                 $cart = new Cart;
                 $cart->vendor_id = $vendor->vendor_id;
@@ -3138,29 +3138,29 @@ class AppController extends Controller
                 $cart->save();
                 $cartId = $cart->id;
                 foreach ($products as $key => $value) {
-                    $productArray = Product_master::where(['products.id'=>$value->product_id,'variants.id'=>$value->variant_id])->join('variant','products.id','=','variants.product_id')->where(['products.status'=>'1','product_approve'=>'1'])->select('variant_price');
+                    $productArray = Product_master::where(['products.id'=>$value->product_id,'variants.id'=>$value->variant_id])->join('variants','products.id','=','variants.product_id')->where(['products.status'=>'1','product_approve'=>'1'])->select('variant_price');
                     if($productArray->exists()){
-                        $cartProduct = new CartProduct;
+                        $cartProduct = new \App\Models\CartProduct;
                         $cartProduct->cart_id = $cartId;
                         $cartProduct->product_id = $value->product_id;
                         $cartProduct->product_qty = $value->product_qty;
                         $cartProduct->save();
                         $cartProductId= $cartProduct->id;
-                        $cartProductVariant = new CartProductVariant;
+                        $cartProductVariant = new \App\Models\CartProductVariant;
                         $cartProductVariant->cart_product_id = $cartProductId;
                         $cartProductVariant->variant_id = $value->variant_id;
                         $cartProductVariant->variant_qty = $value->product_qty;
                         $cartProductVariant->save();
                         // check addons
-                        $addons = OrderProductAddon::where('order_product_id','=',$order_product_id)->get();
-                        if(!empty($addon->toArray())){
+                        $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_id)->get();
+                        if(!empty($addons->toArray())){
                             foreach ($addons as $addonkey => $addonvalue) {
                                 $addon = Addons::where('id','=',$addonvalue->addon_id)->first();
                                 if(!empty($addon)){
-                                    $cartProductAddon = new CartProductAddon;
+                                    $cartProductAddon = new \App\Models\CartProductAddon;
                                     $cartProductAddon->cart_product_id = $cartProductId;
-                                    $cartProductAddon->addon_id = $$addonvalue->addon_id;
-                                    $cartProductAddon->addon_qty = $$addonvalue->addon_qty;
+                                    $cartProductAddon->addon_id = $addonvalue->addon_id;
+                                    $cartProductAddon->addon_qty = $addonvalue->addon_qty;
                                     $cartProductAddon->save();
                                 }
                                 
