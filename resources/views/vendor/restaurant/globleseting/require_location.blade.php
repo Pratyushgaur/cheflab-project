@@ -111,16 +111,16 @@
         function initialize(){
             var map = new google.maps.Map(document.getElementById('address-map'),{
                 center:{
-                    lat:51.5073509,
-                    lng:-0.12775829999998223
+                    lat:24.462200,
+                    lng:74.850403
                 },
                 zoom:15
 
             });
             var marker = new google.maps.Marker({
                 position:{
-                    lat:51.5073509,
-                    lng:-0.12775829999998223
+                    lat:24.462200,
+                    lng:74.850403
                 },
                 map:map,
                 draggable:true

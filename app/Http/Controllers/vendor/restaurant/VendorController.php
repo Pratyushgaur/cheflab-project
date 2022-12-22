@@ -12,6 +12,7 @@ use App\Models\vendors;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class VendorController extends Controller
 {
@@ -19,7 +20,7 @@ class VendorController extends Controller
     {
         date_default_timezone_set(config('app.timezone'));
         // dd(strtotime( "next monday" ));
-        if ($request->offline_till == 1) {
+        if ($request->offline_till == 1) {//automically online --->only those vendor goes to vendor_offline table
             $day[0]       = 'sunday';
             $day[1]       = 'monday';
             $day[2]       = 'Tuesday';
@@ -107,12 +108,12 @@ class VendorController extends Controller
         $this->validate($request, [
             'restaurant_name'   => 'required',
             'pincode'           => 'required',
-            'phone'             => 'required|unique:vendors,mobile,'.\Auth::guard('vendor')->user()->id,
+            'phone'             => 'required|unique:vendors,mobile,' . \Auth::guard('vendor')->user()->id,
             'address'           => 'required',
             'fssai_lic_no'      => 'required',
             'vendor_commission' => 'required',
-//            'categories'        => 'required',
-//            'deal_cuisines'     => 'required',
+            //            'categories'        => 'required',
+            //            'deal_cuisines'     => 'required',
             'tax'               => 'required',
         ]);
         $vendors                   = Vendors::find(\Auth::guard('vendor')->user()->id);
@@ -130,37 +131,72 @@ class VendorController extends Controller
 //        $vendors->deal_categories  = implode(',', $request->categories);
 //        $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
 //
-        if ($request->has('image')) {
-            $vendors_old=$vendors->image;
-            $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();
-            $request->image->move(public_path('vendors'), $filename);
-            $vendors->image = $filename;
-            @unlink(public_path('vendors'.$vendors_old));
+        $json = [];
+        $json = $request->keep_banner;
+        $vendors->banner_image=json_encode($json);
+        if (!empty($request->banner)) {
+//            dd($request->banner);
+            foreach ($request->banner as $k => $img) {
+                if($img!=null){
+                $folderPath = "vendor-banner/"; //path location
+                $image_parts    = explode(";base64,", $img);
+                $image_type_aux = explode("image/", $image_parts[0]);
+//                dd($img);
+                $image_type     = $image_type_aux[1];
+                $image_base64   = base64_decode($image_parts[1]);
+                $name           = 'banner-' . Str::random(10) . uniqid();
+                $file           = $folderPath . $name . '.' . $image_type;
+                file_put_contents($file, $image_base64);
+                $json[] = $name . '.' . $image_type;
+            }}
+            $vendors->banner_image=json_encode($json);
+//            dd($vendors->banner_image);
+        }
+
+//dd($request->all());
+        if ($request->has('logo') && !empty($request->logo)) {
+            $vendors_old = $vendors->image;
+            $img        = $request->logo;
+            $folderPath = "vendors/"; //path location
+
+            $image_parts    = explode(";base64,", $img);
+            $image_type_aux = explode("image/", $image_parts[0]);
+            $image_type     = $image_type_aux[1];
+            $image_base64   = base64_decode($image_parts[1]);
+            $name           = 'logo-' . Str::random(10) . uniqid();
+            $file           = $folderPath . $name . '.' . $image_type;
+            $vendors->image = $name . '.' . $image_type;
+            file_put_contents($file, $image_base64);
+
+//            $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();
+//            $request->image->move(public_path('vendors'), $filename);
+//            $vendors->image = $filename;
+            @unlink(public_path('vendors' . $vendors_old));
         } else {
 //            $vendors->image  = 'default_restourant_image.jpg';
         }
-        if ($request->has('fassai_image')) {
-            $vendors_old=$vendors->fassai_image;
-            $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
-            $request->fassai_image->move(public_path('vendor-documents'), $filename);
-            $vendors->licence_image = $filename;
-            @unlink(public_path('vendor-documents'.$vendors_old));
-        }
-        if ($request->has('other_document')) {
-            $vendors_old=$vendors->other_document;
-            $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
-            $request->other_document->move(public_path('vendor-documents'), $filename);
-            $vendors->other_document_image = $filename;
-            $vendors->other_document       = $request->other_document_name;
-            @unlink(public_path('vendor-documents'.$vendors_old));
-//            @unlink(public_path('vendors'.\Auth::gaurd('vendor')->user()->other_document));
-        }
-        if ($request->has('banner_image')) {
-            $filename = time() . '-banner-' . rand(100, 999) . '.' . $request->banner_image->extension();
-            $request->banner_image->move(public_path('vendor-banner'), $filename);
-            $files[]               = $filename;
-            $vendors->banner_image = json_encode($files);
-        }
+//        if ($request->has('fassai_image')) {
+//            $vendors_old = $vendors->fassai_image;
+//            $filename    = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
+//            $request->fassai_image->move(public_path('vendor-documents'), $filename);
+//            $vendors->licence_image = $filename;
+//            @unlink(public_path('vendor-documents' . $vendors_old));
+//        }
+//        if ($request->has('other_document')) {
+//            $vendors_old = $vendors->other_document;
+//            $filename    = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
+//            $request->other_document->move(public_path('vendor-documents'), $filename);
+//            $vendors->other_document_image = $filename;
+//            $vendors->other_document       = $request->other_document_name;
+//            @unlink(public_path('vendor-documents' . $vendors_old));
+////            @unlink(public_path('vendors'.\Auth::gaurd('vendor')->user()->other_document));
+//        }
+//        if ($request->has('banner_image')) {
+//            $filename = time() . '-banner-' . rand(100, 999) . '.' . $request->banner_image->extension();
+//            $request->banner_image->move(public_path('vendor-banner'), $filename);
+//            $files[]               = $filename;
+//            $vendors->banner_image = json_encode($files);
+//        }
         $vendors->save();
 
         return redirect()->route('restaurant.profile')->with('message', 'Vendor Details Update  Successfully');
@@ -170,47 +206,49 @@ class VendorController extends Controller
     public function update_profile_categories(Request $request)
     {
 
-        $vendors                   = Vendors::find(\Auth::guard('vendor')->user()->id);
-        $vendors->deal_categories = implode(',',$request->categoriesArray);
+        $vendors                  = Vendors::find(\Auth::guard('vendor')->user()->id);
+        $vendors->deal_categories = implode(',', $request->categoriesArray);
         $vendors->save();
         return redirect()->route('restaurant.profile')->with('message', 'Vendor Deals Categories Update  Successfully');
     }
+
     public function update_profile_cuisines(Request $request)
     {
-        $vendors                   = Vendors::find(\Auth::guard('vendor')->user()->id);
-        $vendors->deal_cuisines = implode(',',$request->categoriesArray);
+        $vendors                = Vendors::find(\Auth::guard('vendor')->user()->id);
+        $vendors->deal_cuisines = implode(',', $request->categoriesArray);
         $vendors->save();
         return redirect()->route('restaurant.profile')->with('message', 'Vendor Deals Cuisines Update  Successfully');
     }
 
 
-    public function change_password(Request $request){
+    public function change_password(Request $request)
+    {
         return view('vendor.restaurant.vendor.change_password');
     }
-    public function update_password(Request $request){
+
+    public function update_password(Request $request)
+    {
         $this->validate($request, [
-            'old_password' => 'required',
-            'new_password' => 'min:6|required|same:confirm_password',
-//            'new_password' => 'min:6|required_with:confirm_password|same:confirm_password',
+            'old_password'     => 'required',
+            'new_password'     => 'min:6|required|same:confirm_password',
+            //            'new_password' => 'min:6|required_with:confirm_password|same:confirm_password',
             'confirm_password' => 'min:6'
         ]);
 
         $hashedPassword = \Auth::guard('vendor')->user()->password;
-        if (\Hash::check($request->old_password , $hashedPassword)) {
-            if (!\Hash::check($request->new_password , $hashedPassword)) {
+        if (\Hash::check($request->old_password, $hashedPassword)) {
+            if (!\Hash::check($request->new_password, $hashedPassword)) {
 
                 $users = Vendors::find(\Auth::guard('vendor')->user()->id);;
                 $users->password = bcrypt($request->new_password);
                 $users->save();
                 return redirect()->back();
-            }
-            else{
-                session()->flash('message','new password can not be the old password!');
+            } else {
+                session()->flash('message', 'new password can not be the old password!');
                 return redirect()->back();
             }
-        }
-        else{
-            session()->flash('message','old password doesnt matched');
+        } else {
+            session()->flash('message', 'old password doesnt matched');
             return redirect()->back();
         }
         return redirect()->route('restaurant.profile')->with('success', 'Vendor Details Update  Successfully');

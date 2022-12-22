@@ -97,3 +97,13 @@
     @if (!Auth::guard('vendor')->user()->is_online)
     <div id='message-box'>Now your restaurant is offline,you will not able to get orders from mobile app.<a href="#" style="float: right;    margin-right: 18px;" id="close_msg_bar">X</a></div>
     @endif
+{{--  <audio controls autoplay>--}}
+{{--      <source src="horse.ogg" type="audio/ogg">--}}
+{{--      <source src="{{url('/notification-sound.mp3')}}" type="audio/mpeg">--}}
+{{--      Your browser does not support the audio element.--}}
+{{--  </audio>--}}
+
+{{--  <audio id="chatAudio"  controls autoplay>--}}
+{{--      <source src="notify.ogg" type="audio/ogg">--}}
+{{--      <source id="chatAudio1" src="{{url('/notification-sound.mp3')}}" type="audio/mpeg">--}}
+{{--  </audio>--}}

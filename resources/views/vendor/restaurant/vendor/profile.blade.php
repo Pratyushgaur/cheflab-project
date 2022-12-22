@@ -11,6 +11,60 @@ if (is_array($banners))
 //dd($vendor->image);
 ?>
 @extends('vendor.restaurants-layout')
+@section('page-css')
+    <style>
+        .imagePreview {
+            width: 100%;
+            min-height: 180px;
+            background-position: center center;
+
+            background-color: #fff;
+            background-size: cover;
+            background-repeat: no-repeat;
+            display: inline-block;
+            box-shadow: 0px -3px 6px 2px rgba(0, 0, 0, 0.2);
+
+        }
+
+        .btn-primary {
+            display: block;
+            border-radius: 0px;
+            box-shadow: 0px 4px 6px 2px rgba(0, 0, 0, 0.2);
+            margin-top: -5px;
+        }
+
+        .imgUp {
+            margin-bottom: 15px;
+        }
+
+        .del {
+            position: absolute;
+            top: 0px;
+            right: 15px;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background-color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+        }
+
+        .imgAdd {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #4bd7ef;
+            color: #fff;
+            box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            line-height: 30px;
+            margin-top: 0px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+    </style>
+@endsection
+
 @section('main-content')
     <?php $vendor_type = config('custom_app_setting.vendor_type')?>
     <!-- Body Content Wrapper -->
@@ -60,7 +114,9 @@ if (is_array($banners))
                         <p>{{$resturant->bio}} </p>
 
                         <div class="ms-profile-skills">
-                            <h2 class="section-title">Deals with categories &nbsp;<a href="javascript:void(0)"  data-toggle="modal" data-target="#edit-category-model" data-title="Edit"><i class="fa fa-edit"></i></a></h2>
+                            <h2 class="section-title">Deals with categories
+                                &nbsp;<a href="javascript:void(0)" data-toggle="modal" data-target="#edit-category-model" data-title="Edit"><i class="fa fa-edit"></i></a>
+                            </h2>
                             <ul class="ms-skill-list">
                                 <?php
                                 $categories_id = explode(',', $resturant->deal_categories);
@@ -75,7 +131,9 @@ if (is_array($banners))
                             </ul>
                         </div>
                         <div class="ms-profile-skills">
-                            <h2 class="section-title">Deals with Cuisines &nbsp;<a href="javascript:void(0)"  data-toggle="modal" data-target="#edit-cuisines-model" data-title="Edit"><i class="fa fa-edit"></i></a></h2>
+                            <h2 class="section-title">Deals with Cuisines
+                                &nbsp;<a href="javascript:void(0)" data-toggle="modal" data-target="#edit-cuisines-model" data-title="Edit"><i class="fa fa-edit"></i></a>
+                            </h2>
                             <ul class="ms-skill-list">
                                 <?php
                                 $cusines_id = explode(',', $resturant->deal_cuisines);
@@ -320,101 +378,153 @@ if (is_array($banners))
                                     {{--                                    </div>--}}
                                 @endif
                             </div>
-                            <div class="card card-default">
+                            {{--                            <div class="card card-default">--}}
 
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-sm-3">
-                                            <div>
-                                                <label for="">Restaurant Images</label>
-                                            </div>
-                                            <div class="image-upload">
-                                                <label for="file-input">
-                                                    <div class="upload-icon">
-                                                        @if($vendor->image == null)
-                                                            <?php $is_require = true;?>
-                                                            <img class="icon" src="{{asset('add-image.png')}}">
-                                                        @else
-                                                            <?php $is_require = false;?>
-                                                            <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
-                                                        @endif
-                                                    </div>
-                                                </label>
-                                                <input id="file-input" type="file" name="image" {{($is_require) ? 'required' : ''}}/>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div>
-                                                <label for="">FSSAI Registration </label>
-                                            </div>
-                                            <div class="image-upload">
-                                                <label for="file-input2">
-                                                    <div class="upload-icon2">
-                                                        @if($vendor->licence_image == null)
-                                                            <?php $is_require = true;?>
-                                                            <img class="icon2" src="{{asset('add-image.png')}}">
-                                                        @else
-                                                            <?php $is_require = false;?>
-                                                            <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->licence_image ) }}">
-                                                        @endif
-                                                    </div>
-                                                </label>
-                                                <input id="file-input2" type="file" name="fassai_image" {{($is_require) ? 'required' : ''}}/>
+                            {{--                                <div class="card-body">--}}
+                            {{--                                    <div class="row">--}}
+                            {{--                                        <div class="col-sm-3">--}}
+                            {{--                                            <div>--}}
+                            {{--                                                <label for="">Restaurant Images</label>--}}
+                            {{--                                            </div>--}}
+                            {{--                                            <div class="image-upload">--}}
+                            {{--                                                <label for="file-input">--}}
+                            {{--                                                    <div class="upload-icon">--}}
+                            {{--                                                        @if($vendor->image == null)--}}
+                            {{--                                                            <?php $is_require = true;?>--}}
+                            {{--                                                            <img class="icon" src="{{asset('add-image.png')}}">--}}
+                            {{--                                                        @else--}}
+                            {{--                                                            <?php $is_require = false;?>--}}
+                            {{--                                                            <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">--}}
+                            {{--                                                        @endif--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </label>--}}
+                            {{--                                                <input id="file-input" type="file" name="image" {{($is_require) ? 'required' : ''}}/>--}}
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div class="col-sm-3">--}}
+                            {{--                                            <div>--}}
+                            {{--                                                <label for="">FSSAI Registration </label>--}}
+                            {{--                                            </div>--}}
+                            {{--                                            <div class="image-upload">--}}
+                            {{--                                                <label for="file-input2">--}}
+                            {{--                                                    <div class="upload-icon2">--}}
+                            {{--                                                        @if($vendor->licence_image == null)--}}
+                            {{--                                                            <?php $is_require = true;?>--}}
+                            {{--                                                            <img class="icon2" src="{{asset('add-image.png')}}">--}}
+                            {{--                                                        @else--}}
+                            {{--                                                            <?php $is_require = false;?>--}}
+                            {{--                                                            <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->licence_image ) }}">--}}
+                            {{--                                                        @endif--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </label>--}}
+                            {{--                                                <input id="file-input2" type="file" name="fassai_image" {{($is_require) ? 'required' : ''}}/>--}}
 
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div>
-                                                <label for="">Other Document </label>
+                            {{--                                            </div>--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div class="col-sm-3">--}}
+                            {{--                                            <div>--}}
+                            {{--                                                <label for="">Other Document </label>--}}
 
-                                            </div>
-{{--                                            {{dd($vendor)}}--}}
-                                            <div class="image-upload">
+                            {{--                                            </div>--}}
+                            {{--                                            {{dd($vendor)}}--}}
+                            {{--                                            <div class="image-upload">--}}
 
-                                                <label for="file-input3">
-                                                    <div class="upload-icon3">
-                                                        @if($vendor->other_document_image == null)
-                                                            <?php $is_require = true;?>
-                                                            <img class="icon3" src="{{asset('add-image.png')}}">
-                                                        @else
-                                                            <?php $is_require = false;?>
-                                                            <img class="icon3" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">
-                                                        @endif
-                                                    </div>
-                                                </label>
-                                                <input id="file-input3" type="file" name="other_document" {{($is_require) ? 'required' : ''}} />
+                            {{--                                                <label for="file-input3">--}}
+                            {{--                                                    <div class="upload-icon3">--}}
+                            {{--                                                        @if($vendor->other_document_image == null)--}}
+                            {{--                                                            <?php $is_require = true;?>--}}
+                            {{--                                                            <img class="icon3" src="{{asset('add-image.png')}}">--}}
+                            {{--                                                        @else--}}
+                            {{--                                                            <?php $is_require = false;?>--}}
+                            {{--                                                            <img class="icon3" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">--}}
+                            {{--                                                        @endif--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </label>--}}
+                            {{--                                                <input id="file-input3" type="file" name="other_document" {{($is_require) ? 'required' : ''}} />--}}
 
-                                            </div>
-                                            <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <div>
-                                                <label for="">Banner Image </label>
+                            {{--                                            </div>--}}
+                            {{--                                            <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">--}}
+                            {{--                                        </div>--}}
+                            {{--                                        <div class="col-sm-3">--}}
+                            {{--                                            <div>--}}
+                            {{--                                                <label for="">Banner Image </label>--}}
 
-                                            </div>
-                                            <div class="image-upload">
+                            {{--                                            </div>--}}
+                            {{--                                            <div class="image-upload">--}}
 
-                                                <label for="file-input4">
-                                                    <div class="upload-icon4">
-                                                        @if($vendor->banner_image == null)
-                                                            <img class="icon4" src="{{asset('add-image.png')}}">
-                                                        @else
-                                                            <?php $b = json_decode($vendor->banner_image);?>
-                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$b[0]) }}">
-                                                        @endif
-                                                    </div>
-                                                </label>
-                                                <input id="file-input4" type="file" name="banner_image"/>
+                            {{--                                                <label for="file-input4">--}}
+                            {{--                                                    <div class="upload-icon4">--}}
+                            {{--                                                        @if($vendor->banner_image == null)--}}
+                            {{--                                                            <img class="icon4" src="{{asset('add-image.png')}}">--}}
+                            {{--                                                        @else--}}
+                            {{--                                                            <?php $b = json_decode($vendor->banner_image);?>--}}
+                            {{--                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$b[0]) }}">--}}
+                            {{--                                                        @endif--}}
+                            {{--                                                    </div>--}}
+                            {{--                                                </label>--}}
+                            {{--                                                <input id="file-input4" type="file" name="banner_image"/>--}}
 
-                                            </div>
+                            {{--                                            </div>--}}
 
-                                        </div>
-                                    </div>
-                                    <!-- div row -->
+                            {{--                                        </div>--}}
+                            {{--                                    </div>--}}
+                            {{--                                    <!-- div row -->--}}
+                            {{--                                </div>--}}
+
+
+                            {{--                            </div>--}}
+
+
+                            {{-- Location form start --}}
+                            <div class="form-row">
+                                <div class="col-sm-3">
+                                    <h5>Logo</h5><br>
                                 </div>
-
+                            </div>
+                            <div class="form-row">
+                                <div class="col-sm-3 imgUp">
+                                    <input type="hidden" class="imaage-data" name="logo">
+                                    <div class="imagePreview">
+                                        @if(($vendor->image!=''))
+                                            <img src="{{ url('/').'/vendors' . '/' . $vendor->image}}">
+                                        @endif</div>
+                                    <label class="btn btn-primary button-lable">Select
+                                        Logo<input type="file" data-from="logo" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;"></label>
+                                </div><!-- col-2 -->
 
                             </div>
+                            <hr>
+                            <div class="form-row">
+                                <div class="col-sm-12">
+                                    <h5>Banner (Make sure Image Should be 600*400)</h5><br>
+                                </div>
+                                <?php $bs = json_decode($vendor->banner_image);?>
+                                @foreach($bs as $k=>$b)
+
+                                    <div class="col-sm-10 imgUp">
+                                        <input type="hidden" class="imaage-data" name="keep_banner[]" value="{{$b}}">
+                                        <div class="imagePreview"><img class="icon4" src="{{ asset('vendor-banner'.'/'.$b) }}"></div>
+                                        <i class="fa fa-times del"></i></div><!-- col-2 -->
+                                @endforeach
+
+                                <div class="col-sm-10 imgUp">
+                                    <input type="hidden" class="imaage-data" name="banner[]">
+                                    <div class="imagePreview"></div>
+                                    <label class="btn btn-primary button-lable">Select
+                                        banner<input type="file" data-from="banner" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;"></label>
+                                </div><!-- col-2 -->
+                                <i class="fa fa-plus imgAdd"></i>
+
+                                {{--                                <div class="col-sm-10 imgUp">--}}
+                                {{--                                    <input type="hidden" class="imaage-data" name="banner[]">--}}
+                                {{--                                    <div class="imagePreview"></div>--}}
+                                {{--                                    <label class="btn btn-primary button-lable">Select--}}
+                                {{--                                        banner<input type="file" data-from="banner" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;"></label>--}}
+                                {{--                                </div><!-- col-2 -->--}}
+                                {{--                                <i class="fa fa-plus imgAdd"></i>--}}
+                            </div>
+                            {{-- Location form end --}}
+
                             <button class="btn btn-primary" type="submit">Update</button>
                         </div>
                     </div>
@@ -424,94 +534,94 @@ if (is_array($banners))
 
 
         </div>
-    <!-- model -->
-    <div class="modal fade" id="edit-category-model" tabindex="-1" role="dialog" aria-labelledby="modal-10">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
+        <!-- model -->
+        <div class="modal fade" id="edit-category-model" tabindex="-1" role="dialog" aria-labelledby="modal-10">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
 
-                <div class="modal-header">
-                    <h3 class="modal-title has-icon ms-icon-round ">Edit Restaurant Categories</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <form id="" method="POST" action="{{route('restaurant.profile.update.category')}}">
-                    {{ csrf_field() }}
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Categories</label>
-                            <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
-                                @foreach($categories as $k =>$value)
-                                    <?php
+                    <div class="modal-header">
+                        <h3 class="modal-title has-icon ms-icon-round ">Edit Restaurant Categories</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form id="" method="POST" action="{{route('restaurant.profile.update.category')}}">
+                        {{ csrf_field() }}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Categories</label>
+                                <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
+                                    @foreach($categories as $k =>$value)
+                                        <?php
 
                                         if(in_array($k, $dealsIds)){
-                                            ?>
-                                            <option value="{{$k}}" selected>{{$value}}</option>
-                                            <?php
+                                        ?>
+                                        <option value="{{$k}}" selected>{{$value}}</option>
+                                        <?php
                                         }else{
-                                            ?>
-                                            <option value="{{$k}}">{{$value}}</option>
-                                            <?php
+                                        ?>
+                                        <option value="{{$k}}">{{$value}}</option>
+                                        <?php
                                         }
-                                    ?>
+                                        ?>
 
-                                @endforeach
-                            </select>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary shadow-none">
-                            Update
-                        </button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary shadow-none">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <!--  -->
-    <div class="modal fade" id="edit-cuisines-model" tabindex="-1" role="dialog" aria-labelledby="modal-10">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
+        <!--  -->
+        <div class="modal fade" id="edit-cuisines-model" tabindex="-1" role="dialog" aria-labelledby="modal-10">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
 
-                <div class="modal-header">
-                    <h3 class="modal-title has-icon ms-icon-round ">Edit Cuisines</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                </div>
-                <form id="" method="POST" action="{{route('restaurant.profile.update.cuisines')}}">
-                    {{ csrf_field() }}
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">Cuisines</label>
-                            <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
-                                @foreach($cuisines as $k =>$value)
-                                    <?php
+                    <div class="modal-header">
+                        <h3 class="modal-title has-icon ms-icon-round ">Edit Cuisines</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                    </div>
+                    <form id="" method="POST" action="{{route('restaurant.profile.update.cuisines')}}">
+                        {{ csrf_field() }}
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Cuisines</label>
+                                <select class="form-control select2" multiple="true" name="categoriesArray[]" style="width: 100%;" required>
+                                    @foreach($cuisines as $k =>$value)
+                                        <?php
 
                                         if(in_array($k, $cuisIds)){
-                                            ?>
-                                            <option value="{{$k}}" selected>{{$value}}</option>
-                                            <?php
+                                        ?>
+                                        <option value="{{$k}}" selected>{{$value}}</option>
+                                        <?php
                                         }else{
-                                            ?>
-                                            <option value="{{$k}}">{{$value}}</option>
-                                            <?php
+                                        ?>
+                                        <option value="{{$k}}">{{$value}}</option>
+                                        <?php
                                         }
-                                    ?>
+                                        ?>
 
-                                @endforeach
-                            </select>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary shadow-none">
-                            Update
-                        </button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary shadow-none">
+                                Update
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
 
 
     </div>
@@ -621,3 +731,110 @@ if (is_array($banners))
         });
     </script>
 @endpush
+
+
+
+@section('page-js')
+
+    <script>
+        var bannerCount = 1;
+        $(document).ready(function () {
+            $(".imgAdd").click(function () {
+
+                if ($(this).closest('div').children('.imgUp').last().children('.imaage-data').val() == '') {
+                    toastr.error('Please Select Banner', 'Alert');
+                    return false;
+                }
+
+                bannerCount++;
+                $(this).closest(".row").find('.imgAdd').before('<div class="col-sm-10 imgUp"><input type="hidden" class="imaage-data" name="banner[]"><div class="imagePreview"></div><label class="btn btn-primary button-lable">Select Image<input type="file" data-from="banner" class="uploadFile img" value="Upload Photo" style="width:0px;height:0px;overflow:hidden;"></label><i class="fa fa-times del"></i></div>');
+                if (bannerCount > 2) {
+                    $(this).hide();
+                }
+            });
+            $(document).on("click", "i.del", function () {
+                $(this).parent().remove();
+                bannerCount--;
+                if (bannerCount < 3) {
+                    $('.imgAdd').show();
+                }
+
+            });
+            $(function () {
+                var _URL = window.URL || window.webkitURL;
+                $(document).on("change", ".uploadFile", function () {
+
+                    var from = $(this).attr('data-from');
+
+
+                    var uploadFile = $(this);
+                    var files = !!this.files ? this.files : [];
+
+                    if (!files.length || !window.FileReader) return; // no file selected, or no FileReader support
+
+                    if (/^image/.test(files[0].type)) { // only image file
+
+                        var reader = new FileReader(); // instance of the FileReader
+                        reader.readAsDataURL(files[0]); // read the local file
+                        reader.onloadend = function (theFile) { // set image data as background of div
+                            var data = this.result;
+                            var image = new Image();
+                            image.src = reader.result;
+                            image.onload = function () {
+                                if (from == 'banner') {
+                                    width = this.width;
+                                    height = this.height;
+                                    if (this.width == 600 && this.height == 400) {
+                                        uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + data + ")");
+                                        uploadFile.closest(".imgUp").find('.imaage-data').val(data);
+                                        uploadFile.closest(".imgUp").find('.button-lable').html('Change Image<input type="file" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">');
+                                    } else {
+                                        toastr.error('Image Dimension Should be 600 by 400 ', 'Alert');
+                                    }
+                                } else {
+                                    uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url(" + data + ")");
+                                    uploadFile.closest(".imgUp").find('.imaage-data').val(data);
+                                    uploadFile.closest(".imgUp").find('.button-lable').html('Change Image<input type="file" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">');
+                                }
+
+
+                            };
+
+
+                        }
+                    } else {
+                        toastr.error('Please Select Image file type Only', 'Alert');
+                    }
+
+                });
+            });
+
+            $('#menu-form').submit(function () {
+                var error = false;
+                var logo = $('input[name="logo"]').val();
+                if (logo == '') {
+                    error = true;
+                    toastr.error('Please Select Logo  ', 'Alert');
+                }
+                var arr = $('input[name="banner[]"]').map(function () {
+                    if (this.value == '') {
+                        toastr.error('You Have To select Banner Image ', 'Alert');
+                        error = true;
+                    }
+                }).get();
+                if (error) {
+                    return false;
+                }
+
+
+                if (error) {
+                    return false;
+                }
+
+
+            })
+        })
+    </script>
+
+
+@endsection

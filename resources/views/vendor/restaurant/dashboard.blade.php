@@ -350,10 +350,10 @@
                                         <ul class="ms-star-rating rating-fill rating-circle ratings-new">
                                             <?php
                                             $black_star=5-$product->product_rating;
-                                            for ($i=$black_star;$i<=5;$i++){
-                                            echo '<li class="ms-rating-item"><i class="material-icons">star</i></li>';
+                                            for ($i=1;$i<=$black_star;$i++){
+                                                echo '<li class="ms-rating-item"><i class="material-icons">star</i></li>';
                                             }
-                                            for ($i=$product->product_rating;$i<=5;$i++){
+                                            for ($i=1;$i<=$product->product_rating;$i++){
                                                 echo '<li class="ms-rating-item rated"><i class="material-icons">star</i></li>';
                                             }
                                             ?>

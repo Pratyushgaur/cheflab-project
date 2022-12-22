@@ -1,10 +1,9 @@
-
 <div class="form-row">
 
     <div class="col-md-12 mb-12">
         <label>Bank name <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('bank_name', null, ['class' => 'form-control',  'placeholder' => 'Bank name', 'min' => 3]) }}
+            {{ Form::text('bank_name', null, ['class' => 'form-control',  'placeholder' => 'Bank name', 'minlength' => 3]) }}
             @if ($errors->has('bank_name'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('bank_name') }}</strong></span>
             @endif
@@ -13,7 +12,7 @@
     <div class="col-md-6 mb-3">
         <label>Account holder name <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('holder_name', null, ['class' => 'form-control', 'placeholder' => 'Account Holder name', 'min' => 3]) }}
+            {{ Form::text('holder_name', null, ['class' => 'form-control', 'placeholder' => 'Account Holder name', 'minlength' => 3]) }}
             @if ($errors->has('holder_name'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('holder_name') }}</strong></span>
             @endif
@@ -22,9 +21,18 @@
     <div class="col-md-6 mb-3">
         <label>Account number<code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::number('account_no', null, ['class' => 'form-control', 'placeholder' => 'Account Number','pattern'=>"[1-9]{10}"]) }}
+            {{ Form::number('account_no', null, ['class' => 'form-control', 'placeholder' => 'Account Number','id'=>'account_no','maxlength'=>18,'minlength'=>10]) }}
             @if ($errors->has('account_no'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('account_no') }}</strong></span>
+            @endif
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <label>Confirm Account number<code class="ms-text-danger">*</code></label>
+        <div class="input-group">
+            {{ Form::number('confirm_account_no', null, ['class' => 'form-control', 'placeholder' => 'Account Number']) }}
+            @if ($errors->has('confirm_account_no'))
+                <span class="ms-text-danger"> <strong>{{ $errors->first('confirm_account_no') }}</strong></span>
             @endif
         </div>
     </div>
@@ -71,7 +79,7 @@
 
 </div>
 <div class="form-row">
-{{--    <div class="col-sm-12"><h5>Aadhar scan image</h5><br></div>--}}
+    {{--    <div class="col-sm-12"><h5>Aadhar scan image</h5><br></div>--}}
     <div class="col-sm-3 imgUp">
         <input type="hidden" class="imaage-data" name="aadhar_card_image">
 
@@ -80,7 +88,8 @@
                 <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}">
             @endif
         </div>
-        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->aadhar_card_image!='') ? "Aadhar Already uploaded" : 'Upload Aadhar Card'?><input accept="image/*" type="file" data-from="aadhar_card_image" class="uploadFile img" value="Upload Aadhar Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
+        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->aadhar_card_image != '') ? "Aadhar Already uploaded" : 'Upload Aadhar Card'?>
+            <input accept="image/*" type="file" data-from="aadhar_card_image" class="uploadFile img" value="Upload Aadhar Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
 
@@ -90,7 +99,8 @@
             @if((auth()->guard('vendor')->user()->pancard_image!=''))
                 <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->pancard_image}}">
             @endif</div>
-        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->pancard_image!='') ? "Pan card Already uploaded" : 'Pan card image'?><input accept="image/*" type="file" data-from="pancard_image" class="uploadFile img" value="Upload Pan Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
+        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->pancard_image != '') ? "Pan card Already uploaded" : 'Pan card image'?>
+            <input accept="image/*" type="file" data-from="pancard_image" class="uploadFile img" value="Upload Pan Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
 
@@ -100,17 +110,19 @@
             @if((auth()->guard('vendor')->user()->licence_image!=''))
                 <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->licence_image}}">
             @endif</div>
-        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->licence_image!='') ? "fassi Already uploaded" : 'fassi image'?><input accept="image/*" type="file" data-from="fassi_image" class="uploadFile img" value="Upload fassi" style="width: 0px;height: 0px;overflow: hidden;"></label>
+        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->licence_image != '') ? "fassi Already uploaded" : 'fassi image'?>
+            <input accept="image/*" type="file" data-from="fassi_image" class="uploadFile img" value="Upload fassi" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
     <div class="col-sm-3 imgUp">
         <input type="hidden" class="imaage-data" name="cancel_check">
         <div class="imagePreview">
-            @if(($bankDetail->cancel_check!=''))
+            @if(isset($bankDetail) && @$bankDetail->cancel_check!='')
                 <img src="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}">
             @endif
         </div>
-        <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check!='') ? "Cancel Check Already uploaded" : 'Cancel Check'?><input accept="image/*" type="file" data-from="cancel_check" class="uploadFile img" value="Upload Cancel check " style="width: 0px;height: 0px;overflow: hidden;"></label>
+        <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check != '') ? "Cancel Check Already uploaded" : 'Cancel Check'?>
+            <input accept="image/*" type="file" data-from="cancel_check" class="uploadFile img" value="Upload Cancel check " style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 </div>
 
@@ -126,6 +138,8 @@
 
 
 @push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 
     <script>
 
@@ -162,60 +176,72 @@
                 });
             });
 
-            // $("#menu-form").validate({
-            //     rules: {
-            //         bank_name: {
-            //             required: true,
-            //             maxlength: 40,
-            //         },
-            //         holder_name: {
-            //             required: true
-            //         },
-            //         ifsc: {
-            //             required: true
-            //         },
-            //         aadhar_number: {
-            //             required: true
-            //         },
-            //         pancard_number: {
-            //             required: true,
-            //         },
-            //         account_no: {
-            //             required: true,
-            //             number: true,
-            //             maxlength: 18,
-            //         },
-            //         fssai_lic_no: {
-            //             required: true
-            //         }
-            //     }
-            // });
+            $("#menu-form").validate({
+                rules: {
+                    bank_name: {
+                        required: true,
+                        maxlength: 40,
+                    },
+                    holder_name: {
+                        required: true
+                    },
+                    ifsc: {
+                        required: true
+                    },
+                    aadhar_number: {
+                        required: true
+                    },
+                    pancard_number: {
+                        required: true,
+                    },
+                    account_no: {
+                        required: true,
+                        number: true,
+                        {{--                        maxlength: 18--}}
+                    },
+                    confirm_account_no: {
+                        required: true,
+                        number: true,
+                        maxlength: 18,
+                        equalTo: "#account_no"
+                    },
+                    fssai_lic_no: {
+                        required: true
+                    }
+                }
+            });
 
-            // $('#menu-form').submit(function () {
-            //     var error = false;
-            //     var pancard_image = $('input[name="pancard_image"]').val();
-            //     if (pancard_image == '') {
-            //         error = true;
-            //         toastr.error('Please Select Pan card scan copy  ', 'Alert');
-            //     }
-            //     var fassi_image = $('input[name="fassi_image"]').val();
-            //     if (fassi_image == '') {
-            //         error = true;
-            //         toastr.error('Please Select fassi scan copy  ', 'Alert');
-            //     }
-            //     var aadhar_card_image = $('input[name="aadhar_card_image"]').val();
-            //     if (aadhar_card_image == '') {
-            //         error = true;
-            //         toastr.error('Please Select aadhar card scan copy  ', 'Alert');
-            //     }
-            //
-            //     if(error){
-            //         return false;
-            //     }
-            //
-            //
-            //
-            // });
+            $('#menu-form').submit(function () {
+                var error = false;
+
+                    <?php if(auth()->guard('vendor')->user()->pancard_image == ''){?>
+                var pancard_image = $('input[name="pancard_image"]').val();
+                if (pancard_image == '') {
+                    error = true;
+                    toastr.error('Please Select Pan card scan copy  ', 'Alert');
+                }
+                    <?php }?>
+                    <?php if(auth()->guard('vendor')->user()->licence_image == ''){?>
+                var fassi_image = $('input[name="fassi_image"]').val();
+                if (fassi_image == '') {
+                    error = true;
+                    toastr.error('Please Select fassi scan copy  ', 'Alert');
+                }
+                    <?php }
+                    if(isset($bankDetail->cancel_check) && $bankDetail->cancel_check == ''){ ?>
+                var aadhar_card_image = $('input[name="aadhar_card_image"]').val();
+                if (aadhar_card_image == '') {
+                    error = true;
+                    toastr.error('Please Select aadhar card scan copy  ', 'Alert');
+                }
+                <?php } ?>
+
+                if (error) {
+                    return false;
+                }
+
+
+            });
         });
     </script>
 

@@ -136,6 +136,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-blog-promotion', [\App\Http\Controllers\api\BlogPromotionController::class, 'getBlogPromotion']);
     // refer ammount
     Route::post('refer-amount', [\App\Http\Controllers\api\AppController::class, 'getReferAmmount']);
+    // user driver location
+    Route::post('get-driver-live', [\App\Http\Controllers\api\AppController::class, 'getDriveLocation']);
 
 
 

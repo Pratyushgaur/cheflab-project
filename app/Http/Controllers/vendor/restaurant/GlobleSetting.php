@@ -282,31 +282,32 @@ class GlobleSetting extends Controller
     {
 //                dd($request->all());
         //        dd($request->routeIs('restaurant.globleseting.save_bank_details'));
-        /*        if ($request->routeIs('restaurant.globleseting.save_bank_details'))
+//                if ($request->routeIs('restaurant.globleseting.save_bank_details'))
                     $request->validate([
                         'holder_name' => 'required',
                         'ifsc' => 'required',
                         'bank_name' => 'required',
-                        'account_no' => ['required', 'regex:/^\w{1,17}$/'],
+                        'account_no' => ['required', 'regex:/^\w{1,17}$/','required_with:password_confirmation','same:password_confirmation'],
+                        'confirm_account_no' => 'required',
                         'aadhar_number' => "required",
                         'fssai_lic_no' => "required",
                     ]);
-                else
-                    $request->validate([
-                        'holder_name' => 'required',
-                        'ifsc' => 'required',
-                        'bank_name' => 'required',
-        //            'cancel_check' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
-                        'cancel_check' => 'required',
-                        'account_no' => ['required', 'regex:/^\w{1,17}$/'],
-                        'aadhar_number' => "required",
-                        'aadhar_card_image' => "required",
-                        'pancard_number' => "required",
-                        'pancard_image' => "required",
-                        'fassi_image' => "required",
-                        'fssai_lic_no' => "required",
-                    ]);
-        */
+//                else
+//                    $request->validate([
+//                        'holder_name' => 'required',
+//                        'ifsc' => 'required',
+//                        'bank_name' => 'required',
+//        //            'cancel_check' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048|dimensions:min_width=100,min_height=100,max_width=1000,max_height=1000',
+////                        'cancel_check' => 'required',
+//                        'account_no' => ['required', 'regex:/^\w{1,17}$/'],
+//                        'aadhar_number' => "required",
+//                        'aadhar_card_image' => "required",
+//                        'pancard_number' => "required",
+////                        'pancard_image' => "required",
+////                        'fassi_image' => "required",
+//                        'fssai_lic_no' => "required",
+//                    ]);
+
         $bank   = $request->all();
         $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
         $bank   = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();

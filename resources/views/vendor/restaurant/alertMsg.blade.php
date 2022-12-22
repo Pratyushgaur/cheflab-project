@@ -30,6 +30,12 @@
     @endif
 
     <script>
+        // appending HTML5 Audio Tag in HTML Body
+        {{--$('<audio id="chatAudio" controls autoplay><source  id="chatAudio1" src="{{url('/notification-sound.mp3')}}" type="audio/mpeg"></audio>').appendTo('body');--}}
+
+        {{--// play sound--}}
+        {{--$('#chatAudio')[0].play();--}}
+
         (function ($) {
             'use strict';
 
@@ -52,6 +58,8 @@
                     "hideMethod": "fadeOut"
                 }
 
+            // document.getElementById('chatAudio1').play();
+{{--            $.playSound('{{url('/public/notification-sound.mp3')}}');--}}
             @if (Session::has('error'))
             toastr.error('{{ Session::get('error') }}', 'Danger');
             @endif

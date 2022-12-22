@@ -39,19 +39,20 @@ class SendPushNotification extends Notification
 
    public function toFirebase($notifiable)
    {
-        
-       return (new FirebaseMessage)
-           ->withTitle($this->title)
-           ->withBody($this->message)
+        $r=(new FirebaseMessage)
+            ->withTitle($this->title)
+            ->withBody($this->message)
 //           ->withImage('https://firebase.google.com/images/social.png')
 //           ->withIcon('https://seeklogo.com/images/F/firebase-logo-402F407EE0-seeklogo.com.png')
-           ->withSound('default')
-           ->withClickAction('https://www.google.com')
-           ->withPriority('high')
-           ->withAdditionalData([
-               'msg_type' => 'info',
-               'link' => 'https://www.google.com'
-           ])
-           ->withPriority('high')->asMessage($this->fcmTokens);
+            ->withSound('default')
+            ->withClickAction('https://www.google.com')
+            ->withPriority('high')
+            ->withAdditionalData([
+                'msg_type' => 'info',
+                'link' => 'https://www.google.com'
+            ])
+            ->withPriority('high')->asMessage($this->fcmTokens);
+        echo "<pre>";print_r($r);
+       return $r;
    }
 }
