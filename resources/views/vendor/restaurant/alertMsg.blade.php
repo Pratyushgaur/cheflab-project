@@ -1,4 +1,53 @@
 @push('scripts')
+    <script>
+        (function(w) {
+
+            {{--'use strict';--}}
+
+            {{--var toasty = new Toasty({--}}
+            {{--    transition: "fade",--}}
+            {{--    duration: 0, // calculated automatically.--}}
+            {{--    enableSounds: true,--}}
+            {{--    sounds: {--}}
+            {{--        // path to sound for informational message:--}}
+            {{--        info: "{{ asset('frontend/assets/toasty/sounds/info/1.mp3') }}",--}}
+            {{--        // path to sound for successfull message:--}}
+            {{--        success: "{{ asset('frontend/assets/toasty/sounds/info/1.mp3') }}",--}}
+            {{--        // path to sound for warn message:--}}
+            {{--        warning: "{{ asset('frontend/assets/toasty/sounds/info/1.mp3') }}",--}}
+            {{--        // path to sound for error message:--}}
+            {{--        error: "{{ asset('frontend/assets/toasty/sounds/info/1.mp3') }}",--}}
+            {{--    },--}}
+
+            {{--    progressBar: true,--}}
+            {{--    autoClose: true--}}
+
+            {{--});--}}
+
+            {{--// var tran = document.getElementById('select-transition');--}}
+            {{--// var btns = document.querySelectorAll('.btn-example');--}}
+            {{--// var down = document.getElementById('action-download');--}}
+            {{--// var auto_refresh = setInterval(--}}
+            {{--//     function () {--}}
+            {{--//         toasty.info("sdfsdfdfsd", 10000000);--}}
+            {{--//     }, 3000); // refresh every 10000 milliseconds--}}
+            const playSound = (url) => {
+                const audio = new Audio(url);
+                audio.play();
+            }
+            {{--playSound('{{url("/notification-sound.mp3")}}');--}}
+            {{--setTimeout(() => {--}}
+            {{--    playSound('{{url("/notification-sound.mp3")}}');--}}
+            {{--}, 1000);--}}
+
+            {{--var auto_refresh = setInterval(--}}
+            {{--    function () {--}}
+            {{--        playSound('{{url("/notification-sound.mp3")}}');--}}
+            {{--    }, 3000); // refresh every 10000 milliseconds--}}
+
+        })(window);
+
+    </script>
     @if (Session::has('notice'))
         <script>
             (function ($) {
@@ -10,6 +59,8 @@
                         timer: 5000
                     }
                 );
+                playSound('{{url("/notification-sound.mp3")}}');
+
             })(jQuery);
         </script>
     @endif
@@ -25,6 +76,8 @@
                         timer: 5000
                     }
                 );
+                playSound('{{url("/notification-sound.mp3")}}');
+
             })(jQuery);
         </script>
     @endif
@@ -57,20 +110,28 @@
                     "showMethod": "fadeIn",
                     "hideMethod": "fadeOut"
                 }
-
+            // toastr.info('fdgdfg', 'Info');
             // document.getElementById('chatAudio1').play();
 {{--            $.playSound('{{url('/public/notification-sound.mp3')}}');--}}
             @if (Session::has('error'))
             toastr.error('{{ Session::get('error') }}', 'Danger');
+            playSound('{{url("/notification-sound.mp3")}}');
+
             @endif
 
             @if (Session::has('success'))
             toastr.success('{{ Session::get('success') }}', 'Success');
+            playSound('{{url("/notification-sound.mp3")}}');
+
             @endif
             @if (Session::has('message'))
             toastr.info('{{ Session::get('message') }}', 'Info');
+            playSound('{{url("/notification-sound.mp3")}}');
+
             @endif
             @if ($errors->any())
+            playSound('{{url("/notification-sound.mp3")}}');
+
             @foreach ($errors->all() as $error)
             toastr.error('{{ $error }}', 'Danger');
             @endforeach

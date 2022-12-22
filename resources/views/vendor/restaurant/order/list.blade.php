@@ -29,188 +29,19 @@ $breadcrumb[] = ["name"  => "List",
         <div class="row">
 
             <div class="col-md-12">
-                @include('vendor.vendor_breadcrumbs',['breadcrumb'=>$breadcrumb])      </div>
-
-            {{--                <nav aria-label="breadcrumb">--}}
-            {{--                    <ol class="breadcrumb pl-0">--}}
-            {{--                        <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>--}}
-            {{--                        <li class="breadcrumb-item active" aria-current="page">Orders</li>--}}
-            {{--                        <li class="breadcrumb-item active" aria-current="page">Orders List</li>--}}
-            {{--                    </ol>--}}
-            {{--                </nav>--}}
-
-
-            {{--                          <div class="col-md-12">--}}
-            {{--                            <div class="ms-panel ms-panel-fh">--}}
-            {{--                              <div class="ms-panel-header">--}}
-            {{--                                <h6>Favourite Orders</h6>--}}
-            {{--                              </div>--}}
-            {{--                              <div class="ms-panel-body order-circle">--}}
-
-            {{--                                <div class="row">--}}
-            {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-            {{--                                      <h6 class="text-center">Pizza</h6>--}}
-            {{--                                    <div class="progress-rounded progress-round-tiny">--}}
-
-            {{--                                      <div class="progress-value">12%</div>--}}
-            {{--                                      <svg>--}}
-            {{--                                        <circle class="progress-cicle bg-success" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="12" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-            {{--                                        </circle>--}}
-            {{--                                      </svg>--}}
-            {{--                                    </div>--}}
-            {{--                                  </div>--}}
-            {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-            {{--                                        <h6 class="text-center">Mexican Noodels</h6>--}}
-            {{--                                    <div class="progress-rounded progress-round-tiny">--}}
-            {{--                                      <div class="progress-value">38.8%</div>--}}
-            {{--                                      <svg>--}}
-            {{--                                        <circle class="progress-cicle bg-primary" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="38.8" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-            {{--                                        </circle>--}}
-            {{--                                      </svg>--}}
-            {{--                                    </div>--}}
-            {{--                                  </div>--}}
-            {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-            {{--                                      <h6 class="text-center">Spicy Salad</h6>--}}
-            {{--                                    <div class="progress-rounded progress-round-tiny">--}}
-            {{--                                      <div class="progress-value">78.8%</div>--}}
-            {{--                                      <svg>--}}
-            {{--                                        <circle class="progress-cicle bg-secondary" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="78.8" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-            {{--                                        </circle>--}}
-            {{--                                      </svg>--}}
-            {{--                                    </div>--}}
-            {{--                                  </div>--}}
-            {{--                                  <div class="col-xl-3 col-lg-3 col-md-6">--}}
-            {{--                                      <h6 class="text-center">French Fries</h6>--}}
-            {{--                                    <div class="progress-rounded progress-round-tiny">--}}
-            {{--                                      <div class="progress-value">100%</div>--}}
-            {{--                                      <svg>--}}
-            {{--                                        <circle class="progress-cicle bg-dark" cx="65" cy="65" r="57" stroke-width="4" fill="none" aria-valuenow="100" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" role="slider">--}}
-            {{--                                        </circle>--}}
-            {{--                                      </svg>--}}
-            {{--                                    </div>--}}
-            {{--                                  </div>--}}
-            {{--                                </div>--}}
-            {{--                              </div>--}}
-            {{--                            </div>--}}
-            {{--                          </div>--}}
-            <div class="row">
-                <div class="col-xl-12 col-md-12">
-                    <div class="ms-panel">
-                        <div class="ms-panel-header">
-                            <h6> Order List</h6>
-                        </div>
-                        <div class="ms-panel-body">
-
-                            <div class="table-responsive" style="overflow: hidden;">
-                                <table class="table table-hover thead-primary" id="order">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">Order ID</th>
-                                        <th scope="col">Customer Name</th>
-                                        <th scope="col">Address</th>
-                                        <th scope="col">Total amount</th>
-                                        <th scope="col">Net Amount</th>
-                                        <th scope="col">Discount</th>
-                                        {{--                                        <th scope="col">Order Status</th>--}}
-                                        <th scope="col">Payment Type</th>
-                                        <th scope="col">Payment Status</th>
-                                        <th scope="col">Remaining Time</th>
-                                        <th scope="col">Order Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                    </thead>
-
-                                    <thbody>
-                                        @if(count($orders)<=0)
-                                            <tr>
-                                                <td colspan="5">No record found</td>
-                                            </tr>
-                                        @endif
-                                        @foreach($orders as $k=>$order)
-                                            <tr>
-                                                <td>{{$order->id}}</td>
-                                                <td>{{$order->customer_name}}</td>
-                                                <td>{{$order->delivery_address}}</td>
-                                                <td>{{$order->total_amount}}</td>
-                                                <td>{{$order->net_amount}}</td>
-                                                <td>{{$order->discount_amount}}</td>
-                                                <td>{{$order->payment_type}}</td>
-                                                <td>
-                                                    <span class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span>
-                                                </td>
-                                                <td>@if($order->order_status=='preparing' && $order->preparation_time_to!='')
-
-                                                        <?php if (mysql_date_time($order->preparation_time_to) < mysql_date_time()) {
-                                                            echo "time out";
-                                                        }else{?>
-                                                        <span class="clock" data-countdown="{{ mysql_date_time($order->preparation_time_to)}}"></span>
-                                                        <?php } ?>
-                                                        <br/>
-                                                        <a data-toggle="modal" data-target="#modal-8" class="btn btn-sm btn-primary" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})">need more time</a>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <div class="input-group">
-                                                        <div class="">
-                                                            <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}}</button>
-                                                            <div class="dropdown-menu">
-                                                                <?php //if($order->order_status == 'pending') { ?>
-                                                                {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
-                                                                {{--                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept--}}
-                                                                {{--                                                                    and send for preparing</a>--}}
-                                                                {{--                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
-                                                                <?php
-                                                                //                                                                } else
-                                                                if($order->order_status == 'confirmed'){
-                                                                ?>
-                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
-                                                                <?php }
-                                                                if($order->order_status == 'preparing') {?>
-                                                                <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}" onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready
-                                                                    To Dispatch</a>
-                                                                <?php }if($order->order_status == 'ready_to_dispatch') { ?>
-                                                                <a class="dropdown-item {{'ms-text-'.$status_class['dispatched']}}" onclick="ajax_post_on_link('{{route('restaurant.order.dispatched',[$order->id])}}',{{$order->id}})">Dispatched</a>
-                                                                <?php } if($order->order_status != 'completed' &&
-                                                                $order->order_status != 'cancelled_by_customer_before_confirmed' &&
-                                                                $order->order_status != 'cancelled_by_customer_after_confirmed' &&
-                                                                $order->order_status != 'cancelled_by_vendor' &&
-                                                                $order->order_status != 'dispatched' && $order->order_status != 'ready_to_dispatch'){?>
-
-                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
-                                                                <?php } ?>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-
-                                                <td>
-
-                                                    <a href="{{route('restaurant.order.view',$order->id)}}"><i class="fa fa-eye text-success "></i></a>
-                                                    <a href="{{route('restaurant.order.invoice',$order->id)}}"><i class="fa fa-print text-info "></i></a>
-                                                    {{--                                                    <a href="#"><i class="fas fa-pencil-alt text-secondary"></i></a>--}}
-                                                    {{--                                                    <a href="a.html"><i class="far fa-trash-alt ms-text-danger"></i></a>--}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </thbody>
-                                    <tfoot>
-                                    <tr></tr>
-                                    </tfoot>
-                                </table>
-
-
-                                <div class="">{{ $orders->links('vendor.pagination.bootstrap-4') }}</div>
-
-                            </div>
-                        </div>
+                @include('vendor.vendor_breadcrumbs',['breadcrumb'=>$breadcrumb])
+            </div>
+            <div class="col-md-12">
+                <div class="ms-panel">
+                    <div class="ms-panel-header">
+                        <h6> Order List</h6>
+                    </div>
+                    <div class="ms-panel-body">
+                        <div id="load"></div>
                     </div>
                 </div>
             </div>
-
-
         </div>
-
-    </div>
     </div>
 
 @endsection
@@ -278,10 +109,18 @@ $breadcrumb[] = ["name"  => "List",
                             <code>This much amount of time already lapse</code>
                         </div>
 
+{{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
+{{--                            <label>Order preparation time Extend(in minutes)</label>--}}
+{{--                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">--}}
+{{--                            <i class="material-icons">timer</i>--}}
+{{--                        </div>--}}
                         <div class="ms-form-group has-icon" id="extend_time_div">
                             <label>Order preparation time Extend(in minutes)</label>
-                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">
-                            <i class="material-icons">timer</i>
+                            <select id="extend_preparation_time" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" onchange="extend_time()">
+
+                            </select>
+{{--                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">--}}
+{{--                            <i class="material-icons">timer</i>--}}
                         </div>
 
                     </div>
@@ -398,8 +237,9 @@ $breadcrumb[] = ["name"  => "List",
                     $("#extend_time_div").hide();
                     if (data.is_extend_time) {
                         $("#extend_time_div").show();
-                        $("#extend_preparation_time").prop('max', data.max_preparation_time);
-                        $("#extend_preparation_time").attr('placeholder', "maximum value " + data.max_preparation_time);
+                        $("#extend_preparation_time").html(data.options);
+                        // $("#extend_preparation_time").prop('max', data.max_preparation_time);
+                        // $("#extend_preparation_time").attr('placeholder', "maximum value " + data.max_preparation_time);
                     }
                 },
                 error: function (xhr, textStatus, thrownError) {
@@ -428,5 +268,14 @@ $breadcrumb[] = ["name"  => "List",
                     });
             });
         })(jQuery);
+    </script>
+
+    <script type="text/javascript">
+        $('#load').load('{{route('restaurant.order.refresh_list',["staus_filter"=>$staus_filter])}}').fadeIn("slow");
+        var auto_refresh = setInterval(
+            function () {
+                $('#load').load('{{route('restaurant.order.refresh_list',["staus_filter"=>$staus_filter])}}').fadeIn("slow");
+            }, 30000); // refresh every 10000 milliseconds
+
     </script>
 @endpush

@@ -48,9 +48,10 @@ class RazorpayRestaurantController extends Controller
 
                 $AppPromotionBlogBooking                 = AppPromotionBlogBooking::find($PaymentTransaction->foreign_id);
                 $AppPromotionBlogBooking->payment_status = 1;
+                $AppPromotionBlogBooking->is_active = 1;
                 $AppPromotionBlogBooking->save();
-                \Session::put('success', 'Payment successful, your request send to admin for approval.');
-                return redirect()->back();
+//                \Session::put('success', 'Payment successful.');
+                return redirect()->back()->with('success', 'Payment successful.');
 
 //dd($response);
             } catch (\Exception $e) {
@@ -59,7 +60,7 @@ class RazorpayRestaurantController extends Controller
                 return redirect()->back();
             }
         }
-        \Session::put('success', 'Something went worng.');
-        return redirect()->back();
+//        \Session::put('success', 'Something went worng.');
+        return redirect()->back()->with('error', 'Something went worng.');
     }
 }

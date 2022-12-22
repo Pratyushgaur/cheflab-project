@@ -13,7 +13,7 @@ class NotificationController extends Controller
         if (Auth::guard('admin')->check()) {
             $notifications = Auth::guard('admin')->user()->notifications()->paginate(25);
         } elseif (Auth::guard('vendor')->check()) {
-            $notifications = Auth::guard('vendor')->user()->notifications()->paginate(25);
+            $notifications = Auth::guard('vendor')->user()->notifications()->paginate(5);
         } elseif (Auth::guard('chef')->check()) {
             $notifications = Auth::guard('chef')->user()->notifications()->paginate(25);
         }

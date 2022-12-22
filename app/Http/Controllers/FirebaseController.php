@@ -70,13 +70,13 @@ class FirebaseController extends Controller
             /* or */
 
 //            auth()->user()->notify(new SendPushNotification($title,$message,$fcmTokens));
-            $r=Auth::guard('vendor')->user()->notify(new SendPushNotification("Test title","Description",\Auth::guard('vendor')->user()->fcm_token));
+//            $r=Auth::guard('vendor')->user()->notify(new SendPushNotification("Test title","Description",\Auth::guard('vendor')->user()->fcm_token));
             /* or */
 //            dd($fcmTokens);
 //            Larafirebase::withTitle('Title')
 //                ->withBody('msg')
 //                ->sendMessage($fcmTokens);
-dd($r);
+//dd($r);
 //            return redirect()->back()->with('success', 'Notification Sent Successfully!!');
 
         } catch (\Exception $e) {

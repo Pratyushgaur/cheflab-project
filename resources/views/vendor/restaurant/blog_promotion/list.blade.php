@@ -47,6 +47,9 @@ $breadcrumb[] = ["name"  => "List",
                                 </tr>
                                 </thead>
                                 <tbody>
+                                @if(count($appPromotionBlogBookings)<=0)
+                                    <tr><td class="5">No Record Found</td></tr>
+                                    @endif
                                 <?php $blog_type = config('custom_app_setting.blog_type')?>
                                 @foreach($appPromotionBlogBookings as $k=>$appPromotionBlogBooking)
 
