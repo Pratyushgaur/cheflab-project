@@ -25,7 +25,7 @@ yarn-error.log
 /public/vendor-banner
 /public/vendors
 /public/slot-vendor-image
-/public
+/public/*
 /public/error_log
 
 1firebase-messaging-sw.js

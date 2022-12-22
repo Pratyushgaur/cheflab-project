@@ -61,7 +61,7 @@ class FirebaseController extends Controller
 
             $order = \App\Models\Order::find(2);
             event(new OrderCreateEvent($order,25, 1, 1));
-            dd("sdfdf");
+//            dd("sdfdf");
 //            dd(\Auth::guard('vendor')->user()->fcm_token);
 //            $fcmTokens = User::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
 //            $fcmTokens[] = auth()->user()->fcm_token;

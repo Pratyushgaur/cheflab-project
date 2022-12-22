@@ -109,6 +109,50 @@ $breadcrumb[] = ["name"  => "List",
                             <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1">
                             <i class="material-icons">timer</i>
                             <code>This much amount of time already lapse</code>
+                            <code>Sum of All Preparation Time of Products for particular Order will be order preparation
+                                time </code>
+                        </div>
+
+                        {{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
+                        {{--                            <label>Order preparation time Extend(in minutes)</label>--}}
+                        {{--                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">--}}
+                        {{--                            <i class="material-icons">timer</i>--}}
+                        {{--                        </div>--}}
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary shadow-none" {{--data-dismiss="modal"--}} id="submit_model">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    {{--    Need more time --}}
+    <div class="modal fade" id="modal-8" tabindex="-1" role="dialog" aria-labelledby="modal-8" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <form method="post" id="preparation_form1">
+                    @csrf
+                    <div class="modal-header bg-primary">
+                        <h3 class="modal-title has-icon text-white">Order preparation </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <input type="hidden" name="orignel_preparation_time" value="" id="orignel_preparation_time1">
+                    <div class="modal-body">
+                        <div class="ms-form-group has-icon">
+                            <label>Order preparation time </label>
+                            <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1">
+                            <i class="material-icons">timer</i>
+                            <code>This much amount of time already lapse</code>
                         </div>
 
 {{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
@@ -116,8 +160,18 @@ $breadcrumb[] = ["name"  => "List",
 {{--                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">--}}
 {{--                            <i class="material-icons">timer</i>--}}
 {{--                        </div>--}}
+{{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
+{{--                            <label>Order preparation time Extend(in minutes)</label>--}}
+{{--                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">--}}
+{{--                            <i class="material-icons">timer</i>--}}
+{{--                        </div>--}}
                         <div class="ms-form-group has-icon" id="extend_time_div">
                             <label>Order preparation time Extend(in minutes)</label>
+                            <select id="extend_preparation_time" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" onchange="extend_time()">
+
+                            </select>
+{{--                            <input type="number" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" value="" step="1" id="extend_preparation_time" onchange="extend_time()">--}}
+{{--                            <i class="material-icons">timer</i>--}}
                             <select id="extend_preparation_time" placeholder="preparation time extend in minutes" class="form-control" name="extend_preparation_time" onchange="extend_time()">
 
                             </select>
@@ -252,7 +306,42 @@ $breadcrumb[] = ["name"  => "List",
             $('#myModal').modal('show');
         }
 
+        function preparation_form1(url, id) {
+            $('#preparation_form1').attr('action', url);
+
+            $.ajax({
+                url: '{{route('restaurant.order.get_set_preparation_time')}}',
+                type: 'post',
+                cache: false,
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "order_id": id
+                },
+                success: function (data) {
+
+                    if (data.total_preparation_time != '') {
+                        $("#orignel_preparation_time1").val(data.total_preparation_time);
+                        $("#preparation_time1").val(data.total_preparation_time);
+                    }
+
+                    $("#extend_time_div").hide();
+                    if (data.is_extend_time) {
+                        $("#extend_time_div").show();
+                        $("#extend_preparation_time").html(data.options);
+                        // $("#extend_preparation_time").prop('max', data.max_preparation_time);
+                        // $("#extend_preparation_time").attr('placeholder', "maximum value " + data.max_preparation_time);
+                    }
+                },
+                error: function (xhr, textStatus, thrownError) {
+                    // toastr.info('Something went wrong', 'Info');
+                }
+            });
+            $('#myModal').modal('show');
+        }
+
         function extend_time() {
+            var pre_time = parseInt($("#orignel_preparation_time1").val());
+            $("#preparation_time1").val((pre_time + parseInt($("#extend_preparation_time").val())));
             var pre_time = parseInt($("#orignel_preparation_time1").val());
             $("#preparation_time1").val((pre_time + parseInt($("#extend_preparation_time").val())));
         }

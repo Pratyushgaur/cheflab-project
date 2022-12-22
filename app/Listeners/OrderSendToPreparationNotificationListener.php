@@ -5,6 +5,7 @@ namespace App\Listeners;
 use App\Events\OrderCreateEvent;
 use App\Events\OrderSendToPrepareEvent;
 use App\Jobs\OrderPreparationDoneJob;
+use App\Jobs\DriveAssignOrderJob;
 use App\Models\User;
 use App\Models\vendors;
 use App\Notifications\OrderCreateNotification;
@@ -39,8 +40,7 @@ class OrderSendToPreparationNotificationListener
 //we dont need to send firbase notification to vendor so we dont pass fcm_token
         $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,'Send for preparation',"You have send Order #".$event->order->id." for preparation.",''));
 //dd( $event->preparationTime);
-        OrderPreparationDoneJob::dispatch($event->order)
-//            ->delay(now()->addMinutes(10));
-            ->delay(now()->addMinutes((int) $event->preparationTime));
+        DriveAssignOrderJob::dispatch();
+        //OrderPreparationDoneJob::dispatch($event->order)->delay(now()->addMinutes((int) $event->preparationTime));
     }
 }

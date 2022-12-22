@@ -3193,4 +3193,32 @@ class AppController extends Controller
             ], 500);
         }
     }
+
+    public function getDriveLocation(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'driver_id'    => 'required|exists:deliver_boy,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+           $location =   \App\Models\Deliver_boy::find($request->driver_id)->select('lat','lng')->first();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $location
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }

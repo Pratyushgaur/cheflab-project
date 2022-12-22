@@ -15,7 +15,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class OrderPreparationDoneJob implements ShouldQueue
+class DriveAssignOrderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -59,7 +59,12 @@ class OrderPreparationDoneJob implements ShouldQueue
                 $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign));
                 var_dump($res);
             }
+
+
         }
+
+
+
 //send request to delivery boy
     }
 }

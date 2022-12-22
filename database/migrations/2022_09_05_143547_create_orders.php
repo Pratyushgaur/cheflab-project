@@ -40,6 +40,7 @@ class CreateOrders extends Migration
             $table->text('payment_string')->nullable()->default(null)->comment('payment gatway return json string');
             $table->datetime('preparation_time_from')->nullable()->default(null);
             $table->datetime('preparation_time_to')->nullable()->default(null);
+            $table->boolean('is_need_more_time')->default(0)->comment('1=if more preparation time extends');
             $table->enum('refund',['0','1','2'])->default('0')->comment('0 no need for refund,1 refund requested, 2 refund DONE');
 
             $table->timestamp('created_at')->useCurrent();
