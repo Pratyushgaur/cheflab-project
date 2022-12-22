@@ -59,12 +59,7 @@ class OrderPreparationDoneJob implements ShouldQueue
                 $res = sendNotification($title,$body,$token->token,array('type'=>1,'data'=>$riderAssign));
                 var_dump($res);
             }
-
-
         }
-
-
-
 //send request to delivery boy
     }
 }

@@ -38,6 +38,8 @@ $breadcrumb[] = ["name"  => "List",
                     </div>
                     <div class="ms-panel-body">
                         <div id="load"></div>
+
+                        <div class="row">{{ $orders->links('vendor.pagination.bootstrap-4') }}</div>
                     </div>
                 </div>
             </div>
@@ -169,6 +171,7 @@ $breadcrumb[] = ["name"  => "List",
                         $("#" + id).removeClass('{{$remove_class}}');
                         <?php echo $if_stat;?>
                         toastr.success(data.msg, 'Success');
+                        $('#load').load('{{route('restaurant.order.refresh_list',["staus_filter"=>$staus_filter])}}').fadeIn("slow");
                     } else
                         toastr.info('Something went wrong', 'Info');
                 },
@@ -271,11 +274,14 @@ $breadcrumb[] = ["name"  => "List",
     </script>
 
     <script type="text/javascript">
-        $('#load').load('{{route('restaurant.order.refresh_list',["staus_filter"=>$staus_filter])}}').fadeIn("slow");
+        <?php $query_string = request()->all();
+        $query_string["staus_filter"] = $staus_filter;?>
+        $('#load').load('{{route('restaurant.order.refresh_list',$query_string)}}').fadeIn("slow");
         var auto_refresh = setInterval(
             function () {
-                $('#load').load('{{route('restaurant.order.refresh_list',["staus_filter"=>$staus_filter])}}').fadeIn("slow");
-            }, 30000); // refresh every 10000 milliseconds
+
+                $('#load').load('{{route('restaurant.order.refresh_list',$query_string)}}').fadeIn("slow");
+            }, 300000); // refresh every 10000 milliseconds
 
     </script>
 @endpush

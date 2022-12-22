@@ -22,9 +22,7 @@ class DashboardController extends Controller
         //order count
         \DB::enableQueryLog();
         $order_obj = Orders::where('vendor_id', Auth::guard('vendor')->user()->id);
-        $where = [
-            ['created_at', '<=', mysql_date()]
-        ];
+        $where = [['vendor_id', '=', Auth::guard('vendor')->user()->id]];
 
         if ($request->filter == 1) {
             $text  = "Today";
@@ -55,7 +53,11 @@ class DashboardController extends Controller
         $total_prepairing        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'preparing')->count();
         $total_ready_to_dispatch = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'ready_to_dispatch')->count();
         $total_dispatched        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'dispatched')->count();
-        $total_confirmed         = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->whereNotIn('order_status', ['pending', 'cancelled_by_customer', 'cancelled_by_vendor'])->count();
+        $total_confirmed         = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->whereNotIn('order_status', ['pending',
+                                                                                                                                             'cancelled_by_customer_before_confirmed',
+                                                                                                                                             'cancelled_by_customer_after_confirmed',
+                                                                                                                                             'cancelled_by_customer_during_prepare',
+                                                                                                                                             'cancelled_by_vendor'])->count();
         $total_refund            = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('refund', '2')->count();
 
 //        dd(\DB::getQueryLog());

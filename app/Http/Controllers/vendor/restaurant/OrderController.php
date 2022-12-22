@@ -16,23 +16,23 @@ class OrderController extends Controller
     public function index($staus_filter = null)
     {
         $orders = [];
-//        $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
-//            ->join('users', 'users.id', '=', 'orders.user_id')
-//            ->join('order_products', 'order_products.order_id', '=', 'orders.id')
-//            ->join('products', 'products.id', '=', 'order_products.product_id')
-//            ->where('vendor_id', Auth::guard('vendor')->user()->id)
-//            ->whereNotIn('order_status', ['pending', 'cancelled_by_customer_before_confirmed']);
-//        if (in_array($staus_filter, ['confirmed', 'preparing', 'ready_to_dispatch', 'dispatched', 'cancelled_by_vendor', 'completed']) != '') {
-//            $order_obj->where('order_status', $staus_filter);
-//        }
-//        if (in_array($staus_filter, ['refunded']) != '') {
-//            $order_obj->where('refund', 2);
-//        }
-//
-//        $orders = $order_obj
-//            ->groupBy('orders.id')
-//            ->orderBy('orders.id', 'desc')
-//            ->paginate(25);
+        $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
+            ->join('users', 'users.id', '=', 'orders.user_id')
+            ->join('order_products', 'order_products.order_id', '=', 'orders.id')
+            ->join('products', 'products.id', '=', 'order_products.product_id')
+            ->where('vendor_id', Auth::guard('vendor')->user()->id)
+            ->whereNotIn('order_status', ['pending', 'cancelled_by_customer_before_confirmed']);
+        if (in_array($staus_filter, ['confirmed', 'preparing', 'ready_to_dispatch', 'dispatched', 'cancelled_by_vendor', 'completed']) != '') {
+            $order_obj->where('order_status', $staus_filter);
+        }
+        if (in_array($staus_filter, ['refunded']) != '') {
+            $order_obj->where('refund', 2);
+        }
+
+        $orders = $order_obj
+            ->groupBy('orders.id')
+            ->orderBy('orders.id', 'desc')
+            ->paginate(25);
 //        dd($orders);
         return view('vendor.restaurant.order.list', compact('orders', 'staus_filter'));
     }
