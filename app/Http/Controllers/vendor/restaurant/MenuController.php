@@ -39,7 +39,7 @@ class MenuController extends Controller
 
             $data = VendorMenus::latest()
             ->leftJoin('products as c', 'vendor_menus.id', 'c.menu_id')
-            ->select('vendor_menus.*',\DB::raw('count(*) as count'))
+            ->select('vendor_menus.*',\DB::raw('count(c.id) as count'))
             ->where('vendor_id','=',\Auth::guard('vendor')->user()->id)
             ->groupBy('vendor_menus.id')
             ->get();
