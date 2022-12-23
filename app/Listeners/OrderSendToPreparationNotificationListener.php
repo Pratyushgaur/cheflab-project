@@ -40,7 +40,7 @@ class OrderSendToPreparationNotificationListener
 //we dont need to send firbase notification to vendor so we dont pass fcm_token
         $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,'Send for preparation',"You have send Order #".$event->order->id." for preparation.",''));
 //dd( $event->preparationTime);
-        DriveAssignOrderJob::dispatch();
+        DriveAssignOrderJob::dispatch($event->order);
         //OrderPreparationDoneJob::dispatch($event->order)->delay(now()->addMinutes((int) $event->preparationTime));
     }
 }

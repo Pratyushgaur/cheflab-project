@@ -812,7 +812,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
         //$title = "Notification title";
         //$body = "Hello I am from Your php server";
         $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
-        $arrayToSend = array('to' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+        $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
         $json = json_encode($arrayToSend);
         $headers = array();
         $headers[] = 'Content-Type: application/json';

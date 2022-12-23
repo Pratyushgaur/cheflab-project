@@ -17,7 +17,7 @@ class Products extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('userId')->nullable();
-             $table->foreign('userId')->references('id')->on('vendors')->nullable();
+            $table->foreign('userId')->references('id')->on('vendors')->onDelete('cascade')->nullable();
             $table->string('product_name');
             $table->string('product_image')->nullable();
             $table->unsignedBigInteger('cuisines')->references('id')->on('cuisines')->nullable();

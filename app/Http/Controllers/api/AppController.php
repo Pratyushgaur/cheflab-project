@@ -3221,4 +3221,38 @@ class AppController extends Controller
             ], 500);
         }
     }
+
+    public function orderTimeDiff(Request $request)
+    {
+        try {
+            //return $request->order_id;
+            $validateUser = Validator::make($request->all(), [
+                'order_id'    => 'required|exists:orders,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+           $datetime =   \App\Models\Order::find($request->order_id)->select('created_at')->first();
+           $date = Carbon::parse($datetime->created_at);
+           $now = Carbon::now();
+           $seconds =     $diff = $date->diffInSeconds($now);
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $seconds
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+        
+        
+       
+    }
 }
