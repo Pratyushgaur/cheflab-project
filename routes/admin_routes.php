@@ -24,6 +24,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('restaurant/edit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_edit'])->name('admin.chef.edit');
     Route::get('chef/edit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_editchef'])->name('admin.chef.editchef');
     Route::post('vendors/delete', [App\Http\Controllers\admin\UserControllers::class, 'soft_delete'])->name('admin.vendors.ajax.delete');
+    Route::post('vendors/delete/permanently', [App\Http\Controllers\admin\UserControllers::class, 'truncateVendorData'])->name('admin.vendor.permanently.delete');
+    
     Route::post('vendors/product/delete', [App\Http\Controllers\admin\ProductController::class, 'soft_delete'])->name('admin.product.ajax.delete');
     Route::post('vendors/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'vendor_inactive'])->name('admin.vendors.inactive');
     Route::post('vendors/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'vendor_active'])->name('admin.vendors.active');

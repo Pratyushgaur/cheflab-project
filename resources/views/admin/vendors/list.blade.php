@@ -237,6 +237,99 @@
         function reload_table() {
             table.DataTable().ajax.reload(null, false);
         }
+        $(document).on('click','.delete-vendor-records',function(){
+            Swal.fire({
+                title: 'Are you sure To Want To delete This Vendor?',
+                text: 'It Can Not Recover After delete',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                var id = $(this).attr('data-id');
+                var action = $(this).attr('data-action-url');
+                var table = $(this).attr('data-table');
+                //
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
+                $.ajax({
+                    url: "{{route('admin.vendor.permanently.delete')}}",
+                    type: 'POST',
+                    // dataType: "JSON",
+                    data: {
+                        "vendor_id": $(this).attr('data-id'),
+                    },
+                    success: function (response)
+                    {
+                        console.log(response);
+                        if (response.status == true) {
+                            Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                            $('#example').DataTable().ajax.reload();
+                        } else {
+                            Swal.fire({icon: 'error',title: 'Oops...',text: response.error[0], footer: ''});
+                        }
+                    },
+                    error: function(xhr) {
+                    console.log(xhr.responseText); 
+                    Swal.fire({icon: 'error',title: 'Oops...',text: 'UNAUTHRIZED USER', footer: ''});
+                    
+                    }
+                });
+
+                }
+            })
+        })
+        $(document).on('click','.inactiveVendor',function(){
+            Swal.fire({
+                title: 'Are you sure To Want To Change Status ',
+                text: '',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Change it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                var id = $(this).attr('data-id');
+                var action = $(this).attr('data-url');
+                var table = $(this).attr('data-table');
+                //
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    url: action,
+                    type: 'POST',
+                    // dataType: "JSON",
+                    data: {
+                        "vendor_id": $(this).attr('data-id'),
+                    },
+                    success: function (response)
+                    {
+                        console.log(response);
+                        if (response.success == true) {
+                            Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                            reload_table();
+                        } else {
+                            Swal.fire({icon: 'error',title: 'Oops...',text: response.error[0], footer: ''});
+                        }
+                    },
+                    error: function(xhr) {
+                    console.log(xhr.responseText); 
+                    Swal.fire({icon: 'error',title: 'Oops...',text: 'UNAUTHRIZED USER', footer: ''});
+                    
+                    }
+                });
+
+                }
+            })
+        })
     </script>
 @endsection
