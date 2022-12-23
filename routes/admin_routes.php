@@ -112,6 +112,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
    // Banner Promotion
     Route::get('banner-promotion', [App\Http\Controllers\admin\BannerController::class, 'index'])->name('admin.banner.createbanner');
+    Route::get('banner-booking-list', [App\Http\Controllers\admin\BannerController::class, 'get_data_table_of_slote_booking'])->name('admin.slot.booking.data');
     Route::get('banner-list', [App\Http\Controllers\admin\BannerController::class, 'get_data_table_of_slote'])->name('admin.slot.data');
     Route::get('banner-slot-edit/{id}', [App\Http\Controllers\admin\BannerController::class, 'fun_edit_slot'])->name('admin.slot.edit');
     Route::post('banner-slot-update', [App\Http\Controllers\admin\BannerController::class, 'updateSlot'])->name('admin.slot.update');

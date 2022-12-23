@@ -102,7 +102,7 @@
     <!-- Main content -->
     <section class="content">
 		<div class="row">
-  		<div class="card card-info col-md-8">
+  		<div class="card card-info col-md-12">
             <div class="card-header">
               <h3 class="card-title">List</h3>
 
@@ -131,6 +131,85 @@
 		</div>
     </section>
     <!-- /.content -->
+    <section class="content">
+            <div class="container-fluid">
+                  <!-- /.row -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <!-- <form action="{{route('admin.vendors.list')}}"> -->
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        
+                                        <select name="rolename" class="form-control" id="filter_by_role">
+                                            <option value="">Filter By Role</option>
+                                            <option value="restaurant">Restaurant</option>
+                                            <option value="chef">Chef</option>
+                                        </select>
+                                    </div>
+                                    <!-- <div class="col-md-2">
+                                        <input type="text" name="search" class="form-control" placeholder="Search" value="{{request()->search}}">
+                                    </div> -->
+
+                                    <div class="col-md-2">
+                                    <button type="button" class="pull-right btn btn-sm btn-success" onclick="reload_table();" style="color:#fff;"><i class="fas fa-search"> </i> Search</button>
+                                        <a href="" class="pull-right btn btn-sm btn-primary "><i class="fas fa-refresh"> </i> Reset</a>
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="#" class="pull-right btn btn-sm btn-success " style="float: right;  color:#fff;"><i class="fa fa-plus"> </i> Create New Restaurant</a>
+                                    </div>
+                                    <div class="col-md-3">
+                                    <a href="#" class="pull-right btn btn-sm btn-success " style="  color:#fff;"><i class="fa fa-user"> </i> Create New Chef</a>
+                                    </div>
+                                </div>
+                                <!-- </form> -->
+                            </div>
+
+                          </div>
+
+                      </div>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
+
+                            <div class="card-header">
+                                <h3 class="card-title">Listing of Promotion Booking </h3>
+                            </div>
+                            <div class="card-body pad table-responsive">
+                                <table id="example1" class="table1 table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                                    <thead>
+                                    <tr role="row">
+                                        <th class="text-center">Sr No.</th>
+                                        <th>Vendor name </th>
+                                        <th>Email/Mobile</th>
+                                        <th>Slot Name</th>
+                                        <th> Position</th>
+                                        <th> Price</th>
+                                        <th>Image</th>
+                                        <th>created at</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    
+                                    </tbody>
+                                </table>
+                               
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </section>   
+
   </div>
   <!-- /.content-wrapper -->
  
@@ -162,6 +241,20 @@
             {data: 'slot_name', name: 'slot_name'},
             {data: 'position', name: 'position'},
             {data: 'price', name: 'price'},
+            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+        ]
+    });
+    let table1 = $('#example1').dataTable({
+        processing: true,
+        serverSide: true,
+        ajax: "{{route('admin.slot.booking.data')}}",
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'vendorName', name: 'vendorName'},
+            {data: 'mobile', name: 'mobile'},
+            {data: 'slotName', name: 'slotName'},
+            {data: 'from_date', name: 'from_date'},
+            {data: 'to_date', name: 'to_date'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });

@@ -179,7 +179,7 @@
           rules: {
             name: {
                   required: true,
-                  maxlength: 25,
+                 
                   
               },
               bannerImage: {

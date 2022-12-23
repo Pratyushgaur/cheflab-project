@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use App\Models\SloteBook;
 use App\Models\SloteMaster;
+use App\Models\RootImage;
 use App\Models\VendorMenus;
 use App\Models\vendors;
 use Config;
@@ -93,7 +94,38 @@ class BannerController extends Controller
         }
 
     }
+    public function get_data_table_of_slote_booking(Request $request)
+    {
+        if ($request->ajax()) {
 
+            $data = SloteBook::where('is_active', '=', 1)->join('vendors', 'slotbooking_table.vendor_id', '=', 'vendors.id')->join('cheflab_banner_image', 'slotbooking_table.cheflab_banner_image_id', '=', 'cheflab_banner_image.id')->select('slotbooking_table.*', 'vendors.name as vendorName', 'vendors.mobile as mobile','cheflab_banner_image.name as slotName')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function ($data) {
+                    $btn = '<a href="' . route("admin.slot.edit", Crypt::encryptString($data->id)) . '" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>';
+                    return $btn;
+                })
+               
+                ->addColumn('from_date', function ($data) {
+                    $date_with_format = date('d M Y', strtotime($data->from_date));
+                    return $date_with_format;
+                })
+                ->addColumn('to_date', function ($data) {
+                    $date_with_format = date('d M Y', strtotime($data->to_date));
+                    return $date_with_format;
+                })
+                ->addColumn('slot_image',function($data){
+                    return "<img src=".asset('slot-vendor-image').'/'.$data->slot_image."  style='width: 50px;' />";
+                })
+                ->rawColumns([ 'date', 'action-js','slot_image'])
+                ->rawColumns([ 'action-js','slot_image'])
+                //'. route("admin.slote.edit",Crypt::encryptString($data->id)) .'
+                //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
+        }
+
+    }
     public function getVendorBanner(Request $request, $id)
     {
         $user = $request->id;

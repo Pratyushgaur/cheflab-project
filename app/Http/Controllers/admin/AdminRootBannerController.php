@@ -51,7 +51,7 @@ class AdminRootBannerController extends Controller
             'name' => 'required',
             'bannerImage' => 'required',
         ]);
-        $root = SloteMaster::find($request->id);
+        $root = RootImage::find($request->id);
         $root->name = $request->name;
         if($request->has('bannerImage')){
             $filename = time().'-bannerImage-'.rand(100,999).'.'.$request->bannerImage->extension();
@@ -60,6 +60,6 @@ class AdminRootBannerController extends Controller
             $root->bannerImage  = $filename;
         }
         $root->save();
-        return redirect()->route('admin.vendor.store')->with('message', 'Banner Update Successfully');
+        return redirect()->route('admin.root.banner')->with('message', 'Banner Update Successfully');
     }   
 }
