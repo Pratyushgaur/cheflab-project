@@ -189,8 +189,8 @@ class AppController extends Controller
 
             $userid  = request()->user()->id;
             $where   = ['vendor_type' => 'restaurant'];
-            $whereIn = [36,1391,75,899,976,990,242,253,329,1390];
-            $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null,$whereIn);
+            $whereIn = [];//[36,1391,75,899,976,990,242,253,329,1390];
+            $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
             $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
             $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false)->toArray();//not need to pass offset; limit set on products
@@ -215,13 +215,23 @@ class AppController extends Controller
                 $vendors[$key]->categories     = $category;
                 $vendors[$key]->next_available = next_available_day($value->id);
             }
-
+            // get Promotional Blogs 
+            $Blogs         = AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
+                ->where(function ($p) {
+                    $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
+                })
+                ->where(['vendor_type'=>'restaurent','blog_for'=>0])
+                ->get();
+            $reponce =  promotionRowSetup($Blogs);
+            //////////////////////////
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
                 'response' => [
                     'vendors'  => $vendors,
-                    'products' => $products]
+                    'products' => $products,
+                    'blogs' => $reponce
+                    ]
 
             ], 200);
         } catch (Throwable $th) {
