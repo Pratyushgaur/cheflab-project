@@ -14,7 +14,6 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     public function index($staus_filter = null)
-    public function index($staus_filter = null)
     {
         $orders = [];
         $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
@@ -99,27 +98,27 @@ class OrderController extends Controller
         return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'Total preparation' is grater then admin 'max Preparation time'.");
     }
 
-    public function order_need_more_time(Request $request, $id)
-    {
-        $order                  = Order::find($id);
-        $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
-        $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
-        $a                      = ($admin_masters->max_preparation_time - $total_preparation_time);
-        $p                      = (int)$request->extend_preparation_time;
+    // public function order_need_more_time(Request $request, $id)
+    // {
+    //     $order                  = Order::find($id);
+    //     $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
+    //     $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
+    //     $a                      = ($admin_masters->max_preparation_time - $total_preparation_time);
+    //     $p                      = (int)$request->extend_preparation_time;
 
-        if ($total_preparation_time < $admin_masters->max_preparation_time) {
-            if ($a > $p) {
-                $order->order_status        = 'preparing';
-                $order->is_need_more_time   = 1;
-                $order->preparation_time_to = mysql_add_time($order->preparation_time_to, $request->extend_preparation_time);
-                $order->save();
-                return redirect()->back()->with('success', "# $order->order_id Order send for preparing");
-            }
+    //     if ($total_preparation_time < $admin_masters->max_preparation_time) {
+    //         if ($a > $p) {
+    //             $order->order_status        = 'preparing';
+    //             $order->is_need_more_time   = 1;
+    //             $order->preparation_time_to = mysql_add_time($order->preparation_time_to, $request->extend_preparation_time);
+    //             $order->save();
+    //             return redirect()->back()->with('success', "# $order->order_id Order send for preparing");
+    //         }
 
-            return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'extend preparation time' is grater then admin 'max Preparation time'.");
-        }
-        return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'Total preparation' is grater then admin 'max Preparation time'.");
-    }
+    //         return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'extend preparation time' is grater then admin 'max Preparation time'.");
+    //     }
+    //     return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'Total preparation' is grater then admin 'max Preparation time'.");
+    // }
 
     public function order_ready_to_dispatch($id)
     {
@@ -184,37 +183,37 @@ class OrderController extends Controller
         return response()->json($return, 200);
     }
 
-    public function get_set_preparation_time(Request $request)
-    {
-//        dd("sdfsdf");
-//        $products       = OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')->join('products', 'order_products.product_id', '=', 'products.id')->where('order_id', $request->order_id)->first();
-//        $products=get_order_preparation_time($request->order_id);
-        $order                  = Order::find($request->order_id);
-        $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
-        $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
-        $is_extend_time         = false;
-        $return                 = ['total_preparation_time' => $total_preparation_time, 'is_extend_time' => false];
-//        if ($total_preparation_time <= $admin_masters->max_preparation_time) {
-//            $return['is_extend_time']       = true;
-//            $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
-//        }
-        if ($total_preparation_time <= $admin_masters->max_preparation_time) {
-            $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
-            $options                        = "";
-            if ($return['max_preparation_time'] >= 5) {
-                $return['is_extend_time'] = true;
-                $options                  .= "<option value='5'>5</option>";
-            }
-            if ($return['max_preparation_time'] >= 10) {
-                $options .= "<option value='10'>10</option>";
-            }
-            if ($return['max_preparation_time'] >= 15) {
-                $options .= "<option value='15'>15</option>";
-            }
-            $return['options']=$options;
-        }
-        return response()->json($return, 200);
-    }
+//     public function get_set_preparation_time(Request $request)
+//     {
+// //        dd("sdfsdf");
+// //        $products       = OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')->join('products', 'order_products.product_id', '=', 'products.id')->where('order_id', $request->order_id)->first();
+// //        $products=get_order_preparation_time($request->order_id);
+//         $order                  = Order::find($request->order_id);
+//         $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
+//         $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
+//         $is_extend_time         = false;
+//         $return                 = ['total_preparation_time' => $total_preparation_time, 'is_extend_time' => false];
+// //        if ($total_preparation_time <= $admin_masters->max_preparation_time) {
+// //            $return['is_extend_time']       = true;
+// //            $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
+// //        }
+//         if ($total_preparation_time <= $admin_masters->max_preparation_time) {
+//             $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
+//             $options                        = "";
+//             if ($return['max_preparation_time'] >= 5) {
+//                 $return['is_extend_time'] = true;
+//                 $options                  .= "<option value='5'>5</option>";
+//             }
+//             if ($return['max_preparation_time'] >= 10) {
+//                 $options .= "<option value='10'>10</option>";
+//             }
+//             if ($return['max_preparation_time'] >= 15) {
+//                 $options .= "<option value='15'>15</option>";
+//             }
+//             $return['options']=$options;
+//         }
+//         return response()->json($return, 200);
+//     }
 
     public function refresh_list(Request $request, $staus_filter = null)
     {
@@ -271,26 +270,26 @@ class OrderController extends Controller
         return response()->json($return, 200);
     }
 
-    public function refresh_list(Request $request, $staus_filter = null)
-    {
-        $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
-            ->join('users', 'users.id', '=', 'orders.user_id')
-            ->join('order_products', 'order_products.order_id', '=', 'orders.id')
-            ->join('products', 'products.id', '=', 'order_products.product_id')
-            ->where('vendor_id', Auth::guard('vendor')->user()->id)
-            ->whereNotIn('order_status', ['pending', 'cancelled_by_customer_before_confirmed']);
-        if (in_array($staus_filter, ['confirmed', 'preparing', 'ready_to_dispatch', 'dispatched', 'cancelled_by_vendor', 'completed']) != '') {
-            $order_obj->where('order_status', $staus_filter);
-        }
-        if (in_array($staus_filter, ['refunded']) != '') {
-            $order_obj->where('refund', 2);
-        }
+//     public function refresh_list(Request $request, $staus_filter = null)
+//     {
+//         $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
+//             ->join('users', 'users.id', '=', 'orders.user_id')
+//             ->join('order_products', 'order_products.order_id', '=', 'orders.id')
+//             ->join('products', 'products.id', '=', 'order_products.product_id')
+//             ->where('vendor_id', Auth::guard('vendor')->user()->id)
+//             ->whereNotIn('order_status', ['pending', 'cancelled_by_customer_before_confirmed']);
+//         if (in_array($staus_filter, ['confirmed', 'preparing', 'ready_to_dispatch', 'dispatched', 'cancelled_by_vendor', 'completed']) != '') {
+//             $order_obj->where('order_status', $staus_filter);
+//         }
+//         if (in_array($staus_filter, ['refunded']) != '') {
+//             $order_obj->where('refund', 2);
+//         }
 
-        $orders = $order_obj
-            ->groupBy('orders.id')
-            ->orderBy('orders.id', 'desc')
-            ->paginate(25);
-//        dd($orders);
-        return view('vendor.restaurant.order.refresh_list', compact('orders'));
-    }
+//         $orders = $order_obj
+//             ->groupBy('orders.id')
+//             ->orderBy('orders.id', 'desc')
+//             ->paginate(25);
+// //        dd($orders);
+//         return view('vendor.restaurant.order.refresh_list', compact('orders'));
+//     }
 }
