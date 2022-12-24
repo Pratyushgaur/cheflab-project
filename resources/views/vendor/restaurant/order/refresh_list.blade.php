@@ -58,7 +58,8 @@ $payment_status_class['pending'] = 'badge-danger';
                             <span class="clock" data-countdown="{{ mysql_date_time($order->preparation_time_to)}}"></span>
                             <?php } ?>
                             <br/>
-                            <a data-toggle="modal" data-target="#modal-8" class="btn btn-sm btn-primary" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})">need more time</a>
+                            <a data-toggle="modal" data-target="#modal-8" class="btn btn-sm btn-primary" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})">need
+                                more time</a>
                         @endif
                     </td>
                     <td>
@@ -111,6 +112,22 @@ $payment_status_class['pending'] = 'badge-danger';
     </table>
 
 
-    <div class="">{{ $orders->links('vendor.pagination.bootstrap-4') }}</div>
+
 
 </div>
+<script>
+    (function ($) {
+
+        $('[data-countdown]').each(function () {
+            var $this = $(this), finalDate = $(this).data('countdown');
+// if ($(this).data('countdown') != '')
+//     $this.countdown(finalDate, function (event) {
+//         $this.html(event.strftime('%H:%M:%S'));
+//     });
+            if ($(this).data('countdown') != '')
+                $(this).countdown(finalDate, function (event) {
+                    $(this).html(event.strftime('%H:%M:%S'));
+                });
+        });
+    })(jQuery);
+</script>

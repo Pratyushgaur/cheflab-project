@@ -193,7 +193,7 @@ class AppController extends Controller
             $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null,$whereIn);
             $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
-            $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false);//not need to pass offset; limit set on products
+            $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false)->toArray();//not need to pass offset; limit set on products
             //get productd's shoud display in pagination
             $products_ids = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
             // product details
@@ -1668,9 +1668,9 @@ class AppController extends Controller
                                 $order_products->order_product_variants()->save($orderProductVariant);
                             }
                         }
-                    } 
-                    
-                    
+                    }
+
+
                     if (isset($p['addons']))
                         foreach ($p['addons'] as $k => $a) {
                             $OrderProductAddon = new OrderProductAddon($a);
@@ -2673,9 +2673,9 @@ class AppController extends Controller
             if (!isset($order->id))
                 return response()->json(['status' => false, 'error' => "order not found.You can only cancel orders placed by you."], 401);
 
-            
 
-            
+
+
             if($request->isCancelledWithin30Second){ // if order cancel by user in 30 second
                 $order->order_status = 'cancelled_by_customer_before_confirmed';
                 $order->save();
@@ -2689,9 +2689,9 @@ class AppController extends Controller
                 if($order->order_status == 'preparing' || $order->order_status == 'ready_to_dispatch'){ // if order cancel by user after accpet by vendor or preparing the food or prepared food
                     $order->order_status = 'cancelled_by_customer_during_prepare';
                 }
-                if($order->order_status == 'dispatched'){ //if order  cancel by user after dispatch 
+                if($order->order_status == 'dispatched'){ //if order  cancel by user after dispatch
                     $order->order_status = 'cancelled_by_customer_after_disptch';
-                    
+
                 }
             }
 
@@ -3090,7 +3090,7 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             User::where('id','=',$request->user()->id)->update(['fcm_token'    => $request->fcm_token]);
-            
+
 
             return response()->json([
                 'status'   => true,
@@ -3128,7 +3128,7 @@ class AppController extends Controller
                 $cartProduct->delete();
                 $cart->delete();
             }
-            
+
 
             $vendor = Order::where('id','=',$request->order_id)->select('vendor_id')->first();
             $products = OrderProduct::where('order_id','=',$request->order_id)->join('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('product_id','product_qty','variant_id','order_products.id as order_product_id')->get();
@@ -3164,13 +3164,13 @@ class AppController extends Controller
                                     $cartProductAddon->addon_qty = $addonvalue->addon_qty;
                                     $cartProductAddon->save();
                                 }
-                                
+
                             }
                         }
-                        
+
                     }
-                    
-                }   
+
+                }
             }else{
                 return response()->json([
                     'status' => false,
