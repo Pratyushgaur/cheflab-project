@@ -572,7 +572,7 @@ function get_delivery_boy_near_me($lat, $lng)
 //     return $vendors;
 
 // }
-function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
+function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null, $whereVendorIds = [])
 {
     date_default_timezone_set('Asia/Kolkata');
     if ($lat != '' && $lat != '')
@@ -591,6 +591,10 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 
     if ($where != null && !empty($where)) {
         $vendors->where($where);
+    }
+
+    if($whereVendorIds != null && !empty($whereVendorIds)){
+        $vendors->whereIn('vendors.id',$whereVendorIds);
     }
 
     if ($current_user_id != null) {
@@ -743,7 +747,7 @@ function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit = 'K')
     }
 }
 
-function GetDrivingDistance($lat1, $long1, $lat2, $long2)
+function getDrivingDistance($lat1, $long1, $lat2, $long2)
 {
     $key = env('GOOGLE_MAPS_API_KEY');
     $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" . $lat1 . "," . $long1 . "&destinations=" . $lat2 . "," . $long2 . "&mode=driving&language=pl-PL&key=$key";
@@ -776,7 +780,7 @@ function getOrderId()
 
 function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 {
-    $distance = GetDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
+    $distance = getDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
     //$distance = 3.9;
     $distance = floatval($distance);
     //$distance = 10;
