@@ -325,7 +325,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 
     //    if (!empty($where_vendor_in))
     if ($where_vendor_in != null && is_array($where_vendor_in))
-        $product->whereIn('vendors.id', $where_vendor_in);
+        $product->whereIn('products.userId', $where_vendor_in);
     if ($is_chefleb_product)
         $product->where(['product_for' => '1']);
 
@@ -850,7 +850,7 @@ function vendorOrderCountByRefund($vendor_id, $status)
     return Orders::where(['vendor_id' => $vendor_id, 'refund' => $status])->count();
 }
 
-function promotionRowSetup($Blogs){
+function promotionRowSetup($Blogs,$request,$user_id){
     if(!empty($Blogs) && isset($Blogs[0])){
             $reponce       = [];
             $counter       = 0;
@@ -862,7 +862,7 @@ function promotionRowSetup($Blogs){
                     //$blog->blog_type 1: vendor 2:product
                     if ($blog->blog_type == '1') {
 
-                        $resturant = get_restaurant_near_me($request->lat, $request->lng, null, request()->user()->id, null, null);
+                        $resturant = get_restaurant_near_me($request->lat, $request->lng, null, $user_id, null, null);
 
                         $resturant->join('app_promotion_blog_bookings', function ($query) {
                             $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');

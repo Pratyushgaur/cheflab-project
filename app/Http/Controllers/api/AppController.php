@@ -216,13 +216,13 @@ class AppController extends Controller
                 $vendors[$key]->next_available = next_available_day($value->id);
             }
             // get Promotional Blogs 
-            $Blogs         = AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
+            $Blogs         = \App\Models\AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
                 ->where(function ($p) {
                     $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
                 })
-                ->where(['vendor_type'=>'restaurent','blog_for'=>0])
+                ->where(['vendor_type'=>'1','blog_for'=>'0'])
                 ->get();
-            $reponce =  promotionRowSetup($Blogs);
+            $reponce =  promotionRowSetup($Blogs,$request,request()->user()->id);
             //////////////////////////
             return response()->json([
                 'status'   => true,

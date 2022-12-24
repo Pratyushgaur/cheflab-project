@@ -17,6 +17,7 @@ class CreareAppPromotionBlogs extends Migration
             $table->id();
             $table->enum('vendor_type',['1','2'])->default('1')->comment('1-restaurent 2-chef');
             $table->enum('blog_type',['1','2'])->default('1')->comment('1-vendor 2-product');
+            $table->enum('blog_for',['0','1'])->default('1')->comment('0=master blog (it can not be delete) and 1= defined blog');
             $table->string('name');
             $table->enum('duration', ['1','2'])->default('1')->comment('1-fullday 2-custom');
             $table->time('from')->nullable();

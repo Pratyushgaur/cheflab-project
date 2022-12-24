@@ -33,7 +33,7 @@ class BlogPromotionController extends Controller
                 })
                 ->where('vendor_type', $request->vendor_type)
                 ->get();
-            $reponce =  promotionRowSetup($Blogs);
+            $reponce =  promotionRowSetup($Blogs,$request,request()->user()->id);
 
             return response()->json([
                 'status'   => true,
