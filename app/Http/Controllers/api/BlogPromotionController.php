@@ -31,7 +31,7 @@ class BlogPromotionController extends Controller
                 ->where(function ($p) {
                     $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
                 })
-                ->where('vendor_type', $request->vendor_type)
+                ->where(['vendor_type'=> $request->vendor_type,'blog_for'=>'1'])
                 ->get();
             $reponce =  promotionRowSetup($Blogs,$request,request()->user()->id);
 
