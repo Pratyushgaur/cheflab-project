@@ -922,7 +922,7 @@ function promotionRowSetup($Blogs,$request,$user_id){
                         $resturants = $resturant->get();
 
                         foreach ($resturants as $k => $res)
-                            $data1[] = get_product_with_variant_and_addons(['products.id' => $res->product_id],
+                            $data1 = get_product_with_variant_and_addons(['products.id' => $res->product_id],
                                 $request->user()->id, null, null, true);
 
 
