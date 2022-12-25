@@ -921,14 +921,18 @@ function promotionRowSetup($Blogs,$request,$user_id){
                             ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
                         $resturants = $resturant->get();
 
-                        foreach ($resturants as $k => $res)
+                        foreach ($resturants as $k => $res){
                             $data1 = get_product_with_variant_and_addons(['products.id' => $res->product_id],
                                 $request->user()->id, null, null, true);
 
-
-                        $reponce[$counter]['blog']['products'] = $data1;
+                            $resturants[$k]['products'] = $data1;
+                        }
+                            
+                         $reponce[$counter]['blog']['products'] = $resturants;
                         unset($data1);unset($resturant);
                     }
+                   
+                        
                     $counter++;
                 }
 
