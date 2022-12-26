@@ -123,10 +123,14 @@ class UserControllers extends Controller
         if ($request->ajax()) {
 
             $data = Vendors::latest();
+            //$data = $data->leftJoin('orders as o', 'vendors.id', 'o.vendor_id');
+            //$data = $data->select('vendors.*',\DB::raw('count(o.id) as deliveredOrdreCount'));
+            $data = $data->groupBy('vendors.id');
             if ($request->rolename != '') {
                 $data = $data->where('vendor_type', '=', $request->rolename);
             }
-            $data=$data->orderBy('id','desc')->get();
+            //$data = $data->where('o.order_status','=','completed');
+            $data=$data->orderBy('vendors.id','desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
@@ -163,6 +167,12 @@ class UserControllers extends Controller
                 })
                 ->addColumn('image', function ($data) {
                     return "<img src=" . asset('vendors') . '/' . $data->image . "  style='width: 50px;' />";
+                })
+                ->addColumn('deliveredOrdreCount', function ($data) {
+                    return Orders::where('vendor_id','=',$data->id)->where('order_status','=','completed')->count();
+                })
+                ->addColumn('receivedOrders', function ($data) {
+                    return Orders::where('vendor_id','=',$data->id)->count();
                 })
                 ->rawColumns([ 'date', 'action-js', 'status', 'image','userName' ])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this

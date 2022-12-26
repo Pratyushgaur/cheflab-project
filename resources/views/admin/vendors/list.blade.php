@@ -133,6 +133,9 @@
                                         <th> Status</th>
                                         <th> Image</th>
                                         <th>Wallet</th>
+                                        <th>Delivered Orders</th>
+                                        <th>Received Orders</th>
+                                        
                                         <th>created at</th>
                                         <th>Action</th>
                                     </tr>
@@ -227,6 +230,9 @@
                 {data: 'status', name: 'status', orderable: false, searchable: false},
                 {data: 'image', name: 'image', orderable: false, searchable: false},
                 {data: 'wallet', name: 'wallet'},
+                {data: 'deliveredOrdreCount', name: 'Delivered Orders'},
+                {data: 'receivedOrders', name: 'Received Orders'},
+
                 {data: 'date', name: 'created_at'},
                 {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
             ]

@@ -54,7 +54,7 @@ class AdminRootBannerController extends Controller
         $root = RootImage::find($request->id);
         $root->name = $request->name;
         if($request->has('bannerImage')){
-            return $filename = time().'-bannerImage-'.rand(100,999).'.'.$request->bannerImage->extension();
+            $filename = time().'-bannerImage-'.rand(100,999).'.'.$request->bannerImage->extension();
             $request->bannerImage->move(public_path('admin-banner'),$filename);
            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $root->bannerImage  = $filename;
