@@ -23,11 +23,13 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
+            'position' => 'required|numeric',
         ]);
 
         $VendorMenus = new VendorMenus;
         $VendorMenus->menuName = $request->name;
+        $VendorMenus->position = $request->position;
         $VendorMenus->vendor_id = \Auth::guard('vendor')->user()->id;
         $VendorMenus->save();
         return redirect()->route('restaurant.menu.list')->with('success', 'Menu Created Successfully');
@@ -98,10 +100,12 @@ class MenuController extends Controller
     }
     public function update(Request $request){
         $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required',
+            'position' => 'required|numeric',
         ]);
         $VendorMenus = VendorMenus::find($request->id);
         $VendorMenus->menuName = $request->name;
+        $VendorMenus->position = $request->position;
         $VendorMenus->save();
         return redirect()->route('restaurant.menu.list')->with('success', 'Menu Update Successfully');
     }

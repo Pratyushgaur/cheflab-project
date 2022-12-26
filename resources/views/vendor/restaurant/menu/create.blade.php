@@ -42,6 +42,17 @@
                               </p>
                             @enderror
                      </div>
+                     <div class="col-xl-12 col-md-12 mb-3">
+                      <label for="validationCustom10">Position (Enter Position Number where you want to  show this in your Catalogue)</label>
+                        <div class="input-group">
+                          <input type="text" class="form-control" name="position" value="{{old('position')}}" id="validationCustom03" placeholder="Enter Show  Position in Application Catalogue" >
+                        </div>
+                            @error('position')
+                              <p class="text-danger">
+                                  {{ $message }}
+                              </p>
+                            @enderror
+                     </div>
                   </div>
                 <button class="btn btn-primary float-right" type="submit">Submit</button>
               </form>
@@ -64,6 +75,10 @@
                   required: true,
                   maxlength: 80,
                   remote: '{{route("restaurant.menu.check_duplicate")}}',
+              },
+              position: {
+                  required: true,
+                  number: true
               },
 
           },

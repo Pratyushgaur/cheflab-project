@@ -436,6 +436,7 @@ class AppController extends Controller
                 ->where('product_approve', 1)
                 ->where('status', 1)
                 ->groupBy('menuName')
+                ->orderBy('vendor_menus.position','ASC')
                 ->get();
             // $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->groupBy('menuName')->get();
             $date    = today()->format('Y-m-d');
