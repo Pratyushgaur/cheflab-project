@@ -95,6 +95,7 @@ class VendorPromotionController extends Controller
         $slot->cheflab_banner_image_id = $request->position;
         $slot->for                     = $request->for;
         $slot->payment_status          = '0';
+        $slot->is_active          = '0';
         $slot->vendor_id               = Auth::guard('vendor')->user()->id;
 
         if ($request->has('slot_image')) {
