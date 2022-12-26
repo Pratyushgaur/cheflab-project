@@ -18,7 +18,8 @@ class AdminRootBannerController extends Controller
     }
     public function get_data_table_of_slote(Request $request){
         if ($request->ajax()) {
-            $data = RootImage::where('is_active','=',1)->select('id','name','bannerImage','position')->get();
+            
+            $data = RootImage::where('is_active','=',1)->where('banner_for','=',$request->rolename)->select('id','name','bannerImage','position')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
@@ -48,10 +49,9 @@ class AdminRootBannerController extends Controller
     } 
     public function updateBanner(Request $request){
         $this->validate($request, [
-            'name' => 'required',
-            'bannerImage' => 'required',
+            'name' => 'required'
         ]);
-        $root = SloteMaster::find($request->id);
+        $root = RootImage::find($request->id);
         $root->name = $request->name;
         if($request->has('bannerImage')){
             $filename = time().'-bannerImage-'.rand(100,999).'.'.$request->bannerImage->extension();
@@ -60,6 +60,6 @@ class AdminRootBannerController extends Controller
             $root->bannerImage  = $filename;
         }
         $root->save();
-        return redirect()->route('admin.vendor.store')->with('message', 'Banner Update Successfully');
+        return redirect()->route('admin.root.banner')->with('message', 'Banner Update Successfully');
     }   
 }

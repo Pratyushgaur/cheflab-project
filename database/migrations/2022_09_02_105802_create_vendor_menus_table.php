@@ -16,6 +16,7 @@ class CreateVendorMenusTable extends Migration
         Schema::create('vendor_menus', function (Blueprint $table) {
             $table->id();
             $table->string('menuName',50);
+            $table->integer('position')->unsigned()->default(0);
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->timestamp('created_at')->useCurrent();

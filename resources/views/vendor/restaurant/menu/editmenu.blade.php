@@ -36,8 +36,19 @@
                     <div class="input-group">
                       <input type="text" value="{{$menu_data->menuName}}" class="form-control" name="name"  id="validationCustom03" placeholder="Enter Menu Name " >
                       <input type="hidden" value="{{$menu_data->id}}" name="id">
-                    </div><br>
+                    </div>
                     @error('name')
+                      <p class="text-danger">
+                          {{ $message }}
+                      </p>
+                    @enderror
+                  </div>
+                  <div class="col-xl-12 col-md-12 mb-3">
+                    <label for="validationCustom10">Position</label>
+                    <div class="input-group">
+                      <input type="text" value="{{$menu_data->position}}" class="form-control" name="position"  id="validationCustom03" placeholder="Enter Position " >
+                    </div><br>
+                    @error('position')
                       <p class="text-danger">
                           {{ $message }}
                       </p>
@@ -67,6 +78,10 @@
                   required: true,
                   maxlength: 25,
                   remote: '{{route("restaurant.menu.check_duplicate.edit",$menu_data->id)}}',
+              },
+              position: {
+                  required: true,
+                  number: true
               },
 
           },

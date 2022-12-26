@@ -16,9 +16,9 @@ class CreateUserVendorLikeTable extends Migration
         Schema::create('user_vendor_like', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('vendor_id');
-            $table->foreign('vendor_id')->references('id')->on('vendors');
+            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->dateTime('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

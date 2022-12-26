@@ -178,8 +178,7 @@
     $("#restaurant-form").validate({
           rules: {
             name: {
-                  required: true,
-                  maxlength: 25,
+                  required: true
                   
               },
               bannerImage: {

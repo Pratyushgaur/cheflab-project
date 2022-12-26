@@ -47,7 +47,7 @@ class BlogPromotionController extends Controller
     {
         $app_promotion = AppPromotionBlogs::select(\DB::raw("CONCAT(`name`, ' ( ', `from`, ' - ', `to`, ' ) ') AS display_name"), 'id')
             ->where('vendor_type', '1')->where('blog_type', '2')->pluck('display_name', 'id');
-        $products      = Product_master::where('product_image', '!=', '')->pluck('product_name', 'id');
+        $products      = Product_master::where('product_image', '!=', '')->where('userId','=',\Auth::guard('vendor')->user()->id)->pluck('product_name', 'id');
         return view('vendor.restaurant.blog_promotion.create_product_promotion', compact('app_promotion', 'products'));
     }
 

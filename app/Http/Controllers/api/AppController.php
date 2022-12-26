@@ -189,6 +189,7 @@ class AppController extends Controller
 
             $userid  = request()->user()->id;
             $where   = ['vendor_type' => 'restaurant'];
+            $whereIn = [];//[36,1391,75,899,976,990,242,253,329,1390];
             $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
             $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
@@ -214,13 +215,23 @@ class AppController extends Controller
                 $vendors[$key]->categories     = $category;
                 $vendors[$key]->next_available = next_available_day($value->id);
             }
-
+            // get Promotional Blogs 
+            $Blogs         = \App\Models\AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
+                ->where(function ($p) {
+                    $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
+                })
+                ->where(['vendor_type'=>'1','blog_for'=>'0'])
+                ->get();
+            $reponce =  promotionRowSetup($Blogs,$request,request()->user()->id);
+            //////////////////////////
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
                 'response' => [
                     'vendors'  => $vendors,
-                    'products' => $products]
+                    'products' => $products,
+                    'blogs' => $reponce
+                    ]
 
             ], 200);
         } catch (Throwable $th) {
@@ -425,6 +436,7 @@ class AppController extends Controller
                 ->where('product_approve', 1)
                 ->where('status', 1)
                 ->groupBy('menuName')
+                ->orderBy('vendor_menus.position','ASC')
                 ->get();
             // $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->groupBy('menuName')->get();
             $date    = today()->format('Y-m-d');
@@ -1593,6 +1605,7 @@ class AppController extends Controller
                     'payment_status'  => 'nullable|string',
                     'transaction_id'  => 'nullable|string',
                     'payment_string'  => 'nullable|string',
+                    'send_cutlery'    => 'required',
 
                     'products.*.product_id'   => 'required|numeric',
                     'products.*.product_qty'  => 'required|numeric',
@@ -1646,9 +1659,7 @@ class AppController extends Controller
                 $insertData['wallet_cut'] = $walletCut;
                 $insertData['order_id'] = getOrderId();
                 $insertData['landmark_address'] = $request->reach;
-
                 $Order                    = new Order($insertData);
-
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
@@ -3220,5 +3231,39 @@ class AppController extends Controller
                 'error'  => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function orderTimeDiff(Request $request)
+    {
+        try {
+            //return $request->order_id;
+            $validateUser = Validator::make($request->all(), [
+                'order_id'    => 'required|exists:orders,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+           $datetime =   \App\Models\Order::find($request->order_id)->select('created_at')->first();
+           $date = Carbon::parse($datetime->created_at);
+           $now = Carbon::now();
+           $seconds =     $diff = $date->diffInSeconds($now);
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $seconds
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+        
+        
+       
     }
 }

@@ -41,7 +41,16 @@ class CreateOrders extends Migration
             $table->datetime('preparation_time_from')->nullable()->default(null);
             $table->datetime('preparation_time_to')->nullable()->default(null);
             $table->boolean('is_need_more_time')->default(0)->comment('1=if more preparation time extends');
+            $table->boolean('send_cutlery')->default(0)->comment('0=no 1=yes');
+            $table->text('chef_message')->nullable()->comment('chef message');
+            $table->boolean('avoid_ring_bell')->default(0)->comment('0=false 1= true');
+            $table->boolean('leave_at_door')->default(0)->comment('0=false 1= true');
+            $table->boolean('avoid_calling')->default(0)->comment('0=false 1= true');
+            $table->boolean('direction_to_reach')->default(0)->comment('0=false 1= true');
+            $table->text('direction_instruction')->nullable()->comment('Direction instruction by user');
             $table->enum('refund',['0','1','2'])->default('0')->comment('0 no need for refund,1 refund requested, 2 refund DONE');
+            $table->float('platform_charges', 8, 2)->comment('platform_charges');
+            $table->double('tex')->comment('platform_charges');
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

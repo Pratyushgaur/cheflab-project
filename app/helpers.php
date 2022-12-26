@@ -3,6 +3,7 @@
 use App\Models\Orders;
 use App\Models\Product_master;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 
 function time_diffrence_in_minutes($datetime1, $datetime2)
 {
@@ -129,15 +130,12 @@ function show_time_slots($start_time, $end_time, $duration, $break)
     return $time_slots;
 }
 
-function vendorOrderCountByStatus($vendor_id, $status, $where = null)
+function vendorOrderCountByStatus($vendor_id, $status)
 {
-    $order = Orders::where(['vendor_id' => $vendor_id]);
-    if ($status != '')
-        $order->where(['vendor_id' => $vendor_id, 'order_status' => $status]);
-    if (!empty($where))
-        $order->where($where);
+    if($status=='')
+        return Orders::where(['vendor_id' => $vendor_id])->count();
 
-    return $order->count();
+    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->count();
 }
 
 function vendorTodayOrderCount($vendor_id)
@@ -327,7 +325,6 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product->where($product_where);
 
     //    if (!empty($where_vendor_in))
-
     if ($where_vendor_in != null && is_array($where_vendor_in))
         $product->whereIn('products.userId', $where_vendor_in);
     if ($is_chefleb_product)
@@ -533,7 +530,7 @@ function front_end_currency($number)
 function get_delivery_boy_near_me($lat, $lng)
 {
 
-    return \App\Models\Deliver_boy::where('id', '=', 1)->first();
+    return \App\Models\Deliver_boy::where('id','=',1)->first();
 }
 
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
@@ -576,7 +573,7 @@ function get_delivery_boy_near_me($lat, $lng)
 //     return $vendors;
 
 // }
-function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
+function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null, $whereVendorIds = [])
 {
     date_default_timezone_set('Asia/Kolkata');
     if ($lat != '' && $lat != '')
@@ -597,6 +594,10 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $vendors->where($where);
     }
 
+    if($whereVendorIds != null && !empty($whereVendorIds)){
+        $vendors->whereIn('vendors.id',$whereVendorIds);
+    }
+
     if ($current_user_id != null) {
         $vendors->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
             $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
@@ -613,6 +614,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $vendors->offset($offset)->limit($limit);
 
 //    dd($vendors->get()->toArray());
+    $vendors->where('available',1);
     return $vendors;
 
 }
@@ -620,21 +622,21 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 function next_available_day($vendor_id, $return_obj = false)
 {
     //return $vendor_id;
-    if ($vendor_id == null) return false;
+    if($vendor_id==null)return false;
     $today = \Carbon\Carbon::now()->dayOfWeek;
     ///return $today;
     //$today = 3;
-    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time', '>', mysql_time())->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
-    if (!isset($next_available_day->id)) {
+     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
+    if (!isset($next_available_day->id)){
         $exit = 'false';
         while ($exit == 'false') {
             $today++;
-            if ($today > 6) {
-                $today = 0;
+            if($today > 6){
+              $today=0;
             }
 
-            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
-            if (!empty($next_available_day)) {
+            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
+            if(!empty($next_available_day)){
                 $exit = 'true';
             } else {
                 $exit = 'false';
@@ -747,24 +749,19 @@ function point2point_distance($lat1, $lon1, $lat2, $lon2, $unit = 'K')
     }
 }
 
-function GetDrivingDistance($lat1, $long1, $lat2, $long2)
+function getDrivingDistance($lat1, $long1, $lat2, $long2)
 {
     $key = env('GOOGLE_MAPS_API_KEY');
     $url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" . $lat1 . "," . $long1 . "&destinations=" . $lat2 . "," . $long2 . "&mode=driving&language=pl-PL&key=$key";
-    $ch  = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_PROXYPORT, 3128);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-    $response = curl_exec($ch);
-    curl_close($ch);
-    $response_a = json_decode($response, true);
+    $client = new Client();
+    $response = $client->request('GET', $url);
+    $d = $response->getBody();
+    $response_a = json_decode($d, true);
     $dist       = $response_a['rows'][0]['elements'][0]['distance']['text'];
     $time       = $response_a['rows'][0]['elements'][0]['duration']['text'];
     $dist       = str_replace(',', '.', $dist);
     return $dist = str_replace('km', '', $dist);
-    //return array('distance' => $dist, 'time' => $time);
+    return array('distance' => $dist, 'time' => $time);
 }
 
 function getOrderId()
@@ -780,7 +777,7 @@ function getOrderId()
 
 function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 {
-    $distance = GetDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
+    $distance = getDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
     //$distance = 3.9;
     $distance = floatval($distance);
     //$distance = 10;
@@ -809,32 +806,30 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
     return round($charge);
 
 }
-
-function sendNotification($title, $body, $token, $data = null)
-{
-    $url = "https://fcm.googleapis.com/fcm/send";
-    //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
-    $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
-    //$title = "Notification title";
-    //$body = "Hello I am from Your php server";
-    $notification = array('title' => $title, 'body' => $body, 'sound' => 'default', 'badge' => '1');
-    $arrayToSend  = array('to' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
-    $json         = json_encode($arrayToSend);
-    $headers      = array();
-    $headers[]    = 'Content-Type: application/json';
-    $headers[]    = 'Authorization: key=' . $serverKey;
-    $ch           = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    //Send the request
-    return $response = curl_exec($ch);
-    //Close request
-    if ($response === FALSE) {
+function sendNotification($title,$body,$token,$data=null){
+        $url = "https://fcm.googleapis.com/fcm/send";
+        //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
+        $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
+        //$title = "Notification title";
+        //$body = "Hello I am from Your php server";
+        $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
+        $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+        $json = json_encode($arrayToSend);
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key='. $serverKey;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        //Send the request
+       return  $response = curl_exec($ch);
+        //Close request
+        if ($response === FALSE) {
         die('FCM Send Error: ' . curl_error($ch));
-    }
-    curl_close($ch);
+        }
+        curl_close($ch);
 }
 
 
@@ -850,4 +845,101 @@ function vendorOrderCountByRefund($vendor_id, $status)
 {
 
     return Orders::where(['vendor_id' => $vendor_id, 'refund' => $status])->count();
+}
+
+function promotionRowSetup($Blogs,$request,$user_id){
+    if(!empty($Blogs) && isset($Blogs[0])){
+            $reponce       = [];
+            $counter       = 0;
+            if (isset($Blogs[0])) {
+                foreach ($Blogs as $k => $blog) {
+                    $data1 = null;
+                    $blog_id                   = $blog->id;
+                    $reponce[$counter]['blog'] = $blog;
+                    //$blog->blog_type 1: vendor 2:product
+                    if ($blog->blog_type == '1') {
+
+                        $resturant = get_restaurant_near_me($request->lat, $request->lng, null, $user_id, null, null);
+
+                        $resturant->join('app_promotion_blog_bookings', function ($query) {
+                            $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');
+                        });
+
+                        $resturant->join('app_promotion_blog_settings',
+                            function ($q) use ($blog_id) {
+                                $q->on('app_promotion_blog_bookings.app_promotion_blog_setting_id', '=', 'app_promotion_blog_settings.id');
+                                $q->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog_id);
+                                $q->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                            });
+                        $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
+                        $resturant->addSelect('app_promotion_blog_bookings.app_promotion_blog_id', 'app_promotion_blog_bookings.app_promotion_blog_setting_id',
+                            'app_promotion_blog_bookings.vendor_id', 'from_date', 'to_date', 'from_time', 'to_time',
+                            \DB::raw('CONCAT("' . asset('slot-vendor-image') . '/", app_promotion_blog_bookings.image ) as blog_promotion_image'),
+                            'vendors.id as vendor_id')
+                            ->where('app_promotion_blog_settings.is_active', 1)
+                            ->where('app_promotion_blog_bookings.payment_status', 1)
+                            ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                        $resturant = $resturant->get();
+
+
+                        foreach ($resturant as $key => $value) {
+                            if($value->banner_image!='') {
+                                $banners = @json_decode(@$value->banner_image);
+                                if (is_array($banners))
+                                    $urlbanners = array_map(function ($banner) {
+                                        return URL::to('vendor-banner/') . '/' . $banner;
+                                    }, $banners);
+                                else
+                                    $urlbanners = [];
+                                $resturant[$key]->banner_image = $urlbanners;
+                            }
+                        }
+
+                        $data1     = $resturant;
+                        $reponce[$counter]['blog']['vendors'] = $data1;
+                        unset($data1);unset($resturant);
+                    } else if ($blog->blog_type == '2') {
+                        $resturant = get_restaurant_ids_near_me($request->lat, $request->lng, null, true, null, null);
+
+                        $resturant->join('app_promotion_blog_bookings', function ($query) {
+                            $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');
+                        });
+                        $resturant->join('app_promotion_blog_settings',
+                            function ($q) use ($blog_id) {
+                                $q->on('app_promotion_blog_bookings.app_promotion_blog_setting_id', '=', 'app_promotion_blog_settings.id');
+                                $q->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog_id);
+                                $q->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                            });
+
+                        $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
+
+                        $resturant->addSelect('app_promotion_blog_bookings.app_promotion_blog_id',
+                            'app_promotion_blog_bookings.app_promotion_blog_setting_id',
+                            'app_promotion_blog_bookings.vendor_id', 'from_date', 'to_date', 'from_time', 'to_time',
+                            'app_promotion_blog_bookings.product_id')
+                            ->where('app_promotion_blog_settings.is_active', 1)
+                            ->where('app_promotion_blog_bookings.payment_status', 1)
+                            ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                        $resturants = $resturant->get();
+
+                        foreach ($resturants as $k => $res){
+                            $data1 = get_product_with_variant_and_addons(['products.id' => $res->product_id],
+                                $request->user()->id, null, null, true);
+
+                            $resturants[$k]['products'] = $data1;
+                        }
+                            
+                         $reponce[$counter]['blog']['products'] = $resturants;
+                        unset($data1);unset($resturant);
+                    }
+                   
+                        
+                    $counter++;
+                }
+
+            }
+            return $reponce;
+    }else{
+        return [];
+    }
 }

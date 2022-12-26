@@ -19,7 +19,7 @@ use DataTables;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
-
+use Validator;
 class UserControllers extends Controller
 {
 
@@ -123,10 +123,14 @@ class UserControllers extends Controller
         if ($request->ajax()) {
 
             $data = Vendors::latest();
+            //$data = $data->leftJoin('orders as o', 'vendors.id', 'o.vendor_id');
+            //$data = $data->select('vendors.*',\DB::raw('count(o.id) as deliveredOrdreCount'));
+            $data = $data->groupBy('vendors.id');
             if ($request->rolename != '') {
                 $data = $data->where('vendor_type', '=', $request->rolename);
             }
-            $data=$data->orderBy('id','desc')->get();
+            //$data = $data->where('o.order_status','=','completed');
+            $data=$data->orderBy('vendors.id','desc')->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
@@ -134,7 +138,7 @@ class UserControllers extends Controller
                                 <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item text-info" href="' . route('admin.vendor.view', Crypt::encryptString($data->id)) . '"> <i class="fa fa-eye"></i> View More</a>
-                                        <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> ';
+                                        <a href="javascript:void(0);" data-id="' . $data->id. '" class="btn btn-danger btn-xs delete-vendor-records" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> ';
                     if($data->vendor_type == 'restaurant'){
                         $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>';
                     }elseif($data->vendor_type == 'chef'){
@@ -158,11 +162,17 @@ class UserControllers extends Controller
                     return $data->email.' / '.$data->mobile;
                 })
                 ->addColumn('status', function ($data) {
-                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>';
+                    return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success inactiveVendor" data-url="'.route('admin.vendors.inactive',Crypt::encryptString($data->id)).'" >Active</button>' : '<button class="btn btn-xs btn-danger inactiveVendor" data-url="'.route('admin.vendors.active',Crypt::encryptString($data->id)).'">In active</button>';
                     return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
                 })
                 ->addColumn('image', function ($data) {
                     return "<img src=" . asset('vendors') . '/' . $data->image . "  style='width: 50px;' />";
+                })
+                ->addColumn('deliveredOrdreCount', function ($data) {
+                    return Orders::where('vendor_id','=',$data->id)->where('order_status','=','completed')->count();
+                })
+                ->addColumn('receivedOrders', function ($data) {
+                    return Orders::where('vendor_id','=',$data->id)->count();
                 })
                 ->rawColumns([ 'date', 'action-js', 'status', 'image','userName' ])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
@@ -849,13 +859,15 @@ class UserControllers extends Controller
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
     }
     public function vendor_inactive($id){
-        $id   = decrypt($id);
+        
+        $id   = Crypt::decryptString($id);
+        
         $user = Vendors::find($id);
         Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Inactive Successfully' ], 200);
     }
     public function vendor_active($id){
-        $id   = decrypt($id);
+        $id   = Crypt::decryptString($id);
         $user = Vendors::find($id);
         Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Active Successfully' ], 200);
@@ -897,5 +909,77 @@ class UserControllers extends Controller
     }
     public function refundlist(){
         return view('admin/vendors/refundlist');
+    }
+
+    public function truncateVendorData(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'vendor_id'    => 'required|exists:vendors,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 200);
+            }
+            \DB::beginTransaction();
+            \App\Models\Addons::where('vendorId','=',$request->vendor_id)->delete();
+            \App\Models\AppPromotionBlogBooking::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\BankDetail::where('vendor_id','=',$request->vendor_id)->delete();
+            // cart empty
+            $cartIds = \App\Models\Cart::where('vendor_id','=',$request->vendor_id)->get()->pluck('id');
+            if(!empty($cartIds)){
+                $cartProductIds = \App\Models\CartProduct::whereIn('cart_id',$cartIds)->get()->pluck('id');
+                \App\Models\CartProductVariant::whereIn('cart_product_id',$cartProductIds)->delete();
+                \App\Models\CartProductAddon::whereIn('cart_product_id',$cartProductIds)->delete();
+                \App\Models\Cart::where('vendor_id','=',$request->vendor_id)->delete();
+            }
+            \App\Models\Coupon::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\TableService::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\TableServiceBooking::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\UserVendorLike::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\VendorFeedback::where('vendor_id','=',$request->vendor_id)->delete();
+            
+            \App\Models\VendorDineoutTime::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\VendorMenus::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\VendorOffline::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\VendorOrderTime::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\VendorReview::where('vendor_id','=',$request->vendor_id)->delete();
+            \App\Models\VendorReview::where('vendor_id','=',$request->vendor_id)->delete();
+            // prouuct
+
+            $productIds = \App\Models\Product_master::where('userId','=',$request->vendor_id)->get()->pluck('id');
+            if(!empty($productIds)){
+                \App\Models\ProductReview::whereIn('product_id',$productIds)->delete();
+                \App\Models\Variant::whereIn('product_id',$productIds)->delete();
+                \App\Models\UserProductLike::whereIn('product_id',$productIds)->delete();
+                \App\Models\Product_master::where('userId','=',$request->vendor_id)->delete();
+            }
+            // order 
+            $orderIds = \App\Models\Order::where('vendor_id','=',$request->vendor_id)->get()->pluck('id');
+            if(!empty($orderIds)){
+                $orderProductIds = \App\Models\OrderProduct::whereIn('order_id',$orderIds)->get()->pluck('id');
+
+                \App\Models\OrderProductAddon::whereIn('order_product_id',$orderProductIds)->delete();
+                \App\Models\OrderProductVariant::whereIn('order_product_id',$orderProductIds)->delete();
+                \App\Models\RiderAssignOrders::whereIn('order_id',$orderIds)->delete();
+                \App\Models\Order::where('vendor_id','=',$request->vendor_id)->delete();
+            }
+            
+            \App\Models\Vendors::where('id','=',$request->vendor_id)->delete();
+            \DB::commit();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully'
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+
     }
 }

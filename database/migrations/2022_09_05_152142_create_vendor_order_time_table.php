@@ -21,7 +21,7 @@ class CreateVendorOrderTimeTable extends Migration
             $table->time('end_time')->nullable();
             $table->string('available',50)->comment('0=not available,1=available')->default('1');
             $table->unsignedBigInteger('row_keys');
-            $table->foreign('vendor_id')->references('id')->on('vendors');
+            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

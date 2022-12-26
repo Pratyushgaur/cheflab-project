@@ -17,7 +17,7 @@ class TableServiceDiscountsTable extends Migration
         Schema::create('table_service_discounts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('vendor_id');
-            $table->foreign('vendor_id')->references('id')->on('vendors');
+            $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');;
             $table->string('day_no',5)->comment('0=sun,1=mon,2=Tue,3=wed,4=thu,5=fri,6=sat');
             $table->float('discount_percent', 5, 2);
 
