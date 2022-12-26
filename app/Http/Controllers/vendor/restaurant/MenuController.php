@@ -92,6 +92,7 @@ class MenuController extends Controller
         $menu = VendorMenus::where('menuName','=',$request->name);
 
         $menu = $menu->where('id','!=',$id);
+        $menu = $menu->where('vendor_id','==',\Auth::guard('vendor')->user()->id);
         if ($menu->exists()) {
             return \Response::json(false);
         } else {
