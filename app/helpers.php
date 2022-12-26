@@ -614,6 +614,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $vendors->offset($offset)->limit($limit);
 
 //    dd($vendors->get()->toArray());
+    $vendors->where('available',1);
     return $vendors;
 
 }

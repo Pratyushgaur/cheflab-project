@@ -1604,6 +1604,7 @@ class AppController extends Controller
                     'payment_status'  => 'nullable|string',
                     'transaction_id'  => 'nullable|string',
                     'payment_string'  => 'nullable|string',
+                    'send_cutlery'    => 'required',
 
                     'products.*.product_id'   => 'required|numeric',
                     'products.*.product_qty'  => 'required|numeric',
@@ -1657,9 +1658,7 @@ class AppController extends Controller
                 $insertData['wallet_cut'] = $walletCut;
                 $insertData['order_id'] = getOrderId();
                 $insertData['landmark_address'] = $request->reach;
-
                 $Order                    = new Order($insertData);
-
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
