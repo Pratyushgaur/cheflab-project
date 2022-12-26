@@ -63,14 +63,15 @@ $breadcrumb[] = ["name"  => "List",
                                         <td>{{$banner->position}}</td>
                                         <td><?php
                                             if (!empty($banner->is_active) && ($banner->is_active == 1))
-                                                $return = '<span class="badge badge-success">Active</span>';
+                                                echo '<span class="badge badge-success">Active</span>';
                                             else if (!empty($banner->is_active) && ($banner->is_active == 2))
-                                                $return = '<span class="badge badge-danger">Rejected</span>';
+                                                echo '<span class="badge badge-danger">Rejected</span><br/>'.$banner->comment_reason;
                                             else
-                                                $return = '<span class="badge badge-primary">Pending</span>';
+                                                echo '<span class="badge badge-primary">Pending</span>';
+
                                             ?></td>
                                         <td>
-                                        @if($banner->payment_status!='0')
+                                        @if($banner->payment_status!='0' && !(!empty($banner->is_active) && ($banner->is_active == 2)))
                                             <!-- <div class="panel-body text-center"> -->
                                                 <form action="{!!route('payment')!!}" method="POST">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js"
