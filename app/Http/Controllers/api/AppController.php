@@ -2312,10 +2312,10 @@ class AppController extends Controller
             }
 
 
-            $ContactUs              = new UserFeedback();
+            $ContactUs              = new \App\Models\UserFeedback();
             $ContactUs->user_id     = request()->user()->id;
             $ContactUs->name        = request()->user()->name;
-            $ContactUs->mobile        = request()->user()->mobile;
+            $ContactUs->mobile        = request()->user()->mobile_number;
             $ContactUs->email        = request()->user()->email;
 
             $ContactUs->subject     = $request->subject;
