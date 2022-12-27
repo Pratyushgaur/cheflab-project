@@ -2312,8 +2312,12 @@ class AppController extends Controller
             }
 
 
-            $ContactUs              = new ContactUs();
-            $ContactUs->user_id     = auth()->user()->id;
+            $ContactUs              = new UserFeedback();
+            $ContactUs->user_id     = request()->user()->id;
+            $ContactUs->name        = request()->user()->name;
+            $ContactUs->mobile        = request()->user()->mobile;
+            $ContactUs->email        = request()->user()->email;
+
             $ContactUs->subject     = $request->subject;
             $ContactUs->description = $request->description;
             $ContactUs->save();
