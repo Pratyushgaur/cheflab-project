@@ -19,7 +19,15 @@ class isVendor
     {
         
         if (session()->has('*$%&%*id**$%#')  && Auth::guard('vendor')->user()) {
-             return $next($request);
+            
+            if(Auth::guard('vendor')->user()->status == '1'){
+                return $next($request);
+                
+             }else{
+                Auth::guard('vendor')->logout();
+                return redirect()->route('vendor.login')->with('error', 'Your Account is Inactived Kindly contact to admin to Reactive ');
+             }
+             
         }else{
            
             Auth::guard('vendor')->logout();

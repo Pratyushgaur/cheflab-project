@@ -185,13 +185,16 @@
                                         if(from == 'banner'){
                                             width = this.width;
                                             height = this.height;
-                                            if(this.width == 600 &&  this.height == 400){
-                                                uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+data+")");
-                                                uploadFile.closest(".imgUp").find('.imaage-data').val(data);
-                                                uploadFile.closest(".imgUp").find('.button-lable').html('Change Image<input type="file" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">');
-                                            }else{
-                                                toastr.error('Image Dimension Should be 600 by 400 ', 'Alert');
-                                            }
+                                            uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+data+")");
+                                            uploadFile.closest(".imgUp").find('.imaage-data').val(data);
+                                            uploadFile.closest(".imgUp").find('.button-lable').html('Change Image<input type="file" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">');
+                                            // if(this.width == 600 &&  this.height == 400){
+                                            //     uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+data+")");
+                                            //     uploadFile.closest(".imgUp").find('.imaage-data').val(data);
+                                            //     uploadFile.closest(".imgUp").find('.button-lable').html('Change Image<input type="file" class="uploadFile img" value="Upload Photo" style="width: 0px;height: 0px;overflow: hidden;">');
+                                            // }else{
+                                            //     toastr.error('Image Dimension Should be 600 by 400 ', 'Alert');
+                                            // }
                                         }else{
                                             uploadFile.closest(".imgUp").find('.imagePreview').css("background-image", "url("+data+")");
                                             uploadFile.closest(".imgUp").find('.imaage-data').val(data);

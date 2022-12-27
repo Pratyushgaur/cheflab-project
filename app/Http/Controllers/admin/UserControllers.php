@@ -425,6 +425,9 @@ class UserControllers extends Controller
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+        if($request->password !=''){
+            $vendors->password  = Hash::make($request->password);
+        }
 //dd($vendors);
         if ($request->has('image')) {
             $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();

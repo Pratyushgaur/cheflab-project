@@ -73,7 +73,7 @@ class CouponController extends Controller
     //  }
         if ($request->ajax()) {
 
-            $data = Coupon::latest()->get();
+            $data = Coupon::latest()->leftJoin('vendors','coupons.vendor_id','=','vendors.id')->select('coupons.*','vendors.name as vendor_name')->where('create_by','=',$request->create_by)->get();
 
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -100,9 +100,34 @@ class CouponController extends Controller
                 ->addColumn('status', function($data){
                     return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>';
                 })
+                ->addColumn('vendor_name', function($data){
+                    if ($data->vendor_id != '') {
+                        return '<a target="_blank" href="'. route("admin.vendor.view",Crypt::encryptString($data->vendor_id)) .'" >'.$data->vendor_name.'</a>';
+                    } else {
+                        return '-';
+                    }
+                    
+                })
+                ->addColumn('start_at', function($data){
+                    return \Carbon\Carbon::parse($data->from)->format('M d Y');
+                    
+                })
+                ->addColumn('end_at', function($data){
+                    return \Carbon\Carbon::parse($data->to)->format('M d Y');
+                    
+                })
+
+                ->addColumn('running', function($data){
+                    if( \Carbon\Carbon::now()->gte($data->to)){
+                        return '<a class="text-danger">Expired</a>';
+                    }
+                    
+                    
+                })
+
 
                 ->rawColumns(['date','action-js','status','discount_type'])
-                ->rawColumns(['action-js','discount_type','status'])
+                ->rawColumns(['action-js','discount_type','status','vendor_name','running'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);

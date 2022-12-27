@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use Validator;
+use Hash;
 class LoginController extends Controller
 {
     public function login(Request $request)
@@ -48,4 +50,127 @@ class LoginController extends Controller
         }
 
     }   
+
+    public function checkEmailVendor(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'email'    => 'required|exists:vendors,email'
+            ],
+            [
+                "email.exists" =>'We Dont Have Registered This Email',
+                "email.required" =>'Email Required for Recover Password',
+            ]
+        
+        );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()[0]], 200);
+            }
+            
+            $user =  \App\Models\Vendors::where('email','=',$request->email)->first();
+            if(!empty($user)){
+                $otp = rand(1000,9999);
+                \App\Models\Vendors::where('id','=',$user->id)->update(['password_change_otp'=>$otp]);
+                return response()->json([
+                    'status' => true
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'  => 'No User Found'
+                ], 200);
+            }
+            return response()->json($user);
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 200);
+        }
+    }
+    public function verify_otp(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'email'    => 'required|exists:vendors,email',
+                'otp'    => 'required'
+            ],
+            [
+                "email.exists" =>'We Dont Have Registered This Email',
+                "email.required" =>'Email Required for Recover Password',
+            ]
+        
+        );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()[0]], 200);
+            }
+            
+            $user =  \App\Models\Vendors::where('email','=',$request->email)->first();
+            if(!empty($user)){
+                if($user->password_change_otp == $request->otp){
+                    return response()->json(['status' => true], 200);
+                }else{
+                    return response()->json(['status' => false, 'error' => 'Invalid OTP Enter'], 200);
+                }
+            
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'  => 'No User Found'
+                ], 200);
+            }
+            return response()->json($user);
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 200);
+        }
+    }
+    public function change_new_pass(Request $request)
+    {
+        try {
+
+            $validateUser = Validator::make($request->all(), [
+                'email'    => 'required|exists:vendors,email',
+                'new_pass'    => 'required'
+            ],
+            [
+                "email.exists" =>'We Dont Have Registered This Email',
+                "email.required" =>'Email Required for Recover Password',
+            ]
+        
+        );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()[0]], 200);
+            }
+            
+            $user =  \App\Models\Vendors::where('email','=',$request->email)->first();
+            if(!empty($user)){
+                \App\Models\Vendors::where('id','=',$user->id)->update(['password'=>Hash::make($request->new_pass)]);
+                return response()->json(['status' => true], 200);
+                
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'  => 'No User Found'
+                ], 200);
+            }
+            return response()->json($user);
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 200);
+        }
+    }
+    
 }

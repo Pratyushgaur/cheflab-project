@@ -14,7 +14,7 @@ class AddAutoSendToPreparVendorsTable extends Migration
     public function up()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->boolean('is_auto_send_for_prepare')->default(0)->comment('1=automatically order goes for prepare status ')->after('bio');
+            //$table->boolean('is_auto_send_for_prepare')->default(0)->comment('1=automatically order goes for prepare status ')->after('bio');
         });
     }
 
@@ -26,7 +26,7 @@ class AddAutoSendToPreparVendorsTable extends Migration
     public function down()
     {
         Schema::table('vendors', function (Blueprint $table) {
-            $table->dropColumn(['is_auto_send_for_prepare']);
+            //$table->dropColumn(['is_auto_send_for_prepare']);
         });
     }
 }

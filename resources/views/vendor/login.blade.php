@@ -7,6 +7,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Cheflab Vendor login</title>
   <!-- Iconic Fonts -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -114,12 +115,26 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
             </button> <i class="flaticon-secure-shield d-block"></i>
             <h1>Forgot Password?</h1>
-            <p>Enter your email to recover your password</p>
-            <form method="post">
-              <div class="ms-form-group has-icon">
-                <input type="text" placeholder="Email Address" class="form-control" name="forgot-password" value=""> <i class="material-icons">email</i>
+            <p class="msg-txt">Enter your email to recover your password</p>
+            <form method="post" action="" id="form-forget">
+              @csrf
+              <div class="ms-form-group has-icon email-input">
+                <input type="text" placeholder="Email Address" name="email" class="form-control email" name="forgot-password" value=""> <i class="material-icons">email</i>
+                <br><span class="text-danger forget-email-error"></span>
               </div>
-              <button type="submit" class="btn btn-primary shadow-none">Reset Password</button>
+              
+              <div class="ms-form-group has-icon otp-input" style="display:none">
+                <input type="text" placeholder="Enter One Time Password" class="form-control otp" name="forgot-password" value=""> <i class="material-icons">key</i>
+                <br><span class="text-danger forget-email-error"></span>
+              </div>
+              <div class="ms-form-group has-icon changepass-input" style="display:none">
+                <input type="password" placeholder="Enter New Password" class="form-control new_pass" name="" value=""> <i class="material-icons">key</i>
+                <br><span class="text-danger forget-email-error"></span>
+              </div>
+              <div class="form-btn">
+                <button type="button" class="btn btn-primary shadow-none check">Check Account </button>
+              </div>
+              
             </form>
           </div>
         </div>
@@ -140,6 +155,109 @@
   <script src="{{asset('frontend')}}/assets/js/framework.js"></script>
   <!-- Settings -->
   <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('.check').click(function(){
+        var email = $('.email').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+                  url: "{{route('action.vendor.changepass')}}",
+                  type: 'POST',
+                  // dataType: "JSON",
+                  data: {
+                      "email": email,
+                  },
+                  success: function (response)
+                  {
+                      if(!response.status){
+                        $('.forget-email-error').text(response.error);
+                      }else{
+                        $('.msg-txt').text("We Have Sent OTP In your Register  Mobile Number");
+                        $('.email-input').hide();
+                        $('.otp-input').show();
+                        $('.check').remove();
+                        $('.form-btn').html('<button type="button" class="btn btn-primary shadow-none verify">Verify OTP </button>');
+
+                      }
+                  },
+                  error: function(xhr) {
+                  console.log(xhr.responseText); 
+                  
+                }
+              });
+      });
+
+      $(document).on('click','.verify',function(){
+        var email = $('.email').val();
+        var otp = $('.otp').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+                  url: "{{route('action.vendor.verify_pass')}}",
+                  type: 'POST',
+                  // dataType: "JSON",
+                  data: {
+                      "email": email,
+                      "otp": otp,
+                  },
+                  success: function (response)
+                  {
+                      if(!response.status){
+                        $('.forget-email-error').text(response.error);
+                      }else{
+                        $('.msg-txt').text("Enter New Password");
+                        $('.otp-input').hide();
+                        $('.changepass-input').show();
+                        $('.check').remove();
+                        $('.form-btn').html('<button type="button" class="btn btn-primary shadow-none change_pass_btn">Change New Password </button>');
+                      }
+                  },
+                  error: function(xhr) {
+                  console.log(xhr.responseText); 
+                  
+                }
+              });
+      })
+      $(document).on('click','.change_pass_btn',function(){
+        var new_pass = $('.new_pass').val();
+        var email = $('.email').val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+                  url: "{{route('action.vendor.change_new_pass')}}",
+                  type: 'POST',
+                  // dataType: "JSON",
+                  data: {
+                      "email": email,
+                      "new_pass": new_pass,
+                  },
+                  success: function (response)
+                  {
+                      if(!response.status){
+                        $('.forget-email-error').text(response.error);
+                      }else{
+                        $('.modal').modal('hide');
+
+                      }
+                  },
+                  error: function(xhr) {
+                  console.log(xhr.responseText); 
+                  
+                }
+              });
+      })
+    })
+  </script>
 </body>
 
 

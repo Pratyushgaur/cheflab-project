@@ -48,6 +48,8 @@ class CreateVendorsTable extends Migration
             $table->enum('table_service',['1','0'])->default('0')->comment('1-active 0-inactive');
             $table->boolean('is_all_setting_done')->default(0)->comment('1=when vendor opning time setting and all other essential things done');
             $table->text('bio')->nullable();
+            $table->boolean('is_auto_send_for_prepare')->default(0)->comment('1=automatically order goes for prepare status ');
+            $table->string('password_change_otp')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

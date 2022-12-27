@@ -210,7 +210,7 @@
         ajax: "{{ route('admin.category.datatable') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'city_name'},
+            {data: 'name', name: 'name'},
             {data: 'position', name: 'position'},
             {data: 'categoryImage', name: 'categoryImage'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},

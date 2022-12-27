@@ -412,7 +412,7 @@ class ProductController extends Controller
             Vendors::where('id','=',$product->userId)->update(['deal_cuisines'=>implode(',',$cuisines)]);
         }
         //return $product;
-        $vendor=Vendors::find($product->vendor_id);
+        $vendor=Vendors::find($product->userId);
 
         $vendor->notify(new ProductReviewNotification($product->id,\Auth::guard('admin')->user()->name,"$product->product_name product approved by admin.")); //With new post
         return true;

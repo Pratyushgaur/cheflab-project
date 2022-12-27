@@ -59,6 +59,9 @@ Route::get('vendor-logout', function () {
     Auth::guard('vendor')->logout();
     return redirect()->route('vendor.login');
 })->name('vendor.logout');
+Route::post('check-email-for-vendor', [ App\Http\Controllers\vendor\LoginController::class, 'checkEmailVendor' ])->name('action.vendor.changepass');
+Route::post('verify-otp-for-vendor', [ App\Http\Controllers\vendor\LoginController::class, 'verify_otp' ])->name('action.vendor.verify_pass');
+Route::post('change-new-password-vendor', [ App\Http\Controllers\vendor\LoginController::class, 'change_new_pass' ])->name('action.vendor.change_new_pass');
 
 @require_once 'restaurant_routes.php';
 

@@ -365,13 +365,10 @@
             "_token": "{{ csrf_token() }}",
             "id":id },
             success: function(response){
-
-              $(document).Toasts('create', {
-                class: 'bg-success',
-                title: 'Success',
-                subtitle: '',
-                body: 'Product Published on Application'
-              })
+              $('.bd-example-modal-lg').modal('hide');
+              alert('Product Approved');
+              
+              reload_table();
                //window.location.reload();
              // $('#price').append("<p class='text-danger' name='id' value="+obj.id+">Banner Rs.. "+obj.price+"</p>","<input type='hidden' name='price' value="+obj.price+">","<input type='hidden' name='id' value="+obj.id+">","<input type='hidden' name='slot_name' value="+obj.slot_name+">","<input type='hidden' name='position' value="+obj.position+">");
             }
