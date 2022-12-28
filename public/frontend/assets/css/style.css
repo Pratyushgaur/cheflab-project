@@ -5068,7 +5068,7 @@ table.dataTable thead .sorting_desc_disabled:after{
 .ms-auth-bg{
   position: relative;
   height: 100%;
-      background-image: url(../img/costic/default-login.jpg);
+  background-image: url(../img/costic/default-login.png);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

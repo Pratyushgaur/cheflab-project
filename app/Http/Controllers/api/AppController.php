@@ -197,7 +197,7 @@ class AppController extends Controller
             //get productd's shoud display in pagination
             $products_ids = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
             // product details
-            $products = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, null, null, false, $products_ids);
+            $products = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.product_rating', 'desc', true, false, $vendor_ids, null, null, false, $products_ids);
             // total products
 
 
@@ -816,6 +816,7 @@ class AppController extends Controller
                         ->where('available', '=', 1);
                 });
 
+                $product = $product->where('vendors.status', '=','1');
                 $product = $product->orderBy('products.id', 'ASC');
                 $product = $product->Select(DB::raw('products.userId as vendor_id'),
                     'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
