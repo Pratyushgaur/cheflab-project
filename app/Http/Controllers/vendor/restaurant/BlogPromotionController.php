@@ -10,7 +10,6 @@ use App\Models\Product_master;
 use App\Models\Superadmin;
 use App\Notifications\CreateSlotBookingToAdminNotification;
 use Illuminate\Http\Request;
-use Razorpay\Api\Api;
 
 class BlogPromotionController extends Controller
 {
@@ -105,29 +104,31 @@ class BlogPromotionController extends Controller
 
 //\DB::enableQueryLog();
         //eliminate already booked slots
-        $booked_slot_ids = AppPromotionBlogBooking::where('app_promotion_blog_id', $request->app_promotion_blog_id)
+        $booked_slot_ids = AppPromotionBlogBooking::where('app_promotion_blog_bookings.app_promotion_blog_id', $request->app_promotion_blog_id)
+            ->join('app_promotion_blog_settings', 'app_promotion_blog_bookings.app_promotion_blog_setting_id', 'app_promotion_blog_settings.id')
             ->where(function ($q) use ($date_to, $date_from, $AppPromotionBlogs) {
                 $q->where(function ($q) use ($date_to, $date_from) {
                     $q->where([['from_date', '>=', $date_from], ['from_date', '<=', $date_to]])
-                        ->orWhere([['to_date', '>=', $date_from], ['to_date', '<=', $date_to]]);
+                        ->orWhere([['to_date', '>=', $date_from], ['to_date', '<=', $date_to]])
+                        ->orWhere([['from_date', '<=', $date_from], ['to_date', '>=', $date_from]])
+                        ->orWhere([['from_date', '<=', $date_to], ['to_date', '>=', $date_to]]);;
                 })
                     ->where('from_time', mysql_time($AppPromotionBlogs->from))->where('to_time', mysql_time($AppPromotionBlogs->to));
 
             })
-            ->where('is_active', '=', '1')
+            ->where('app_promotion_blog_bookings.is_active', '=', '1')
             ->whereIn('vendor_id', $vendor_ids)
-            ->pluck('app_promotion_blog_setting_id');
-//dd($booked_slot_ids);
+            ->pluck('app_promotion_blog_settings.blog_position');
+
         $slotMaster = AppPromotionBlogSetting::select(\DB::raw("CONCAT(`blog_name`, ' Place ( Price:', `blog_price`, ' ) ','For ',`blog_promotion_date_frame`,'Days') AS name"), 'id')
             ->where('app_promotion_blog_id', $request->app_promotion_blog_id)->where('is_active', 1);
 
         if (!empty($booked_slot_ids)) {
-            $slotMaster->whereNotIn('id', $booked_slot_ids);
+            $slotMaster->whereNotIn('blog_position', $booked_slot_ids);
         }
         $slot = $slotMaster->where('blog_promotion_date_frame', $date_frame)
 //            ->limit(config('custom_app_setting.blog_promotion_banner_number_of_slides'))
             ->get();
-//dd($slot);
         if (isset($slot[0]))
             return \Response::json($slot);
         else
@@ -141,7 +142,7 @@ class BlogPromotionController extends Controller
     {
 //        dd($request->all());
         $this->validate($request, [
-            'date'                  => 'required|after:tomorrow',
+            'date'                  => 'required|after:today',
             'app_promotion_blog_id' => 'required',
             'booked_for_time'       => 'required',
             'position'              => 'required',
@@ -221,7 +222,7 @@ class BlogPromotionController extends Controller
 //        dd($request->all());
         $this->validate($request, [
             'product_id'            => 'required',
-            'date'                  => 'required|after:tomorrow',
+            'date'                  => 'required|after:today',
             'app_promotion_blog_id' => 'required',
             'booked_for_time'       => 'required',
             'position'              => 'required'

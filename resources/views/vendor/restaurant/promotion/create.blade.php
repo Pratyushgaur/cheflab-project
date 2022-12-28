@@ -297,6 +297,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
             $('#datepicker').on('change', get_positions);
             $('#time_frame').on('change', get_positions);
             $('#date_frame').change(get_positions);
+            $('#banner_for').change(get_positions);
 
         });
     </script>

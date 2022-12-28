@@ -20,7 +20,7 @@ class VendorPromotionController extends Controller
         $data['banners']      = SloteBook::join('cheflab_banner_image', 'cheflab_banner_image.id', 'slotbooking_table.cheflab_banner_image_id')
 //            ->join('slot',)
             ->where('vendor_id', $vendor_id)
-            ->select('slotbooking_table.id','slotbooking_table.price','position', 'cheflab_banner_image_id', \DB::raw('DATE_FORMAT(from_date,"%D %b %y") as from_date'), \DB::raw('DATE_FORMAT(to_date,"%D %b %y") as to_date'),
+            ->select('comment_reason','slotbooking_table.id','slotbooking_table.price','position', 'cheflab_banner_image_id', \DB::raw('DATE_FORMAT(from_date,"%D %b %y") as from_date'), \DB::raw('DATE_FORMAT(to_date,"%D %b %y") as to_date'),
                 \DB::raw('DATE_FORMAT(from_time,"%r") as from_time'), \DB::raw('DATE_FORMAT(to_time,"%r") as to_time'),
                 'name', 'slot_image', 'slotbooking_table.is_active')->get();
 
@@ -95,6 +95,7 @@ class VendorPromotionController extends Controller
         $slot->cheflab_banner_image_id = $request->position;
         $slot->for                     = $request->for;
         $slot->payment_status          = '0';
+        $slot->is_active               = '0';
         $slot->vendor_id               = Auth::guard('vendor')->user()->id;
 
         if ($request->has('slot_image')) {
