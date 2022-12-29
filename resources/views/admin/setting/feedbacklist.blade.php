@@ -31,13 +31,13 @@
                             <thead>
                                   <tr role="row">
                                     <th class="text-center">Sr No.</th>
-                                    <th>User-id</th>
+                                    
                                     <th>User Name</th>
                                     <th>Mobile</th>
                                     <th>Email</th>
                                     <th>Subject</th>
-                                    <th>Descreption</th>
-                                    <th>Action</th>
+                                    <th>Description</th>
+                                    <th>date</th>
                                   </tr>
                             </thead>
                             
@@ -83,7 +83,7 @@
             {data: 'email', name: 'email'},
             {data: 'subject', name: 'subject'},
             {data: 'description', name: 'description'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+            {data: 'date', name: 'action-js'},
         ]
     });
   // });

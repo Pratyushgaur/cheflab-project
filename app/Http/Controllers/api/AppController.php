@@ -2040,8 +2040,7 @@ class AppController extends Controller
             $validateUser = Validator::make($request->all(), [
                 'name'               => 'required',
                 'lastname'               => 'required',
-                'email'              => 'required',
-                'alternative_number' => 'required',
+                'email'              => 'required'
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
@@ -2055,7 +2054,14 @@ class AppController extends Controller
                 $user->image = $filename;
             }
             $user->save();
-            $update = User::where('id', '=', request()->user()->id)->update(['name' => $request->name,'surname' => $request->lastname, 'email' => $request->email, 'alternative_number' => $request->alternative_number]);
+            $userUpdate = User::where('id', '=', request()->user()->id);
+            $userUpdate->name = $request->name;
+            $userUpdate->surname = $request->lastname;
+            $userUpdate->email = $request->email;
+            if($request->alternative_number != null){
+                $userUpdate->alternative_number = $request->alternative_number;
+            }
+            $user->save();
             return response()->json([
                 'status'  => true,
                 'message' => 'User Updated Successfully'
