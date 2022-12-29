@@ -87,29 +87,51 @@ $product_status = config('custom_app_setting.product_status');
                                             <td>{{$product->product_price}}</td>
                                             <!-- <td>{{$product->categoryName}}</td> -->
                                             <td>
-                                                <?php if ($product->product_approve == 1) {
-                                                    $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $product->id . '"></span></label>';
-                                                } elseif ($product->product_approve == 0) {
-                                                    $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round onProduct" data-id="' . $product->id . '"></span></label>';
-                                                } else {
-                                                    $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round"></span></label>';
-                                                }
-                                                echo $btn;
+
+                                                <?php 
+                                                    if($product->status == 1){
+                                                        $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $product->id . '"></span></label>';
+                                                    }
+                                                    if($product->status == 0){
+                                                        if($product->product_approve == '2'){
+                                                            $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round " data-id="' . $product->id . '"></span></label>';
+                                                        }else{
+                                                            $btn = '<label class="ms-switch"><input type="checkbox" > <span class="ms-switch-slider round onProduct" data-id="' . $product->id . '"></span></label>';
+                                                        }
+                                                        
+                                                    }
+                                                    if($product->status == 2){
+                                                        $btn = '';
+                                                    }
+                                                    echo $btn;
+                                                ?>
+                                                <?php 
+                                                // if ($product->product_approve == 1) {
+                                                //     $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offproduct" data-id="' . $product->id . '"></span></label>';
+                                                // } elseif ($product->product_approve == 0) {
+                                                //     $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round onProduct" data-id="' . $product->id . '"></span></label>';
+                                                // } else {
+                                                //     $btn = '<label class="ms-switch"><input type="checkbox" disabled> <span class="ms-switch-slider round"></span></label>';
+                                                // }
+                                                // echo $btn;
                                                 ?>
                                             </td>
-                                            <td><?php if ($product->status == 1) {
-                                                    $btn = '<span class="badge badge-success">Active</span>';
-                                                } elseif ($product->status == 2) {
-                                                    $btn = '<span class="badge badge-primary">Pending</span>';
-                                                } elseif ($product->status == 0) {
-                                                    $btn = '<span class="badge badge-primary">Inactive</span>';
-                                                } else {
+                                            <td><?php  
+                                                
+                                                if ($product->product_approve == '1') {
+                                                
+                                                    $btn = '<span class="badge badge-success">Approved</span>';
+                                                } elseif ($product->product_approve == '3') {
                                                     $btn = '<a href="javascript:void(0)" class="openModal"  data-id="' . $product->comment_reason . '"><span class="badge badge-primary" data-toggle="modal" data-target="#modal-8">Reject</span></a>';
+                                                } elseif ($product->product_approve == '2') {
+                                                    $btn = '<span class="badge badge-primary">Pending</span>';
+                                                } else{
+                                                    $btn = '';
                                                 }
                                                 echo $btn;?></td>
                                             <td>{{front_end_short_date_time($product->created_at)}}</td>
 
-                                            <td><?php if ($product->status == '1') {?>
+                                            <td><?php if ($product->product_approve == '1') {?>
                                                 <a href="{{route('vendor.product.edit', ['id' => Crypt::encryptString($product->id)])}}"><i class="fa fa-edit"></i></a>
                                                 <a href="{{route('restaurant.product.delete', ['id' => Crypt::encryptString($product->id)])}}" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fa fa-trash"></i></a>
                                                 <?php } else {?>

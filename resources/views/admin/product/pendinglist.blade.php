@@ -90,6 +90,7 @@
 
                                 <select class="form-control select2" style="width: 100%;" id="filter-by-restaurant" onchange="reload_table()">
                                     <option value="">Select Restaurant</option>
+                                    
                                     @foreach($vendor as $val)
                                         <option value="{{$val->id}}">{{$val->name}}</option>
                                     @endforeach;
@@ -120,7 +121,7 @@
                                     <th  >Image</th>
                                     <th> Type</th>
                                     <th> Price</th>
-                                    <th  >status</th>
+                                    <th  >Approval</th>
                                     <th  >created at</th>
                                     <th  >Action</th>
                                   </tr>
@@ -313,7 +314,7 @@
 
               var uh = JSON.stringify(response);
               var obj = JSON.parse(uh);
-              console.log(obj.product['status']);
+              console.log(obj.product);
              // $vendorimg = '<img src=""{{url('vendor')}}/'+obj.vendor['image']+'" />';
              $vendorimg = '<img src="{{url('vendors')}}/'+obj.vendor['image']+'" alt="" >';
              $('.widget-user-image').html($vendorimg);
@@ -324,7 +325,7 @@
              // $('#menu').html("Menu<span class='float-right badge bg-info'>"+obj.menu['menuName']+"</span>");
               $btn1 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="edit btn btn-warning btn-xs accept-btn"  data-alert-message="Are You Sure to Accept this Product" flash="Product" " title="Accept">Accept</a> <a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
               $btn2 = '<a href="javascript:void(0)" data-id="'+obj.product['id']+'" class="btn btn-danger btn-xs rejectdata" data-toggle="modal" data-target="#modal-default"  id="closebtn">Reject</a>';
-             if(obj.product['status'] == '2'){
+             if(obj.product['product_approve'] == '2' || obj.product['product_approve'] == '0'){
               $('.accept').html($btn1);
              }else{
               $('.accept').html($btn2);

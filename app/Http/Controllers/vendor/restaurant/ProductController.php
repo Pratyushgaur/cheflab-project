@@ -173,7 +173,6 @@ class ProductController extends Controller
 
         $product                       = Product_master::find($request->id);
         $product->product_name         = $request->product_name;
-        $product->userId               = Auth::guard('vendor')->user()->id;
        // $product->cuisines             = $request->cuisines;
         //$product->category             = $request->category;
         $product->menu_id              = $request->menu_id;
@@ -184,7 +183,8 @@ class ProductController extends Controller
         $product->preparation_time     = $request->preparation_time;
         $product->chili_level          = $request->chili_level;
         $product->primary_variant_name = $request->primary_variant_name;
-        $product->product_approve      = 2;
+        $product->product_approve      = '2';
+        $product->status               = '0';
 
 
         if (isset($request->product_type))
@@ -199,9 +199,8 @@ class ProductController extends Controller
 
             @unlink($old_image);
         }
-        $product->product_for = '3';
-
         $product->save();
+        
         $primary = Variant::where('product_id','=',$product->id)->orderBy('id','ASC')->limit(1)->select('id')->first();
         Variant::where('id','=',$primary->id)->update(['variant_name' => $request->primary_variant_name, 'variant_price' => $request->item_price]);
         if ($request->custimization == 'true') {
@@ -343,7 +342,7 @@ class ProductController extends Controller
         $id     = $request->id;
         $update = \DB::table('products')
             ->where('id', $id)
-            ->update(['product_approve' => '0']);
+            ->update(['status' => '0']);
         return \Response::json($update);
     }
 
@@ -352,7 +351,7 @@ class ProductController extends Controller
         $id     = $request->id;
         $update = \DB::table('products')
             ->where('id', $id)
-            ->update(['product_approve' => '1']);
+            ->update(['status' => '1']);
         return \Response::json($update);
     }
 

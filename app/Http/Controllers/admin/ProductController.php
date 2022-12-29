@@ -274,13 +274,20 @@ class ProductController extends Controller
        // $data1 = Product_master::where('product_for','=','3')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*',  'vendors.name as restaurantName')->get();
        // $data = Product_master::where('product_for','=','3')->join('categories', 'products.category', '=', 'categories.id')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*', 'categories.name as categoryName')->get();
        // echo $data1;die;
+       
         if ($request->ajax()) {
-            $data = Product_master::where('product_for','=','3')->where('products.status','=','2')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName')->get();
+            $data = Product_master::where('product_for','=','3')->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName');
             if($request->rolename != ''){
-                $data =  Product_master::where('products.status','=',$request->rolename)->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName')->get();
-             }elseif($request->restaurant != ''){
-                $data =  Product_master::where('userId','=',$request->restaurant)->join('vendors', 'products.userId', '=', 'vendors.id')->select('products.*','vendors.name as restaurantName')->get();
+                $data = $data->where('products.product_approve','=',$request->rolename);
              }
+            if($request->restaurant != ''){
+                $data = $data->where('userId','=',$request->restaurant);
+                
+             }
+            if($request->rolename == '' && $request->restaurant == ''){
+                $data = $data->where('products.product_approve','=','2');
+            }
+            $data = $data->get();
             return Datatables::of($data)
             ->addIndexColumn()
             ->addColumn('action-js', function($data){
@@ -302,12 +309,12 @@ class ProductController extends Controller
             ->addColumn('status', function($data){
                 //   return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>'
 
-                   if($data->status == 1){
-                       return '<span class="badge badge-success">Active</span>';
-                   }elseif($data->status == 2){
+                   if($data->product_approve == '1'){
+                       return '<span class="badge badge-success">Approved</span>';
+                   }elseif($data->product_approve == '2'){
                        return '<span class="badge badge-primary">Pending</span>';
-                   }elseif($data->status == 0){
-                       return '<span class="badge badge-primary">Inactive</span>';
+                   }elseif($data->product_approve == '0'){
+                       return '<span class="badge badge-primary">Pending</span>';
                    }else{
                        return '<span class="badge badge-primary">Reject</span>';
                    }

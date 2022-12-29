@@ -617,6 +617,7 @@ class AppController extends Controller
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
                 ->where('product_approve', 1)
                 ->where('status', 1)
+                ->orderBy('position','ASC')
                 ->groupBy('menuName')
                 ->having('count','>','0')
                 ->get();
