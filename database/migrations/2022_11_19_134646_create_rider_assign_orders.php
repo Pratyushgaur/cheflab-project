@@ -22,7 +22,7 @@ class CreateRiderAssignOrders extends Migration
             $table->string('distance')->nullable();
             $table->float('earning', 8, 2)->nullable();
             $table->text('cancel_reason')->nullable()->commnet('if driver cancel the order then they put reason');
-            $table->enum('action',['0','1','2','3'])->default('0')->comment('0=pending 1= accept 2= reject 3=delivered');
+            $table->enum('action',['0','1','2','3','4'])->default('0')->comment('0=pending 1= accept 2= reject , 4=pickup , 3=delivered');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
