@@ -8,6 +8,8 @@ use App\Models\Cuisines;
 use App\Models\Product_master;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryboySetting;
+use App\Models\RiderbankDetails;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Crypt;
@@ -123,6 +125,35 @@ class Deliveryboy extends Controller
             $vendors->identity_number  = $request->identity_number;
         }
         $vendors->save();
+        $vendors->save();
+
+        if($request->time == 'full_time'){
+            $time = 'F'.sprintf("%06d", $vendors->id);
+        }else{
+            $time = 'P'.sprintf("%06d", $vendors->id);
+        }
+
+        $delivery = Deliver_boy::where('id', '=',  $vendors->id)->first();
+        $delivery->boy_id = $time;
+        $delivery->created_at = date('Y-m-d H:i:s');
+        $delivery->updated_at = date('Y-m-d H:i:s');
+        $delivery->save();
+
+        $bankdetail = new RiderbankDetails;
+        $bankdetail->rider_id = $delivery->id;
+        $bankdetail->bank_name = $request->bank_name;      
+        $bankdetail->holder_name = $request->holder_name;
+        $bankdetail->account_no = $request->account_no;
+
+        if ($request->has('cancel_check')) {
+            $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+            $request->cancel_check->move(public_path('dliver-boy-documents'), $filename);
+            $files               = $filename;
+            $bankdetail->cancel_check = $files;
+        }
+
+        $bankdetail->ifsc = $request->ifsc;
+        $bankdetail->save();
         return redirect()->route('admin.deliverboy.list')->with('message', 'Delivery Boy Registration Successfully');
         
 
@@ -157,6 +188,31 @@ class Deliveryboy extends Controller
         $general->save();
         return redirect()->route('admin.deliverboy.setting')->with('message', 'Update Chargs Successfully');
     }
+
+    // public function storeDelivercharge(Request $request){
+
+    //     // echo '<pre>'; print_r($request->all());die;
+    //     $general = DeliveryboySetting::find($request->id);
+    //     $general->first_three_km_charge_admin = $request->first_three_km_charge_admin;
+    //     $general->first_three_km_charge_user = $request->first_three_km_charge_user;
+    //     $general->first_three_km_charge_admin = $request->first_three_km_charge_admin;
+    //     $general->three_km_to_six_user = $request->three_km_to_six_user;
+    //     $general->three_km_to_six_admin = $request->three_km_to_six_admin;
+    //     $general->six_km_above_user = $request->six_km_above_user;
+    //     $general->six_km_above_admin = $request->six_km_above_admin;
+    //     $general->extra_charges_admin = $request->extra_charges_admin;
+    //     $general->fifteen_order_incentive_4 = $request->fifteen_order_incentive_4;
+    //     $general->fifteen_order_incentive_5 = $request->fifteen_order_incentive_5;
+    //     $general->sentientfive_order_incentive_4 = $request->sentientfive_order_incentive_4;
+    //     $general->sentientfive_order_incentive_5 = $request->sentientfive_order_incentive_5;
+    //     $general->hundred_order_incentive_4 = $request->hundred_order_incentive_4;
+    //     $general->hundred_order_incentive_5 = $request->hundred_order_incentive_5;
+    //     $general->no_of_order_cancel = $request->no_of_order_cancel;
+    //     $general->below_one_five_km = $request->below_one_five_km;
+    //     $general->above_one_five_km = $request->above_one_five_km;
+    //     $general->save();
+    //     return redirect()->route('admin.deliverboy.setting')->with('message', 'Update Chargs Successfully');
+    // }
     public function get_data_table_of_deliverboy(Request $request)
     {
         //echo 'ok';die;
@@ -264,6 +320,7 @@ class Deliveryboy extends Controller
             'address' => 'required',
             'password' => 'required',
             'confirm_password' => 'required',
+            'time' => 'required'
         ]);
         $vendors = Deliver_boy::find($request->id);
         $vendors->name = $request->name;
@@ -288,6 +345,21 @@ class Deliveryboy extends Controller
             $vendors->identity_number  = $request->identity_number;
         }
         $vendors->save();
+        $bankdetail = RiderbankDetails::where('rider_id', '=',  $vendors->id)->first();
+        $bankdetail->rider_id = $delivery->id;
+        $bankdetail->bank_name = $request->bank_name;      
+        $bankdetail->holder_name = $request->holder_name;
+        $bankdetail->account_no = $request->account_no;
+
+        if ($request->has('cancel_check')) {
+            $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+            $request->cancel_check->move(public_path('dliver-boy-documents'), $filename);
+            $files               = $filename;
+            $bankdetail->cancel_check = $files;
+        }
+
+        $bankdetail->ifsc = $request->ifsc;
+        $bankdetail->save();
         return redirect()->route('admin.deliverboy.list')->with('message', 'Vendor Registration Successfully');
     }
     public function soft_delete(Request $request)

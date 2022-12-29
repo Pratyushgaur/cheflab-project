@@ -162,5 +162,17 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
         Route::post('user/profile/category/update',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_profile_categories'])->name('restaurant.profile.update.category');
         Route::post('user/profile/cuisines/update',[App\Http\Controllers\vendor\restaurant\VendorController::class, 'update_profile_cuisines'])->name('restaurant.profile.update.cuisines');
+        // mis
+        Route::get('mis/renvenue', [App\Http\Controllers\vendor\restaurant\MisController::class, 'index'])->name('restaurant.mis.renvenue');
+        Route::post('mis/order-list', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_list'])->name('restaurant.mis.order.list');
+        Route::post('mis/renvenue-ajax', [App\Http\Controllers\vendor\restaurant\MisController::class, 'renvenue_ajax'])->name('restaurant.mis.renvenue.ajax');
+        Route::get('mis/order/view/{id}', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_detail'])->name('restaurant.mis.order.view');
+        Route::get('mis/order/export', [App\Http\Controllers\vendor\restaurant\MisController::class, 'oredr_export'])->name('restaurant.mis.order.export');
+
+        Route::get('mis/order-data', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_data'])->name('restaurant.mis.order.data');
+        Route::get('mis/renvenue/addition-view', [App\Http\Controllers\vendor\restaurant\MisController::class, 'addition_view'])->name('restaurant.mis.renvenue.addition');
+        Route::get('mis/renvenue/deductions-view', [App\Http\Controllers\vendor\restaurant\MisController::class, 'deductions_view'])->name('restaurant.mis.renvenue.deductions');
+
+        Route::get('mis/order-invoice-pdf', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_invoice'])->name('restaurant.mis.order.invoice.pdf');
     });
 });

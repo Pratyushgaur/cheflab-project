@@ -384,6 +384,48 @@
                           </div>
                           <!-- basic information end -->
                           <hr>
+                          <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">Bank Information</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Bank name</label>
+                                        <input type="text" name="bank_name" class="form-control"  id="" placeholder="Enter Bank Name" value="{{ @$vendor_bankdetails->bank_name }}">
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Account Holder name</label>
+                                            <input type="text" name="holder_name" class="form-control"  id="" placeholder="Account Holder Name" value="{{ @$vendor_bankdetails->holder_name }}">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Account Number </label>
+                                            <input type="text" name="account_no" class="form-control" placeholder="Account Number" value="{{ @$vendor_bankdetails->account_no }}">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>IFSC Code </label>
+                                            <input type="text" name="ifsc" class="form-control" placeholder="IFSC Code" value="{{ @$vendor_bankdetails->ifsc }}">
+                                        </div>
+                                  </div>                                 
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Cancel Check</label>
+                                            <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check" value="{{ @$vendor_bankdetails->cancel_check }}">
+                                        </div>
+                                  </div>
+                                </div>
+                                <!-- div row -->
+                              </div>
+
+
+                          </div><hr>
                           <!-- schedule information start -->
                           <div class="card card-default">
                               <div class="card-header">

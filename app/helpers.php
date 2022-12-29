@@ -4,6 +4,7 @@ use App\Models\Orders;
 use App\Models\Product_master;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
+use App\Models\OrderCommision;
 
 function time_diffrence_in_minutes($datetime1, $datetime2)
 {
@@ -943,3 +944,92 @@ function promotionRowSetup($Blogs,$request,$user_id){
         return [];
     }
 }
+function orderCancel($id)
+    {
+        // echo $id;die;
+
+        $order = Order::where('id',$id)->first();
+        $payout = Paymentsetting::first();
+        $order_amount = $order->net_amount;
+        $vendor_cancellation = $payout->additions;
+        $convenience_fee = $payout->convenience_fee;
+        $admin_commision = $payout->admin_commision;
+        $tax = 18 ;
+       
+        $gross_revenue = 0;
+        $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
+        $admin_per = ($admin_commision / 100) * $vendor_commision;
+        $tax_commision = ($tax / 100) * $vendor_commision;
+        $convenience_commision = ($convenience_fee / 100) * $vendor_commision;
+        $deduction =  $admin_per + $tax_commision + $convenience_commision;        
+      
+
+        $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
+        
+        $ordercommision = array(
+            'is_cancel' => 1,
+            'vendor_id' => $order->vendor_id,
+            'order_id' => $order->id,
+            'vendor_commision' => $vendor_commision,
+            'admin_commision' => $deduction,
+            'net_amount' => $order_amount,           
+            'gross_revenue' => $gross_revenue,
+            'additions' => $vendor_commision,
+            'deductions' => $deduction,
+            'net_receivables' => $net_receivables,
+            'convenience_tax' => $convenience_fee,
+            'addition_tax' => $vendor_cancellation,
+            'admin_tax' => $admin_commision,
+            'tax' => $tax,
+            'convenience_amount' => $convenience_commision,
+            'tax_amount' => $tax_commision,
+            'admin_amount' => $admin_per,
+            'order_date' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' =>date('Y-m-d H:i:s')
+        );
+       return  OrderCommision::create($ordercommision); 
+    }
+
+    function orderComplete($id)
+    {
+        $order = Order::where('id',$id)->first();
+        $payout = Paymentsetting::first();
+        $order_amount = $order->net_amount;
+        $convenience_fee = $payout->convenience_fee;
+        $admin_commision = $payout->admin_commision;
+        $tax = 18 ;
+        $gross_revenue = $order_amount;
+        $additions = 0;
+        $convenience_commision = ($convenience_fee / 100) * $order_amount;
+        $admin_per = ($admin_commision / 100) * $order_amount;
+        $tax_commision = ($tax / 100) * $admin_per;
+        $deduction =  $admin_per + $tax_commision + $convenience_commision; 
+        $net_receivables = ($gross_revenue + $additions) - $deduction;
+
+        $ordercommision = array(
+            'is_approve' => 1,
+            'vendor_id' => $order->vendor_id,
+            'order_id' => $order->id,
+            'vendor_commision' => $net_receivables,
+            'admin_commision' => $deduction,
+            'net_amount' => $order_amount,           
+            'gross_revenue' => $gross_revenue,
+            'additions' => $additions,
+            'deductions' => $deduction,
+            'net_receivables' => $net_receivables,
+            'convenience_tax' => $convenience_fee,
+            'addition_tax' => $additions,
+            'admin_tax' => $admin_commision,
+            'tax' => $tax,
+            'convenience_amount' => $convenience_commision,
+            'tax_amount' => $tax_commision,
+            'admin_amount' => $admin_per,
+            'order_date' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' =>date('Y-m-d H:i:s')
+        );
+       return  OrderCommision::create($ordercommision);
+
+
+    }

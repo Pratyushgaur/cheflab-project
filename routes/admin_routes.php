@@ -240,5 +240,25 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('refund-list',[\App\Http\Controllers\admin\UserControllers::class,'refundlist'])->name('admin.refund.list');
     //
     Route::post('get-status-update', [App\Http\Controllers\admin\OrderController::class, 'status_update'])->name('admin.status.update');
-Route::get('order/generate-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoiceorder'])->name('admin.order.invoice');
+    Route::get('order/generate-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoiceorder'])->name('admin.order.invoice');
+    // Account  Management
+    Route::get('account-settlement/mis', [App\Http\Controllers\admin\AccountmisController::class, 'index'])->name('admin.account.mis.list');
+    Route::get('order-list-data', [App\Http\Controllers\admin\AccountmisController::class, 'get_data_table_of_order'])->name('admin.account.order.data');   
+
+    Route::post('get-account-status-update', [App\Http\Controllers\admin\AccountmisController::class, 'status_update'])->name('admin.account.status.update'); 
+
+    Route::get('order/account-generate-invoice/{id}', [App\Http\Controllers\admin\AccountmisController::class, 'invoiceorder'])->name('admin.account.order.invoice');
+
+
+    Route::get('account-settlement/vendor', [App\Http\Controllers\admin\AccountsettlementController::class, 'index'])->name('admin.account.vendor.list');
+    Route::get('vendor-list-data', [App\Http\Controllers\admin\AccountsettlementController::class, 'get_data_table_of_order'])->name('admin.account.vendor.data');
+
+
+    Route::get('account-settlement/rider', [App\Http\Controllers\admin\AccountriderController::class, 'index'])->name('admin.account.rider.list');
+    Route::get('rider-list-data', [App\Http\Controllers\admin\AccountriderController::class, 'get_data_table_of_order'])->name('admin.account.rider.data');
+
+
+    // Payout setting
+    Route::get('payout-setting', [App\Http\Controllers\admin\PaymentsettingController::class,'index'])->name('admin.payout.setting');
+    Route::post('payout-setting-store', [App\Http\Controllers\admin\PaymentsettingController::class,'storeGernel'])->name('admin.payout.storeGernel');
 });

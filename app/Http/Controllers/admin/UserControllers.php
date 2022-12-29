@@ -240,6 +240,11 @@ class UserControllers extends Controller
             'pancard_image'     => 'required',
             'aadhar_number'     => 'required',
             'aadhar_card_image' => 'required',
+            'bank_name'   => 'required',
+            'holder_name'   => 'required',
+            'account_no'   => 'required',
+            'ifsc'   => 'required',
+            'cancel_check'   => 'required',
         ]);
         $vendors                   = new Vendors;
         $vendors->name             = $request->restaurant_name;
@@ -296,6 +301,21 @@ class UserControllers extends Controller
             $vendors->banner_image = json_encode($files);
         }
         $vendors->save();
+        // bank details add
+        $bankdetail = new BankDetail;
+        $bankdetail->vendor_id = $vendors->id;
+        $bankdetail->bank_name = $request->bank_name;      
+        $bankdetail->holder_name = $request->holder_name;
+        $bankdetail->account_no = $request->account_no;
+        $bankdetail->ifsc = $request->ifsc;
+        if ($request->has('cancel_check')) {
+            $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+            $request->cancel_check->move(public_path('vendor-documents'), $filename);
+            $files               = $filename;
+            // echo '<pre>'; print_r($files);die;
+            $bankdetail->cancel_check = $files;
+        }
+        $bankdetail->save();
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');
 
 
@@ -405,6 +425,10 @@ class UserControllers extends Controller
             'gst_available'     => 'required',
             //  'deal_cuisines' => 'required',
             'tax'               => 'required',
+            'bank_name'   => 'required',
+            'holder_name'   => 'required',
+            'account_no'   => 'required',
+            'ifsc'   => 'required',
         ]);
         $vendors = Vendors::find($request->id);
 //          dd($request->all());
@@ -466,6 +490,23 @@ class UserControllers extends Controller
         }
 
         $vendors->save();
+
+        $bankdetail = new BankDetail;
+        $bankdetail->vendor_id = $vendors->id;
+        $bankdetail->bank_name = $request->bank_name;      
+        $bankdetail->holder_name = $request->holder_name;
+        $bankdetail->account_no = $request->account_no;
+
+        if ($request->has('cancel_check')) {
+            $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+            $request->cancel_check->move(public_path('vendor-documents'), $filename);
+            $files               = $filename;
+            // echo '<pre>'; print_r($files);die;
+            $bankdetail->cancel_check = $files;
+        }
+
+        $bankdetail->ifsc = $request->ifsc;
+        $bankdetail->save();
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
 
     }

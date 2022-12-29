@@ -256,6 +256,39 @@
 			</li>
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
+				  <i class="fa fa-book nav-icon"></i>
+				  <p>
+				  MIS & Account Settlement
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+				    <li class="nav-item">
+						<a href="{{ route('admin.account.mis.list') }}" class="nav-link">
+						  <i class="fa fa-arrow-right  nav-icon"></i>
+						  <p>MIS</p>
+						</a>
+					</li>
+					<li class="nav-item">
+
+						<div class="dropdown pl-1 pb-2">
+							<a href="#" class="px-3" data-toggle="dropdown"> <i class="far fa-circle nav-icon"></i> Account Settlement <i class="fas fa-angle-down right pl-2"></i></a>
+							<div class="dropdown-menu custombox pl-3">
+								<a class="dropdown-item" href="{{ route('admin.account.vendor.list') }}">								
+									<p class="mb-0"><i class="fa fa-arrow-right  nav-icon" style="font-size:12px;"></i>  Vendor</p>
+							   </a>
+							   <a class="dropdown-item" href="{{ route('admin.account.rider.list') }}">								
+									<p class="mb-0 "><i class="fa fa-arrow-right  nav-icon"  style="font-size:12px;"></i>  Rider</p>
+							   </a>
+							</div>
+						</div>
+
+
+					</li>
+				</ul>
+			</li>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
 
 				  <i class="far fa-user nav-icon"></i>
 				  <p>
@@ -324,6 +357,12 @@
 				<a href="{{route('admin.globle.setting')}}" class="nav-link">
 				  <i class="nav-icon fa fa-cog"></i>
 				  <p>GlobleSetting</p>
+				</a>
+			</li>
+			<li class="nav-item">
+				<a href="{{route('admin.payout.setting')}}" class="nav-link">
+				  <i class="nav-icon fa fa-cog"></i>
+				  <p>Payout Setting</p>
 				</a>
 			</li>
 			<li class="nav-item">

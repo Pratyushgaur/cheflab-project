@@ -51,7 +51,7 @@ class CreateOrders extends Migration
             $table->enum('refund',['0','1','2'])->default('0')->comment('0 no need for refund,1 refund requested, 2 refund DONE');
             $table->float('platform_charges', 8, 2)->comment('platform_charges');
             $table->double('tex')->comment('platform_charges');
-
+            $table->unsignedBigInteger('cancel_by_user')->default(0);
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

@@ -79,6 +79,16 @@
       </li>
 
       <li class="menu-item">
+        <a href="#" class="has-chevron" data-toggle="collapse" data-target="#mis" aria-expanded="false" aria-controls="mis"> <span><i class="nav-icon fa fa-shopping-basket fs-16"></i>MIS</span>
+        </a>
+        <ul id="mis" class="collapse " aria-labelledby="product" data-parent="#side-nav-accordion">
+          <li>
+             <a href="{{ route('restaurant.mis.renvenue') }}" class="">Statement of Accounts</a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="menu-item">
         <a href="{{route('restaurant.coupon.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Coupons</span>
         </a>
       </li>

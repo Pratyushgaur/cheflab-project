@@ -239,19 +239,19 @@
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Deliveryboy Email">
                                     </div>
                                   </div>
-                                  <div class="col-md-3">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">City <span class="text-danger">*</span></label>
                                         <input type="text" name="city" class="form-control"  id="" placeholder="Enter City">
                                     </div>
                                   </div>
-                                  <div class="col-md-3">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>
                                   </div>
-                                  <div class="col-md-3">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
@@ -259,18 +259,27 @@
                                   </div>
 
 
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
                                             <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
                                             <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
                                         </div>
-                                    </div>     
+                                    </div>  
+                                    <div class="col-md-4">
+                                      <div class="form-group">
+                                          <label for="exampleInputEmail1">Time Type <span class="text-danger">*</span></label>
+                                          <select name="time"  class="form-control">
+                                            <option value="full_time">Full Time</option>
+                                            <option value="part_time">Part Time</option>
+                                          </select>
+                                      </div>  
+                                    </div>   
                                   
                                 </div>
 
@@ -278,6 +287,50 @@
 
                           </div>
                           <!-- basic information end -->
+                          
+                          <hr>
+                          <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">Bank Information</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Bank name</label>
+                                        <input type="text" name="bank_name" class="form-control"  id="" placeholder="Enter Bank Name">
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Account Holder name</label>
+                                            <input type="text" name="holder_name" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Account Number </label>
+                                            <input type="text" name="account_no" class="form-control" placeholder="Account Number">
+                                        </div>
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>IFSC Code </label>
+                                            <input type="text" name="ifsc" class="form-control" placeholder="IFSC Code">
+                                        </div>
+                                  </div>                                 
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label>Cancel Check</label>
+                                            <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check">
+                                        </div>
+                                  </div>
+                                </div>
+                                <!-- div row -->
+                              </div>
+
+
+                          </div>
                           <hr>
                           <!-- schedule information start -->
                           <div class="card card-default">
