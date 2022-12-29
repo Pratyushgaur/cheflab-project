@@ -124,6 +124,8 @@ class ProductController extends Controller
                 $filename = time() . '-restaurant-product-' . rand(100, 999) . '.' . $request->file('product_image')->clientExtension();
                 $request->product_image->move(public_path('products'), $filename);
                 $product->product_image = $filename;
+            }else{
+                $product->product_image = 'default-image.jpeg';
             }
             $product->product_for = '3';
             $product->save();
