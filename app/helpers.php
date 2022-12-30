@@ -825,7 +825,7 @@ function sendNotification($title,$body,$token,$data=null){
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
         curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
         //Send the request
-       return  $response = curl_exec($ch);
+         $response = curl_exec($ch);
         //Close request
         if ($response === FALSE) {
         die('FCM Send Error: ' . curl_error($ch));
