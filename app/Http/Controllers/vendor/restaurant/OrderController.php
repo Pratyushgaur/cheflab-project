@@ -102,7 +102,10 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'ready_to_dispatch';
         $order->save();
-        \App\Models\RiderAssignOrders::where('order_id','=',$id)->orWhere('action','!=','0')->orWhere('action','!=','2')->update(['otp'=>rand(1000,9999)]);
+        if($order->accepted_driver_id != null){
+            \App\Models\RiderAssignOrders::where('order_id','=',$id)->where('rider_id','=',$order->accepted_driver_id)->update(['otp'=>rand(1000,9999)]);
+        }
+        
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',

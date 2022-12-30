@@ -159,6 +159,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'order_row_id' => 'required|numeric|exists:orders,id',
+                    'rider_assign_order_id'=>'required|exists:rider_assign_orders,id',
                     'status'   => 'required',
                     'distance' => [
                         'required_if:status,==,1'
@@ -184,11 +185,11 @@ class AppController extends Controller
             }
             
 
-            RiderAssignOrders::where('order_id','=',$request->order_row_id)->orWhere('action','!=','0')->orWhere('action','!=','2')->update(['action'=>$request->status]);
+            RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['action'=>$request->status]);
             $order = [];
             if ($request->status == '1') {
-                RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
-                $order = RiderAssignOrders::where('rider_assign_orders.order_id','=',$request->order_row_id);
+                RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
+                $order = RiderAssignOrders::where('id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
                 $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id');
@@ -197,8 +198,9 @@ class AppController extends Controller
                 $order = $order->first();
                 $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
                 RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
+                Order::where('id','=',$request->order_row_id)->update('accepted_driver_id',$request->user_id);
             }elseif($request->status == '2'){
-                RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['cancel_reason'=>$request->cancel_reason]);
+                RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
             }
             
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
@@ -226,6 +228,8 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'order_row_id' => 'required|numeric|exists:orders,id',
+                    'rider_assign_order_id'=>'required|exists:rider_assign_orders,id',
+                    'otp'=>'required',
                 ]
             );
             if ($validateUser->fails()) {
@@ -238,7 +242,7 @@ class AppController extends Controller
             }
             
 
-            $order = RiderAssignOrders::where('order_id','=',$request->order_row_id)->orWhere('action','!=','0')->orWhere('action','!=','2')->first();
+            $order = RiderAssignOrders::where('id','=',$request->rider_assign_orders)->first();
             if(empty($order)){
                 return response()->json([
                     'status' => false,
@@ -248,7 +252,7 @@ class AppController extends Controller
             }
             if($order->otp == $request->otp){
                 RiderAssignOrders::where('id','=',$order->id)->update('action','4');
-                $order = RiderAssignOrders::where('rider_assign_orders.order_id','=',$request->order_row_id);
+                $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_orders);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
                 $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id');
