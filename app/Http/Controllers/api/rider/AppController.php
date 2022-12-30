@@ -198,7 +198,7 @@ class AppController extends Controller
                 $order = $order->first();
                 $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
                 RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
-                Order::where('id','=',$request->order_row_id)->update('accepted_driver_id',$request->user_id);
+                Order::where('id','=',$request->order_row_id)->update(['accepted_driver_id'=>$request->user_id]);
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
             }
