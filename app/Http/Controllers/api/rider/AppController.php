@@ -265,7 +265,8 @@ class AppController extends Controller
                 
                 return response()->json([
                     'status'   => true,
-                    'message'  => 'Status Updated Successfully'
+                    'message'  => 'Status Updated Successfully',
+                    'order' =>$order
                 ], 200); 
             }else{
                 return response()->json([
