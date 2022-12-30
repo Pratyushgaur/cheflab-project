@@ -1689,8 +1689,8 @@ class AppController extends Controller
                             $order_products->order_product_addons()->save($OrderProductAddon);
                         }
                 }
-                $riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
-                $riderAssign->saveOrFail();
+                //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
+                //$riderAssign->saveOrFail();
                 DB::commit();
                  \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(10));
 
