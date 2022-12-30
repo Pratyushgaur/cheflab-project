@@ -189,7 +189,7 @@ class AppController extends Controller
             $order = [];
             if ($request->status == '1') {
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
-                $order = RiderAssignOrders::where('id','=',$request->rider_assign_order_id);
+                $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
                 $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id');
@@ -242,7 +242,7 @@ class AppController extends Controller
             }
             
 
-            $order = RiderAssignOrders::where('id','=',$request->rider_assign_orders)->first();
+            $order = RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->first();
             if(empty($order)){
                 return response()->json([
                     'status' => false,
