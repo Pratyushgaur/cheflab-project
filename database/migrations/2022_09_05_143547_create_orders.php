@@ -52,6 +52,7 @@ class CreateOrders extends Migration
             $table->float('platform_charges', 8, 2)->comment('platform_charges');
             $table->double('tex')->comment('platform_charges');
             $table->unsignedBigInteger('cancel_by_user')->default(0);
+            $table->unsignedBigInteger('accepted_driver_id')->nullable()->comment('Driver id who accepted this order and going to delivery');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
