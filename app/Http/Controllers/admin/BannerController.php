@@ -9,7 +9,7 @@ use App\Models\Banner;
 use App\Models\SloteBook;
 use App\Models\SloteMaster;
 use App\Models\VendorMenus;
-use App\Models\vendors;
+use App\Models\Vendors;
 use Config;
 use DataTables;
 use DB;
@@ -229,7 +229,7 @@ class BannerController extends Controller
         $slot_id = Crypt::decryptString($encrypt_id);
         $slot    = SloteBook::findOrFail($slot_id);
         $vendor  = Vendors::findOrFail($slot->vendor_id);
-$menu='';
+        $menu='';
 //        $menu    = VendorMenus::findOrFail($slot->vendor_id);
 //        dd($menu);
         return view('admin/banner/view-vendor', compact('slot', 'vendor', 'menu'));
