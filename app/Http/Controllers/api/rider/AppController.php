@@ -10,8 +10,6 @@ use App\Models\OrderProduct;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\DriverWorkingLogs;
-
-
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use PDOException;
@@ -22,6 +20,7 @@ class AppController extends Controller
 {
     public function home(Request $request)
     {
+        
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -41,7 +40,7 @@ class AppController extends Controller
             $order = RiderAssignOrders::where(['rider_id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
-            $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id');
+            $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
            
             if ($order->first()->action == '0') {
                 $order = $order->first();
@@ -159,6 +158,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'order_row_id' => 'required|numeric|exists:orders,id',
+                    'user_id' => 'required|numeric|exists:deliver_boy,id',
                     'rider_assign_order_id'=>'required|exists:rider_assign_orders,id',
                     'status'   => 'required',
                     'distance' => [
@@ -192,7 +192,7 @@ class AppController extends Controller
                 $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
-                $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id');
+                $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
                 $order = $order->addSelect('vendors.mobile as vendor_mobile','orders.order_status','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount',);
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
@@ -201,6 +201,8 @@ class AppController extends Controller
                 Order::where('id','=',$request->order_row_id)->update(['accepted_driver_id'=>$request->user_id]);
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
+            }elseif($request->status == '3'){
+                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'completed']);
             }
             
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
@@ -230,6 +232,7 @@ class AppController extends Controller
                     'order_row_id' => 'required|numeric|exists:orders,id',
                     'rider_assign_order_id'=>'required|exists:rider_assign_orders,id',
                     'otp'=>'required',
+                    'user_id' => 'required|numeric|exists:deliver_boy,id'
                 ]
             );
             if ($validateUser->fails()) {
@@ -256,7 +259,7 @@ class AppController extends Controller
                 $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
-                $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id');
+                $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
                 $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount',);
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();

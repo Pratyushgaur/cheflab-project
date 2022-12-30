@@ -49,7 +49,7 @@ class DriveAssignOrderJob implements ShouldQueue
             if(!empty($token)){
                 $riderAssign = $riderAssign->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $riderAssign = $riderAssign->join('vendors','orders.vendor_id','=','vendors.id');
-                $riderAssign = $riderAssign->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',\DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id');
+                $riderAssign = $riderAssign->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',\DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
                 $riderAssign = $riderAssign->first();
                 $riderAssign->expected_earninig = 50;
                 $riderAssign->trip_distance = 7;
