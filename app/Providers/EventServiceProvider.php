@@ -8,6 +8,7 @@ use App\Events\DineOutBookingEvent;
 use App\Events\IsAllSettingDoneEvent;
 use App\Events\OrderCreateEvent;
 use App\Events\OrderSendToPrepareEvent;
+use App\Events\OrderReadyToDispatchEvent;
 use App\Events\SlotBookingAcceptEvent;
 use App\Events\SlotBookingRejectEvent;
 use App\Listeners\AdminLoginHistoryListener;
@@ -18,6 +19,7 @@ use App\Listeners\OrderSendNotificationListener;
 use App\Listeners\OrderSendToPreparationNotificationListener;
 use App\Listeners\SlotBookingAcceptNotificationListener;
 use App\Listeners\SlotBookingRejectNotificationListener;
+use App\Listeners\OrderReadyToDispatchListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,15 +33,16 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen
         = [
-            Registered::class              => [SendEmailVerificationNotification::class,],
-            AdminLoginHistoryEvent::class  => [AdminLoginHistoryListener::class,],
-            IsAllSettingDoneEvent::class   => [IsAllSettingsDoneListener::class,],
-            OrderCreateEvent::class        => [OrderSendNotificationListener::class,],
-            OrderSendToPrepareEvent::class => [OrderSendToPreparationNotificationListener::class,],
-            CreateSlotBookingEvent::class  => [CreateSlotBookingNotificationListener::class],
-            SlotBookingAcceptEvent::class  => [SlotBookingAcceptNotificationListener::class],
-            SlotBookingRejectEvent::class  => [SlotBookingRejectNotificationListener::class],
-            DineOutBookingEvent::class     => [DineOutBookingNotificationListener::class]
+            Registered::class               => [SendEmailVerificationNotification::class,],
+            AdminLoginHistoryEvent::class   => [AdminLoginHistoryListener::class,],
+            IsAllSettingDoneEvent::class    => [IsAllSettingsDoneListener::class,],
+            OrderCreateEvent::class         => [OrderSendNotificationListener::class,],
+            OrderSendToPrepareEvent::class  => [OrderSendToPreparationNotificationListener::class,],
+            CreateSlotBookingEvent::class   => [CreateSlotBookingNotificationListener::class],
+            SlotBookingAcceptEvent::class   => [SlotBookingAcceptNotificationListener::class],
+            SlotBookingRejectEvent::class   => [SlotBookingRejectNotificationListener::class],
+            DineOutBookingEvent::class      => [DineOutBookingNotificationListener::class],
+            OrderReadyToDispatchEvent::class => [OrderReadyToDispatchListener::class],
         ];
 
     /**
