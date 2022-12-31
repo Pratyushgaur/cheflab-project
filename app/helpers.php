@@ -831,6 +831,7 @@ function sendNotification($title,$body,$token,$data=null){
         die('FCM Send Error: ' . curl_error($ch));
         }
         curl_close($ch);
+        return true;
 }
 
 
