@@ -807,13 +807,13 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
     return round($charge);
 
 }
-function sendNotification($title,$body,$token,$data=null){
+function sendNotification($title,$body,$token,$data=null,$sound='default'){
         $url = "https://fcm.googleapis.com/fcm/send";
         //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
         $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
         //$title = "Notification title";
         //$body = "Hello I am from Your php server";
-        $notification = array('title' =>$title , 'body' => $body, 'sound' => 'default', 'badge' => '1');
+        $notification = array('title' =>$title , 'body' => $body, 'sound' => $sound, 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
         $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
         $json = json_encode($arrayToSend);
         $headers = array();

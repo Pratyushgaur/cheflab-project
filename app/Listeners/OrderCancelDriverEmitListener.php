@@ -39,7 +39,7 @@ class OrderCancelDriverEmitListener
                 $riderAssign->trip_distance = 7;
                 $title = 'Order Cancelled';
                 $body = "Order Cancelled";
-                $res = sendNotification($title,$body,$token,array('type'=>3,'data'=>$riderAssign));
+                $res = sendNotification($title,$body,$token,array('type'=>3,'data'=>$riderAssign),'notify_sound');
             }
             return true;
             

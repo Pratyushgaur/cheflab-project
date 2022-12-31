@@ -39,7 +39,7 @@ class OrderReadyToDispatchListener
                     $riderAssign->trip_distance = 7;
                     $title = 'Restaurant Order Ready to Dispatch';
                     $body = "Restaurant Order Ready to Dispatch";
-                    $res = sendNotification($title,$body,$token,array('type'=>2,'data'=>$riderAssign));
+                    $res = sendNotification($title,$body,$token,array('type'=>2,'data'=>$riderAssign),'notify_sound');
                 }
                 
                 

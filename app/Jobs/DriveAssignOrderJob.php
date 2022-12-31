@@ -56,8 +56,8 @@ class DriveAssignOrderJob implements ShouldQueue
                 //
                 $title = 'New Delivery Request';
                 $body = "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address;
-                $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign));
-                var_dump($res);
+                $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign),'notify_sound');
+                
             }
 
 
