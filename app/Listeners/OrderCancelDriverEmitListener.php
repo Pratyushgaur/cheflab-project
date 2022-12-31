@@ -36,8 +36,8 @@ class OrderCancelDriverEmitListener
             if(!empty($riderAssign)){
                 $riderAssign->expected_earninig = 50;
                 $riderAssign->trip_distance = 7;
-                $title = 'Restaurant Order Ready to Dispatch';
-                $body = "Restaurant Order Ready to Dispatch";
+                $title = 'Order Cancelled';
+                $body = "Order Cancelled";
                 $res = sendNotification($title,$body,$token,array('type'=>3,'data'=>$riderAssign));
             }
             
