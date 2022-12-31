@@ -202,7 +202,7 @@ class AppController extends Controller
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
             }elseif($request->status == '3'){
-                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'completed']);
+                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
             }
             
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
@@ -255,7 +255,7 @@ class AppController extends Controller
             }
             if($order->otp == $request->otp){
                 RiderAssignOrders::where('id','=',$order->id)->update(['action'=>'4']);
-                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'dispatched']);
+                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'dispatched','pickup_time'=>mysql_date_time()]);
                 $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');

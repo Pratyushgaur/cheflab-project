@@ -51,7 +51,11 @@ class OrderApiController extends Controller
             $order = $order->skip($request->offset)->take(10);
             $order = $order->select('orders.customer_name',\DB::raw("DATE_FORMAT(orders.created_at, '%d/%b/%y %H:%i %p') as order_date"),'orders.order_id','orders.id as order_row_id','net_amount','rider_assign_orders.cancel_reason');
             $order = $order->addSelect('vendors.name as vendor_name','vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','vendors.address as vendor_address','orders.lat as customer_lat','orders.long as customer_lng','orders.delivery_address','orders.mobile_number as customer_mobile');
-
+            if($request->status == 'completed'){
+                $order = $order->addSelect(\DB::raw("DATE_FORMAT(orders.pickup_time, '%h:%i %p, %d/%m/%y') as pickup_time"),\DB::raw("DATE_FORMAT(orders.delivered_time, '%h:%i %p, %d/%m/%y') as delivered_time"));
+                //10:32 AM, 20/09/22
+                
+            }
             // $order = Order::where('user_id', '=', request()->user()->id);
             // $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"),'delivery_address','orders.lat','orders.long','vendors.lat as vendor_lat','vendors.long as vendor_lng','vendors.fssai_lic_no','vendors.address as vendor_address');
             // $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
