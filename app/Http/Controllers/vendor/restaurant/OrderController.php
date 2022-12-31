@@ -4,6 +4,7 @@ namespace App\Http\Controllers\vendor\restaurant;
 
 use App\Events\OrderSendToPrepareEvent;
 use App\Events\OrderReadyToDispatchEvent;
+use App\Events\OrderCancelDriverEmitEvent;
 use App\Http\Controllers\Controller;
 use App\Models\AdminMasters;
 use App\Models\Order;
@@ -56,6 +57,9 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'cancelled_by_vendor';
         $order->save();
+        if($order->accepted_driver_id != null){
+            event(new OrderCancelDriverEmitEvent($order, $order->accepted_driver_id));
+        }
         return response()->json([
             'status'       => 'success',
             'order_status' => 'cancelled_by_vendor',

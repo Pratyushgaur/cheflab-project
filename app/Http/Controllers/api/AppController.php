@@ -2715,9 +2715,12 @@ class AppController extends Controller
                     $order->order_status = 'cancelled_by_customer_after_disptch';
 
                 }
+                $order->save();
             }
 
-
+            if($order->accepted_driver_id != null){
+                event(new OrderCancelDriverEmitEvent($order, $order->accepted_driver_id));
+            }
             return response()->json([
                 'status'  => true,
                 'message' => 'Successfully'
