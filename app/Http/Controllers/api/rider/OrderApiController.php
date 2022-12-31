@@ -43,6 +43,9 @@ class OrderApiController extends Controller
             if($request->status == 'cancelled'){
                 $order = $order->where('action','=','2');
             }
+            if($request->status == 'ongoing'){
+                $order = $order->where('action','=','1');
+            }
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
             $order = $order->skip($request->offset)->take(10);
