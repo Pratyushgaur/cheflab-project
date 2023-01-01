@@ -11,6 +11,7 @@ use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\DriverWorkingLogs;
 use Carbon\Carbon;
+use App\jobs\UserOrderNotification;
 use Illuminate\Support\Facades\DB;
 use PDOException;
 use Throwable;
@@ -203,8 +204,10 @@ class AppController extends Controller
                 $orderdata->update(['accepted_driver_id'=>$request->user_id]);
                 $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
                 if($user->fcm_token != ''){
-                    sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
+                    //sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
+                    \App\Jobs\UserOrderNotification::dispatch('Order Assigned to Delivery Patner','Your Order has been Assigned to Delivery Boy',$user->fcm_token,2,$profile);
                 }
+                
                 
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
@@ -213,7 +216,8 @@ class AppController extends Controller
                 $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
                 $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
                 if($user->fcm_token != ''){
-                    sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
+                    //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
+                    \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,[]);
                 }
             }
             
@@ -272,7 +276,8 @@ class AppController extends Controller
                 $user = \App\Models\User::find($$orderdata->user_id);
                 if(!empty($user)){
                     if($user->fcm_token != ''){
-                        sendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
+                        //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
+                        \App\Jobs\UserOrderNotification::dispatch('Order dispated from restauran','Your Order has been Dispatched',$user->fcm_token,4,[]);
                     }
                 }
                 
