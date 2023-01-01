@@ -60,6 +60,14 @@ class OrderPreparationDoneJob implements ShouldQueue
                 
             }
         }
+        $user = User::find($this->order->user_id);
+        if(!empty($user)){
+            if($user->fcm_token!=''){
+                sendUserAppNotification('Order Accepted',"Your Order has been Accepted by Restaurant",$user->fcm_token,array('type'=>1,'data'=>array('message'=>'')));
+            }
+        }
+        // user send notification
+
 //send request to delivery boy
     }
 }

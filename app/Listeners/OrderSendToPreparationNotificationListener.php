@@ -35,8 +35,12 @@ class OrderSendToPreparationNotificationListener
     {
         $customer = User::find($event->order->user_id);
         $vendor = Vendors::find($event->order->vendor_id);
-
-        $customer->notify(new OrderSendToPreparationNotification($event->order->id,$vendor->name,'Send for preparation',"Your Order #" .$event->order->id." send for preparation.It will be preparared in $event->preparationTime minutes",$customer->fcm_token));
+        if(!empty($customer)){
+            if($customer->fcm_token!=''){
+                sendUserAppNotification('Order is ready to dispatch',"Your Order is ready to dispatch from Restaurant",$customer->fcm_token,array('type'=>3,'data'=>array()));
+            }
+        }
+        //$customer->notify(new OrderSendToPreparationNotification($event->order->id,$vendor->name,'Send for preparation',"Your Order #" .$event->order->id." send for preparation.It will be preparared in $event->preparationTime minutes",$customer->fcm_token));
 //we dont need to send firbase notification to vendor so we dont pass fcm_token
         $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,'Send for preparation',"You have send Order #".$event->order->id." for preparation.",''));
 //dd( $event->preparationTime);

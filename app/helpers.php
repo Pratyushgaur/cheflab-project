@@ -834,6 +834,33 @@ function sendNotification($title,$body,$token,$data=null,$sound='default'){
         return true;
 }
 
+function sendUserAppNotification($title,$body,$token,$data=null){
+    $url = "https://fcm.googleapis.com/fcm/send";
+    //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
+    $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
+    //$title = "Notification title";
+    //$body = "Hello I am from Your php server";
+    $notification = array('title' =>$title , 'body' => $body, 'sound' => 'notify_sound', 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
+    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+    $json = json_encode($arrayToSend);
+    $headers = array();
+    $headers[] = 'Content-Type: application/json';
+    $headers[] = 'Authorization: key='. $serverKey;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+    //Send the request
+     $response = curl_exec($ch);
+    //Close request
+    if ($response === FALSE) {
+    die('FCM Send Error: ' . curl_error($ch));
+    }
+    curl_close($ch);
+    return true;
+}
+
 
 function get_order_preparation_time($order_id)
 {

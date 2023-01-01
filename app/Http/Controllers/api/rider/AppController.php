@@ -16,11 +16,11 @@ use PDOException;
 use Throwable;
 use URL;
 use Validator;
+use App\Notifications\UserOrderAcceptNotification;
 class AppController extends Controller
 {
     public function home(Request $request)
     {
-        
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -185,7 +185,7 @@ class AppController extends Controller
                 ], 401);
             }
             
-
+            $profile = Deliver_boy::where('id','=',$request->user_id)->select('id','name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
             RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['action'=>$request->status]);
             $order = [];
             if ($request->status == '1') {
@@ -199,14 +199,25 @@ class AppController extends Controller
                 $order = $order->first();
                 $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
                 RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
-                Order::where('id','=',$request->order_row_id)->update(['accepted_driver_id'=>$request->user_id]);
+                $orderdata = Order::where('id','=',$request->order_row_id);
+                $orderdata->update(['accepted_driver_id'=>$request->user_id]);
+                $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
+                if($user->fcm_token != ''){
+                    sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
+                }
+                
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
             }elseif($request->status == '3'){
-                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
+                Order::where('id','=',$request->order_row_id);
+                $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
+                $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
+                if($user->fcm_token != ''){
+                    sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
+                }
             }
             
-            $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
+            
             return response()->json([
                 'status'   => true,
                 'message'  => 'Status Updated Successfully',
@@ -256,7 +267,15 @@ class AppController extends Controller
             }
             if($order->otp == $request->otp){
                 RiderAssignOrders::where('id','=',$order->id)->update(['action'=>'4']);
-                Order::where('id','=',$request->order_row_id)->update(['order_status'=>'dispatched','pickup_time'=>mysql_date_time()]);
+                $orderdata = Order::where('id','=',$request->order_row_id);
+                $orderdata->update(['order_status'=>'dispatched','pickup_time'=>mysql_date_time()]);
+                $user = \App\Models\User::find($$orderdata->user_id);
+                if(!empty($user)){
+                    if($user->fcm_token != ''){
+                        sendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
+                    }
+                }
+                
                 $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
