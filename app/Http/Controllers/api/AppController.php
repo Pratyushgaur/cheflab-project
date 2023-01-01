@@ -208,7 +208,7 @@ class AppController extends Controller
                         return URL::to('vendor-banner/') . '/' . $banner;
                     }, $banners);
                 else
-                    $urlbanners = [];
+                $urlbanners = [];
                 $vendors[$key]->banner_image   = $urlbanners;
                 $vendors[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                 $category                      = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
@@ -3280,5 +3280,45 @@ class AppController extends Controller
         
         
        
+    }
+
+    public function orderDetails(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'order_id'    => 'required|exists:orders,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+           $order =   \App\Models\Order::find($request->order_id)->first();
+           if($order->accepted_driver_id != null){
+                $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' =>$order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
+                if(!empty($riderAssign)){
+                    $order->rider_id = $riderAssign->rider_id;
+                    $order->order_row_id = $riderAssign->order_id;
+                    $order->distance = $riderAssign->distance;
+                    $order->earning = $riderAssign->earning;
+                    $order->cancel_reason = $riderAssign->cancel_reason;
+                    $order->action = $riderAssign->action;
+                    $order->otp = $riderAssign->otp;
+                }
+           }
+           
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $seconds
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
     }
 }
