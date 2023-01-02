@@ -218,7 +218,7 @@ class AppController extends Controller
                 RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
                 $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['accepted_driver_id'=>$request->user_id]);
-                $user = \App\Models\User::find($orderdata->first()->user_id)->first();
+                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->first();
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
                     $data = orderDetailForUser($request->order_row_id);
@@ -231,7 +231,7 @@ class AppController extends Controller
             }elseif($request->status == '3'){
                 Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
-                $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
+                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->first()->fcm_token;
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
                     $data = orderDetailForUser($request->order_row_id);
@@ -291,7 +291,7 @@ class AppController extends Controller
                 RiderAssignOrders::where('id','=',$order->id)->update(['action'=>'4']);
                 $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['order_status'=>'dispatched','pickup_time'=>mysql_date_time()]);
-                $user = \App\Models\User::find($$orderdata->user_id);
+                $user = \App\Models\User::where('id','=',$$orderdata->user_id);
                 if(!empty($user)){
                     if($user->fcm_token != ''){
                         //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
