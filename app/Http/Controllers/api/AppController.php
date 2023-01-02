@@ -3294,7 +3294,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $order - orderDetailForUser($request->order_id);
+            $order = orderDetailForUser($request->order_id);
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully',
