@@ -231,7 +231,7 @@ class AppController extends Controller
             }elseif($request->status == '3'){
                 Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
-                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->first()->fcm_token;
+                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->select('fcm_token')->first();
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
                     $data = orderDetailForUser($request->order_row_id);
