@@ -3294,39 +3294,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-             $order =   \App\Models\Order::where('id','=',$request->order_id)->first();
-            $products = OrderProduct::where('order_id', '=', $request->order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'order_products.id as order_product_id')->get();
-           
-            // foreach ($products as $k => $v) {
-            //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
-            //     $OrderProductVariant = OrderProductVariant::where('order_product_id', '=', $v->order_product_id)->select('variant_name', 'variant_price', 'variant_qty')->first();
-            //     if (!empty($OrderProductVariant)) {
-            //         $products[$k]->variant = $OrderProductVariant;
-            //     }
-            //     if (!empty($OrderProductAddon->toArray())) {
-            //         $products[$k]->addons = $OrderProductAddon;
-            //     }
-
-            // }
-             $order->products = $products;
-            return $order;
-           if($order->accepted_driver_id != null){
-                $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' =>$order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
-                if(!empty($riderAssign)){
-                    $order->rider_id = $riderAssign->rider_id;
-                    $order->order_row_id = $riderAssign->order_id;
-                    $order->distance = $riderAssign->distance;
-                    $order->earning = $riderAssign->earning;
-                    $order->cancel_reason = $riderAssign->cancel_reason;
-                    $order->action = $riderAssign->action;
-                    $order->otp = $riderAssign->otp;
-                    $driver = \App\Models\Delivery_boy::where('id','=',$riderAssign->rider_id)->first();
-                    $order->driver_name = $driver->name;
-                    $order->driver_email = $driver->email;
-                    $order->mobile = $driver->mobile;
-                }
-           }
-           
+            $order - orderDetailForUser($request->order_id);
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully',

@@ -37,7 +37,8 @@ class OrderSendToPreparationNotificationListener
         $vendor = Vendors::find($event->order->vendor_id);
         if(!empty($customer)){
             if($customer->fcm_token!=''){
-                sendUserAppNotification('Order is ready to dispatch',"Your Order is ready to dispatch from Restaurant",$customer->fcm_token,array('type'=>3,'data'=>array()));
+                $data = orderDetailForUser($event->order->id);
+                sendUserAppNotification('Order is ready to dispatch',"Your Order is ready to dispatch from Restaurant",$customer->fcm_token,array('type'=>3,'data'=>$data));
             }
         }
         //$customer->notify(new OrderSendToPreparationNotification($event->order->id,$vendor->name,'Send for preparation',"Your Order #" .$event->order->id." send for preparation.It will be preparared in $event->preparationTime minutes",$customer->fcm_token));

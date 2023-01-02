@@ -22,6 +22,22 @@ class AppController extends Controller
 {
     public function home(Request $request)
     {
+
+    // $pi80 = M_PI / 180;
+    // $lat1 = floatval(22.9535588) * $pi80;
+    // $lng1 = floatval(76.0328445) * $pi80;
+    // $lat2 = floatval(22.761070) * $pi80;
+    // $lng2 = floatval(75.914160) * $pi80;
+
+    // $r = 6372.797; // earth radius
+    // $dlat = $lat2 - $lat1;
+    // $dlng = $lng2 - $lng1;
+    // $a = sin($dlat / 2) * sin($dlat / 2) + cos($lat1) * cos($lat2) * sin($dlng / 2) * sin($dlng / 2);
+    // $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+    // $km = $r * $c;
+
+    // echo "Distance: ". round($km*1.3);
+    // die;
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -205,7 +221,8 @@ class AppController extends Controller
                 $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
-                    \App\Jobs\UserOrderNotification::dispatch('Order Assigned to Delivery Patner','Your Order has been Assigned to Delivery Boy',$user->fcm_token,2,$profile);
+                    $data = orderDetailForUser($request->order_row_id);
+                    \App\Jobs\UserOrderNotification::dispatch('Order Assigned to Delivery Patner','Your Order has been Assigned to Delivery Boy',$user->fcm_token,2,$data);
                 }
                 
                 
@@ -217,7 +234,8 @@ class AppController extends Controller
                 $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
-                    \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,[]);
+                    $data = orderDetailForUser($request->order_row_id);
+                    \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,$data);
                 }
             }
             
@@ -277,7 +295,8 @@ class AppController extends Controller
                 if(!empty($user)){
                     if($user->fcm_token != ''){
                         //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
-                        \App\Jobs\UserOrderNotification::dispatch('Order dispated from restauran','Your Order has been Dispatched',$user->fcm_token,4,[]);
+                        $data = orderDetailForUser($request->order_row_id);
+                        \App\Jobs\UserOrderNotification::dispatch('Order dispated from restauran','Your Order has been Dispatched',$user->fcm_token,4,$data);
                     }
                 }
                 

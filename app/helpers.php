@@ -1063,3 +1063,48 @@ function orderCancel($id)
 
 
     }
+    function orderDetailForUser($order_id){
+        $order =   \App\Models\Order::where('id','=',$order_id)->first();
+        if($order->order_status == 'preparing'){
+            if(\Carbon\Carbon::now()->lt($order->preparation_time_to)){
+                $start  = \Carbon\Carbon::now();
+                $end    = new Carbon($order->preparation_time_to);
+                $order->preparingdiffrence = $start->diff($end)->format('%I');
+            }else{
+                $order->preparingdiffrence = '0';
+            }
+            
+        }
+        $products = OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get();
+           
+            // foreach ($products as $k => $v) {
+            //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
+            //     $OrderProductVariant = OrderProductVariant::where('order_product_id', '=', $v->order_product_id)->select('variant_name', 'variant_price', 'variant_qty')->first();
+            //     if (!empty($OrderProductVariant)) {
+            //         $products[$k]->variant = $OrderProductVariant;
+            //     }
+            //     if (!empty($OrderProductAddon->toArray())) {
+            //         $products[$k]->addons = $OrderProductAddon;
+            //     }
+
+            // }
+        $order->products = $products;
+            
+        if($order->accepted_driver_id != null){
+            $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' =>$order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
+            if(!empty($riderAssign)){
+                $order->rider_id = $riderAssign->rider_id;
+                $order->order_row_id = $riderAssign->order_id;
+                $order->distance = $riderAssign->distance;
+                $order->earning = $riderAssign->earning;
+                $order->cancel_reason = $riderAssign->cancel_reason;
+                $order->action = $riderAssign->action;
+                $order->otp = $riderAssign->otp;
+                $driver = \App\Models\Delivery_boy::where('id','=',$riderAssign->rider_id)->first();
+                $order->driver_name = $driver->name;
+                $order->driver_email = $driver->email;
+                $order->mobile = $driver->mobile;
+            }
+        }
+        return $order;
+    }
