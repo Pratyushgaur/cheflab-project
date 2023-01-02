@@ -1092,7 +1092,8 @@ function orderCancel($id)
             
         if($order->accepted_driver_id != null){
             $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' =>$order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
-            if(!empty($riderAssign)){
+            if($riderAssign->exists()){
+                $riderAssign = $riderAssign->first();
                 $order->rider_id = $riderAssign->rider_id;
                 $order->order_row_id = $riderAssign->order_id;
                 $order->distance = $riderAssign->distance;
