@@ -1066,9 +1066,11 @@ function orderCancel($id)
     function orderDetailForUser($order_id){
         $order =   \App\Models\Order::where('id','=',$order_id)->first();
         $order->order_date =  date("d M Y  h:i A",strtotime($order->created_at));
-        $vendor = \App\Models\Vendors::where('id','=',$order->vendor_id)->select('name','image')->first();
+        $vendor = \App\Models\Vendors::where('id','=',$order->vendor_id)->select('name','image','lat','long')->first();
         $order->vendor_name = $vendor->name;
         $order->image = asset('vendors').'/'.$vendor->image;
+        $order->vendor_lat = $vendor->lat;
+        $order->vendor_long = $vendor->long;
         if($order->order_status == 'preparing'){
             if(\Carbon\Carbon::now()->lt($order->preparation_time_to)){
                 $start  = \Carbon\Carbon::now();
