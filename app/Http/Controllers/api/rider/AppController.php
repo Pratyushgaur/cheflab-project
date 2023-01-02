@@ -211,14 +211,14 @@ class AppController extends Controller
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
                 $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
-                $order = $order->addSelect('vendors.mobile as vendor_mobile','orders.order_status','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount',);
+                $order = $order->addSelect('vendors.mobile as vendor_mobile','orders.order_status','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
                 $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
                 RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
                 $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['accepted_driver_id'=>$request->user_id]);
-                $user = \App\Models\User::find($orderdata->user_id)->fcm_token;
+                $user = \App\Models\User::find($orderdata->first()->user_id)->first();
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
                     $data = orderDetailForUser($request->order_row_id);
