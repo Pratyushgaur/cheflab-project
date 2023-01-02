@@ -207,12 +207,12 @@ if (is_array($banners))
                             </tr>
 
                             <tr>
-                                <th scope="row">address</th>
+                                <th scope="row">Address</th>
                                 <td>{{$resturant->address}}</td>
                             </tr>
 
                             <tr>
-                                <th scope="row">fssai licence no</th>
+                                <th scope="row">FSSAI Licence No.</th>
                                 <td>{{$resturant->fssai_lic_no}}</td>
                             </tr>
 
@@ -346,7 +346,7 @@ if (is_array($banners))
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Vendor Commission
-                                            Persentage<span class="text-danger">*</span></label>
+                                            Percentage<span class="text-danger">*</span></label>
                                         <input type="text" value="{{$vendor->commission}}" name="vendor_commission" class="form-control" id="" placeholder="Enter Commission">
                                     </div>
                                 </div>

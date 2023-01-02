@@ -14,7 +14,7 @@
         </a>
       </li>
       <li class="menu-item">
-      <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menus Catalogue</span>
+      <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menu Catalogue</span>
         </a>
       </li>
 
@@ -29,14 +29,14 @@
       </li>
 
       <li class="menu-item">
-        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/promotion*') ? 'active' : '' }}" data-toggle="collapse" data-target="#promotion" aria-expanded="false" aria-controls="promotion"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotion</span>
+        <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/promotion*') ? 'active' : '' }}" data-toggle="collapse" data-target="#promotion" aria-expanded="false" aria-controls="promotion"> <span><i class="nav-icon fa fa-bullhorn fs-16"></i>Promotions</span>
         </a>
         <ul id="promotion" class="collapse {{ request()->is('vendor/restaurant/promotion*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
           <li>
              <a href="{{route('restaurant.promotion.list')}}" class="{{ Request::routeIs('restaurant.promotion.list') ? 'active' : '' }} {{ Request::routeIs('restaurant.promotion.create') ? 'active' : '' }}">Banner Promotion</a>
           </li>
           <li>
-             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Shop Promotion</a>
+             <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Restaurant Promotion</a>
           </li>
           <li>
               <a href="{{route('restaurant.product.promotion')}}" class="{{ Request::routeIs('restaurant.product.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.product.promotion.create') ? 'active' : '' }}">Product Promotion</a>
@@ -60,10 +60,10 @@
             </li>
 
             <li>
-                <a href="{{route('restaurant.order.list','ready_to_dispatch')}}" class="{{ request()->is('vendor/restaurant/orders/ready_to_dispatch') ? 'active' : '' }}">Ready to dispatch <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'ready_to_dispatch')}}</a>
+                <a href="{{route('restaurant.order.list','ready_to_dispatch')}}" class="{{ request()->is('vendor/restaurant/orders/ready_to_dispatch') ? 'active' : '' }}">Ready For Delivery <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'ready_to_dispatch')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','dispatched')}}" class="{{ request()->is('vendor/restaurant/orders/dispatched') ? 'active' : '' }}">Dispatch <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'dispatched')}}</a>
+                <a href="{{route('restaurant.order.list','dispatched')}}" class="{{ request()->is('vendor/restaurant/orders/dispatched') ? 'active' : '' }}">Out For Delivery <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'dispatched')}}</a>
             </li>
             <li>
                 <a href="{{route('restaurant.order.list','completed')}}" class="{{ request()->is('vendor/restaurant/orders/completed') ? 'active' : '' }}">Completed <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'completed')}}</span></a>
@@ -109,7 +109,7 @@
 {{--        </a>--}}
 {{--      </li>--}}
       <li class="menu-item ">
-        <a href="{{route('restaurant.globleseting.ordertime')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Setting</span>
+        <a href="{{route('restaurant.globleseting.ordertime')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Settings</span>
         </a>
         <ul id="setting" class="collapse " aria-labelledby="setting" data-parent="#side-nav-accordion">
           <li> <a href="{{route('restaurant.globleseting.ordertime')}}" class="">Globel Setting</a>
@@ -119,11 +119,11 @@
       </li>
 
         <li class="menu-item ">
-            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Vendor Review</span></a>
+            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Restaurant Rating/Review</span></a>
         </li>
 
         <li class="menu-item ">
-            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Product Review</span></a>
+            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Dishes Rating/Review</span></a>
         </li>
         <li class="menu-item ">
             <a href="{{route('restaurant.vendor.change_password')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Update Password</span></a>

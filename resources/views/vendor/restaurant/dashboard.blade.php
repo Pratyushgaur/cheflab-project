@@ -18,7 +18,7 @@
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
-                            <h6>Total Confirmed</h6>
+                            <h6>Total Orders</h6>
                             <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_confirmed}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
@@ -46,7 +46,7 @@
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
-                            <h6>Ready for delivered</h6>
+                            <h6>Ready for Delivery</h6>
                             <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_completed}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
@@ -60,7 +60,7 @@
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
-                            <h6>Food on the way</h6>
+                            <h6>Out For Delivery</h6>
                             <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_dispatched}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
@@ -77,7 +77,7 @@
                             <i class="fa fa-truck fa-6" aria-hidden="true"></i>
                             <div class="media-body">
                                 <h6>{{$total_completed}}</h6>
-                                <span>Delivered</span>
+                                <span>Total Delivered</span>
                             </div>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             <i class="material-icons">cached</i>
                             <div class="media-body">
                                 <h6>{{$total_refund}}</h6>
-                                <span>no. of order Refunded </span>
+                                <span>Total Refunds </span>
                             </div>
                         </div>
                     </div>
@@ -223,7 +223,7 @@
             <div class="col-md-12">
                 <div class="ms-panel">
                     <div class="ms-panel-header">
-                        <h6>Top Selling Products</h6>
+                        <h6>Top Selling Dishes</h6>
                     </div>
                     <div class="ms-panel-body">
                         <div class="row">
@@ -329,7 +329,7 @@
             <div class="col-md-12">
                 <div class="ms-panel">
                     <div class="ms-panel-header">
-                        <h6>Top Rating and Reviews Product</h6>
+                        <h6>Top Rated/Reviews Dishes</h6>
 
                     </div>
                     <div class="ms-panel-body">

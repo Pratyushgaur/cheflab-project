@@ -7,7 +7,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb pl-0">
                         <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Globle Setting</a></li>
+                        <li class="breadcrumb-item"><a href="#">Global Setting</a></li>
                         <li class="breadcrumb-item"><a href="#">Order Time</a></li>
                     </ol>
                 </nav>

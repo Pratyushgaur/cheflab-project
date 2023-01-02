@@ -67,9 +67,9 @@
         </div>
     </div>
     <div class="col-md-6 mb-3">
-        <label>Fassi Number <code class="ms-text-danger">*</code></label>
+        <label>FSSAI Number <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('fssai_lic_no', \Auth::guard('vendor')->user()->fssai_lic_no, ['class' => 'form-control', 'placeholder' => 'fassi number', 'min' => 3]) }}
+            {{ Form::text('fssai_lic_no', \Auth::guard('vendor')->user()->fssai_lic_no, ['class' => 'form-control', 'placeholder' => 'FSSAI number', 'min' => 3]) }}
             @if ($errors->has('fssai_lic_no'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('fssai_lic_no') }}</strong></span>
             @endif
@@ -110,7 +110,7 @@
             @if((auth()->guard('vendor')->user()->licence_image!=''))
                 <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->licence_image}}">
             @endif</div>
-        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->licence_image != '') ? "fassi Already uploaded" : 'fassi image'?>
+        <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->licence_image != '') ? "FSSAI Already uploaded" : 'FSSAI image'?>
             <input accept="image/*" type="file" data-from="fassi_image" class="uploadFile img" value="Upload fassi" style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 
@@ -121,7 +121,7 @@
                 <img src="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}">
             @endif
         </div>
-        <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check != '') ? "Cancel Check Already uploaded" : 'Cancel Check'?>
+        <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check != '') ? "Cancel Cheque Already uploaded" : 'Cancel Cheque'?>
             <input accept="image/*" type="file" data-from="cancel_check" class="uploadFile img" value="Upload Cancel check " style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 </div>

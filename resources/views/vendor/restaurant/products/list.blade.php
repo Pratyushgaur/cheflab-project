@@ -45,13 +45,13 @@ $product_status = config('custom_app_setting.product_status');
                             <table id="" class="table thead-primary">
                                 <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">S.No.</th>
                                     <th scope="col">Product Name</th>
                                     <th scope="col">Product Price</th>
                                     <!-- <th scope="col">Category</th> -->
                                     <th scope="col">Status</th>
                                     <th scope="col">Admin Review</th>
-                                    <th scope="col">Created at</th>
+                                    <th scope="col">Created On</th>
                                     <th scope="col">Action</th>
                                 </tr>
                                 </thead>
@@ -59,9 +59,9 @@ $product_status = config('custom_app_setting.product_status');
 
                                 <tr>
                                     <form action="{{route('restaurant.product.list')}}" method="get">
-                                        <td scope="col">#</td>
+                                        <td scope="col"></td>
                                         <td scope="col">{{ Form::text('name', app()->request->name, ['class' => 'form-control', 'placeholder' => 'Name']) }}</td>
-                                        <td scope="col">{{ Form::number('price', app()->request->price, ['class' => 'form-control', 'placeholder' => 'price']) }}</td>
+                                        <td scope="col">{{ Form::number('price', app()->request->price, ['class' => 'form-control', 'placeholder' => 'Price']) }}</td>
                                         <!-- <td scope="col">{{ Form::select('categories', $categories,app()->request->categories, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td> -->
                                         <td scope="col">{{ Form::select('status', $product_status,app()->request->status, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>
                                         <td scope="col">{{ Form::select('approve', $product_approve,null, ['class' => 'form-control select2', 'placeholder' => 'Select']) }}</td>

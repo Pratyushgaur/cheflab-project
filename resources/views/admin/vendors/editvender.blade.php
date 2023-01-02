@@ -190,9 +190,9 @@
                                             <label for="file-input">
                                                 <div class="upload-icon">
                                                     @if($vendor->image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    <img class="icon" src="{{asset('add-image.png')}}">
                                                     @else
-                                                    <img class="icon2" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
+                                                    <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">
                                                     @endif
                                                 </div>
                                             </label>
@@ -209,12 +209,12 @@
                                             <label for="file-input4">
                                                 <div class="upload-icon4">
                                                     @if($vendor->banner_image == null)
-                                                    <img class="icon2" src="{{asset('add-image.png')}}">
+                                                    <img class="icon4" src="{{asset('add-image.png')}}">
                                                     @else
                                                         <?php
                                                         $baner=json_decode($vendor->banner_image);
                                                         ?>
-                                                    <img class="icon2" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
+                                                    <img class="icon4" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
                                                     @endif
                                                 </div>
                                             </label>

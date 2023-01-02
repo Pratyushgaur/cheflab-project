@@ -7,7 +7,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb pl-0">
                         <li class="breadcrumb-item"><a href="{{route("restaurant.dashboard")}}"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('restaurant.globleseting.ordertime')}}">Globle Setting</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('restaurant.globleseting.ordertime')}}">Global Setting</a></li>
                         <li class="breadcrumb-item">Location</li>
                     </ol>
                 </nav>
@@ -31,7 +31,7 @@
                                 <div class="col-md-12 mb-3">
                                     <label>Location</label>
                                     <div class="input-group">
-                                        <input type="text" id="address-input" name="location" class="form-control map-input" value="" >
+                                        <input type="text" placeholder="Search" id="address-input" name="location" class="form-control map-input" value="" >
                                     </div>
 
                                 </div>
@@ -44,7 +44,7 @@
 
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label>Restaurent Latitude</label>
+                                    <label>Restaurant Latitude</label>
                                     <div class="input-group">
                                         <input id="address-latitude" type="text" class="form-control" placeholder="Latitude"
                                                step="" name="lat"
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-2">
-                                    <label>Restaurent Longitude</label>
+                                    <label>Restaurant Longitude</label>
                                     <div class="input-group">
                                         <input id="address-longitude" type="text" class="form-control" placeholder="Latitude"
                                                step="" name="long"

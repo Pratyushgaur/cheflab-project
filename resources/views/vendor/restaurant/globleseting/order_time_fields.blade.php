@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4">
-        <h6>Available</h6>
+        <h6>Availability</h6>
         <div class="input-group">
             <select class="form-control" id="available_0" name="available[0]" data-item-id="0" data-day="sun" onchange="get_available(this)">
                 <option value="1" @if (@$VendorOrderTime[0][0]['available'] == '1') {{ 'selected' }} @endif>
@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4 ">
-        <h6>Opening times</h6>
+        <h6>Opening time</h6>
         <div class="input-group hidepart_sun">
             <input type="time" class="start_time form-control" name="start_time[0][]" id='start_time_0' data-item-id="0"
                 <?= isset($VendorOrderTime[0][0]['start_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[0][0]['start_time'])) . '"' : '' ?>>
@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="col-md-3 mb-4 ">
-        <h6>Closing times</h6>
+        <h6>Closing time</h6>
         <div class="input-group hidepart_sun">
             <input type="time" class="end_time form-control" name="end_time[0][]" id="end_time_0" data-item-id="0"
                 <?= isset($VendorOrderTime[0][0]['end_time']) ? 'value="' . date('H:i', strtotime($VendorOrderTime[0][0]['end_time'])) . '"' : '' ?>>
@@ -145,7 +145,7 @@ foreach($VendorOrderTime[1] as $times1){
 <div class="form-row tr_clone">
     <div class="col-md-1 mb-4">
         <div class="input-group">
-            <span> Tus </span>
+            <span> Tue </span>
         </div>
     </div>
     <div class="col-md-3 mb-4">
@@ -287,7 +287,7 @@ foreach($VendorOrderTime[3] as $times3){
 <div class="form-row tr_clone">
     <div class="col-md-1 mb-4">
         <div class="input-group">
-            <span> Thus </span>
+            <span> Thur </span>
         </div>
     </div>
     <div class="col-md-3 mb-4">

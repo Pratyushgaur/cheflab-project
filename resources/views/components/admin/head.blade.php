@@ -49,7 +49,7 @@
   <!-- sweatalert -->
   <link rel="stylesheet" href="{{asset('commonarea/ass')}}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
   <!-- sweatalert -->
-  
+  <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/daterangepicker/daterangepicker.css')}}">
   @yield('page-style')
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">

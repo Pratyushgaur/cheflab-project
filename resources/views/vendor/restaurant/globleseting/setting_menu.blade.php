@@ -2,7 +2,7 @@
 <div class="col-md-3">
     <div class="ms-panel ms-panel-fh">
         <div class="ms-panel-header">
-            <h6>Globel Setting</h6>
+            <h6>Global Setting</h6>
 
         </div>
 
@@ -17,7 +17,7 @@
                         <div class="card-body">
                             <li><a href="{{route('restaurant.globleseting.ordertime')}}" class="">Order Time Setting</a>
                             </li>
-                            <li><a href="{{route('restaurant.order.auto_accept')}}" class="">Order auto accept</a></li>
+                            <li><a href="{{route('restaurant.order.auto_accept')}}" class="">Auto Order acceptance</a></li>
                         </div>
                     </div>
                 </div>
@@ -48,12 +48,12 @@
 
                 <div class="card">
                     <div <?php echo (request()->route()->getName()=='restaurant.globleseting.bank_details') ? 'class="card-header" aria-expanded="true"' : 'class="card-header collapsed" aria-expanded="false"' ?> data-toggle="collapse" role="button" data-target="#collapseOne3"  aria-controls="collapseOne">
-                        <span>Bank And documents</span>
+                        <span>Bank Details and documents</span>
                     </div>
 
                     <div id="collapseOne3" class="{{ (request()->route()->getName()=='restaurant.globleseting.bank_details') ? 'collapse show' : 'collapse' }}" data-parent="#accordionExample1">
                         <div class="card-body">
-                            <li><a href="{{route('restaurant.globleseting.bank_details')}}" class="">Bank and other documents</a></li>
+                            <li><a href="{{route('restaurant.globleseting.bank_details')}}" class="">Bank Details and other documents</a></li>
                         </div>
                     </div>
                 </div>

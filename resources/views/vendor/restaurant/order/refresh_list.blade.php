@@ -13,7 +13,7 @@ $payment_status_class['paid'] = 'badge-success';
 $payment_status_class['pending'] = 'badge-danger';
 
 ?>
-<div class="table-responsive" style="overflow: hidden;">
+<div class="table-responsive" style="overflow: hidden; min-height:200px;">
     <table class="table table-hover thead-primary" id="order">
         <thead>
         <tr>

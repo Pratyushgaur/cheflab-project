@@ -76,8 +76,9 @@
 <script src="{{asset('commonarea/ass')}}/plugins/toastr/toastr.min.js"></script>
 <script src="{{asset('commonarea/ass')}}/plugins/select2/js/select2.full.min.js"></script>
 
-<!-- sweatalert -->
 
+<!-- sweatalert -->
+<script src="{{asset('commonarea/ass/plugins/daterangepicker/daterangepicker.js')}}"></script>
 <!-- this is footer ending -->
 
 @yield('js_section')

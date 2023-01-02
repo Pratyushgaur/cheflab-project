@@ -2,7 +2,7 @@
 $breadcrumb[] = ["name"  => "Home",
                  "icon"  => '<i class = "material-icons">home</i>',
                  'route' => route("restaurant.dashboard")];
-$breadcrumb[] = ["name"  => "Vendor Review",
+$breadcrumb[] = ["name"  => "Restaurant Rating Review",
                  'route' => ""];
 ?>
 @extends('vendor.restaurants-layout')
@@ -20,7 +20,7 @@ $breadcrumb[] = ["name"  => "Vendor Review",
                     <div class="ms-panel-header">
                         <div class="d-flex justify-content-between">
                             <div class="align-self-center align-left">
-                                <h6>Recent Vendor Review</h6>
+                                <h6>Recent Restaurant Rating/Review</h6>
                             </div>
 {{--                            <a href="#" class="btn btn-primary"> View All</a>--}}
                         </div>
