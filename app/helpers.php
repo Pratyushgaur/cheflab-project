@@ -1075,7 +1075,7 @@ function orderCancel($id)
             }
             
         }
-        $products = OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get();
+        $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get();
            
             // foreach ($products as $k => $v) {
             //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
