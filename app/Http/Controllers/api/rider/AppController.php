@@ -291,7 +291,7 @@ class AppController extends Controller
                 RiderAssignOrders::where('id','=',$order->id)->update(['action'=>'4']);
                 $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['order_status'=>'dispatched','pickup_time'=>mysql_date_time()]);
-                $user = \App\Models\User::where('id','=',$$orderdata->first()->user_id)->select('fcm_token')->first();
+                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->select('fcm_token')->first();
                 if(!empty($user)){
                     if($user->fcm_token != ''){
                         //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
