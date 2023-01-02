@@ -1065,7 +1065,7 @@ function orderCancel($id)
     }
     function orderDetailForUser($order_id){
         $order =   \App\Models\Order::where('id','=',$order_id)->first();
-        $vendor = Vendors::where('id','=',$order->vendor_id)->select('name','image')->first();
+        $vendor = \App\Models\Vendors::where('id','=',$order->vendor_id)->select('name','image')->first();
         $order->vendorName = $vendor->name;
         $order->vendorImage = asset('vendors').'/'.$vendor->image;
         if($order->order_status == 'preparing'){
