@@ -1104,7 +1104,7 @@ function orderCancel($id)
                 $order->cancel_reason = $riderAssign->cancel_reason;
                 $order->action = $riderAssign->action;
                 $order->otp = $riderAssign->otp;
-                $driver = \App\Models\Deliver_boy::where('id','=',$riderAssign->rider_id);
+                $driver = \App\Models\Deliver_boy::where('id','=',$riderAssign->rider_id)->select('*');
                 $driver = $driver->addSelect(\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
                 $driver = $driver->first();
                 $order->driver_name = $driver->name;
