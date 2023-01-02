@@ -1065,7 +1065,7 @@ function orderCancel($id)
     }
     function orderDetailForUser($order_id){
         $order =   \App\Models\Order::where('id','=',$order_id)->first();
-        $order->date =  date('d M Y at h:i A',strtotime($order->created_at));
+        $order->order_date =  date("d M Y  h:i A",strtotime($order->created_at));
         $vendor = \App\Models\Vendors::where('id','=',$order->vendor_id)->select('name','image')->first();
         $order->vendor_name = $vendor->name;
         $order->image = asset('vendors').'/'.$vendor->image;
