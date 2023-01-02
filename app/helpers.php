@@ -1100,11 +1100,15 @@ function orderCancel($id)
                 $order->cancel_reason = $riderAssign->cancel_reason;
                 $order->action = $riderAssign->action;
                 $order->otp = $riderAssign->otp;
-                $driver = \App\Models\Delivery_boy::where('id','=',$riderAssign->rider_id)->first();
+                $driver = \App\Models\Delivery_boy::where('id','=',$riderAssign->rider_id);
+                $driver = $driver->addSelect(\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
+                $driver = $driver->first();
                 $order->driver_name = $driver->name;
                 $order->driver_email = $driver->email;
                 $order->mobile = $driver->mobile;
+                $order->image = $driver->image;
             }
+
         }
         return $order;
     }
