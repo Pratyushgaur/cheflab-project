@@ -52,6 +52,8 @@
                                 <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
                                 <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
                                 <p class="mb-0"><b>City :</b> {{$order->pincode}}</p>
+                                <p class="mb-0"><b>Send Cutlery :</b> @if($order->send_cutlery == '1') YES @else NO</p>
+                                <p class="mb-0"><b>Msg to chef  :</b> {{$order->chef_message}}</p>
 
                             </div>
                         </div>
