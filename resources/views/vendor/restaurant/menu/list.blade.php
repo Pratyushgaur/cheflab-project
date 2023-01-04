@@ -60,6 +60,7 @@
   (function($) {
     let table = $('#menu-catalogue-table').dataTable({
         ext:{errMode:'throw'},
+        pageLength:25,
         ajax: "{{ route('restaurant.menu.datatable') }}",
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
