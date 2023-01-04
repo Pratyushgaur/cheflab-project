@@ -617,7 +617,7 @@ class AppController extends Controller
                 ->get();
             $new = [];
             foreach ($category as $key => $value) {
-                $count = Product_master::where()->where('product_approve', 1)->where('status', 1)->count();
+                $count = Product_master::where('menu_id','=',$value->menu_id)->where('product_approve', 1)->where('status', 1)->count();
                 if($count > 0){
                     $value->count = $count;
                     $new[] = $value;
