@@ -14,6 +14,7 @@ use App\Models\Vendors;
 use App\Models\Deliver_boy;
 use App\Models\AdminMasters;
 use App\Models\Orders;
+use App\Models\BankDetail;
 use App\Rules\VendorOrderTimeRule;
 use DataTables;
 use Illuminate\Http\Request;
