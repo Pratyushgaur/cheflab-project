@@ -611,21 +611,24 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            $category = VendorMenus::query()
-                ->select('menuName', \DB::raw('count(*) as count'), 'vendor_menus.id as menu_id')
-                ->join('products as c', 'vendor_menus.id', 'c.menu_id')
+            $category = VendorMenus::select('menuName', 'vendor_menus.id as menu_id')
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
-                ->where('product_approve', 1)
-                ->where('status', 1)
                 ->orderBy('position','ASC')
-                ->groupBy('menuName')
-                ->having('count','>','0')
                 ->get();
+            $new = [];
+            foreach ($category as $key => $value) {
+                $count = Product_master::where()->where('product_approve', 1)->where('status', 1)->count();
+                if($count > 0){
+                    $value->count = $count;
+                    $new[] = $value;
+                }
+                
+            }
             //
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => $category
+                'response' => $new
 
             ], 200);
         } catch (Throwable $th) {
@@ -745,7 +748,8 @@ class AppController extends Controller
             //
 
             if ($request->search_for == 'restaurant') {
-                $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id)
+                $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id,null,null,[],'yes')
+                
                     ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service', 'start_time', 'end_time', 'table_service')
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
 //                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
@@ -818,6 +822,7 @@ class AppController extends Controller
                 });
 
                 $product = $product->where('vendors.status', '=','1');
+                $product = $product->where('available',1);
                 $product = $product->orderBy('products.id', 'ASC');
                 $product = $product->Select(DB::raw('products.userId as vendor_id'),
                     'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
