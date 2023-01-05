@@ -493,7 +493,7 @@ class GlobleSetting extends Controller
         
     }
     public function product_active(){
-       Product_master::where('status','=', '2')->update( ['status' => 1 ,'product_approve' => 1]);
+       Product_master::where('product_approve','=', '2')->update( ['status' => 1 ,'product_approve' => 1]);
        return redirect()->route('admin.dashboard')->with('message', 'Product Active Successfully');
     }
     
