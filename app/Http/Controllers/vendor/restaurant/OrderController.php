@@ -107,14 +107,17 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'ready_to_dispatch';
         $order->save();
+        $otp = rand(1000,9999);
         if($order->accepted_driver_id != null){
-            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id));
+           event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id,$otp));
         }
+
         
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',
-            'msg'          => "# $id Order ready to dispatch."
+            'msg'          => "# $id Order ready to dispatch.",
+            'otp'          => $otp
         ], 200);
     }
 
@@ -199,7 +202,7 @@ class OrderController extends Controller
 
     public function refresh_list(Request $request, $staus_filter = null)
     {
-        $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
+        $order_obj = Order::select('orders.id','orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->join('order_products', 'order_products.order_id', '=', 'orders.id')
             ->join('products', 'products.id', '=', 'order_products.product_id')
@@ -215,8 +218,8 @@ class OrderController extends Controller
         $orders = $order_obj
             ->groupBy('orders.id')
             ->orderBy('orders.id', 'desc')
-            ->paginate(2);
+            ->paginate(10);
 //        dd($orders);
-        return view('vendor.restaurant.order.refresh_list', compact('orders'));
+        return view('vendor.restaurant.order.refresh_list', compact('orders','staus_filter'));
     }
 }

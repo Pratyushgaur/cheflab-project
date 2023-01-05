@@ -53,7 +53,7 @@
                 <a href="{{route('restaurant.order.list','all')}}" class="{{ request()->is('vendor/restaurant/orders/all') ? 'active' : '' }}">All <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','confirmed')}}" class="{{ request()->is('vendor/restaurant/orders/confirmed') ? 'active' : '' }}">Confirmed <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'confirmed')}}</a>
+                <a href="{{route('restaurant.order.list','confirmed')}}" class="{{ request()->is('vendor/restaurant/orders/confirmed') ? 'active' : '' }}">Pending <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'confirmed')}}</a>
             </li>
             <li>
                 <a href="{{route('restaurant.order.list','preparing')}}" class="{{ request()->is('vendor/restaurant/orders/preparing') ? 'active' : '' }}">Preparing <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'preparing')}}</a>

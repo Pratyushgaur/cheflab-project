@@ -1625,7 +1625,7 @@ class AppController extends Controller
                 //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 //$riderAssign->saveOrFail();
                 DB::commit();
-                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(10));
+                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(30));
 
 //                $on = \Carbon\Carbon::now()->addSecond(30);
 //                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);

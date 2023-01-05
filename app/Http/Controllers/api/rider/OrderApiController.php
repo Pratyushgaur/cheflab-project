@@ -49,7 +49,7 @@ class OrderApiController extends Controller
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
             $order = $order->skip($request->offset)->take(10);
-            $order = $order->select('orders.customer_name',\DB::raw("DATE_FORMAT(orders.created_at, '%d/%b/%y %H:%i %p') as order_date"),'orders.order_id','orders.id as order_row_id','net_amount','rider_assign_orders.cancel_reason');
+            $order = $order->select('orders.customer_name',\DB::raw("DATE_FORMAT(orders.created_at, '%d/%b/%y %H:%i %p') as order_date"),'orders.order_id','orders.id as order_row_id','net_amount','rider_assign_orders.cancel_reason','rider_assign_orders.distance','rider_assign_orders.earning');
             $order = $order->addSelect('vendors.name as vendor_name','vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','vendors.address as vendor_address','orders.lat as customer_lat','orders.long as customer_lng','orders.delivery_address','orders.mobile_number as customer_mobile');
             if($request->status == 'completed'){
                 $order = $order->addSelect(\DB::raw("DATE_FORMAT(orders.pickup_time, '%h:%i %p, %d/%m/%y') as pickup_time"),\DB::raw("DATE_FORMAT(orders.delivered_time, '%h:%i %p, %d/%m/%y') as delivered_time"));

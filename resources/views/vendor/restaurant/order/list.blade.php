@@ -191,13 +191,52 @@ $breadcrumb[] = ["name"  => "List",
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-confirm" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h3 class="modal-title has-icon text-white">Order Reject Confirmation </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <b>Are You Sure To Reject This order</b>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel Rejection</button>
+                        <button type="button" class="btn btn-primary shadow-none yes-reject" data-id="" {{--data-dismiss="modal"--}} id="" data-url="">
+                            Yes Reject
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
 
 @endpush
 @push('scripts')
     <script src="{{ asset('frontend') }}/assets/js/jquery.countdown.min.js"></script>
 
     <script>
+        $(document).ready(function(){
+            $('.yes-reject').click(function(){
+                var url = $(this).attr('data-url');
+                var id = $(this).attr('data-id');
+
+                ajax_post_on_link(url,id);
+                $('#modal-confirm').modal('hide');
+
+            })
+        })
+        
+
+        function confirm_reject(actionUrl,id){
+           
+            $('.yes-reject').attr('data-url',actionUrl);
+            $('.yes-reject').attr('data-id',id);
+            
+        }
         function ajax_post_on_link(url, id) {
+            
             toastr.options =
                 {
                     "progressBar": true,

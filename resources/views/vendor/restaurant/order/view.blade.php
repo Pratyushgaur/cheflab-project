@@ -52,6 +52,8 @@
                                 <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
                                 <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
                                 <p class="mb-0"><b>City :</b> {{$order->pincode}}</p>
+                                <p class="mb-0"><b>Send Cutlery :</b> <?php if($order->send_cutlery == '1'){echo 'Yes';}else{echo 'No';} ?></p>
+                                <p class="mb-0"><b>Message to Chef :</b> <?php echo $order->chef_message ; ?></p>
 
                             </div>
                         </div>
@@ -326,10 +328,13 @@
         </div>
     </div>
 
+
+    
 @endpush
 
 @push('scripts')
     <script>
+        
         function ajax_post_on_link(url, id) {
 
             $.ajax({
