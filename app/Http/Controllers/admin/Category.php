@@ -53,7 +53,7 @@ class Category extends Controller
                 ->addColumn('action-js', function($data){
                     $btn = '<a href="'. route("admin.category.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a>  
                             <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City"  data-action-url="' . route('admin.category.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>
-                            <a taget="_blank" href="'.route('admin.category.restaurant',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"  flash="City"   title="View Restaurant" ><i class="fa fa-building"></i></a> ';
+                            <a target="_blank" href="'.route('admin.category.restaurant',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"  flash="City"   title="View Restaurant" ><i class="fa fa-building"></i></a> ';
                     return $btn;
                 })
                 
