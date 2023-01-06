@@ -63,6 +63,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('check-edit_duplicate-category/{id}', [App\Http\Controllers\admin\Category::class, 'check_edit_duplicate_category'])->name('check-edit_duplicate-category');
     Route::post('category-inactive/{id}', [App\Http\Controllers\admin\Category::class, 'inactive'])->name('admin.category.inactive');
     Route::post('category-active/{id}', [App\Http\Controllers\admin\Category::class, 'active'])->name('admin.category.active');
+    Route::get('category_restaurant/{id}', [App\Http\Controllers\admin\Category::class, 'category_restaurant'])->name('admin.category.restaurant');
     // cuisiness
     Route::get('cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'index'])->name('admin.cuisines.create');
     Route::post('cuisines', [App\Http\Controllers\admin\CuisinesController::class, 'store_cuisines'])->name('admin.cuisines.store');

@@ -98,118 +98,101 @@
 
     <!-- Main content -->
     <section class="content">
-		<div class="row">
+		  <div class="row">
 			
-				<div class="col-md-12">
-        <form id="restaurant-form" action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
-          @if ($errors->any())
-              @foreach ($errors->all() as $error)
-                  <div class="alert alert-danger">{{$error}}</div>
-              @endforeach
-          @endif
-          @csrf
-          <div class="card card-primary">
-							<div class="card-header">
-							  <h3 class="card-title">Create</h3>
+				<div class="col-md-3">
+          <form id="restaurant-form" action="{{route('admin.category.store')}}" method="post" enctype="multipart/form-data">
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div class="alert alert-danger">{{$error}}</div>
+                @endforeach
+            @endif
+            @csrf
+            <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Create</h3>
 
-							  <div class="card-tools">
-								<button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-								  <i class="fas fa-minus"></i></button>
-							  </div>
-							</div>
-							<div class="card-body">
-							  <div class="form-group">
-                  <label for="category_name">Category Name <span class="text-danger">*</span></label>
-                  <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Enter Category">
-                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                  <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                    <i class="fas fa-minus"></i></button>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label for="category_name">Position <span class="text-danger">*</span></label>
-                  <input type="number" id="position" name="position" value="{{!empty($class_name[0]->position) ? $class_name[0]->position : ''}}" class="form-control" placeholder="Position ">
-                  <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
-                </div>
-                <div class="form-group">
-                      <div>
-                        <label for="">Images <span class="text-danger">*</span></label>
-                      </div>
-                      <div class="image-upload">
-                          <label for="file-input">
-                              <div class="upload-icon">
-                                  <img class="icon" src="{{asset('add-image.png')}}">
-                              </div>
-                          </label>
-                          <input id="file-input" type="file" name="categoryImage">
-                      </div>      
-                </div>
-                <span class="product_image_error text-danger"></span>
-							</div>
-							<!-- /.card-body -->
-						</div>
-						<div>
-						
-						  <input type="submit" value="Save Changes" class="btn btn-success float-right">
-						</div>
-					</form>
-				  <!-- /.card -->
-				</div>
-        <div class="row">
-                    <div class="col-md-12">
-                        <div class="card card-primary card-outline">
-
-                            <div class="card-header">
-                                <h3 class="card-title">Listing of Registered Restaurant And Chef </h3>
-
-
-                            </div>
-                            <div class="card-body pad table-responsive">
-                                <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
-                                    <thead>
-                                    <tr role="row">
-                                        <th class="text-center">Sr No.</th>
-                                        <th >Category Name</th>
-                                        <th >Position</th>
-                                        <th  >Image</th>
-                                        <th  >Status</th>
-                                        <th  >Action</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                   
-                                    </tbody>
-                                </table>
-                               
-                            </div>
+                <div class="card-body">
+                  <div class="form-group">
+                    <label for="category_name">Category Name <span class="text-danger">*</span></label>
+                    <input type="text" id="name" name="name" value="{{!empty($class_name[0]->name) ? $class_name[0]->name : ''}}" class="form-control" placeholder="Enter Category">
+                    <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                  </div>
+                  <div class="form-group">
+                    <label for="category_name">Position <span class="text-danger">*</span></label>
+                    <input type="number" id="position" name="position" value="{{!empty($class_name[0]->position) ? $class_name[0]->position : ''}}" class="form-control" placeholder="Position ">
+                    <input type="hidden" name="txtpkey" id="txtpkey" value="{{!empty($class_name[0]->id) ? $class_name[0]->id : ''}}">
+                  </div>
+                  <div class="form-group">
+                        <div>
+                          <label for="">Images <span class="text-danger">*</span></label>
                         </div>
-
-              <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                  <i class="fas fa-minus"></i></button>
-              </div>
-            </div>
-            <div class="card-body pad table-responsive">
-                        <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
-                            <thead>
-                                  <tr role="row">
-                                    <th  class="text-center">Sr No.</th>
-                                    <th >Category Name</th>
-                                    <th >Position</th>
-                                    <th  >Image</th>
-                                    <th  >No Of Res.</th>
-                                    <th  >Status</th>
-                                    <th  >Action</th>
-                                  </tr>
-                            </thead>
-                            
-                        </table>
-                    </div>
-
+                        <div class="image-upload">
+                            <label for="file-input">
+                                <div class="upload-icon">
+                                    <img class="icon" src="{{asset('add-image.png')}}">
+                                </div>
+                            </label>
+                            <input id="file-input" type="file" name="categoryImage">
+                        </div>      
+                  </div>
+                  <span class="product_image_error text-danger"></span>
                 </div>
-            </div>
+                <!-- /.card-body -->
+              </div>
+              <div>
+              
+                <input type="submit" value="Save Changes" class="btn btn-success float-right">
+              </div>
+            </form>
+            <!-- /.card -->
+				</div>
+        <!--  -->
+          <div class="col-md-9">
+          
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Create</h3>
 
+                  <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                    <i class="fas fa-minus"></i></button>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                      <thead>
+                            <tr role="row">
+                              <th  class="text-center">Sr No.</th>
+                              <th >Category Name</th>
+                              <th >Position</th>
+                              <th  >Image</th>
+                              <th  >No Of Res.</th>
+                              <th  >Status</th>
+                              <th  >Action</th>
+                            </tr>
+                      </thead>
+                      
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              
+            
+            <!-- /.card -->
+				  </div>
 
-        </section>
+        
+                  
+      </div>
+    </section>
         <!-- /.content -->
-    </div>
+  </div>
     <!-- /.content-wrapper -->
 
     <!-- /.content-wrapper -->
