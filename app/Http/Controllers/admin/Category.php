@@ -52,7 +52,8 @@ class Category extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '<a href="'. route("admin.category.edit",Crypt::encryptString($data->id)) .'" class="edit btn btn-warning btn-xs"><i class="nav-icon fas fa-edit"></i></a>  
-                    <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City"  data-action-url="' . route('admin.category.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City"  data-action-url="' . route('admin.category.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i></a>
+                            <a href="'.route('admin.category.restaurant',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"  flash="City"   title="View Restaurant" ><i class="fa fa-building"></i></a> ';
                     return $btn;
                 })
                 
@@ -95,6 +96,18 @@ class Category extends Controller
             $city_data = Catogory_master::findOrFail($id);
            // dd($city_data);
             return view('admin/category/edit',compact('city_data'));
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        } 
+    }
+
+    public function category_restaurant($encrypt_id)
+    {
+        try {
+            $id =  Crypt::decryptString($encrypt_id);  
+            $vendors =  Vendors::whereRaw(DB::raw("FIND_IN_SET(".$id.", vendors.deal_categories)"))->get();
+            $category = Catogory_master::findOrFail($id);
+            return view('admin/category/vendor_list',compact('vendors','category'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 
