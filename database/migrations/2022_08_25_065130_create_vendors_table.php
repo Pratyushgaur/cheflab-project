@@ -16,6 +16,8 @@ class CreateVendorsTable extends Migration
         Schema::create('vendors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
+            $table->string('owner_name')->nullable();
+            $table->string('manager_name')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->date('dob')->nullable();
@@ -26,6 +28,7 @@ class CreateVendorsTable extends Migration
             $table->string('deal_cuisines',255)->nullable();
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
             $table->string('mobile',20)->unique();
+            $table->string('alt_mobile',20)->nullable();
             $table->string('pincode',8)->nullable();
             $table->text('address')->nullable();
             $table->string('fssai_lic_no')->nullable();

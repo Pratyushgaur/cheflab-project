@@ -90,7 +90,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
 
                             <div class="form-row">
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Promotion for *</label>
+                                    <label for="validationCustom10">Promotion for <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('for', $for, null,['class'=>"form-control", 'id' => 'banner_for','placeholder'=>'Select Slide shows in section']) }}
                                     </div>
@@ -100,7 +100,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
 
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Start Date *</label>
+                                    <label for="validationCustom10">Start Date <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="text" name="date" class="form-control" id="datepicker"
                                                placeholder="Enter Date">
@@ -109,7 +109,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
                                 </div>
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select Date frame for promotion *</label>
+                                    <label for="validationCustom10">Select Date frame for promotion <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('booked_for', config('custom_app_setting.promotion_date_frame'), null, ['class'=>"form-control", 'id' => 'date_frame','placeholder'=>'Select Date Frame']) }}
                                     </div>
@@ -117,7 +117,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
                                 </div>
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select time frame for promotion *</label>
+                                    <label for="validationCustom10">Select time frame for promotion <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('booked_for_time', config('custom_app_setting.promotion_restaurant_time'), null, ['class'=>"form-control", 'id' => 'time_frame','placeholder'=>'Select Time Frame']) }}
                                     </div>
@@ -126,7 +126,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
 
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select Position *</label>
+                                    <label for="validationCustom10">Select Position <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('position', [], null, ['class'=>"form-control", 'id' => 'validationCustom22','placeholder'=>'Select Slide Position']) }}
                                         {{--                                        <select class="form-control" name="position" id="validationCustom22">--}}
@@ -140,7 +140,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
 
                                 <div class="col-md-12 mb-12">
                                     <div>
-                                        <label for="">Images *</label>
+                                        <label for="">Images <span class="text-danger">*</span></label>
                                     </div>
                                     <div class="image-upload">
                                         <label for="file-input">

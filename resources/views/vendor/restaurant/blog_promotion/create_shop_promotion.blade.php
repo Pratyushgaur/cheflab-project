@@ -33,7 +33,7 @@ $breadcrumb[] = ["name"  => "Create",
                             @endif
                             <div class="form-row">
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Date</label>
+                                    <label for="validationCustom10">Date <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="text" name="date" class="form-control" id="datepicker"
                                                placeholder="Promotion Date From">
@@ -42,7 +42,7 @@ $breadcrumb[] = ["name"  => "Create",
                                     <span class="date_error text-danger"></span>
                                 </div>
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select Place</label>
+                                    <label for="validationCustom10">Select Place <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('app_promotion_blog_id',$app_promotion,null,['class' => 'form-control','id'=>'app_promotion_blog_id', 'placeholder' => 'Select Place ']) }}
                                     </div>
@@ -52,7 +52,7 @@ $breadcrumb[] = ["name"  => "Create",
                                 </div>
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select time frame for promotion *</label>
+                                    <label for="validationCustom10">Select time frame for promotion <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('booked_for_time', config('custom_app_setting.blog_promotion_date_frame'), null, ['class'=>"form-control", 'id' => 'time_frame','placeholder'=>'Select Time Frame']) }}
                                     </div>
@@ -61,7 +61,7 @@ $breadcrumb[] = ["name"  => "Create",
 
 
                                 <div class="col-xl-6 col-md-6 mb-3">
-                                    <label for="validationCustom10">Select Place *</label>
+                                    <label for="validationCustom10">Select Place <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('position', [], null,['class'=>"form-control", 'id' => 'position','placeholder'=>'Select Slide Position']) }}
                                         {{--                                        <select class="form-control" name="position" id="validationCustom22">--}}

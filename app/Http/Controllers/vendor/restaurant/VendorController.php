@@ -111,10 +111,8 @@ class VendorController extends Controller
             'phone'             => 'required|unique:vendors,mobile,' . \Auth::guard('vendor')->user()->id,
             'address'           => 'required',
             'fssai_lic_no'      => 'required',
-            'vendor_commission' => 'required',
             //            'categories'        => 'required',
-            //            'deal_cuisines'     => 'required',
-            'tax'               => 'required',
+        
         ]);
         $vendors                   = Vendors::find(\Auth::guard('vendor')->user()->id);
         $vendors->name             = $request->restaurant_name;
@@ -122,12 +120,14 @@ class VendorController extends Controller
         $vendors->mobile           = $request->phone;
         $vendors->pincode          = $request->pincode;
         $vendors->address          = $request->address;
-        $vendors->fssai_lic_no     = $request->fssai_lic_no;
-        $vendors->commission       = $request->vendor_commission;
+        //$vendors->fssai_lic_no     = $request->fssai_lic_no;
+        //$vendors->commission       = $request->vendor_commission;
         $vendors->vendor_food_type = $request->type;
-        $vendors->tax              = $request->tax;
+        //$vendors->tax              = $request->tax;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
+        $vendors->manager_name     = $request->manager_name;
+        $vendors->alt_mobile     = $request->alt_mobile;
 //        $vendors->deal_categories  = implode(',', $request->categories);
 //        $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
 //

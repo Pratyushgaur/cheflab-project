@@ -248,13 +248,19 @@
                                         <input type="text" name="restaurant_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Name">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Restaurant Owner</label>
                                         <input type="text" name="owner_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Owner Name">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Restaurant Manager</label>
+                                        <input type="text" name="manager_name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Restaurant Manager Name">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Restaurant Email">
@@ -271,6 +277,12 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternate Mobile Number</label>
+                                        <input type="text" name="alt_phone" class="form-control"  id="" placeholder="Enter Alternate Mobile Number">
                                     </div>
                                   </div>
 
@@ -590,8 +602,14 @@
                   minlength: 10,
                   maxlength: 10,
                   number: true,
-                  remote: '{{route("admin.vendor.mobilecheck")}}',
+                  //remote: '{{route("admin.vendor.mobilecheck")}}',
               },
+              alt_phone: {
+                  minlength: 10,
+                  maxlength: 10,
+                  number: true,
+              },
+              
               pincode: {
                   required: true,
                   minlength: 6,

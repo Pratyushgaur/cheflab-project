@@ -260,6 +260,18 @@
                                         <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternate Mobile Number</label>
+                                        <input type="text" name="alt_phone" class="form-control" value="{{$vendor->alt_mobile}}"  id="" placeholder="Enter Alternate Mobile Number">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Restaurant Manager</label>
+                                        <input type="text" name="manager_name" class="form-control" value="{{$vendor->manager_name}}"  id="exampleInputEmail1" placeholder="Enter Restaurant Manager Name">
+                                    </div>
+                                  </div>
                                   <!-- <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
