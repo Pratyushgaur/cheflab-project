@@ -840,7 +840,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 
 function sendNotification($title,$body,$token,$data=null,$sound='default')
 {
-    $server_key = env('FIREBASE_DRIVER_SERVER_KEY');
+    $server_key = env('FIREBASE_SERVER_KEY');
     $headers = [
         'Authorization' => 'key='.$server_key,
         'Content-Type'  => 'application/json',
