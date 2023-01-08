@@ -3256,15 +3256,15 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $review = new RiderReviewRatings;
+            $review = new \App\Models\RiderReviewRatings;
             $review->user_id =$request->user()->id;
             $review->rider_id = $request->rider_id;
             $review->rating =$request->rating;
             $review->review	 =$request->review;
             $review->save();
             //
-            $rating=RiderReviewRatings::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('rider_id',$request->rider_id)->first();
-            $deliver_boy=Deliver_boy::find($request->rider_id);
+            $rating=\App\Models\RiderReviewRatings::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('rider_id',$request->rider_id)->first();
+            $deliver_boy=\App\Models\Deliver_boy::find($request->rider_id);
             $deliver_boy->ratings=$rating->rating;
             //$vendor->review_count=$rating->total_review;
             $deliver_boy->save();
