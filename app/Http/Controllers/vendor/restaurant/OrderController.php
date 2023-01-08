@@ -80,26 +80,34 @@ class OrderController extends Controller
 
     }
 
+    // public function order_need_more_time(Request $request, $id)
+    // {
+    //     $order                  = Order::find($id);
+    //     $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
+    //     $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
+    //     $a                      = ($admin_masters->max_preparation_time - $total_preparation_time);
+    //     $p                      = (int)$request->extend_preparation_time;
+
+    //     if ($total_preparation_time < $admin_masters->max_preparation_time) {
+    //         if ($a > $p) {
+    //             $order->order_status        = 'preparing';
+    //             $order->is_need_more_time   = 1;
+    //             $order->preparation_time_to = mysql_add_time($order->preparation_time_to, $request->extend_preparation_time);
+    //             $order->save();
+    //             return redirect()->back()->with('success', "# $order->order_id Order send for preparing");
+    //         }
+
+    //         return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'extend preparation time' is grater then admin 'max Preparation time'.");
+    //     }
+    //     return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'Total preparation' is grater then admin 'max Preparation time'.");
+    // }
     public function order_need_more_time(Request $request, $id)
     {
-        $order                  = Order::find($id);
-        $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
-        $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
-        $a                      = ($admin_masters->max_preparation_time - $total_preparation_time);
-        $p                      = (int)$request->extend_preparation_time;
-
-        if ($total_preparation_time < $admin_masters->max_preparation_time) {
-            if ($a > $p) {
-                $order->order_status        = 'preparing';
-                $order->is_need_more_time   = 1;
-                $order->preparation_time_to = mysql_add_time($order->preparation_time_to, $request->extend_preparation_time);
-                $order->save();
-                return redirect()->back()->with('success', "# $order->order_id Order send for preparing");
-            }
-
-            return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'extend preparation time' is grater then admin 'max Preparation time'.");
-        }
-        return redirect()->back()->with('error', "Preparation time could be extend for order#$id. Because 'Total preparation' is grater then admin 'max Preparation time'.");
+        $order                      = Order::find($id);
+        $order->preparation_time_to = mysql_add_time($order->preparation_time_to, $request->preparation_time);
+        $order->is_need_more_time   = 1;
+        $order->save();
+        return redirect()->back()->with('success', "# $order->order_id Order Preparing time extended");  
     }
 
     public function order_ready_to_dispatch($id)
@@ -160,11 +168,12 @@ class OrderController extends Controller
         $products       = get_order_preparation_time($request->order_id);
         $admin_masters  = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
         $is_extend_time = false;
-        $return         = ['total_preparation_time' => $products->total_preparation_time, 'is_extend_time' => false];
-        if ($products->total_preparation_time <= $admin_masters->max_preparation_time) {
-            $return['is_extend_time']       = true;
-            $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $products->total_preparation_time);
-        }
+        //$return         = ['total_preparation_time' => $products->total_preparation_time, 'is_extend_time' => false];
+        $return         = ['total_preparation_time' => $admin_masters->max_preparation_time, 'is_extend_time' => false];
+        // if ($products->total_preparation_time <= $admin_masters->max_preparation_time) {
+        //     $return['is_extend_time']       = true;
+        //     $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $products->total_preparation_time);
+        // }
         return response()->json($return, 200);
     }
 

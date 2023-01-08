@@ -185,7 +185,7 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Default Preparation Time<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$data->default_cooking_time}}" name="default_cooking_time" class="form-control"  id="exampleInputEmail1" placeholder="Cook Default Time">
+                                        <input type="text" value="{{$data->max_preparation_time}}" name="default_cooking_time" class="form-control"  id="exampleInputEmail1" placeholder="Cook Default Time">
                                         <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
                                     </div>  
                                   </div>

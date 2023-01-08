@@ -35,6 +35,7 @@ class DeliverBoy extends Migration
             $table->double('lat',8,6)->nullable();
             $table->string('time')->nullable();
             $table->string('boy_id')->nullable();
+            $table->float('ratings',2,1)->default('0.0');
             $table->softDeletes();
             $table->timestamps();
         });

@@ -64,9 +64,13 @@ $breadcrumb[] = ["name"  => "List",
                         <div class="ms-form-group has-icon">
                             <label>Order preparation time</label>
                             <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time">
-                            <i class="material-icons">timer</i>
-                            <code>Sum of All Preparation Time of Products for particular Order will be order preparation
-                                time </code>
+                                    <i class="material-icons">timer</i>
+                            
+                            
+                            <!-- <code>Sum of All Preparation Time of Products for particular Order will be order preparation
+                                
+                                time </code> -->
+                                <code>Default Prepration Minutes Define by admin . You can Increase time by click need more time Button</code>
                         </div>
 
                         {{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
@@ -105,12 +109,19 @@ $breadcrumb[] = ["name"  => "List",
                     <input type="hidden" name="orignel_preparation_time" value="" id="orignel_preparation_time1">
                     <div class="modal-body">
                         <div class="ms-form-group has-icon">
-                            <label>Order preparation time </label>
-                            <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1">
+                            <label>Add More Minute for  preparation </label>
+                            <!-- <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1"> -->
+                            <select name="preparation_time" id="" class="form-control">
+                                <option value="20">20 Minute</option>
+                                <option value="20">20 Minute</option>
+                                <option value="20">20 Minute</option>
+                            </select>
                             <i class="material-icons">timer</i>
-                            <code>This much amount of time already lapse</code>
+                            <!-- <code>This much amount of time already lapse</code>
                             <code>Sum of All Preparation Time of Products for particular Order will be order preparation
-                                time </code>
+                                time </code> -->
+                                <code>You can increase Time .it will show Deley Delivery</code>
+                            
                         </div>
 
                         {{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}

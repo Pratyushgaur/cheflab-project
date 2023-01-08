@@ -52,6 +52,7 @@ class CreateVendorsTable extends Migration
             $table->boolean('is_all_setting_done')->default(0)->comment('1=when vendor opning time setting and all other essential things done');
             $table->text('bio')->nullable();
             $table->boolean('is_auto_send_for_prepare')->default(0)->comment('1=automatically order goes for prepare status ');
+            $table->integer('auto_accept_prepration_time')->default(0)->comment('auto accepted prepration time which define in create order');
             $table->string('password_change_otp')->nullable();
             $table->softDeletes();
             $table->timestamps();

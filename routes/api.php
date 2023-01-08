@@ -93,6 +93,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-vendor-rating-review', [App\Http\Controllers\api\VendorReviewController::class, 'getReviewData']);
     Route::post('save-product-rating-review', [App\Http\Controllers\api\ProductReviewController::class, 'saveReviewData']);
     Route::post('get-vendor-all-review', [App\Http\Controllers\api\VendorReviewController::class, 'getVendorReviews']);
+    Route::post('save-rider-rating-review', [App\Http\Controllers\api\AppController::class, 'saveRiderRatingReviews']);
     
 //    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
     // Delivery Address

@@ -426,10 +426,15 @@ class GlobleSetting extends Controller
             $msg  = 'Order auto send for preparation disabled for your restaurant.';
             $data = '0';
         }
-
+        
         $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
 
         $vendor->is_auto_send_for_prepare = $data;
+        if($request->prepration_time != ''){
+            $vendor->auto_accept_prepration_time = $request->prepration_time;
+
+        }
+        
         $vendor->save();
 
 

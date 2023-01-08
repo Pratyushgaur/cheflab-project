@@ -13,7 +13,7 @@ $payment_status_class['paid'] = 'badge-success';
 $payment_status_class['pending'] = 'badge-danger';
 
 ?>
-<div class="table-responsive" style="overflow: hidden; min-height:200px;">
+<div class="table-responsive" style="overflow: hidden; min-height:200px; overflow-x: scroll;">
     <table class="table table-hover thead-primary" id="order">
         <thead>
         <tr>
@@ -58,8 +58,7 @@ $payment_status_class['pending'] = 'badge-danger';
                             <span class="clock" data-countdown="{{ mysql_date_time($order->preparation_time_to)}}"></span>
                             <?php } ?>
                             <br/>
-                            <a data-toggle="modal" data-target="#modal-8" class="btn btn-sm btn-primary" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})">need
-                                more time</a>
+                            <a href="#" data-toggle="modal" data-target="#modal-8" class="" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})" style="font-size:12px;">more time</a>
                             @endif    
                         
                         
@@ -68,9 +67,15 @@ $payment_status_class['pending'] = 'badge-danger';
                     </td>
                     <td>
                         @if($order->order_status!='ready_to_dispatch')
+                          <?php
+                                if($order->order_status == 'confirmed'){
+                            $status = 'Pending';
+                          }else{
+                            $status = $order->order_status;
+                          } ?>
                         <div class="input-group">
                             <div class="">
-                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}}</button>
+                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$status))}}</button>
                                 <div class="dropdown-menu">
                                     <?php //if($order->order_status == 'pending') { ?>
                                     {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
