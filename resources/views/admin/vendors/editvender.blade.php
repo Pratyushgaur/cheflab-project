@@ -487,12 +487,6 @@
                                             <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">
                                         </div>
                                   </div>
-{{--                                  <div class="col-sm-3">--}}
-{{--                                        <div class="form-group">--}}
-{{--                                            <label for="exampleInputEmail1">Document Number. </label>--}}
-{{--                                            <input type="text" name="other_document_no" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Number">--}}
-{{--                                        </div>--}}
-{{--                                  </div>--}}
                                   <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Other Document.</label>
@@ -519,6 +513,31 @@
 
                           </div>
                           <!-- schedule information end -->
+                          <!--  -->
+                          <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">Location Setup</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-sm-4">
+                                          <div class="form-group">
+                                              <label>Lat </label>
+                                              <input type="text" name="lat" class="form-control" placeholder="Latitue of Restaurant" value="{{ @$vendor->lat }}" required>
+                                          </div>
+                                    </div>                                 
+                                    <div class="col-sm-4">
+                                          <div class="form-group">
+                                              <label>Lng</label>
+                                              <input type="text" name="lng" class="form-control" placeholder="Lng of Restaurant" value="{{ @$vendor->long }}" required>
+                                          </div>
+                                    </div>
+                                </div>
+                                <!-- div row -->
+                              </div>
+
+
+                          </div>
                           <div class="card-footer">
                             <button class="btn btn-success" ><i class="fa fa-save"></i>  Update Restaurant </button>
                           </div>
@@ -613,6 +632,12 @@
               tax: {
                 required: true,
               }
+              // lat:{
+              //   required:true
+              // },
+              // lng:{
+              //   required:true
+              // }
 
 
 

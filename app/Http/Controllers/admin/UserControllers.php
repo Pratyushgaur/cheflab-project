@@ -228,7 +228,8 @@ class UserControllers extends Controller
             'restaurant_name'   => 'required',
             'email'             => 'required|unique:vendors,email',
             'pincode'           => 'required',
-            'phone'             => 'required|unique:vendors,mobile',
+            //'phone'             => 'required|unique:vendors,mobile',
+            'phone'             => 'required',
             'address'           => 'required',
             'fssai_lic_no'      => 'required',
             'password'          => 'required',
@@ -457,6 +458,8 @@ class UserControllers extends Controller
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+        $vendors->lat    = $request->lat;
+        $vendors->long    = $request->lng;
         if($request->password !=''){
             $vendors->password  = Hash::make($request->password);
         }
@@ -769,7 +772,7 @@ class UserControllers extends Controller
         try {
             $id = Crypt::decryptString($encrypt_id);
             //  dd($id);die;
-            $vendor = Vendors::findOrFail($id);
+             $vendor = Vendors::findOrFail($id);
             // $vendor =  Vendors::where('vendors.id','=',$id)->join('categories', 'vendors.deal_categories', '=', 'categories.id')->join('cuisines', 'vendors.deal_cuisines', '=', 'cuisines.id')->select('vendors.*', 'categories.name as categoryName','cuisines.name as cuisinesName')->get()->first();
             //dd($vendor);die;
             $categories = @Catogory_master::where('is_active', '=', '1')->pluck('name', 'id')->toArray();;//->get();

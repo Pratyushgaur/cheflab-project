@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatRiderbankDetails extends Migration
+class CreateRiderbankDetails extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatRiderbankDetails extends Migration
      */
     public function up()
     {
-        Schema::create('order_commisions', function (Blueprint $table) {
+        Schema::create('rider_bank_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('rider_id');
             $table->string('holder_name');

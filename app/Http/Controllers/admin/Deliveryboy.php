@@ -92,11 +92,15 @@ class Deliveryboy extends Controller
             'email' => 'required|unique:deliver_boy,email',
             'city' => 'required',
             'pincode' => 'required',
-            'password'  => 'required',
-            'confirm_password'  => 'required',
+            'join_date'  => 'required',
+            'address'  => 'required',
+            //'confirm_password'  => 'required',
             'phone' => 'required|unique:deliver_boy,mobile',
-            'identity_image' => 'required',
-            'identity_number' => 'required',
+            // 'identity_image' => 'required',
+            // 'identity_number' => 'required',
+            'bank_name' =>'required',
+            'holder_name' =>'required',
+            'account_no' =>'required',
         ]);
         $code = generateDriverUniqueCode();
         $uname  =  $request->name;
@@ -106,26 +110,59 @@ class Deliveryboy extends Controller
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
-        $vendors->password   = Hash::make($request->password);
+        $vendors->password   = Hash::make('test');
         $vendors->pincode  = $request->pincode;
         $vendors->city  = $request->city;
-        $vendors->identity_number  = $request->identity_number;
+        $vendors->identity_number  = '001';
+        $vendors->join_date  = $request->join_date;
+        $vendors->alt_mobile  = $request->alt_phone;
+        
 //        $vendors->address  = $request->address;
 
         if($request->has('image')){
             $filename = time().'-image-'.rand(100,999).'.'.$request->image->extension();
-            $request->image->move(public_path('dliver-boy'),$filename);
+            $request->image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->image  = $filename;
         }
-       
-        if($request->has('identity_image')){
-            $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
-            $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
-            $vendors->identity_image  = $filename;
-            $vendors->identity_number  = $request->identity_number;
+        if($request->has('license_image')){
+            $filename = time().'-license-image-'.rand(100,999).'.'.$request->license_image->extension();
+            $request->license_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->licence_image  = $filename;
+            $vendors->licence_number  = $request->license_number;
+        }    
+        if($request->has('rc_image')){
+            $filename = time().'-rc_image-image-'.rand(100,999).'.'.$request->rc_image->extension();
+            $request->rc_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->rc_image  = $filename;
+            $vendors->rc_number  = $request->rc_number;
         }
+        if($request->has('insurance_image')){
+            $filename = time().'-insurance_image-image-'.rand(100,999).'.'.$request->insurance_image->extension();
+            $request->insurance_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->insurance_image  = $filename;
+            $vendors->insurance_number  = $request->insurance_number;
+        }
+        if($request->has('pancard_image')){
+            $filename = time().'-pancard_image-image-'.rand(100,999).'.'.$request->pancard_image->extension();
+            $request->pancard_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->pancard_image  = $filename;
+            $vendors->pancard_number  = $request->pancard_image;
+        }  
+        if($request->has('varification_image')){
+            $filename = time().'-varification_image-image-'.rand(100,999).'.'.$request->varification_image->extension();
+            $request->varification_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->police_varification_image  = $filename;
+        }    
+        // if($request->has('identity_image')){
+        //     $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
+        //     $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
+        //     $vendors->identity_image  = $filename;
+        //     $vendors->identity_number  = $request->identity_number;
+        // }
+
+
         $vendors->save();
-        $vendors->save();
+        //$vendors->save();
 
         if($request->time == 'full_time'){
             $time = 'F'.sprintf("%06d", $vendors->id);
@@ -242,11 +279,17 @@ class Deliveryboy extends Controller
                         </ul>';
                 //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
                 return $btn;
+                
             })
 
             ->addColumn('date', function($data){
                 $date_with_format = date('d M Y',strtotime($data->created_at));
                 return $date_with_format;
+            })
+
+            ->addColumn('rating', function($data){
+                return $data->rating.' <span class="text-danger">*</span>';
+                
             })
 
             ->addColumn('status', function($data){
@@ -258,7 +301,7 @@ class Deliveryboy extends Controller
                 return "<img src=".asset('dliver-boy').'/'.$data->image."  style='width: 50px;' />";
             })
 
-            ->rawColumns(['date','action-js','status','image'])
+            ->rawColumns(['date','action-js','status','image','rating'])
             //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
            // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
             ->make(true);

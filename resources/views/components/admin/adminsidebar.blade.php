@@ -79,12 +79,7 @@
 						  <p>All Delivery Boy</p>
 						</a>
 					</li>
-					<li class="nav-item">
-						<a href="{{route('admin.deliverboy.review')}}" class="nav-link">
-						  <i class="fa fa-arrow-right nav-icon"></i>
-						  <p>Delivery Boy Review</p>
-						</a>
-					</li>
+					
 					<li class="nav-item">
 						<a href="{{route('admin.user.list')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
@@ -108,12 +103,12 @@
 						  <p>All Delivery Boy</p>
 						</a>
 					</li>
-					<li class="nav-item">
+					<!-- <li class="nav-item">
 						<a href="{{route('admin.deliverboy.review')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>Delivery Boy Review</p>
 						</a>
-					</li>
+					</li> -->
 					<li class="nav-item">
 						<a href="{{route('admin.deliverboy.setting')}}" class="nav-link">
 						<i class="nav-icon fa fa-cog"></i>
