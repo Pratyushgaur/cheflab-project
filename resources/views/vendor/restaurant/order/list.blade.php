@@ -64,9 +64,13 @@ $breadcrumb[] = ["name"  => "List",
                         <div class="ms-form-group has-icon">
                             <label>Order preparation time</label>
                             <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time">
-                            <i class="material-icons">timer</i>
-                            <code>Sum of All Preparation Time of Products for particular Order will be order preparation
-                                time </code>
+                                    <i class="material-icons">timer</i>
+                            
+                            
+                            <!-- <code>Sum of All Preparation Time of Products for particular Order will be order preparation
+                                
+                                time </code> -->
+                                <code>Default Prepration Minutes Define by admin . You can Increase time by click need more time Button</code>
                         </div>
 
                         {{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
@@ -105,12 +109,19 @@ $breadcrumb[] = ["name"  => "List",
                     <input type="hidden" name="orignel_preparation_time" value="" id="orignel_preparation_time1">
                     <div class="modal-body">
                         <div class="ms-form-group has-icon">
-                            <label>Order preparation time </label>
-                            <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1">
+                            <label>Add More Minute for  preparation </label>
+                            <!-- <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1"> -->
+                            <select name="preparation_time" id="" class="form-control">
+                                <option value="20">20 Minute</option>
+                                <option value="20">20 Minute</option>
+                                <option value="20">20 Minute</option>
+                            </select>
                             <i class="material-icons">timer</i>
-                            <code>This much amount of time already lapse</code>
+                            <!-- <code>This much amount of time already lapse</code>
                             <code>Sum of All Preparation Time of Products for particular Order will be order preparation
-                                time </code>
+                                time </code> -->
+                                <code>You can increase Time .it will show Deley Delivery</code>
+                            
                         </div>
 
                         {{--                        <div class="ms-form-group has-icon" id="extend_time_div">--}}
@@ -191,13 +202,52 @@ $breadcrumb[] = ["name"  => "List",
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="modal-confirm" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h3 class="modal-title has-icon text-white">Order Reject Confirmation </h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <b>Are You Sure To Reject This order</b>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel Rejection</button>
+                        <button type="button" class="btn btn-primary shadow-none yes-reject" data-id="" {{--data-dismiss="modal"--}} id="" data-url="">
+                            Yes Reject
+                        </button>
+                    </div>
+            </div>
+        </div>
+    </div>
 
 @endpush
 @push('scripts')
     <script src="{{ asset('frontend') }}/assets/js/jquery.countdown.min.js"></script>
 
     <script>
+        $(document).ready(function(){
+            $('.yes-reject').click(function(){
+                var url = $(this).attr('data-url');
+                var id = $(this).attr('data-id');
+
+                ajax_post_on_link(url,id);
+                $('#modal-confirm').modal('hide');
+
+            })
+        })
+        
+
+        function confirm_reject(actionUrl,id){
+           
+            $('.yes-reject').attr('data-url',actionUrl);
+            $('.yes-reject').attr('data-id',id);
+            
+        }
         function ajax_post_on_link(url, id) {
+            
             toastr.options =
                 {
                     "progressBar": true,

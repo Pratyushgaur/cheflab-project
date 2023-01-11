@@ -13,7 +13,7 @@ $payment_status_class['paid'] = 'badge-success';
 $payment_status_class['pending'] = 'badge-danger';
 
 ?>
-<div class="table-responsive" style="overflow: hidden; min-height:200px;">
+<div class="table-responsive" style="overflow: hidden; min-height:200px; overflow-x: scroll;">
     <table class="table table-hover thead-primary" id="order">
         <thead>
         <tr>
@@ -23,11 +23,10 @@ $payment_status_class['pending'] = 'badge-danger';
             <th scope="col">Total amount</th>
             <th scope="col">Net Amount</th>
             <th scope="col">Discount</th>
-            {{--                                        <th scope="col">Order Status</th>--}}
             <th scope="col">Payment Type</th>
             <th scope="col">Payment Status</th>
             <th scope="col">Remaining Time</th>
-            <th scope="col">Order Status</th>
+            <th scope="col"><?php if($staus_filter=='ready_to_dispatch'){echo 'OTP';}else{echo 'Order Status';} ?></th>
             <th>Action</th>
         </tr>
         </thead>
@@ -40,7 +39,7 @@ $payment_status_class['pending'] = 'badge-danger';
             @endif
             @foreach($orders as $k=>$order)
                 <tr>
-                    <td>{{$order->id}}</td>
+                    <td><a href="{{route('restaurant.order.view',$order->id)}}" target="_blank">{{$order->order_id}}</a></td>
                     <td>{{$order->customer_name}}</td>
                     <td>{{$order->delivery_address}}</td>
                     <td>{{$order->total_amount}}</td>
@@ -50,7 +49,8 @@ $payment_status_class['pending'] = 'badge-danger';
                     <td>
                         <span class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span>
                     </td>
-                    <td>@if($order->order_status=='preparing' && $order->preparation_time_to!='')
+                    <td>
+                            @if($order->order_status=='preparing' && $order->preparation_time_to!='')
 
                             <?php if (mysql_date_time($order->preparation_time_to) < mysql_date_time()) {
                                 echo "time out";
@@ -58,14 +58,24 @@ $payment_status_class['pending'] = 'badge-danger';
                             <span class="clock" data-countdown="{{ mysql_date_time($order->preparation_time_to)}}"></span>
                             <?php } ?>
                             <br/>
-                            <a data-toggle="modal" data-target="#modal-8" class="btn btn-sm btn-primary" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})">need
-                                more time</a>
-                        @endif
+                            <a href="#" data-toggle="modal" data-target="#modal-8" class="" onclick="preparation_form1('{{route('restaurant.order.order_need_more_time',[$order->id])}}',{{$order->id}})" style="font-size:12px;">more time</a>
+                            @endif    
+                        
+                        
+
+                        
                     </td>
                     <td>
+                        @if($order->order_status!='ready_to_dispatch')
+                          <?php
+                                if($order->order_status == 'confirmed'){
+                            $status = 'Pending';
+                          }else{
+                            $status = $order->order_status;
+                          } ?>
                         <div class="input-group">
                             <div class="">
-                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}}</button>
+                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$status))}}</button>
                                 <div class="dropdown-menu">
                                     <?php //if($order->order_status == 'pending') { ?>
                                     {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
@@ -89,11 +99,19 @@ $payment_status_class['pending'] = 'badge-danger';
                                     $order->order_status != 'cancelled_by_vendor' &&
                                     $order->order_status != 'dispatched' && $order->order_status != 'ready_to_dispatch'){?>
 
-                                    <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
+                                    <a data-toggle="modal" data-target="#modal-confirm" class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" data-id="{{$order->id}}" onclick="confirm_reject('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})" >Reject</a>
                                     <?php } ?>
                                 </div>
                             </div>
                         </div>
+                        @else
+                            <?php  
+                                $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->whereNotIn('action',['0','2'])->first();
+                                if(!empty($rider)){
+                                    echo $rider->otp;
+                                }
+                            ?>
+                        @endif
                     </td>
 
                     <td>

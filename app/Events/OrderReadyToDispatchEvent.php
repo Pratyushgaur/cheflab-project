@@ -14,16 +14,17 @@ class OrderReadyToDispatchEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $order_id,$driver_id;
+    public $order_id,$driver_id,$otp;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($order_id,$driver_id)
+    public function __construct($order_id,$driver_id,$otp)
     {
         $this->order_id = $order_id;
         $this->driver_id = $driver_id;
+        $this->otp = $otp;
     }
 
     /**

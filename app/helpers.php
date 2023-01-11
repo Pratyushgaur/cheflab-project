@@ -574,7 +574,7 @@ function get_delivery_boy_near_me($lat, $lng)
 //     return $vendors;
 
 // }
-function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null, $whereVendorIds = [])
+function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null, $whereVendorIds = [] ,$alsoClosed =null)
 {
     date_default_timezone_set('Asia/Kolkata');
     if ($lat != '' && $lat != '')
@@ -615,7 +615,11 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $vendors->offset($offset)->limit($limit);
 
 //    dd($vendors->get()->toArray());
-    $vendors->where('available',1);
+    if($alsoClosed == null){
+        $vendors->where('available',1);
+    }
+    
+    
     return $vendors;
 
 }
@@ -807,60 +811,108 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
     return round($charge);
 
 }
-function sendNotification($title,$body,$token,$data=null,$sound='default'){
-        $url = "https://fcm.googleapis.com/fcm/send";
-        //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
-        $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
-        //$title = "Notification title";
-        //$body = "Hello I am from Your php server";
-        $notification = array('title' =>$title , 'body' => $body, 'sound' => $sound, 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
-        $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
-        $json = json_encode($arrayToSend);
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: key='. $serverKey;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
-        //Send the request
-         $response = curl_exec($ch);
-        //Close request
-        if ($response === FALSE) {
-        die('FCM Send Error: ' . curl_error($ch));
-        }
-        curl_close($ch);
-        return true;
+// function sendNotification($title,$body,$token,$data=null,$sound='default'){
+//         $url = "https://fcm.googleapis.com/fcm/send";
+//         //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
+//         $serverKey = env('FIREBASE_DRIVER_SERVER_KEY');
+//         //$title = "Notification title";
+//         //$body = "Hello I am from Your php server";
+//         $notification = array('title' =>$title , 'body' => $body, 'sound' => $sound, 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
+//         $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+//         $json = json_encode($arrayToSend);
+//         $headers = array();
+//         $headers[] = 'Content-Type: application/json';
+//         $headers[] = 'Authorization: key='. $serverKey;
+//         $ch = curl_init();
+//         curl_setopt($ch, CURLOPT_URL, $url);
+//         curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+//         curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+//         curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+//         //Send the request
+//          $response = curl_exec($ch);
+//         //Close request
+//         if ($response === FALSE) {
+//         die('FCM Send Error: ' . curl_error($ch));
+//         }
+//         curl_close($ch);
+//         return true;
+// }
+
+function sendNotification($title,$body,$token,$data=null,$sound='default')
+{
+    $server_key = env('FIREBASE_SERVER_KEY');
+    $headers = [
+        'Authorization' => 'key='.$server_key,
+        'Content-Type'  => 'application/json',
+    ];
+    $url = "https://fcm.googleapis.com/fcm/send";
+    $notification = array('title' =>$title , 'body' => $body, 'sound' => $sound, 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
+    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+    $fields = json_encode ( $arrayToSend );
+    $client = new Client();
+    try{
+        $request = $client->post($url,[
+            'headers' => $headers,
+            "body" => $fields,
+        ]);
+        $response = $request->getBody();
+        return $response;
+    }
+    catch (Exception $e){
+        return $e;
+    }
 }
 
 function sendUserAppNotification($title,$body,$token,$data=null){
     $tokens[] = $token;
     
+    // $url = "https://fcm.googleapis.com/fcm/send";
+    // //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
+    // $serverKey = env('FIREBASE_SERVER_KEY');
+    // //$title = "Notification title";
+    // //$body = "Hello I am from Your php server";
+    // $notification = array('title' =>$title , 'body' => $body, 'sound' => 'notify_sound', 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
+    // $arrayToSend = array('registration_ids' => $tokens, 'notification' => $notification,'priority'=>'high','data'=>$data);
+    // $json = json_encode($arrayToSend);
+    // $headers = array();
+    // $headers[] = 'Content-Type: application/json';
+    // $headers[] = 'Authorization: key='. $serverKey;
+    // $ch = curl_init();
+    // curl_setopt($ch, CURLOPT_URL, $url);
+    // curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+    // curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    // curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+    // //Send the request
+    //  curl_exec($ch);
+    // // //Close request
+    // // if ($response === FALSE) {
+    // // die('FCM Send Error: ' . curl_error($ch));
+    // // }
+    // // curl_close($ch);
+    // // return true;
+
+
+    $server_key = env('FIREBASE_SERVER_KEY');
+    $headers = [
+        'Authorization' => 'key='.$server_key,
+        'Content-Type'  => 'application/json',
+    ];
     $url = "https://fcm.googleapis.com/fcm/send";
-    //$token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
-    $serverKey = env('FIREBASE_SERVER_KEY');
-    //$title = "Notification title";
-    //$body = "Hello I am from Your php server";
     $notification = array('title' =>$title , 'body' => $body, 'sound' => 'notify_sound', 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
-    $arrayToSend = array('registration_ids' => $tokens, 'notification' => $notification,'priority'=>'high','data'=>$data);
-    $json = json_encode($arrayToSend);
-    $headers = array();
-    $headers[] = 'Content-Type: application/json';
-    $headers[] = 'Authorization: key='. $serverKey;
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-    curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
-    //Send the request
-     curl_exec($ch);
-    // //Close request
-    // if ($response === FALSE) {
-    // die('FCM Send Error: ' . curl_error($ch));
-    // }
-    // curl_close($ch);
-    // return true;
+    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
+    $fields = json_encode ( $arrayToSend );
+    $client = new Client();
+    try{
+        $request = $client->post($url,[
+            'headers' => $headers,
+            "body" => $fields,
+        ]);
+        $response = $request->getBody();
+        return $response;
+    }
+    catch (Exception $e){
+        return $e;
+    }
 }
 
 

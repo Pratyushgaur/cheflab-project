@@ -215,7 +215,7 @@
                                 <div class="row">
                                   <div class="col-md-12">
                                         <div>
-                                          <label for="">Logo Images</label>
+                                          <label for="">Profile Images</label>
                                         </div>
                                         <div class="image-upload">
                                             <label for="file-input">
@@ -227,16 +227,22 @@
                                         </div>
                                   </div>
                             
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name  <span class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control"  id="exampleInputEmail1" placeholder="Enter Deliveryboy Name">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control"  id="" placeholder="Enter Deliveryboy Email">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
+                                        <input type="text" name="address" class="form-control"  id="" placeholder="Enter Address">
                                     </div>
                                   </div>
                                   <div class="col-md-4">
@@ -257,20 +263,21 @@
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternet Phone</label>
+                                        <input type="text" name="alt_phone" class="form-control"  id="" placeholder="Enter Alternet Mobile Number">
+                                    </div>
+                                  </div>
 
 
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
-                                            <input type="password" name="password" class="form-control"  id="" placeholder="Enter Password">
+                                            <label for="exampleInputEmail1">Joinnig Date <span class="text-danger">*</span></label>
+                                            <input type="date" name="join_date" class="form-control"  id="" placeholder="Enter Join Date">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
-                                            <input type="password" name="confirm_password" class="form-control"  id="" placeholder="Enter Confirm Password">
-                                        </div>
-                                    </div>  
+                                    
                                     <div class="col-md-4">
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Time Type <span class="text-danger">*</span></label>
@@ -304,7 +311,7 @@
                                   <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Account Holder name</label>
-                                            <input type="text" name="holder_name" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                            <input type="text" name="holder_name" class="form-control"  id="" placeholder="Enter Accouunt Holder Name">
                                         </div>
                                   </div>
                                   <div class="col-sm-4">
@@ -321,7 +328,7 @@
                                   </div>                                 
                                   <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label>Cancel Check</label>
+                                            <label>Cancel Cheque</label>
                                             <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check">
                                         </div>
                                   </div>
@@ -341,28 +348,122 @@
                                 <div class="row">
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Identity Type</label>
                                         <select name="identity_type"  class="form-control">
-                                          <option value="1">Passport</option>
+                                          <!-- <option value="1">Passport</option> -->
                                           <option value="2">Driving License</option>
-                                          <option value="3">Aadhar Card</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
                                         </select>
                                     </div>  
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
-                                        <input type="text" name="identity_number" class="form-control"  id="" placeholder="Enter Identity Number">
+                                        <label for="exampleInputEmail1">Driving License number </label>
+                                        <input type="text" name="license_number" class="form-control"  id="" placeholder="Enter License Number">
                                     </div>  
                                   </div>
                                   <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Identity Image. </label>
-                                            <input type="file" name="identity_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                            <label for="exampleInputEmail1">Driving License Image. </label>
+                                            <input type="file" name="license_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
                                         </div>
                                   </div>
                                 </div>
                                 <!-- div row -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">R/C</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">R/C Number </label>
+                                        <input type="text" name="rc_number" class="form-control"  id="" placeholder="R/C Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">R/C  Image. </label>
+                                            <input type="file" name="rc_image" class="form-control"  id="" >
+                                        </div>
+                                  </div>
+                                </div>
+                                <!--  -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Insurance</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Insurance Number </label>
+                                        <input type="text" name="insurance_number" class="form-control"  id="" placeholder="Insurance Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Insurance Image. </label>
+                                            <input type="file" name="insurance_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
+                                </div>
+                                <!--  -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Pancard</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Pancard Number </label>
+                                        <input type="text" name="pancard_number" class="form-control"  id="" placeholder="Pancard Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Pancard Number Image. </label>
+                                            <input type="file" name="pancard_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
+                                </div>
+                                <!--  -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1"> </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Police Verification</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Police Verification Image. </label>
+                                            <input type="file" name="varification_image" class="form-control"  id="" placeholder="">
+                                        </div>
+                                  </div>
+                                </div>
                               </div>
 
 
@@ -437,6 +538,9 @@
                   email: true,
                   remote: '{{route("admin.deliverboy.emailcheck")}}',
               },
+              address: {
+                  required: true
+              },
               phone: {
                   required: true,
                   minlength: 10,
@@ -450,21 +554,8 @@
                   maxlength: 6,
                   number: true
               },
-              identity_number: {
-                required: true,
-              },
-              password:{
-                required: true,
-                maxlength: 20,
-                minlength: 5,
-
-              },
-              confirm_password:{
-                 required: true,
-                 equalTo : '[name="password"]'
-              },
-              identity_image: {
-                required: true,
+              join_date:{
+                required: true
               }
 
 
@@ -486,17 +577,8 @@
                   minlength: "pincode cannot be Less than 6 characters",
                   number: "Pincode must be an number"
               },
-              confirm_password:{
-                equalTo:"Field Not Match with Passowrd Field"
-              },
               phone:{
                 remote:"Mobile Number Already use in Onther Account"
-              },
-              identity_image:{
-                remote:"identity  image is required"
-              },
-              identity_number:{
-                remote:"identity  number is required"
               }
 
 
@@ -506,22 +588,6 @@
       $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');
-      });
-      $('#file-input2').change( function(event) {
-          $("img.icon2").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon2").parents('.upload-icon2').addClass('has-img2');
-      });
-      $('#file-input3').change( function(event) {
-          $("img.icon3").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon3").parents('.upload-icon3').addClass('has-img3');
-      });
-      $('#file-input4').change( function(event) {
-          $("img.icon4").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon4").parents('.upload-icon4').addClass('has-img4');
-      });
-      $('#file-input5').change( function(event) {
-          $("img.icon5").attr('src',URL.createObjectURL(event.target.files[0]));
-          $("img.icon5").parents('.upload-icon5').addClass('has-img5');
       });
   });
 

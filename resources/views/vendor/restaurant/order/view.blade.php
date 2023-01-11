@@ -52,6 +52,8 @@
                                 <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
                                 <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
                                 <p class="mb-0"><b>City :</b> {{$order->pincode}}</p>
+                                <p class="mb-0"><b>Send Cutlery :</b> <?php if($order->send_cutlery == '1'){echo 'Yes';}else{echo 'No';} ?></p>
+                                <p class="mb-0"><b>Message to Chef :</b> <?php echo $order->chef_message ; ?></p>
 
                             </div>
                         </div>
@@ -152,15 +154,16 @@
                                         <p><b>Status : </b>
                                         <div class="input-group">
                                             <div class="">
-                                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$order->order_status))}}</button>
+                                            <?php
+                                                if($order->order_status == 'confirmed'){
+                                                $status = 'Pending';
+                                            }else{
+                                                $status = $order->order_status;
+                                            } ?>
+                                                <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$status))}}</button>
                                                 <div class="dropdown-menu">
-                                                    <?php //if($order->order_status == 'pending') { ?>
-                                                    {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
-                                                    {{--                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept--}}
-                                                    {{--                                                                    and send for preparing</a>--}}
-                                                    {{--                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
+                                                    
                                                     <?php
-                                                    //                                                                } else
                                                     if($order->order_status == 'confirmed'){
                                                     ?>
                                                     <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
@@ -326,10 +329,13 @@
         </div>
     </div>
 
+
+    
 @endpush
 
 @push('scripts')
     <script>
+        
         function ajax_post_on_link(url, id) {
 
             $.ajax({

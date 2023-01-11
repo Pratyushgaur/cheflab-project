@@ -48,6 +48,7 @@
                                     <th> Status</th>
                                     <th> Image</th>
                                     <th  >Wallet</th>
+                                    <th  >Rating</th>
                                     <th  >created at</th>
                                     <th  >Action</th>
                                   </tr>
@@ -94,6 +95,7 @@
             {data: 'status', name: 'status',orderable: false, searchable: false},
             {data: 'image', name: 'image',orderable: false, searchable: false},
             {data: 'wallet', name: 'wallet'},
+            {data: 'ratings', name: 'ratings'},
             {data: 'date', name: 'created_at'},
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]

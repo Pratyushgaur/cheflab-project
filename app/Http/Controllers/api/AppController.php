@@ -429,85 +429,13 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $category = VendorMenus::query()
-                ->select('menuName', 'vendor_menus.id', \DB::raw('count(*) as count'))
-                ->join('products as c', 'vendor_menus.id', 'c.menu_id')
-                ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
-                ->where('product_approve', 1)
-                ->where('status', 1)
-                ->groupBy('menuName')
-                ->orderBy('vendor_menus.position','ASC')
-                ->get();
-            // $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->groupBy('menuName')->get();
+            $category = VendorMenus::select('menuName', 'vendor_menus.id')->where('vendor_menus.vendor_id', '=', $request->vendor_id)->orderBy('vendor_menus.position','ASC')->get();
             $date    = today()->format('Y-m-d');
             $coupon  = Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=', 1)->where('from', '<=', $date)->where('to', '>=', $date)->select('*')->get();
             $catData = [];
 
             foreach ($category as $key => $value) {
-                /*              $product = Product_master::where(['products.status' => '1', 'product_for' => '3']);
-                              $product = $product->join('categories', 'products.category', '=', 'categories.id');
-                              $product = $product->leftJoin('user_product_like', function ($join) {
-                                  $join->on('products.id', '=', 'user_product_like.product_id');
-                                  $join->where('user_product_like.user_id', '=', request()->user()->id);
-                              });
-                              $product = $product->where('menu_id', '=', $value->id);
-                              $product = $product->select(
-              //                    'addons.*','addons.price as addon_price','addons.id as addon_id','addons.addon as addon_name',
-                                  'variants.id as variant_id', 'variants.variant_price', 'variants.variant_name',
-                                  'products.product_name', 'product_price', 'customizable', 'products.addons',
-                                  \DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'type', 'products.id as product_id', 'product_rating', 'categories.name as categoryName', \DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
-                              $product = $product->leftJoin('variants', 'variants.product_id', 'products.id');
-              //                $product = $product->leftJoin("addons", \DB::raw("FIND_IN_SET(addons, addons.id)"), ">", \DB::raw("'0'"));
-              //                $product = $product->leftJoin("addons",function($q){
-              //                    $q->whereRaw(\DB::raw("FIND_IN_SET(addons, addons.id)"));
-              //                });
-                              $product = $product->get();
-              //                dd(\DB::getQueryLog ());
-              //                dd($product->toArray());
-
-                              \DB::enableQueryLog();
-
-                              //+
-                              if (count($product->toArray())) {
-              //                    $value->products = $product;
-                                  foreach ($product as $i => $p) {
-
-                                      if (!isset($variant[$p['product_id']])) {
-              //                            dd($p['addons']);
-                                          $addons = Addons::whereRaw(\DB::raw("FIND_IN_SET(addons.id, '" . $p['addons'] . "')"))->get()->toArray();
-              //                            print_r($addons);
-              //                            dd(\DB::getQueryLog ());
-                                          $variant[$p['product_id']] = ['product_id' => $p['product_id'],
-                                              'product_name' => $p['product_name'],
-                                              'product_price' => $p['product_price'],
-                                              'customizable' => $p['customizable'],
-                                              'image' => $p['image'],
-                                              'type' => $p['type'],
-                                              'product_rating' => $p['product_rating'],
-                                              'categoryName' => $p['categoryName'],
-                                              'is_like' => $p['is_like']
-                                          ];
-                                          if (count($addons))
-                                              $variant[$p['product_id']]['addons'] = $addons;
-                                      }
-                                      if ($p->variant_id != '') {
-                                          $variant[$p['product_id']]['options'][$p->variant_id] = ['id' => $p->variant_id,
-                                              'variant_name' => $p->variant_name,
-                                              'variant_price' => $p->variant_price];
-                                      }
-                                      if ($p->addon_id != '')
-                                          $variant[$p['product_id']]['addons'][$p->addon_id] = ['id' => $p->addon_id,
-                                              'addon' => $p->addon,
-                                              'price' => $p->addon_price];
-                                  }
-                                  foreach ($variant as $i => $v) {
-                                      if (isset($variant[$i]['options']))
-                                          $variant[$i]['options'] = array_values($variant[$i]['options']);
-                                      if (isset($variant[$i]['addons']))
-                                          $variant[$i]['addons'] = array_values($variant[$i]['addons']);
-                                  }
-                                  $variant = array_values($variant);
-              */
+                
                 $variant = get_product_with_variant_and_addons(['product_for' => '3', 'menu_id' => $value->id], request()->user()->id, '', '', false);
                 if (!empty($variant)) {
                     $catData[] = ['menuName' => $value->menuName,
@@ -611,21 +539,24 @@ class AppController extends Controller
                 ], 401);
             }
             //
-            $category = VendorMenus::query()
-                ->select('menuName', \DB::raw('count(*) as count'), 'vendor_menus.id as menu_id')
-                ->join('products as c', 'vendor_menus.id', 'c.menu_id')
+            $category = VendorMenus::select('menuName', 'vendor_menus.id as menu_id')
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
-                ->where('product_approve', 1)
-                ->where('status', 1)
                 ->orderBy('position','ASC')
-                ->groupBy('menuName')
-                ->having('count','>','0')
                 ->get();
+            $new = [];
+            foreach ($category as $key => $value) {
+                $count = Product_master::where('menu_id','=',$value->menu_id)->where('product_approve', 1)->where('status', 1)->count();
+                if($count > 0){
+                    $value->count = $count;
+                    $new[] = $value;
+                }
+                
+            }
             //
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => $category
+                'response' => $new
 
             ], 200);
         } catch (Throwable $th) {
@@ -745,7 +676,8 @@ class AppController extends Controller
             //
 
             if ($request->search_for == 'restaurant') {
-                $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id)
+                $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id,null,null,[],'yes')
+                
                     ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service', 'start_time', 'end_time', 'table_service')
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
 //                $data = Vendors::where(['status' => '1', 'vendor_type' => 'restaurant', 'is_all_setting_done' => '1'])
@@ -818,6 +750,7 @@ class AppController extends Controller
                 });
 
                 $product = $product->where('vendors.status', '=','1');
+                $product = $product->where('available',1);
                 $product = $product->orderBy('products.id', 'ASC');
                 $product = $product->Select(DB::raw('products.userId as vendor_id'),
                     'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
@@ -1692,7 +1625,7 @@ class AppController extends Controller
                 //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 //$riderAssign->saveOrFail();
                 DB::commit();
-                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(10));
+                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(30));
 
 //                $on = \Carbon\Carbon::now()->addSecond(30);
 //                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
@@ -3299,6 +3232,45 @@ class AppController extends Controller
                 'status'   => true,
                 'message'  => 'Successfully',
                 'response' => $order
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function saveRiderRatingReviews(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'rider_id'    => 'required|numeric|exists:deliver_boy,id',
+                'rating' => 'required|numeric',
+                'review' => 'required',
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $review = new \App\Models\RiderReviewRatings;
+            $review->user_id =$request->user()->id;
+            $review->rider_id = $request->rider_id;
+            $review->rating =$request->rating;
+            $review->review	 =$request->review;
+            $review->save();
+            //
+            $rating=\App\Models\RiderReviewRatings::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('rider_id',$request->rider_id)->first();
+            $deliver_boy=\App\Models\Deliver_boy::find($request->rider_id);
+            $deliver_boy->ratings=$rating->rating;
+            //$vendor->review_count=$rating->total_review;
+            $deliver_boy->save();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully'
 
             ], 200);
 

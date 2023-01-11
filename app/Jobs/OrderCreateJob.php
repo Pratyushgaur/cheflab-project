@@ -43,7 +43,10 @@ class OrderCreateJob implements ShouldQueue
     {
 
         $orderdata = Order::where('id','=',$this->order_id)->first();
-        event(new \App\Events\OrderCreateEvent($orderdata, $orderdata->id, $orderdata->user_id, $orderdata->vendor_id));
+        if($orderdata->order_status != 'cancelled_by_customer_before_confirmed'){
+            event(new \App\Events\OrderCreateEvent($orderdata, $orderdata->id, $orderdata->user_id, $orderdata->vendor_id));
+        }
+        
 
     }
 }

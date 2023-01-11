@@ -2,7 +2,7 @@
 $breadcrumb[] = ["name"  => "Home",
                  "icon"  => '<i class = "material-icons">home</i>',
                  'route' => route("restaurant.dashboard")];
-$breadcrumb[] = ["name"  => "Shop Promotion management",
+$breadcrumb[] = ["name"  => "Restaurant Promotion management",
                  'route' => route("restaurant.shop.promotion")];
 $breadcrumb[] = ["name"  => "List",
                  'route' => ""];
@@ -32,7 +32,7 @@ $breadcrumb[] = ["name"  => "List",
                             <table id="menu-catalogue-table" class="table thead-primary">
                                 <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">S.No.</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Blog Type</th>

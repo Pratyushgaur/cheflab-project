@@ -97,7 +97,7 @@ class GlobleSetting extends Controller
     }
     public function storeDefaultTime(Request $request){
         $general = AdminMasters::find($request->id);
-        $general->default_cooking_time = $request->default_cooking_time;
+        $general->max_preparation_time = $request->default_cooking_time;
         $general->default_delivery_time = $request->default_delivery_time;
         $general->save();
         return redirect()->route('admin.globle.setting')->with('message', 'Default Time Update Successfully');
@@ -493,7 +493,7 @@ class GlobleSetting extends Controller
         
     }
     public function product_active(){
-       Product_master::where('status','=', '2')->update( ['status' => 1 ,'product_approve' => 1]);
+       Product_master::where('product_approve','=', '2')->update( ['status' => 1 ,'product_approve' => 1]);
        return redirect()->route('admin.dashboard')->with('message', 'Product Active Successfully');
     }
     

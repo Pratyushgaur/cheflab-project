@@ -70,7 +70,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6">
+            <!-- <div class="col-xl-3 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
@@ -82,8 +82,20 @@
                         </div>
                     </div>
                 </a>
+            </div> -->
+            <div class="col-xl-3 col-md-6">
+                <a href="#">
+                    <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
+                        <div class="ms-panel-body media">
+                            <i class="fa fa-truck fa-6" aria-hidden="true"></i>
+                            <div class="media-body">
+                                <h6>{{$total_completed}}</h6>
+                                <span>Total <br> Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-
             <div class="col-xl-3 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
@@ -91,14 +103,14 @@
                             <i class="material-icons">cached</i>
                             <div class="media-body">
                                 <h6>{{$total_refund}}</h6>
-                                <span>Total Refunds </span>
+                                <span>Total <br> Refunds </span>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
 
-            <div class="col-xl-3 col-md-6">
+            <!-- <div class="col-xl-3 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
@@ -110,10 +122,23 @@
                         </div>
                     </div>
                 </a>
+            </div> -->
+            <div class="col-xl-3 col-md-6">
+                <a href="#">
+                    <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
+                        <div class="ms-panel-body media">
+                            <i class="material-icons">timer</i>
+                            <div class="media-body">
+                                <h6>{{$total_ready_to_dispatch}}</h6>
+                                <span>Cancelled Orders</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
 
 
-            <div class="col-xl-3 col-md-6">
+            <!-- <div class="col-xl-3 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
@@ -125,7 +150,7 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </div> -->
 
 
             <div class="col-xl-12 col-md-12">

@@ -47,12 +47,13 @@ class OrderSendNotificationListener
         //automatice send for prepration
         //order_status ===>'confirmed' to 'preparing'
         if ($vendor->is_auto_send_for_prepare) {
-            $products                                = get_order_preparation_time($event->order_obj->id);
+            //$products                                = get_order_preparation_time($event->order_obj->id);
+            $auto_accept_prepration_time                                = $vendor->auto_accept_prepration_time;
             $event->order_obj->order_status          = 'preparing';
             $event->order_obj->preparation_time_from = mysql_date_time();
-            $event->order_obj->preparation_time_to   = mysql_add_time($event->order_obj->preparation_time_from, $products->total_preparation_time);
+            $event->order_obj->preparation_time_to   = mysql_add_time($event->order_obj->preparation_time_from, $auto_accept_prepration_time);
             $event->order_obj->save();
-            event(new OrderSendToPrepareEvent($event->order_obj, $products->total_preparation_time));
+            event(new OrderSendToPrepareEvent($event->order_obj, $auto_accept_prepration_time));
             $event->order_obj->save();
         }
     }

@@ -3,7 +3,7 @@
     <div class="logo-sn ms-d-block-lg">
       <a class="pl-0 ml-0 text-center" href="{{route('restaurant.dashboard')}}" style="padding:0px !important;">
         <!-- <img src="{{asset('frontend')}}/assets/img/costic/costic-logo-216x62.png" alt="logo"> -->
-        <img src="{{asset('commonarea')}}/logo.png" alt="logo" style="height: 70px;">
+        <img src="{{asset('commonarea')}}/logo.png" alt="logo" style="height: 80px; padding-bottom:15px;padding-top:15px;">
       </a>
     </div>
     <!-- Navigation -->
@@ -53,7 +53,7 @@
                 <a href="{{route('restaurant.order.list','all')}}" class="{{ request()->is('vendor/restaurant/orders/all') ? 'active' : '' }}">All <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','confirmed')}}" class="{{ request()->is('vendor/restaurant/orders/confirmed') ? 'active' : '' }}">Confirmed <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'confirmed')}}</a>
+                <a href="{{route('restaurant.order.list','confirmed')}}" class="{{ request()->is('vendor/restaurant/orders/confirmed') ? 'active' : '' }}">Pending <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'confirmed')}}</a>
             </li>
             <li>
                 <a href="{{route('restaurant.order.list','preparing')}}" class="{{ request()->is('vendor/restaurant/orders/preparing') ? 'active' : '' }}">Preparing <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'preparing')}}</a>
@@ -123,7 +123,7 @@
         </li>
 
         <li class="menu-item ">
-            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Dishes Rating/Review</span></a>
+            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Dishes (Top Rated/Review)</span></a>
         </li>
         <li class="menu-item ">
             <a href="{{route('restaurant.vendor.change_password')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Update Password</span></a>
