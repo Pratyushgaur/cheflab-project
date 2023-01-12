@@ -133,12 +133,16 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('banner-slot-reject', [App\Http\Controllers\admin\BannerController::class, 'rejectProduct'])->name('admin.slot.reject');
     // application blog promotion
     Route::get('user-app-blog', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.application.blog');
+    Route::get('user-app-blog-create', [App\Http\Controllers\admin\VendorPromotion::class, 'create_blog'])->name('admin.application.blog.create');
     Route::post('user-app-blog-create', [App\Http\Controllers\admin\VendorPromotion::class, 'store'])->name('admin.application.blog.store');
     Route::get('user-app-blog-edit/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'fun_edit_blog'])->name('admin.application.blogedit');
     Route::post('user-app-blog-update', [App\Http\Controllers\admin\VendorPromotion::class, 'update'])->name('admin.application.blog.update');
     Route::post('user-app-blog-delete', [App\Http\Controllers\admin\VendorPromotion::class, 'soft_delete'])->name('admin.application.blog.ajax.delete');
     Route::post('user-app-blog-inactive/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'inactive'])->name('admin.application.blog.inactive');
     Route::post('user-app-blog-active/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'active'])->name('admin.application.blog.active');
+    Route::get('user-app-blog-history/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'blogBookingHistory'])->name('admin.application.blog.history');
+    Route::get('user-app-blog-activecontent/{id}', [App\Http\Controllers\admin\VendorPromotion::class, 'blogActiveContent'])->name('admin.application.blog.activecontent');
+    
     // Root Banner
    Route::get('banner-root-banner', [App\Http\Controllers\admin\AdminRootBannerController::class, 'index'])->name('admin.root.banner');
    Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');

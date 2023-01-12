@@ -286,6 +286,16 @@
                                       <textarea name="youtube_link" class="form-control" value="{{$data->youtube_link}}"  id="" placeholder="Youtube Link..">{{$data->youtube_link}}</textarea>
                                     </div>
                                   </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Application Get Order Switch<span class="text-danger">* (This Attempt Will Stop get Order in Application)</span></label>
+                                      <select class="form-control" name="app_run" id="">
+                                        <option value="1" @if($data->app_run == '1') selected @endif >On</option>
+                                        <option value="0" @if($data->app_run == '0') selected @endif>Off</option>
+                                      </select>
+                                      
+                                    </div>
+                                  </div>
                                   
 
 

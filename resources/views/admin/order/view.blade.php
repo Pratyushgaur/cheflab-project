@@ -24,7 +24,7 @@
                      <div class="row invoice-info">
                         <div class="col-sm-6 invoice-col">
                            <h5 class="text"><b>Order ID #{{$order->order_id}}</b></h5>
-                           <p><i class="fa fa-calendar-o pr-2" aria-hidden="true"></i> {{ date('d M Y H:s',strtotime($order->created_at)) }}</p>
+                           <p><i class="fa fa-calendar-o pr-2" aria-hidden="true"></i> {{ date('d M Y h:s',strtotime($order->created_at)) }}</p>
                            <p><b class="text-dark"><i class="fa fa-home" aria-hidden="true"></i>  Restaurant: </b> <span class="text-primary ml-1">{{ ucwords($vendor->name) }}</span></p>
                         </div>
                         <div class="col-sm-6 invoice-col text-right">
@@ -50,7 +50,7 @@
                             </p>
                               <p class="mb-1"><small class="ml-2">Payment Method</small>: {{ $order->payment_type }}</p>
                               <!-- <p class="mb-1"> <small>Reference Code</small>: <button type="button" class="ml-2 btn px-2 py-1 btn-sm btn-outline-primary badge badge-soft-success">Add</button></p> -->
-                              <p class="mb-1"><small>Payment Status</small>: <small class="text-danger ml-2"><b>{{ ucwords($order->payment_status) }} </b></small></p>
+                              <!-- <p class="mb-1"><small>Payment Status</small>: <small class="text-danger ml-2"><b>{{ ucwords($order->payment_status) }} </b></small></p> -->
 
                               
 
@@ -71,6 +71,7 @@
                               <tr>
                                  <th>Item Details</th>
                                  <th>Addons</th>
+                                 
                                  <th style="width: 40px">Price</th>
                               </tr>
                            </thead>
@@ -80,12 +81,15 @@
                                  <td>
                                     <div class="media media--sm">
                                        <a class="avatar avatar-xl mr-3" href="javascript:void(0);">
+                                       @if($val['product_image']!='')
                                        <img class="img-fluid rounded" src="<?php echo asset('products/')?>/<?php echo $val['product_image'];?>" alt="Image Description" width="60">
+                                       @endif
+                                       
                                        </a>
                                        <div class="media-body">
                                           <div>
                                              <strong class="line--limit-1">{{$val['product_name']}}</strong>
-                                             <strong><u> Variation : </u></strong>
+                                             
                                              <div class="font-size-sm text-body">
                                                 <span>type : </span>
                                                 <span class="font-weight-bold">{{ $val['type'] }}</span>
@@ -98,7 +102,12 @@
                                        </div>
                                     </div>
                                  </td>
-                                 <td>{{ $val['primary_variant_name'] }}</td>
+                                 <td>
+                                    @foreach($val['addons'] as $key =>$value)
+                                       {{$value['addon']}} - Rs.{{$value['addon_price']}} 
+                                       <br>
+                                    @endforeach
+                                 </td>
                                  <td>{{ $val['product_price'] }}</td>
                               </tr>
                               @endforeach
@@ -130,7 +139,7 @@
                </div>
             </div>
             <div class="col-md-4">
-               <div class="card card-primary card-outline">
+               <!-- <div class="card card-primary card-outline">
                   <div class="card-body box-profile">
                      <div class="invoice-col">
                       <h5 class="text-center mb-3"> Order Setup</h5>
@@ -195,7 +204,7 @@
                         </address>
                      </div>
                   </div>
-               </div>
+               </div> -->
                <div class="">
                   <div class="card">
                      <div class="card-body pt-3">
@@ -215,7 +224,7 @@
                               </span>
                               <span>
                               <strong class="text--title font-semibold">{{ count($product) }}</strong>
-                              Orders
+                              Products
                               </span>
                               <span class="text--title font-semibold d-block">
                               <i class="tio-call-talking-quiet"></i> {{ $users->mobile_number }}
@@ -245,7 +254,8 @@
                         <i class="tio-call-talking-quiet"></i>
                         {{ $users->mobile_number }}</a><br>
                         <b class="name pr-2">Delivery Address: </b>
-                        <span class="info">{{$order->delivery_address}}</span></br>
+                        <span class="info"><a target="_blank" href="http://maps.google.com/maps?z=12&amp;t=m&amp;q=loc:{{$order->lat}}+{{$order->long}}">{{$order->delivery_address}}</a></span></br>
+                        
                      </div>
                      </span>
                   </div>
@@ -261,21 +271,14 @@
                               </div>
                               <div class="media-body">
                                  <span class="text-body text-hover-primary text-break"></span>
-                                 <span></span>
                                  <span class="fz--14px text--title font-semibold text-hover-primary d-block">
-                                 {{ ucwords($vendor->name) }}
-                                 </span>
-                                 <span>
-                                 <!-- <strong class="text--title font-semibold">
-                                 10
-                                 </strong>
-                                 orders served -->
-                                 </span>
-                                 <span class="text--title font-semibold d-block">
-                                 <i class="tio-call-talking-quiet"></i> {{ $vendor->mobile }}
+                                    {{ ucwords($vendor->name) }} &nbsp;
                                  </span>
                                  <span class="text--title">
-                                 <i class="tio-poi"></i> {{ $vendor->address }}
+                                    <i class="tio-call-talking-quiet"></i> ({{ $vendor->mobile }})
+                                 </span>
+                                 <span class="text--title">
+                                 <i class="tio-poi"></i> <a target="_blank" href="http://maps.google.com/maps?z=12&amp;t=m&amp;q=loc:{{$vendor->lat}}+{{$vendor->long}}">{{ $vendor->address }}</a>
                                  </span>
                               </div>
                            </a>

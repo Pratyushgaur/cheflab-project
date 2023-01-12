@@ -169,6 +169,12 @@
 						  <p>Vendor Orders</p>
 						</a>
 					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.order.list')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Order Dashbord</p>
+						</a>
+					</li>
 					<!-- <li class="nav-item">
 						<a href="{{route('admin.dineout.list')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>

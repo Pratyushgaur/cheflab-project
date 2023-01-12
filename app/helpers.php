@@ -1172,3 +1172,85 @@ function orderCancel($id)
         }
         return $order;
     }
+
+    function blogPromotionPriceSetup ($request,$id){
+        $AppPromotionBlogSetting= new \App\Models\AppPromotionBlogSetting;
+        // 
+        
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>1,'blog_name'=>'First Position','blog_price' => $request['first_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_name'=>'Second Position','blog_price' => $request['second_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>3,'blog_name'=>'Third Position','blog_price' => $request['third_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_name'=>'Fourth Position','blog_price' => $request['fourth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_name'=>'Fifth Position','blog_price' => $request['fifth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_name'=>'Sixth Position','blog_price' => $request['sixth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_name'=>'Seventh Position','blog_price' => $request['seventh_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_name'=>'Eighth Position','blog_price' => $request['eighth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_name'=>'Ninth Position','blog_price' => $request['ninth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_name'=>'Tenth Position','blog_price' => $request['tenth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
+        // 
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>1,'blog_name'=>'First Position','blog_price' => $request['first_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_name'=>'Second Position','blog_price' => $request['second_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>3,'blog_name'=>'Third Position','blog_price' => $request['third_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_name'=>'Fourth Position','blog_price' => $request['fourth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_name'=>'Fifth Position','blog_price' => $request['fifth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_name'=>'Sixth Position','blog_price' => $request['sixth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_name'=>'Seventh Position','blog_price' => $request['seventh_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_name'=>'Eighth Position','blog_price' => $request['eighth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_name'=>'Ninth Position','blog_price' => $request['ninth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_name'=>'Tenth Position','blog_price' => $request['tenth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
+        // 
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>1,'blog_name'=>'First Position','blog_price' => $request['first_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_name'=>'Second Position','blog_price' => $request['second_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>3,'blog_name'=>'Third Position','blog_price' => $request['third_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_name'=>'Fourth Position','blog_price' => $request['fourth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_name'=>'Fifth Position','blog_price' => $request['fifth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_name'=>'Sixth Position','blog_price' => $request['sixth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_name'=>'Seventh Position','blog_price' => $request['seventh_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_name'=>'Eighth Position','blog_price' => $request['eighth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_name'=>'Ninth Position','blog_price' => $request['ninth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_name'=>'Tenth Position','blog_price' => $request['tenth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
+        
+        
+    
+    }
+    function blogPromotionPriceUpdate ($request,$id){
+        //$AppPromotionBlogSetting= new \App\Models\AppPromotionBlogSetting;
+        // 
+        
+        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'7','app_promotion_blog_id'=>$id,'blog_position'=>1])->update(['blog_price' => $request['first_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['second_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'7','app_promotion_blog_id'=>$id,'blog_position'=>3])->update(['blog_price' => $request['third_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['fourth_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['fifth_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['sixth_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['seventh_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['eighth_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['ninth_position_price_for_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['tenth_position_price_for_week']]);
+        //
+        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'14','app_promotion_blog_id'=>$id,'blog_position'=>1])->update(['blog_price' => $request['first_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['second_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'14','app_promotion_blog_id'=>$id,'blog_position'=>3])->update(['blog_price' => $request['third_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['fourth_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['fifth_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['sixth_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['seventh_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['eighth_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['ninth_position_price_for_two_week']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['tenth_position_price_for_two_week']]);
+        //
+        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'30','app_promotion_blog_id'=>$id,'blog_position'=>1])->update(['blog_price' => $request['first_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['second_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'30','app_promotion_blog_id'=>$id,'blog_position'=>3])->update(['blog_price' => $request['third_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['fourth_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['fifth_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['sixth_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['seventh_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['eighth_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['ninth_position_price_for_month']]);
+        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['tenth_position_price_for_month']]);
+        // // 
+        
+        
+    
+    }
