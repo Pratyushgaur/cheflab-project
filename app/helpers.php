@@ -5,6 +5,7 @@ use App\Models\Product_master;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use App\Models\OrderCommision;
+use App\Models\Paymentsetting;
 
 function time_diffrence_in_minutes($datetime1, $datetime2)
 {
@@ -1030,7 +1031,7 @@ function orderCancel($id)
     {
         // echo $id;die;
 
-        $order = Order::where('id',$id)->first();
+        $order = Orders::where('id',$id)->first();
         $payout = Paymentsetting::first();
         $order_amount = $order->net_amount;
         $vendor_cancellation = $payout->additions;
@@ -1075,7 +1076,7 @@ function orderCancel($id)
 
     function orderComplete($id)
     {
-        $order = Order::where('id',$id)->first();
+        $order = Orders::where('id',$id)->first();
         $payout = Paymentsetting::first();
         $order_amount = $order->net_amount;
         $convenience_fee = $payout->convenience_fee;

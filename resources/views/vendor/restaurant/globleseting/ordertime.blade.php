@@ -7,7 +7,7 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb pl-0">
                         <li class="breadcrumb-item"><a href="{{route("restaurant.dashboard")}}"><i class="material-icons">home</i> Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{route('restaurant.globleseting.ordertime')}}">Global Setting</a></li>
+                        <li class="breadcrumb-item"><a href="{{route('restaurant.globleseting.ordertime')}}">Globle Setting</a></li>
                         <li class="breadcrumb-item">Order Time</li>
                     </ol>
                 </nav>

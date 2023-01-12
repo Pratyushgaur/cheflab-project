@@ -29,6 +29,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">
   <!-- select 2 -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{{ asset('css/mis.css') }}" rel="stylesheet">
     <link href="{{ asset('frontend') }}/assets/css/toastr.min.css" rel="stylesheet">
 {{--    <link href="{{ asset('frontend') }}/assets/toasty/toasty.min.css" rel="stylesheet">--}}
 

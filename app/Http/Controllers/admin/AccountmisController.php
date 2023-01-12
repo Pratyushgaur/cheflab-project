@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Crypt;
 use DataTables;
 use Config;
 use Auth;
-// test changes
 class AccountmisController extends Controller
 {
     public function index()
