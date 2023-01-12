@@ -26,7 +26,7 @@ class OrderController extends Controller
     {
         if ($request->ajax()) {
         
-           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','orders.customer_name','users.mobile_number as mobile','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
+           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
            if($request->status != ''){
             $data = $data->where('payment_status','=',$request->status);
            }
@@ -47,26 +47,10 @@ class OrderController extends Controller
                 })
                 
                 ->addColumn('date', function($data){
-                    $date_with_format = date('d M Y hh:mm',strtotime($data->created_at));
+                    $date_with_format = date('d M Y h:i A',strtotime($data->created_at));
                     return $date_with_format;
                 })
-                // ->addColumn('status', function($data){
-                //     if ($data->status == 1) {
-                //         $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round couponOff" data-id="' . $data->id . '"></span></label>';
-                //     } elseif($data->status == 0) {
-                //         $btn = '<label class="ms-switch"><input type="checkbox"> <span class="ms-switch-slider round  couponON" data-id="' . $data->id . '""></span></label>';
-                //     }
-                //     return $btn;
-                // })
-                // ->addColumn('discount_type', function($data){
-                //     if ($data->discount_type) {
-                //         $btn = ''.$data->discount.'<i class="fa fa-percent fa-sm"></i>';
-                //     } else {
-                //         $btn = ''.$data->discount.'<i class="fas fa-rupee-sign fa-sm"></i>';
-                //     }    
-                //     return $btn;
-                // })
-              
+                
 
 
                 ->rawColumns(['date','action-js'])
@@ -89,13 +73,17 @@ class OrderController extends Controller
             // echo '<pre>'; print_r($order);die;
             $vendor_id = $order->vendor_id;
             $user_id = $order->user_id;
-            $orderProduct = OrderProduct::findOrFail($order_id);
-            $product_id = $orderProduct->product_id;
-            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
+            $product = OrderProduct::where('order_id','=',$order_id)->join('products','order_products.product_id','=','products.id')->select('order_products.*','products.type')->get();
+            foreach($product as $key =>$value){
+                $product[$key]['addons'] = \App\Models\OrderProductAddon::where('order_product_id','=',$value->id)->join('addons','order_product_addons.addon_id','=','addons.id')->select('order_product_addons.*','addons.addon')->get()->toArray();  
+            }
+            
+            //$product_id = $orderProduct->product_id;
+            //$product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
             $vendor = Vendors::findOrFail($vendor_id);
             $users = User::findOrFail($user_id);
             
-            return view('admin.order.view',compact('order','orderProduct','product','vendor','users'));
+            return view('admin.order.view',compact('order','product','vendor','users'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 

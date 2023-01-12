@@ -148,6 +148,7 @@ class GlobleSetting extends Controller
         $general->youtube_link = $request->youtube_link;
         $general->aboutus = $request->aboutus;
         $general->order_limit_amout = $request->order_limit_amout;
+        $general->app_run = $request->app_run;
         if($request->has('logo')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->logo->extension();
             $request->logo->move(public_path('logo'),$filename);

@@ -121,7 +121,7 @@
         },
         columns: [
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'id', name: 'id'},
+            {data: 'order_id', name: 'order_id'},
             {data: 'vendor_name', name: 'vendor_name'},
             {data: 'customer_name', name: 'customer_name'},
             {data: 'mobile', name: 'mobile'},
