@@ -233,10 +233,12 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('content-static-vendor-faqdeliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'update_deliveryboyfaq'])->name('admin.deliveryboy.update_faq');
     //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
+    Route::get('notification/create', [App\Http\Controllers\NotificationController::class, 'create'])->name('admin.notification.create');
 
 
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
+    Route::post('users/add/wallet/{id}', [App\Http\Controllers\admin\UserControllers::class,'add_wallet'])->name('user.wallet.add');
     Route::post('users/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
     Route::post('users/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
     Route::post('user/delete/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_delete'])->name('admin.user.delete');

@@ -113,7 +113,7 @@
 
 
         .upload-icon4{
-          width: 150px;
+          width: 450px;
           height: 150px;
           border: 2px solid #000;
           border-style: dotted;
@@ -121,14 +121,14 @@
         }
 
         .upload-icon4 img{
-            width: 100px;
+            width: 300px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
 
         .upload-icon4.has-img4{
-            width: 150px;
+            width: 450px;
             height: 150px;
             border: none;
         }
@@ -136,7 +136,7 @@
         .upload-icon4.has-img4 img {
             /*width: 100%;
             height: auto;*/
-            width: 150px;
+            width: 450px;
             height: 150px;
             border-radius: 18px;
             margin:0px;

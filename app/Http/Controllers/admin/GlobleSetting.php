@@ -135,6 +135,12 @@ class GlobleSetting extends Controller
         return redirect()->route('admin.globle.setting')->with('message', 'Update Platform Chargs Successfully');
     }
     public function storeGernel(Request $request){
+        $this->validate($request, 
+            [
+            'reason_close' => ['required_if:app_run,==,0']
+            ]
+    
+        );
         $general = AdminMasters::find($request->id);
         $general->company_name = $request->company_name;
         $general->email = $request->email;
@@ -149,6 +155,7 @@ class GlobleSetting extends Controller
         $general->aboutus = $request->aboutus;
         $general->order_limit_amout = $request->order_limit_amout;
         $general->app_run = $request->app_run;
+        $general->app_close_reason = $request->reason_close;
         if($request->has('logo')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->logo->extension();
             $request->logo->move(public_path('logo'),$filename);
