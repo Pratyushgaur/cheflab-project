@@ -212,9 +212,20 @@
                                                     <img class="icon4" src="{{asset('add-image.png')}}">
                                                     @else
                                                         <?php
-                                                        $baner=json_decode($vendor->banner_image);
+                                                          $baner=json_decode($vendor->banner_image);
+                                                          if (json_last_error() === JSON_ERROR_NONE) {
+                                                            ?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
+                                                            <?php
+                                                          } else {
+                                                            ?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                            <?php
+                                                          }
+                                                          
+                                                          
                                                         ?>
-                                                    <img class="icon4" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
+                                                    
                                                     @endif
                                                 </div>
                                             </label>

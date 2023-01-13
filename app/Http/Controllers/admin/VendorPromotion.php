@@ -179,6 +179,7 @@ class VendorPromotion extends Controller
         $blog->to = mysql_time($request->to);
         $blog->vendor_type =  $request->position;
         $blog->blog_type = $request->blog_type;
+        $blog->blog_for = $request->master_blog;
         $blog->save();
         blogPromotionPriceUpdate($request->all(),$request->id);
         return redirect()->route('admin.application.blog')->with('message', 'Blog Update Successfully');
