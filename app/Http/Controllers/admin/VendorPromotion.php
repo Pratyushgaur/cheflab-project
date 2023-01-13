@@ -254,7 +254,7 @@ class VendorPromotion extends Controller
             $booking = $booking->join('vendors','app_promotion_blog_bookings.vendor_id','=','vendors.id');
             $booking = $booking->select('app_promotion_blog_bookings.*','app_promotion_blog_settings.blog_position','app_promotion_blog_settings.blog_name','blog_price','blog_promotion_date_frame','vendors.name');
             $booking = $booking->where('app_promotion_blog_bookings.payment_status','=','1');
-            $booking = $booking->orderBy('app_promotion_blog_bookings.id','desc');
+            $booking = $booking->orderBy('app_promotion_blog_settings.blog_position','ASC');
             if($blog->blog_type == '2'){
                 $booking = $booking->join('products','app_promotion_blog_bookings.product_id','=','products.id');
                 $booking = $booking->addSelect('products.product_name',DB::raw('CONCAT("' . asset('products') . '/", product_image) AS product_image'));
