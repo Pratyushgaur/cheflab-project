@@ -71,9 +71,10 @@ $breadcrumb[] = ["name"  => "List",
 
                                             ?></td>
                                         <td>
+
                                         @if($banner->payment_status!='0' && !(!empty($banner->is_active) && ($banner->is_active == 2)))
                                             <!-- <div class="panel-body text-center"> -->
-                                                <form action="{!!route('payment')!!}" method="POST">
+                                                <form action="{!!route('banner_payment')!!}" method="POST">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js"
                                                             data-key="{{ env('RAZOR_KEY') }}"
                                                             data-amount="{{($banner->price*100)}}"

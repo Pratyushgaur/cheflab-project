@@ -34,7 +34,7 @@ class OrderController extends Controller
         $orders = $order_obj
             ->groupBy('orders.id')
             ->orderBy('orders.id', 'desc')
-            ->paginate(2);
+            ->paginate(10);
 //        dd($orders);
         return view('vendor.restaurant.order.list', compact('orders', 'staus_filter'));
     }
@@ -112,7 +112,7 @@ class OrderController extends Controller
            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id,$otp));
         }
 
-        
+
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',
