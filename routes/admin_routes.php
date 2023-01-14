@@ -167,6 +167,12 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('orders-view/{id}', [App\Http\Controllers\admin\OrderController::class, 'vieworder'])->name('admin.order.view');
     Route::get('orders-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoice'])->name('admin.order.invoice');
     Route::get('orders-product/{id}', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_product'])->name('admin.order.product');
+    Route::get('orders/dashboard', [App\Http\Controllers\admin\OrderController::class, 'dashboard'])->name('admin.order.dashboard');
+    Route::get('orders/dashboard/{status}', [App\Http\Controllers\admin\OrderController::class, 'dashboard'])->name('admin.order.dashboard.status');
+    Route::post('orders/dashboard/pending/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshPending'])->name('admin.order.dashboard.pending');
+    Route::post('orders/dashboard/needMore/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshNeedTime'])->name('admin.order.dashboard.delay_restaurant');
+    Route::post('orders/dashboard/delayRider/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshDelayRider'])->name('admin.order.dashboard.delay_rider');
+
     // Order Dineout
     Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');
     Route::get('order-list-dineout', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order_dineout'])->name('admin.order.dineoutdata');
