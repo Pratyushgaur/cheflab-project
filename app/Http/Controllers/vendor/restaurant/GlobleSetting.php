@@ -30,9 +30,82 @@ class GlobleSetting extends Controller
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
         foreach ($order_time as $v)
             $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
+        
 
         return view('vendor.restaurant.globleseting.require_ordertime', compact('hideSidebar', 'VendorOrderTime'));
     }
+
+    public function time_save(Request $request)
+    { 
+        // echo '<pre>'; print_r($request->all());die;
+        $day = $request->no_day;
+        $start_time = $request->start_time;
+        $end_time = $request->end_time;
+
+        $str = '
+        <div class="form-row my-2 border align-items-center ordertime_'.$day.'">
+            <div class="col-md-3 text-center mb-2">
+                <b>New Added</b>
+            </div>
+        <div class="col-md-4 text-center">
+          <span class="StartTime">Opening times: '.$start_time.'</spna>
+          <div class=" hidepart_sun">
+             <input type="hidden" class="start_time_'.$day.' form-control" name="start_time['.$day.'][]" value="'.$start_time.'" id="start_time_'.$day.'" >
+          </div>
+       </div>
+       <div class="col-md-4 text-center">
+          <span class="CloseTime">Closing times: '.$end_time.'</spna>
+          <div class="hidepart_sun">
+             <input type="hidden" class="end_time_'.$day.' form-control" name="end_time['.$day.'][]" value="'.$end_time.'" id="end_time_'.$day.'">
+          </div>
+       </div>
+       <div class="col-md-1 text-center my-2">
+          <div class="">
+             <span> <button type="button" data-item-id="'.$day.'" data-day="sun" onclick="removeRow(this);return false;" class="tr_clone_remove"><i class="fa fa-minus-circle" aria-hidden="true"></i></button> </span>
+          </div>
+       </div></div>
+       ';
+
+       return response()->json(['success' => 1,'str'=>$str,'start_time'=>$start_time,'end_time'=>$end_time]);
+
+        
+    }
+
+        public function time_model(Request $request)
+    { 
+       
+        return view('vendor.restaurant.globleseting.timeing_view', compact('request'));
+
+        
+
+    } 
+
+    public function time_update(Request $request)
+    { 
+        // echo '<pre>'; print_r($request->all());die;
+        $data = array(
+            'start_time' => $request->start_time,
+            'end_time' => $request->end_time
+        );
+
+        Order_time::where('id',$request->id)->update($data);
+       
+
+
+       return response()->json(['success' => 1]);
+
+        
+    }
+
+
+
+    public function time_edit(Request $request)
+    { 
+        $timing = VendorOrderTime::where('id',$request->id)->first();
+        return view('vendor.restaurant.globleseting.timeing_edit', compact('request','timing'));
+
+    }
+
 
     public function order_time()
     {
@@ -41,7 +114,7 @@ class GlobleSetting extends Controller
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
         foreach ($order_time as $v)
             $VendorOrderTime[$v->day_no][$v->row_keys] = $v->toArray();
-
+          
         //echo '<pre>';var_dump($VendorOrderTime);echo '</pre>';die;
         // echo '<pre>'; print_r($order_time);die;
         return view('vendor.restaurant.globleseting.ordertime', compact('VendorOrderTime'));
@@ -426,10 +499,15 @@ class GlobleSetting extends Controller
             $msg  = 'Order auto send for preparation disabled for your restaurant.';
             $data = '0';
         }
-
+        
         $vendor = Vendors::find(Auth::guard('vendor')->user()->id);
 
         $vendor->is_auto_send_for_prepare = $data;
+        if($request->prepration_time != ''){
+            $vendor->auto_accept_prepration_time = $request->prepration_time;
+
+        }
+        
         $vendor->save();
 
 

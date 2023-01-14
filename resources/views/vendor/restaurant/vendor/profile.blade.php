@@ -163,7 +163,7 @@ if (is_array($banners))
                             </li>
                             <li>
                                 <h3 class="ms-count">{{$like_user_count}}</h3>
-                                <span>No of users like</span>
+                                <span>Favorite </span>
                             </li>
                             <li>
                                 <h3 class="ms-count"><?php echo front_end_currency($resturant->wallet)?></h3>
@@ -172,7 +172,7 @@ if (is_array($banners))
 
                             <li>
                                 <h3 class="ms-count"><?php echo $resturant->vendor_ratings;?></h3>
-                                <span>Rating</span>
+                                <span>Ratings</span>
                             </li>
                         </ul>
                         <h2 class="section-title">Basic Information</h2>
@@ -182,10 +182,13 @@ if (is_array($banners))
                                 <th scope="row">Full Name</th>
                                 <td>{{$resturant->name}}</td>
                             </tr>
+                            @if($resturant->vendor_type == 'chef')
+                            
                             <tr>
                                 <th scope="row">Birthday</th>
                                 <td>{{front_end_date($resturant->dob)}}</td>
                             </tr>
+                            @endif
                             <tr>
                                 <th scope="row">Email</th>
                                 <td>{{$resturant->email}}</td>
@@ -240,10 +243,7 @@ if (is_array($banners))
                                 <th scope="row">Tax</th>
                                 <td><?php echo $resturant->tax; ?></td>
                             </tr>
-                            <tr>
-                                <th scope="row">FSSAI</th>
-                                <td><?php echo $resturant->fssai_lic_no; ?></td>
-                            </tr>
+                           
                             </tbody>
                         </table>
                     </div>
@@ -273,14 +273,14 @@ if (is_array($banners))
                                         <input type="hidden" value="{{$vendor->id}}" name="id" class="form-control" id="exampleInputEmail1" placeholder="Enter Chef Name">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
                                         <input type="email" readonly="true" name="email" value="{{$vendor->email}}" class="form-control" id="" placeholder="Enter Restaurant Email">
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode
                                             <span class="text-danger">*</span></label>
@@ -289,190 +289,44 @@ if (is_array($banners))
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Manage Name </label>
+                                        <input type="text" name="manager_name" value="{{$resturant->manager_name}}" class="form-control" id="" placeholder="Enter Manager Name">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control" id="" placeholder="Enter Mobile Number">
                                     </div>
                                 </div>
-                                {{--                                <div class="col-md-12">--}}
-                                {{--                                    <div class="form-group">--}}
-                                {{--                                        <label for="exampleInputEmail1">Deal With Categories--}}
-                                {{--                                            <span class="text-danger">*</span></label>--}}
-                                {{--                                        {{ Form::select('categories[]',$categories,@explode(',',$vendor->deal_categories),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Categories",'style'=>"width: 100%;"]) }}--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="col-md-12">--}}
-                                {{--                                    <div class="form-group">--}}
-                                {{--                                        <label for="exampleInputEmail1">Deal With Cuisines--}}
-                                {{--                                            <span class="text-danger">*</span></label>--}}
-                                {{--                                        {{ Form::select('deal_cuisines[]',$cuisines,@explode(',',$vendor->deal_cuisines),['class' => 'select2','multiple'=>"multiple", 'data-placeholder'=>"Select Deal Cuisines" ,'style'=>"width: 100%;"]) }}--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                <div class="col-md-6">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternate Mobile
+                                            <span class="text-danger">*</span></label>
+                                        <input type="text" name="alt_mobile" value="{{$resturant->alt_mobile}}" class="form-control" id="" placeholder="Enter alternate mobile Number">
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">FSSAI Lic. No.
+                                            <span class="text-danger">*</span></label>
+                                        <input type="text" name="fssai_lic_no" value="{{$vendor->fssai_lic_no}}" class="form-control" id="" placeholder="Enter FSSAI licence Number" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address
                                             <span class="text-danger">*</span></label>
                                         <input type="text" name="address" value="{{$vendor->address}}" class="form-control" id="" placeholder="Enter Restaurant Address">
                                     </div>
                                 </div>
-                                {{--                                <div class="col-md-6">--}}
-                                {{--                                    <div class="form-group">--}}
+                                
+                                
 
-                                {{--                                        <label for="exampleInputEmail1">Vendor Food Type</label><br>--}}
-
-                                {{--                                        <div class="form-group clearfix">--}}
-                                {{--                                            <div class="icheck-success d-inline">--}}
-
-                                {{--                                                <input type="radio" id="veg" name="type" value="1" {{($vendor->vendor_food_type==1) ? 'checked' : ''}}>--}}
-                                {{--                                                <label for="veg">Veg</label>--}}
-                                {{--                                            </div>--}}
-
-                                {{--                                            <div class="icheck-danger d-inline">--}}
-                                {{--                                                <input type="radio" id="non_veg" name="type" value="3" {{($vendor->vendor_food_type==3) ? 'checked' : ''}}>--}}
-                                {{--                                                <label for="non_veg">Veg + Non Veg</label>--}}
-                                {{--                                            </div>--}}
-
-
-                                {{--                                        </div>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">FSSAI Lic. No.
-                                            <span class="text-danger">*</span></label>
-                                        <input type="text" name="fssai_lic_no" value="{{$vendor->fssai_lic_no}}" class="form-control" id="" placeholder="Enter FSSAI licence Number">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Vendor Commission
-                                            Percentage<span class="text-danger">*</span></label>
-                                        <input type="text" value="{{$vendor->commission}}" name="vendor_commission" class="form-control" id="" placeholder="Enter Commission">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Tax<span class="text-danger">*</span></label>
-                                        <input type="text" name="tax" value="{{$vendor->tax}}" class="form-control" id="" placeholder="Tax">
-                                    </div>
-                                </div>
-                                {{--                                <div class="col-md-3">--}}
-                                {{--                                    <div class="form-group">--}}
-                                {{--                                        <label for="exampleInputEmail1">GST Available<span class="text-danger">*</span></label>--}}
-                                {{--                                        <select class="form-control gstavailable" name="gst_available">--}}
-                                {{--                                            @if($vendor->gst_available == '0')--}}
-                                {{--                                                <option value="0">Not Available</option>--}}
-                                {{--                                            @else--}}
-                                {{--                                                <option value="1">Available</option>--}}
-                                {{--                                            @endif--}}
-                                {{--                                        </select>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                @if($vendor->gst_available == '1')
-                                    {{--                                    <div class="col-md-6 custmization-block">--}}
-                                    {{--                                        <div class="form-group">--}}
-                                    {{--                                            <label for="exampleInputEmail1">GST--}}
-                                    {{--                                                No<span class="text-danger">*</span></label>--}}
-                                    {{--                                            <input type="password" name="gst_no" class="form-control" id="" placeholder="Enter Confirm Password">--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                    </div>--}}
-                                @endif
+                            
+                                
                             </div>
-                            {{--                            <div class="card card-default">--}}
-
-                            {{--                                <div class="card-body">--}}
-                            {{--                                    <div class="row">--}}
-                            {{--                                        <div class="col-sm-3">--}}
-                            {{--                                            <div>--}}
-                            {{--                                                <label for="">Restaurant Images</label>--}}
-                            {{--                                            </div>--}}
-                            {{--                                            <div class="image-upload">--}}
-                            {{--                                                <label for="file-input">--}}
-                            {{--                                                    <div class="upload-icon">--}}
-                            {{--                                                        @if($vendor->image == null)--}}
-                            {{--                                                            <?php $is_require = true;?>--}}
-                            {{--                                                            <img class="icon" src="{{asset('add-image.png')}}">--}}
-                            {{--                                                        @else--}}
-                            {{--                                                            <?php $is_require = false;?>--}}
-                            {{--                                                            <img class="icon" src="{{ asset('vendors'.'/'.$vendor->image ) }}">--}}
-                            {{--                                                        @endif--}}
-                            {{--                                                    </div>--}}
-                            {{--                                                </label>--}}
-                            {{--                                                <input id="file-input" type="file" name="image" {{($is_require) ? 'required' : ''}}/>--}}
-                            {{--                                            </div>--}}
-                            {{--                                        </div>--}}
-                            {{--                                        <div class="col-sm-3">--}}
-                            {{--                                            <div>--}}
-                            {{--                                                <label for="">FSSAI Registration </label>--}}
-                            {{--                                            </div>--}}
-                            {{--                                            <div class="image-upload">--}}
-                            {{--                                                <label for="file-input2">--}}
-                            {{--                                                    <div class="upload-icon2">--}}
-                            {{--                                                        @if($vendor->licence_image == null)--}}
-                            {{--                                                            <?php $is_require = true;?>--}}
-                            {{--                                                            <img class="icon2" src="{{asset('add-image.png')}}">--}}
-                            {{--                                                        @else--}}
-                            {{--                                                            <?php $is_require = false;?>--}}
-                            {{--                                                            <img class="icon2" src="{{ asset('vendor-documents'.'/'.$vendor->licence_image ) }}">--}}
-                            {{--                                                        @endif--}}
-                            {{--                                                    </div>--}}
-                            {{--                                                </label>--}}
-                            {{--                                                <input id="file-input2" type="file" name="fassai_image" {{($is_require) ? 'required' : ''}}/>--}}
-
-                            {{--                                            </div>--}}
-                            {{--                                        </div>--}}
-                            {{--                                        <div class="col-sm-3">--}}
-                            {{--                                            <div>--}}
-                            {{--                                                <label for="">Other Document </label>--}}
-
-                            {{--                                            </div>--}}
-                            {{--                                            {{dd($vendor)}}--}}
-                            {{--                                            <div class="image-upload">--}}
-
-                            {{--                                                <label for="file-input3">--}}
-                            {{--                                                    <div class="upload-icon3">--}}
-                            {{--                                                        @if($vendor->other_document_image == null)--}}
-                            {{--                                                            <?php $is_require = true;?>--}}
-                            {{--                                                            <img class="icon3" src="{{asset('add-image.png')}}">--}}
-                            {{--                                                        @else--}}
-                            {{--                                                            <?php $is_require = false;?>--}}
-                            {{--                                                            <img class="icon3" src="{{ asset('vendor-documents'.'/'.$vendor->other_document_image ) }}">--}}
-                            {{--                                                        @endif--}}
-                            {{--                                                    </div>--}}
-                            {{--                                                </label>--}}
-                            {{--                                                <input id="file-input3" type="file" name="other_document" {{($is_require) ? 'required' : ''}} />--}}
-
-                            {{--                                            </div>--}}
-                            {{--                                            <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">--}}
-                            {{--                                        </div>--}}
-                            {{--                                        <div class="col-sm-3">--}}
-                            {{--                                            <div>--}}
-                            {{--                                                <label for="">Banner Image </label>--}}
-
-                            {{--                                            </div>--}}
-                            {{--                                            <div class="image-upload">--}}
-
-                            {{--                                                <label for="file-input4">--}}
-                            {{--                                                    <div class="upload-icon4">--}}
-                            {{--                                                        @if($vendor->banner_image == null)--}}
-                            {{--                                                            <img class="icon4" src="{{asset('add-image.png')}}">--}}
-                            {{--                                                        @else--}}
-                            {{--                                                            <?php $b = json_decode($vendor->banner_image);?>--}}
-                            {{--                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$b[0]) }}">--}}
-                            {{--                                                        @endif--}}
-                            {{--                                                    </div>--}}
-                            {{--                                                </label>--}}
-                            {{--                                                <input id="file-input4" type="file" name="banner_image"/>--}}
-
-                            {{--                                            </div>--}}
-
-                            {{--                                        </div>--}}
-                            {{--                                    </div>--}}
-                            {{--                                    <!-- div row -->--}}
-                            {{--                                </div>--}}
-
-
-                            {{--                            </div>--}}
+                           
 
 
                             {{-- Location form start --}}

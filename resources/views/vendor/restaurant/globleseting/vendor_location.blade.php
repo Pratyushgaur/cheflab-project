@@ -28,13 +28,13 @@
 
                             {{-- Location form start --}}
                             <div class="form-row">
-                                <div class="col-md-12 mb-3">
+                                <!-- <div class="col-md-12 mb-3">
                                     <label>Location</label>
                                     <div class="input-group">
                                         <input type="text" placeholder="Search" id="address-input" name="location" class="form-control map-input" value="" >
                                     </div>
 
-                                </div>
+                                </div> -->
                                 <div class="col-md-12 mb-3">
                                     <div id="address-map-container" style="width:100%;height:400px; ">
                                         <div style="width: 100%; height: 100%" id="address-map"></div>
@@ -72,14 +72,14 @@
                             </div>
                             {{-- Location form end --}}
 
-                            <div class="form-row">
+                            <!-- <div class="form-row">
                                 <div class="col-md-6 mb-6">
                                     <a class="btn btn-light " href="{{route('restaurant.require.ordertime')}}" >Back</a>
                                 </div>
                                 <div class="col-md-6 mb-6">
                                     <button class="btn btn-primary" type="submit"  style="float: right">Submit</button>
                                 </div>
-                            </div>
+                            </div> -->
                         </form>
                     </div>
                 </div>

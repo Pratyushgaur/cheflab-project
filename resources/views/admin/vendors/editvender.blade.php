@@ -113,7 +113,7 @@
 
 
         .upload-icon4{
-          width: 150px;
+          width: 450px;
           height: 150px;
           border: 2px solid #000;
           border-style: dotted;
@@ -121,14 +121,14 @@
         }
 
         .upload-icon4 img{
-            width: 100px;
+            width: 300px;
             height: 100px;
             margin:19px;
             cursor: pointer;
         }
 
         .upload-icon4.has-img4{
-            width: 150px;
+            width: 450px;
             height: 150px;
             border: none;
         }
@@ -136,7 +136,7 @@
         .upload-icon4.has-img4 img {
             /*width: 100%;
             height: auto;*/
-            width: 150px;
+            width: 450px;
             height: 150px;
             border-radius: 18px;
             margin:0px;
@@ -212,9 +212,20 @@
                                                     <img class="icon4" src="{{asset('add-image.png')}}">
                                                     @else
                                                         <?php
-                                                        $baner=json_decode($vendor->banner_image);
+                                                          $baner=json_decode($vendor->banner_image);
+                                                          if (json_last_error() === JSON_ERROR_NONE) {
+                                                            ?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
+                                                            <?php
+                                                          } else {
+                                                            ?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                            <?php
+                                                          }
+                                                          
+                                                          
                                                         ?>
-                                                    <img class="icon4" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
+                                                    
                                                     @endif
                                                 </div>
                                             </label>
@@ -258,6 +269,18 @@
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" value="{{$vendor->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternate Mobile Number</label>
+                                        <input type="text" name="alt_phone" class="form-control" value="{{$vendor->alt_mobile}}"  id="" placeholder="Enter Alternate Mobile Number">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Name of Restaurant Manager</label>
+                                        <input type="text" name="manager_name" class="form-control" value="{{$vendor->manager_name}}"  id="exampleInputEmail1" placeholder="Enter Restaurant Manager Name">
                                     </div>
                                   </div>
                                   <!-- <div class="col-md-3">
@@ -475,12 +498,6 @@
                                             <input type="text" name="other_document_name" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Name">
                                         </div>
                                   </div>
-{{--                                  <div class="col-sm-3">--}}
-{{--                                        <div class="form-group">--}}
-{{--                                            <label for="exampleInputEmail1">Document Number. </label>--}}
-{{--                                            <input type="text" name="other_document_no" value="{{$vendor->other_document}}" class="form-control" placeholder="Document Number">--}}
-{{--                                        </div>--}}
-{{--                                  </div>--}}
                                   <div class="col-sm-2">
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Other Document.</label>
@@ -507,6 +524,31 @@
 
                           </div>
                           <!-- schedule information end -->
+                          <!--  -->
+                          <div class="card card-default">
+                              <div class="card-header">
+                                <h3 class="card-title text-bold">Location Setup</h3>
+                              </div>
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-sm-4">
+                                          <div class="form-group">
+                                              <label>Lat </label>
+                                              <input type="text" name="lat" class="form-control" placeholder="Latitue of Restaurant" value="{{ @$vendor->lat }}" required>
+                                          </div>
+                                    </div>                                 
+                                    <div class="col-sm-4">
+                                          <div class="form-group">
+                                              <label>Lng</label>
+                                              <input type="text" name="lng" class="form-control" placeholder="Lng of Restaurant" value="{{ @$vendor->long }}" required>
+                                          </div>
+                                    </div>
+                                </div>
+                                <!-- div row -->
+                              </div>
+
+
+                          </div>
                           <div class="card-footer">
                             <button class="btn btn-success" ><i class="fa fa-save"></i>  Update Restaurant </button>
                           </div>
@@ -601,6 +643,12 @@
               tax: {
                 required: true,
               }
+              // lat:{
+              //   required:true
+              // },
+              // lng:{
+              //   required:true
+              // }
 
 
 

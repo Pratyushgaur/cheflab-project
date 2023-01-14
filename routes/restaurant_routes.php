@@ -5,6 +5,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
     Route::group([
         'prefix' => 'restaurant',
                   'middleware' => ['isRestaurant']], function () {
+
+                    Route::post('/time-model', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_model'])->name('restaurant.time.model');
+        Route::post('restaurent/time-model/save', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_save'])->name('restaurant.time.save');
         Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
             Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 
@@ -71,6 +74,14 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store'])->name('restaurant.ordertime.store');
             Route::get('globle/auto_accept', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_auto_accept'])->name('restaurant.order.auto_accept');
             Route::post('globle/auto_accept', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_order_auto_accept'])->name('restaurant.order.save_order_auto_accept');
+
+             
+ 
+             Route::post('/time-edit', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_edit'])->name('restaurant.time.edit');
+ 
+             Route::post('restaurent/time-model/update', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_update'])->name('restaurant.time.update');
+ 
+             Route::get('time/delete', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_delete'])->name('restaurant.time.delete');
 
             Route::post('offline', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_offline'])->name('restaurant.set_offline');
             Route::post('online', [App\Http\Controllers\vendor\restaurant\VendorController::class, 'set_online'])->name('restaurant.set_online');

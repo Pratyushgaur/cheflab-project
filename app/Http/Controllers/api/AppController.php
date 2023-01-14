@@ -3243,4 +3243,43 @@ class AppController extends Controller
             ], 500);
         }
     }
+
+    public function saveRiderRatingReviews(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'rider_id'    => 'required|numeric|exists:deliver_boy,id',
+                'rating' => 'required|numeric',
+                'review' => 'required',
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $review = new \App\Models\RiderReviewRatings;
+            $review->user_id =$request->user()->id;
+            $review->rider_id = $request->rider_id;
+            $review->rating =$request->rating;
+            $review->review	 =$request->review;
+            $review->save();
+            //
+            $rating=\App\Models\RiderReviewRatings::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('rider_id',$request->rider_id)->first();
+            $deliver_boy=\App\Models\Deliver_boy::find($request->rider_id);
+            $deliver_boy->ratings=$rating->rating;
+            //$vendor->review_count=$rating->total_review;
+            $deliver_boy->save();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully'
+
+            ], 200);
+
+
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }

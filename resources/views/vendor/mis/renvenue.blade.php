@@ -19,7 +19,7 @@
                            <lable><b>Weekly Date: </b></lable>
                         </div>                       
                         <div class="col-md-9 px-md-0">
-                          <input type="text" class="form-control" name="start_date" value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday 1 week')) }}" placeholder="" id="datePicker">
+                          <input type="text" class="form-control" name="start_date" value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday')) }}" placeholder="" id="datePicker">
                         </div>
                       </div>                  
                     </div>
@@ -93,12 +93,14 @@
 @endsection
 
 @push('scripts')
+
+
 <script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
+
 <script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
 <script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-<script src="{{asset('frontend')}}/assets/js/datatables.min.js">
-</script>
+<script src="{{asset('frontend')}}/assets/js/datatables.min.js"></script>
 
 <script>
 $(function() {
@@ -125,7 +127,7 @@ $(function() {
        
 
 });
-  var start_date = $('#datepicker').val();
+  var start_date = $('#datePicker').val();
                 revenue_ajax(start_date);
 
 
@@ -180,7 +182,7 @@ function revenue_ajax(start_date){
 }
 
 
-      function additions(){
+      function additions(){       
           $('#renvenue .modal-content').html('');
           $.ajax({  
             headers: {
@@ -214,12 +216,13 @@ function revenue_ajax(start_date){
 
 
       function view_detail(){
-        var start_date = $('#datepicker').val();
+        var start_date = $('#datePicker').val();
         $('#viewDetail').toggle();
          
       }
       function filter_date (){
-  var start_date = $('#datepicker').val();
+  var start_date = $('#datePicker').val();
+  
                 revenue_ajax(start_date);
                 table.DataTable().ajax.reload(null, false);
 

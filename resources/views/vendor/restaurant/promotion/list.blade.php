@@ -31,7 +31,7 @@ $breadcrumb[] = ["name"  => "List",
                             <table id="menu-catalogue-table" class="table thead-primary">
                                 <thead>
                                 <tr>
-                                    <th scope="col">#</th>
+                                    <th scope="col">S.No.</th>
                                     <th scope="col">Slot</th>
                                     <th scope="col">Image</th>
                                     <th scope="col">From Date</th>

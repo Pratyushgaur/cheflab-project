@@ -121,7 +121,7 @@
                 <img src="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}">
             @endif
         </div>
-        <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check != '') ? "Cancel Cheque Already uploaded" : 'Cancel Cheque'?>
+        <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check != '') ? "Cancelled Cheque Already uploaded" : 'Cancelled Cheque'?>
             <input accept="image/*" type="file" data-from="cancel_check" class="uploadFile img" value="Upload Cancel check " style="width: 0px;height: 0px;overflow: hidden;"></label>
     </div><!-- col-2 -->
 </div>

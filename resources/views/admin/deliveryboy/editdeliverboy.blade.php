@@ -231,29 +231,36 @@
                                         </div>
                                   </div>
                             
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Name of Deliver Boy <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" value="{{$city_data->name}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter  Name">
+                                        <input type="text" name="name" value="{{$deliveryboy->name}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter  Name">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" value="{{$city_data->email}}" class="form-control"  id="" placeholder="Enter  Email">
+                                        <input type="email" name="email" value="{{$deliveryboy->email}}" class="form-control"  id="" placeholder="Enter  Email">
+                                    </div>
+                                  </div>
+
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
+                                        <input type="text" name="address" value="{{$deliveryboy->address}}" class="form-control"  id="" placeholder="Enter Address">
                                     </div>
                                   </div>
 
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
-                                        <input type="text" name="pincode" value="{{$city_data->pincode}}" class="form-control"  id="" placeholder="Enter Pincode">
+                                        <input type="text" name="pincode" value="{{$deliveryboy->pincode}}" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
-                                        <input type="text" name="phone" value="{{$city_data->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                        <input type="text" name="phone" value="{{$deliveryboy->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
                                   <div class="col-md-4">

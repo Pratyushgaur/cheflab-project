@@ -87,12 +87,12 @@
             <div class="container-fluid">
               <div class="row mb-2">
                 <div class="col-sm-6">
-                  <h1>Application Blog </h1>
+                  <h1>Booking List of  {{$blog->name}}</h1>
                 </div>
                 <div class="col-sm-6">
                   <ol class="breadcrumb float-sm-right">
                     <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Application Blog </li>
+                    <li class="breadcrumb-item active"></li>
                   </ol>
                 </div>
               </div>
@@ -175,7 +175,7 @@
               </div> -->
               <div class="card card-info col-md-12">
                 <div class="card-header">
-                  <h3 class="card-title"><a href="{{route('admin.application.blog.create')}}" class="btn btn-xs btn-danger">Create New Blog</a></h3>
+                  <h3 class="card-title">List</h3>
 
                   <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -184,16 +184,70 @@
                 </div>
                 <div class="card-body pad table-responsive">
                               <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
-                                  <thead>
+                                    <thead>
                                         <tr role="row">
-                                          <th  class="text-center">Sr No.</th>
-                                          <th >Name of Blog</th>
-                                          
-                                          <th >Blog For</th>
-                                          <th >Active Duration</th>
-                                          <th >Action</th>
+                                            <th  class="text-center">Sr No.</th>
+                                            <th >Vendor</th>
+                                            @if($blog->blog_type == '2')
+                                            <th>Product</th>
+                                            <th>Image</th>
+                                            @endif
+                                            <th>Position</th>
+                                            <th>Blog Name</th>
+                                            <th>Price</th>
+                                            <th>Apply Duration</th>
+                                            <th>Active Status</th>
+                                            <th>Day Frame</th>
+                                            <th>Booking Date</th>
                                         </tr>
-                                  </thead>
+                                    </thead>
+                                    <tbody>
+                                    <?php $i=1; ?>
+                                    @foreach($booking as $key =>$value)
+                                        
+                                        <tr>
+                                            <td>{{$i}}</td>
+                                            <td>{{$value->name}}</td>
+                                            @if($blog->blog_type == '2')
+                                            <td>{{$value->product_name}}</td>
+                                            <td><img src="{{$value->product_image}}" alt="" height="80" width="80"></td>
+                                            @endif
+                                            <td>{{$value->blog_position}}</td>
+                                            <td>{{$value->blog_name}}</td>
+                                            <td>{{$value->blog_price}}</td>
+                                            <td>{{date('d m Y h:i A',strtotime($value->from_date))}} <br> {{date('d m Y h:i A',strtotime($value->to_date))}}</td>
+                                            <td>
+                                              <?php 
+                                                  $now = \Carbon\Carbon::now();
+                                                  if ($now >= \Carbon\Carbon::parse($value->from_date) && $now <= \Carbon\Carbon::parse($value->to_date)) {
+                                                    if ($now->isBetween($value->from_time, $value->to_time)) {
+                                                      echo '<button class="btn btn-xs btn-success">Running</button>';
+                                                    } elseif($now->lt($value->from_time)) {
+                                                      echo '<button class="btn btn-xs btn-success">Waiting for Period</button>';
+                                                    }elseif($now->gt($value->to_time)){
+                                                      echo '<button class="btn btn-xs btn-success">Activated Today</button>';
+                                                    }
+                                                    
+                                                   
+                                                  } else {
+                                                    if($now > \Carbon\Carbon::parse($value->to_date)){
+                                                      echo '<button class="btn btn-xs btn-danger">Expired</button>';
+                                                    }elseif($now < \Carbon\Carbon::parse($value->from_date)){
+                                                      echo '<button class="btn btn-xs btn-success">Waiting</button>';
+                                                    }else{
+                                                      echo '<button class="btn btn-xs btn-danger">Expired</button>';
+                                                    }
+                                                  }
+
+                                              ?>
+                                            </td>
+                                            <td>{{$value->blog_promotion_date_frame}}</td>
+                                            <td>{{date('d-m-Y h:i A',strtotime($value->created_at))}}</td>
+                                        </tr>
+                                        <?php $i++; ?>
+                                    @endforeach    
+                                    
+                                    </tbody>
 
                               </table>
                           </div>
@@ -226,19 +280,7 @@
 <script type="text/javascript">
    (function($) {
   // $(function () {
-    let table = $('#example').dataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{route('admin.vendorstore.data')}}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            // {data: 'vendor_type', name: 'vendor_type'},
-            {data: 'blog_type', name: 'blog_type'},
-            {data: 'from_to', name: 'from_to',orderable: false, searchable: false},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-        ]
-    });
+    let table = $('#example').dataTable();
     $("#banner-form").validate({
       rules: {
             blog_position: {

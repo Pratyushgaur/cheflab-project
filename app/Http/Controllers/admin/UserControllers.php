@@ -228,7 +228,8 @@ class UserControllers extends Controller
             'restaurant_name'   => 'required',
             'email'             => 'required|unique:vendors,email',
             'pincode'           => 'required',
-            'phone'             => 'required|unique:vendors,mobile',
+            //'phone'             => 'required|unique:vendors,mobile',
+            'phone'             => 'required',
             'address'           => 'required',
             'fssai_lic_no'      => 'required',
             'password'          => 'required',
@@ -241,19 +242,21 @@ class UserControllers extends Controller
             'pancard_image'     => 'required',
             'aadhar_number'     => 'required',
             'aadhar_card_image' => 'required',
-            'bank_name'   => 'required',
-            'holder_name'   => 'required',
-            'account_no'   => 'required',
-            'ifsc'   => 'required',
-            'cancel_check'   => 'required',
+            // 'bank_name'   => 'required',
+            // 'holder_name'   => 'required',
+            // 'account_no'   => 'required',
+            // 'ifsc'   => 'required',
+            // 'cancel_check'   => 'required',
         ]);
         $vendors                   = new Vendors;
         $vendors->name             = $request->restaurant_name;
-        $vendors->owner_name       = $request->restourant_owner_name;
+        $vendors->owner_name       = $request->owner_name;
+        $vendors->manager_name       = $request->manager_name;
         $vendors->email            = $request->email;
         $vendors->password         = Hash::make($request->password);
         $vendors->vendor_type      = 'restaurant';
         $vendors->mobile           = $request->phone;
+        $vendors->alt_mobile       = $request->alt_phone;
         $vendors->pincode          = $request->pincode;
         $vendors->address          = $request->address;
         $vendors->fssai_lic_no     = $request->fssai_lic_no;
@@ -303,20 +306,23 @@ class UserControllers extends Controller
         }
         $vendors->save();
         // bank details add
-        $bankdetail = new BankDetail;
-        $bankdetail->vendor_id = $vendors->id;
-        $bankdetail->bank_name = $request->bank_name;      
-        $bankdetail->holder_name = $request->holder_name;
-        $bankdetail->account_no = $request->account_no;
-        $bankdetail->ifsc = $request->ifsc;
-        if ($request->has('cancel_check')) {
-            $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
-            $request->cancel_check->move(public_path('vendor-documents'), $filename);
-            $files               = $filename;
-            // echo '<pre>'; print_r($files);die;
-            $bankdetail->cancel_check = $files;
+        if($request->bank_name!='' && $request->holder_name!='' && $request->account_no!='' && $request->ifsc!=''){
+            $bankdetail = new BankDetail;
+            $bankdetail->vendor_id = $vendors->id;
+            $bankdetail->bank_name = $request->bank_name;      
+            $bankdetail->holder_name = $request->holder_name;
+            $bankdetail->account_no = $request->account_no;
+            $bankdetail->ifsc = $request->ifsc;
+            if ($request->has('cancel_check')) {
+                $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+                $request->cancel_check->move(public_path('vendor-documents'), $filename);
+                $files               = $filename;
+                // echo '<pre>'; print_r($files);die;
+                $bankdetail->cancel_check = $files;
+            }
+            $bankdetail->save();
         }
-        $bankdetail->save();
+        
         return redirect()->route('admin.restourant.create')->with('message', 'Vendor Registration Successfully');
 
 
@@ -426,18 +432,20 @@ class UserControllers extends Controller
             'gst_available'     => 'required',
             //  'deal_cuisines' => 'required',
             'tax'               => 'required',
-            'bank_name'   => 'required',
-            'holder_name'   => 'required',
-            'account_no'   => 'required',
-            'ifsc'   => 'required',
+            // 'bank_name'   => 'required',
+            // 'holder_name'   => 'required',
+            // 'account_no'   => 'required',
+            // 'ifsc'   => 'required',
         ]);
         $vendors = Vendors::find($request->id);
 //          dd($request->all());
         $vendors->name             = $request->restaurant_name;
         $vendors->owner_name       = $request->owner_name;
+        $vendors->manager_name       = $request->manager_name;
         $vendors->email            = $request->email;
         $vendors->vendor_type      = 'restaurant';
         $vendors->mobile           = $request->phone;
+        $vendors->alt_mobile       = $request->alt_phone;
         $vendors->pincode          = $request->pincode;
         $vendors->address          = $request->address;
         $vendors->fssai_lic_no     = $request->fssai_lic_no;
@@ -450,6 +458,8 @@ class UserControllers extends Controller
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
+        $vendors->lat    = $request->lat;
+        $vendors->long    = $request->lng;
         if($request->password !=''){
             $vendors->password  = Hash::make($request->password);
         }
@@ -491,23 +501,25 @@ class UserControllers extends Controller
         }
 
         $vendors->save();
+        if($request->bank_name!='' && $request->holder_name!='' && $request->account_no!='' && $request->ifsc!=''){
+            $bankdetail = new BankDetail;
+            $bankdetail->vendor_id = $vendors->id;
+            $bankdetail->bank_name = $request->bank_name;      
+            $bankdetail->holder_name = $request->holder_name;
+            $bankdetail->account_no = $request->account_no;
 
-        $bankdetail = new BankDetail;
-        $bankdetail->vendor_id = $vendors->id;
-        $bankdetail->bank_name = $request->bank_name;      
-        $bankdetail->holder_name = $request->holder_name;
-        $bankdetail->account_no = $request->account_no;
+            if ($request->has('cancel_check')) {
+                $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+                $request->cancel_check->move(public_path('vendor-documents'), $filename);
+                $files               = $filename;
+                // echo '<pre>'; print_r($files);die;
+                $bankdetail->cancel_check = $files;
+            }
 
-        if ($request->has('cancel_check')) {
-            $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
-            $request->cancel_check->move(public_path('vendor-documents'), $filename);
-            $files               = $filename;
-            // echo '<pre>'; print_r($files);die;
-            $bankdetail->cancel_check = $files;
+            $bankdetail->ifsc = $request->ifsc;
+            $bankdetail->save();
         }
-
-        $bankdetail->ifsc = $request->ifsc;
-        $bankdetail->save();
+        
         return redirect()->route('admin.vendors.list')->with('message', 'Vendor Details Update  Successfully');
 
     }
@@ -760,7 +772,7 @@ class UserControllers extends Controller
         try {
             $id = Crypt::decryptString($encrypt_id);
             //  dd($id);die;
-            $vendor = Vendors::findOrFail($id);
+             $vendor = Vendors::findOrFail($id);
             // $vendor =  Vendors::where('vendors.id','=',$id)->join('categories', 'vendors.deal_categories', '=', 'categories.id')->join('cuisines', 'vendors.deal_cuisines', '=', 'cuisines.id')->select('vendors.*', 'categories.name as categoryName','cuisines.name as cuisinesName')->get()->first();
             //dd($vendor);die;
             $categories = @Catogory_master::where('is_active', '=', '1')->pluck('name', 'id')->toArray();;//->get();
@@ -890,6 +902,27 @@ class UserControllers extends Controller
     {
         $users = User::orderBy('id', 'desc')->paginate(15);
         return view('admin/vendors/user_list', compact('users'));
+    }
+    public function add_wallet(Request $request ,$id)
+    {
+        try {   
+             $user = User::findOrfail($id);
+             if($user->wallet_amount  == null){
+                $user->wallet_amount = 0;
+             }
+            $user->wallet_amount = $user->wallet_amount+$request->amount;
+             User::where('id','=',$id)->update(['wallet_amount'=> $user->wallet_amount]);
+             
+             $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+             $UserWalletTransactions->user_id = $id;
+             $UserWalletTransactions->amount = $request->amount;
+             $UserWalletTransactions->narration = $request->narration;
+             $UserWalletTransactions->save();
+             
+            return  redirect()->route('admin.user.list')->with('message', 'Amount Added Successfully');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
     public function user_inactive($id){
         $id   = decrypt($id);

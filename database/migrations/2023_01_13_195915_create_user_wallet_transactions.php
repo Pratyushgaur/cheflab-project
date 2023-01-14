@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRiderbankDetails extends Migration
+class CreateUserWalletTransactions extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateRiderbankDetails extends Migration
      */
     public function up()
     {
-        Schema::create('rider_bank_details', function (Blueprint $table) {
+        Schema::create('user_wallet_transactions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('rider_id');
-            $table->string('holder_name');
-            $table->string('account_no');
-            $table->string('ifsc');
-            $table->string('bank_name');
-            $table->string('cancel_check');
+            $table->integer('user_id');
+            $table->decimal('amount',8,2)->default('0');
+            $table->text('narration');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -33,6 +30,6 @@ class CreateRiderbankDetails extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('riderbank_details');
+        Schema::dropIfExists('user_wallet_transactions');
     }
 }

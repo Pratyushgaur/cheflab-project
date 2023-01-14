@@ -79,9 +79,8 @@
                           <div class="col-md-3">
                                 <select name="" id="filter-by-role" onchange="reload_table()" class="form-control">
                                   <option value="">Filter By Status</option>
-                                  <option value="2">Pending </option>
-                                  <option value="1">Active</option>
-                                  <option value="0">Inactive</option>
+                                  <option value="2">Un- Approved </option>
+                                  <option value="1">Approved</option>
                                   <option value="3">Reject</option>
                                 </select>
                             </div>

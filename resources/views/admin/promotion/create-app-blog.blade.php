@@ -104,9 +104,8 @@
             <div class="row">
 
               <div class="col-md-12">
-                <form id="banner-form" action="{{route('admin.application.blog.update')}}" method="post" enctype="multipart/form-data">
+                <form id="banner-form" action="{{route('admin.application.blog.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
-                    <input type="hidden" id="name" name="id" value="{{$blog['id']}}" class="form-control" placeholder="Name of Blog">
 
                     <div class="card card-primary">
                       <div class="card-header"></div>
@@ -114,30 +113,20 @@
                         <div class="form-group">
                             <label for="blog_position">Blog Position <span class="text-danger">*</span></label>
                             <select name="position" class="form-control" id="blog_position">
-                                  @if($blog->vendor_type == '1')
-                                  <option value="1">Restaurant</option>
-                                  <option value="2">Chef</option>
-                                  @else
-                                  <option value="2">Chef</option>
-                                  <option value="1">Restaurant</option>
-                                  @endif
+                              <option value="1">Restaurant</option>
+                              <option value="2">Chef</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="blog_type">Shop type <span class="text-danger">*</span></label>
                             <select name="blog_type" class="form-control" id="blog_type">
-                                  @if($blog->blog_type == '1')
-                                  <option value="1">Vendor</option>
-                                  <option value="2">Product</option>
-                                  @else
-                                  <option value="2">Product</option>
-                                  <option value="1">Vendor</option>
-                                  @endif
+                              <option value="1">Vendor</option>
+                              <option value="2">Product</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="name">Name of Blog <span class="text-danger">*</span></label>
-                            <input type="text" id="name" name="name" value="{{$blog['name']}}"  class="form-control" placeholder="Name of Blog">
+                            <input type="text" id="name" name="name"  class="form-control" placeholder="Name of Blog">
 
                         </div>
                         <!-- row -->
@@ -146,7 +135,7 @@
                             <div class="form-group">
                               <label for="">Start Time</label>
                                 <div class="input-group date" id="timepicker" data-target-input="nearest">
-                                  <input type="text" name="from" value="{{$blog['from']}}" class="form-control datetimepicker-input" data-target="#timepicker"/>
+                                  <input type="text" name="from" class="form-control datetimepicker-input" data-target="#timepicker"/>
                                   <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                   </div>
@@ -157,7 +146,7 @@
                             <div class="form-group">
                               <label for="">End Time</label>
                               <div class="input-group date" id="timepicker2" data-target-input="nearest">
-                                <input type="text" name="to" value="{{$blog['to']}}" class="form-control datetimepicker-input" data-target="#timepicker2"/>
+                                <input type="text" name="to" class="form-control datetimepicker-input" data-target="#timepicker2"/>
                                   <div class="input-group-append" data-target="#timepicker2" data-toggle="datetimepicker">
                                     <div class="input-group-text"><i class="far fa-clock"></i></div>
                                   </div>
@@ -170,8 +159,8 @@
                         <div class="form-group">
                             <label for="master_blog">Master Blog <span class="text-danger">*</span> <span>(This option for shown in top of the application)</span></label>
                             <select name="master_blog" class="form-control" id="master_blog">
-                              <option value="1" @if($blog['blog_for'] == '1') selected @endif>No</option>
-                              <option value="0" @if($blog['blog_for'] == '0') selected @endif>Yes</option>
+                              <option value="1">No</option>
+                              <option value="0">Yes</option>
                             </select>
                         </div>
                         <div class="row">
@@ -182,21 +171,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="first_position_price_for_week" value="{{$blogSettingforWeek[0]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="first_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_two_week" name="first_position_price_for_two_week" value="{{$blogSettingforTwoWeek[0]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_two_week" name="first_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_month" name="first_position_price_for_month" value="{{$blogSettingforMonth[0]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_month" name="first_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -211,21 +200,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="second_position_price_for_week" value="{{$blogSettingforWeek[1]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="second_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_two_week" name="second_position_price_for_two_week" value="{{$blogSettingforTwoWeek[1]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_two_week" name="second_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_month" name="second_position_price_for_month"  value="{{$blogSettingforMonth[1]}}" class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_month" name="second_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -238,21 +227,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="third_position_price_for_week" value="{{$blogSettingforWeek[2]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="third_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_two_week" name="third_position_price_for_two_week" value="{{$blogSettingforTwoWeek[2]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_two_week" name="third_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_month" name="third_position_price_for_month" value="{{$blogSettingforMonth[2]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_month" name="third_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -265,21 +254,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="fourth_position_price_for_week" value="{{$blogSettingforWeek[3]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="fourth_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="fourth_position_price_for_two_week" value="{{$blogSettingforTwoWeek[3]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="fourth_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="fourth_position_price_for_month" value="{{$blogSettingforMonth[3]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="fourth_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -292,21 +281,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="fifth_position_price_for_week" value="{{$blogSettingforWeek[4]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="fifth_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="fifth_position_price_for_two_week" value="{{$blogSettingforTwoWeek[4]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="fifth_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="fifth_position_price_for_month" value="{{$blogSettingforMonth[4]}}"   class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="fifth_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -319,21 +308,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="sixth_position_price_for_week" value="{{$blogSettingforWeek[5]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="sixth_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="sixth_position_price_for_two_week" value="{{$blogSettingforTwoWeek[5]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="sixth_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="sixth_position_price_for_month" value="{{$blogSettingforMonth[5]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="sixth_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -346,21 +335,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="seventh_position_price_for_week" value="{{$blogSettingforWeek[6]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="seventh_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="seventh_position_price_for_two_week"  value="{{$blogSettingforTwoWeek[6]}}" class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="seventh_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="seventh_position_price_for_month" value="{{$blogSettingforMonth[6]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="seventh_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -373,21 +362,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="eighth_position_price_for_week" value="{{$blogSettingforWeek[7]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="eighth_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="eighth_position_price_for_two_week" value="{{$blogSettingforTwoWeek[7]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="eighth_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="eighth_position_price_for_month"  value="{{$blogSettingforMonth[7]}}" class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="eighth_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -400,21 +389,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="ninth_position_price_for_week"  value="{{$blogSettingforWeek[8]}}" class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="ninth_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="ninth_position_price_for_two_week" value="{{$blogSettingforTwoWeek[8]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="ninth_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="ninth_position_price_for_month" value="{{$blogSettingforMonth[8]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="ninth_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
@@ -427,21 +416,21 @@
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="first_position_price_for_week" name="tenth_position_price_for_week" value="{{$blogSettingforWeek[9]}}" class="form-control" placeholder="">
+                                  <input type="number" id="first_position_price_for_week" name="tenth_position_price_for_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">Two Week  <span class="text-danger">*</span></label>
-                                  <input type="number" id="second_position_price_for_week" name="tenth_position_price_for_two_week" value="{{$blogSettingforTwoWeek[9]}}"  class="form-control" placeholder="">
+                                  <input type="number" id="second_position_price_for_week" name="tenth_position_price_for_two_week"  class="form-control" placeholder="">
 
                               </div>
                             </div>
                             <div class="col-md-4">
                               <div class="form-group">
                                   <label for="name">One Month <span class="text-danger">*</span></label>
-                                  <input type="number" id="third_position_price_for_week" name="tenth_position_price_for_month"  value="{{$blogSettingforMonth[9]}}" class="form-control" placeholder="">
+                                  <input type="number" id="third_position_price_for_week" name="tenth_position_price_for_month"  class="form-control" placeholder="">
 
                               </div>
                             </div>
