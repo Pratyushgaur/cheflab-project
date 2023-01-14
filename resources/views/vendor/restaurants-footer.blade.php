@@ -438,21 +438,22 @@
 <!-- SCRIPTS -->
 <!-- SCRIPTS -->
 <!-- Global Required Scripts Start -->
-<script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script>
+<script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
+<!-- <script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script> -->
 <script src="{{asset('frontend')}}/assets/js/popper.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">
 </script>
-<script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js">
-</script>
+<!-- <script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js"> -->
+<!-- </script> -->
 <!-- Global Required Scripts End -->
 <!-- Page Specific Scripts Start -->
 
-<script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js">
-</script>
-<script src="{{asset('frontend')}}/assets/js/widgets.js"></script>
-<script src="{{asset('frontend')}}/assets/js/clients.js"></script>
-<script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script>
+<!-- <script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js"> -->
+<!-- </script> -->
+<!-- <script src="{{asset('frontend')}}/assets/js/widgets.js"></script> -->
+<!-- <script src="{{asset('frontend')}}/assets/js/clients.js"></script> -->
+<!-- <script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script> -->
 <script src="{{asset('frontend')}}/assets/js/d3.v3.min.js">
 </script>
 <script src="{{asset('frontend')}}/assets/js/topojson.v1.min.js">
@@ -464,6 +465,7 @@
 </script>
 <script src="{{asset('frontend')}}/assets/js/sweet-alerts.js">
 </script>
+
 <!-- <script src="{{asset('frontend')}}/assets/js/data-tables.js">
       </script> -->
 <!-- Page Specific Scripts Finish -->
@@ -471,7 +473,7 @@
 <script src="{{asset('frontend')}}/assets/js/framework.js"></script>
 <!-- Settings -->
 <script src="{{asset('frontend')}}/assets/js/settings.js"></script>
-<script src="{{asset('frontend')}}/assets/js/jquery.prettyPhoto.js"></script>
+<!-- <script src="{{asset('frontend')}}/assets/js/jquery.prettyPhoto.js"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <style>
     #toast-container > div {
