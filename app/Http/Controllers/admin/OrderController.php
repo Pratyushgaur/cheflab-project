@@ -259,7 +259,7 @@ class OrderController extends Controller
         
            $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
            if($request->status != ''){
-            $data = $data->where('payment_status','=',$request->status);
+            $data = $data->where('order_status','=',$request->status);
            }
            if($request->role != ''){
             $data = $data->where('vendors.vendor_type','=',$request->role);
@@ -267,7 +267,7 @@ class OrderController extends Controller
            if($request->vendor != ''){
             $data = $data->where('orders.vendor_id','=',$request->vendor);
            }
-           
+           $data= $data->orderBy('orders.id','desc');
            $data = $data->get();
             return Datatables::of($data)
                 ->addIndexColumn()

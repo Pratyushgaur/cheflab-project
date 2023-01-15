@@ -73,6 +73,9 @@ class LoginController extends Controller
             if(!empty($user)){
                 $otp = rand(1000,9999);
                 \App\Models\Vendors::where('id','=',$user->id)->update(['password_change_otp'=>$otp]);
+                $msg = "OTP to update your ChefLab vendor account password is $otp DO NOT share this OTP to anyone for security reasons.";  
+                $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$user->mobile&message=".urlencode($msg)."&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507167378318092499";
+                \Http::get($url);
                 return response()->json([
                     'status' => true
                 ], 200);
