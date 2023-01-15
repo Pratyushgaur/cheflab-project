@@ -131,9 +131,14 @@
                                  <td>{{$order->total_amount}}</td>
                               </tr>
                               <tr>
-                                 <th>Tax ({{$vendor->tax}}%)</th>
-                                 <td>{{$order->gross_amount}}</td>
+                                 <th>Tax & Plateform Charge</th>
+                                 <td>{{$order->tex}}</td>
                               </tr>
+                              <tr>
+                                 <th>Wallet Cut</th>
+                                 <td>{{$order->wallet_cut}}</td>
+                              </tr>
+                              
                               <tr>
                                  <th>Total:</th>
                                  <td>{{$order->net_amount}}</td>
