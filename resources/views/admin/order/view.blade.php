@@ -107,12 +107,14 @@
                                     </div>
                                  </td>
                                  <td>
+                                    <?php $addontotal = 0; ?>
                                     @foreach($val['addons'] as $key =>$value)
                                        {{$value['addon']}} - Rs.{{$value['addon_price']}} 
+                                          <?php $addontotal= $addontotal+$value['addon_price']*$value['addon_qty']; ?>
                                        <br>
                                     @endforeach
                                  </td>
-                                 <td>{{ $val['product_price'] * $val['product_qty'] }}</td>
+                                 <td>{{ $val['product_price'] * $val['product_qty']+$addontotal }}</td>
                               </tr>
                               @endforeach
                            </tbody>
