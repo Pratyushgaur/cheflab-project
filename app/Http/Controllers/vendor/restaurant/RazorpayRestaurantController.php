@@ -23,7 +23,7 @@ class RazorpayRestaurantController extends Controller
 
     public function payment(Request $request)
     {
-        $input   = $request->all();
+        $input = $request->all();
 //        dd($input);
         $api     = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
         $payment = $api->payment->fetch($input['razorpay_payment_id']);
@@ -38,7 +38,7 @@ class RazorpayRestaurantController extends Controller
                 $PaymentTransaction->user_id            = \Auth::guard('vendor')->user()->id;
                 $PaymentTransaction->user_table_name    = 'vendors';
                 $PaymentTransaction->r_payment_id       = $response->id;
-                $PaymentTransaction->amount             = $response->amount/100;
+                $PaymentTransaction->amount             = $response->amount / 100;
                 $PaymentTransaction->currency           = $response->currency;
                 $PaymentTransaction->status             = $response->status;
                 $PaymentTransaction->method             = $response->method;
@@ -50,7 +50,7 @@ class RazorpayRestaurantController extends Controller
 
                 $AppPromotionBlogBooking                 = AppPromotionBlogBooking::find($request->id);
                 $AppPromotionBlogBooking->payment_status = 1;
-                $AppPromotionBlogBooking->is_active = 1;
+                $AppPromotionBlogBooking->is_active      = 1;
                 $AppPromotionBlogBooking->save();
 
 //                dd($AppPromotionBlogBooking);
@@ -70,8 +70,8 @@ class RazorpayRestaurantController extends Controller
 
     public function banner_payment(Request $request)
     {
-        $input   = $request->all();
-//        dd($input);
+        $input = $request->all();
+
         $api     = new Api(env('RAZOR_KEY'), env('RAZOR_SECRET'));
         $payment = $api->payment->fetch($input['razorpay_payment_id']);
 
@@ -85,7 +85,7 @@ class RazorpayRestaurantController extends Controller
                 $PaymentTransaction->user_id            = \Auth::guard('vendor')->user()->id;
                 $PaymentTransaction->user_table_name    = 'vendors';
                 $PaymentTransaction->r_payment_id       = $response->id;
-                $PaymentTransaction->amount             = $response->amount/100;
+                $PaymentTransaction->amount             = $response->amount / 100;
                 $PaymentTransaction->currency           = $response->currency;
                 $PaymentTransaction->status             = $response->status;
                 $PaymentTransaction->method             = $response->method;
@@ -96,15 +96,13 @@ class RazorpayRestaurantController extends Controller
                 $PaymentTransaction->save();
 
                 $AppPromotionBlogBooking                 = SloteBook::find($request->id);
-                $AppPromotionBlogBooking->payment_status = 1;
-//                $AppPromotionBlogBooking->is_active = 1;
+                $AppPromotionBlogBooking->payment_status = '1';
+
                 $AppPromotionBlogBooking->save();
 
-//                dd($AppPromotionBlogBooking);
-//                \Session::put('success', 'Payment successful.');
-//                return redirect()->back()->with('success', 'Payment successful.');
+
+                //                return redirect()->back()->with('success', 'Payment successful.');
                 return redirect()->route('restaurant.promotion.list')->with('message', 'Slot successfully booked');
-//dd($response);
             } catch (\Exception $e) {
                 return $e->getMessage();
                 \Session::put('error', $e->getMessage());
@@ -113,5 +111,7 @@ class RazorpayRestaurantController extends Controller
         }
 //        \Session::put('success', 'Something went worng.');
         return redirect()->back()->with('error', 'Something went worng.');
+
+
     }
 }

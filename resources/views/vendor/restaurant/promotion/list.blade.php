@@ -51,7 +51,7 @@ $breadcrumb[] = ["name"  => "List",
                                 @endif
                                 @foreach($banners as $key=>$banner)
                                     <tr>
-                                        <td>{{$key}}</td>
+                                        <td>{{++$key}}</td>
                                         <td>{{$banner->name}}</td>
                                         <td>
                                             <img src="{{ asset('slot-vendor-image').'/'.$banner->slot_image }}" style='width: 50px;'/>
@@ -71,8 +71,8 @@ $breadcrumb[] = ["name"  => "List",
 
                                             ?></td>
                                         <td>
-
-                                        @if($banner->payment_status!='0' && !(!empty($banner->is_active) && ($banner->is_active == 2)))
+{{--{{$banner->payment_status}}--}}
+                                        @if($banner->payment_status!='1' && !(!empty($banner->is_active) && ($banner->is_active == 2)))
                                             <!-- <div class="panel-body text-center"> -->
                                                 <form action="{!!route('banner_payment')!!}" method="POST">
                                                     <script src="https://checkout.razorpay.com/v1/checkout.js"

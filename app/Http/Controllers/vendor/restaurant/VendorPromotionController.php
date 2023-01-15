@@ -106,7 +106,7 @@ class VendorPromotionController extends Controller
 
         $slot->save();
 //        dd($slot);
-        print_r('fgfdgdfgdfg');
+//        print_r('fgfdgdfgdfg');
         event(new CreateSlotBookingEvent($slot));
         return view('vendor.restaurant.promotion.pay', compact('slot'));
 //        return redirect()->route('restaurant.promotion.list')->with('message', 'Slot successfully booked');
@@ -248,9 +248,10 @@ class VendorPromotionController extends Controller
                     ->orWhere([['to_date', '>=', $date_from], ['to_date', '<=', $date_to]]);
             })
                 ->where('from_time', $time[0])->where('to_time', $time[1]);
-        })->where('is_active', '=', '1')
+        })
+            ->where('is_active', '=', '1')
             ->whereIn('vendor_id', $vendor_ids)->pluck('cheflab_banner_image_id');
-
+//dd($booked_slot_ids);
         $slotMaster = RootImage::where('is_active', '=', '1')->where('banner_for', '=', $request->banner_for)->select('id', 'price', \DB::raw('name as slot_name'));
 
         if (!empty($booked_slot_ids)) {
