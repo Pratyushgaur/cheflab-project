@@ -1599,14 +1599,14 @@ class AppController extends Controller
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
                     $checkcustomizable = Product_master::where('products.id','=',$p['product_id'])->join('variants','products.id','=','variants.product_id')->select('customizable','variants.*')->orderBy('variants.id','ASC')->first();
-                    $orderPro = new OrderProduct;
-                    $orderPro->order_id = $order_id;
-                    $orderPro->product_id = $p['product_id'];
-                    $orderPro->product_name = $p['product_name'];
-                    $orderPro->product_price = $p['product_price'];
-                    $orderPro->product_qty = $p['product_qty'];
-                    $orderPro->save();
-                    $orderProductId = $orderPro->id;
+                    $order_products = new OrderProduct;
+                    $order_products->order_id = $order_id;
+                    $order_products->product_id = $p['product_id'];
+                    $order_products->product_name = $p['product_name'];
+                    $order_products->product_price = $p['product_price'];
+                    $order_products->product_qty = $p['product_qty'];
+                    $order_products->save();
+                    $orderProductId = $order_products->id;
                     // $order_products = new OrderProduct($p);
                     // $orderProductId =  $Order->products()->save($order_products)->id;
                     if (!empty($checkcustomizable)) {
