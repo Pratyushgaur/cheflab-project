@@ -74,7 +74,7 @@
                                  <th>Item Details</th>
                                  <th>Addons</th>
                                  
-                                 <th style="width: 40px">Price</th>
+                                 <th style="width: 40px">Amount</th>
                               </tr>
                            </thead>
                            <tbody>
@@ -128,7 +128,7 @@
                            <table class="table">
                               <tr>
                                  <th style="width:50%">Items Price:</th>
-                                 <td>{{$order->total_amount}}</td>
+                                 <td>{{$order->gross_amount}}</td>
                               </tr>
                               <tr>
                                  <th>Tax & Plateform Charge</th>
