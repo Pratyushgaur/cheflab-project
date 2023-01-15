@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DriverMapController;
+
 Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // City Module
     Route::get('dashbord-admin', [App\Http\Controllers\admin\Dashboard::class, 'index'])->name('admin.dashboard');
@@ -277,4 +279,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Payout setting
     Route::get('payout-setting', [App\Http\Controllers\admin\PaymentsettingController::class,'index'])->name('admin.payout.setting');
     Route::post('payout-setting-store', [App\Http\Controllers\admin\PaymentsettingController::class,'storeGernel'])->name('admin.payout.storeGernel');
+
+    // Driver Map
+    Route::get('drivers-map', [DriverMapController::class,'index']);
+    Route::get('drivers/{driver}/info', [DriverMapController::class,'getDriver']);
 });
