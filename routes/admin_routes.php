@@ -172,6 +172,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('orders/dashboard/pending/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshPending'])->name('admin.order.dashboard.pending');
     Route::post('orders/dashboard/needMore/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshNeedTime'])->name('admin.order.dashboard.delay_restaurant');
     Route::post('orders/dashboard/delayRider/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshDelayRider'])->name('admin.order.dashboard.delay_rider');
+    Route::post('orders/dashboard/prepairing/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshPreparingOrders'])->name('admin.order.dashboard.prepairing');
+    Route::post('orders/dashboard/notPickedUp/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshNotPickedUpRider'])->name('admin.order.dashboard.PickedUpRider');
+    Route::post('orders/dashboard/out-of-delivery/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshOutOfDelivery'])->name('admin.order.dashboard.out_of_delivery');
 
     // Order Dineout
     Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');

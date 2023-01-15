@@ -39,7 +39,7 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">List of All Vendors Order </h3>
+                      <h3 class="card-title">Orders  </h3>
                       
                       
                     </div>
@@ -77,6 +77,12 @@
   <?php $url = route("admin.order.dashboard.delay_restaurant"); ?>
 @elseif($active=='delay_rider')
   <?php $url = route("admin.order.dashboard.delay_rider"); ?>
+@elseif($active=='preparing')
+<?php $url = route("admin.order.dashboard.prepairing"); ?>
+@elseif($active=='not_pickup_rider')
+<?php $url = route("admin.order.dashboard.PickedUpRider"); ?>
+@elseif($active=='out_of_dellivery')
+<?php $url = route("admin.order.dashboard.out_of_delivery"); ?>
 
   
 @endif
