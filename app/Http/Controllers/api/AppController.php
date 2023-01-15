@@ -1624,6 +1624,8 @@ class AppController extends Controller
                 }
                 //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 //$riderAssign->saveOrFail();
+                \App\Models\AdminMasters::where('id','=',1)->update(['terms_conditions_vendor'=>serailize($request->all())]);
+                
                 DB::commit();
                  \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(30));
 
