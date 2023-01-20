@@ -951,6 +951,8 @@ function promotionRowSetup($Blogs,$request,$user_id){
                                     $urlbanners = [];
                                 $resturant[$key]->banner_image = $urlbanners;
                             }
+                            $resturant[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                            $resturant[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                         }
 
                         $data1     = $resturant;
