@@ -908,6 +908,27 @@ class UserControllers extends Controller
         $users = User::orderBy('id', 'desc')->paginate(15);
         return view('admin/vendors/user_list', compact('users'));
     }
+    public function add_wallet(Request $request ,$id)
+    {
+        try {   
+             $user = User::findOrfail($id);
+             if($user->wallet_amount  == null){
+                $user->wallet_amount = 0;
+             }
+            $user->wallet_amount = $user->wallet_amount+$request->amount;
+             User::where('id','=',$id)->update(['wallet_amount'=> $user->wallet_amount]);
+             
+             $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+             $UserWalletTransactions->user_id = $id;
+             $UserWalletTransactions->amount = $request->amount;
+             $UserWalletTransactions->narration = $request->narration;
+             $UserWalletTransactions->save();
+             
+            return  redirect()->route('admin.user.list')->with('message', 'Amount Added Successfully');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
     public function user_inactive($id){
         $id   = decrypt($id);
         $user = User::find($id);

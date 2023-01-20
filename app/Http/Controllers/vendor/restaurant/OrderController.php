@@ -34,7 +34,7 @@ class OrderController extends Controller
         $orders = $order_obj
             ->groupBy('orders.id')
             ->orderBy('orders.id', 'desc')
-            ->paginate(2);
+            ->paginate(10);
 //        dd($orders);
         return view('vendor.restaurant.order.list', compact('orders', 'staus_filter'));
     }
@@ -110,7 +110,7 @@ class OrderController extends Controller
         $order->preparation_time_to = mysql_add_time($order->preparation_time_to, $request->preparation_time);
         $order->is_need_more_time   = 1;
         $order->save();
-        return redirect()->back()->with('success', "# $order->order_id Order Preparing time extended");  
+        return redirect()->back()->with('success', "# $order->order_id Order Preparing time extended");
     }
 
     public function order_ready_to_dispatch($id)
@@ -122,8 +122,8 @@ class OrderController extends Controller
         if($order->accepted_driver_id != null){
            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id,$otp));
         }
-  
-        
+
+
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',

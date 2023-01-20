@@ -188,7 +188,7 @@
                                         <tr role="row">
                                             <th  class="text-center">Sr No.</th>
                                             <th >Vendor</th>
-                                            @if($blog->blog_type == 'product')
+                                            @if($blog->blog_type == '2')
                                             <th>Product</th>
                                             <th>Image</th>
                                             @endif
@@ -208,9 +208,9 @@
                                         <tr>
                                             <td>{{$i}}</td>
                                             <td>{{$value->name}}</td>
-                                            @if($blog->blog_type == 'product')
+                                            @if($blog->blog_type == '2')
                                             <td>{{$value->product_name}}</td>
-                                            <td><img src="{{$value->product_image}}" alt="" height="150" width="150"></td>
+                                            <td><img src="{{$value->product_image}}" alt="" height="80" width="80"></td>
                                             @endif
                                             <td>{{$value->blog_position}}</td>
                                             <td>{{$value->blog_name}}</td>

@@ -18,7 +18,14 @@
                         <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <div class="row">
-                                    <h4>Notifications</h4>
+                                    <div class="col-md-8">
+                                        <h4>Notifications</h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <a href="{{route('admin.notification.create')}}" class="pull-right btn btn-xs btn-success">Send New Notification</a>
+                                    </div>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>

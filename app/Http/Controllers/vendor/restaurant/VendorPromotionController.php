@@ -22,7 +22,7 @@ class VendorPromotionController extends Controller
             ->where('vendor_id', $vendor_id)
             ->select('comment_reason','slotbooking_table.id','slotbooking_table.price','position', 'cheflab_banner_image_id', \DB::raw('DATE_FORMAT(from_date,"%D %b %y") as from_date'), \DB::raw('DATE_FORMAT(to_date,"%D %b %y") as to_date'),
                 \DB::raw('DATE_FORMAT(from_time,"%r") as from_time'), \DB::raw('DATE_FORMAT(to_time,"%r") as to_time'),
-                'name', 'slot_image', 'slotbooking_table.is_active')->get();
+                'name', 'slot_image', 'slotbooking_table.is_active','slotbooking_table.payment_status')->orderBy('id','desc')->get();
 
         return view('vendor.restaurant.promotion.list',$data);
     }
@@ -90,7 +90,7 @@ class VendorPromotionController extends Controller
         $slot->to_date                 = $date_to;
         $slot->from_time               = $time_frame[0];
         $slot->to_time                 = $time_frame[1];
-        $slot->cheflab_banner_image_id = $request->id;
+//        $slot->cheflab_banner_image_id = $request->id;
         $slot->price                   = $request->price;
         $slot->cheflab_banner_image_id = $request->position;
         $slot->for                     = $request->for;
@@ -106,8 +106,10 @@ class VendorPromotionController extends Controller
 
         $slot->save();
 //        dd($slot);
+//        print_r('fgfdgdfgdfg');
         event(new CreateSlotBookingEvent($slot));
-        return redirect()->route('restaurant.promotion.list')->with('message', 'Slot successfully booked');
+        return view('vendor.restaurant.promotion.pay', compact('slot'));
+//        return redirect()->route('restaurant.promotion.list')->with('message', 'Slot successfully booked');
     }
 
     public function get_list_slotbook(Request $request)
@@ -246,9 +248,10 @@ class VendorPromotionController extends Controller
                     ->orWhere([['to_date', '>=', $date_from], ['to_date', '<=', $date_to]]);
             })
                 ->where('from_time', $time[0])->where('to_time', $time[1]);
-        })->where('is_active', '=', '1')
+        })
+            ->where('is_active', '=', '1')
             ->whereIn('vendor_id', $vendor_ids)->pluck('cheflab_banner_image_id');
-
+//dd($booked_slot_ids);
         $slotMaster = RootImage::where('is_active', '=', '1')->where('banner_for', '=', $request->banner_for)->select('id', 'price', \DB::raw('name as slot_name'));
 
         if (!empty($booked_slot_ids)) {

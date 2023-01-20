@@ -438,8 +438,13 @@
 <!-- SCRIPTS -->
 <!-- SCRIPTS -->
 <!-- Global Required Scripts Start -->
+<<<<<<< HEAD
 <script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
 <script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script>
+=======
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- <script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script> -->
+>>>>>>> master
 <script src="{{asset('frontend')}}/assets/js/popper.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">

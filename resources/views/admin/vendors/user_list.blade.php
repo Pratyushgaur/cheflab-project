@@ -47,7 +47,7 @@
                                             <td>{{$user->email}}</td>
                                             <td>{{$user->mobile_number}}</td>
                                             <td>{{$user->alternative_number}}</td>
-                                            <td><?php echo front_end_currency($user->wallet_amount)?></td>
+                                            <td><?php if($user->wallet_amount!=null){echo $user->wallet_amount;}else{echo '0';}; //front_end_currency($user->wallet_amount)?> &#8377;<br><a href="#" class="add_wallet" data-url="{{route('user.wallet.add',$user->id)}}" data-name="{{$user->name}}" data-id="{{$user->id}}">Add</a></td>
                                             <td> 
                                                 @if($user->status == '1')
                                                 <!--<a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="{{route('admin.user.inactive',['id'=>encrypt($user->id)])}}" title="Inactive">Active</a>-->
@@ -78,7 +78,43 @@
 
                 </div>
             </div>
+            <!--  -->
+            <div id="myModal" class="modal fade" role="dialog">
+                <div class="modal-dialog">
 
+                    <!-- Modal content-->
+                    <form action="" id="myForm" method="post">
+                        @csrf
+                        <div class="modal-content">
+                            <div class="modal-header">
+
+                                <h4 class="modal-title">sdf</h4>
+                            </div>
+                            <div class="modal-body">
+
+                                    <div class="form-group">
+                                        <label for="">Enter Amount For Add</label>
+                                        <input type="number" name="amount" class="form-control" required
+                                        >
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Enter Narration</label>
+                                        <textarea name="narration" class="form-control" id="" cols="30" rows="10" required></textarea>
+
+                                    </div>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success">Add Amount</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+            <!--  -->
 
         </section>
         <!-- /.content -->
@@ -89,5 +125,18 @@
 
     <!-- /.row -->
 @endsection
+@section('js_section')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.add_wallet').click(function(){
+            $('.modal-title').text($(this).attr('data-name'));
+            $('#myForm').attr('action',$(this).attr('data-url'));
+            $('#myModal').modal('show');
+        })
+    })
+</script>
+@endsection
 
