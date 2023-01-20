@@ -10,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Deliver_boy extends Model
 {
-    use HasFactory, SoftDeletes,Notifiable ,HasApiTokens;
+    use HasFactory,Notifiable ,HasApiTokens;
 
     protected $table ='deliver_boy';
     public $timestamps = false;

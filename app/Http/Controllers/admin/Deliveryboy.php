@@ -96,6 +96,7 @@ class Deliveryboy extends Controller
             'address'  => 'required',
             //'confirm_password'  => 'required',
             'phone' => 'required|unique:deliver_boy,mobile',
+            'leader_contact_no' => 'required|mobile',
             // 'identity_image' => 'required',
             // 'identity_number' => 'required',
             'bank_name' =>'required',
@@ -110,6 +111,7 @@ class Deliveryboy extends Controller
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
+        $vendors->leader_contact_no  = $request->leader_contact_no;
         $vendors->password   = Hash::make('test');
         $vendors->pincode  = $request->pincode;
         $vendors->city  = $request->city;
@@ -172,6 +174,8 @@ class Deliveryboy extends Controller
 
         $delivery = Deliver_boy::where('id', '=',  $vendors->id)->first();
         $delivery->boy_id = $time;
+        $delivery->start_time = $request->start_time;
+        $delivery->end_time = $request->end_time;
         $delivery->created_at = date('Y-m-d H:i:s');
         $delivery->updated_at = date('Y-m-d H:i:s');
         $delivery->save();
@@ -197,7 +201,7 @@ class Deliveryboy extends Controller
     }
     public function storeDelivercharge(Request $request){
 
-        //echo '<pre>'; print_r($request->all());die;
+        // echo '<pre>'; print_r($request->all());die;
         $general = DeliveryboySetting::find($request->id);
         $general->first_three_km_charge_admin = $request->first_three_km_charge_admin;
         $general->first_three_km_charge_user = $request->first_three_km_charge_user;
@@ -293,8 +297,8 @@ class Deliveryboy extends Controller
             })
 
             ->addColumn('status', function($data){
-                return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success">Active</button>' : '<button class="btn btn-xs btn-danger">In active</button>';
-                return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
+                return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success inactiveVendor" data-url="'.route('admin.deliver_boy.inactive',$data->id).'" >Active</button>' : '<button class="btn btn-xs btn-danger inactiveVendor" data-url="'.route('admin.deliver_boy.active',$data->id).'">In active</button>';
+                    return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
             })
 
             ->addColumn('image',function($data){
@@ -309,11 +313,13 @@ class Deliveryboy extends Controller
 
     }
     public function fun_edit_deliverboy($encrypt_id){
+        
         try {
             $id =  Crypt::decryptString($encrypt_id);
             $deliveryboy = Deliver_boy::findOrFail($id);
-           // dd($city_data);
-            return view('admin/deliveryboy/editdeliverboy',compact('deliveryboy'));
+            $delivery_bankdetails = RiderbankDetails::where('rider_id', '=',  $deliveryboy->id)->first();
+          
+            return view('admin/deliveryboy/editdeliverboy',compact('deliveryboy','delivery_bankdetails'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         }
@@ -345,6 +351,7 @@ class Deliveryboy extends Controller
     }
     public function checkMobileExistUpdate(Request $request,$id)
     {
+        
         $city = Deliver_boy::where('mobile','=',$request->mobile);
         $city = $city->where('id','!=',$id);
         if ($city->exists()) {
@@ -354,25 +361,26 @@ class Deliveryboy extends Controller
         }
     }
     public function update(Request $request){
-      //  return $request->input(); die;
+       
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|unique:vendors,email',
+            'email' => 'required|email|unique:deliver_boy,email,'.$request->id,
             'pincode' => 'required',
-            'phone' => 'required|unique:vendors,mobile',
+            'phone' => 'required|unique:deliver_boy,mobile,'.$request->id,
             'address' => 'required',
-            'password' => 'required',
-            'confirm_password' => 'required',
             'time' => 'required'
         ]);
         $vendors = Deliver_boy::find($request->id);
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
+        $vendors->leader_contact_no  = $request->leader_contact_no;
         $vendors->password   = Hash::make($request->password);
         $vendors->pincode  = $request->pincode;
         $vendors->city  = $request->city;
         $vendors->identity_number  = $request->identity_number;
+        $vendors->start_time = $request->start_time;
+        $vendors->end_time = $request->end_time;
 //        $vendors->address  = $request->address;
 
         if($request->has('image')){
@@ -406,7 +414,8 @@ class Deliveryboy extends Controller
         return redirect()->route('admin.deliverboy.list')->with('message', 'Vendor Registration Successfully');
     }
     public function soft_delete(Request $request)
-    {
+    {   
+        // echo 'yes';
         try {
             $id =  Crypt::decryptString($request->id);
             $data = Deliver_boy::findOrFail($id);
@@ -423,5 +432,18 @@ class Deliveryboy extends Controller
             //return redirect('city')->with('error', 'something went wrong');
             return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
+    }
+
+    public function deliver_boy_inactive($id){            
+        $user = Deliver_boy::find($id);
+        Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => 3]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
+    }
+
+    public function deliver_boy_active($id){      
+      
+        $user = Deliver_boy::find($id);
+        Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
     }
 }

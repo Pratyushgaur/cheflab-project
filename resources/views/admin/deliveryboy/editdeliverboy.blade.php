@@ -200,6 +200,7 @@
                     <div class="card-body pad table-responsive">
                       <form id="restaurant-form" action="{{route('admin.deliverboy.update')}}" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <input type="hidden" name="id" value="{{ $deliveryboy->id }}" />
                           <div class="card card-default">
                               <div class="card-header">
                                 <h3 class="card-title text-bold" >Basic Information</h3>
@@ -263,15 +264,34 @@
                                         <input type="text" name="phone" value="{{$deliveryboy->mobile}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Leader's Contact Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="leader_contact_no" value="{{$deliveryboy->leader_contact_no}}" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>
+                                  </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="time">Time Type <span class="text-danger">*</span></label>
+                                        <label for="time">Shift Time <span class="text-danger">*</span></label>
                                         <select name="time"  class="form-control" id="time">
                                           <option value="full_time">Full Time</option>
                                           <option value="part_time">Part Time</option>
                                         </select>
                                     </div>  
                                   </div>
+
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                    <label for="exampleInputEmail1">Start Time<span class="text-danger">*</span></label>
+                                      <input type="time" class="form-control" name="start_time" value="{{$deliveryboy->start_time}}"/>
+                                    </div>
+                                </div>
+                                  
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    <label for="exampleInputEmail1">End Time<span class="text-danger">*</span></label> <input type="time" class="form-control" name="end_time" value="{{$deliveryboy->end_time}}"/>
+                                    </div>
+                                </div>
 
 
                                     
@@ -438,14 +458,14 @@
                   required: true,
                   maxlength: 60,
                   email: true,
-                  remote: '{{route("admin.deliverboy.emailcheck")}}',
+                  remote: '{{route("admin.deliverboy.emailcheck_update",["id"=>4])}}',
               },
               phone: {
                   required: true,
                   minlength: 10,
                   maxlength: 10,
                   number: true,
-                  remote: '{{route("admin.deliverboy.mobilecheck")}}',
+                  remote: '{{route("admin.deliverboy.mobilecheck.update",["id"=>4])}}',
               },
               pincode: {
                   required: true,

@@ -265,6 +265,12 @@
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
+                                        <label for="exampleInputEmail1">Leader's Contact Number <span class="text-danger">*</span></label>
+                                        <input type="text" name="leader_contact_no" class="form-control"  id="" placeholder="Enter Mobile Number">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
                                         <label for="exampleInputEmail1">Alternet Phone</label>
                                         <input type="text" name="alt_phone" class="form-control"  id="" placeholder="Enter Alternet Mobile Number">
                                     </div>
@@ -277,17 +283,29 @@
                                             <input type="date" name="join_date" class="form-control"  id="" placeholder="Enter Join Date">
                                         </div>
                                     </div>
-                                    
                                     <div class="col-md-4">
                                       <div class="form-group">
-                                          <label for="exampleInputEmail1">Time Type <span class="text-danger">*</span></label>
+                                          <label for="exampleInputEmail1">Shift Time<span class="text-danger">*</span></label>
                                           <select name="time"  class="form-control">
                                             <option value="full_time">Full Time</option>
                                             <option value="part_time">Part Time</option>
                                           </select>
                                       </div>  
-                                    </div>   
+                                    </div>
+                                    
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                    <label for="exampleInputEmail1">Start Time<span class="text-danger">*</span></label>
+                                      <input type="time" class="form-control" name="start_time"/>
+                                    </div>
+                                </div>
                                   
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                    <label for="exampleInputEmail1">End Time<span class="text-danger">*</span></label> <input type="time" class="form-control" name="end_time"/>
+                                    </div>
+                                </div>
+
                                 </div>
 
                               </div>
@@ -394,31 +412,7 @@
                                         </div>
                                   </div>
                                 </div>
-                                <!--  -->
-                                <div class="row">
-                                  <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Identity Type </label>
-                                        <select name="identity_type"  class="form-control">
-                                          <!-- <option value="1">Passport</option> -->
-                                          <option value="2">Insurance</option>
-                                          <!-- <option value="3">Aadhar Card</option> -->
-                                        </select>
-                                    </div>  
-                                  </div>
-                                  <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Insurance Number </label>
-                                        <input type="text" name="insurance_number" class="form-control"  id="" placeholder="Insurance Number">
-                                    </div>  
-                                  </div>
-                                  <div class="col-sm-4">
-                                        <div class="form-group">
-                                            <label for="exampleInputEmail1">Insurance Image. </label>
-                                            <input type="file" name="insurance_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
-                                        </div>
-                                  </div>
-                                </div>
+                               
                                 <!--  -->
                                 <div class="row">
                                   <div class="col-md-4">
@@ -464,6 +458,32 @@
                                         </div>
                                   </div>
                                 </div>
+
+                                 <!--  -->
+                                 <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Insurance</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Insurance Number </label>
+                                        <input type="text" name="insurance_number" class="form-control"  id="" placeholder="Insurance Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Insurance Image. </label>
+                                            <input type="file" name="insurance_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
+                                </div>
                               </div>
 
 
@@ -498,14 +518,10 @@
 
 
 @section('js_section')
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 
 <script src="https://maps.googleapis.com/maps/api/js?key={{ env('GOOGLE_MAPS_API_KEY') }}&libraries=places&callback=initialize&language=en&region=GB" async defer></script>
-
-
-
 
 
 
