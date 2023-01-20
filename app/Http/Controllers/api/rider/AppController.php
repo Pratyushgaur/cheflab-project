@@ -53,30 +53,40 @@ class AppController extends Controller
 
                 ], 401);
             }
-
+            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
             //$order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->whereNotIn('action', ['pending', 'cancelled_by_customer_before_confirmed']);->orderBy('rider_assign_orders.id','desc')->limit(1);
             $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
             $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
-           
-            if ($order->first()->action == '0') {
-                $order = $order->first();
-                $order->expected_earninig = 50;
-                $order->trip_distance = 7;
-            } else {
-                $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction');
-                $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
-                $order = $order->first();
-                $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
+            if($order->exists()){
+                if ($order->first()->action == '0') {
+                    $order = $order->first();
+                    $order->expected_earninig = 50;
+                    $order->trip_distance = 7;
+                } else {
+                    $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction');
+                    $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
+                    $order = $order->first();
+                    $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
+                }
+                
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => ['orders'=>$order,'profile'=>$data]
+    
+                ], 200);
+            }else{
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => ['orders'=>[],'profile'=>$data]
+    
+                ], 200);
             }
-            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
-            return response()->json([
-                'status'   => true,
-                'message'  => 'Data Get Successfully',
-                'response' => ['orders'=>$order,'profile'=>$data]
-
-            ], 200);
+            
+            
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
