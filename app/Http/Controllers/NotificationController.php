@@ -26,9 +26,22 @@ class NotificationController extends Controller
         $notifications=[];
         $user=Superadmin::find(Auth::guard('admin')->user()->id);
         if (Auth::guard('admin')->check()) {
-            $notifications = $user->unreadNotifications;//->notifications()->paginate(25);
+            //$notifications = $user->unreadNotifications->notifications()->paginate(25);
+            //$notifications = Auth::guard('admin')->user()->notifications()->paginate(25);
+            
+            $page = 2; /* Actual page */
+
+            $limit = 4; /* Limit per page*/
+
+            $notifications =[];
+
         }
 //dd(Auth::guard('admin')->user()->id);
         return view('admin.notification.index', compact('notifications'));
+    }
+
+    public function create()
+    {
+        return 'under developement';
     }
 }

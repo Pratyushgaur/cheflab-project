@@ -82,10 +82,11 @@
                                 <tr>
                                     <td class="text-center">
                                         <?php
-                                        //                                        dd($product->product_id);
+//                                                                                dd($product);
                                         $Product_master = \App\Models\Product_master::withTrashed()->find($product->product_id);
+                                        echo "<img style='max-width: 100px;max-hieght: 100px;' src='" . url('/') . '/products/' . $Product_master->product_image . "'>";
 
-                                        echo "<img style='max-width: 100px;max-hieght: 100px;' src='" . url('/') . '/products/' . $Product_master->product_image . "'>"; ?></td>
+                                        ?></td>
                                     </td>
                                     <td class="text-left">{{($k+1)}} <b>Product :</b> {{$product->product_name}}
                                         <?php
@@ -109,6 +110,23 @@
                                     <td><?php echo "&#8377;" . $unit_price;?></td>
                                     <td><?php echo "&#8377;" . $price;?></td>
                                 </tr>
+                                <?php
+                                $addons=\App\Models\OrderProductAddon::join('addons','addons.id','order_product_addons.addon_id')->where('order_product_id',$product->id)->get();
+//                                print_r($addon);
+                                if(isset($addons[0])){
+                                    foreach ($addons as $k1=>$addon)
+if(isset($addon->addon) && $addon->addon!=''){
+    ?>
+    <tr>
+        <td></td>
+        <td class="text-left">{{"Addon : ".$addon->addon}}</td>
+        <td>{{$addon->addon_qty}}</td>
+        <td>{{($addon->addon_price/$addon->addon_qty)}}</td>
+        <td>{{$addon->addon_price}}</td>
+    </tr>
+                                <?php
+}}
+                                ?>
                             @endforeach
                             <tr>
                                 <td colspan="4">Total:</td>
@@ -162,7 +180,7 @@
                                             } ?>
                                                 <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$status))}}</button>
                                                 <div class="dropdown-menu">
-                                                    
+
                                                     <?php
                                                     if($order->order_status == 'confirmed'){
                                                     ?>
@@ -330,12 +348,12 @@
     </div>
 
 
-    
+
 @endpush
 
 @push('scripts')
     <script>
-        
+
         function ajax_post_on_link(url, id) {
 
             $.ajax({

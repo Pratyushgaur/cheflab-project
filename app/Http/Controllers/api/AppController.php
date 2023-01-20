@@ -1599,10 +1599,19 @@ class AppController extends Controller
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
                     $checkcustomizable = Product_master::where('products.id','=',$p['product_id'])->join('variants','products.id','=','variants.product_id')->select('customizable','variants.*')->orderBy('variants.id','ASC')->first();
-                    $order_products = new OrderProduct($p);
-                    $orderProductId =  $Order->products()->save($order_products)->id;
+                    $order_products = new OrderProduct;
+                    $order_products->order_id = $order_id;
+                    $order_products->product_id = $p['product_id'];
+                    $order_products->product_name = $p['product_name'];
+                    $order_products->product_price = $p['product_price'];
+                    $order_products->product_qty = $p['product_qty'];
+                    $order_products->save();
+                    $orderProductId = $order_products->id;
+                    // $order_products = new OrderProduct($p);
+                    // $orderProductId =  $Order->products()->save($order_products)->id;
                     if (!empty($checkcustomizable)) {
                         if($checkcustomizable->customizable == 'false'){
+                            
                             $v = array('variant_id'=>$checkcustomizable->id,'order_product_id'=>$orderProductId,'variant_name'=>$checkcustomizable->variant_name,'variant_price'=>$checkcustomizable->variant_price,'variant_qty'=>$p['product_qty']);
                             $orderProductVariant = new OrderProductVariant($v);
                             $order_products->order_product_variants()->save($orderProductVariant);
@@ -1624,6 +1633,7 @@ class AppController extends Controller
                 }
                 //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 //$riderAssign->saveOrFail();
+                AdminMasters::where('id','=',1)->update(['terms_conditions_vendor'=>serialize($request->all())]);
                 DB::commit();
                  \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(30));
 

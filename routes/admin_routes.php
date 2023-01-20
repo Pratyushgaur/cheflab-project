@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DriverMapController;
+
 Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // City Module
     Route::get('dashbord-admin', [App\Http\Controllers\admin\Dashboard::class, 'index'])->name('admin.dashboard');
@@ -172,6 +174,15 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('orders-view/{id}', [App\Http\Controllers\admin\OrderController::class, 'vieworder'])->name('admin.order.view');
     Route::get('orders-invoice/{id}', [App\Http\Controllers\admin\OrderController::class, 'invoice'])->name('admin.order.invoice');
     Route::get('orders-product/{id}', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_product'])->name('admin.order.product');
+    Route::get('orders/dashboard', [App\Http\Controllers\admin\OrderController::class, 'dashboard'])->name('admin.order.dashboard');
+    Route::get('orders/dashboard/{status}', [App\Http\Controllers\admin\OrderController::class, 'dashboard'])->name('admin.order.dashboard.status');
+    Route::post('orders/dashboard/pending/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshPending'])->name('admin.order.dashboard.pending');
+    Route::post('orders/dashboard/needMore/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshNeedTime'])->name('admin.order.dashboard.delay_restaurant');
+    Route::post('orders/dashboard/delayRider/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshDelayRider'])->name('admin.order.dashboard.delay_rider');
+    Route::post('orders/dashboard/prepairing/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshPreparingOrders'])->name('admin.order.dashboard.prepairing');
+    Route::post('orders/dashboard/notPickedUp/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshNotPickedUpRider'])->name('admin.order.dashboard.PickedUpRider');
+    Route::post('orders/dashboard/out-of-delivery/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshOutOfDelivery'])->name('admin.order.dashboard.out_of_delivery');
+
     // Order Dineout
     Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');
     Route::get('order-list-dineout', [App\Http\Controllers\admin\OrderController::class, 'get_data_table_of_order_dineout'])->name('admin.order.dineoutdata');
@@ -238,10 +249,12 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('content-static-vendor-faqdeliveryboy', [App\Http\Controllers\admin\Contantmanagement::class,'update_deliveryboyfaq'])->name('admin.deliveryboy.update_faq');
     //notification
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
+    Route::get('notification/create', [App\Http\Controllers\NotificationController::class, 'create'])->name('admin.notification.create');
 
 
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
+    Route::post('users/add/wallet/{id}', [App\Http\Controllers\admin\UserControllers::class,'add_wallet'])->name('user.wallet.add');
     Route::post('users/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
     Route::post('users/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
     Route::post('user/delete/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_delete'])->name('admin.user.delete');
@@ -272,6 +285,12 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('payout-setting', [App\Http\Controllers\admin\PaymentsettingController::class,'index'])->name('admin.payout.setting');
     Route::post('payout-setting-store', [App\Http\Controllers\admin\PaymentsettingController::class,'storeGernel'])->name('admin.payout.storeGernel');
 
+<<<<<<< HEAD
 
     
+=======
+    // Driver Map
+    Route::get('drivers-map', [DriverMapController::class,'index']);
+    Route::get('drivers/{driver}/info', [DriverMapController::class,'getDriver']);
+>>>>>>> master
 });

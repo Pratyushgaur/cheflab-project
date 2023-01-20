@@ -114,6 +114,10 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('promotion/product-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'save_product_promotion'])->name('restaurant.product.promotion.save');
 
 
+            Route::get('promotion/banner-promotion/create', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'create_shop_promotion'])->name('restaurant.shop.promotion.create');
+            Route::post('promotion/banner-promotion/position', [App\Http\Controllers\vendor\restaurant\BlogPromotionController::class,'get_positions'])->name('restaurant.shop.promotion.positions');
+
+
             //dine out
             Route::get('dine-out-order-setting', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'dine_out_order_time'])->name('restaurant.dineout.dine_out_order_time');
             Route::post('dine-out-order-setting/edit', [App\Http\Controllers\vendor\restaurant\DineoutController::class,'update_dine_out_order_time'])->name('restaurant.dineout.update_dine_out_order_time');
@@ -136,7 +140,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
             Route::get('razorpay', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorpay'])->name('razorpay');
             Route::post('razorpaypayment', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'payment'])->name('payment');
-
+            Route::post('banner_razorpaypayment', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'banner_payment'])->name('banner_payment');
+//            Route::get('banner_razorpay', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorpay'])->name('banner_razorpay');
 
             Route::get('reviews/vendors', [App\Http\Controllers\vendor\restaurant\ReviewController::class,'index'])->name('restaurant.vendor.reviews');
             Route::get('reviews/products', [App\Http\Controllers\vendor\restaurant\ReviewController::class,'product_index'])->name('restaurant.product.reviews');

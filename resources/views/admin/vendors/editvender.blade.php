@@ -116,6 +116,7 @@
 
 
 
+<<<<<<< HEAD
   .upload-icon4 {
     width: 150px;
     height: 150px;
@@ -136,10 +137,33 @@
     height: 150px;
     border: none;
   }
+=======
+        .upload-icon4{
+          width: 450px;
+          height: 150px;
+          border: 2px solid #000;
+          border-style: dotted;
+          border-radius: 18px;
+        }
+
+        .upload-icon4 img{
+            width: 300px;
+            height: 100px;
+            margin:19px;
+            cursor: pointer;
+        }
+
+        .upload-icon4.has-img4{
+            width: 450px;
+            height: 150px;
+            border: none;
+        }
+>>>>>>> master
 
   .upload-icon4.has-img4 img {
     /*width: 100%;
             height: auto;*/
+<<<<<<< HEAD
     width: 150px;
     height: 150px;
     border-radius: 18px;
@@ -156,6 +180,36 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <div class="container-fluid">
+=======
+            width: 450px;
+            height: 150px;
+            border-radius: 18px;
+            margin:0px;
+        }
+        .select2-selection__choice{
+          background:#007bff !important;
+        }
+      </style>
+      @endsection
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+          <!-- Content Header (Page header) -->
+          <section class="content-header">
+            <div class="container-fluid">
+
+            </div><!-- /.container-fluid -->
+          </section>
+
+          <!-- Main content -->
+          <section class="content">
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="card card-primary card-outline">
+
+                    <div class="card-header">
+                      <h3 class="card-title">Edit  Restaurant </h3>
+>>>>>>> master
 
     </div><!-- /.container-fluid -->
   </section>
@@ -167,8 +221,38 @@
         <div class="col-md-12">
           <div class="card card-primary card-outline">
 
+<<<<<<< HEAD
             <div class="card-header">
               <h3 class="card-title">Edit Restaurant </h3>
+=======
+                                        </div>
+                                        <div class="image-upload">
+
+                                            <label for="file-input4">
+                                                <div class="upload-icon4">
+                                                    @if($vendor->banner_image == null)
+                                                    <img class="icon4" src="{{asset('add-image.png')}}">
+                                                    @else
+                                                        <?php
+                                                          $baner=json_decode($vendor->banner_image);
+                                                          if (json_last_error() === JSON_ERROR_NONE) {
+                                                            ?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$baner[0] ) }}">
+                                                            <?php
+                                                          } else {
+                                                            ?>
+                                                            <img class="icon4" src="{{ asset('vendor-banner'.'/'.$vendor->banner_image ) }}">
+                                                            <?php
+                                                          }
+                                                          
+                                                          
+                                                        ?>
+                                                    
+                                                    @endif
+                                                </div>
+                                            </label>
+                                            <input id="file-input4"  type="file" name="banner_image"/>
+>>>>>>> master
 
             </div>
             <div class="card-body pad table-responsive">

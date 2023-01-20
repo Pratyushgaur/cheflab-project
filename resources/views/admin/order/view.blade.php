@@ -26,6 +26,8 @@
                            <h5 class="text"><b>Order ID #{{$order->order_id}}</b></h5>
                            <p><i class="fa fa-calendar-o pr-2" aria-hidden="true"></i> {{ date('d M Y h:s',strtotime($order->created_at)) }}</p>
                            <p><b class="text-dark"><i class="fa fa-home" aria-hidden="true"></i>  Restaurant: </b> <span class="text-primary ml-1">{{ ucwords($vendor->name) }}</span></p>
+                           <p><b class="text-dark"><i class="fa fa-circle" aria-hidden="true"></i>  Send Cutlery: </b> <span class="text-primary ml-1">@if($order->send_cutlery){{"Yes"}}@else {{"No"}} @endif</span></p>
+                           <p><b class="text-dark"><i class="fa fa-envelope" aria-hidden="true"></i>  Chef message: </b> <span class="text-primary ml-1">{{$order->chef_message}}</span></p>
                         </div>
                         <div class="col-sm-6 invoice-col text-right">
                            <div class="mb-3">
@@ -72,11 +74,12 @@
                                  <th>Item Details</th>
                                  <th>Addons</th>
                                  
-                                 <th style="width: 40px">Price</th>
+                                 <th style="width: 40px">Amount</th>
                               </tr>
                            </thead>
                            <tbody>
-                              @foreach($product as $val)          
+                              @foreach($product as $val)       
+                              
                               <tr>
                                  <td>
                                     <div class="media media--sm">
@@ -95,20 +98,23 @@
                                                 <span class="font-weight-bold">{{ $val['type'] }}</span>
                                              </div>
                                              <div class="font-size-sm text-body">
-                                                <span>price : </span>
-                                                <span class="font-weight-bold">{{ $val['product_price'] }}</span>
+                                                <span>Rate : </span>
+                                                <span class="font-weight-bold">{{ $val['product_price'] }} * ({{$val['product_qty']}})</span>
                                              </div>
+                                             
                                           </div>
                                        </div>
                                     </div>
                                  </td>
                                  <td>
+                                    <?php $addontotal = 0; ?>
                                     @foreach($val['addons'] as $key =>$value)
                                        {{$value['addon']}} - Rs.{{$value['addon_price']}} 
+                                          <?php $addontotal= $addontotal+$value['addon_price']*$value['addon_qty']; ?>
                                        <br>
                                     @endforeach
                                  </td>
-                                 <td>{{ $val['product_price'] }}</td>
+                                 <td>{{ $val['product_price'] * $val['product_qty']+$addontotal }}</td>
                               </tr>
                               @endforeach
                            </tbody>
@@ -122,12 +128,17 @@
                            <table class="table">
                               <tr>
                                  <th style="width:50%">Items Price:</th>
-                                 <td>{{$order->total_amount}}</td>
-                              </tr>
-                              <tr>
-                                 <th>Tax ({{$vendor->tax}}%)</th>
                                  <td>{{$order->gross_amount}}</td>
                               </tr>
+                              <tr>
+                                 <th>Tax & Plateform Charge</th>
+                                 <td>{{$order->tex}}</td>
+                              </tr>
+                              <tr>
+                                 <th>Wallet Cut</th>
+                                 <td>{{$order->wallet_cut}}</td>
+                              </tr>
+                              
                               <tr>
                                  <th>Total:</th>
                                  <td>{{$order->net_amount}}</td>

@@ -170,7 +170,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{route('admin.order.list')}}" class="nav-link">
+						<a href="{{route('admin.order.dashboard')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
 						  <p>Order Dashbord</p>
 						</a>

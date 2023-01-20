@@ -289,10 +289,17 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                       <label for="exampleInputEmail1">Application Get Order Switch<span class="text-danger">* (This Attempt Will Stop get Order in Application)</span></label>
-                                      <select class="form-control" name="app_run" id="">
+                                      <select class="form-control app_run"  name="app_run" id="">
                                         <option value="1" @if($data->app_run == '1') selected @endif >On</option>
                                         <option value="0" @if($data->app_run == '0') selected @endif>Off</option>
                                       </select>
+                                      
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6 close-reason" style="@if($data->app_run == '1')display:none;@endif">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Reason Why We are Not Getting Ordres <span class="text-danger">* </span></label>
+                                      <textarea name="reason_close" class="form-control" value="{{$data->app_close_reason}}"  id="" placeholder="Reason Why We are Not Getting Ordres..">{{$data->app_close_reason}}</textarea>
                                       
                                     </div>
                                   </div>
@@ -597,6 +604,14 @@
         }
         
     });
+    $('.app_run').change(function(){
+      if($(this).val() =='0'){
+        $('.close-reason').show();
+      }else{
+        $('.close-reason').hide();
+
+      }
+    })
       $('#file-input').change( function(event) {
           $("img.icon").attr('src',URL.createObjectURL(event.target.files[0]));
           $("img.icon").parents('.upload-icon').addClass('has-img');

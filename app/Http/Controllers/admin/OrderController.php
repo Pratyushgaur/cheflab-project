@@ -22,13 +22,244 @@ class OrderController extends Controller
     public function dineoutlist(){
         return view('admin.dineout.list');
     }
+    public function dashboard($active = 'pending')
+    {
+        // $active = 'pending';
+        return view('admin.order.order_dashboard',compact('active'));
+    }
+
+    public function autoRefreshPending()
+    {
+        $order = Orders::where(\DB::raw("date_add(orders.created_at,interval 90 second)"),'<=',\Carbon\Carbon::now());
+        $order = $order->where("order_status","=","confirmed");
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->select("orders.order_id",'orders.id','orders.mobile_number','customer_name','vendors.name','vendors.mobile','vendors.alt_mobile','vendors.email',\DB::raw("date_add(orders.created_at,interval 30 second) as created_at"),\DB::raw("TIMESTAMPDIFF(SECOND,date_add(orders.created_at,interval 90 second),Now()) as d"));
+        $order = $order->orderBy("d","DESC");
+        $order = $order->get()->toArray();
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> order Id</th>
+                            <th>Vendor</th>
+                            <th>Vendor Mobile</th>
+                            <th>Customer Name</th>
+                            
+                            <th>Order Date</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
+    public function autoRefreshNeedTime()
+    {
+        $order = Orders::where('is_need_more_time','=','1');
+        $order = $order->where("order_status","=","preparing");
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->select("orders.order_id",'orders.id','orders.mobile_number','customer_name','orders.preparation_time_from','orders.preparation_time_to','vendors.name','vendors.mobile','vendors.alt_mobile','vendors.email',\DB::raw("date_add(orders.created_at,interval 30 second) as created_at"));
+        $order = $order->orderBy("preparation_time_from","DESC");
+        $order = $order->get()->toArray();
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.date('d M Y h:i A',strtotime($v['preparation_time_from'])).'</td><td>'.date('d M Y h:i A',strtotime($v['preparation_time_to'])).'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> order Id</th>
+                            <th>Vendor</th>
+                            <th>Vendor Mobile</th>
+                            <th>Customer Name</th>
+                            <th>Prepration Time From</th>
+                            <th>Prepration Time To</th>
+                            <th>Order Date</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
+    public function autoRefreshDelayRider()
+    {
+        $order = Orders::where('accepted_driver_id','!=','');
+        $order = $order->where("order_status","=","dispatched");
+        $order = $order->where("action","=",'4');
+        $order = $order->where(\DB::raw("TIMESTAMPDIFF(MINUTE,orders.pickup_time,Now())"),'>=',15);
+        $order = $order->join('rider_assign_orders','orders.id','=','rider_assign_orders.order_id');
+        $order = $order->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id');
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->select("orders.order_id",'orders.id','orders.mobile_number','customer_name','vendors.name','vendors.mobile','vendors.alt_mobile','vendors.email',\DB::raw("date_add(orders.created_at,interval 30 second) as created_at"),\DB::raw("TIMESTAMPDIFF(MINUTE,orders.pickup_time,Now()) as d"),'deliver_boy.name as driverName','deliver_boy.mobile as deliver_mobile','pickup_time');
+        $order = $order->orderBy("d","DESC");
+        $order = $order->get()->toArray();
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.$v['driverName'].'</td><td>'.$v['deliver_mobile'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['pickup_time'])).'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> order Id</th>
+                            <th>Vendor</th>
+                            <th>Vendor Mobile</th>
+                            <th>Customer Name</th>
+                            <th>Driver</th>
+                            <th>Driver Mobile</th>
+                            <th>Pick Up At</th>
+                            <th>Order Date</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
+    public function autoRefreshPreparingOrders()
+    {
+        $order = Orders::where('order_status','=','preparing');
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->select("orders.order_id",'orders.id','orders.mobile_number','customer_name','vendors.name','vendors.mobile','vendors.alt_mobile','vendors.email',\DB::raw("date_add(orders.created_at,interval 30 second) as created_at"),\DB::raw("TIMESTAMPDIFF(MINUTE,orders.preparation_time_from,orders.preparation_time_to) as d"),'pickup_time');
+        $order = $order->orderBy("d","DESC");
+        $order = $order->get()->toArray();
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.$v['d'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> order Id</th>
+                            <th>Vendor</th>
+                            <th>Vendor Mobile</th>
+                            <th>Customer Name</th>
+                            <th>Prepration Time</th>
+                            <th>Order Date</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
+    public function autoRefreshNotPickedUpRider()
+    {
+        $order = Orders::where('accepted_driver_id','!=','');
+        $order = $order->where("order_status","=","ready_to_dispatch");
+        $order = $order->where("action","=",'1');
+        $order = $order->join('rider_assign_orders','orders.id','=','rider_assign_orders.order_id');
+        $order = $order->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id');
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->select("orders.order_id",'orders.id','orders.mobile_number','customer_name','vendors.name','vendors.mobile','vendors.alt_mobile','vendors.email',\DB::raw("date_add(orders.created_at,interval 30 second) as created_at"),'deliver_boy.name as driverName','deliver_boy.mobile as deliver_mobile');
+        $order = $order->get()->toArray();
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.$v['driverName'].'</td><td>'.$v['deliver_mobile'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> order Id</th>
+                            <th>Vendor</th>
+                            <th>Vendor Mobile</th>
+                            <th>Customer Name</th>
+                            <th>Driver</th>
+                            <th>Driver Mobile</th>
+                            <th>Order Date</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
+    public function autoRefreshOutOfDelivery()
+    {
+        $order = Orders::where('accepted_driver_id','!=','');
+        $order = $order->where("order_status","=","dispatched");
+        $order = $order->where("action","=",'4');
+        //$order = $order->where(\DB::raw("TIMESTAMPDIFF(MINUTE,orders.pickup_time,Now())"),'>=',15);
+        $order = $order->join('rider_assign_orders','orders.id','=','rider_assign_orders.order_id');
+        $order = $order->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id');
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->select("orders.order_id",'orders.id','orders.mobile_number','customer_name','vendors.name','vendors.mobile','vendors.alt_mobile','vendors.email',\DB::raw("date_add(orders.created_at,interval 30 second) as created_at"),\DB::raw("TIMESTAMPDIFF(MINUTE,orders.pickup_time,Now()) as d"),'deliver_boy.name as driverName','deliver_boy.mobile as deliver_mobile','pickup_time');
+        $order = $order->orderBy("d","DESC");
+        $order = $order->get()->toArray();
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.$v['driverName'].'</td><td>'.$v['deliver_mobile'].'</td><td>'.$v['d'].' Minute</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> order Id</th>
+                            <th>Vendor</th>
+                            <th>Vendor Mobile</th>
+                            <th>Customer Name</th>
+                            <th>Driver</th>
+                            <th>Driver Mobile</th>
+                            <th>PickedUp At</th>
+                            <th>Order Date</th>
+                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
     public function get_data_table_of_order(Request $request)
     {
         if ($request->ajax()) {
         
            $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
            if($request->status != ''){
-            $data = $data->where('payment_status','=',$request->status);
+            $data = $data->where('order_status','=',$request->status);
            }
            if($request->role != ''){
             $data = $data->where('vendors.vendor_type','=',$request->role);
@@ -36,7 +267,7 @@ class OrderController extends Controller
            if($request->vendor != ''){
             $data = $data->where('orders.vendor_id','=',$request->vendor);
            }
-           
+           $data= $data->orderBy('orders.id','desc');
            $data = $data->get();
             return Datatables::of($data)
                 ->addIndexColumn()

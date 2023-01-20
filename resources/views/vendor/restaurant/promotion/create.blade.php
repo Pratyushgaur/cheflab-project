@@ -277,9 +277,13 @@ $breadcrumb[] = ["name"  => "Create Promotion",
                     "id": id
                 },
                 success: function (response) {
+                    $('#price').html('');
                     var uh = JSON.stringify(response);
                     var obj = JSON.parse(uh);
-                    $('#price').append("<p class='text-danger' name='id' value=" + obj.id + ">Banner Rs.. " + obj.price + "</p>", "<input type='hidden' name='price' value=" + obj.price + ">", "<input type='hidden' name='id' value=" + obj.id + ">", "<input type='hidden' name='slot_name' value=" + obj.slot_name + ">", "<input type='hidden' name='position' value=" + obj.position + ">");
+                    $('#price').append("<p class='text-danger' name='id' value=" + obj.id + ">Banner Rs.. " + obj.price + "</p>",
+                        "<input type='hidden' name='price' value=" + obj.price + ">",
+                        "<input type='hidden' name='id' value=" + obj.id + ">", "<input type='hidden' name='slot_name' value=" + obj.slot_name + ">",
+                        "<input type='hidden' name='position' value=" + obj.position + ">");
                 }
             });
             $('#price').empty().append();

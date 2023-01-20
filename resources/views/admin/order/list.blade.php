@@ -19,15 +19,21 @@
                   <div class="card card-primary card-outline">
                       <div class="card-header">
                           <div class="row">
-                            <div class="col-md-2">
+                            <div class="col-md-4">
                                 <select name="" id="filter-by-status" onchange="reload_table()" class="form-control">
                                   <option value="">Filter By Status</option>
-                                  <option value="pending">Pending</option>
-                                  <option value="cancelled_by_customer">Cancelled By Customer</option>
+                                  <option value="confirmed">Pending</option>
+                                  <option value="preparing">Preparing</option>
+                                  <option value="ready_to_dispatch">Ready To Dispatch</option>
+                                  <option value="dispatched">Dispatched</option>
                                   <option value="cancelled_by_vendor">Cancelled By Vendor</option>
-                                  <option value="completed">completed</option>
-                                  <option value="accept">Accept</option>
-                                  <option value="payment_pending">Payment Pending</option>
+                                  <option value="cancelled_by_customer_before_confirmed">Cancelled By User (With in 30)</option>
+                                  <option value="cancelled_by_customer_after_confirmed">Cancelled By User (After in 30)</option>
+                                  <option value="cancelled_by_customer_during_prepare">Cancelled By User (After Accept)</option>
+                                  <option value="cancelled_by_customer_after_disptch">Cancelled By User (After Dispatched)</option>
+                                  <option value="completed">Completed</option>
+                                  <!-- <option value="accept">Accept</option>
+                                  <option value="payment_pending">Payment Pending</option> -->
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -37,8 +43,8 @@
                                   <option value="chef">Chef</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
-                                <select name="" id="filter-by-vendor" onchange="reload_table()" class="form-control">
+                            <div class="col-md-6">
+                                <select name="" id="filter-by-vendor" onchange="reload_table()" class="form-control ">
                                   <option value="">Filter By Vendor</option>
                                   
                                 </select>
@@ -138,16 +144,17 @@
       table.DataTable().ajax.reload(null, false);
   }
   $('#filter-by-role').change(function(){
-    $.ajax({
-      method:"GET",
-      action:"{{route('admin.vendor.byRole')}}",
-      data:{
-        role:$(this).val()
-      },
-      success:function(){
+     
+    // $.ajax({
+    //   method:"GET",
+    //   action:"{{route('admin.vendor.byRole')}}",
+    //   data:{
+    //     role:$(this).val()
+    //   },
+    //   success:function(){
 
-      }
-    })
+    //   }
+    // })
     //
     $.ajaxSetup({
           headers: {
@@ -160,9 +167,12 @@
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
         data: { "_token": "{{ csrf_token() }}","role":$(this).val() },
         success: function(response){
+          
+          
           var html = '<option value="">Filter By Vendor</option>';
           for(var i=0;response.length >i; i++){
             html+='<option value="'+response[i].id+'">'+response[i].name+'</option>';
+            
           }
           $('#filter-by-vendor').html(html);
         }
