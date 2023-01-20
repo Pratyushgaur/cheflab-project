@@ -65,7 +65,7 @@ class AppController extends Controller
                 $order->expected_earninig = 50;
                 $order->trip_distance = 7;
             } else {
-                $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
+                $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction');
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
                 $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
@@ -102,7 +102,8 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
+            
+            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), "" ) as licence_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), "" ) as rc_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", insurance_image), "" ) as insurance_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", pancard_image), "" ) as pancard_image'));
             if($data->exists()){
                 $data = $data->first();   
                 return response()->json([
