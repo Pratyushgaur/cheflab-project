@@ -15,6 +15,7 @@ use App\Models\Deliver_boy;
 use App\Models\AdminMasters;
 use App\Models\Orders;
 use App\Models\BankDetail;
+use App\Models\OrderCommision;
 use App\Rules\VendorOrderTimeRule;
 use DataTables;
 use Illuminate\Http\Request;
@@ -224,6 +225,7 @@ class UserControllers extends Controller
 
     public function store_restourant(Request $request)
     {
+      
         $this->validate($request, [
             'restaurant_name'   => 'required',
             'email'             => 'required|unique:vendors,email',
@@ -267,6 +269,8 @@ class UserControllers extends Controller
         $vendors->aadhar_number    = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
+        $vendors->lat           = $request->lat;
+        $vendors->long           = $request->long;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
 
@@ -525,7 +529,7 @@ class UserControllers extends Controller
     }
     public function chef_update(Request $request)
     {
-//        return $request->input();die;
+    //    return $request->input();die;
         $this->validate($request, [
             'restaurant_name'   => 'required',
             'email'             => 'required',
@@ -632,7 +636,8 @@ class UserControllers extends Controller
         $vendorLike = \App\Models\UserVendorLike::wherevendor_id($id)->count();
         $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
         $cuisines   = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
-        return view('admin/vendors/view-vendor', compact('vendor', 'categories', 'cuisines', 'vendorLike'));
+        $net_receivables = OrderCommision::where('vendor_id',$id)->sum('net_receivables');
+        return view('admin/vendors/view-vendor', compact('vendor', 'categories', 'cuisines', 'vendorLike','net_receivables'));
     }
 
     public function chef_product_list(Request $request, $userId)

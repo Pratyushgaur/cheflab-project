@@ -51,6 +51,7 @@ class DeliverBoy extends Migration
             $table->string('boy_id')->nullable();
             $table->float('ratings',2,1)->default('0.0');
             $table->date('join_date');
+            $table->string('leader_contact_no')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

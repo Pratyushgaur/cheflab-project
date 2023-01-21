@@ -103,6 +103,11 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('delivery-boy/delete', [App\Http\Controllers\admin\Deliveryboy::class, 'soft_delete'])->name('admin.deliverboy.ajax.delete');
     Route::get('delivery-boy-setting', [App\Http\Controllers\admin\Deliveryboy::class, 'setting'])->name('admin.deliverboy.setting');
     Route::post('delivery-boy/chargse', [App\Http\Controllers\admin\Deliveryboy::class, 'storeDelivercharge'])->name('admin.deliveryboy.storeDelivercharge');
+
+    Route::post('deliver_boy/inactive/{id}', [App\Http\Controllers\admin\Deliveryboy::class,'deliver_boy_inactive'])->name('admin.deliver_boy.inactive');
+    Route::post('deliver_boy/active/{id}', [App\Http\Controllers\admin\Deliveryboy::class,'deliver_boy_active'])->name('admin.deliver_boy.active');
+
+    
     //Coupons
     Route::get('coupon', [App\Http\Controllers\admin\CouponController::class, 'index'])->name('admin.coupon.list');
     Route::get('coupon-list', [App\Http\Controllers\admin\CouponController::class, 'get_data_table_of_coupon'])->name('admin.coupon.data');

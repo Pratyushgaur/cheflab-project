@@ -438,22 +438,22 @@
 <!-- SCRIPTS -->
 <!-- SCRIPTS -->
 <!-- Global Required Scripts Start -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- <script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script> -->
+<script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
+<script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/popper.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">
 </script>
-<!-- <script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js"> -->
+<script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js">
 <!-- </script> -->
 <!-- Global Required Scripts End -->
 <!-- Page Specific Scripts Start -->
 
-<!-- <script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js"> -->
+<script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js">
 <!-- </script> -->
-<!-- <script src="{{asset('frontend')}}/assets/js/widgets.js"></script> -->
-<!-- <script src="{{asset('frontend')}}/assets/js/clients.js"></script> -->
-<!-- <script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script> -->
+<script src="{{asset('frontend')}}/assets/js/widgets.js"></script>
+<script src="{{asset('frontend')}}/assets/js/clients.js"></script>
+<script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script>
 <script src="{{asset('frontend')}}/assets/js/d3.v3.min.js">
 </script>
 <script src="{{asset('frontend')}}/assets/js/topojson.v1.min.js">

@@ -55,7 +55,7 @@
                             <b>Mobile</b> <a class="float-right">{{$vendor->mobile}}</a>
                           </li>
                           <li class="list-group-item ">
-                            <b>Wallet</b> <a class="float-right">{{$vendor->wallet}}</a>
+                            <b>Wallet</b> <a class="float-right">{{$net_receivables}}</a>
                           </li>
                           <li class="list-group-item ">
                             <b>Commission</b> <a class="float-right">{{$vendor->commission}}%</a>

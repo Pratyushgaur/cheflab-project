@@ -3,7 +3,7 @@
 <x-admin.header />
 <x-admin.adminsidebar />
 <x-admin.navbar />
-@yield('content')
+
 
 <x-admin.footer />
 
