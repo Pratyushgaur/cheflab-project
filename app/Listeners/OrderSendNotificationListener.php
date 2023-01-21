@@ -30,6 +30,7 @@ class OrderSendNotificationListener
     {
         //order_status ===>'pending' to 'confirmed'
         $event->order_obj->order_status = 'confirmed';
+        $event->order_obj->deliver_otp = rand(1000,9999);  
         $event->order_obj->save();
 
         //send notification
