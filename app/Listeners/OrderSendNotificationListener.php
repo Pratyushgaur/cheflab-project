@@ -43,7 +43,8 @@ class OrderSendNotificationListener
             route('restaurant.order.view', $event->order_id),
             $vendor->fcm_token
         ));
-    
+        $token []= $this->fcmTokens;
+        $res = sendNotification('New Order',"You have received new Order #" . $event->order_id . ' from ' . $customer->name,$token,['msg_type' => 'info','link' => $this->link]);
 
         //automatice send for prepration
         //order_status ===>'confirmed' to 'preparing'
