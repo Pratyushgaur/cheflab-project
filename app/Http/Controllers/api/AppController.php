@@ -1594,6 +1594,7 @@ class AppController extends Controller
                 $insertData['wallet_cut'] = $walletCut;
                 $insertData['order_id'] = getOrderId();
                 $insertData['landmark_address'] = $request->reach;
+                $insertData['deliver_otp'] = rand(1000,9999);
                 $Order                    = new Order($insertData);
                 $Order->saveOrFail();
                 $order_id = $Order->id;
@@ -1686,7 +1687,7 @@ class AppController extends Controller
             }
             if ($request->order_for == 'restaurant') {
                 $order = Order::where('user_id', '=', request()->user()->id);
-                $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"), 'delivery_address', 'orders.lat', 'orders.long', 'vendors.lat as vendor_lat', 'vendors.long as vendor_lng', 'vendors.fssai_lic_no', 'vendors.address as vendor_address','orders.created_at');
+                $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"), 'delivery_address', 'orders.lat', 'orders.long', 'vendors.lat as vendor_lat', 'vendors.long as vendor_lng', 'vendors.fssai_lic_no', 'orders.deliver_otp','vendors.address as vendor_address','orders.created_at');
                 $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
                 $order = $order->where('vendors.vendor_type', '=', 'restaurant');
                 $order = $order->orderBy('orders.id', 'desc');

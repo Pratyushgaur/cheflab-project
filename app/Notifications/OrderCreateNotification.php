@@ -76,7 +76,11 @@ class OrderCreateNotification extends Notification
    {
 
        if ($this->fcmTokens != ''){
-        sendNotification($this->title,$this->msg,$this->fcmTokens,['msg_type' => 'info','link' => $this->link]);
+        $token []= $this->fcmTokens;
+        $res = sendNotification($this->title,$this->msg,$token,['msg_type' => 'info','link' => $this->link]);
+        
+        var_dump($res);
+        //var_dump($res);
         //    $r =  (new FirebaseMessage)
         //        ->withTitle($this->title)
         //        ->withBody($this->msg)

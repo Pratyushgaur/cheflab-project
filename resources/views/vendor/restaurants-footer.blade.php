@@ -1,7 +1,7 @@
 <audio class="alert-audio" style="display:none" controls >
     <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
 </audio>
-<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}"></audio>
+<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}" allow="autoplay">></audio>
 
 <!-- MODALS -->
 <!-- Quick bar -->
@@ -596,9 +596,10 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         initFirebaseMessagingRegistration();
 
         messaging.onMessage((payload) => {
-            new Notification(payload.title, {body: payload.data.body});
+            console.log(payload.notification.title);
+            new Notification(payload.notification.title, {body: payload.notification.body});
             if (payload.data.link === void 0) {
-                toastr.info(payload.data.title, payload.data.body);
+                toastr.info(payload.notification.title, payload.notification.body);
 
             } else {
                 toastr.options.onclick = function () {
@@ -606,10 +607,12 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                     console.log('clicked');
                 }
 
-                toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.data.title,);
+                toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.notification.title,);
 
             }
-            $("#beep__hover").get(0).play();
+            //$("#beep__hover").get(0).play();
+            var audio = document.getElementById("beep__hover");
+            audio.play();
         });
     });
 </script>

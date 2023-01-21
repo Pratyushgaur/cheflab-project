@@ -53,6 +53,7 @@ class CreateOrders extends Migration
             $table->double('tex')->comment('platform_charges');
             $table->unsignedBigInteger('cancel_by_user')->default(0);
             $table->unsignedBigInteger('accepted_driver_id')->nullable()->comment('Driver id who accepted this order and going to delivery');
+            $table->string('deliver_otp')->nullable()->comment('Otp for deliver to user');
             $table->timestamp('pickup_time')->nullable()->comment('driver order pick up time');
             $table->timestamp('delivered_time')->nullable()->comment('driver order delivered time');
             $table->timestamp('created_at')->useCurrent();

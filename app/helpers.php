@@ -842,26 +842,45 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 function sendNotification($title,$body,$token,$data=null,$sound='default')
 {
     $server_key = env('FIREBASE_SERVER_KEY');
-    $headers = [
-        'Authorization' => 'key='.$server_key,
-        'Content-Type'  => 'application/json',
-    ];
+    // $headers = [
+    //     'Authorization' => 'key='.$server_key,
+    //     'Content-Type'  => 'application/json',
+    // ];
     $url = "https://fcm.googleapis.com/fcm/send";
     $notification = array('title' =>$title , 'body' => $body, 'sound' => $sound, 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
     $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
     $fields = json_encode ( $arrayToSend );
-    $client = new Client();
-    try{
-        $request = $client->post($url,[
-            'headers' => $headers,
-            "body" => $fields,
-        ]);
-        $response = $request->getBody();
-        return $response;
-    }
-    catch (Exception $e){
-        return $e;
-    }
+    // $client = new Client();
+    // try{
+    //     $request = $client->post($url,[
+    //         'headers' => $headers,
+    //         "body" => $fields,
+    //     ]);
+    //     //$response = $request->getBody()->getContents();
+    //     $response = (string) $request->getBody()->getContents();
+    //     return $response =json_decode($response); 
+    //     //return $response;
+    // }
+    // catch (Exception $e){
+    //     return $e;
+    // }//
+        $json = json_encode($arrayToSend);
+        $headers = array();
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Authorization: key='. $server_key;
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
+        //Send the request
+         return $response = curl_exec($ch);
+        //Close request
+        if ($response === FALSE) {
+        die('FCM Send Error: ' . curl_error($ch));
+        }
+        curl_close($ch);
+        return true;
 }
 
 function sendUserAppNotification($title,$body,$token,$data=null){
@@ -883,11 +902,12 @@ function sendUserAppNotification($title,$body,$token,$data=null){
             "body" => $fields,
         ]);
         $response = $request->getBody();
-        return $response;
+        //return $response;
     }
     catch (Exception $e){
         return $e;
     }
+    
 }
 
 
