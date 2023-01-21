@@ -14,6 +14,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('edit-city/{id}', [App\Http\Controllers\admin\City::class, 'fun_edit_city'])->name('fun_edit_city');
     Route::post('city/delete', [App\Http\Controllers\admin\City::class, 'soft_delete'])->name('admin.city.ajax.delete');
     // vendor's
+    
+   
     Route::get('vendors', [App\Http\Controllers\admin\UserControllers::class, 'index'])->name('admin.vendors.list');
     Route::get('vendors-datatable', [App\Http\Controllers\admin\UserControllers::class, 'get_data_table_of_vendor'])->name('admin.vendors.datatable');
     Route::get('vendors-restourant-create', [App\Http\Controllers\admin\UserControllers::class, 'create_restourant'])->name('admin.restourant.create');
@@ -283,4 +285,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Driver Map
     Route::get('drivers-map', [DriverMapController::class,'index']);
     Route::get('drivers/{driver}/info', [DriverMapController::class,'getDriver']);
+
+    Route::get('order/pdf-invoice', [App\Http\Controllers\admin\InvoicePdfController::class, 'index']);
+
+    Route::post('vendors-login', [App\Http\Controllers\vendor\LoginController::class, 'vendorLogin'])->name('admin.vendor.login');
 });

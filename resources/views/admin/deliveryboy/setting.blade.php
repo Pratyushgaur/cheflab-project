@@ -308,13 +308,13 @@
                                
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Below 1.5 km <span class="text-danger">*</span></label>
+                                      <label for="exampleInputEmail1">Below 2 km <span class="text-danger">*</span></label>
                                       <input type="number" name="below_one_five_km" value="{{$data->below_one_five_km}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div>  
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-group">
-                                      <label for="exampleInputEmail1">Above 1.5 km <span class="text-danger">*</span></label>
+                                      <label for="exampleInputEmail1">Above 2 km <span class="text-danger">*</span></label>
                                       <input type="number" name="above_one_five_km" value="{{$data->above_one_five_km}}" class="form-control"  id="" placeholder="Enter Per KM Charge">
                                   </div>  
                                 </div>

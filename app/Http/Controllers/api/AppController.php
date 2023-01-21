@@ -1540,7 +1540,7 @@ class AppController extends Controller
                     'payment_status'  => 'nullable|string',
                     'transaction_id'  => 'nullable|string',
                     'payment_string'  => 'nullable|string',
-                    'send_cutlery'    => 'required',
+                    // 'send_cutlery'    => 'required',
 
                     'products.*.product_id'   => 'required|numeric',
                     'products.*.product_qty'  => 'required|numeric',

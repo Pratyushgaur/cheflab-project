@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use App\Models\OrderCommision;
 use App\Models\Paymentsetting;
+use App\Models\Vendors;
+use App\Models\User;
+use App\Models\OrderProduct;
 
 function time_diffrence_in_minutes($datetime1, $datetime2)
 {
@@ -1227,4 +1230,25 @@ function orderCancel($id)
         
         
     
+    }
+
+    function createPdf($id)
+    {
+        
+        $order = Orders::where('id',$id)->first();
+        $vendor = Vendors::findOrFail($order->vendor_id);
+        $users = User::findOrFail($order->user_id);
+        $orderProduct = OrderProduct::findOrFail($id);
+            $product_id = $orderProduct->product_id;
+            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
+
+        $invoiceName = rand(9999,99999).$id.'.pdf'; 
+        $pdf = PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order','vendor','users','product'));
+        $pdf->save(public_path('uploads/invoices/'. $invoiceName));
+        $url = 'uploads/invoices/'. $invoiceName;
+
+        $pdfUrl = Orders::where('id', '=', $id)->first();
+        $pdfUrl->pdf_url = $url;
+        $pdfUrl->save();
+        return true;
     }

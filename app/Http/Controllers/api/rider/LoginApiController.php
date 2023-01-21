@@ -14,6 +14,7 @@ class LoginApiController extends Controller
 {
     public function login_send_otp(Request $request)
     {
+        
         try {
             $validateUser = Validator::make($request->all(),
             [
@@ -27,8 +28,13 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
-            $deliveryBoy =  Deliver_boy::where(['mobile' => $request->username])->orWhere('username','=',$request->username);
-            if ($deliveryBoy->exists()) {
+
+        
+        $deliveryBoy =  Deliver_boy::where(['mobile' => $request->username])->orWhere('username','=',$request->username);
+        $deliveryBoyData = Deliver_boy::where('deliver_boy.mobile' , $request->username)->first();
+        if ($deliveryBoy->exists()) {
+
+            if ($deliveryBoyData->status == 1) {
                 $data =  $deliveryBoy->first();
                 $otp = $this->otp_generate($data->mobile);
                 return response()->json([
@@ -37,14 +43,22 @@ class LoginApiController extends Controller
                     'otp'=>$otp,
                     'mobile' =>$data->mobile
                 ], 200);
-            } else {
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'=>'User In-Active'
+
+                ], 401);
+            }
+
+        } else {
                 return response()->json([
                     'status' => false,
                     'error'=>'User Not Found'
 
                 ], 401);
-            }
-
+        }
+           
 
 
         } catch (\Throwable $th) {

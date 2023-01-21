@@ -21,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 use Validator;
+use Auth;
 class UserControllers extends Controller
 {
 
@@ -121,6 +122,7 @@ class UserControllers extends Controller
     // }
     public function get_data_table_of_vendor(Request $request)
     {
+        
         if ($request->ajax()) {
 
             $data = Vendors::latest();
@@ -145,6 +147,7 @@ class UserControllers extends Controller
                     }elseif($data->vendor_type == 'chef'){
                         $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.editchef', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit Chef</a><a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
                     }
+                    $btn .= '<button class="dropdown-item text-info" onClick="loginVendor(`' . $data->id. '`)"><i class="fas fa-edit"></i> Login</a>';
 
                     $btn .= '</div>
                                 </li>
@@ -1060,4 +1063,5 @@ class UserControllers extends Controller
         }
 
     }
+
 }
