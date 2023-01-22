@@ -1,7 +1,16 @@
 @extends('vendor.restaurants-layout')
 @section('main-content')
 <link href="{{ asset('js/bootstrap-datepicker3.css') }}" rel="stylesheet">
+<style>
+    .datepicker.datepicker-dropdown.dropdown-menu {
+    opacity: 1;
+        visibility: unset;
+    }
+    .datepicker.datepicker-dropdown.dropdown-menu .datepicker-days .new {
+        display: none;
+    }
 
+  </style>
     <div class="ms-content-wrapper">
         <div class="row">
             <div class="col-md-12">

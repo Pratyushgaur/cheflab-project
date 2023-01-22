@@ -81,6 +81,85 @@
             <!-- /.info-box -->
           </div>
           <!-- /.col -->
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="{{ url('orders/dashboard') }}">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Pending Orders</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+          </a>
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="{{ url('orders/dashboard/delay_restaurant') }}">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Delay (Restaurant)</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+          </a>
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="{{ url('orders/dashboard/delay_rider') }}">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Delay (Riders)</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+          </a>
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="{{ url('orders/dashboard/preparing') }}">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Preparing</span>
+                       </div>
+              <!-- /.info-box-content -->
+            </div>
+</a>
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="{{ url('orders/dashboard/not_pickup_rider') }}">
+            <div class="info-box mb-3">
+              <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+              <div class="info-box-content">
+                <span class="info-box-text">Not Picked Up (Rider)</span>
+              </div>
+              <!-- /.info-box-content -->
+            </div>
+          </a>
+            <!-- /.info-box -->
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-3">
+          <a href="{{ url('orders/dashboard/out_of_dellivery') }}">
+            <div class="info-box mb-3">            
+                <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
+                <div class="info-box-content">
+                  <span class="info-box-text">Out for delivery</span>
+                </div>             
+              <!-- /.info-box-content -->
+            </div>
+            </a>
+            <!-- /.info-box -->
+          </div>
+
+          
         </div>
         <!-- /.row -->
 

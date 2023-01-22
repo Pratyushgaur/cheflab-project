@@ -30,6 +30,7 @@ class OrderSendNotificationListener
     {
         //order_status ===>'pending' to 'confirmed'
         $event->order_obj->order_status = 'confirmed';
+        $event->order_obj->deliver_otp = rand(1000,9999);  
         $event->order_obj->save();
 
         //send notification
@@ -42,7 +43,8 @@ class OrderSendNotificationListener
             route('restaurant.order.view', $event->order_id),
             $vendor->fcm_token
         ));
-    
+        $token []= $vendor->fcm_token;
+        $res = sendNotification('New Order',"You have received new Order #" . $event->order_id . ' from ' . $customer->name,$token,['msg_type' => 'info','link' => route('restaurant.order.view', $event->order_id)]);
 
         //automatice send for prepration
         //order_status ===>'confirmed' to 'preparing'

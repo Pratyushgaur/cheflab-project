@@ -45,6 +45,7 @@ class OrderController extends Controller
         $order->order_status = 'accepted';
         $order->save();
         \App\Jobs\OrderPreparationDoneJob::dispatch($order);
+        
 
         return response()->json([
             'status'       => 'success',
@@ -77,7 +78,7 @@ class OrderController extends Controller
         $order->preparation_time_to   = mysql_add_time($order->preparation_time_from, $request->preparation_time);
         $order->save();
 //        event(new OrderSendToPrepareEvent($id, $order->user_id, $order->vendor_id, $request->preparation_time));
-
+        orderCancel($id);
         event(new OrderSendToPrepareEvent($order, $request->preparation_time));
         return redirect()->back()->with('success', "# $id Order send for preparing");
 
@@ -122,7 +123,7 @@ class OrderController extends Controller
         if($order->accepted_driver_id != null){
            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id,$otp));
         }
-
+        orderCancel($id);
 
         return response()->json([
             'status'       => 'success',
@@ -137,6 +138,7 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'dispatched';
         $order->save();
+        orderCancel($id);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'dispatched',

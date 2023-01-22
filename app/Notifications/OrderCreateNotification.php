@@ -37,9 +37,7 @@ class OrderCreateNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'
-               , 'firebase'
-        ];
+        return ['database'];
     }
 
     /**
@@ -76,17 +74,22 @@ class OrderCreateNotification extends Notification
    {
 
        if ($this->fcmTokens != ''){
-           $r =  (new FirebaseMessage)
-               ->withTitle($this->title)
-               ->withBody($this->msg)
-               ->withSound('default')
-               ->withClickAction($this->link)
-               ->withAdditionalData([
-                   'msg_type' => 'info',
-                   'link' => $this->link
-               ])
-               ->withPriority('high')->asMessage($this->fcmTokens);
-            return $r;
+        $token []= $this->fcmTokens;
+        $res = sendNotification($this->title,$this->msg,$token,['msg_type' => 'info','link' => $this->link]);
+        
+        var_dump($res);
+        //var_dump($res);
+        //    $r =  (new FirebaseMessage)
+        //        ->withTitle($this->title)
+        //        ->withBody($this->msg)
+        //        ->withSound('default')
+        //        ->withClickAction($this->link)
+        //        ->withAdditionalData([
+        //            'msg_type' => 'info',
+        //            'link' => $this->link
+        //        ])
+        //        ->withPriority('high')->asMessage($this->fcmTokens);
+        //     return $r;
 
        }
 

@@ -1,7 +1,7 @@
 <audio class="alert-audio" style="display:none" controls >
     <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
 </audio>
-<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}"></audio>
+<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}" allow="autoplay">></audio>
 
 <!-- MODALS -->
 <!-- Quick bar -->
@@ -438,22 +438,22 @@
 <!-- SCRIPTS -->
 <!-- SCRIPTS -->
 <!-- Global Required Scripts Start -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js" integrity="sha512-STof4xm1wgkfm7heWqFJVn58Hm3EtS31XFaagaa8VMReCXAkQnJZ+jEy8PCC/iT18dFy95WcExNHFTqLyp72eQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- <script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script> -->
+<script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
+<script src="{{asset('frontend')}}/assets/js/jquery-3.5.0.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/popper.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">
 </script>
-<!-- <script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js"> -->
+<script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js">
 <!-- </script> -->
 <!-- Global Required Scripts End -->
 <!-- Page Specific Scripts Start -->
 
-<!-- <script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js"> -->
+<script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js">
 <!-- </script> -->
-<!-- <script src="{{asset('frontend')}}/assets/js/widgets.js"></script> -->
-<!-- <script src="{{asset('frontend')}}/assets/js/clients.js"></script> -->
-<!-- <script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script> -->
+<script src="{{asset('frontend')}}/assets/js/widgets.js"></script>
+<script src="{{asset('frontend')}}/assets/js/clients.js"></script>
+<script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script>
 <script src="{{asset('frontend')}}/assets/js/d3.v3.min.js">
 </script>
 <script src="{{asset('frontend')}}/assets/js/topojson.v1.min.js">
@@ -596,9 +596,10 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         initFirebaseMessagingRegistration();
 
         messaging.onMessage((payload) => {
-            new Notification(payload.title, {body: payload.data.body});
+            console.log(payload.notification.title);
+            new Notification(payload.notification.title, {body: payload.notification.body});
             if (payload.data.link === void 0) {
-                toastr.info(payload.data.title, payload.data.body);
+                toastr.info(payload.notification.title, payload.notification.body);
 
             } else {
                 toastr.options.onclick = function () {
@@ -606,10 +607,12 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                     console.log('clicked');
                 }
 
-                toastr.info(payload.data.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.data.title,);
+                toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.notification.title,);
 
             }
-            $("#beep__hover").get(0).play();
+            //$("#beep__hover").get(0).play();
+            var audio = document.getElementById("beep__hover");
+            audio.play();
         });
     });
 </script>

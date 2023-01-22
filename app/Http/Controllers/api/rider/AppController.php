@@ -53,30 +53,46 @@ class AppController extends Controller
 
                 ], 401);
             }
-
+            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
             //$order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->whereNotIn('action', ['pending', 'cancelled_by_customer_before_confirmed']);->orderBy('rider_assign_orders.id','desc')->limit(1);
             $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
             $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
-           
-            if ($order->first()->action == '0') {
-                $order = $order->first();
-                $order->expected_earninig = 50;
-                $order->trip_distance = 7;
-            } else {
-                $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
-                $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
-                $order = $order->first();
-                $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
+            if($order->exists()){
+                if ($order->first()->action == '0') {
+                    $order = $order->first();
+                    $order->expected_earninig = 50;
+                    $order->trip_distance = 7;
+                } else {
+                    $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction');
+                    $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
+                    $order = $order->first();
+                    $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
+                    foreach($products as $key =>$value ){
+                        $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
+                        $products[$key]->addons = $addons;
+                        
+                    }
+                    $order->products = $products;
+                }
+                
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => ['orders'=>$order,'profile'=>$data]
+    
+                ], 200);
+            }else{
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => ['orders'=>[],'profile'=>$data]
+    
+                ], 200);
             }
-            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
-            return response()->json([
-                'status'   => true,
-                'message'  => 'Data Get Successfully',
-                'response' => ['orders'=>$order,'profile'=>$data]
-
-            ], 200);
+            
+            
         } catch (Throwable $th) {
             return response()->json([
                 'status' => false,
@@ -102,7 +118,8 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
+            
+            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), "" ) as licence_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), "" ) as rc_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", insurance_image), "" ) as insurance_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", pancard_image), "" ) as pancard_image'));
             if($data->exists()){
                 $data = $data->first();   
                 return response()->json([
@@ -214,7 +231,13 @@ class AppController extends Controller
                 $order = $order->addSelect('vendors.mobile as vendor_mobile','orders.order_status','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
-                $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
+                $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
+                foreach($products as $key =>$value ){
+                    $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
+                    $products[$key]->addons = $addons;
+                    
+                }
+                $order->products = $products;
                 RiderAssignOrders::where('order_id','=',$request->order_row_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
                 $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['accepted_driver_id'=>$request->user_id]);
@@ -307,9 +330,13 @@ class AppController extends Controller
                 $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
-                $order->products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type')->get();
-                //
-                
+                $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
+                foreach($products as $key =>$value ){
+                    $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
+                    $products[$key]->addons = $addons;
+                    
+                }
+                $order->products = $products;
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Status Updated Successfully',

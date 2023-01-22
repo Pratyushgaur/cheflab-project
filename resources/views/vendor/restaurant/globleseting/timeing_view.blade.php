@@ -12,10 +12,15 @@
           <input type="hidden" value=" {{ csrf_token() }}" name="_token">
               <div class="row"> 
                 <div class="col-6"> 
-                  <div class=""> 
-                    <label class="d-block pr-2">Open Time</label>
-                      <select class="form-control" name="start_time" onchange="cheaktime(this);return false;">
-                          <?php
+                  <div class="">
+                  <div class="form-group">
+                      <label for="usr">Open Time:</label>
+                      <input type="time" class="form-control" id="usr" name="start_time" onchange="cheaktime(this);return false;">
+                    </div> 
+                    
+                     
+                      <!-- <select class="form-control" name="start_time" onchange="cheaktime(this);return false;">
+                          <//?php
                             $hour = 0;
                             
                             while($hour++ < 24)
@@ -33,24 +38,28 @@
 
                         ?>
                           <option value=""></option>
-                      </select>
+                      </select> -->
                   </div>
                 </div>
                 <div class="col-6"> 
-                  <div class=""> 
-                  <label class="d-block pr-2">Close Time</label>
-                      <select class="form-control "  onchange="cheaktime(this);return false;" name="end_time">
-                          <?php
+                  <div class="">
+                  <div class="form-group">
+                      <label for="usr">Close Time:</label>
+                      <input type="time" class="form-control" id="usr" name="end_time" onchange="cheaktime(this);return false;">
+                    </div> 
+                  <!-- <label class="d-block pr-2">Close Time</label> -->
+                      <!-- <select class="form-control "  onchange="cheaktime(this);return false;" name="end_time">
+                           <//?php
                             $hour = 0;
                             while($hour++ < 24)
                             {
                                 $timetoprint = date('H:i',mktime($hour,0,0,1,1,2011));
                                 echo "<option>".$timetoprint."</option>";                              
-                            }
+                            } 
 
-                        ?>
+                        ?> 
                           <option value=""></option>
-                      </select>
+                      </select> -->
                   </div>
                 </div>
               </div>
