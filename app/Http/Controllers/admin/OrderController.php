@@ -255,9 +255,10 @@ class OrderController extends Controller
     }
     public function get_data_table_of_order(Request $request)
     {
+        
         if ($request->ajax()) {
         
-           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
+           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','orders.pdf_url','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
            if($request->status != ''){
             $data = $data->where('order_status','=',$request->status);
            }
@@ -269,10 +270,14 @@ class OrderController extends Controller
            }
            $data= $data->orderBy('orders.id','desc');
            $data = $data->get();
+// echo '<pre>';print_r($data);die;
+           
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'"><i class="fa fa-eye"></i></a> <a href="#"><i class="fa fa-print"></i></a>';
+                    $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'" ><i class="fa fa-eye"></i></a>';
+                    
+                    $btn .= '<a href="'. asset("$data->pdf_url").'" download><i class="fa fa-print"></i></a>';
                     
                     return $btn;
                 })

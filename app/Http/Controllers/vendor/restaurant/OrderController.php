@@ -41,6 +41,7 @@ class OrderController extends Controller
 
     public function order_accept($id)
     {
+        
         $order               = Order::find($id);
         $order->order_status = 'accepted';
         $order->save();
@@ -72,6 +73,7 @@ class OrderController extends Controller
 
     public function order_preparing(Request $request, $id)
     {
+        createPdf($id);
         $order                        = Order::find($id);
         $order->order_status          = 'preparing';
         $order->preparation_time_from = mysql_date_time();
@@ -116,6 +118,7 @@ class OrderController extends Controller
 
     public function order_ready_to_dispatch($id)
     {
+        // createPdf($id);
         $order               = Order::find($id);
         $order->order_status = 'ready_to_dispatch';
         $order->save();
