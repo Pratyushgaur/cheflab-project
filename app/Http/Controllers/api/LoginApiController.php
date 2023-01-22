@@ -38,7 +38,7 @@ class LoginApiController extends Controller
             if (User::where('mobile_number', '=', $request->mobile_number)->exists()) {
                 return response()->json([
                     'status' => false,
-                    'error' => 'Already Have Regiseter this Number'
+                    'error' => 'Already Have Register this Number'
                 ], 401);
             } else {
                 $otp = $this->otp_generate($request->mobile_number);
