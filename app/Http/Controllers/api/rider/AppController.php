@@ -392,7 +392,7 @@ class AppController extends Controller
                 ], 401);
             }
             if($order->deliver_otp == $request->otp){
-                Order::where('id','=',$request->order_row_id);
+                $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
                 $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->select('fcm_token')->first();
                 if($user->fcm_token != ''){
