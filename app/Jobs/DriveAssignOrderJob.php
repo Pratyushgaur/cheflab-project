@@ -39,7 +39,7 @@ class DriveAssignOrderJob implements ShouldQueue
     {
 
         $vendor=Vendors::find($this->order->vendor_id);
-        $delivery_boy=get_delivery_boy_near_me($vendor->lat, $vendor->lng);
+        $delivery_boy=get_delivery_boy_near_me($vendor->lat, $vendor->lng,$this->order);
         if(!empty($delivery_boy)){
             $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id));
             $riderAssign->saveOrFail();

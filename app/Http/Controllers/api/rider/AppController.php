@@ -64,6 +64,7 @@ class AppController extends Controller
                     $order = $order->first();
                     $order->expected_earninig = 50;
                     $order->trip_distance = 7;
+                    $busy = false;
                 } else {
                     $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction');
                     $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
@@ -75,19 +76,20 @@ class AppController extends Controller
                         
                     }
                     $order->products = $products;
+                    $busy = true;
                 }
                 
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Data Get Successfully',
-                    'response' => ['orders'=>$order,'profile'=>$data]
+                    'response' => ['orders'=>$order,'busy'=>$busy,'profile'=>$data]
     
                 ], 200);
             }else{
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Data Get Successfully',
-                    'response' => ['orders'=>[],'profile'=>$data]
+                    'response' => ['orders'=>[],'busy'=>false,'profile'=>$data]
     
                 ], 200);
             }

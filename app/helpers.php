@@ -532,10 +532,15 @@ function front_end_currency($number)
     return $result . '  &#8377; ';
 }
 
-function get_delivery_boy_near_me($lat, $lng)
+function get_delivery_boy_near_me($lat, $lng,$order)
 {
-
-    return \App\Models\Deliver_boy::where('id','=',1)->first();
+    if ($order->user_id == 4) {
+        return \App\Models\Deliver_boy::where('id','=',2)->first();
+    } else {
+        return \App\Models\Deliver_boy::where('id','=',1)->first();
+    }
+       
+    
 }
 
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
