@@ -8,10 +8,12 @@ use Illuminate\Support\Facades\Session;
 use Auth;
 use Validator;
 use Hash;
+use App\Models\Vendors;
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
+        
         $request->validate([
             'email' => 'required',
             'password' => 'required',
@@ -174,6 +176,25 @@ class LoginController extends Controller
                 'error'  => $th->getMessage()
             ], 200);
         }
+    }
+
+    public function vendorLogin(Request $request)
+    {
+      
+        $vendorEmail = Vendors::where('id', $request->id)->first(); 
+        if ($vendorEmail) {
+
+                    Auth::guard('vendor')->login($vendorEmail);
+
+                if($vendorEmail->status==0) {
+                   return response()->json(['success'=>0,'message'=>'Your Account Not Approved']); die;
+                }else{
+                    return response()->json(['success'=>2,'message'=>'Successfully Logged In!']); die;
+                }
+
+        }
+        return response()->json(['success'=>1,'message'=>'Login details are not valid']); die;
+
     }
     
 }

@@ -178,10 +178,13 @@ Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::clas
 Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppController::class, 'register_token']);
 Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController::class, 'change_status']);
 
-Route::post('rider-order-status', [App\Http\Controllers\api\rider\AppController::class, 'orderStatus']);
-Route::post('rider-pick-up-otp', [App\Http\Controllers\api\rider\AppController::class, 'pickupOtpCheck']);
-Route::post('rider-analytics', [App\Http\Controllers\api\rider\AppController::class, 'analytics']);
-Route::post('rider-latLng-update', [App\Http\Controllers\api\rider\AppController::class, 'updateLatLng']);
+
+Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
+Route::post('rider-pick-up-otp',[App\Http\Controllers\api\rider\AppController::class,'pickupOtpCheck']);
+Route::post('rider-analytics',[App\Http\Controllers\api\rider\AppController::class,'analytics']);
+Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController::class,'updateLatLng']);
+Route::post('rider-deliver-otp',[App\Http\Controllers\api\rider\AppController::class,'deliverOtpCheck']);
+
 
 
 //

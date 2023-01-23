@@ -337,5 +337,23 @@
                 }
             })
         })
+
+        function loginVendor(id){
+            $.ajax({  
+                'headers': {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url :"{{ route('admin.vendor.login') }}",  
+                method:"POST",  
+                data:{'id':id},
+                success: function(res){ 
+
+                    var surl = "{{ route('restaurant.dashboard') }}";
+                    // alert(surl);
+                    window.open(surl);
+                        return false;
+                },
+            }); 
+        }
     </script>
 @endsection
