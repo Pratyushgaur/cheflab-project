@@ -69,7 +69,7 @@ class AppController extends Controller
                     $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction');
                     $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                     $order = $order->first();
-                    $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
+                    $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_products.product_qty','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
                     foreach($products as $key =>$value ){
                         $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
                         $products[$key]->addons = $addons;
@@ -241,7 +241,7 @@ class AppController extends Controller
                 $order = $order->addSelect('vendors.mobile as vendor_mobile','orders.order_status','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
-                $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
+                $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_products.product_qty','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
                 foreach($products as $key =>$value ){
                     $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
                     $products[$key]->addons = $addons;
@@ -331,7 +331,7 @@ class AppController extends Controller
                 $order = $order->addSelect('vendors.mobile as vendor_mobile','vendors.lat as vendor_lat','vendors.long as vendor_lng','orders.lat as customer_lat','orders.long as customer_lng','orders.mobile_number as customer_mobile','net_amount');
                 $order = $order->leftJoin('order_products', 'orders.id', '=', 'order_products.order_id');
                 $order = $order->first();
-                $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
+                $products = OrderProduct::where('order_id','=',$order->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_products.product_qty','order_product_variants.variant_name','products.type','order_products.id as order_product_row_id')->get();
                 foreach($products as $key =>$value ){
                     $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$value->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
                     $products[$key]->addons = $addons;
