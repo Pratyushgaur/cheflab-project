@@ -124,11 +124,11 @@ class AppController extends Controller
             $data = Deliver_boy::where('id','=',$request->user_id);
             $data =     $data->select(
                                         'name','email','username','mobile','is_online','address','licence_number','rc_number','leader_contact_no',
-                                        \DB::raw('IFNULL()CONCAT("' . asset('dliver-boy') . '/", image) AS image'),
-                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), "" ) as licence_image'),
-                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), "" ) as rc_image'),
-                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", insurance_image), "" ) as insurance_image'),
-                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", pancard_image), "" ) as pancard_image')
+                                        \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), null ) as licence_image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), null ) as rc_image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", insurance_image), null ) as insurance_image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", pancard_image), null ) as pancard_image')
                                     );
             if($data->exists()){
                 $data = $data->first();   
