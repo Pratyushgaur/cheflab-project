@@ -38,7 +38,7 @@ class RegisterTest extends TestCase
 
     public function test_it_can_check_the_mobile_number_already_existed_validation()
     {
-        $user = $this->createUser();
+        $user = $this->createUser(["mobile_number" => "1234567890"]);
         $response = $this->postJson(route("register.otp.send"), ["mobile_number" => $user->mobile_number]);
         $response->assertJsonStructure([
             "error"
