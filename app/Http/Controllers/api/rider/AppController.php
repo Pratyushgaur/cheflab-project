@@ -401,7 +401,7 @@ class AppController extends Controller
                     \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,$data);
                 }
                 $riderAssing = RiderAssignOrders::where('id','=',$request->rider_assign_order_id);
-                $riderAssing->update(['action'=>$request->status]);
+                $riderAssing->update(['action'=>'3']);
                 $earningData = $riderAssing->select('earning')->first();
                 return response()->json([
                     'status'   => true,
