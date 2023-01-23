@@ -65,12 +65,10 @@ class OrderApiController extends Controller
             $order = $order->get();
 
             foreach ($order as $key => $value) {
-                $products              = OrderProduct::where('order_id','=',$value->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_products.product_qty','order_product_variants.variant_name','products.type')->get();
-                
+                $products              = OrderProduct::where('order_id','=',$value->order_row_id)->join('products','order_products.product_id','=','products.id')->leftJoin('order_product_variants','order_products.id','=','order_product_variants.order_product_id')->select('order_products.product_name','order_products.product_qty','order_products.id as order_product_row_id','order_product_variants.variant_name','products.type')->get();
                 foreach($products as $k =>$v ){
                     $addons = \App\Models\OrderProductAddon::where('order_product_id','=',$v->order_product_row_id)->select('addon_name','addon_price','addon_qty')->get();
                     $products[$k]->addons = $addons;
-                    
                 }
                 
                 $order[$key]->products = $products;
