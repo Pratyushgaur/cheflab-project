@@ -154,8 +154,8 @@ Route::get('login', function () {
         'error'  => "Need To Use Token for this route"
     ], 500);
 })->name('login');
-Route::post('register-send-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_send_otp']);
-Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_verify_otp']);
+Route::post('register-send-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_send_otp'])->name("register.otp.send");
+Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_verify_otp'])->name("register.otp.verify");
 Route::post('register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user']);
 Route::post('login-otp-send', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp'])->name("login.otp.send");
 Route::post('login-otp-verify', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp'])->name("login.verify.otp");
