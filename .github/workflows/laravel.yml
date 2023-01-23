@@ -23,9 +23,6 @@ jobs:
       - name: Install Dependencies
         run: composer install
 
-      - name: Run Style Fix using pint
-        run: ./vendor/bin/pint
-
       - name: Generate key
         run: php artisan key:generate
 
