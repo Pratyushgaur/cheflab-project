@@ -89,7 +89,7 @@ class AppController extends Controller
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Data Get Successfully',
-                    'response' => ['orders'=>[],'busy'=>false,'profile'=>$data]
+                    'response' => ['orders'=>null,'busy'=>false,'profile'=>$data]
     
                 ], 200);
             }
@@ -121,7 +121,15 @@ class AppController extends Controller
                 ], 401);
             }
             
-            $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), "" ) as licence_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), "" ) as rc_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", insurance_image), "" ) as insurance_image'),\DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", pancard_image), "" ) as pancard_image'));
+            $data = Deliver_boy::where('id','=',$request->user_id);
+            $data =     $data->select(
+                                        'name','email','username','mobile','is_online','address','licence_number','rc_number','leader_contact_no',
+                                        \DB::raw('IFNULL()CONCAT("' . asset('dliver-boy') . '/", image) AS image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), "" ) as licence_image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), "" ) as rc_image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", insurance_image), "" ) as insurance_image'),
+                                        \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", pancard_image), "" ) as pancard_image')
+                                    );
             if($data->exists()){
                 $data = $data->first();   
                 return response()->json([
@@ -253,15 +261,6 @@ class AppController extends Controller
                 
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
-            }elseif($request->status == '3'){
-                Order::where('id','=',$request->order_row_id);
-                $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
-                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->select('fcm_token')->first();
-                if($user->fcm_token != ''){
-                    //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
-                    $data = orderDetailForUser($request->order_row_id);
-                    \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,$data);
-                }
             }
             
             
@@ -343,6 +342,69 @@ class AppController extends Controller
                     'status'   => true,
                     'message'  => 'Status Updated Successfully',
                     'order' =>$order
+                ], 200); 
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'  =>'Invalid OTP'
+
+                ], 401);
+            }
+
+              
+            
+           
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function deliverOtpCheck(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'order_row_id' => 'required|numeric|exists:orders,id',
+                    'rider_assign_order_id'=>'required|exists:rider_assign_orders,id',
+                    'otp'=>'required',
+                    'user_id' => 'required|numeric|exists:deliver_boy,id'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            
+
+            $order = Order::where('id','=',$request->order_row_id)->select('deliver_otp')->first();
+            if(empty($order)){
+                return response()->json([
+                    'status' => false,
+                    'error'  =>'No Order found'
+
+                ], 401);
+            }
+            if($order->deliver_otp == $request->otp){
+                Order::where('id','=',$request->order_row_id);
+                $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
+                $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->select('fcm_token')->first();
+                if($user->fcm_token != ''){
+                    //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
+                    $data = orderDetailForUser($request->order_row_id);
+                    \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,$data);
+                }
+                $earningData = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id)->select('earning')->first();
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Status Updated Successfully',
+                    'earning'  => $earningData->earning
                 ], 200); 
             }else{
                 return response()->json([
