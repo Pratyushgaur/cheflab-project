@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
 
-//    Route::post('getRestaurantDetailPage_old', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage_old']);
+    //    Route::post('getRestaurantDetailPage_old', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage_old']);
 
 
     Route::post('getRestaurantDetailByFoodtype', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailByFoodtype']);
@@ -66,10 +66,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('dislike-product-chef', [App\Http\Controllers\api\AppController::class, 'deleteLikeProductChef']);
     Route::post('dislike-vendor-chef', [App\Http\Controllers\api\AppController::class, 'deleteLikeChef']);
     // coupon
-    Route::post('vendor-coupon',[App\Http\Controllers\api\CouponController::class,'getCoupon']);
-    Route::post('vendor-coupon-details',[App\Http\Controllers\api\CouponController::class,'couponDetailPage']);
-    Route::post('procode-coupon-details',[App\Http\Controllers\api\CouponController::class,'getPromoCode']);
-    Route::post('procode-coupon-apply',[App\Http\Controllers\api\CouponController::class,'couponApply']);
+    Route::post('vendor-coupon', [App\Http\Controllers\api\CouponController::class, 'getCoupon']);
+    Route::post('vendor-coupon-details', [App\Http\Controllers\api\CouponController::class, 'couponDetailPage']);
+    Route::post('procode-coupon-details', [App\Http\Controllers\api\CouponController::class, 'getPromoCode']);
+    Route::post('procode-coupon-apply', [App\Http\Controllers\api\CouponController::class, 'couponApply']);
 
 
     // order
@@ -94,13 +94,13 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('save-product-rating-review', [App\Http\Controllers\api\ProductReviewController::class, 'saveReviewData']);
     Route::post('get-vendor-all-review', [App\Http\Controllers\api\VendorReviewController::class, 'getVendorReviews']);
     Route::post('save-rider-rating-review', [App\Http\Controllers\api\AppController::class, 'saveRiderRatingReviews']);
-    
-//    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
+
+    //    Route::get('getProductReview', [App\Http\Controllers\api\ProductReviewController::class, 'getReviewData']);
     // Delivery Address
-    Route::post('delivery-address-user',[App\Http\Controllers\api\DeliveryAddressController::class,'deliverAddress']);
-    Route::post('get-delivery-address',[App\Http\Controllers\api\DeliveryAddressController::class,'getDeliverAddress']);
-    Route::post('delivery-address-update',[App\Http\Controllers\api\DeliveryAddressController::class,'updateAdress']);
-    Route::post('delivery-address-delete',[App\Http\Controllers\api\DeliveryAddressController::class,'deleteAddres']);
+    Route::post('delivery-address-user', [App\Http\Controllers\api\DeliveryAddressController::class, 'deliverAddress']);
+    Route::post('get-delivery-address', [App\Http\Controllers\api\DeliveryAddressController::class, 'getDeliverAddress']);
+    Route::post('delivery-address-update', [App\Http\Controllers\api\DeliveryAddressController::class, 'updateAdress']);
+    Route::post('delivery-address-delete', [App\Http\Controllers\api\DeliveryAddressController::class, 'deleteAddres']);
     // FAQ
     Route::post('getUerFaq', [App\Http\Controllers\api\AppController::class, 'getUerFaq']);
     // Privacy Polic TAD User
@@ -128,7 +128,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('get-filter-chef', [App\Http\Controllers\api\AppController::class, 'filterByChef']);
     //firbase
     Route::post('user-fcm-token', [App\Http\Controllers\api\AppController::class, 'updateTokenUser'])->name('fcmToken_user');
-    Route::get('/user-send-notification',[\App\Http\Controllers\API\FirebaseApiController::class,'notification'])->name('notification_user');
+    Route::get('/user-send-notification', [\App\Http\Controllers\API\FirebaseApiController::class, 'notification'])->name('notification_user');
     Route::post('save-contact-us', [\App\Http\Controllers\api\AppController::class, 'save_contact_us']);
     Route::post('get-all-liked-products', [\App\Http\Controllers\api\AppController::class, 'getAllLikeProducts']);
     Route::post('get-all-liked-restaurant', [\App\Http\Controllers\api\AppController::class, 'getAllLikerestaurants']);
@@ -148,35 +148,36 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     //
 
 });
-Route::get('login',function(){
+Route::get('login', function () {
     return response()->json([
         'status' => false,
         'error'  => "Need To Use Token for this route"
     ], 500);
 })->name('login');
-Route::post('register-send-otp',[App\Http\Controllers\api\LoginApiController::class,'register_send_otp']);
-Route::post('register-verify-otp',[App\Http\Controllers\api\LoginApiController::class,'register_verify_otp']);
-Route::post('register-verified-user',[App\Http\Controllers\api\LoginApiController::class,'register_user']);
-Route::post('login-otp-send',[App\Http\Controllers\api\LoginApiController::class,'login_send_otp']);
-Route::post('login-otp-verify',[App\Http\Controllers\api\LoginApiController::class,'login_verify_otp']);
+Route::post('register-send-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_send_otp'])->name("register.otp.send");
+Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_verify_otp'])->name("register.otp.verify");
+Route::post('register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user']);
+Route::post('login-otp-send', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp'])->name("login.otp.send");
+Route::post('login-otp-verify', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp'])->name("login.verify.otp");
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);
 
 Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion']);
 
 
-Route::post('send-notification',[App\Http\Controllers\api\AppController::class,'sendNotification']);
+Route::post('send-notification', [App\Http\Controllers\api\AppController::class, 'sendNotification']);
 
 //
 
-Route::post('rider-otp-send',[App\Http\Controllers\api\rider\LoginApiController::class,'login_send_otp']);
-Route::post('rider-otp-verify',[App\Http\Controllers\api\rider\LoginApiController::class,'login_verify_otp']);
+Route::post('rider-otp-send', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_send_otp']);
+Route::post('rider-otp-verify', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_verify_otp']);
 // home
 
-Route::post('rider-home',[App\Http\Controllers\api\rider\AppController::class,'home']);
-Route::post('rider-profile',[App\Http\Controllers\api\rider\AppController::class,'profile']);
-Route::post('rider-register-token',[App\Http\Controllers\api\rider\AppController::class,'register_token']);
-Route::post('rider-chage-status',[App\Http\Controllers\api\rider\AppController::class,'change_status']);
+Route::post('rider-home', [App\Http\Controllers\api\rider\AppController::class, 'home']);
+Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::class, 'profile']);
+Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppController::class, 'register_token']);
+Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController::class, 'change_status']);
+
 
 Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
 Route::post('rider-pick-up-otp',[App\Http\Controllers\api\rider\AppController::class,'pickupOtpCheck']);
@@ -185,8 +186,9 @@ Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController:
 Route::post('rider-deliver-otp',[App\Http\Controllers\api\rider\AppController::class,'deliverOtpCheck']);
 
 
+
 //
 
-Route::post('rider-order-history',[App\Http\Controllers\api\rider\OrderApiController::class,'orderhistory']);
-Route::get('getDistance',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance']);
-Route::get('getDistance2',[App\Http\Controllers\api\rider\LoginApiController::class,'getDistance2']);
+Route::post('rider-order-history', [App\Http\Controllers\api\rider\OrderApiController::class, 'orderhistory']);
+Route::get('getDistance', [App\Http\Controllers\api\rider\LoginApiController::class, 'getDistance']);
+Route::get('getDistance2', [App\Http\Controllers\api\rider\LoginApiController::class, 'getDistance2']);
