@@ -157,6 +157,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
    Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');
    Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit');
    Route::post('root-image-update', [App\Http\Controllers\admin\AdminRootBannerController::class, 'updateBanner'])->name('admin.root.update');
+   Route::get('banner/promotion/booking/list/{id}', [App\Http\Controllers\admin\BannerController::class, 'bannerPromotionBookingList'])->name('banner.promotion.booking.list');
+   Route::post('banner/promotion/slot/edit/', [App\Http\Controllers\admin\BannerController::class, 'bannerSlotEdit'])->name('banner.promotion.slot.edit');
+   
    // Vendor Store Promotion
     Route::get('vendor-promotion', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.vendor.store');
     Route::post('vendor-promotion/create', [App\Http\Controllers\admin\VendorPromotion::class, 'store'])->name('admin.vendorstore.store');

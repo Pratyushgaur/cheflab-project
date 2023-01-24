@@ -21,10 +21,19 @@ class BannerController extends Controller
 
     public function index()
     {
-        
-        return view('admin/banner/createbanner');
+        $slots =  \App\Models\RootImage::where('banner_for','!=','cheflab')->get();
+        return view('admin/banner/banner-slots',compact('slots'));
     }
-
+    public function bannerPromotionBookingList($id)
+    {
+        
+        $booking = \App\Models\SloteBook::where('cheflab_banner_image_id','=',$id)
+        ->join('vendors','slotbooking_table.vendor_id','=','vendors.id')
+        ->join('cheflab_banner_image','slotbooking_table.cheflab_banner_image_id','=','cheflab_banner_image.id')
+        ->select('cheflab_banner_image.position','vendors.name','slotbooking_table.*')
+        ->orderBy('slotbooking_table.id','DESC')->get();
+        return view('admin/banner/banner-booking-list',compact('booking'));
+    }
     public function store_banner(Request $request)
     {
         $this->validate($request, [
@@ -41,7 +50,19 @@ class BannerController extends Controller
         return redirect()->route('admin.banner.createbanner')->with('message', 'Slote Create Successfully');
 
     }
-
+    public function bannerSlotEdit(Request $request)
+    {
+        $this->validate($request, [
+            'position_id'          => 'required',
+            'position_name'    => 'required',
+            'position_price' => 'required',
+        ]);
+        $RootImage            = \App\Models\RootImage::findOrFail($request->position_id);
+        $RootImage->name             = $request->position_name;
+        $RootImage->price            = $request->position_price;
+        $RootImage->save();
+        return redirect()->route('admin.banner.createbanner')->with('message', 'Slot Updated Successfully');
+    }
     public function updateSlot(Request $request)
     {
         $this->validate($request, [

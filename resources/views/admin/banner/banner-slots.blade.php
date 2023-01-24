@@ -102,7 +102,7 @@
     <!-- Main content -->
     <section class="content">
 		<div class="row">
-  		<div class="card card-info col-md-8">
+  		<div class="card card-info col-md-12">
             <div class="card-header">
               <h3 class="card-title">List</h3>
 
@@ -117,11 +117,29 @@
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
                                     <th >Slot Name</th>
-                                    <th >Position</th>
+                                    
+                                    <th>Position</th>
                                     <th >Price</th>
-                                    <th  >Action</th>
+                                    <th>Banner For</th>
+                                    <th>Action</th>
                                   </tr>
                             </thead>
+                            <tbody>
+                              @foreach($slots as $Key =>$value)
+                              <tr>
+                                <td>1</td>
+                                <td>{{$value->name}}</td>
+                                <td>{{$value->position}}</td>
+                                <td>{{$value->price}}</td>
+                                <td>{{$value->banner_for}}</td>
+                                <td>
+                                  <a href="#" class="edit-btn" data-price="{{$value->price}}"  data-id="{{$value->id}}" data-name="{{$value->name}}"><i class="fas fa-edit"></i></a>
+                                  <a href="{{route('banner.promotion.booking.list',$value->id)}}" class="btn btn-primary btn-xs">Bookings</i></a>
+                                  <!-- <a href="{{route('banner.promotion.booking.list',$value->id)}}" class="btn btn-primary btn-xs">Active</i></a> -->
+                                </td>
+                              </tr>
+                              @endforeach
+                            </tbody>
                             
                         </table>
                     </div>
@@ -132,6 +150,37 @@
     </section>
     <!-- /.content -->
   </div>
+  <!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="{{route('banner.promotion.slot.edit')}}" method="post">
+        @csrf
+        <input type="hidden" class="position_id" name="position_id" required>
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit Banner Slot</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="">Name Position</label>
+            <input type="text" name="position_name" class="form-control position_name" required>
+          </div>
+          <div class="form-group">
+            <label for="">Price</label>
+            <input type="number" name="position_price" class="form-control position_price" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
   <!-- /.content-wrapper -->
  
   <!-- /.content-wrapper -->
@@ -153,17 +202,20 @@
 
 <script type="text/javascript">
   // $(function () {
+    // let table = $('#example').dataTable({
+    //     processing: true,
+    //     serverSide: true,
+    //     ajax: "{{route('admin.slot.data')}}",
+    //     columns: [
+    //         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+    //         {data: 'slot_name', name: 'slot_name'},
+    //         {data: 'position', name: 'position'},
+    //         {data: 'price', name: 'price'},
+    //         {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
+    //     ]
+    // });
     let table = $('#example').dataTable({
-        processing: true,
-        serverSide: true,
-        ajax: "{{route('admin.slot.data')}}",
-        columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'slot_name', name: 'slot_name'},
-            {data: 'position', name: 'position'},
-            {data: 'price', name: 'price'},
-            {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
-        ]
+      paging: false
     });
     $("#banner-form").validate({
       rules: {
@@ -227,6 +279,12 @@
             nr++;
         }
         }); 
+    $('.edit-btn').click(function(){
+      $('.position_name').val($(this).attr('data-name'));
+      $('.position_price').val($(this).attr('data-price'));
+      $('.position_id').val($(this).attr('data-id'));
+      $('#exampleModal').modal('show');
+    })
   function reload_table() {
       table.DataTable().ajax.reload(null, false);
    }
