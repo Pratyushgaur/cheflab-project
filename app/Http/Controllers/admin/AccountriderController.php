@@ -29,6 +29,7 @@ class AccountriderController extends Controller
         
            $data = Deliver_boy::select('deliver_boy.*','riderbank_details.bank_name','riderbank_details.holder_name','riderbank_details.account_no','riderbank_details.ifsc')->join('riderbank_details','deliver_boy.id','=','riderbank_details.rider_id');
            
+            
 
            $dateSedule = $request->datePicker;
         

@@ -82,7 +82,7 @@
           </div>
           <!-- /.col -->
           <div class="col-12 col-sm-6 col-md-3">
-          <a href="{{ url('orders/dashboard') }}">
+          <a href="{{ url('admin/orders/dashboard') }}">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
               <div class="info-box-content">
@@ -95,7 +95,7 @@
           </div>
 
           <div class="col-12 col-sm-6 col-md-3">
-          <a href="{{ url('orders/dashboard/delay_restaurant') }}">
+          <a href="{{ url('admin/orders/dashboard/delay_restaurant') }}">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
               <div class="info-box-content">
@@ -108,7 +108,7 @@
           </div>
 
           <div class="col-12 col-sm-6 col-md-3">
-          <a href="{{ url('orders/dashboard/delay_rider') }}">
+          <a href="{{ url('admin/orders/dashboard/delay_rider') }}">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
               <div class="info-box-content">
@@ -121,7 +121,7 @@
           </div>
 
           <div class="col-12 col-sm-6 col-md-3">
-          <a href="{{ url('orders/dashboard/preparing') }}">
+          <a href="{{ url('admin/orders/dashboard/preparing') }}">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
               <div class="info-box-content">
@@ -134,7 +134,7 @@
           </div>
 
           <div class="col-12 col-sm-6 col-md-3">
-          <a href="{{ url('orders/dashboard/not_pickup_rider') }}">
+          <a href="{{ url('admin/orders/dashboard/not_pickup_rider') }}">
             <div class="info-box mb-3">
               <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
               <div class="info-box-content">
@@ -147,7 +147,7 @@
           </div>
 
           <div class="col-12 col-sm-6 col-md-3">
-          <a href="{{ url('orders/dashboard/out_of_dellivery') }}">
+          <a href="{{ url('admin/orders/dashboard/out_of_dellivery') }}">
             <div class="info-box mb-3">            
                 <span class="info-box-icon bg-danger elevation-1"><i class="fa fa-motorcycle"></i></span>
                 <div class="info-box-content">

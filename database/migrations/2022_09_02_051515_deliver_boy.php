@@ -49,6 +49,8 @@ class DeliverBoy extends Migration
             $table->double('lat',8,6)->nullable();
             $table->string('time')->nullable();
             $table->string('boy_id')->nullable();
+            $table->string('start_time')->nullable();
+            $table->string('end_time')->nullable();
             $table->float('ratings',2,1)->default('0.0');
             $table->date('join_date');
             $table->string('leader_contact_no')->nullable();
