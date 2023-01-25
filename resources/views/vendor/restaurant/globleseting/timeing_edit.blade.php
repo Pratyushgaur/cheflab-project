@@ -15,51 +15,55 @@
                 <div class="col-6"> 
                   <div class=""> 
                    
-                    <label class="d-block pr-2">Open Time</label>
-                      <select class="form-control" name="start_time" onchange="cheaktime(this);return false;">
+                    <!-- <label class="d-block pr-2">Open Time</label> -->
+                    <label for="usr">Open Time:</label>
+                    <input type="time" value="{{ $timing->start_time }}" class="form-control" id="usr" name="start_time" onchange="cheaktime(this);return false;">
+                      <!-- <select class="form-control" name="start_time" onchange="cheaktime(this);return false;"> -->
                           <?php
-                            $hour = 0;
-                            while($hour++ < 24)
-                            {
-                              $timetoprint = date('H:i',mktime($hour,0,0,1,1,2011));
-                             $stime = date('H:i',strtotime($timing->start_time));
+                            // $hour = 0;
+                            // while($hour++ < 24)
+                            // {
+                            //   $timetoprint = date('H:i',mktime($hour,0,0,1,1,2011));
+                            //  $stime = date('H:i',strtotime($timing->start_time));
 
-                              if($stime == $timetoprint){
-                                $select = 'selected';
-                              }else{
-                                $select = '';
-                              }
+                            //   if($stime == $timetoprint){
+                            //     $select = 'selected';
+                            //   }else{
+                            //     $select = '';
+                            //   }
                                
-                                echo "<option value=".$timetoprint." $select>".$timetoprint."</option>";                              
-                            }
+                            //     echo "<option value=".$timetoprint." $select>".$timetoprint."</option>";                              
+                            // }
 
                         ?>
                           
-                      </select>
+                      <!-- </select> -->
                   </div>
                 </div>
                 <div class="col-6"> 
                   <div class=""> 
-                  <label class="d-block pr-2">Close Time</label>
-                      <select class="form-control "  onchange="cheaktime(this);return false;" name="end_time">
+                  <label for="usr">Close Time:</label>
+                      <input type="time" value="{{ $timing->end_time }}" class="form-control" id="usr" name="end_time" onchange="cheaktime(this);return false;">
+                  <!-- <label class="d-block pr-2">Close Time</label>
+                      <select class="form-control "  onchange="cheaktime(this);return false;" name="end_time"> -->
                           <?php
-                            $hour = 0;
-                            while($hour++ < 24)
-                            {
+                            // $hour = 0;
+                            // while($hour++ < 24)
+                            // {
                                
-                                $timetoprint = date('H:i',mktime($hour,0,0,1,1,2011));
-                                $stime = date('H:i',strtotime($timing->end_time));
-                              if($stime == $timetoprint){
-                                $select = 'selected';
-                              }else{
-                                $select = '';
-                              }
-                              echo "<option value=".$timetoprint." $select>".$timetoprint."</option>";                            
-                            }
+                            //     $timetoprint = date('H:i',mktime($hour,0,0,1,1,2011));
+                            //     $stime = date('H:i',strtotime($timing->end_time));
+                            //   if($stime == $timetoprint){
+                            //     $select = 'selected';
+                            //   }else{
+                            //     $select = '';
+                            //   }
+                            //   echo "<option value=".$timetoprint." $select>".$timetoprint."</option>";                            
+                            // }
 
                         ?>
-                          <option value=""></option>
-                      </select>
+                          <!-- <option value=""></option>
+                      </select> -->
                   </div>
                 </div>
               </div>
