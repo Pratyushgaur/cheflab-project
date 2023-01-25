@@ -196,15 +196,15 @@ var x
             {data: 'transaction_id', name: 'transaction_id'},
             {data: 'coupon_id', name: 'coupon_id'},
             {data: 'discount_amount', name: 'discount_amount'},
-
+            {data: 'code', name: 'code'},
             {data: 'vendor_commision', name: 'vendor_commision'},
             {data: 'delivery_charge', name: 'delivery_charge'},
             {data: 'wallet_cut', name: 'wallet_cut'},
             {data: 'rider_earning', name: 'rider_earning'},
             {data: 'commission', name: 'commission'}, 
             {data: 'admin_commision', name: 'admin_commision'},
-            {data: 'preparation_time_to', name: 'preparation_time_to'},
             {data: 'admin_amount', name: 'admin_amount'},
+            {data: 'admin_erning', name: 'admin_erning'},
         ]
     });
     // table.buttons().container()

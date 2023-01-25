@@ -515,8 +515,8 @@
                           <input type="hidden" name="address_latitude" id="" value="{{ old('address_latitude') ?? '0' }}" />
                           <input type="hidden" name="address_longitude" id="" value="{{ old('address_longitude') ?? '0' }}" />
 
-                            <input id="address-latitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="lat" value="51.5073509" readonly required>
-                          <input id="address-longitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="long" value="-0.12775829999998223" readonly required>
+                            <!-- <input id="address-latitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="lat" value="51.5073509" readonly required>
+                          <input id="address-longitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="long" value="-0.12775829999998223" readonly required> -->
 
 
                         </div>
@@ -524,20 +524,20 @@
                     </div>
                     <!-- div row -->
                   </div>
-                  <!-- <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label>Latitude</label>
-                    <div class="input-group">
-                      <input id="address-latitude" type="text" class="form-control" placeholder="Latitude" step="" name="lat" value="51.5073509" readonly required><br>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label>Latitude</label>
+                      <div class="input-group">
+                        <input type="text" name="lat" class="form-control newLatitude" placeholder="Latitude" value="" readonly><br>
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-2">
+                      <label>Longitude</label>
+                      <div class="input-group">
+                        <input type="text" name="lng" class="form-control newLongitude" placeholder="Latitude" value="" readonly><br>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-md-6 mb-2">
-                    <label>Longitude</label>
-                    <div class="input-group">
-                    <input id="address-longitude" type="text" class="form-control" placeholder="Latitude" step="" name="long" value="-0.12775829999998223" readonly required><br>
-                    </div>
-                  </div>
-                  </div> -->
 
                 </div>
                 <!-- schedule information end -->
@@ -669,6 +669,12 @@
         },
         'deal_cuisines[]': {
           required: true
+        },
+        lat:{
+          required: true,
+        },
+        lng:{
+          required: true,
         }
 
 
@@ -721,6 +727,12 @@
         },
         'deal_cuisines[]': {
           required: "Select Deals Cuisines"
+        },
+        lat: {
+          required: "Latitude is required",
+        },
+        lng: {
+          required: "Longitude is required",
         }
 
 
@@ -817,11 +829,15 @@
     });
 
     function setLocationCoordinates(lat, lng) {
-      const latitudeField = document.getElementById("address-latitude"); 
-      const longitudeField = document.getElementById("address-longitude");
-      latitudeField.value = lat;
-      longitudeField.value = lng;
-     
+      
+      // const latitudeField = document.getElementById("address-latitude-1");
+      // const longitudeField = document.getElementById("address-longitude-1");
+      // latitudeField.value = lat;
+      // longitudeField.value = lng;
+      // $('#address-lat').val(lat);
+      // $('#address-long').val(lng);
+      $('.newLatitude').val(lat);
+      $('.newLongitude').val(lng);
     }
   }
 </script>

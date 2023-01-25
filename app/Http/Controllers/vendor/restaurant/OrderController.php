@@ -127,7 +127,6 @@ class OrderController extends Controller
            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id,$otp));
         }
         orderCancel($id);
-
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',
@@ -138,6 +137,7 @@ class OrderController extends Controller
 
     public function order_dispatched($id)
     {
+        
         $order               = Order::find($id);
         $order->order_status = 'dispatched';
         $order->save();

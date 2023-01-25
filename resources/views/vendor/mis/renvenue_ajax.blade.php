@@ -100,7 +100,7 @@
                       <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
-                            <h4 class="fw-normal text-dark">₹10,500</h4>
+                            <h4 class="fw-normal text-dark">₹0.0</h4>
                             <p class="subtitle text-sm text-muted mb-0">Your Settlements (Bank UTRs)</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">

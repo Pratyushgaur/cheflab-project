@@ -674,7 +674,42 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function logInHistory(Request $request){
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
 
+                ], 401);
+            }
+            $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
+            $response = [];
+            foreach($period as $Key =>$value){
+                $response[] = array('date'=>Carbon::parse($value)->format('d-m-Y'),'hour'=>0);
+            }
+            return response()->json([
+                'status'   => true,
+                'message'  => 'data Get Successfully',
+                'response' => $response
+
+            ], 200);    
+            
+           
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
     function calculateWorkingHours($riderId,$from,$to){
         $logs = \App\Models\DriverWorkingLogs::whereDate('created_at',Carbon::now())->orderBy('id','DESC')->get();
         if(!empty($logs)){

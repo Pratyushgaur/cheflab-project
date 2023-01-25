@@ -186,6 +186,7 @@ Route::post('rider-order-earnings',[App\Http\Controllers\api\rider\AppController
 Route::post('rider-incentive-history',[App\Http\Controllers\api\rider\AppController::class,'incentiveHistory']);
 Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController::class,'updateLatLng']);
 Route::post('rider-deliver-otp',[App\Http\Controllers\api\rider\AppController::class,'deliverOtpCheck']);
+Route::post('rider-login-history',[App\Http\Controllers\api\rider\AppController::class,'logInHistory']);
 
 
 
