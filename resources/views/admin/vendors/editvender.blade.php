@@ -420,31 +420,31 @@
                       <div class="col-md-4">
                         <div class="form-group">
                           <label>Bank name</label>
-                          <input type="text" name="bank_name" class="form-control" id="" placeholder="Enter Bank Name" value="{{ @$vendor_bankdetails->bank_name }}">
+                          <input type="text" name="bank_name" class="form-control" id="" placeholder="Enter Bank Name" value="{{ @$bankDetail->bank_name }}">
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
                           <label>Account Holder name</label>
-                          <input type="text" name="holder_name" class="form-control" id="" placeholder="Account Holder Name" value="{{ @$vendor_bankdetails->holder_name }}">
+                          <input type="text" name="holder_name" class="form-control" id="" placeholder="Account Holder Name" value="{{ @$bankDetail->holder_name }}">
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
                           <label>Account Number </label>
-                          <input type="text" name="account_no" class="form-control" placeholder="Account Number" value="{{ @$vendor_bankdetails->account_no }}">
+                          <input type="text" name="account_no" class="form-control" placeholder="Account Number" value="{{ @$bankDetail->account_no }}">
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
                           <label>IFSC Code </label>
-                          <input type="text" name="ifsc" class="form-control" placeholder="IFSC Code" value="{{ @$vendor_bankdetails->ifsc }}">
+                          <input type="text" name="ifsc" class="form-control" placeholder="IFSC Code" value="{{ @$bankDetail->ifsc }}">
                         </div>
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
                           <label>Cancel Check</label>
-                          <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check" value="{{ @$vendor_bankdetails->cancel_check }}">
+                          <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check" value="{{ @$bankDetail->cancel_check }}">
                         </div>
                       </div>
                     </div>
@@ -564,8 +564,8 @@
                           <input type="hidden" name="address_latitude" id="" value="{{ old('address_latitude') ?? '0' }}" />
                           <input type="hidden" name="address_longitude" id="" value="{{ old('address_longitude') ?? '0' }}" />
 
-                          <input id="address-latitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="lat" value="{{ @$vendor->lat }}" readonly required>
-                          <input id="address-longitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="long" value="{{ @$vendor->long }}" readonly required>
+                          <!-- <input id="address-latitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="lat" value="{{ @$vendor->lat }}" readonly required>
+                          <input id="address-longitude" type="hidden" class="form-control" placeholder="Latitude" step="" name="long" value="{{ @$vendor->long }}" readonly required> -->
 
                         </div>
                       </div>
@@ -577,13 +577,13 @@
                     <div class="col-md-6 mb-3">
                       <label>Latitude</label>
                       <div class="input-group">
-                        <input id="address-lat" type="text" class="form-control" placeholder="Latitude" step="" value="{{ @$vendor->lat }}" readonly><br>
+                        <input type="text" name="lat" class="form-control newLatitude" placeholder="Latitude" value="{{ @$vendor->lat }}" readonly><br>
                       </div>
                     </div>
                     <div class="col-md-6 mb-2">
                       <label>Longitude</label>
                       <div class="input-group">
-                        <input id="address-long" type="text" class="form-control" placeholder="Latitude" step="" value="{{ @$vendor->long }}" readonly><br>
+                        <input type="text" name="lng" class="form-control newLongitude" placeholder="Latitude" value="{{ @$vendor->long }}" readonly><br>
                       </div>
                     </div>
                   </div>
@@ -644,6 +644,7 @@
       }
     })
     $("#restaurant-form").validate({
+    
       rules: {
         restourant_name: {
           required: true,
@@ -682,13 +683,13 @@
         },
         tax: {
           required: true,
+        },
+        lat:{
+          required: true,
+        },
+        lng:{
+          required: true,
         }
-        // lat:{
-        //   required:true
-        // },
-        // lng:{
-        //   required:true
-        // }
 
 
 
@@ -720,6 +721,12 @@
         },
         tax: {
           remote: "Tax is required"
+        },
+        lat: {
+          required: "Latitude is required",
+        },
+        lng: {
+          required: "Longitude is required",
         }
 
 
@@ -748,16 +755,16 @@
   function initialize() {
     var map = new google.maps.Map(document.getElementById('address-map'), {
       center: {
-        lat: 51.5073509,
-        lng: -0.12775829999998223
+        lat:<?php echo (isset($Vendor->lat) && $Vendor->lat!='') ? $Vendor->lat : 24.462200;?>,
+        lng:<?php echo (isset($Vendor->long) && $Vendor->long!='') ? $Vendor->long : 74.850403;?>
       },
       zoom: 15
 
     });
     var marker = new google.maps.Marker({
       position: {
-        lat: 51.5073509,
-        lng: -0.12775829999998223
+       lat:<?php echo (isset($Vendor->lat) && $Vendor->lat!='') ? $Vendor->lat : 24.462200;?>,
+                    lng:<?php echo (isset($Vendor->long) && $Vendor->long!='') ? $Vendor->long : 74.850403;?>
       },
       map: map,
       draggable: true
@@ -813,12 +820,15 @@
     });
 
     function setLocationCoordinates(lat, lng) {
-      const latitudeField = document.getElementById("address-latitude");
-      const longitudeField = document.getElementById("address-longitude");
-      latitudeField.value = lat;
-      longitudeField.value = lng;
-      $('#address-lat').val(lat);
-      $('#address-long').val(lng);
+      
+      // const latitudeField = document.getElementById("address-latitude-1");
+      // const longitudeField = document.getElementById("address-longitude-1");
+      // latitudeField.value = lat;
+      // longitudeField.value = lng;
+      // $('#address-lat').val(lat);
+      // $('#address-long').val(lng);
+      $('.newLatitude').val(lat);
+      $('.newLongitude').val(lng);
     }
   }
 </script>

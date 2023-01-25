@@ -182,12 +182,12 @@ var x
             {data: 'customer_name', name: 'customer_name'},
             {data: 'net_amount', name: 'net_amount'},
             {data: 'transaction_id', name: 'transaction_id'},
-            {data: 'coupon_id', name: 'coupon_id'},
+            {data: 'code', name: 'code'},
             {data: 'vendor_commision', name: 'vendor_commision'},
             {data: 'wallet_cut', name: 'wallet_cut'},
             {data: 'admin_commision', name: 'admin_commision'},
-            {data: 'preparation_time_to', name: 'preparation_time_to'},
             {data: 'admin_amount', name: 'admin_amount'},
+            {data: 'admin_erning', name: 'admin_erning'},
         ]
     });
     // table.buttons().container()

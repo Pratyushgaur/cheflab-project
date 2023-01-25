@@ -265,7 +265,7 @@
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Leader's Contact Number <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Zone Manager Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" name="leader_contact_no" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
@@ -305,7 +305,12 @@
                                     <label for="exampleInputEmail1">End Time<span class="text-danger">*</span></label> <input type="time" class="form-control" name="end_time"/>
                                     </div>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Zone</label>
+                                        <input type="text" name="zone" class="form-control"  id="" placeholder="Enter Zone">
+                                    </div>
+                                  </div>
                                 </div>
 
                               </div>

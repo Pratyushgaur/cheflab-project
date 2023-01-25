@@ -225,7 +225,7 @@ class UserControllers extends Controller
 
     public function store_restourant(Request $request)
     {
-      
+    //   echo '<pre>';print_r($request->all());die;
         $this->validate($request, [
             'restaurant_name'   => 'required',
             'email'             => 'required|unique:vendors,email',
@@ -270,7 +270,7 @@ class UserControllers extends Controller
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->lat           = $request->lat;
-        $vendors->long           = $request->long;
+        $vendors->long           = $request->lng;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
 
@@ -423,7 +423,7 @@ class UserControllers extends Controller
 
     public function vendors_update(Request $request)
     {
-//        return $request->input();die;
+        
         $this->validate($request, [
             'restaurant_name'   => 'required',
 //            'owner_name'   => 'required',
@@ -434,6 +434,8 @@ class UserControllers extends Controller
             'fssai_lic_no'      => 'required',
             'vendor_commission' => 'required',
             'gst_available'     => 'required',
+            'lat'     => 'required',
+            'lng'     => 'required',
             //  'deal_cuisines' => 'required',
             'tax'               => 'required',
             // 'bank_name'   => 'required',
@@ -505,6 +507,7 @@ class UserControllers extends Controller
         }
 
         $vendors->save();
+
         if($request->bank_name!='' && $request->holder_name!='' && $request->account_no!='' && $request->ifsc!=''){
             $bankdetail = new BankDetail;
             $bankdetail->vendor_id = $vendors->id;
@@ -774,15 +777,17 @@ class UserControllers extends Controller
 
     public function chef_edit($encrypt_id)
     {
+        
         try {
             $id = Crypt::decryptString($encrypt_id);
             //  dd($id);die;
              $vendor = Vendors::findOrFail($id);
+             $bankDetail = BankDetail::where('vendor_id', $vendor->id)->first();
             // $vendor =  Vendors::where('vendors.id','=',$id)->join('categories', 'vendors.deal_categories', '=', 'categories.id')->join('cuisines', 'vendors.deal_cuisines', '=', 'cuisines.id')->select('vendors.*', 'categories.name as categoryName','cuisines.name as cuisinesName')->get()->first();
             //dd($vendor);die;
             $categories = @Catogory_master::where('is_active', '=', '1')->pluck('name', 'id')->toArray();;//->get();
             $cuisines = @Cuisines::where('is_active', '=', '1')->pluck('name', 'id')->toArray();          //->get();
-            return view('admin/vendors/editvender', compact('vendor', 'categories', 'cuisines'));
+            return view('admin/vendors/editvender', compact('vendor', 'categories', 'cuisines','bankDetail'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         }

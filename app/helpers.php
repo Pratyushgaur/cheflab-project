@@ -1025,9 +1025,11 @@ function promotionRowSetup($Blogs,$request,$user_id){
 }
 function orderCancel($id)
     {
-        // echo $id;die;
+        // echo 'hello';die;
 
         $order = Orders::where('id',$id)->first();
+
+        
         $payout = Paymentsetting::first();
         $order_amount = $order->net_amount;
         $vendor_cancellation = $payout->additions;
@@ -1035,16 +1037,18 @@ function orderCancel($id)
         $admin_commision = $payout->admin_commision;
         $tax = 18 ;
        
-        $gross_revenue = 0;
+        $gross_revenue = $order->gross_amount;
         $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
         $admin_per = ($admin_commision / 100) * $vendor_commision;
-        $tax_commision = ($tax / 100) * $vendor_commision;
-        $convenience_commision = ($convenience_fee / 100) * $vendor_commision;
+        
+        $tax_commision = ($tax / 100) * $admin_per;
+        
+        $convenience_commision = ($convenience_fee / 100) * ($gross_revenue + $vendor_commision);
+
         $deduction =  $admin_per + $tax_commision + $convenience_commision;        
-      
+        
 
         $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
-        
         $ordercommision = array(
             'is_cancel' => 1,
             'vendor_id' => $order->vendor_id,

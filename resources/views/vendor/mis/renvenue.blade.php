@@ -19,7 +19,7 @@
         </div>
         <div class="revenue_box  mb-4">
               <form action="{{ route('restaurant.mis.order.export') }}"  enctype="multipart/form-data">
-                <input type="hidden" name="id" value="{{ Auth::guard('vendor')->user()->id }}">
+                <input type="hidden" name="id" id="vendorId" value="{{ Auth::guard('vendor')->user()->id }}">
                 <div class="row align-items-center">
                   <div class="col-md-6">
                     <div class="form-group mb-0">
@@ -157,6 +157,7 @@ $(function() {
                d.role = $('#filter-by-role').val(),
                d.vendor = $('#filter-by-vendor').val()
                d.datePicker = $('#datepicker').val()
+               d.vendorId = $('#vendorId').val()
            }
        },
        columns: [
