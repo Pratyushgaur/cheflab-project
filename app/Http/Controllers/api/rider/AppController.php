@@ -363,6 +363,12 @@ class AppController extends Controller
     }
     public function deliverOtpCheck(Request $request)
     {
+        
+        // $logs = \App\Models\DriverWorkingLogs::where('rider_id',1)->whereMonth('created_at', \Carbon\Carbon::now()->month)->get();
+        // var_dump($logs->toArray());
+        // die;
+
+        
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -394,15 +400,19 @@ class AppController extends Controller
             if($order->deliver_otp == $request->otp){
                 $orderdata = Order::where('id','=',$request->order_row_id);
                 $orderdata->update(['order_status'=>'completed','delivered_time'=>mysql_date_time()]);
+                $riderAssing = RiderAssignOrders::where('id','=',$request->rider_assign_order_id);
+                $riderAssing->update(['action'=>'3']);
+                $earningData = $riderAssing->select('earning','rider_id')->first();
+                $this->genarateIncentive($earningData->rider_id);
                 $user = \App\Models\User::where('id','=',$orderdata->first()->user_id)->select('fcm_token')->first();
                 if($user->fcm_token != ''){
                     //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
                     $data = orderDetailForUser($request->order_row_id);
                     \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully','Your Order has been Delivered Successfully',$user->fcm_token,5,$data);
                 }
-                $riderAssing = RiderAssignOrders::where('id','=',$request->rider_assign_order_id);
-                $riderAssing->update(['action'=>'3']);
-                $earningData = $riderAssing->select('earning')->first();
+                
+                //
+                
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Status Updated Successfully',
@@ -427,6 +437,43 @@ class AppController extends Controller
         }
     }
 
+    function genarateIncentive($riderId){
+        $rider = \App\Models\Deliver_boy::where('id','=',$riderId)->select('ratings')->first();
+        $incentive = 0;
+        if($rider->ratings >= 4.3 && $rider->ratings <= 4.7 ){
+            $now = \Carbon\Carbon::now();
+            $deliverySetting =  \App\Models\DeliveryboySetting::first();
+            $thisWeekOrders = RiderAssignOrders::whereBetween("created_at",[$now->startOfWeek()->format('Y-m-d'),$now->endOfWeek()->format('Y-m-d')])->where('action','=','3')->where('rider_id','=',$riderId)->count();
+            if($thisWeekOrders >= 50 && $thisWeekOrders < 75){
+                $incentive = $deliverySetting->fifteen_order_incentive_4;
+            }elseif($thisWeekOrders >= 75 && $thisWeekOrders < 100){
+                $incentive = $deliverySetting->sentientfive_order_incentive_4;
+            }elseif($thisWeekOrders >= 100){
+                $incentive = $deliverySetting->hundred_order_incentive_4;
+            }
+            
+            
+            
+        }elseif($rider->ratings >= 4.8 && $rider->ratings <= 5.0 ){
+            $now = \Carbon\Carbon::now();
+            $deliverySetting =  \App\Models\DeliveryboySetting::first();
+            $thisWeekOrders = RiderAssignOrders::whereBetween("created_at",[$now->startOfWeek()->format('Y-m-d'),$now->endOfWeek()->format('Y-m-d')])->where('action','=','3')->where('rider_id','=',$riderId)->count();
+            if($thisWeekOrders >= 50 && $thisWeekOrders < 75){
+                $incentive = $deliverySetting->fifteen_order_incentive_5;
+            }elseif($thisWeekOrders >= 75 && $thisWeekOrders < 100){
+                $incentive = $deliverySetting->sentientfive_order_incentive_5;
+            }elseif($thisWeekOrders >= 100){
+                $incentive = $deliverySetting->hundred_order_incentive_5;
+            }
+            
+        }
+        if($incentive > 0){
+            $RiderIncentives = new \App\Models\RiderIncentives;
+            $RiderIncentives->rider_id = $riderId;
+            $RiderIncentives->amount	 = $incentive;
+            $RiderIncentives->save();
+        }
+    }
     public function change_status(Request $request)
     {
         try {
@@ -484,37 +531,61 @@ class AppController extends Controller
                 ], 401);
             }
             $RiderAssignOrders = new RiderAssignOrders ;
+            $RiderIncentives = new \App\Models\RiderIncentives ;
+            $RiderReviewRatings = new \App\Models\RiderReviewRatings ;
             if($request->report_for == 'today'){
+                $RiderAssignOrders = $RiderAssignOrders->whereDate('created_at',Carbon::now());
+                $RiderIncentives = $RiderIncentives->whereDate('created_at',Carbon::now());
+                $RiderReviewRatings = $RiderReviewRatings->whereDate('created_at',Carbon::now());
+            }
+            if($request->report_for == 'last_week'){
                 $RiderAssignOrders = $RiderAssignOrders->whereBetween(
-                    'created_at' ,[Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+                    'created_at' ,[Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
+                $RiderIncentives = $RiderIncentives->whereBetween(
+                    'created_at' ,[Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
+                $RiderReviewRatings = $RiderReviewRatings->whereBetween(
+                    'created_at' ,[Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
             }
-            if($request->report_for == 'week'){
+            if($request->report_for == 'last_four_week'){
                 $RiderAssignOrders = $RiderAssignOrders->whereBetween(
-                    'created_at' ,[Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]
+                    'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
-            }
-            if($request->report_for == 'month'){
-                $RiderAssignOrders = $RiderAssignOrders->where('created_at','>=' ,Carbon::now()->subDays(30));
+                $RiderIncentives = $RiderIncentives->whereBetween(
+                    'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
+                $RiderReviewRatings = $RiderReviewRatings->whereBetween(
+                    'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
             }
             
-            $RiderAssignOrders = $RiderAssignOrders->where(['action'=>'3','rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(earning),0) as earning'),\DB::raw('IFNULL(COUNT(id),0) as order_count'))->first();
+            $earning_and_orders = $RiderAssignOrders->where(['action'=>'3','rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(earning),0) as earning'),\DB::raw('IFNULL(COUNT(id),0) as order_count'))->first();
+            $rejectedOrders     = $RiderAssignOrders->where(['action'=>'2','rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(COUNT(id),0) as rejectOrders'))->first();
+            $RiderIncentives    = $RiderIncentives->where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(amount),0) as amount'))->first();
+            $RiderReviewRatings    = $RiderReviewRatings->where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(AVG(rating),0.0) as rating'))->first();
+            //$workingHours = calculateWorkingHours($request->user_id,Carbon::now(),Carbon::now());
             //[now()->subdays(30), now()->subday()]
-            
+            $response = ['earning'=>$earning_and_orders->earning,'order_delivered'=>$earning_and_orders->order_count,'rejected_orders'=>$rejectedOrders->rejectOrders,'incentive'=>$RiderIncentives->amount,'rating'=>$RiderReviewRatings->rating,'workingHours'=>0];
             //
-            $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
             $chart = [];
-            foreach ($period as $date) {
-                $dayData  =  RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
-                $dayData->day = $date->format('D');
-                $chart[] = $dayData;
-                    
+            if($request->report_for == 'today'){
+                $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
+                $chart = [];
+                foreach ($period as $date) {
+                    $dayData  =  RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
+                    $dayData->day = $date->format('D');
+                    $chart[] = $dayData;
+                        
+                }
             }
-            $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
+            
+            $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'data Get Successfully',
-                'reports' => $RiderAssignOrders,
+                'reports' => $response,
                 'chart' =>$chart,
                 'profile'=>$profile
 
@@ -526,6 +597,97 @@ class AppController extends Controller
                 'status' => false,
                 'error'  => $th->getMessage()
             ], 500);
+        }
+    }
+
+    public function orderEarnings(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+        
+            $earning = \App\Models\RiderAssignOrders::where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
+            $incentive = \App\Models\RiderIncentives::where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(amount),0) as amount'))->first();
+            $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
+            $response = ['earning'=>$earning->earning,'incentive'=>$incentive->amount];
+            return response()->json([
+                'status'   => true,
+                'message'  => 'data Get Successfully',
+                'reports' => $response,
+                'profile'=>$profile
+
+            ], 200);    
+            
+           
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function incentiveHistory(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $incentive = \App\Models\RiderIncentives::where(['rider_id'=>$request->user_id])->select(\DB::raw("DATE_FORMAT(created_at, '%d %b %Y') as date"),'amount')->orderBy('id','desc')->get();
+            $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
+           
+            return response()->json([
+                'status'   => true,
+                'message'  => 'data Get Successfully',
+                'reports' => $incentive,
+                'profile'=>$profile
+
+            ], 200);    
+            
+           
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    function calculateWorkingHours($riderId,$from,$to){
+        $logs = \App\Models\DriverWorkingLogs::whereDate('created_at',Carbon::now())->orderBy('id','DESC')->get();
+        if(!empty($logs)){
+            $hours = 0;
+            foreach ($logs as $key => $value) {
+                if($value->status){
+
+                }else{
+
+                }
+            }
+        }else{
+            return 0;
         }
     }
 
