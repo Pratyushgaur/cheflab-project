@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class User_faq extends Model
 {
     use HasFactory;
-    protected $table ='user_faq';	
+    protected $table = 'user_faq';
 }
