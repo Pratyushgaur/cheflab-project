@@ -58,6 +58,7 @@ class CreateOrders extends Migration
             $table->timestamp('delivered_time')->nullable()->comment('driver order delivered time');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->boolean('delivery_charge')->default(0);
         });
     }
 

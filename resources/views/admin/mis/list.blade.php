@@ -72,13 +72,21 @@
                                   <tr role="row">
                                     <th class="text-center">Sr No.</th>
                                     <th>Invoice No. / Order ID</th>
+                                    <th>Order Date / Time</th>
+                                    <th>User (Customer Name)</th>
                                     <th>Vendor Name</th>
                                     <th>Rider Name & ID</th>
                                     <th>Order Amount</th>
+                                    <th>Platform Charges</th>
+                                    <th>Taxes</th>
                                     <th>Transaction ID</th>
                                     <th>Coupon Used/ Coupon Code (Coupon amount and code both will be visible)</th>
+                                    <th>Coupon Amount</th>
                                     <th>Vendor Profit</th>
+                                    <th>Delivery Charges (User App)</th>
+                                    <th>Wallet Cut</th>
                                     <th>Rider Profit</th>
+                                    <th>Vendor Comission (%)</th>
                                     <th>Earning from Vendor (to admin)</th>
                                     <th>Earning from Rider (to admin)</th>
                                     <th>Admin Profit (Final)</th>
@@ -178,13 +186,22 @@ var x
         columns: [
           {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'order_id', name: 'order_id'},
+            {data: 'created_at', name: 'created_at'},
+            {data: 'name', name: 'name'},
             {data: 'vendor_name', name: 'vendor_name'},
             {data: 'customer_name', name: 'customer_name'},
             {data: 'net_amount', name: 'net_amount'},
+            {data: 'platform_charges', name: 'platform_charges'},
+            {data: 'tex', name: 'tex'},
             {data: 'transaction_id', name: 'transaction_id'},
+            {data: 'coupon_id', name: 'coupon_id'},
+            {data: 'discount_amount', name: 'discount_amount'},
             {data: 'code', name: 'code'},
             {data: 'vendor_commision', name: 'vendor_commision'},
+            {data: 'delivery_charge', name: 'delivery_charge'},
             {data: 'wallet_cut', name: 'wallet_cut'},
+            {data: 'rider_earning', name: 'rider_earning'},
+            {data: 'commission', name: 'commission'}, 
             {data: 'admin_commision', name: 'admin_commision'},
             {data: 'admin_amount', name: 'admin_amount'},
             {data: 'admin_erning', name: 'admin_erning'},

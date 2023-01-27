@@ -27,8 +27,10 @@ class AccountmisController extends Controller
     {
         // echo "hello";die;
         if ($request->ajax()) {
-        
-           $data = Orders::join('order_commisions','orders.id','=','order_commisions.order_id')->join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->join('coupons','orders.coupon_id','=','coupons.id')->select('orders.order_id','orders.transaction_id','orders.coupon_id','orders.preparation_time_from','orders.preparation_time_to','orders.customer_name','vendors.name as vendor_name','order_commisions.net_amount','order_commisions.vendor_commision','order_commisions.admin_commision','order_commisions.admin_amount','coupons.code');
+
+            
+           $data = Orders::join('order_commisions','orders.id','=','order_commisions.order_id')->join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->join('coupons','orders.coupon_id','=','coupons.id')->join('rider_assign_orders','order_commisions.order_id','=','rider_assign_orders.order_id')->select('orders.order_id','orders.transaction_id','orders.coupon_id','orders.preparation_time_from','orders.preparation_time_to','orders.customer_name','vendors.name as vendor_name','order_commisions.net_amount','order_commisions.vendor_commision','order_commisions.admin_commision','order_commisions.admin_amount','orders.created_at','users.name','orders.platform_charges','orders.tex','orders.discount_amount','orders.wallet_cut','vendors.commission','rider_assign_orders.earning','orders.delivery_charge','coupons.code');	
+
            if($request->status != ''){
             $data = $data->where('payment_status','=',$request->status);
            }
@@ -55,10 +57,23 @@ class AccountmisController extends Controller
            $data = $data->get();
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('wallet_cut', function($data){
-                    $wallet_cut = 0;
-                    return $wallet_cut;
+                // ->addColumn('wallet_cut', function($data){
+                //     $wallet_cut = 0;
+                //     return $wallet_cut;
+                // })
+                 ->addColumn('rider_earning', function($data){
+                    if($data->earning == ''){
+                        $rider_earning = 0;
+                    }else{
+                        $rider_earning = $data->earning;
+                    }
+                    return $rider_earning;
                 })
+
+                
+
+                ->rawColumns(['wallet_cut','rider_earning','action-js'])
+
                 ->addColumn('admin_erning', function($data){
                     $admin_erning = $data->admin_commision + $data->admin_amount;
                     return $admin_erning;
@@ -66,6 +81,7 @@ class AccountmisController extends Controller
 
 
                 ->rawColumns(['wallet_cut','admin_erning','action-js'])
+
                 ->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 

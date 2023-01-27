@@ -14,8 +14,6 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('edit-city/{id}', [App\Http\Controllers\admin\City::class, 'fun_edit_city'])->name('fun_edit_city');
     Route::post('city/delete', [App\Http\Controllers\admin\City::class, 'soft_delete'])->name('admin.city.ajax.delete');
     // vendor's
-    
-   
     Route::get('vendors', [App\Http\Controllers\admin\UserControllers::class, 'index'])->name('admin.vendors.list');
     Route::get('vendors-datatable', [App\Http\Controllers\admin\UserControllers::class, 'get_data_table_of_vendor'])->name('admin.vendors.datatable');
     Route::get('vendors-restourant-create', [App\Http\Controllers\admin\UserControllers::class, 'create_restourant'])->name('admin.restourant.create');
@@ -157,9 +155,6 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
    Route::get('root-image', [App\Http\Controllers\admin\AdminRootBannerController::class, 'get_data_table_of_slote'])->name('admin.root.data');
    Route::get('root-image-edit/{id}', [App\Http\Controllers\admin\AdminRootBannerController::class, 'fun_edit_image'])->name('admin.rootimage.edit');
    Route::post('root-image-update', [App\Http\Controllers\admin\AdminRootBannerController::class, 'updateBanner'])->name('admin.root.update');
-   Route::get('banner/promotion/booking/list/{id}', [App\Http\Controllers\admin\BannerController::class, 'bannerPromotionBookingList'])->name('banner.promotion.booking.list');
-   Route::post('banner/promotion/slot/edit/', [App\Http\Controllers\admin\BannerController::class, 'bannerSlotEdit'])->name('banner.promotion.slot.edit');
-   
    // Vendor Store Promotion
     Route::get('vendor-promotion', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.vendor.store');
     Route::post('vendor-promotion/create', [App\Http\Controllers\admin\VendorPromotion::class, 'store'])->name('admin.vendorstore.store');
@@ -293,8 +288,4 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Driver Map
     Route::get('drivers-map', [DriverMapController::class,'index']);
     Route::get('drivers/{driver}/info', [DriverMapController::class,'getDriver']);
-
-    Route::get('order/pdf-invoice', [App\Http\Controllers\admin\InvoicePdfController::class, 'index']);
-
-    Route::post('vendors-login', [App\Http\Controllers\vendor\LoginController::class, 'vendorLogin'])->name('admin.vendor.login');
 });
