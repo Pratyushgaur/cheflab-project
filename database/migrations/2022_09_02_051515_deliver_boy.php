@@ -39,6 +39,8 @@ class DeliverBoy extends Migration
             $table->string('insurance_image')->nullable();
             $table->string('pancard_number')->nullable();
             $table->string('pancard_image')->nullable();
+            $table->string('aadhar_number')->nullable();
+            $table->string('aadhar_image')->nullable();
             $table->string('police_varification_image')->nullable();
 
             //
