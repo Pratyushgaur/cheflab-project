@@ -251,7 +251,12 @@
                                         <input type="text" name="address" value="{{$deliveryboy->address}}" class="form-control"  id="" placeholder="Enter Address">
                                     </div>
                                   </div>
-
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">City <span class="text-danger">*</span></label>
+                                        <input type="text" value="{{$deliveryboy->city}}" name="city" class="form-control"  id="" placeholder="Enter City">
+                                    </div>
+                                  </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Pincode <span class="text-danger">*</span></label>
@@ -266,10 +271,22 @@
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Leader's Contact Number <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Zone Manager Contact Number <span class="text-danger">*</span></label>
                                         <input type="text" name="leader_contact_no" value="{{$deliveryboy->leader_contact_no}}" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternet Phone</label>
+                                        <input type="text" value="{{$deliveryboy->alt_mobile}}" name="alt_mobile" class="form-control"  id="" placeholder="Enter Alternet Mobile Number">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Joinnig Date <span class="text-danger">*</span></label>
+                                            <input type="date" value="{{$deliveryboy->join_date}}" name="join_date" class="form-control"  id="" placeholder="Enter Join Date">
+                                        </div>
+                                    </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="time">Shift Time <span class="text-danger">*</span></label>
@@ -292,7 +309,12 @@
                                     <label for="exampleInputEmail1">End Time<span class="text-danger">*</span></label> <input type="time" class="form-control" name="end_time" value="{{$deliveryboy->end_time}}"/>
                                     </div>
                                 </div>
-
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Zone</label>
+                                        <input type="text" name="zone" class="form-control" value="{{$deliveryboy->zone}}"  id="" placeholder="Enter Zone">
+                                    </div>
+                                  </div>
 
                                     
                                   
@@ -351,41 +373,152 @@
                                 <h3 class="card-title text-bold">Identity  Information</h3>
                               </div>
                               <div class="card-body">
-                                <div class="row">
+                              <div class="row">
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Identity Type <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Identity Type </label>
                                         <select name="identity_type"  class="form-control">
-                                          @if($deliveryboy->identity_type == '1')
-                                            <option value="1">Passport</option>
-                                            <option value="2">Driving License</option>
-                                            <option value="3">Aadhar Card</option>
-                                            @elseif($deliveryboy->identity_type)
-                                            <option value="2">Driving License</option>
-                                            <option value="1">Passport</option>
-                                            <option value="3">Aadhar Card</option>
-                                            @else
-                                            <option value="3">Aadhar Card</option>
-                                            <option value="2">Driving License</option>
-                                            <option value="1">Passport</option>
-                                            @endif
+                                          <!-- <option value="1">Passport</option> -->
+                                          <!-- <option value="2">Pancard</option> -->
+                                          <option value="3">Aadhar Card</option>
                                         </select>
                                     </div>  
                                   </div>
                                   <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Identity Number <span class="text-danger">*</span></label>
-                                        <input type="text" name="identity_number" value="{{$deliveryboy->identity_number}}" class="form-control"  id="" placeholder="Enter Identity Number">
+                                        <label for="exampleInputEmail1">Aadhar Number </label>
+                                        <input type="text" value="{{$deliveryboy->aadhar_number}}" name="aadhar_number" class="form-control"  id="" placeholder="Aadhar Number">
                                     </div>  
                                   </div>
                                   <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1">Identity Image. </label>
-                                            <input type="file" name="identity_image" value="{{$deliveryboy->identity_image}}" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                            <label for="exampleInputEmail1">Aadhar Image. </label>
+                                            <input type="file" value="{{$deliveryboy->aadhar_image}}" name="aadhar_image" class="form-control"  id="" placeholder="Aadhar Image">
+                                        </div>
+                                  </div>
+                                </div>
+
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type</label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Driving License</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Driving License number </label>
+                                        <input type="text" value="{{$deliveryboy->licence_number}}" name="license_number" class="form-control"  id="" placeholder="Enter License Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Driving License Image. </label>
+                                            <input type="file" value="{{$deliveryboy->licence_image}}" name="license_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
                                         </div>
                                   </div>
                                 </div>
                                 <!-- div row -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">R/C</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">R/C Number </label>
+                                        <input type="text" value="{{$deliveryboy->rc_number}}" name="rc_number" class="form-control"  id="" placeholder="R/C Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">R/C  Image. </label>
+                                            <input type="file" value="{{$deliveryboy->rc_image}}" name="rc_image" class="form-control"  id="" >
+                                        </div>
+                                  </div>
+                                </div>
+                               
+                                <!--  -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Pancard</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Pancard Number </label>
+                                        <input type="text" value="{{$deliveryboy->pancard_number}}" name="pancard_number" class="form-control"  id="" placeholder="Pancard Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Pancard Number Image. </label>
+                                            <input type="file" value="{{$deliveryboy->pancard_image}}" name="pancard_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
+                                </div>
+                                <!--  -->
+                                <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1"> </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Police Verification</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Police Verification Image. </label>
+                                            <input type="file" value="{{$deliveryboy->police_varification_image}}" name="varification_image" class="form-control"  id="" placeholder="">
+                                        </div>
+                                  </div>
+                                </div>
+
+                                 <!--  -->
+                                 <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <option value="2">Insurance</option>
+                                          <!-- <option value="3">Aadhar Card</option> -->
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Insurance Number </label>
+                                        <input type="text" value="{{$deliveryboy->insurance_number}}" name="insurance_number" class="form-control"  id="" placeholder="Insurance Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Insurance Image. </label>
+                                            <input type="file" value="{{$deliveryboy->insurance_image}}" name="insurance_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                  </div>
+                                </div>
                               </div>
 
 
@@ -393,6 +526,8 @@
                           
                           
                           <!-- schedule information end -->
+                         
+                          
                           <div class="card-footer">
                             <button class="btn btn-success" ><i class="fa fa-save"></i>Update Deliveryboy </button>
                           </div>
@@ -458,14 +593,14 @@
                   required: true,
                   maxlength: 60,
                   email: true,
-                  remote: '{{route("admin.deliverboy.emailcheck_update",["id"=>4])}}',
+                  remote: '{{route("admin.deliverboy.emailcheck_update",["id"=>$deliveryboy->id])}}',
               },
               phone: {
                   required: true,
                   minlength: 10,
                   maxlength: 10,
                   number: true,
-                  remote: '{{route("admin.deliverboy.mobilecheck.update",["id"=>4])}}',
+                  remote: '{{route("admin.deliverboy.mobilecheck.update",["id"=>$deliveryboy->id])}}',
               },
               pincode: {
                   required: true,

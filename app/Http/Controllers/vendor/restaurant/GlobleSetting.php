@@ -25,6 +25,7 @@ class GlobleSetting extends Controller
 
     public function requireOrderTime()
     {
+        
         $VendorOrderTime = [];
         $hideSidebar     = true;
         $order_time      = VendorOrderTime::select(DB::raw('DATE_FORMAT(start_time, "%H:%i") as start_time ,DATE_FORMAT(end_time, "%H:%i") as end_time,vendor_order_time.row_keys,vendor_order_time.id,day_no,vendor_id'))->where('vendor_id', Auth::guard('vendor')->user()->id)->get();
@@ -37,6 +38,7 @@ class GlobleSetting extends Controller
 
     public function time_save(Request $request)
     { 
+        
         // echo '<pre>'; print_r($request->all());die;
         $day = $request->no_day;
         $start_time = $request->start_time;

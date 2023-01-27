@@ -19,19 +19,19 @@ class AccountsettlementController extends Controller
 {
     public function index()
     {
-       
+        
         return view('admin.account-vendor.list');
     }
 
     
     public function get_data_table_of_order(Request $request)
     {
-        
+       
         if ($request->ajax()) {
         
            $data = Vendors::groupBy("vendors.id")->select('vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
            
-
+            // echo '<pre>';print_r($data);die;
           
 
 

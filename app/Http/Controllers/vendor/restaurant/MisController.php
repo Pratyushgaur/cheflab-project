@@ -28,6 +28,8 @@ class MisController extends Controller
     
     public function index(Request $request)
     {
+        // orderCancel(16);die;
+
         $vendorId = Auth::guard('vendor')->user()->id;
         $order_sum = OrderCommision::where('vendor_id', $vendorId)->sum('gross_revenue');
         $order_count = OrderCommision::where('vendor_id', $vendorId)->where('is_approve',1)->count();        
@@ -46,13 +48,16 @@ class MisController extends Controller
         $end_date = date('Y-m-d',strtotime($date[1]));
         
         $vendorId = Auth::guard('vendor')->user()->id;
+
         $order_sum = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('gross_revenue');
         // echo '<pre>'; print_r($order_sum);die;
+
         $order_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->where('is_approve',1)->count();        
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('additions');
         $deductions = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('deductions');
         $net_receivables = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('net_receivables');
 
+        
         return view('vendor.mis.renvenue_ajax', compact('order_sum','order_count','additions_count','deductions','net_receivables'));
     }
     public function addition_view(Request $request)
@@ -68,6 +73,7 @@ class MisController extends Controller
         $tax_amount = OrderCommision::where('vendor_id', $vendorId)->sum('tax_amount');
         $convenience_amount = OrderCommision::where('vendor_id', $vendorId)->sum('convenience_amount');
         $net_amount = OrderCommision::where('vendor_id', $vendorId)->sum('deductions');
+        
         return view('vendor.mis.deductions_view', compact('admin_amount','tax_amount','convenience_amount','net_amount'));
     }
 
@@ -79,10 +85,12 @@ class MisController extends Controller
     }
     public function order_data(Request $request)
     { 
+        
         if ($request->ajax()) {
         
-            $data = OrderCommision::join('orders','order_commisions.order_id','=','orders.id')->select('order_commisions.*','orders.payment_type','orders.payment_status');
-           
+            $data = OrderCommision::where('orders.vendor_id', $request->vendorId)->join('orders','order_commisions.order_id','=','orders.id')->select('order_commisions.*','orders.payment_type','orders.payment_status');
+
+       
             $dateSedule = $request->datePicker;
          
             if(isset($dateSedule)){
@@ -97,6 +105,7 @@ class MisController extends Controller
      
             
             $data = $data->get();
+            // echo '<pre>';print_r($data);die;
              return Datatables::of($data)
                  ->addIndexColumn()
                  ->addColumn('action-js', function($data){

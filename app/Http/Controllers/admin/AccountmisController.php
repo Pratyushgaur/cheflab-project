@@ -9,6 +9,7 @@ use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\Vendors;
 use App\Models\User;
+use App\Models\Coupon;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
 use Config;
@@ -24,10 +25,12 @@ class AccountmisController extends Controller
     
     public function get_data_table_of_order(Request $request)
     {
-        
+        // echo "hello";die;
         if ($request->ajax()) {
-        
-           $data = Orders::join('order_commisions','orders.id','=','order_commisions.order_id')->join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.order_id','orders.transaction_id','orders.coupon_id','orders.preparation_time_from','orders.preparation_time_to','orders.customer_name','vendors.name as vendor_name','order_commisions.net_amount','order_commisions.vendor_commision','order_commisions.admin_commision','order_commisions.admin_amount');
+
+            
+           $data = Orders::join('order_commisions','orders.id','=','order_commisions.order_id')->join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->join('coupons','orders.coupon_id','=','coupons.id')->join('rider_assign_orders','order_commisions.order_id','=','rider_assign_orders.order_id')->select('orders.order_id','orders.transaction_id','orders.coupon_id','orders.preparation_time_from','orders.preparation_time_to','orders.customer_name','vendors.name as vendor_name','order_commisions.net_amount','order_commisions.vendor_commision','order_commisions.admin_commision','order_commisions.admin_amount','orders.created_at','users.name','orders.platform_charges','orders.tex','orders.discount_amount','orders.wallet_cut','vendors.commission','rider_assign_orders.earning','orders.delivery_charge','coupons.code');	
+
            if($request->status != ''){
             $data = $data->where('payment_status','=',$request->status);
            }
@@ -52,16 +55,33 @@ class AccountmisController extends Controller
     
            
            $data = $data->get();
-        //    echo '<pre>'; print_r($data);die;
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('wallet_cut', function($data){
-                    $wallet_cut = 0;
-                    return $wallet_cut;
+                // ->addColumn('wallet_cut', function($data){
+                //     $wallet_cut = 0;
+                //     return $wallet_cut;
+                // })
+                 ->addColumn('rider_earning', function($data){
+                    if($data->earning == ''){
+                        $rider_earning = 0;
+                    }else{
+                        $rider_earning = $data->earning;
+                    }
+                    return $rider_earning;
+                })
+
+                
+
+                ->rawColumns(['wallet_cut','rider_earning','action-js'])
+
+                ->addColumn('admin_erning', function($data){
+                    $admin_erning = $data->admin_commision + $data->admin_amount;
+                    return $admin_erning;
                 })
 
 
-                ->rawColumns(['wallet_cut','action-js'])
+                ->rawColumns(['wallet_cut','admin_erning','action-js'])
+
                 ->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 
@@ -79,7 +99,6 @@ class AccountmisController extends Controller
             $order_id =$id;
             $order = Orders::findOrFail($id);
 
-            // echo '<pre>'; print_r($order);die;
             $vendor_id = $order->vendor_id;
             $user_id = $order->user_id;
             $orderProduct = OrderProduct::findOrFail($order_id);
@@ -131,6 +150,7 @@ class AccountmisController extends Controller
     }
     public function get_data_table_of_product(Request $request,$id)
     {
+       
         $product_id = $id;
         if ($request->ajax()) {
         

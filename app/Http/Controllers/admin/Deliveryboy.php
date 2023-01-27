@@ -85,8 +85,8 @@ class Deliveryboy extends Controller
     }*/
     public function store_deliverboy(Request $request)
     {
-      // echo 'ok';die;
-     // return $request->input();die;
+// echo '<pre>';print_r($request->all());die;
+        // return $request->input();die;
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|unique:deliver_boy,email',
@@ -96,7 +96,7 @@ class Deliveryboy extends Controller
             'address'  => 'required',
             //'confirm_password'  => 'required',
             'phone' => 'required|unique:deliver_boy,mobile',
-            'leader_contact_no' => 'required|mobile',
+            // 'leader_contact_no' => 'required|mobile',
             // 'identity_image' => 'required',
             // 'identity_number' => 'required',
             'bank_name' =>'required',
@@ -111,6 +111,7 @@ class Deliveryboy extends Controller
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
+        $vendors->zone  = $request->zone;
         $vendors->leader_contact_no  = $request->leader_contact_no;
         $vendors->password   = Hash::make('test');
         $vendors->pincode  = $request->pincode;
@@ -118,6 +119,7 @@ class Deliveryboy extends Controller
         $vendors->identity_number  = '001';
         $vendors->join_date  = $request->join_date;
         $vendors->alt_mobile  = $request->alt_phone;
+        $vendors->aadhar_number  = $request->aadhar_number;
         
 //        $vendors->address  = $request->address;
 
@@ -149,6 +151,12 @@ class Deliveryboy extends Controller
             $request->pancard_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->pancard_image  = $filename;
             $vendors->pancard_number  = $request->pancard_image;
+        } 
+        if($request->has('aadhar_image')){
+            $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
+            $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->aadhar_image  = $filename;
+            $vendors->aadhar_image  = $request->aadhar_image;
         }  
         if($request->has('varification_image')){
             $filename = time().'-varification_image-image-'.rand(100,999).'.'.$request->varification_image->extension();
@@ -361,19 +369,19 @@ class Deliveryboy extends Controller
         }
     }
     public function update(Request $request){
-       
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email|unique:deliver_boy,email,'.$request->id,
             'pincode' => 'required',
             'phone' => 'required|unique:deliver_boy,mobile,'.$request->id,
-            'address' => 'required',
+            // 'address' => 'required',
             'time' => 'required'
         ]);
         $vendors = Deliver_boy::find($request->id);
         $vendors->name = $request->name;
         $vendors->email = $request->email;
         $vendors->mobile  = $request->phone;
+        $vendors->zone  = $request->zone;
         $vendors->leader_contact_no  = $request->leader_contact_no;
         $vendors->password   = Hash::make($request->password);
         $vendors->pincode  = $request->pincode;
@@ -381,6 +389,7 @@ class Deliveryboy extends Controller
         $vendors->identity_number  = $request->identity_number;
         $vendors->start_time = $request->start_time;
         $vendors->end_time = $request->end_time;
+        $vendors->aadhar_number  = $request->aadhar_number;
 //        $vendors->address  = $request->address;
 
         if($request->has('image')){
@@ -395,9 +404,16 @@ class Deliveryboy extends Controller
             $vendors->identity_image  = $filename;
             $vendors->identity_number  = $request->identity_number;
         }
+        if($request->has('aadhar_image')){
+            $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
+            $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->aadhar_image  = $filename;
+            $vendors->aadhar_image  = $request->aadhar_image;
+        } 
         $vendors->save();
+        
         $bankdetail = RiderbankDetails::where('rider_id', '=',  $vendors->id)->first();
-        $bankdetail->rider_id = $delivery->id;
+        $bankdetail->rider_id = $vendors->id;
         $bankdetail->bank_name = $request->bank_name;      
         $bankdetail->holder_name = $request->holder_name;
         $bankdetail->account_no = $request->account_no;

@@ -179,11 +179,16 @@ Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppControlle
 Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController::class, 'change_status']);
 
 
-Route::post('rider-order-status', [App\Http\Controllers\api\rider\AppController::class, 'orderStatus']);
-Route::post('rider-pick-up-otp', [App\Http\Controllers\api\rider\AppController::class, 'pickupOtpCheck']);
-Route::post('rider-analytics', [App\Http\Controllers\api\rider\AppController::class, 'analytics']);
-Route::post('rider-latLng-update', [App\Http\Controllers\api\rider\AppController::class, 'updateLatLng']);
-Route::post('rider-deliver-otp', [App\Http\Controllers\api\rider\AppController::class, 'deliverOtpCheck']);
+Route::post('rider-order-status',[App\Http\Controllers\api\rider\AppController::class,'orderStatus']);
+Route::post('rider-pick-up-otp',[App\Http\Controllers\api\rider\AppController::class,'pickupOtpCheck']);
+Route::post('rider-analytics',[App\Http\Controllers\api\rider\AppController::class,'analytics']);
+Route::post('rider-order-earnings',[App\Http\Controllers\api\rider\AppController::class,'orderEarnings']);
+Route::post('rider-incentive-history',[App\Http\Controllers\api\rider\AppController::class,'incentiveHistory']);
+Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController::class,'updateLatLng']);
+Route::post('rider-deliver-otp',[App\Http\Controllers\api\rider\AppController::class,'deliverOtpCheck']);
+Route::post('rider-login-history',[App\Http\Controllers\api\rider\AppController::class,'logInHistory']);
+Route::post('rider-update-version', [\App\Http\Controllers\api\rider\LoginApiController::class, 'checkVersion']);
+
 
 
 
