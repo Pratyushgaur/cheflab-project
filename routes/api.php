@@ -156,7 +156,7 @@ Route::get('login', function () {
 })->name('login');
 Route::post('register-send-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_send_otp'])->name("register.otp.send");
 Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController::class, 'register_verify_otp'])->name("register.otp.verify");
-Route::post('register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user']);
+Route::post('register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user'])->name("register.user.verify");
 Route::post('login-otp-send', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp'])->name("login.otp.send");
 Route::post('login-otp-verify', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp'])->name("login.verify.otp");
 
@@ -188,6 +188,7 @@ Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController:
 Route::post('rider-deliver-otp',[App\Http\Controllers\api\rider\AppController::class,'deliverOtpCheck']);
 Route::post('rider-login-history',[App\Http\Controllers\api\rider\AppController::class,'logInHistory']);
 Route::post('rider-update-version', [\App\Http\Controllers\api\rider\LoginApiController::class, 'checkVersion']);
+
 
 
 
