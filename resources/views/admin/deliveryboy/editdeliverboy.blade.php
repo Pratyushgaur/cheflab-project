@@ -373,6 +373,31 @@
                                 <h3 class="card-title text-bold">Identity  Information</h3>
                               </div>
                               <div class="card-body">
+                              <div class="row">
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Identity Type </label>
+                                        <select name="identity_type"  class="form-control">
+                                          <!-- <option value="1">Passport</option> -->
+                                          <!-- <option value="2">Pancard</option> -->
+                                          <option value="3">Aadhar Card</option>
+                                        </select>
+                                    </div>  
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1">Aadhar Number </label>
+                                        <input type="text" value="{{$deliveryboy->aadhar_number}}" name="aadhar_number" class="form-control"  id="" placeholder="Aadhar Number">
+                                    </div>  
+                                  </div>
+                                  <div class="col-sm-4">
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Aadhar Image. </label>
+                                            <input type="file" value="{{$deliveryboy->aadhar_image}}" name="aadhar_image" class="form-control"  id="" placeholder="Aadhar Image">
+                                        </div>
+                                  </div>
+                                </div>
+
                                 <div class="row">
                                   <div class="col-md-4">
                                     <div class="form-group">

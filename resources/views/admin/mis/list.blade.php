@@ -194,9 +194,9 @@ var x
             {data: 'platform_charges', name: 'platform_charges'},
             {data: 'tex', name: 'tex'},
             {data: 'transaction_id', name: 'transaction_id'},
-            {data: 'coupon_id', name: 'coupon_id'},
-            {data: 'discount_amount', name: 'discount_amount'},
             {data: 'code', name: 'code'},
+            {data: 'discount_amount', name: 'discount_amount'},
+            
             {data: 'vendor_commision', name: 'vendor_commision'},
             {data: 'delivery_charge', name: 'delivery_charge'},
             {data: 'wallet_cut', name: 'wallet_cut'},
