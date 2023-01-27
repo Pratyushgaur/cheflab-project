@@ -119,6 +119,7 @@ class Deliveryboy extends Controller
         $vendors->identity_number  = '001';
         $vendors->join_date  = $request->join_date;
         $vendors->alt_mobile  = $request->alt_phone;
+        $vendors->aadhar_number  = $request->aadhar_number;
         
 //        $vendors->address  = $request->address;
 
@@ -150,6 +151,12 @@ class Deliveryboy extends Controller
             $request->pancard_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->pancard_image  = $filename;
             $vendors->pancard_number  = $request->pancard_image;
+        } 
+        if($request->has('aadhar_image')){
+            $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
+            $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->aadhar_image  = $filename;
+            $vendors->aadhar_image  = $request->aadhar_image;
         }  
         if($request->has('varification_image')){
             $filename = time().'-varification_image-image-'.rand(100,999).'.'.$request->varification_image->extension();
@@ -382,6 +389,7 @@ class Deliveryboy extends Controller
         $vendors->identity_number  = $request->identity_number;
         $vendors->start_time = $request->start_time;
         $vendors->end_time = $request->end_time;
+        $vendors->aadhar_number  = $request->aadhar_number;
 //        $vendors->address  = $request->address;
 
         if($request->has('image')){
@@ -396,6 +404,12 @@ class Deliveryboy extends Controller
             $vendors->identity_image  = $filename;
             $vendors->identity_number  = $request->identity_number;
         }
+        if($request->has('aadhar_image')){
+            $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
+            $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->aadhar_image  = $filename;
+            $vendors->aadhar_image  = $request->aadhar_image;
+        } 
         $vendors->save();
         
         $bankdetail = RiderbankDetails::where('rider_id', '=',  $vendors->id)->first();
