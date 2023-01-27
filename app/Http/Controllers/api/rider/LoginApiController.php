@@ -135,4 +135,41 @@ class LoginApiController extends Controller
         //24.54764088976084, 74.83816149442208
         //24.258000662713282, 74.93817489405903
     }
+    public function checkVersion(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'version' => 'required'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $version = floatval($request->version);
+            $record = \App\Models\AdminMasters::select('driver_app_current_version', 'driver_app_force_update', 'driver_app_soft_update')->first();
+            if (floatval($request->version) < floatval($record->driver_app_current_version)) {
+                return response()->json([
+                    'status' => true,
+                    'data' => array('current_version' => $record->driver_app_current_version, 'force_update' => $record->driver_app_force_update, 'user_app_soft_update' => $record->driver_app_soft_update)
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'data' => []
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

@@ -187,6 +187,7 @@ Route::post('rider-incentive-history',[App\Http\Controllers\api\rider\AppControl
 Route::post('rider-latLng-update',[App\Http\Controllers\api\rider\AppController::class,'updateLatLng']);
 Route::post('rider-deliver-otp',[App\Http\Controllers\api\rider\AppController::class,'deliverOtpCheck']);
 Route::post('rider-login-history',[App\Http\Controllers\api\rider\AppController::class,'logInHistory']);
+Route::post('rider-update-version', [\App\Http\Controllers\api\rider\LoginApiController::class, 'checkVersion']);
 
 
 
