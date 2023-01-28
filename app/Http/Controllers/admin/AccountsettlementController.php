@@ -30,7 +30,7 @@ class AccountsettlementController extends Controller
        
         if ($request->ajax()) {
         
-           $data = Vendors::groupBy("vendors.id")->select('vendors.id','vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
+           $data = Vendors::groupBy("vendors.id")->select('vendors.id','vendors.status','vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
            
             // echo '<pre>';print_r($data);die;
           
@@ -50,18 +50,12 @@ class AccountsettlementController extends Controller
     
            
            $data = $data->get();
-        //    echo '<pre>'; print_r($data);die;
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function($data){
                     if ($data->status == 1) {
-                        $btn = '<button class="btn btn-xs btn-success">Success</button>';
-                    } elseif($data->status == 0) {
-                        // $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess",$data->id) .'">Pay</a>';
                         $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess").'?id='.$data->id.'">Pay</a>';
-                        // $btn = '<a href="'. route("admin.account.vendor.vendorPaymentSuccess",$data->id) .'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>';
-                        
-                    }
+                    } 
                     return $btn;
                 })
                 ->addColumn('name', function($data){
