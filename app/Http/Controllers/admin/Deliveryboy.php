@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\vendors;
 use App\Models\User;
 use App\Models\Catogory_master;
+use App\Models\RiderAssignOrders;
 use App\Models\Cuisines;
 use App\Models\Product_master;
 use App\Models\Deliver_boy;
@@ -264,7 +265,7 @@ class Deliveryboy extends Controller
     // }
     public function get_data_table_of_deliverboy(Request $request)
     {
-        //echo 'ok';die;
+        // echo 'ok';die;
         
         if ($request->ajax()) {
             $data = Deliver_boy::latest()->get();
@@ -304,6 +305,21 @@ class Deliveryboy extends Controller
                 
             })
 
+            ->addColumn('order_delivered', function($data){
+                $data = RiderAssignOrders::join('order_commisions','rider_assign_orders.order_id','=','order_commisions.order_id')
+                                        ->where(['rider_assign_orders.id'=> $data->id, 'order_commisions.is_approve' => 1])
+                                        ->count();
+                return $data;
+                // return 1;
+            })
+
+            ->addColumn('order_calceled', function($data){
+                $data = RiderAssignOrders::join('order_commisions','rider_assign_orders.order_id','=','order_commisions.order_id')
+                                        ->where(['rider_assign_orders.id'=> $data->id, 'order_commisions.is_cancel' => 1])
+                                        ->count();
+                return $data;
+            })
+
             ->addColumn('status', function($data){
                 return $status_class = (!empty($data->status)) && ($data->status == 1) ? '<button class="btn btn-xs btn-success inactiveVendor" data-url="'.route('admin.deliver_boy.inactive',$data->id).'" >Active</button>' : '<button class="btn btn-xs btn-danger inactiveVendor" data-url="'.route('admin.deliver_boy.active',$data->id).'">In active</button>';
                     return '<input type="checkbox" name="my-checkbox" checked data-bootstrap-switch data-off-color="danger" data-on-color="success">';
@@ -313,7 +329,7 @@ class Deliveryboy extends Controller
                 return "<img src=".asset('dliver-boy').'/'.$data->image."  style='width: 50px;' />";
             })
 
-            ->rawColumns(['date','action-js','status','image','rating'])
+            ->rawColumns(['date','action-js','status','image','rating','order_calceled','order_delivered'])
             //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
            // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
             ->make(true);
@@ -408,7 +424,6 @@ class Deliveryboy extends Controller
             $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
             $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->aadhar_image  = $filename;
-            $vendors->aadhar_image  = $request->aadhar_image;
         } 
         $vendors->save();
         

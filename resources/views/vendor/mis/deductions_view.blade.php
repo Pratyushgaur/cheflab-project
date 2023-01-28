@@ -34,7 +34,7 @@
                                     </tbody>
                                 </table>
                             </td>
-                        </tr>
+                        </tr> 
                         <tr>
                             <td>
                                 <table class="table table-borderless mb-0">
@@ -42,6 +42,17 @@
                                         <tr>
                                             <td>Convenience fee</td>
                                             <td class="text-right"><b>₹{{ $convenience_amount }}</b></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        
+                            <td>
+                                <table class="table table-borderless mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <td>Order canceled Deduction</td>
+                                            <td class="text-right"><b>₹{{ $calceled_order }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>

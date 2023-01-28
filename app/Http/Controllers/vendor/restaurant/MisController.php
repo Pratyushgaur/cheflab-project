@@ -73,8 +73,11 @@ class MisController extends Controller
         $tax_amount = OrderCommision::where('vendor_id', $vendorId)->sum('tax_amount');
         $convenience_amount = OrderCommision::where('vendor_id', $vendorId)->sum('convenience_amount');
         $net_amount = OrderCommision::where('vendor_id', $vendorId)->sum('deductions');
-        
-        return view('vendor.mis.deductions_view', compact('admin_amount','tax_amount','convenience_amount','net_amount'));
+       
+        //$calceled_order = OrderCommision::join('orders','order_commisions.order_id','=','orders.id')->where(['vendor_id'=> $vendorId, 'order.order_status'=> 'cancelled_by_vendor'])->sum('deductions');
+
+        $calceled_order = 1;
+        return view('vendor.mis.deductions_view', compact('admin_amount','tax_amount','convenience_amount','net_amount','calceled_order'));
     }
 
     
