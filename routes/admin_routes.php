@@ -275,7 +275,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
     Route::get('account-settlement/vendor', [App\Http\Controllers\admin\AccountsettlementController::class, 'index'])->name('admin.account.vendor.list');
     Route::get('vendor-list-data', [App\Http\Controllers\admin\AccountsettlementController::class, 'get_data_table_of_order'])->name('admin.account.vendor.data');
-
+    Route::get('account-settlement/vendorpayment', [App\Http\Controllers\admin\AccountsettlementController::class, 'vendorPaymentSuccess'])->name('admin.account.vendor.vendorPaymentSuccess');
+    Route::post('account-settlement/vendor/pay', [App\Http\Controllers\admin\AccountsettlementController::class, 'payVendorPayment'])->name('admin.account.vendor.payVendor');
 
     Route::get('account-settlement/rider', [App\Http\Controllers\admin\AccountriderController::class, 'index'])->name('admin.account.rider.list');
     Route::get('rider-list-data', [App\Http\Controllers\admin\AccountriderController::class, 'get_data_table_of_order'])->name('admin.account.rider.data');

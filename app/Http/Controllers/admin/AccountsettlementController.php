@@ -8,6 +8,7 @@ use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\OrderCommision;
+use App\Models\vendor_payout_detail;
 use App\Models\Vendors;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -29,7 +30,7 @@ class AccountsettlementController extends Controller
        
         if ($request->ajax()) {
         
-           $data = Vendors::groupBy("vendors.id")->select('vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
+           $data = Vendors::groupBy("vendors.id")->select('vendors.id','vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
            
             // echo '<pre>';print_r($data);die;
           
@@ -54,12 +55,15 @@ class AccountsettlementController extends Controller
                 ->addIndexColumn()
                 ->addColumn('status', function($data){
                     if ($data->status == 1) {
-                        $btn = 'Active';
+                        $btn = '<button class="btn btn-xs btn-success">Success</button>';
                     } elseif($data->status == 0) {
-                        $btn = 'InActive';
+                        // $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess",$data->id) .'">Pay</a>';
+                        $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess").'?id='.$data->id.'">Pay</a>';
+                        // $btn = '<a href="'. route("admin.account.vendor.vendorPaymentSuccess",$data->id) .'" class="edit btn btn-warning btn-xs"><i class="fas fa-eye"></i></a>';
+                        
                     }
                     return $btn;
-                })  
+                })
                 ->addColumn('name', function($data){
                    $name = ucwords($data->name);
                     return $name;
@@ -164,4 +168,25 @@ class AccountsettlementController extends Controller
            ->make(true);
         }
     }
+
+    public function vendorPaymentSuccess()
+    {
+        $id = $_GET['id'];
+        return view('admin.account-vendor.paymentsuccess',compact('id'));
+    }
+
+    public function payVendorPayment(Request $request)
+    {
+        
+        $data = ([
+            'vendor_id' => $request->id,
+            'amount' => $request->amount,
+            'bank_utr' => $request->bank_utr
+        ]);
+        vendor_payout_detail::create($data);
+        return response()->json(['success' => 1]);
+    }
+
+    
+    
 }

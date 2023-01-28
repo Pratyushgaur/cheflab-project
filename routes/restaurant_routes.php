@@ -188,6 +188,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('mis/order-data', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_data'])->name('restaurant.mis.order.data');
         Route::get('mis/renvenue/addition-view', [App\Http\Controllers\vendor\restaurant\MisController::class, 'addition_view'])->name('restaurant.mis.renvenue.addition');
         Route::get('mis/renvenue/deductions-view', [App\Http\Controllers\vendor\restaurant\MisController::class, 'deductions_view'])->name('restaurant.mis.renvenue.deductions');
+        Route::get('mis/renvenue/settlements-view', [App\Http\Controllers\vendor\restaurant\MisController::class, 'settlements_view'])->name('restaurant.mis.renvenue.settlements');
+
+        Route::get('mis/renvenue/settlements-list', [App\Http\Controllers\vendor\restaurant\MisController::class, 'settlements_list'])->name('restaurant.mis.renvenue.settlements.list');
 
         Route::get('mis/order-invoice-pdf', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_invoice'])->name('restaurant.mis.order.invoice.pdf');
     });
