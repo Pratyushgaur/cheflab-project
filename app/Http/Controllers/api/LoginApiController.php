@@ -319,9 +319,10 @@ class LoginApiController extends Controller
     }
     public function generateReferralCode($name)
     {
-        $name = str_replace(' ', '', $name);
-        $name = preg_replace('/\s+/', '', $name);
-        $name = strtoupper($name);
+        // $name = str_replace(' ', '', $name);
+        // $name = preg_replace('/\s+/', '', $name);
+        // $name = strtoupper($name);
+        $name =  chr(rand(65,90)).chr(rand(65,90)).chr(rand(65,90)).chr(rand(65,90));
         $code = $name . rand(1000, 9999);
         if (User::where('referralCode', '=', $code)->exists()) {
             $exit = false;

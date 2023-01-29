@@ -1906,7 +1906,7 @@ class AppController extends Controller
     {
         try {
 
-            $user = User::where('id', '=', request()->user()->id)->select('id', 'name', 'surname', 'email', 'alternative_number', DB::raw('CONCAT("' . asset('user-profile') . '/", image) AS image'))->first();
+            $user = User::where('id', '=', request()->user()->id)->select('id', 'name', 'surname', 'email', 'alternative_number', DB::raw('CONCAT("' . asset('user-profile') . '/", image) AS image'),'status')->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data get Successfully',
@@ -1962,11 +1962,15 @@ class AppController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             $user = User::where('id', '=', request()->user()->id)->select('referralCode', 'by_earn')->get();
+            $transactions = \App\Models\UserWalletTransactions::where('user_id','=',request()->user()->id)->orderBy('id','desc')->get();
+            $amount = \App\Models\AdminMasters::find(1)->select('refer_amount','refer_earn_msg')->first();
             return response()->json([
                 'status'       => true,
                 'message'      => 'User Updated Successfully',
                 'respons'      => $user,
-                'reff_message' => 'Get Rs 21 On Your First Order'
+                'reff_message' => $amount->refer_earn_msg,
+                'transactions' => $transactions
+                
 
             ], 200);
 

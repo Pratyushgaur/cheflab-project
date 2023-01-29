@@ -452,14 +452,14 @@ class Deliveryboy extends Controller
 
     public function deliver_boy_inactive($id){            
         $user = Deliver_boy::find($id);
-        Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => 3]);
+        Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => '0']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
     }
 
     public function deliver_boy_active($id){      
       
         $user = Deliver_boy::find($id);
-        Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => '1']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
     }
 }

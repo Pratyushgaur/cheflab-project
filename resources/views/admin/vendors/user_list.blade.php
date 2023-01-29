@@ -17,10 +17,23 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
+                            <div class="card-header">
+                                <form action="{{route('admin.user.list')}}">
+                                    <input type="text" name="search">
+                                    <input type="submit" class="btn btn-sm btn-primary" value="Search">
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card card-primary card-outline">
 
                             <div class="card-header">
                                 <h3 class="card-title">Listing of Registered app users </h3>
-
+                                
 
                             </div>
                             <div class="card-body pad table-responsive">
@@ -32,7 +45,7 @@
                                         <th> Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
-                                        <th>Total Order</th>
+                                        
                                         <th>Wallet</th>
                                         <th>Active/Inactive</th>
                                         <th>Action</th>
@@ -45,8 +58,8 @@
                                             <td>{{$k+1}}</td>
                                             <td>{{$user->name}}</td>
                                             <td>{{$user->email}}</td>
-                                            <td>{{$user->mobile_number}}</td>
-                                            <td>{{$user->alternative_number}}</td>
+                                            <td>{{$user->mobile_number}} <br>{{$user->alternative_number}}</td>
+                                            
                                             <td><?php if($user->wallet_amount!=null){echo $user->wallet_amount;}else{echo '0';}; //front_end_currency($user->wallet_amount)?> &#8377;<br><a href="#" class="add_wallet" data-url="{{route('user.wallet.add',$user->id)}}" data-name="{{$user->name}}" data-id="{{$user->id}}">Add</a></td>
                                             <td> 
                                                 @if($user->status == '1')

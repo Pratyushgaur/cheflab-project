@@ -123,7 +123,7 @@ class AppController extends Controller
             
             $data = Deliver_boy::where('id','=',$request->user_id);
             $data =     $data->select(
-                                        'name','email','username','mobile','is_online','address','licence_number','rc_number','leader_contact_no',
+                                        'name','email','username','mobile','is_online','address','licence_number','rc_number','leader_contact_no','status',
                                         \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),
                                         \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", licence_image), null ) as licence_image'),
                                         \DB::Raw('IFNULL( CONCAT("' . asset('dliver-boy-documents') . '/", rc_image), null ) as rc_image'),
