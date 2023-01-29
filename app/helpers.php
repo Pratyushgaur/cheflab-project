@@ -481,9 +481,11 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = null, $limit = null, $group_by = true)
 {
 
-    $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
+   // $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(vendors.lat))) ";
     $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
-    $vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
+    //$vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
+    $vendors = $vendors->selectRaw("ROUND({$select}) AS distance")->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
     $vendors->where("vendors.is_all_setting_done", 1)
         ->where('vendors.status', 1)->where('vendors.is_online', 1);
