@@ -4,6 +4,7 @@ namespace Tests;
 
 use App\Models\Mobileotp;
 use App\Models\User;
+use App\Models\User_faq;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -25,5 +26,10 @@ abstract class TestCase extends BaseTestCase
     public function createOtp($args = [], $num = null)
     {
         return Mobileotp::factory()->count($num)->create($args);
+    }
+
+    public function createUserFaq($args = [], $num = null)
+    {
+        return User_faq::factory()->count($num)->create($args);
     }
 }

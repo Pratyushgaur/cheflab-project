@@ -122,7 +122,6 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
-
             //check otp is verified
             if (Mobileotp::where(['mobile_number' => $request->mobile_number, 'status' => '1'])->exists()) {
                 //  $refer_amount = AdminMasters::select('refer_amount');
@@ -142,7 +141,6 @@ class LoginApiController extends Controller
                     }
                 }
 
-
                 $user->name = $request->name;
                 $user->surname = $request->lastname;
                 $user->email = $request->email;
@@ -150,6 +148,7 @@ class LoginApiController extends Controller
                 //  $user->by_earn = $refer_amount;
                 $user->alternative_number = $request->alternative_mobile;
                 $user->referralCode = $this->generateReferralCode($request->name);
+
                 $user->save();
 
                 $token = $user->createToken('cheflab-app-token')->plainTextToken;
