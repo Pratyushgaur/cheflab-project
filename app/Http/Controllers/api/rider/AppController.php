@@ -579,14 +579,23 @@ class AppController extends Controller
             //
             $chart = [];
             if($request->report_for == 'today'){
-                $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
-                $chart = [];
-                foreach ($period as $date) {
-                    $dayData  =  RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
-                    $dayData->day = $date->format('D');
+                
+                for($i=0; $i<6; $i++){
+                    $date    = date('Y-m-d', strtotime('last monday + '.$i.' day'));
+                    $dayData = RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
+                    $dayData->day = date('D', strtotime($date));
+                    $dayData->date = date('d-m-Y', strtotime($date));
                     $chart[] = $dayData;
-                        
                 }
+                // var_dump($last_week_dates);die;
+                // $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
+                // $chart = [];
+                // foreach ($period as $date) {
+                //     $dayData  =  RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
+                //     $dayData->day = $date->format('D');
+                //     $chart[] = $dayData;
+                        
+                // }
             }
             
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
