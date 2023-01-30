@@ -18,6 +18,7 @@ class CreateOrders extends Migration
             $table->string('order_id');
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('user_id');
+            $table->string('pdf_url')->nullable();
             $table->string('customer_name');
             $table->text('delivery_address')->comment('this addres also have deliver to customer name');
             $table->text('landmark_address')->comment('landmark address');

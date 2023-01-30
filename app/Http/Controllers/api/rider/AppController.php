@@ -637,8 +637,9 @@ class AppController extends Controller
         
             $earning = \App\Models\RiderAssignOrders::where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
             $incentive = \App\Models\RiderIncentives::where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(amount),0) as amount'))->first();
+            $RiderTransactions = \App\Models\RiderTransactions::where(['rider_id'=>$request->user_id])->select('*',\DB::raw("DATE_FORMAT(created_at, '%d/%m/%Y %h:%i %p') as date"))->first();
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
-            $response = ['earning'=>$earning->earning,'incentive'=>$incentive->amount];
+            $response = ['earning'=>$earning->earning,'incentive'=>$incentive->amount,'transaction'=>$RiderTransactions];
             return response()->json([
                 'status'   => true,
                 'message'  => 'data Get Successfully',
