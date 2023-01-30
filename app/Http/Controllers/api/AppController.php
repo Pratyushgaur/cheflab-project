@@ -2623,6 +2623,7 @@ class AppController extends Controller
 
     public function cancel_order(Request $request)
     {
+        
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -2631,15 +2632,24 @@ class AppController extends Controller
                     'order_id'                  => 'required|numeric'
                 ]
             );
-            if ($validateUser->fails()) {
-                $error = $validateUser->errors();
-                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
-            }
+            // if ($validateUser->fails()) {
+            //     $error = $validateUser->errors();
+            //     return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            // }
+
+
+            
 
             $order = Order::where('id', $request->order_id)
-                ->where('user_id', $request->user()->id)
+                ->where('user_id', 34)
                 ->first();
-//            dd($order->id);
+
+                if($order->order_status != 'dispatched'){ 
+                    orderCancelByCustomer($request->order_id);
+                }
+
+
+
             if (!isset($order->id))
                 return response()->json(['status' => false, 'error' => "order not found.You can only cancel orders placed by you."], 401);
 
@@ -2650,7 +2660,7 @@ class AppController extends Controller
                 $order->order_status = 'cancelled_by_customer_before_confirmed';
                 $order->save();
                 $user                = User::find($request->user()->id);
-                $user->wallet_amount = $user->$wallet_amount+$order->net_amount;
+                $user->wallet_amount = $user->wallet_amount+$order->net_amount;
                 $user->save();
             }else{
                 if($order->order_status == 'confirmed'){ // if order cancel by user after  30 second and order arrived to vendor

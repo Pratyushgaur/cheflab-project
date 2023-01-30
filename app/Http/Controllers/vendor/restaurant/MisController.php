@@ -7,6 +7,7 @@ use App\Models\Orders;
 use App\Models\Product_master;
 use App\Models\Vendortransition;
 use App\Models\OrderCommision;
+use App\Models\vendor_payout_detail;
 use Illuminate\Support\Facades\Crypt;
 use Auth;
 use DataTables;
@@ -52,13 +53,16 @@ class MisController extends Controller
         $order_sum = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('gross_revenue');
         // echo '<pre>'; print_r($order_sum);die;
 
-        $order_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->where('is_approve',1)->count();        
+        $order_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->count();   
+            //  echo '<pre>';print_r($order_count);die;
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('additions');
         $deductions = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('deductions');
         $net_receivables = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('net_receivables');
 
+        $your_settlement = vendor_payout_detail::where('vendor_id', $vendorId)->sum('amount');
+// echo '<pre>';print_r($your_settlement);die;
         
-        return view('vendor.mis.renvenue_ajax', compact('order_sum','order_count','additions_count','deductions','net_receivables'));
+        return view('vendor.mis.renvenue_ajax', compact('order_sum','order_count','additions_count','deductions','net_receivables','your_settlement'));
     }
     public function addition_view(Request $request)
     {
@@ -152,4 +156,18 @@ class MisController extends Controller
          $pdf->save(public_path('invoices/'. $invoiceName));
          return $pdf->download('order_invoice.pdf');
      }
+
+     public function settlements_view(Request $request)
+    {
+        $vendorId = Auth::guard('vendor')->user()->id;
+        $settlements_list = vendor_payout_detail::where('vendor_id', $vendorId)->get();
+        return view('vendor.mis.settlements_view', compact('settlements_list'));
+    }
+
+    // public function settlements_list(Request $request)
+    // {
+    //    echo "hello";die;
+    // }
+
+    
 }
