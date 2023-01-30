@@ -581,7 +581,7 @@ class AppController extends Controller
             if($request->report_for == 'today'){
                 
                 for($i=0; $i<7; $i++){
-                    $date    = date('Y-m-d', strtotime('last monday + '.$i.' day'));
+                    $date    = date('Y-m-d', strtotime('monday + '.$i.' day'));
                     $dayData = RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
                     $dayData->day = date('D', strtotime($date));
                     $dayData->date = date('d-m-Y', strtotime($date));
