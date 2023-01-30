@@ -41,7 +41,7 @@ class OrderApiController extends Controller
                 
             }
             if($request->status == 'cancelled'){
-                $order = $order->where('action','=','2');
+                $order = $order->whereIn('action',['2','6']);
             }
             if($request->status == 'ongoing'){
                 $order = $order->where('action','=','1');

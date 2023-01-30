@@ -138,6 +138,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('banner-slot-comment/{slot_id}', [App\Http\Controllers\admin\BannerController::class, 'comment'])->name('admin.slot.comment');
     Route::post('banner-commentstore', [App\Http\Controllers\admin\BannerController::class,'commentstore'])->name('admin.banner.commentstore');
     Route::post('banner-slot-reject', [App\Http\Controllers\admin\BannerController::class, 'rejectProduct'])->name('admin.slot.reject');
+    Route::get('banner-promotion/booking/list/{id}', [App\Http\Controllers\admin\BannerController::class, 'bannerPromotionBookingList'])->name('banner.promotion.booking.list');
+    Route::get('banner-promotion-slot-edit', [App\Http\Controllers\admin\BannerController::class, 'bannerSlotEdit'])->name('banner.promotion.slot.edit');
+
     // application blog promotion
     Route::get('user-app-blog', [App\Http\Controllers\admin\VendorPromotion::class, 'index'])->name('admin.application.blog');
     Route::get('user-app-blog-create', [App\Http\Controllers\admin\VendorPromotion::class, 'create_blog'])->name('admin.application.blog.create');

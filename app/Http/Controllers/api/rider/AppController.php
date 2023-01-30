@@ -444,13 +444,17 @@ class AppController extends Controller
             $now = \Carbon\Carbon::now();
             $deliverySetting =  \App\Models\DeliveryboySetting::first();
             $thisWeekOrders = RiderAssignOrders::whereBetween("created_at",[$now->startOfWeek()->format('Y-m-d'),$now->endOfWeek()->format('Y-m-d')])->where('action','=','3')->where('rider_id','=',$riderId)->count();
-            if($thisWeekOrders >= 50 && $thisWeekOrders < 75){
-                $incentive = $deliverySetting->fifteen_order_incentive_4;
-            }elseif($thisWeekOrders >= 75 && $thisWeekOrders < 100){
-                $incentive = $deliverySetting->sentientfive_order_incentive_4;
-            }elseif($thisWeekOrders >= 100){
-                $incentive = $deliverySetting->hundred_order_incentive_4;
+            $thisWeekRejectedOrders = RiderAssignOrders::whereBetween("created_at",[$now->startOfWeek()->format('Y-m-d'),$now->endOfWeek()->format('Y-m-d')])->where('action','=','2')->where('rider_id','=',$riderId)->count();
+            if($thisWeekRejectedOrders < $deliverySetting->no_of_order_cancel){
+                if($thisWeekOrders >= 50 && $thisWeekOrders < 75){
+                    $incentive = $deliverySetting->fifteen_order_incentive_4;
+                }elseif($thisWeekOrders >= 75 && $thisWeekOrders < 100){
+                    $incentive = $deliverySetting->sentientfive_order_incentive_4;
+                }elseif($thisWeekOrders >= 100){
+                    $incentive = $deliverySetting->hundred_order_incentive_4;
+                }
             }
+            
             
             
             
@@ -458,13 +462,17 @@ class AppController extends Controller
             $now = \Carbon\Carbon::now();
             $deliverySetting =  \App\Models\DeliveryboySetting::first();
             $thisWeekOrders = RiderAssignOrders::whereBetween("created_at",[$now->startOfWeek()->format('Y-m-d'),$now->endOfWeek()->format('Y-m-d')])->where('action','=','3')->where('rider_id','=',$riderId)->count();
-            if($thisWeekOrders >= 50 && $thisWeekOrders < 75){
-                $incentive = $deliverySetting->fifteen_order_incentive_5;
-            }elseif($thisWeekOrders >= 75 && $thisWeekOrders < 100){
-                $incentive = $deliverySetting->sentientfive_order_incentive_5;
-            }elseif($thisWeekOrders >= 100){
-                $incentive = $deliverySetting->hundred_order_incentive_5;
+            $thisWeekRejectedOrders = RiderAssignOrders::whereBetween("created_at",[$now->startOfWeek()->format('Y-m-d'),$now->endOfWeek()->format('Y-m-d')])->where('action','=','2')->where('rider_id','=',$riderId)->count();
+            if($thisWeekRejectedOrders < $deliverySetting->no_of_order_cancel){
+                if($thisWeekOrders >= 50 && $thisWeekOrders < 75){
+                    $incentive = $deliverySetting->fifteen_order_incentive_5;
+                }elseif($thisWeekOrders >= 75 && $thisWeekOrders < 100){
+                    $incentive = $deliverySetting->sentientfive_order_incentive_5;
+                }elseif($thisWeekOrders >= 100){
+                    $incentive = $deliverySetting->hundred_order_incentive_5;
+                }
             }
+            
             
         }
         if($incentive > 0){
