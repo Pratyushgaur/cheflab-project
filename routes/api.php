@@ -162,7 +162,7 @@ Route::post('login-otp-verify', [App\Http\Controllers\api\LoginApiController::cl
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq'])->name("user.faq");
 
-Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion']);
+Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion'])->name("update.version");
 
 
 Route::post('send-notification', [App\Http\Controllers\api\AppController::class, 'sendNotification']);

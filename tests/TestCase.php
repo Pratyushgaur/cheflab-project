@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Models\AdminMasters;
 use App\Models\Mobileotp;
 use App\Models\User;
 use App\Models\User_faq;
@@ -31,5 +32,10 @@ abstract class TestCase extends BaseTestCase
     public function createUserFaq($args = [], $num = null)
     {
         return User_faq::factory()->count($num)->create($args);
+    }
+
+    public function createAdminMasters($args = [], $num = null)
+    {
+        return AdminMasters::factory()->count($num)->create($args);
     }
 }
