@@ -113,4 +113,46 @@ class LoginTest extends TestCase
         ]);
         $this->assertStringContainsString($user->mobile_number, $response->json()["token"]["mobile"]);
     }
+
+    public function test_check_the_required_field_of_app_version()
+    {
+        $response = $this->postJson(route("update.version"), ["version" => ""]);
+        $response->assertJsonStructure([
+            "error"
+        ]);
+        $this->assertStringContainsString("The version field is required.", $response->json()["error"][0]);
+    }
+
+    public function test_check_the_app_version_and_send_back_empty_array()
+    {
+        $this->createAdminMasters(
+            [
+                "user_app_current_version" => "2.0",
+                "user_app_force_update" => "2.0",
+                "user_app_soft_update" => "2.0"
+            ]
+        );
+        $response = $this->postJson(route("update.version"), ["version" => "2.0"]);
+        $response->assertJsonStructure([
+            "data" => []
+        ]);
+        $response->assertJsonCount(0, "data");
+    }
+
+    public function test_check_the_app_version_if_version_is_less_then_sent_the_values()
+    {
+        $this->createAdminMasters([
+            "user_app_current_version" => "2.0",
+            "user_app_force_update" => "2.0",
+            "user_app_soft_update" => "2.0"
+        ]);
+        $response = $this->postJson(route("update.version"), ["version" => "1.0"]);
+        $response->assertJsonStructure([
+            "data" => [
+                "current_version",
+                "force_update",
+                "user_app_soft_update",
+            ]
+        ]);
+    }
 }
