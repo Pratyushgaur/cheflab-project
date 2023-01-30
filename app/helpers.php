@@ -1048,7 +1048,8 @@ function orderCancel($id)
         $tax = 18 ;
        
         $gross_revenue = $order->gross_amount;
-        $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
+        // $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
+        $vendor_commision = 0;
         $admin_per = ($admin_commision / 100) * $vendor_commision;
         
         $tax_commision = ($tax / 100) * $admin_per;
@@ -1284,4 +1285,70 @@ function orderCancel($id)
         $pdfUrl->pdf_url = $url;
         $pdfUrl->save();
         return true;
+    }
+
+
+    function orderCancelByCustomer($order_id)
+    {
+       
+        $order = Orders::where('id',$order_id)->first();
+        
+        $payout = Paymentsetting::first();
+        $order_amount = $order->net_amount;
+        $vendor_cancellation = $payout->additions;
+        $convenience_fee = $payout->convenience_fee;
+        $admin_commision = $payout->admin_commision;
+        $tax = 18 ;
+       
+        $gross_revenue = $order->gross_amount;
+        $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
+        $admin_per = ($admin_commision / 100) * $vendor_commision;
+        
+        $tax_commision = ($tax / 100) * $admin_per;
+        
+        $convenience_commision = ($convenience_fee / 100) * ($vendor_commision);
+
+        $deduction =  $admin_per + $tax_commision + $convenience_commision;        
+        
+
+        $net_receivables = ($vendor_commision - $deduction);
+
+        $ordercommision = array(
+            'is_cancel' => 1,
+            'vendor_id' => $order->vendor_id,
+            'order_id' => $order->id,
+            'vendor_commision' => $vendor_commision,
+            'admin_commision' => $deduction,
+            'net_amount' => $order_amount,
+            'deductions' => $deduction,
+            'convenience_tax' => $convenience_fee,
+            'addition_tax' => $vendor_cancellation,
+            'admin_tax' => $admin_commision,
+            'tax' => $tax,
+            'convenience_amount' => $convenience_commision,
+            'tax_amount' => $tax_commision,
+            'admin_amount' => $admin_per,
+            'order_date' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+
+            'gross_revenue' => $vendor_commision,
+            'additions' => $vendor_commision,
+            'net_receivables' => $net_receivables,
+            'updated_at' =>date('Y-m-d H:i:s')
+        );
+       
+
+        $orderData = OrderCommision::where('order_id', $order_id)->first();
+
+        if(isset($orderData)){
+            $data = OrderCommision::where('order_id', $order_id)
+            ->update($ordercommision);
+          
+        }else{
+           
+            OrderCommision::create($ordercommision);
+        }
+       
+          
+         return true;
     }

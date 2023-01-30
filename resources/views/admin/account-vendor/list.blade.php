@@ -200,5 +200,7 @@ $(function() {
   th {
     white-space: nowrap;
 }
+
+
  </style>
 @endsection

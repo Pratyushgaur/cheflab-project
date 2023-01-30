@@ -24,11 +24,13 @@ class PaymentsettingController extends Controller
         $general->additions = $request->additions;
         if($request->hiddentoggle){
             $general->convenience_fee = $request->convenience_fee;
+            
         }else{
-            $general->convenience_fee = '';
+            $general->convenience_fee = 0;
         }
         
-        $general->order_rejection = $request->order_rejection;        
+        $general->order_rejection = $request->order_rejection;  
+        $general->toggle = $request->hiddentoggle;      
         $general->save();
         return redirect()->route('admin.payout.setting')->with('message', 'Update Successfully');
     }

@@ -11,10 +11,10 @@ Route::get('/test', function () {
 //    dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
 
 
-//    event(new \App\Events\OrderCreateEvent($Order,$Order->id, 1, 1));
-//    dispatch(function(){
-//        echo mysql_date_time();
-//    })->delay(now()->addSeconds(30));
+   event(new \App\Events\OrderCreateEvent($Order,$Order->id, 1, 1));
+   dispatch(function(){
+       echo mysql_date_time();
+   })->delay(now()->addSeconds(30));
 
     \App\Jobs\OrderCreateJob::dispatch($Order)
         ->delay(now()->addSeconds(3));
