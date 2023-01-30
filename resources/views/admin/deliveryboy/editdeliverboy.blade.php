@@ -359,6 +359,7 @@
                                         <div class="form-group">
                                             <label>Cancel Check</label>
                                             <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check" value="{{ @$delivery_bankdetails->cancel_check }}">
+                                            <span>{{$delivery_bankdetails->cancel_check}}</span>
                                         </div>
                                   </div>
                                 </div>
@@ -394,6 +395,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Aadhar Image. </label>
                                             <input type="file" value="{{$deliveryboy->aadhar_image}}" name="aadhar_image" class="form-control"  id="" placeholder="Aadhar Image">
+                                            <span>{{$deliveryboy->aadhar_image}}</span>
                                         </div>
                                   </div>
                                 </div>
@@ -419,6 +421,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Driving License Image. </label>
                                             <input type="file" value="{{$deliveryboy->licence_image}}" name="license_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                            <span>{{$deliveryboy->licence_image}}</span>
                                         </div>
                                   </div>
                                 </div>
@@ -444,6 +447,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">R/C  Image. </label>
                                             <input type="file" value="{{$deliveryboy->rc_image}}" name="rc_image" class="form-control"  id="" >
+                                            <span>{{$deliveryboy->rc_image}}</span>
                                         </div>
                                   </div>
                                 </div>
@@ -470,6 +474,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Pancard Number Image. </label>
                                             <input type="file" value="{{$deliveryboy->pancard_image}}" name="pancard_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                            <span>{{$deliveryboy->pancard_image}}</span>
                                         </div>
                                   </div>
                                 </div>
@@ -490,6 +495,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Police Verification Image. </label>
                                             <input type="file" value="{{$deliveryboy->police_varification_image}}" name="varification_image" class="form-control"  id="" placeholder="">
+                                            <span>{{$deliveryboy->police_varification_image}}</span>
                                         </div>
                                   </div>
                                 </div>
@@ -516,6 +522,7 @@
                                         <div class="form-group">
                                             <label for="exampleInputEmail1">Insurance Image. </label>
                                             <input type="file" value="{{$deliveryboy->insurance_image}}" name="insurance_image" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
+                                            <span>{{$deliveryboy->insurance_image}}</span>
                                         </div>
                                   </div>
                                 </div>

@@ -193,7 +193,7 @@
                                   </div>
                                   <div class="col-md-6">
                                     <div class="custom-control custom-switch">
-                                      <input type="checkbox" class="custom-control-input" id="switch1" name="toggle" onchange="get_toggle()" value="0">
+                                      <input type="checkbox" class="custom-control-input" id="switch1" name="toggle" onchange="get_toggle()" value="0" @if($data->toggle == '1') checked @endif>
 
                                       <input type="hidden" class="custom-input"  name="hiddentoggle" onchange="get_toggle()" value="0">
                                       <label class="custom-control-label" for="switch1"></label>
