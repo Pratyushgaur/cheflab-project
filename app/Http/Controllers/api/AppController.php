@@ -1600,7 +1600,7 @@ class AppController extends Controller
                 $Order->saveOrFail();
                 $order_id = $Order->id;
                 foreach ($request->products as $k => $p) {
-                    $checkcustomizable = Product_master::where('products.id','=',$p['product_id'])->join('variants','products.id','=','variants.product_id')->select('customizable','variants.*')->orderBy('variants.id','ASC')->first();
+                    $checkcustomizable = Product_master::where('products.id','=',$p['product_id'])->select('customizable')->first();
                     $order_products = new OrderProduct;
                     $order_products->order_id = $order_id;
                     $order_products->product_id = $p['product_id'];
@@ -1613,8 +1613,8 @@ class AppController extends Controller
                     // $orderProductId =  $Order->products()->save($order_products)->id;
                     if (!empty($checkcustomizable)) {
                         if($checkcustomizable->customizable == 'false'){
-                            
-                            $v = array('variant_id'=>$checkcustomizable->id,'order_product_id'=>$orderProductId,'variant_name'=>$checkcustomizable->variant_name,'variant_price'=>$checkcustomizable->variant_price,'variant_qty'=>$p['product_qty']);
+                            $variants = \App\Models\Variant::where('product_id','=',$p['product_id'])->orderBy('variants.id','ASC')->first();
+                            $v = array('variant_id'=>$variants->id,'order_product_id'=>$orderProductId,'variant_name'=>$variants->variant_name,'variant_price'=>$variants->variant_price,'variant_qty'=>$p['product_qty']);
                             $orderProductVariant = new OrderProductVariant($v);
                             $order_products->order_product_variants()->save($orderProductVariant);
                         }else{
