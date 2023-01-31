@@ -55,7 +55,7 @@ class AppController extends Controller
             }
             $data = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
             //$order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->whereNotIn('action', ['pending', 'cancelled_by_customer_before_confirmed']);->orderBy('rider_assign_orders.id','desc')->limit(1);
-            $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5','3'])->orderBy('rider_assign_orders.id','desc')->limit(1);
+            $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5','3','6'])->orderBy('rider_assign_orders.id','desc')->limit(1);
             $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
             $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
             $order = $order->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
@@ -512,16 +512,25 @@ class AppController extends Controller
 
                 ], 401);
             }
-            Deliver_boy::where('id','=',$request->user_id)->update(['is_online'=>$request->status]);
-            $DriverWorkingLogs = new DriverWorkingLogs;
-            $DriverWorkingLogs->rider_id = $request->user_id;
-            $DriverWorkingLogs->status = $request->status;
-            $DriverWorkingLogs->saveOrFail();
-            return response()->json([
-                'status'   => true,
-                'message'  => 'Status Updated Successfully'
+            $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5','3','6'])->orderBy('rider_assign_orders.id','desc')->limit(1);
+            if(empty($order)){
+                Deliver_boy::where('id','=',$request->user_id)->update(['is_online'=>$request->status]);
+                $DriverWorkingLogs = new DriverWorkingLogs;
+                $DriverWorkingLogs->rider_id = $request->user_id;
+                $DriverWorkingLogs->status = $request->status;
+                $DriverWorkingLogs->saveOrFail();
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Status Updated Successfully'
 
-            ], 200);    
+                ], 200); 
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'error'  => "You Can Not Go offline during the Ride"
+                ], 500);
+            }
+               
             
            
         } catch (Throwable $th) {
