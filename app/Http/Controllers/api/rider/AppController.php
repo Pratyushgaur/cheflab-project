@@ -512,7 +512,7 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5','3','6'])->orderBy('rider_assign_orders.id','desc')->limit(1);
+            $order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->whereNotIn('action', ['2', '5','3','6'])->orderBy('rider_assign_orders.id','desc')->limit(1)->first();
             if(empty($order)){
                 Deliver_boy::where('id','=',$request->user_id)->update(['is_online'=>$request->status]);
                 $DriverWorkingLogs = new DriverWorkingLogs;
