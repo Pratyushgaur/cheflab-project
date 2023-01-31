@@ -230,10 +230,23 @@ class AppController extends Controller
             }
             
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('id','name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
-            RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['action'=>$request->status]);
+            $asing = RiderAssignOrders::where('id','=',$request->rider_assign_order_id);
+            if($request->status == '1' || $request->status == '2'){
+                if($asing->first()->action == '0'){
+                    $asing->update(['action'=>$request->status]); 
+                }else{
+                    return response()->json([
+                        'status' => false,
+                        'error'  => 'You Can Not Accept This Order'
+                    ], 500);
+                }
+            }else{
+                $asing->update(['action'=>$request->status]); 
+            }
+            
             $order = [];
             if ($request->status == '1') {
-                RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);
+                RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['distance'=>$request->distance,'earning'=>$request->earning]);;
                 $order = RiderAssignOrders::where('rider_assign_orders.id','=',$request->rider_assign_order_id);
                 $order = $order->join('orders','rider_assign_orders.order_id','=','orders.id');
                 $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
@@ -257,7 +270,6 @@ class AppController extends Controller
                     $data = orderDetailForUser($request->order_row_id);
                     \App\Jobs\UserOrderNotification::dispatch('Order Assigned to Delivery Patner','Your Order has been Assigned to Delivery Boy',$user->fcm_token,2,$data);
                 }
-                
                 
             }elseif($request->status == '2'){
                 RiderAssignOrders::where('id','=',$request->rider_assign_order_id)->update(['cancel_reason'=>$request->cancel_reason]);
