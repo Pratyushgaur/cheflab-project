@@ -35,18 +35,18 @@ class OrderController extends Controller
             ->groupBy('orders.id')
             ->orderBy('orders.id', 'desc')
             ->paginate(10);
-//        dd($orders);
+        //        dd($orders);
         return view('vendor.restaurant.order.list', compact('orders', 'staus_filter'));
     }
 
     public function order_accept($id)
     {
-        
+
         $order               = Order::find($id);
         $order->order_status = 'accepted';
         $order->save();
         \App\Jobs\OrderPreparationDoneJob::dispatch($order);
-        
+
 
         return response()->json([
             'status'       => 'success',
@@ -60,10 +60,10 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'cancelled_by_vendor';
         $order->save();
-        if($order->accepted_driver_id != null){
+        if ($order->accepted_driver_id != null) {
             event(new OrderCancelDriverEmitEvent($order, $order->accepted_driver_id));
         }
-
+        orderCancelByVendor($id);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'cancelled_by_vendor',
@@ -79,11 +79,10 @@ class OrderController extends Controller
         $order->preparation_time_from = mysql_date_time();
         $order->preparation_time_to   = mysql_add_time($order->preparation_time_from, $request->preparation_time);
         $order->save();
-//        event(new OrderSendToPrepareEvent($id, $order->user_id, $order->vendor_id, $request->preparation_time));
+        //        event(new OrderSendToPrepareEvent($id, $order->user_id, $order->vendor_id, $request->preparation_time));
         orderCancel($id);
         event(new OrderSendToPrepareEvent($order, $request->preparation_time));
         return redirect()->back()->with('success', "# $id Order send for preparing");
-
     }
 
     // public function order_need_more_time(Request $request, $id)
@@ -122,9 +121,9 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'ready_to_dispatch';
         $order->save();
-        $otp = rand(1000,9999);
-        if($order->accepted_driver_id != null){
-           event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id,$otp));
+        $otp = rand(1000, 9999);
+        if ($order->accepted_driver_id != null) {
+            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id, $otp));
         }
         orderCancel($id);
         return response()->json([
@@ -137,7 +136,7 @@ class OrderController extends Controller
 
     public function order_dispatched($id)
     {
-        
+
         $order               = Order::find($id);
         $order->order_status = 'dispatched';
         $order->save();
@@ -152,19 +151,19 @@ class OrderController extends Controller
     public function view($id)
     {
         $order = Order::with('products', 'user', 'order_product_details', 'rider_assign_orders')->find($id);
-//        dd($order);
+        //        dd($order);
         if (!$order)
             return redirect()->back()->with('error', 'Order not found');
 
-//        $rider=RiderAssignOrders::with('deliver_boy')->where('order_id',$id)->get();
-//        dd($order);
+        //        $rider=RiderAssignOrders::with('deliver_boy')->where('order_id',$id)->get();
+        //        dd($order);
         return view('vendor.restaurant.order.view', compact('order'));
     }
 
     public function invoice($id)
     {
         $order = Order::with('products', 'user', 'order_product_details')->find($id);
-//        dd($order);
+        //        dd($order);
         if (!$order)
             return redirect()->back()->with('error', 'Order not found');
         return view('vendor.restaurant.order.invoice', compact('order'));
@@ -172,7 +171,7 @@ class OrderController extends Controller
 
     public function get_preparation_time(Request $request)
     {
-//        $products       = OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')->join('products', 'order_products.product_id', '=', 'products.id')->where('order_id', $request->order_id)->first();
+        //        $products       = OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')->join('products', 'order_products.product_id', '=', 'products.id')->where('order_id', $request->order_id)->first();
         $products       = get_order_preparation_time($request->order_id);
         $admin_masters  = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
         $is_extend_time = false;
@@ -187,18 +186,18 @@ class OrderController extends Controller
 
     public function get_set_preparation_time(Request $request)
     {
-//        dd("sdfsdf");
-//        $products       = OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')->join('products', 'order_products.product_id', '=', 'products.id')->where('order_id', $request->order_id)->first();
-//        $products=get_order_preparation_time($request->order_id);
+        //        dd("sdfsdf");
+        //        $products       = OrderProduct::selectRaw('SUM(preparation_time) as total_preparation_time')->join('products', 'order_products.product_id', '=', 'products.id')->where('order_id', $request->order_id)->first();
+        //        $products=get_order_preparation_time($request->order_id);
         $order                  = Order::find($request->order_id);
         $total_preparation_time = time_diffrence_in_minutes($order->preparation_time_from, $order->preparation_time_to);
         $admin_masters          = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
         $is_extend_time         = false;
         $return                 = ['total_preparation_time' => $total_preparation_time, 'is_extend_time' => false];
-//        if ($total_preparation_time <= $admin_masters->max_preparation_time) {
-//            $return['is_extend_time']       = true;
-//            $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
-//        }
+        //        if ($total_preparation_time <= $admin_masters->max_preparation_time) {
+        //            $return['is_extend_time']       = true;
+        //            $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
+        //        }
         if ($total_preparation_time <= $admin_masters->max_preparation_time) {
             $return['max_preparation_time'] = ($admin_masters->max_preparation_time - $total_preparation_time);
             $options                        = "";
@@ -212,14 +211,14 @@ class OrderController extends Controller
             if ($return['max_preparation_time'] >= 15) {
                 $options .= "<option value='15'>15</option>";
             }
-            $return['options']=$options;
+            $return['options'] = $options;
         }
         return response()->json($return, 200);
     }
 
     public function refresh_list(Request $request, $staus_filter = null)
     {
-        $order_obj = Order::select('orders.id','orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
+        $order_obj = Order::select('orders.id', 'orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->join('order_products', 'order_products.order_id', '=', 'orders.id')
             ->join('products', 'products.id', '=', 'order_products.product_id')
@@ -236,7 +235,7 @@ class OrderController extends Controller
             ->groupBy('orders.id')
             ->orderBy('orders.id', 'desc')
             ->paginate(10);
-//        dd($orders);
-        return view('vendor.restaurant.order.refresh_list', compact('orders','staus_filter'));
+        //        dd($orders);
+        return view('vendor.restaurant.order.refresh_list', compact('orders', 'staus_filter'));
     }
 }

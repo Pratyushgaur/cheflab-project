@@ -185,7 +185,7 @@ $('#reportrange').daterangepicker({
         // .appendTo( '#example_wrapper .col-md-6:eq(0)' );
   // });
 
-  ;
+  
 
   function reload_table() {
       table.DataTable().ajax.reload(null, false);

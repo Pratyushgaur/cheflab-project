@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use App\Models\OrderCommision;
 use App\Models\Paymentsetting;
 use App\Models\Vendors;
+use App\Models\vendor_order_statement;
 use App\Models\User;
 use App\Models\OrderProduct;
 
@@ -15,17 +16,17 @@ function time_diffrence_in_minutes($datetime1, $datetime2)
     $dateTimeObject1 = date_create($datetime1);
     $dateTimeObject2 = date_create($datetime2);
 
-// Calculating the difference between DateTime Objects
+    // Calculating the difference between DateTime Objects
     $interval = date_diff($dateTimeObject1, $dateTimeObject2);
 
-// Printing the result in days format
+    // Printing the result in days format
 
 
     $min = $interval->days * 24 * 60;
     $min += $interval->h * 60;
     $min += $interval->i;
 
-// Printing the Result in Minutes format.
+    // Printing the Result in Minutes format.
     return $min;
 }
 
@@ -137,7 +138,7 @@ function show_time_slots($start_time, $end_time, $duration, $break)
 
 function vendorOrderCountByStatus($vendor_id, $status)
 {
-    if($status=='')
+    if ($status == '')
         return Orders::where(['vendor_id' => $vendor_id])->count();
 
     return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->count();
@@ -367,7 +368,6 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
             //$join->where('products.category', '=', 'categories.id');
             $join->where('user_product_like.user_id', '=', $user_id);
         });
-
     }
 
     $product = $product->leftJoin('variants', 'variants.product_id', 'products.id')
@@ -380,22 +380,41 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product->orderBy($order_by_column, $order_by_order);
     //    dd($product->get()->toArray());
     $qty     = '0';
-    $product = $product->addSelect(DB::raw('products.userId as vendor_id'),
-        'variants.id as variant_id', 'variants.variant_name', 'variants.variant_price', 'preparation_time', 'chili_level', 'type',
-        'addons.id as addon_id', 'addons.addon', 'addons.price as addon_price',
-        'products.id as product_id', 'products.dis as description', 'products.product_name', 'product_price', 'dis', 'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'), 'dis as description',
-        'products.id as product_id', 'product_rating', 'dis', 'chili_level', 'primary_variant_name')
+    $product = $product->addSelect(
+        DB::raw('products.userId as vendor_id'),
+        'variants.id as variant_id',
+        'variants.variant_name',
+        'variants.variant_price',
+        'preparation_time',
+        'chili_level',
+        'type',
+        'addons.id as addon_id',
+        'addons.addon',
+        'addons.price as addon_price',
+        'products.id as product_id',
+        'products.dis as description',
+        'products.product_name',
+        'product_price',
+        'dis',
+        'customizable',
+        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+        'dis as description',
+        'products.id as product_id',
+        'product_rating',
+        'dis',
+        'chili_level',
+        'primary_variant_name'
+    )
         ->get();
     //dd($product->toArray());
     //    dd(\DB::getQueryLog());
     $variant = [];
-//dd($user_id);
+    //dd($user_id);
     $cart = \App\Models\Cart::where('user_id', $user_id)->first();
-//    dd($cart);
+    //    dd($cart);
     if (count($product->toArray())) {
         foreach ($product as $i => $p) {
-            $qty = 0;//dd("sdf");
+            $qty = 0; //dd("sdf");
             if (isset($cart->id) && $cart->id != '') {
 
                 $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
@@ -405,65 +424,66 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     $cart_variant = \App\Models\CartProductVariant::where('cart_product_id', $cart_p->id)->pluck('variant_qty', 'variant_id');
                     $cart_addons  = \App\Models\CartProductAddon::where('cart_product_id', $cart_p->id)->pluck('addon_qty', 'addon_id');
                 }
-
             }
 
             if (!isset($variant[$p['product_id']])) {
-                $variant[$p['product_id']] = ['product_id'           => $p['product_id'],
-                                              'product_name'         => $p['product_name'],
-                                              'product_price'        => $p['product_price'],
-                                              'dis'                  => $p['dis'],
-                                              'customizable'         => $p['customizable'],
-                                              'image'                => $p['image'],
-                                              'type'                 => $p['type'],
-                                              'product_rating'       => $p['product_rating'],
-                                              'category'             => $p['categoryName'],
-                                              'is_like'              => $p['is_like'],
-                                              'primary_variant_name' => $p['primary_variant_name'],
-                                              'preparation_time'     => $p['preparation_time'],
-                                              'vendor_id'            => $p['vendor_id'],
-                                              'chili_level'          => $p['chili_level'],
-                                              'cuisines'             => $p['cuisinesName'],
-                                              'categorie'            => $p['categorieName'],
-                                              'cart_qty'             => $qty
+                $variant[$p['product_id']] = [
+                    'product_id'           => $p['product_id'],
+                    'product_name'         => $p['product_name'],
+                    'product_price'        => $p['product_price'],
+                    'dis'                  => $p['dis'],
+                    'customizable'         => $p['customizable'],
+                    'image'                => $p['image'],
+                    'type'                 => $p['type'],
+                    'product_rating'       => $p['product_rating'],
+                    'category'             => $p['categoryName'],
+                    'is_like'              => $p['is_like'],
+                    'primary_variant_name' => $p['primary_variant_name'],
+                    'preparation_time'     => $p['preparation_time'],
+                    'vendor_id'            => $p['vendor_id'],
+                    'chili_level'          => $p['chili_level'],
+                    'cuisines'             => $p['cuisinesName'],
+                    'categorie'            => $p['categorieName'],
+                    'cart_qty'             => $qty
                 ];
                 if ($with_restaurant_name) {
-                    $variant[$p['product_id']] ['restaurantName'] = $p['restaurantName'];
+                    $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
                     //  $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
                     // $variant[$p['product_id']] ['tax'] = $p['tax'];
-                    $variant[$p['product_id']] ['vendor_image'] = asset('vendors') . '/' . $p['vendor_image'];
+                    $variant[$p['product_id']]['vendor_image'] = asset('vendors') . '/' . $p['vendor_image'];
 
                     $banners = json_decode($p['banner_image']);
 
                     if (is_array($banners))
-                        $variant[$p['product_id']] ['banner_image'] = array_map(function ($banner) {
+                        $variant[$p['product_id']]['banner_image'] = array_map(function ($banner) {
                             return URL::to('vendor-banner/') . '/' . $banner;
                         }, $banners);
                     else
-                        $variant[$p['product_id']] ['banner_image'] = [];
-
+                        $variant[$p['product_id']]['banner_image'] = [];
                 }
-
-
             }
             if ($p->variant_id != '') {
                 $v_qty = 0;
                 if (isset($cart_variant[$p->variant_id]))
                     $v_qty = $cart_variant[$p->variant_id];
-                $variant[$p['product_id']]['options'][$p->variant_id] = ['id'               => $p->variant_id,
-                                                                         'variant_name'     => $p->variant_name,
-                                                                         'variant_price'    => $p->variant_price,
-                                                                         'cart_variant_qty' => $v_qty];
+                $variant[$p['product_id']]['options'][$p->variant_id] = [
+                    'id'               => $p->variant_id,
+                    'variant_name'     => $p->variant_name,
+                    'variant_price'    => $p->variant_price,
+                    'cart_variant_qty' => $v_qty
+                ];
             }
             if ($p->addon_id != '') {
                 $a_qty = 0;
                 if (isset($cart_addons[$p->addon_id]))
                     $a_qty = $cart_addons[$p->addon_id];
 
-                $variant[$p['product_id']]['addons'][$p->addon_id] = ['id'             => $p->addon_id,
-                                                                      'addon'          => $p->addon,
-                                                                      'price'          => $p->addon_price,
-                                                                      "cart_addon_qty" => $a_qty];
+                $variant[$p['product_id']]['addons'][$p->addon_id] = [
+                    'id'             => $p->addon_id,
+                    'addon'          => $p->addon,
+                    'price'          => $p->addon_price,
+                    "cart_addon_qty" => $a_qty
+                ];
             }
         }
     }
@@ -481,8 +501,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = null, $limit = null, $group_by = true)
 {
 
-   // $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
-    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(vendors.lat))) ";
+    // $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(vendors.lat))) ";
     $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
     //$vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
     $vendors = $vendors->selectRaw("ROUND({$select}) AS distance")->addSelect("vendors.id");
@@ -501,15 +521,13 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
             return $vendors;
     } else
         return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
-
-
 }
 
 function front_end_currency($number)
 {
-//    setlocale(LC_MONETARY, 'en_IN');
-//    $amount = money_format('%!i', $number);
-//    return "$amount \20B9;";
+    //    setlocale(LC_MONETARY, 'en_IN');
+    //    $amount = money_format('%!i', $number);
+    //    return "$amount \20B9;";
     $decimal   = (string)($number - floor($number));
     $money     = floor($number);
     $length    = strlen($money);
@@ -534,15 +552,13 @@ function front_end_currency($number)
     return $result . '  &#8377; ';
 }
 
-function get_delivery_boy_near_me($lat, $lng,$order)
+function get_delivery_boy_near_me($lat, $lng, $order)
 {
     if ($order->user_id == 4) {
-        return \App\Models\Deliver_boy::where('id','=',2)->first();
+        return \App\Models\Deliver_boy::where('id', '=', 2)->first();
     } else {
-        return \App\Models\Deliver_boy::where('id','=',1)->first();
+        return \App\Models\Deliver_boy::where('id', '=', 1)->first();
     }
-       
-    
 }
 
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
@@ -585,7 +601,7 @@ function get_delivery_boy_near_me($lat, $lng,$order)
 //     return $vendors;
 
 // }
-function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null, $whereVendorIds = [] ,$alsoClosed =null)
+function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null, $whereVendorIds = [], $alsoClosed = null)
 {
     date_default_timezone_set('Asia/Kolkata');
     if ($lat != '' && $lat != '')
@@ -606,8 +622,8 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         $vendors->where($where);
     }
 
-    if($whereVendorIds != null && !empty($whereVendorIds)){
-        $vendors->whereIn('vendors.id',$whereVendorIds);
+    if ($whereVendorIds != null && !empty($whereVendorIds)) {
+        $vendors->whereIn('vendors.id', $whereVendorIds);
     }
 
     if ($current_user_id != null) {
@@ -616,43 +632,58 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
             $join->where('user_vendor_like.user_id', '=', $current_user_id);
         })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
     }
-    $vendors->addSelect('vendor_type', 'is_all_setting_done', 'start_time', 'end_time', 'vendor_order_time.day_no', 'vendors.name', "vendor_food_type",
-        'vendor_ratings', 'vendors.lat', 'vendors.long', 'deal_categories',
+    $vendors->addSelect(
+        'vendor_type',
+        'is_all_setting_done',
+        'start_time',
+        'end_time',
+        'vendor_order_time.day_no',
+        'vendors.name',
+        "vendor_food_type",
+        'vendor_ratings',
+        'vendors.lat',
+        'vendors.long',
+        'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
         DB::raw('if(available,false,true)  as isClosed'),
-        "vendors.fssai_lic_no", 'review_count', 'table_service', 'vendors.id as vendor_id', 'banner_image', 'deal_cuisines');
+        "vendors.fssai_lic_no",
+        'review_count',
+        'table_service',
+        'vendors.id as vendor_id',
+        'banner_image',
+        'deal_cuisines'
+    );
 
     if (!empty($limit) && !empty($offset))
         $vendors->offset($offset)->limit($limit);
 
-//    dd($vendors->get()->toArray());
-    if($alsoClosed == null){
-        $vendors->where('available',1);
+    //    dd($vendors->get()->toArray());
+    if ($alsoClosed == null) {
+        $vendors->where('available', 1);
     }
-    
-    
-    return $vendors;
 
+
+    return $vendors;
 }
 
 function next_available_day($vendor_id, $return_obj = false)
 {
     //return $vendor_id;
-    if($vendor_id==null)return false;
+    if ($vendor_id == null) return false;
     $today = \Carbon\Carbon::now()->dayOfWeek;
     ///return $today;
     //$today = 3;
-     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time','>',mysql_time())->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
-    if (!isset($next_available_day->id)){
+    $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('start_time', '>', mysql_time())->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
+    if (!isset($next_available_day->id)) {
         $exit = 'false';
         while ($exit == 'false') {
             $today++;
-            if($today > 6){
-              $today=0;
+            if ($today > 6) {
+                $today = 0;
             }
 
-            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->first();
-            if(!empty($next_available_day)){
+            $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('available', 1)->where('vendor_id', '=', $vendor_id)->orderBy('start_time', 'ASC')->first();
+            if (!empty($next_available_day)) {
                 $exit = 'true';
             } else {
                 $exit = 'false';
@@ -660,7 +691,7 @@ function next_available_day($vendor_id, $return_obj = false)
         }
     }
 
-//    $today=6;
+    //    $today=6;
     //return \App\Models\VendorOrderTime::where('day_no', '=', $today)->where('vendor_id','=',$vendor_id)->orderBy('start_time','ASC')->get();
     // if ($today == 6){
     //     $next_available_day = \App\Models\VendorOrderTime::where('day_no', '>=', 0)->where('vendor_id','=',$vendor_id)->where('available', 1)->orderBy('day_no')->orderBy('start_time','ASC')->first();
@@ -704,7 +735,6 @@ function next_available_day($vendor_id, $return_obj = false)
         }
     else
         return null;
-
 }
 
 
@@ -713,7 +743,14 @@ function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id
     date_default_timezone_set('Asia/Kolkata');
     $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
 
-    $vendors->addSelect('vendors.id', 'name', "vendor_food_type", 'vendor_ratings', 'lat', 'long', 'deal_categories',
+    $vendors->addSelect(
+        'vendors.id',
+        'name',
+        "vendor_food_type",
+        'vendor_ratings',
+        'lat',
+        'long',
+        'deal_categories',
         \DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'),
         \DB::raw('CONCAT("' . asset('vendors-banner') . '/", banner_image) AS banner_image'),
         DB::raw('if(available,false,true)  as isClosed'),
@@ -735,7 +772,6 @@ function get_restaurant_filerty_nonveg($lat, $lng, $where = [], $current_user_id
         $vendors->offset($offset)->limit($limit);
 
     return $vendors;
-
 }
 
 function generateDriverUniqueCode()
@@ -814,13 +850,11 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
             $thirdCharge = $remainingkm * $setting->six_km_above_user;
             $charge      = $charge + $thirdCharge;
         }
-
     }
     if ($setting->extra_charge_active) {
         $charge = $charge + $setting->extra_charges_user;
     }
     return round($charge);
-
 }
 // function sendNotification($title,$body,$token,$data=null,$sound='default'){
 //         $url = "https://fcm.googleapis.com/fcm/send";
@@ -849,7 +883,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 //         return true;
 // }
 
-function sendNotification($title,$body,$token,$data=null,$sound='default')
+function sendNotification($title, $body, $token, $data = null, $sound = 'default')
 {
     $server_key = env('FIREBASE_SERVER_KEY');
     // $headers = [
@@ -857,9 +891,9 @@ function sendNotification($title,$body,$token,$data=null,$sound='default')
     //     'Content-Type'  => 'application/json',
     // ];
     $url = "https://fcm.googleapis.com/fcm/send";
-    $notification = array('title' =>$title , 'body' => $body, 'sound' => $sound, 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
-    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification,'priority'=>'high','data'=>$data);
-    $fields = json_encode ( $arrayToSend );
+    $notification = array('title' => $title, 'body' => $body, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
+    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
+    $fields = json_encode($arrayToSend);
     // $client = new Client();
     // try{
     //     $request = $client->post($url,[
@@ -874,50 +908,49 @@ function sendNotification($title,$body,$token,$data=null,$sound='default')
     // catch (Exception $e){
     //     return $e;
     // }//
-        $json = json_encode($arrayToSend);
-        $headers = array();
-        $headers[] = 'Content-Type: application/json';
-        $headers[] = 'Authorization: key='. $server_key;
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST,"POST");
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_HTTPHEADER,$headers);
-        //Send the request
-         return $response = curl_exec($ch);
-        //Close request
-        if ($response === FALSE) {
+    $json = json_encode($arrayToSend);
+    $headers = array();
+    $headers[] = 'Content-Type: application/json';
+    $headers[] = 'Authorization: key=' . $server_key;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    //Send the request
+    return $response = curl_exec($ch);
+    //Close request
+    if ($response === FALSE) {
         die('FCM Send Error: ' . curl_error($ch));
-        }
-        curl_close($ch);
-        return true;
+    }
+    curl_close($ch);
+    return true;
 }
 
-function sendUserAppNotification($title,$body,$token,$data=null){
+function sendUserAppNotification($title, $body, $token, $data = null)
+{
     $tokens[] = $token;
-    
+
     $server_key = env('FIREBASE_SERVER_KEY');
     $headers = [
-        'Authorization' => 'key='.$server_key,
+        'Authorization' => 'key=' . $server_key,
         'Content-Type'  => 'application/json',
     ];
     $url = "https://fcm.googleapis.com/fcm/send";
-    $notification = array('title' =>$title , 'body' => $body, 'sound' => 'notify_sound', 'badge' => '1',"android_channel_id" =>"ChefLab_Delivery");
-    $arrayToSend = array('registration_ids' => $tokens, 'notification' => $notification,'priority'=>'high','data'=>$data);
-    $fields = json_encode ( $arrayToSend );
+    $notification = array('title' => $title, 'body' => $body, 'sound' => 'notify_sound', 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
+    $arrayToSend = array('registration_ids' => $tokens, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
+    $fields = json_encode($arrayToSend);
     $client = new Client();
-    try{
-        $request = $client->post($url,[
+    try {
+        $request = $client->post($url, [
             'headers' => $headers,
             "body" => $fields,
         ]);
         $response = $request->getBody();
         //return $response;
-    }
-    catch (Exception $e){
+    } catch (Exception $e) {
         return $e;
     }
-    
 }
 
 
@@ -935,420 +968,522 @@ function vendorOrderCountByRefund($vendor_id, $status)
     return Orders::where(['vendor_id' => $vendor_id, 'refund' => $status])->count();
 }
 
-function promotionRowSetup($Blogs,$request,$user_id){
-    if(!empty($Blogs) && isset($Blogs[0])){
-            $reponce       = [];
-            $counter       = 0;
-            if (isset($Blogs[0])) {
-                foreach ($Blogs as $k => $blog) {
-                    $data1 = null;
-                    $blog_id                   = $blog->id;
-                    $reponce[$counter]['blog'] = $blog;
-                    //$blog->blog_type 1: vendor 2:product
-                    if ($blog->blog_type == '1') {
+function promotionRowSetup($Blogs, $request, $user_id)
+{
+    if (!empty($Blogs) && isset($Blogs[0])) {
+        $reponce       = [];
+        $counter       = 0;
+        if (isset($Blogs[0])) {
+            foreach ($Blogs as $k => $blog) {
+                $data1 = null;
+                $blog_id                   = $blog->id;
+                $reponce[$counter]['blog'] = $blog;
+                //$blog->blog_type 1: vendor 2:product
+                if ($blog->blog_type == '1') {
 
-                        $resturant = get_restaurant_near_me($request->lat, $request->lng, null, $user_id, null, null);
+                    $resturant = get_restaurant_near_me($request->lat, $request->lng, null, $user_id, null, null);
 
-                        $resturant->join('app_promotion_blog_bookings', function ($query) {
-                            $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');
-                        });
+                    $resturant->join('app_promotion_blog_bookings', function ($query) {
+                        $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');
+                    });
 
-                        $resturant->join('app_promotion_blog_settings',
-                            function ($q) use ($blog_id) {
-                                $q->on('app_promotion_blog_bookings.app_promotion_blog_setting_id', '=', 'app_promotion_blog_settings.id');
-                                $q->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog_id);
-                                $q->orderBy('app_promotion_blog_settings.blog_position', 'asc');
-                            });
-                        $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
-                        $resturant->addSelect('app_promotion_blog_bookings.app_promotion_blog_id', 'app_promotion_blog_bookings.app_promotion_blog_setting_id',
-                            'app_promotion_blog_bookings.vendor_id', 'from_date', 'to_date', 'from_time', 'to_time',
-                            \DB::raw('CONCAT("' . asset('slot-vendor-image') . '/", app_promotion_blog_bookings.image ) as blog_promotion_image'),
-                            'vendors.id as vendor_id')
-                            ->where('app_promotion_blog_settings.is_active', 1)
-                            ->where('app_promotion_blog_bookings.payment_status', 1)
-                            ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
-                        $resturant = $resturant->get();
-
-
-                        foreach ($resturant as $key => $value) {
-                            if($value->banner_image!='') {
-                                $banners = @json_decode(@$value->banner_image);
-                                if (is_array($banners))
-                                    $urlbanners = array_map(function ($banner) {
-                                        return URL::to('vendor-banner/') . '/' . $banner;
-                                    }, $banners);
-                                else
-                                    $urlbanners = [];
-                                $resturant[$key]->banner_image = $urlbanners;
-                            }
-                            $resturant[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
-                            $resturant[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $resturant->join(
+                        'app_promotion_blog_settings',
+                        function ($q) use ($blog_id) {
+                            $q->on('app_promotion_blog_bookings.app_promotion_blog_setting_id', '=', 'app_promotion_blog_settings.id');
+                            $q->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog_id);
+                            $q->orderBy('app_promotion_blog_settings.blog_position', 'asc');
                         }
+                    );
+                    $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
+                    $resturant->addSelect(
+                        'app_promotion_blog_bookings.app_promotion_blog_id',
+                        'app_promotion_blog_bookings.app_promotion_blog_setting_id',
+                        'app_promotion_blog_bookings.vendor_id',
+                        'from_date',
+                        'to_date',
+                        'from_time',
+                        'to_time',
+                        \DB::raw('CONCAT("' . asset('slot-vendor-image') . '/", app_promotion_blog_bookings.image ) as blog_promotion_image'),
+                        'vendors.id as vendor_id'
+                    )
+                        ->where('app_promotion_blog_settings.is_active', 1)
+                        ->where('app_promotion_blog_bookings.payment_status', 1)
+                        ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                    $resturant = $resturant->get();
 
-                        $data1     = $resturant;
-                        $reponce[$counter]['blog']['vendors'] = $data1;
-                        unset($data1);unset($resturant);
-                    } else if ($blog->blog_type == '2') {
-                        $resturant = get_restaurant_ids_near_me($request->lat, $request->lng, null, true, null, null);
 
-                        $resturant->join('app_promotion_blog_bookings', function ($query) {
-                            $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');
-                        });
-                        $resturant->join('app_promotion_blog_settings',
-                            function ($q) use ($blog_id) {
-                                $q->on('app_promotion_blog_bookings.app_promotion_blog_setting_id', '=', 'app_promotion_blog_settings.id');
-                                $q->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog_id);
-                                $q->orderBy('app_promotion_blog_settings.blog_position', 'asc');
-                            });
-
-                        $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
-
-                        $resturant->addSelect('app_promotion_blog_bookings.app_promotion_blog_id',
-                            'app_promotion_blog_bookings.app_promotion_blog_setting_id',
-                            'app_promotion_blog_bookings.vendor_id', 'from_date', 'to_date', 'from_time', 'to_time',
-                            'app_promotion_blog_bookings.product_id')
-                            ->where('app_promotion_blog_settings.is_active', 1)
-                            ->where('app_promotion_blog_bookings.payment_status', 1)
-                            ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
-                        $resturants = $resturant->get();
-
-                        foreach ($resturants as $k => $res){
-                            $data1 = get_product_with_variant_and_addons(['products.id' => $res->product_id],
-                                $request->user()->id, null, null, true);
-
-                            $resturants[$k]['products'] = $data1;
+                    foreach ($resturant as $key => $value) {
+                        if ($value->banner_image != '') {
+                            $banners = @json_decode(@$value->banner_image);
+                            if (is_array($banners))
+                                $urlbanners = array_map(function ($banner) {
+                                    return URL::to('vendor-banner/') . '/' . $banner;
+                                }, $banners);
+                            else
+                                $urlbanners = [];
+                            $resturant[$key]->banner_image = $urlbanners;
                         }
-                            
-                         $reponce[$counter]['blog']['products'] = $resturants;
-                        unset($data1);unset($resturant);
+                        $resturant[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                        $resturant[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                     }
-                   
-                        
-                    $counter++;
+
+                    $data1     = $resturant;
+                    $reponce[$counter]['blog']['vendors'] = $data1;
+                    unset($data1);
+                    unset($resturant);
+                } else if ($blog->blog_type == '2') {
+                    $resturant = get_restaurant_ids_near_me($request->lat, $request->lng, null, true, null, null);
+
+                    $resturant->join('app_promotion_blog_bookings', function ($query) {
+                        $query->on('app_promotion_blog_bookings.vendor_id', '=', 'vendors.id');
+                    });
+                    $resturant->join(
+                        'app_promotion_blog_settings',
+                        function ($q) use ($blog_id) {
+                            $q->on('app_promotion_blog_bookings.app_promotion_blog_setting_id', '=', 'app_promotion_blog_settings.id');
+                            $q->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog_id);
+                            $q->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                        }
+                    );
+
+                    $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
+
+                    $resturant->addSelect(
+                        'app_promotion_blog_bookings.app_promotion_blog_id',
+                        'app_promotion_blog_bookings.app_promotion_blog_setting_id',
+                        'app_promotion_blog_bookings.vendor_id',
+                        'from_date',
+                        'to_date',
+                        'from_time',
+                        'to_time',
+                        'app_promotion_blog_bookings.product_id'
+                    )
+                        ->where('app_promotion_blog_settings.is_active', 1)
+                        ->where('app_promotion_blog_bookings.payment_status', 1)
+                        ->orderBy('app_promotion_blog_settings.blog_position', 'asc');
+                    $resturants = $resturant->get();
+
+                    foreach ($resturants as $k => $res) {
+                        $data1 = get_product_with_variant_and_addons(
+                            ['products.id' => $res->product_id],
+                            $request->user()->id,
+                            null,
+                            null,
+                            true
+                        );
+
+                        $resturants[$k]['products'] = $data1;
+                    }
+
+                    $reponce[$counter]['blog']['products'] = $resturants;
+                    unset($data1);
+                    unset($resturant);
                 }
 
+
+                $counter++;
             }
-            return $reponce;
-    }else{
+        }
+        return $reponce;
+    } else {
         return [];
     }
 }
 function orderCancel($id)
-    {
-        // echo 'hello';die;
+{
+    // echo 'hello';die;
 
-        $order = Orders::where('id',$id)->first();
+    $order = Orders::where('id', $id)->first();
 
-        
-        $payout = Paymentsetting::first();
-        $order_amount = $order->net_amount;
-        $vendor_cancellation = $payout->additions;
-        $convenience_fee = $payout->convenience_fee;
-        $admin_commision = $payout->admin_commision;
-        $tax = 18 ;
-       
-        $gross_revenue = $order->gross_amount;
-        // $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
-        $vendor_commision = 0;
-        $admin_per = ($admin_commision / 100) * $vendor_commision;
-        
-        $tax_commision = ($tax / 100) * $admin_per;
-        
-        $convenience_commision = ($convenience_fee / 100) * ($gross_revenue + $vendor_commision);
 
-        $deduction =  $admin_per + $tax_commision + $convenience_commision;        
-        
+    $payout = Paymentsetting::first();
+    $order_amount = $order->net_amount;
+    $vendor_cancellation = $payout->additions;
+    $convenience_fee = $payout->convenience_fee;
+    $admin_commision = $payout->admin_commision;
+    $tax = 18;
 
-        $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
-        $ordercommision = array(
-            'is_cancel' => 1,
+    $gross_revenue = $order->gross_amount;
+    // $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
+    $vendor_commision = 0;
+    $admin_per = ($admin_commision / 100) * $vendor_commision;
+
+    $tax_commision = ($tax / 100) * $admin_per;
+
+    $convenience_commision = ($convenience_fee / 100) * ($gross_revenue + $vendor_commision);
+
+    $deduction =  $admin_per + $tax_commision + $convenience_commision;
+
+
+    $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
+    $ordercommision = array(
+        'is_cancel' => 1,
+        'vendor_id' => $order->vendor_id,
+        'order_id' => $order->id,
+        'vendor_commision' => $vendor_commision,
+        'admin_commision' => $deduction,
+        'net_amount' => $order_amount,
+        'gross_revenue' => $gross_revenue,
+        'additions' => $vendor_commision,
+        'deductions' => $deduction,
+        'net_receivables' => $net_receivables,
+        'convenience_tax' => $convenience_fee,
+        'addition_tax' => $vendor_cancellation,
+        'admin_tax' => $admin_commision,
+        'tax' => $tax,
+        'convenience_amount' => $convenience_commision,
+        'tax_amount' => $tax_commision,
+        'admin_amount' => $admin_per,
+        'order_date' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
+    );
+   
+    OrderCommision::create($ordercommision);
+
+    $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+    $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+    $statementData = vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+    // echo '<pre>';print_r($statementData->paid_amount);die;
+    if ($statementData) {
+        $total = ($statementData->paid_amount + $net_receivables);
+        $updateData = ([
+            'paid_amount' => $total
+        ]);
+        return vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+    } else {
+        $createData = array(
             'vendor_id' => $order->vendor_id,
-            'order_id' => $order->id,
-            'vendor_commision' => $vendor_commision,
-            'admin_commision' => $deduction,
-            'net_amount' => $order_amount,           
-            'gross_revenue' => $gross_revenue,
-            'additions' => $vendor_commision,
-            'deductions' => $deduction,
-            'net_receivables' => $net_receivables,
-            'convenience_tax' => $convenience_fee,
-            'addition_tax' => $vendor_cancellation,
-            'admin_tax' => $admin_commision,
-            'tax' => $tax,
-            'convenience_amount' => $convenience_commision,
-            'tax_amount' => $tax_commision,
-            'admin_amount' => $admin_per,
-            'order_date' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' =>date('Y-m-d H:i:s')
+            'paid_amount' => $net_receivables,
+            'vendor_cancel_deduction' => 0,
+            'start_date' => $current_start_date,
+            'end_date' => $current_end_date
         );
-       return  OrderCommision::create($ordercommision); 
-    }
-
-    function orderComplete($id)
-    {
-        $order = Orders::where('id',$id)->first();
-        $payout = Paymentsetting::first();
-        $order_amount = $order->net_amount;
-        $convenience_fee = $payout->convenience_fee;
-        $admin_commision = $payout->admin_commision;
-        $tax = 18 ;
-        $gross_revenue = $order_amount;
-        $additions = 0;
-        $convenience_commision = ($convenience_fee / 100) * $order_amount;
-        $admin_per = ($admin_commision / 100) * $order_amount;
-        $tax_commision = ($tax / 100) * $admin_per;
-        $deduction =  $admin_per + $tax_commision + $convenience_commision; 
-        $net_receivables = ($gross_revenue + $additions) - $deduction;
-
-        $ordercommision = array(
-            'is_approve' => 1,
-            'vendor_id' => $order->vendor_id,
-            'order_id' => $order->id,
-            'vendor_commision' => $net_receivables,
-            'admin_commision' => $deduction,
-            'net_amount' => $order_amount,           
-            'gross_revenue' => $gross_revenue,
-            'additions' => $additions,
-            'deductions' => $deduction,
-            'net_receivables' => $net_receivables,
-            'convenience_tax' => $convenience_fee,
-            'addition_tax' => $additions,
-            'admin_tax' => $admin_commision,
-            'tax' => $tax,
-            'convenience_amount' => $convenience_commision,
-            'tax_amount' => $tax_commision,
-            'admin_amount' => $admin_per,
-            'order_date' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' =>date('Y-m-d H:i:s')
-        );
-       return  OrderCommision::create($ordercommision);
-
-
-    }
-    function orderDetailForUser($order_id){
-        $order =   \App\Models\Order::where('id','=',$order_id)->first();
-        $order->order_date =  date("d M Y  h:i A",strtotime($order->created_at));
-        $vendor = \App\Models\Vendors::where('id','=',$order->vendor_id)->select('name','image','lat','long')->first();
-        $order->vendor_name = $vendor->name;
-        $order->image = asset('vendors').'/'.$vendor->image;
-        $order->vendor_lat = $vendor->lat;
-        $order->vendor_long = $vendor->long;
-        if($order->order_status == 'preparing'){
-            if(\Carbon\Carbon::now()->lt($order->preparation_time_to)){
-                $start  = \Carbon\Carbon::now();
-                $end    = new Carbon($order->preparation_time_to);
-                $order->preparingdiffrence = $start->diff($end)->format('%I');
-            }else{
-                $order->preparingdiffrence = '0';
-            }
-            
-        }
-        $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get();
-           
-            // foreach ($products as $k => $v) {
-            //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
-            //     $OrderProductVariant = OrderProductVariant::where('order_product_id', '=', $v->order_product_id)->select('variant_name', 'variant_price', 'variant_qty')->first();
-            //     if (!empty($OrderProductVariant)) {
-            //         $products[$k]->variant = $OrderProductVariant;
-            //     }
-            //     if (!empty($OrderProductAddon->toArray())) {
-            //         $products[$k]->addons = $OrderProductAddon;
-            //     }
-
-            // }
-        $order->products = $products;
-            
-        if($order->accepted_driver_id != null){
-            $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' =>$order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id','desc')->limit(1);
-            if($riderAssign->exists()){
-                $riderAssign = $riderAssign->first();
-                $order->rider_id = $riderAssign->rider_id;
-                $order->order_row_id = $riderAssign->order_id;
-                $order->distance = $riderAssign->distance;
-                $order->earning = $riderAssign->earning;
-                $order->cancel_reason = $riderAssign->cancel_reason;
-                $order->action = $riderAssign->action;
-                $order->otp = $riderAssign->otp;
-                $driver = \App\Models\Deliver_boy::where('id','=',$riderAssign->rider_id)->select('*');
-                $driver = $driver->addSelect(\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
-                $driver = $driver->first();
-                $order->driver_name = $driver->name;
-                $order->driver_email = $driver->email;
-                $order->mobile = $driver->mobile;
-                $order->driver_image = $driver->image;
-            }
-
-        }
-        return $order;
-    }
-
-    function blogPromotionPriceSetup ($request,$id){
-        $AppPromotionBlogSetting= new \App\Models\AppPromotionBlogSetting;
-        // 
         
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>1,'blog_name'=>'First Position','blog_price' => $request['first_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_name'=>'Second Position','blog_price' => $request['second_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>3,'blog_name'=>'Third Position','blog_price' => $request['third_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_name'=>'Fourth Position','blog_price' => $request['fourth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_name'=>'Fifth Position','blog_price' => $request['fifth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_name'=>'Sixth Position','blog_price' => $request['sixth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_name'=>'Seventh Position','blog_price' => $request['seventh_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_name'=>'Eighth Position','blog_price' => $request['eighth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_name'=>'Ninth Position','blog_price' => $request['ninth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_name'=>'Tenth Position','blog_price' => $request['tenth_position_price_for_week'],'blog_promotion_date_frame'=>'7']);
-        // 
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>1,'blog_name'=>'First Position','blog_price' => $request['first_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_name'=>'Second Position','blog_price' => $request['second_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>3,'blog_name'=>'Third Position','blog_price' => $request['third_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_name'=>'Fourth Position','blog_price' => $request['fourth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_name'=>'Fifth Position','blog_price' => $request['fifth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_name'=>'Sixth Position','blog_price' => $request['sixth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_name'=>'Seventh Position','blog_price' => $request['seventh_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_name'=>'Eighth Position','blog_price' => $request['eighth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_name'=>'Ninth Position','blog_price' => $request['ninth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_name'=>'Tenth Position','blog_price' => $request['tenth_position_price_for_two_week'],'blog_promotion_date_frame'=>'14']);
-        // 
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>1,'blog_name'=>'First Position','blog_price' => $request['first_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_name'=>'Second Position','blog_price' => $request['second_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>3,'blog_name'=>'Third Position','blog_price' => $request['third_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_name'=>'Fourth Position','blog_price' => $request['fourth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_name'=>'Fifth Position','blog_price' => $request['fifth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_name'=>'Sixth Position','blog_price' => $request['sixth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_name'=>'Seventh Position','blog_price' => $request['seventh_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_name'=>'Eighth Position','blog_price' => $request['eighth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_name'=>'Ninth Position','blog_price' => $request['ninth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        $AppPromotionBlogSetting->insert(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_name'=>'Tenth Position','blog_price' => $request['tenth_position_price_for_month'],'blog_promotion_date_frame'=>'30']);
-        
-        
+       return vendor_order_statement::create($createData);
+    }
+}
+
+function orderComplete($id)
+{
     
+    $order = Orders::where('id', $id)->first();
+    $payout = Paymentsetting::first();
+    $order_amount = $order->net_amount;
+    $convenience_fee = $payout->convenience_fee;
+    $admin_commision = $payout->admin_commision;
+    $tax = 18;
+    $gross_revenue = $order_amount;
+    $additions = 0;
+    $convenience_commision = ($convenience_fee / 100) * $order_amount;
+    $admin_per = ($admin_commision / 100) * $order_amount;
+    $tax_commision = ($tax / 100) * $admin_per;
+    $deduction =  $admin_per + $tax_commision + $convenience_commision;
+    $net_receivables = ($gross_revenue + $additions) - $deduction;
+
+    $ordercommision = array(
+        'is_approve' => 1,
+        'vendor_id' => $order->vendor_id,
+        'order_id' => $order->id,
+        'vendor_commision' => $net_receivables,
+        'admin_commision' => $deduction,
+        'net_amount' => $order_amount,
+        'gross_revenue' => $gross_revenue,
+        'additions' => $additions,
+        'deductions' => $deduction,
+        'net_receivables' => $net_receivables,
+        'convenience_tax' => $convenience_fee,
+        'addition_tax' => $additions,
+        'admin_tax' => $admin_commision,
+        'tax' => $tax,
+        'convenience_amount' => $convenience_commision,
+        'tax_amount' => $tax_commision,
+        'admin_amount' => $admin_per,
+        'order_date' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
+    );
+    return  OrderCommision::create($ordercommision);
+}
+function orderDetailForUser($order_id)
+{
+    $order =   \App\Models\Order::where('id', '=', $order_id)->first();
+    $order->order_date =  date("d M Y  h:i A", strtotime($order->created_at));
+    $vendor = \App\Models\Vendors::where('id', '=', $order->vendor_id)->select('name', 'image', 'lat', 'long')->first();
+    $order->vendor_name = $vendor->name;
+    $order->image = asset('vendors') . '/' . $vendor->image;
+    $order->vendor_lat = $vendor->lat;
+    $order->vendor_long = $vendor->long;
+    if ($order->order_status == 'preparing') {
+        if (\Carbon\Carbon::now()->lt($order->preparation_time_to)) {
+            $start  = \Carbon\Carbon::now();
+            $end    = new Carbon($order->preparation_time_to);
+            $order->preparingdiffrence = $start->diff($end)->format('%I');
+        } else {
+            $order->preparingdiffrence = '0';
+        }
     }
-    function blogPromotionPriceUpdate ($request,$id){
-        //$AppPromotionBlogSetting= new \App\Models\AppPromotionBlogSetting;
-        // 
-        
-        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'7','app_promotion_blog_id'=>$id,'blog_position'=>1])->update(['blog_price' => $request['first_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['second_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'7','app_promotion_blog_id'=>$id,'blog_position'=>3])->update(['blog_price' => $request['third_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['fourth_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['fifth_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['sixth_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['seventh_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['eighth_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['ninth_position_price_for_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_promotion_date_frame'=>'7'])->update(['blog_price' => $request['tenth_position_price_for_week']]);
-        //
-        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'14','app_promotion_blog_id'=>$id,'blog_position'=>1])->update(['blog_price' => $request['first_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['second_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'14','app_promotion_blog_id'=>$id,'blog_position'=>3])->update(['blog_price' => $request['third_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['fourth_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['fifth_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['sixth_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['seventh_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['eighth_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['ninth_position_price_for_two_week']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_promotion_date_frame'=>'14'])->update(['blog_price' => $request['tenth_position_price_for_two_week']]);
-        //
-        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'30','app_promotion_blog_id'=>$id,'blog_position'=>1])->update(['blog_price' => $request['first_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>2,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['second_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame'=>'30','app_promotion_blog_id'=>$id,'blog_position'=>3])->update(['blog_price' => $request['third_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>4,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['fourth_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>5,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['fifth_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>6,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['sixth_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>7,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['seventh_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>8,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['eighth_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>9,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['ninth_position_price_for_month']]);
-        \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id'=>$id,'blog_position'=>10,'blog_promotion_date_frame'=>'30'])->update(['blog_price' => $request['tenth_position_price_for_month']]);
-        // // 
-        
-        
-    
+    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get();
+
+    // foreach ($products as $k => $v) {
+    //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
+    //     $OrderProductVariant = OrderProductVariant::where('order_product_id', '=', $v->order_product_id)->select('variant_name', 'variant_price', 'variant_qty')->first();
+    //     if (!empty($OrderProductVariant)) {
+    //         $products[$k]->variant = $OrderProductVariant;
+    //     }
+    //     if (!empty($OrderProductAddon->toArray())) {
+    //         $products[$k]->addons = $OrderProductAddon;
+    //     }
+
+    // }
+    $order->products = $products;
+
+    if ($order->accepted_driver_id != null) {
+        $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' => $order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id', 'desc')->limit(1);
+        if ($riderAssign->exists()) {
+            $riderAssign = $riderAssign->first();
+            $order->rider_id = $riderAssign->rider_id;
+            $order->order_row_id = $riderAssign->order_id;
+            $order->distance = $riderAssign->distance;
+            $order->earning = $riderAssign->earning;
+            $order->cancel_reason = $riderAssign->cancel_reason;
+            $order->action = $riderAssign->action;
+            $order->otp = $riderAssign->otp;
+            $driver = \App\Models\Deliver_boy::where('id', '=', $riderAssign->rider_id)->select('*');
+            $driver = $driver->addSelect(\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
+            $driver = $driver->first();
+            $order->driver_name = $driver->name;
+            $order->driver_email = $driver->email;
+            $order->mobile = $driver->mobile;
+            $order->driver_image = $driver->image;
+        }
     }
+    return $order;
+}
 
-    function createPdf($id)
-    {
-        
-        $order = Orders::where('id',$id)->first();
-        $vendor = Vendors::findOrFail($order->vendor_id);
-        $users = User::findOrFail($order->user_id);
-        $orderProduct = OrderProduct::findOrFail($id);
-            $product_id = $orderProduct->product_id;
-            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
+function blogPromotionPriceSetup($request, $id)
+{
+    $AppPromotionBlogSetting = new \App\Models\AppPromotionBlogSetting;
+    // 
 
-        $invoiceName = rand(9999,99999).$id.'.pdf'; 
-        $pdf = PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order','vendor','users','product'));
-        $pdf->save(public_path('uploads/invoices/'. $invoiceName));
-        $url = 'uploads/invoices/'. $invoiceName;
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 1, 'blog_name' => 'First Position', 'blog_price' => $request['first_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 2, 'blog_name' => 'Second Position', 'blog_price' => $request['second_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 3, 'blog_name' => 'Third Position', 'blog_price' => $request['third_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 4, 'blog_name' => 'Fourth Position', 'blog_price' => $request['fourth_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 5, 'blog_name' => 'Fifth Position', 'blog_price' => $request['fifth_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 6, 'blog_name' => 'Sixth Position', 'blog_price' => $request['sixth_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 7, 'blog_name' => 'Seventh Position', 'blog_price' => $request['seventh_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 8, 'blog_name' => 'Eighth Position', 'blog_price' => $request['eighth_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 9, 'blog_name' => 'Ninth Position', 'blog_price' => $request['ninth_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 10, 'blog_name' => 'Tenth Position', 'blog_price' => $request['tenth_position_price_for_week'], 'blog_promotion_date_frame' => '7']);
+    // 
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 1, 'blog_name' => 'First Position', 'blog_price' => $request['first_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 2, 'blog_name' => 'Second Position', 'blog_price' => $request['second_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 3, 'blog_name' => 'Third Position', 'blog_price' => $request['third_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 4, 'blog_name' => 'Fourth Position', 'blog_price' => $request['fourth_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 5, 'blog_name' => 'Fifth Position', 'blog_price' => $request['fifth_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 6, 'blog_name' => 'Sixth Position', 'blog_price' => $request['sixth_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 7, 'blog_name' => 'Seventh Position', 'blog_price' => $request['seventh_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 8, 'blog_name' => 'Eighth Position', 'blog_price' => $request['eighth_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 9, 'blog_name' => 'Ninth Position', 'blog_price' => $request['ninth_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 10, 'blog_name' => 'Tenth Position', 'blog_price' => $request['tenth_position_price_for_two_week'], 'blog_promotion_date_frame' => '14']);
+    // 
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 1, 'blog_name' => 'First Position', 'blog_price' => $request['first_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 2, 'blog_name' => 'Second Position', 'blog_price' => $request['second_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 3, 'blog_name' => 'Third Position', 'blog_price' => $request['third_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 4, 'blog_name' => 'Fourth Position', 'blog_price' => $request['fourth_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 5, 'blog_name' => 'Fifth Position', 'blog_price' => $request['fifth_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 6, 'blog_name' => 'Sixth Position', 'blog_price' => $request['sixth_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 7, 'blog_name' => 'Seventh Position', 'blog_price' => $request['seventh_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 8, 'blog_name' => 'Eighth Position', 'blog_price' => $request['eighth_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 9, 'blog_name' => 'Ninth Position', 'blog_price' => $request['ninth_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+    $AppPromotionBlogSetting->insert(['app_promotion_blog_id' => $id, 'blog_position' => 10, 'blog_name' => 'Tenth Position', 'blog_price' => $request['tenth_position_price_for_month'], 'blog_promotion_date_frame' => '30']);
+}
+function blogPromotionPriceUpdate($request, $id)
+{
+    //$AppPromotionBlogSetting= new \App\Models\AppPromotionBlogSetting;
+    // 
 
-        $pdfUrl = Orders::where('id', '=', $id)->first();
-        $pdfUrl->pdf_url = $url;
-        $pdfUrl->save();
-        return true;
-    }
+    \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame' => '7', 'app_promotion_blog_id' => $id, 'blog_position' => 1])->update(['blog_price' => $request['first_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 2, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['second_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame' => '7', 'app_promotion_blog_id' => $id, 'blog_position' => 3])->update(['blog_price' => $request['third_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 4, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['fourth_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 5, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['fifth_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 6, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['sixth_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 7, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['seventh_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 8, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['eighth_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 9, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['ninth_position_price_for_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 10, 'blog_promotion_date_frame' => '7'])->update(['blog_price' => $request['tenth_position_price_for_week']]);
+    //
+    \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame' => '14', 'app_promotion_blog_id' => $id, 'blog_position' => 1])->update(['blog_price' => $request['first_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 2, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['second_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame' => '14', 'app_promotion_blog_id' => $id, 'blog_position' => 3])->update(['blog_price' => $request['third_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 4, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['fourth_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 5, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['fifth_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 6, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['sixth_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 7, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['seventh_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 8, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['eighth_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 9, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['ninth_position_price_for_two_week']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 10, 'blog_promotion_date_frame' => '14'])->update(['blog_price' => $request['tenth_position_price_for_two_week']]);
+    //
+    \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame' => '30', 'app_promotion_blog_id' => $id, 'blog_position' => 1])->update(['blog_price' => $request['first_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 2, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['second_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['blog_promotion_date_frame' => '30', 'app_promotion_blog_id' => $id, 'blog_position' => 3])->update(['blog_price' => $request['third_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 4, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['fourth_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 5, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['fifth_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 6, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['sixth_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 7, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['seventh_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 8, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['eighth_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 9, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['ninth_position_price_for_month']]);
+    \App\Models\AppPromotionBlogSetting::where(['app_promotion_blog_id' => $id, 'blog_position' => 10, 'blog_promotion_date_frame' => '30'])->update(['blog_price' => $request['tenth_position_price_for_month']]);
+    // // 
 
 
-    function orderCancelByCustomer($order_id)
-    {
-       
-        $order = Orders::where('id',$order_id)->first();
-        
-        $payout = Paymentsetting::first();
-        $order_amount = $order->net_amount;
-        $vendor_cancellation = $payout->additions;
-        $convenience_fee = $payout->convenience_fee;
-        $admin_commision = $payout->admin_commision;
-        $tax = 18 ;
-       
-        $gross_revenue = $order->gross_amount;
-        $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
-        $admin_per = ($admin_commision / 100) * $vendor_commision;
-        
-        $tax_commision = ($tax / 100) * $admin_per;
-        
-        $convenience_commision = ($convenience_fee / 100) * ($vendor_commision);
 
-        $deduction =  $admin_per + $tax_commision + $convenience_commision;        
-        
+}
 
-        $net_receivables = ($vendor_commision - $deduction);
+function createPdf($id)
+{
 
-        $ordercommision = array(
-            'is_cancel' => 1,
-            'vendor_id' => $order->vendor_id,
-            'order_id' => $order->id,
-            'vendor_commision' => $vendor_commision,
-            'admin_commision' => $deduction,
-            'net_amount' => $order_amount,
-            'deductions' => $deduction,
-            'convenience_tax' => $convenience_fee,
-            'addition_tax' => $vendor_cancellation,
-            'admin_tax' => $admin_commision,
-            'tax' => $tax,
-            'convenience_amount' => $convenience_commision,
-            'tax_amount' => $tax_commision,
-            'admin_amount' => $admin_per,
-            'order_date' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s'),
+    $order = Orders::where('id', $id)->first();
+    $vendor = Vendors::findOrFail($order->vendor_id);
+    $users = User::findOrFail($order->user_id);
+    $orderProduct = OrderProduct::findOrFail($id);
+    $product_id = $orderProduct->product_id;
+    $product = Product_master::where('id', '=', $product_id)->select('id', 'product_name', 'product_image', 'primary_variant_name', 'product_price', 'type')->get();
 
-            'gross_revenue' => $vendor_commision,
-            'additions' => $vendor_commision,
-            'net_receivables' => $net_receivables,
-            'updated_at' =>date('Y-m-d H:i:s')
-        );
-       
+    $invoiceName = rand(9999, 99999) . $id . '.pdf';
+    $pdf = PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order', 'vendor', 'users', 'product'));
+    $pdf->save(public_path('uploads/invoices/' . $invoiceName));
+    $url = 'uploads/invoices/' . $invoiceName;
 
-        $orderData = OrderCommision::where('order_id', $order_id)->first();
+    $pdfUrl = Orders::where('id', '=', $id)->first();
+    $pdfUrl->pdf_url = $url;
+    $pdfUrl->save();
+    return true;
+}
 
-        if(isset($orderData)){
-            $data = OrderCommision::where('order_id', $order_id)
+
+function orderCancelByCustomer($order_id)
+{
+
+    $order = Orders::where('id', $order_id)->first();
+
+    $payout = Paymentsetting::first();
+    $order_amount = $order->net_amount;
+    $vendor_cancellation = $payout->additions;
+    $convenience_fee = $payout->convenience_fee;
+    $admin_commision = $payout->admin_commision;
+    $tax = 18;
+
+    $gross_revenue = $order->gross_amount;
+    $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
+    $admin_per = ($admin_commision / 100) * $vendor_commision;
+
+    $tax_commision = ($tax / 100) * $admin_per;
+
+    $convenience_commision = ($convenience_fee / 100) * ($vendor_commision);
+
+    $deduction =  $admin_per + $tax_commision + $convenience_commision;
+
+
+    $net_receivables = ($vendor_commision - $deduction);
+
+    $ordercommision = array(
+        'is_cancel' => 1,
+        'vendor_id' => $order->vendor_id,
+        'order_id' => $order->id,
+        'vendor_commision' => $vendor_commision,
+        'admin_commision' => $deduction,
+        'net_amount' => $order_amount,
+        'deductions' => $deduction,
+        'convenience_tax' => $convenience_fee,
+        'addition_tax' => $vendor_cancellation,
+        'admin_tax' => $admin_commision,
+        'tax' => $tax,
+        'convenience_amount' => $convenience_commision,
+        'tax_amount' => $tax_commision,
+        'admin_amount' => $admin_per,
+        'order_date' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+
+        'gross_revenue' => $vendor_commision,
+        'additions' => $vendor_commision,
+        'net_receivables' => $net_receivables,
+        'updated_at' => date('Y-m-d H:i:s')
+    );
+
+
+    $orderData = OrderCommision::where('order_id', $order_id)->first();
+
+    if (isset($orderData)) {
+        $data = OrderCommision::where('order_id', $order_id)
             ->update($ordercommision);
-          
-        }else{
-           
-            OrderCommision::create($ordercommision);
-        }
-       
-          
-         return true;
+    } else {
+
+        OrderCommision::create($ordercommision);
     }
+
+
+    return true;
+}
+
+function orderCancelByVendor($id)
+{
+    
+
+    $order = Orders::where('id', $id)->first();
+    $charges = Paymentsetting::first();
+    $order_amount = $order->net_amount;
+    $vendor_cancellation = $charges->order_rejection;
+
+    $vendor_charges = ($vendor_cancellation / 100) * $order_amount;
+    $ordercommision = array(
+        'is_cancel' => 1,
+        'cancel_by_vendor' => 1,
+        'vendor_cancel_charge' => $vendor_charges,
+        'vendor_id' => $order->vendor_id,
+        'order_id' => $order->id,
+        'vendor_commision' => 0,
+        'admin_commision' => 0,
+        'net_amount' => $order_amount,
+        'gross_revenue' => 0,
+        'additions' => 0,
+        'deductions' => $vendor_charges,
+        'net_receivables' => 0,
+        'convenience_tax' => 0,
+        'addition_tax' => 0,
+        'admin_tax' => 0,
+        'tax' => 0,
+        'convenience_amount' => 0,
+        'tax_amount' => 0,
+        'admin_amount' => 0,
+        'order_date' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
+    );
+    OrderCommision::create($ordercommision);
+
+    $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+    $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+    $statementData = vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+    // echo '<pre>';print_r($current_start_date);die;
+    if ($statementData) {
+        $total = ($statementData->vendor_cancel_deduction + $vendor_charges);
+        $updateData = ([
+            'vendor_cancel_deduction' => $total
+        ]);
+        return vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+    } else {
+        $createData = array(
+            'vendor_id' => $order->vendor_id,
+            'paid_amount' => 0,
+            'vendor_cancel_deduction' => $vendor_charges,
+            'start_date' => $current_start_date,
+            'end_date' => $current_end_date
+        );
+        
+       return vendor_order_statement::create($createData);
+    }
+}
