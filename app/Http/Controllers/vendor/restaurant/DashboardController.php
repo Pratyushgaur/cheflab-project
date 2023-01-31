@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-
+        updateDriverLatLngFromFcm();
         $product = Product_master::where('userId', '=', Auth::guard('vendor')->user()->id);
         $product = $product->select('products.product_name', 'products.id as product_id', 'product_image', 'product_price');
         $product = $product->addSelect(\DB::raw('(SELECT IFNULL(COUNT(id),0) as total FROM order_products WHERE  order_products.product_id =  products.id ) AS orderTotal'));

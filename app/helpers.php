@@ -1352,3 +1352,23 @@ function orderCancel($id)
           
          return true;
     }
+    function updateDriverLatLngFromFcm(){
+        try {
+            $database = app('firebase.database');
+            $reference =  $database->getReference('locations')->getvalue();
+            if(!empty($reference)){
+                foreach ($reference as $key => $value) {
+                    if(!empty($value)){
+                        $deliverBoy = \App\Models\Deliver_boy::where('id','=',$value['driver_id'])->where('is_online','=','1')->first();     
+                        if(!empty($deliverBoy)){
+                            \App\Models\Deliver_boy::where('id','=',$value['driver_id'])->update(['lng'=>$value['long'],'lat'=>$value['lat'] ]);
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e){
+             return $e;
+        }
+       
+        
+    }
