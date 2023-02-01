@@ -536,15 +536,78 @@ function front_end_currency($number)
 
 function get_delivery_boy_near_me($lat, $lng,$order)
 {
-    if ($order->user_id == 4) {
-        return \App\Models\Deliver_boy::where('id','=',2)->first();
-    } else {
-        return \App\Models\Deliver_boy::where('id','=',1)->first();
-    }
-       
-    
+    // if ($order->user_id == 4) {
+    //     return \App\Models\Deliver_boy::where('id','=',2)->first();
+    // } else {
+    //     return \App\Models\Deliver_boy::where('id','=',1)->first();
+    // }
+    //
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(deliver_boy.lat))) ";
+    $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
+    $boy = $boy->where('lat','!=','');
+    $boy = $boy->where('lng','!=','');
+    $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+    $boy = $boy->orderBy('distance','ASC');
+    $boy = $boy->limit(1);
+    return $boy->first();
+
 }
 
+function orderAssignToDeliveryBoy($lat, $lng,$order){
+    $riders =\App\Models\RiderAssignOrders::where(['order_id'=>$order->id,'action'=>'2'])->orWhere(['action'=>'0'])->get()->pluck('rider_id')->toArray();
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(deliver_boy.lat))) ";
+    $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
+    $boy = $boy->where('lat','!=','');
+    $boy = $boy->where('lng','!=','');
+    if(!empty($riders)){
+        $boy = $boy->whereNotIn('id',$riders);
+    }
+    $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+    $boy = $boy->orderBy('distance','ASC');
+    $boy = $boy->limit(1);
+    return $boy->first();
+    
+}
+function calculateRiderCharge($riderToRestaurantDistance,$vendorLat,$vendorLng,$orderlat,$orderLng){
+    $distance =  getDrivingDistance($vendorLat, $vendorLng, $orderlat, $orderLng);
+    $distance = floatval($distance);
+    $setting = App\Models\DeliveryboySetting::first();
+    $riderToRescharge = 0;
+    if($riderToRestaurantDistance <= 2){
+        $riderToRescharge = $setting->below_one_five_km*$riderToRestaurantDistance;
+    }else{
+        $rem  = $riderToRestaurantDistance-2;
+        $riderToRescharge = $setting->below_one_five_km*2;
+        if($rem > 1){
+            $riderToRescharge = $riderToRescharge+$setting->above_one_five_km*$rem;
+        }
+    }
+
+    // restaturnat to user calculations
+    $riderToRescharge = $riderToRescharge+$setting->first_three_km_charge_admin;
+    if ($distance > 3) {
+        $remainingkm = $distance - 3.0;
+        if ($remainingkm >= 3) {
+            $secondCharge = 3 * $setting->three_km_to_six_admin;
+        } else {
+            $secondCharge = $remainingkm * $setting->three_km_to_six_admin;
+        }
+        $riderToRescharge = $riderToRescharge + $secondCharge;
+        //
+        $remainingkm = $remainingkm - 3.0;
+
+        if ($remainingkm > 0) {
+            $thirdCharge = $remainingkm * $setting->six_km_above_admin;
+            $riderToRescharge      = $riderToRescharge + $thirdCharge;
+        }
+
+    }
+    if ($setting->extra_charge_active) {
+        $riderToRescharge = $riderToRescharge + $setting->extra_charges_admin;
+    }
+    return array('charges'=>round($riderToRescharge),'resToUserDistance'=>$distance);
+    
+}
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
 // {
 //     date_default_timezone_set('Asia/Kolkata');

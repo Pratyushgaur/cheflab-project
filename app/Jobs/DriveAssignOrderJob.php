@@ -37,11 +37,16 @@ class DriveAssignOrderJob implements ShouldQueue
      */
     public function handle()
     {
-
+        updateDriverLatLngFromFcm();
+        
         $vendor=Vendors::find($this->order->vendor_id);
-        $delivery_boy=get_delivery_boy_near_me($vendor->lat, $vendor->lng,$this->order);
+        $delivery_boy = $orderAssignToDeliveryBoy($vendor->lat, $vendor->long,$this->order);
+        //$delivery_boy=get_delivery_boy_near_me($vendor->lat, $vendor->lng,$this->order);
         if(!empty($delivery_boy)){
-            $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id));
+            $charges = calculateRiderCharge($delivery_boy->distance,$vendor->lat,$vendor->long,$this->order->lat,$this->order->long);
+
+
+            $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id,'earning'=>$charges['charges'],'distance'=>$charges['resToUserDistance']));
             $riderAssign->saveOrFail();
             //$riderAssign = RiderAssignOrders::where(['id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
 
@@ -51,8 +56,8 @@ class DriveAssignOrderJob implements ShouldQueue
                 $riderAssign = $riderAssign->join('vendors','orders.vendor_id','=','vendors.id');
                 $riderAssign = $riderAssign->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',\DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
                 $riderAssign = $riderAssign->first();
-                $riderAssign->expected_earninig = 50;
-                $riderAssign->trip_distance = 7;
+                $riderAssign->expected_earninig = $charges['charges'];
+                $riderAssign->trip_distance = $charges['resToUserDistance'];
                 //
                 $title = 'New Delivery Request';
                 $body = "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address;
@@ -61,6 +66,11 @@ class DriveAssignOrderJob implements ShouldQueue
             }
 
 
+        }else{
+            $noRiderAssignOrders = new \App\Models\NoRiderAssignOrders;
+            $noRiderAssignOrders->order_id  = $this->order->id;
+            $noRiderAssignOrders->status = 0;
+            $noRiderAssignOrders->save();
         }
 
 
