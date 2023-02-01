@@ -563,15 +563,20 @@ class AppController extends Controller
                 ], 401);
             }
             $RiderAssignOrders = new RiderAssignOrders ;
+            $rejectedOrders = new RiderAssignOrders ;
             $RiderIncentives = new \App\Models\RiderIncentives ;
             $RiderReviewRatings = new \App\Models\RiderReviewRatings ;
             if($request->report_for == 'today'){
                 $RiderAssignOrders = $RiderAssignOrders->whereDate('created_at',Carbon::now());
+                $rejectedOrders = $rejectedOrders->whereDate('created_at',Carbon::now());
                 $RiderIncentives = $RiderIncentives->whereDate('created_at',Carbon::now());
                 $RiderReviewRatings = $RiderReviewRatings->whereDate('created_at',Carbon::now());
             }
             if($request->report_for == 'last_week'){
                 $RiderAssignOrders = $RiderAssignOrders->whereBetween(
+                    'created_at' ,[Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
+                $rejectedOrders = $rejectedOrders->whereBetween(
                     'created_at' ,[Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
                 $RiderIncentives = $RiderIncentives->whereBetween(
@@ -585,6 +590,9 @@ class AppController extends Controller
                 $RiderAssignOrders = $RiderAssignOrders->whereBetween(
                     'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
+                $rejectedOrders = $rejectedOrders->whereBetween(
+                    'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
                 $RiderIncentives = $RiderIncentives->whereBetween(
                     'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
@@ -592,9 +600,8 @@ class AppController extends Controller
                     'created_at' ,[Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
             }
-            
             $earning_and_orders = $RiderAssignOrders->where(['action'=>'3','rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(earning),0) as earning'),\DB::raw('IFNULL(COUNT(id),0) as order_count'))->first();
-            $rejectedOrders     = $RiderAssignOrders->where(['action'=>'2','rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(COUNT(id),0) as rejectOrders'))->first();
+            $rejectedOrders     = $rejectedOrders->where(['action'=>'2','rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(COUNT(id),0) as rejectOrders'))->first();
             $RiderIncentives    = $RiderIncentives->where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(SUM(amount),0) as amount'))->first();
             $RiderReviewRatings    = $RiderReviewRatings->where(['rider_id'=>$request->user_id])->select(\DB::raw('IFNULL(AVG(rating),0.0) as rating'))->first();
             //$workingHours = calculateWorkingHours($request->user_id,Carbon::now(),Carbon::now());
@@ -603,23 +610,15 @@ class AppController extends Controller
             //
             $chart = [];
             if($request->report_for == 'today'){
-                
+                 $date = Carbon::now()->startOfWeek();;
                 for($i=0; $i<7; $i++){
-                    $date    = date('Y-m-d', strtotime('monday + '.$i.' day'));
                     $dayData = RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
                     $dayData->day = date('D', strtotime($date));
                     $dayData->date = date('d-m-Y', strtotime($date));
+                    $date = $date->addDays(1);
                     $chart[] = $dayData;
+
                 }
-                // var_dump($last_week_dates);die;
-                // $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
-                // $chart = [];
-                // foreach ($period as $date) {
-                //     $dayData  =  RiderAssignOrders::whereDate('created_at',$date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
-                //     $dayData->day = $date->format('D');
-                //     $chart[] = $dayData;
-                        
-                // }
             }
             
             $profile = Deliver_boy::where('id','=',$request->user_id)->select('name','email','username','mobile','is_online',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
