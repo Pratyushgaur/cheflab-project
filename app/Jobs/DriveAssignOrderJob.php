@@ -40,7 +40,7 @@ class DriveAssignOrderJob implements ShouldQueue
         updateDriverLatLngFromFcm();
         
         $vendor=Vendors::find($this->order->vendor_id);
-        $delivery_boy = $orderAssignToDeliveryBoy($vendor->lat, $vendor->long,$this->order);
+        $delivery_boy = orderAssignToDeliveryBoy($vendor->lat, $vendor->long,$this->order);
         //$delivery_boy=get_delivery_boy_near_me($vendor->lat, $vendor->lng,$this->order);
         if(!empty($delivery_boy)){
             $charges = calculateRiderCharge($delivery_boy->distance,$vendor->lat,$vendor->long,$this->order->lat,$this->order->long);
