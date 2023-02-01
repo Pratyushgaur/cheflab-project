@@ -64,19 +64,23 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="card-title">{{ $user->name }}</h5>
-
                     <div class="card-tools">
-                        <button type="button" class="btn btn-danger">Suspend This Delivery Boy
-                        </button>
+                        @if($user->status==1)
+                        <a type="button" href="javascript:void(0)" class="btn btn-danger">Delivery Boy Is Active
+                        </a>
+                        @else
+                        <a type="button" href="javascript:void(0)" class="btn btn-danger">Delivery Boy Is De-Active
+                        </a>
+                        @endif
                         <button type="button" class="btn btn-tool" data-card-widget="collapse">
                             <i class="fas fa-minus"></i>
                         </button>
                         <div class="btn-group">
-                            <select name="" id="filter-by-role" class="form-control">
-                                <option value="">Woring Type</option>
-                                <option value="1">Part Time </option>
-                                <option value="2">Full Time</option>
-                            </select>
+                        @if($user->status==1)
+                            <input type="text" class="form-control" value="Part Time" readonly>
+                        @else
+                            <input type="text" class="form-control" value="Full Time" readonly>
+                        @endif
                         </div>
                         <button type="button" class="btn btn-tool" data-card-widget="remove">
                             <i class="fas fa-times"></i>
@@ -106,39 +110,39 @@
 
                             <div class="progress-group">
                                 Excellent
-                                <span class="float-right"><b>0</b></span>
+                                <span class="float-right"><b>{{ $rating_arr['excellent_count'] }}</b></span>
                                 <div class="progress progress-sm">
-                                    <div class="progress-bar bg-success" style="width: 23%"></div>
+                                    <div class="progress-bar bg-success" style="width:{{ $rating_arr['excellent'] }}%"></div>
                                 </div>
                             </div>
                             <!-- /.progress-group -->
 
                             <div class="progress-group">
                                 Good
-                                <span class="float-right"><b>0</b></span>
+                                <span class="float-right"><b>{{ $rating_arr['good_count'] }}</b></span>
                                 <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger" style="width: 34%"></div>
+                                    <div class="progress-bar bg-danger" style="width:{{ $rating_arr['good'] }}%"></div>
                                 </div>
                             </div>
                             <div class="progress-group">
                                 Average
-                                <span class="float-right"><b>0</b></span>
+                                <span class="float-right"><b>{{ $rating_arr['average_count'] }}</b></span>
                                 <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger" style="width: 23%"></div>
+                                    <div class="progress-bar bg-danger" style="width:{{ $rating_arr['average'] }}%"></div>
                                 </div>
                             </div>
                             <div class="progress-group">
                                 Below Average
-                                <span class="float-right"><b>0</b></span>
+                                <span class="float-right"><b>{{ $rating_arr['below_average_count'] }}</b></span>
                                 <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger" style="width: 43%"></div>
+                                    <div class="progress-bar bg-danger" style="width:{{ $rating_arr['below_average'] }}%"></div>
                                 </div>
                             </div>
                             <div class="progress-group">
                                 Poor
-                                <span class="float-right"><b>0</b></span>
+                                <span class="float-right"><b>{{ $rating_arr['poor_count'] }}</b></span>
                                 <div class="progress progress-sm">
-                                    <div class="progress-bar bg-danger" style="width: 67%"></div>
+                                    <div class="progress-bar bg-danger" style="width:{{ $rating_arr['poor'] }}%"></div>
                                 </div>
                             </div>
 

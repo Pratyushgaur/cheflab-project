@@ -8,7 +8,7 @@ use App\Models\RiderAssignOrders;
 use App\Models\Cuisines;
 use App\Models\Product_master; 
 use App\Models\RiderReviewRatings;
-use App\Models\DriverWorkingLogs;
+use App\Models\driver_total_working_perday;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryboySetting;
 use App\Models\RiderbankDetails;
@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 use DataTables;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 class Deliveryboy extends Controller
 {
@@ -473,8 +474,7 @@ class Deliveryboy extends Controller
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
     }
 
-    public function deliver_boy_active($id){      
-      
+    public function deliver_boy_active($id){
         $user = Deliver_boy::find($id);
         Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => '1']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
@@ -483,24 +483,48 @@ class Deliveryboy extends Controller
     public function fun_view_deliverboy($id){      
         $rider_id =  Crypt::decryptString($id);
         $user = Deliver_boy::find($rider_id);
-        $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
-        $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
-        $total_earning = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
-        $total_incentive = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+        // $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
+        // $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
+        // $total_earning = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+        // $total_incentive = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
         
-        return view('admin/deliveryboy/deliverboy_view',compact('rider_id','deliverd_order','canceled_order','total_earning','total_incentive','user'));
+        return view('admin/deliveryboy/deliverboy_view',compact('rider_id','user'));
     }
 
     public function delivery_boy_tab(){   
        $type = $_POST['type'];
        $rider_id = $_POST['rider_id'];
        $user = Deliver_boy::find($rider_id);
+
         if($type == 'info'){
+
+            $userData = RiderReviewRatings::where(['rider_id' => $rider_id])->count();
+
+            $excellent = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '5'])->count();
+            $good = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '4'])->count();
+            $average = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '3'])->count();
+            $below_average = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '2'])->count();
+            $poor = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '1'])->count();
+
+            $rating_arr = ([
+                'excellent_count' => $excellent,
+                'good_count' => $good,
+                'average_count' => $average,
+                'below_average_count' => $below_average,
+                'poor_count' => $poor,
+                'excellent' => ($excellent/$userData * 100),
+                'good' => ($good/$userData * 100),
+                'average' => ($average/$userData * 100),
+                'below_average' => ($below_average/$userData * 100),
+                'poor' => ($poor/$userData * 100)
+            ]);
+// echo '<pre>';print_r($rating_arr);die;
+
             $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
             $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
             $total_earning = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
             $total_incentive = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
-            $view = view('admin/deliveryboy/deliverboy_information_view',compact('rider_id','deliverd_order','canceled_order','total_earning','total_incentive','user'))->render();
+            $view = view('admin/deliveryboy/deliverboy_information_view',compact('rider_id','deliverd_order','canceled_order','total_earning','total_incentive','user','rating_arr'))->render();
             return json_encode(['type' => $type,'view' => $view ]);
         }else if($type == 'tran'){
             $view = view('admin/deliveryboy/deliverboy_transaction_view',compact('rider_id','user'))->render();
@@ -568,9 +592,9 @@ class Deliveryboy extends Controller
     {
        
         if ($request->ajax()) {
-            $data = DriverWorkingLogs::where(['rider_id' => $request->rider_id,'status' => '1'])->get();
+            $data = driver_total_working_perday::where(['rider_id' => $request->rider_id])->get();
    
-            return Datatables::of($data)
+            return Datatables::of($data)    
                 ->addIndexColumn()
                
             ->addColumn('date', function($data){
@@ -579,15 +603,31 @@ class Deliveryboy extends Controller
             })
 
             ->addColumn('active_time', function($data){
-                $active_time = date('Y-m-d',strtotime($data->created_at));
+                $active_time = gmdate('H:i:s', $data->total_hr);
                 return $active_time;
             })
+
             ->rawColumns(['date','active_time'])
 
             ->make(true);
        }
 
     }
+
+    // public function delivery_boy_status($id){  
+
+    //     $rider = Deliver_boy::find($id);
+
+    //     if($rider->status == 1){
+    //         Deliver_boy::where('id', $id)->first()->update([ 'status' => 0]);
+    //         return redirect()->route('admin.deliverboy.viewdetail',encrypt($id))->with('message', 'Rider In-Active Successfully');
+    //     }else{
+    //         Deliver_boy::where('id', $id)->first()->update([ 'status' => 1]);
+    //         return redirect()->route('admin.deliverboy.viewdetail',encrypt($id))->with('message', 'Rider Active Successfully');
+    //     }
+        
+    // }
+    
 
 
     

@@ -1,4 +1,16 @@
 <div class="row">
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Time Logs</h5>
+            </div>
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col -->
+      </div>
+
+<div class="row">
   <div class="col-md-12">
     <div class="card card-primary">
     <input type="hidden" id="riderId" value="{{ $rider_id }}">

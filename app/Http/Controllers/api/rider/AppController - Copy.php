@@ -10,7 +10,6 @@ use App\Models\OrderProduct;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\DriverWorkingLogs;
-use App\Models\driver_total_working_perday;
 use Carbon\Carbon;
 use App\jobs\UserOrderNotification;
 use Illuminate\Support\Facades\DB;
@@ -477,7 +476,6 @@ class AppController extends Controller
     }
     public function change_status(Request $request)
     {
-        // echo 'hello';die;
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -499,48 +497,6 @@ class AppController extends Controller
             $DriverWorkingLogs->rider_id = $request->user_id;
             $DriverWorkingLogs->status = $request->status;
             $DriverWorkingLogs->saveOrFail();
-
-            $workingLogsData_old = DriverWorkingLogs::where(['rider_id'=> $request->user_id, 'status'=> '1', 'working_hr'=> 0])->first();
-
-            $workingLogsData_new = DriverWorkingLogs::where(['rider_id'=> $request->user_id, 'status'=> '0', 'working_hr'=> 0])->first();
-
-            if($workingLogsData_new){
-                $day1 = $workingLogsData_old->created_at;
-                $day_1 = strtotime($day1);
-                $day2 = $workingLogsData_new->created_at;
-                $day_2 = strtotime($day2);
-                $hr = ($day_2 - $day_1);
-
-                DriverWorkingLogs::where(['rider_id'=> $request->user_id, 'working_hr'=> 0])->update(['working_hr'=>$hr]);    
-            }
-
-            $today_date = date('d-m-Y');
-
-            $driver_total_working_perday = driver_total_working_perday::where(['rider_id'=> $request->user_id,'current_date' => $today_date])->first();
-// echo '<pre>';print_r($driver_total_working_perday);die; 
-            if($driver_total_working_perday){
-                if(isset($hr)){
-                driver_total_working_perday::where(['rider_id'=> $request->user_id,'current_date' => $today_date])->update(['total_hr'=>($driver_total_working_perday->total_hr + $hr)]);
-                }
-            }else{
-                if(isset($hr)){
-                    driver_total_working_perday::create(['rider_id'=> $request->user_id, 'total_hr'=> $hr,'current_date'=> $today_date]);
-                }
-               
-            }            
-            
-
-            // driver_total_working_perday::where(['rider_id'=> $request->user_id, 'status'=> '0', 'working_hr'=> 0])->first();
-
-                
-
-                
-
-
-
-
-
-
             return response()->json([
                 'status'   => true,
                 'message'  => 'Status Updated Successfully'

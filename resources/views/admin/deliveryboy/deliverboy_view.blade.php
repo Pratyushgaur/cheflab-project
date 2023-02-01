@@ -33,9 +33,9 @@
         <li class="nav-item">
           <a type="button" class="nav-link click_tab click_tab_3" onclick="tabData('{{ $rider_id }}','time')" aria-disabled="true">Time Logs</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a type="button" class="nav-link click_tab click_tab_4" onclick="tabData('{{ $rider_id }}','conv')" aria-disabled="true">Conversations</a>
-        </li>
+        </li> -->
       </ul>
 
     </div>
