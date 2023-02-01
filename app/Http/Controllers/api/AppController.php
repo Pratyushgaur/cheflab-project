@@ -1620,7 +1620,9 @@ class AppController extends Controller
                         }else{
                             if (isset($p['variants']))
                             foreach ($p['variants'] as $k => $v) {
-                                $orderProductVariant = new OrderProductVariant($v);
+                                $variants = \App\Models\Variant::where('product_id','=',$p['product_id'])->where('id','=',$v['variant_id'])->first();
+                                $varint_array = array('variant_id'=>$variants->id,'order_product_id'=>$orderProductId,'variant_name'=>$variants->variant_name,'variant_price'=>$variants->variant_price,'variant_qty'=>$v['variant_qty']);
+                                $orderProductVariant = new OrderProductVariant($varint_array);
                                 $order_products->order_product_variants()->save($orderProductVariant);
                             }
                         }
