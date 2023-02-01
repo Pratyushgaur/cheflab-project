@@ -79,7 +79,6 @@
                            </thead>
                            <tbody>
                               @foreach($product as $val)       
-                              
                               <tr>
                                  <td>
                                     <div class="media media--sm">
@@ -92,6 +91,10 @@
                                        <div class="media-body">
                                           <div>
                                              <strong class="line--limit-1">{{$val['product_name']}}</strong>
+                                             @if($val->customizable == 'true')
+                                             <br>
+                                             <span class="line--limit-1">({{$val->variant->variant_name}})</span>
+                                             @endif
                                              
                                              <div class="font-size-sm text-body">
                                                 <span>type : </span>
@@ -128,17 +131,28 @@
                            <table class="table">
                               <tr>
                                  <th style="width:50%">Items Price:</th>
-                                 <td>{{$order->gross_amount}}</td>
+                                 <td>{{number_format($order->total_amount,2)}}</td>
                               </tr>
                               <tr>
                                  <th>Tax & Plateform Charge</th>
-                                 <td>{{$order->tex}}</td>
+                                 <td>{{number_format( (float)$order->tex+$order->platform_charges,2)}}</td>
                               </tr>
+                              <tr>
+                                 <th>Delivery Charge</th>
+                                 <td>{{number_format($order->delivery_charge,2)}}</td>
+                              </tr>
+                              @if(!empty($coupon))
+                              <tr>
+                                 <th>Discount <br>Coupon Applied <span class="text-success">({{$coupon->name}})</span></th>
+                                 <td><?php echo number_format( $order->discount_amount,2);?></td>
+                              </tr>
+                              @endif
+                              @if($order->wallet_apply)
                               <tr>
                                  <th>Wallet Cut</th>
                                  <td>{{$order->wallet_cut}}</td>
                               </tr>
-                              
+                              @endif
                               <tr>
                                  <th>Total:</th>
                                  <td>{{$order->net_amount}}</td>

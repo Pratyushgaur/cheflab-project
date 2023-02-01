@@ -309,17 +309,19 @@ class OrderController extends Controller
             // echo '<pre>'; print_r($order);die;
             $vendor_id = $order->vendor_id;
             $user_id = $order->user_id;
-            $product = OrderProduct::where('order_id','=',$order_id)->join('products','order_products.product_id','=','products.id')->select('order_products.*','products.type')->get();
+            $product = OrderProduct::where('order_id','=',$order_id)->join('products','order_products.product_id','=','products.id')->select('order_products.*','products.type','products.customizable')->get();
+            
             foreach($product as $key =>$value){
+                $varint = \App\Models\OrderProductVariant::where('order_product_id','=',$value->id)->first();
+                $product[$key]['variant'] = $varint;
                 $product[$key]['addons'] = \App\Models\OrderProductAddon::where('order_product_id','=',$value->id)->join('addons','order_product_addons.addon_id','=','addons.id')->select('order_product_addons.*','addons.addon')->get()->toArray();  
             }
-            
             //$product_id = $orderProduct->product_id;
             //$product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
             $vendor = Vendors::findOrFail($vendor_id);
             $users = User::findOrFail($user_id);
-            
-            return view('admin.order.view',compact('order','product','vendor','users'));
+            $coupon = \App\Models\Coupon::find($order->coupon_id);
+            return view('admin.order.view',compact('order','product','vendor','users','coupon'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 

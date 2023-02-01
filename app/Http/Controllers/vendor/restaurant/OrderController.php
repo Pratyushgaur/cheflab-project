@@ -152,13 +152,14 @@ class OrderController extends Controller
     public function view($id)
     {
         $order = Order::with('products', 'user', 'order_product_details', 'rider_assign_orders')->find($id);
-//        dd($order);
+        $coupon = \App\Models\Coupon::find($order->coupon_id);
+
         if (!$order)
             return redirect()->back()->with('error', 'Order not found');
 
 //        $rider=RiderAssignOrders::with('deliver_boy')->where('order_id',$id)->get();
 //        dd($order);
-        return view('vendor.restaurant.order.view', compact('order'));
+        return view('vendor.restaurant.order.view', compact('order','coupon'));
     }
 
     public function invoice($id)
