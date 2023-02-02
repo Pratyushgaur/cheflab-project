@@ -605,7 +605,7 @@ function calculateRiderCharge($riderToRestaurantDistance,$vendorLat,$vendorLng,$
     if ($setting->extra_charge_active) {
         $riderToRescharge = $riderToRescharge + $setting->extra_charges_admin;
     }
-    return array('charges'=>round($riderToRescharge),'resToUserDistance'=>$distance);
+    return array('charges'=>round($riderToRescharge),'resToUserDistance'=>$distance,'totalDistance'=>$distance+$riderToRestaurantDistance);
     
 }
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)

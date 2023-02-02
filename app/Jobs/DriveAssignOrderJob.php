@@ -44,7 +44,7 @@ class DriveAssignOrderJob implements ShouldQueue
         //$delivery_boy=get_delivery_boy_near_me($vendor->lat, $vendor->lng,$this->order);
         if(!empty($delivery_boy)){
             $charges = calculateRiderCharge($delivery_boy->distance,$vendor->lat,$vendor->long,$this->order->lat,$this->order->long);
-            $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id,'earning'=>$charges['charges'],'distance'=>$charges['resToUserDistance']));
+            $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id,'earning'=>$charges['charges'],'distance'=>$charges['resToUserDistance'],'total_ride_distance'=>$charges['totalDistance']));
             $riderAssign->saveOrFail();
             //$riderAssign = RiderAssignOrders::where(['id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
 

@@ -13,6 +13,7 @@ class RiderAssignOrders extends Model
         'order_id',
         'earning',
         'distance',
+        'total_ride_distance',
         'action'
     ];
 
