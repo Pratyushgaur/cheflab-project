@@ -2632,7 +2632,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'isCancelledWithin30Second' => 'required|in:1,0',
-                    'order_id'                  => 'required|numeric'
+                    'order_id'                  => 'required|numeric|exists:orders,id'
                 ]
             );
             // if ($validateUser->fails()) {
@@ -2644,7 +2644,7 @@ class AppController extends Controller
             
 
             $order = Order::where('id', $request->order_id)
-                ->where('user_id', 34)
+                ->where('user_id', $request->user()->id)
                 ->first();
 
                 if($order->order_status != 'dispatched'){ 
