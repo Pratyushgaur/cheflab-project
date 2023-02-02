@@ -1417,14 +1417,15 @@ function orderCancel($id)
     }
     function updateDriverLatLngFromFcm(){
         try {
-            $database = app('firebase.database');
-            $reference =  $database->getReference('locations')->getvalue();
-            if(!empty($reference)){
-                foreach ($reference as $key => $value) {
-                    if(!empty($value)){
-                        $deliverBoy = \App\Models\Deliver_boy::where('id','=',$value['driver_id'])->where('is_online','=','1')->first();     
+            $ids = \App\Models\Deliver_boy::where('is_online','=','1')->where('status','=','1')->get()->pluck('id');
+            if(!empty($ids)){
+                $database = app('firebase.database');
+                foreach($ids as $key =>$value){
+                    $reference = $database->getReference('locations')->getChild($value)->getvalue();
+                    if(!empty($reference)){
+                        $deliverBoy = \App\Models\Deliver_boy::where('id','=',$reference['driver_id'])->where('is_online','=','1')->first();     
                         if(!empty($deliverBoy)){
-                            \App\Models\Deliver_boy::where('id','=',$value['driver_id'])->update(['lng'=>$value['long'],'lat'=>$value['lat'] ]);
+                            \App\Models\Deliver_boy::where('id','=',$reference['driver_id'])->update(['lng'=>$reference['long'],'lat'=>$reference['lat'] ]);
                         }
                     }
                 }
