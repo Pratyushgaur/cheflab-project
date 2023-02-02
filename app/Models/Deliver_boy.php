@@ -11,7 +11,7 @@ use Laravel\Sanctum\HasApiTokens;
 class Deliver_boy extends Model
 {
     use HasFactory,Notifiable ,HasApiTokens;
-
+    protected $fillable=['status'];
     protected $table ='deliver_boy';
     public $timestamps = false;
 }

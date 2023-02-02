@@ -10,8 +10,8 @@
           
         </div>
         
-        <!-- Modal body -->
-        <form id="restaurant-form" action="javascript:void();" method="post" onsubmit="payVendor(this);">
+        
+        <form id="restaurant-form" action="{{route('admin.account.vendor.payVendor')}}" method="post" >
        
         <div class="modal-body">
         
@@ -31,7 +31,7 @@
                   <div class="">
                   <div class="form-group">
                       <label for="bankUtr">Amount</label>
-                      <input type="number" class="form-control" id="amounUtr" name="amount">
+                      <input type="number" class="form-control" value = "{{ $data->paid_amount - $data->vendor_cancel_deduction }}" id="amounUtr" name="amount" readonly>
                     </div> 
                   </div>
                 </div>
@@ -63,27 +63,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/additional-methods.js"></script>
 
 <script>
-  function payVendor(e){
-    
-            $.ajax({    
-                'headers': {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                url :"{{ route('admin.account.vendor.payVendor') }}",  
-                method:"POST",  
-                dataType:"json",  
-                data:$(e).serialize(),
-                success: function(data){ 
-                  if(data.success==1){
-                  toastr.success(data.message,'Success');
-                  }
-                    var surl = "{{ route('admin.account.vendor.list') }}";
-                    $(location).attr('href',surl)
-                },
-            }); 
-        }
-        
-
+  
         $("#restaurant-form").validate({
           rules: {
             bank_utr: {

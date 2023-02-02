@@ -11,8 +11,18 @@ use Illuminate\Http\Request;
 class DashboardController extends Controller
 {
     public function index(Request $request)
-    {
+    {   
+        //updateDriverLatLngFromFcm();
+        // $order = Orders::find(1);
+        // $vendor = \App\Models\Vendors::find($order->vendor_id);
+        // $d = orderAssignToDeliveryBoy(24.46423226202339, 74.86663632553595,$order);
+        // if(!empty($d)){
+        //     $d = calculateRiderCharge($d->distance,$vendor->lat,$vendor->long,$order->lat,$order->long);
+        //     dd($d);
+            
+        // }
 
+        // dd($d->toArray());
         $product = Product_master::where('userId', '=', Auth::guard('vendor')->user()->id);
         $product = $product->select('products.product_name', 'products.id as product_id', 'product_image', 'product_price');
         $product = $product->addSelect(\DB::raw('(SELECT IFNULL(COUNT(id),0) as total FROM order_products WHERE  order_products.product_id =  products.id ) AS orderTotal'));

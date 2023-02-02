@@ -77,29 +77,31 @@
                             </tr>
                             </thead>
                             <tbody>
+                                
                             @foreach($order->products as $k=>$product)
 
                                 <tr>
                                     <td class="text-center">
                                         <?php
-//                                                                                dd($product);
+                                            
                                         $Product_master = \App\Models\Product_master::withTrashed()->find($product->product_id);
                                         echo "<img style='max-width: 100px;max-hieght: 100px;' src='" . url('/') . '/products/' . $Product_master->product_image . "'>";
 
                                         ?></td>
                                     </td>
-                                    <td class="text-left">{{($k+1)}} <b>Product :</b> {{$product->product_name}}
+                                    <td class="text-left"> <b>Product :</b> {{$product->product_name}}
                                         <?php
 
-                                        $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->get();
-                                        if (!$OrderProductVariant) {
+                                        $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->first();
+                                        if (!empty($OrderProductVariant) && $Product_master->customizable == 'true') {
+                                           
                                             echo "<br/> <b>Variant :</b> $OrderProductVariant->variant_name";
 
-                                            $unit_price = $OrderProductVariant->variant_price / $OrderProductVariant->variant_qty;
-                                            $price      = $OrderProductVariant->variant_price;
+                                            $unit_price = $OrderProductVariant->variant_price;
+                                            $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
                                         } else {
-                                            $unit_price = @(@$product->product_price / @$product->product_qty);
-                                            $price      = $product->product_price;
+                                            $unit_price = @(@$product->product_price);
+                                            $price      = $product->product_price*$product->product_qty;
                                         }
 
                                         ?>
@@ -115,34 +117,51 @@
 //                                print_r($addon);
                                 if(isset($addons[0])){
                                     foreach ($addons as $k1=>$addon)
-if(isset($addon->addon) && $addon->addon!=''){
-    ?>
-    <tr>
-        <td></td>
-        <td class="text-left">{{"Addon : ".$addon->addon}}</td>
-        <td>{{$addon->addon_qty}}</td>
-        <td>{{($addon->addon_price/$addon->addon_qty)}}</td>
-        <td>{{$addon->addon_price}}</td>
-    </tr>
-                                <?php
-}}
+                                        if(isset($addon->addon) && $addon->addon!=''){
+                                            ?>
+                                            <tr>
+                                                <td></td>
+                                                <td class="text-left">{{"Addon : ".$addon->addon}}</td>
+                                                <td>{{$addon->addon_qty}}</td>
+                                                <td>{{($addon->addon_price)}}</td>
+                                                <td>{{$addon->addon_price}}</td>
+                                            </tr>
+                                                                        <?php
+                                        }
+                                    }
                                 ?>
                             @endforeach
                             <tr>
-                                <td colspan="4">Total:</td>
-                                <td><b><?php echo "&#8377;" . $order->total_amount;?></b></td>
+                                <td colspan="4">Items Total:</td>
+                                <td><b><?php echo "&#8377; " . number_format($order->total_amount,2);?></b></td>
                             </tr>
-
                             <tr>
-                                <td colspan="4">Discount:</td>
-                                <td>-<?php echo "&#8377; " . $order->discount_amount;?></td>
+                                <td colspan="4">Tax & Charge:</td>
+                                <td>&#8377; <?php echo number_format( (float)$order->tex+$order->platform_charges,2);?></td>
                             </tr>
+                            <tr>
+                                <td colspan="4">Delivery Charge:</td>
+                                <td>&#8377; <?php echo number_format( $order->delivery_charge,2);?></td>
+                            </tr>
+                            @if(!empty($coupon))
+                            <tr>
 
+                                <td colspan="4">Discount: <br>Coupon Applied <span class="text-success">({{$coupon->name}})</span></td>
+                                <td>-<?php echo "&#8377; ";?> <?php echo number_format( $order->discount_amount,2);?></td>
+                            </tr>
+                            @endif
+                            @if($order->wallet_apply)
+                            <tr>
+
+                                <td colspan="4">Wallet Apply:</td>
+                                <td>-<?php echo "&#8377; ";?> <?php echo number_format( $order->wallet_cut,2);?></td>
+                            </tr>
+                            @endif
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="4">Net Amount:</td>
-                                <td><b><?php echo "&#8377;" . $order->net_amount;?></b></td>
+                                <td><b><?php echo "&#8377; " . $order->net_amount;?></b></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -243,45 +262,6 @@ if(isset($addon->addon) && $addon->addon!=''){
 
                 <div class="ms-panel {{--ms-panel-fh--}}">
                     <div class="ms-panel-header">
-                        <h6>Rider</h6>
-                    </div>
-                    <div class="ms-panel-body p-0">
-                        <ul class="ms-list ms-feed ms-twitter-feed">
-                            @foreach($order->rider_assign_orders as $k=>$rider)
-
-                                <li class="ms-list-item">
-                                    <div class="media clearfix">
-                                        <img src="
-                                        @if($rider->image!='')
-                                        {{url('/').'/dliver-boy/'.$rider->image}}@else{{url('/').'/default_user.jpg'}} @endif
-" class="ms-img-round ms-img-small" alt="people">
-                                        <div class="media-body">
-                                            <h6 class="ms-feed-user"><b>Rider Name : </b>{{$rider->name}}</h6><br/>
-                                            <p><b>Email :</b> {{$rider->email}}</p>
-                                            <p><b>Mobile :</b> {{$rider->mobile}}</p>
-                                            @if($rider->action==0)
-                                                <span class="badge badge-primary">Pending</span>
-                                            @endif
-                                            @if($rider->action==1)
-                                                <span class="badge badge-success">Accepted</span>
-                                            @endif
-                                            @if($rider->action==2)
-                                                <span class="badge badge-dark">Rejected</span>
-                                                <p>Cancel Reason : {{$rider->cancel_reason}}</p>
-                                            @endif
-                                            @if($rider->action==3)
-                                                <span class="badge badge-info">Deliveered</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="ms-panel {{--ms-panel-fh--}}">
-                    <div class="ms-panel-header">
                         <h6>Customer</h6>
                     </div>
                     <div class="ms-panel-body p-0">
@@ -300,6 +280,51 @@ if(isset($addon->addon) && $addon->addon!=''){
                         </ul>
                     </div>
                 </div>
+                @if(!empty($order->rider_assign_orders))
+                <div class="ms-panel {{--ms-panel-fh--}}">
+                    <div class="ms-panel-header">
+                        <h6>Rider</h6>
+                    </div>
+                    <div class="ms-panel-body p-0">
+                        <ul class="ms-list ms-feed ms-twitter-feed">
+                            @foreach($order->rider_assign_orders as $k=>$rider)                    
+                                <li class="ms-list-item">
+                                    <div class="media clearfix">
+                                        <img src="
+                                        @if($rider->image!='')
+                                        {{url('/').'/dliver-boy/'.$rider->image}}@else{{url('/').'/default_user.jpg'}} @endif" class="ms-img-round ms-img-small" alt="people">
+                                        <div class="media-body">
+                                            <h6 class="ms-feed-user"><b>Rider Name : </b>{{$rider->name}}</h6><br/>
+                                            <p><b>Email :</b> {{$rider->email}}</p>
+                                            <p><b>Mobile :</b> {{$rider->mobile}}</p>
+                                            @if($rider->pivot->action==0)
+                                                <span class="badge badge-primary">Pending</span>
+                                            @endif
+                                            @if($rider->pivot->action==1)
+                                                <span class="badge badge-success">Accepted</span>
+                                            @endif
+                                            @if($rider->pivot->action==2)
+                                                <span class="badge badge-dark">Rejected</span>
+                                                <p>Cancel Reason : {{$rider->cancel_reason}}</p>
+                                            @endif
+                                            @if($rider->pivot->action==3)
+                                                <span class="badge badge-info">Delivered</span>
+                                            @endif
+                                            @if($rider->pivot->action==4)
+                                                <span class="badge badge-info">Pickuped</span>
+                                            @endif
+                                            @if($rider->pivot->action==6)
+                                                <span class="badge badge-info">User Cancelled</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+                @endif                                             
+                
             </div>
 
 
