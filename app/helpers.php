@@ -554,7 +554,7 @@ function get_delivery_boy_near_me($lat, $lng,$order)
 }
 
 function orderAssignToDeliveryBoy($lat, $lng,$order){
-    $riders =\App\Models\RiderAssignOrders::where(['order_id'=>$order->id,'action'=>'2'])->orWhere(['action'=>'0'])->get()->pluck('rider_id')->toArray();
+    $riders =\App\Models\RiderAssignOrders::where(['order_id'=>$order->id,'action'=>'2'])->orWhereIn('action',["0","1","4"])->get()->pluck('rider_id')->toArray();
     $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(deliver_boy.lat))) ";
     $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
     $boy = $boy->where('lat','!=','');
