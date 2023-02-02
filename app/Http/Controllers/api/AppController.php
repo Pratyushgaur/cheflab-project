@@ -1596,6 +1596,9 @@ class AppController extends Controller
                 $insertData['landmark_address'] = $request->reach;
                 $insertData['deliver_otp'] = rand(1000,9999);
                 $insertData['delivery_charge'] = intval($request->delivery_charge); 
+                $insertData['chef_message'] = $request->chef_message; 
+                
+
                 $Order                    = new Order($insertData);
                 $Order->saveOrFail();
                 $order_id = $Order->id;
