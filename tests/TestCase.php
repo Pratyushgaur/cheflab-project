@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use App\Http\Controllers\Admin\Deliveryboy;
 use App\Models\AdminMasters;
+use App\Models\Deliver_boy;
 use App\Models\Mobileotp;
 use App\Models\User;
 use App\Models\User_faq;
@@ -37,5 +39,10 @@ abstract class TestCase extends BaseTestCase
     public function createAdminMasters($args = [], $num = null)
     {
         return AdminMasters::factory()->count($num)->create($args);
+    }
+
+    public function createDeliveryBoy($args = [], $num = null)
+    {
+        return Deliver_boy::factory()->count($num)->create($args);
     }
 }
