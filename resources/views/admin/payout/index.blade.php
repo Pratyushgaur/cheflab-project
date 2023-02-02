@@ -192,7 +192,9 @@
                                     </div>
                                   </div>
                                   <div class="col-md-6">
+                                  <label for="additions">Convenience Fee for vendor (Including GST)</label>
                                     <div class="custom-control custom-switch">
+                                      
                                       <input type="checkbox" class="custom-control-input" id="switch1" name="toggle" onchange="get_toggle()" value="0" @if($data->toggle == '1') checked @endif>
 
                                       <input type="hidden" class="custom-input"  name="hiddentoggle" onchange="get_toggle()" value="0">
@@ -201,7 +203,7 @@
                                   </div>
                                   <div class="col-md-6" id="convenience_id">
                                     <div class="form-group">
-                                      <label for="additions">Convenience Fee for vendor (Including GST)</label>
+                                      <!-- <label for="additions">Convenience Fee for vendor (Including GST)</label> -->
                                       <div class="input-group mb-3">
                                           <input type="text" class="form-control" name="convenience_fee" value="{{ $data->convenience_fee }}">
                                           <div class="input-group-append">

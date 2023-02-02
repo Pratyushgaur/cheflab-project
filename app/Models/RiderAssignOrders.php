@@ -11,6 +11,9 @@ class RiderAssignOrders extends Model
     protected $fillable = [
         'rider_id',
         'order_id',
+        'earning',
+        'distance',
+        'total_ride_distance',
         'action'
     ];
 

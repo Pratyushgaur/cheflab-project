@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Deliver_boy;
 use App\Models\RiderMobileOtp;
 use Validator;
+use Illuminate\Support\Facades\Http;
 
 class LoginApiController extends Controller
 {
@@ -33,10 +34,12 @@ class LoginApiController extends Controller
             $deliveryBoy =  Deliver_boy::where(['mobile' => $request->username])->orWhere('username', '=', $request->username);
             $deliveryBoyData = Deliver_boy::where('deliver_boy.mobile', $request->username)->first();
             if ($deliveryBoy->exists()) {
-
                 if ($deliveryBoyData->status == 1) {
                     $data =  $deliveryBoy->first();
                     $otp = $this->otp_generate($data->mobile);
+                    $msg = "OTP to Login to your ChefLab Rider App is $otp DO NOT share this OTP to anyone for security reasons.";
+                    $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$data->mobile&message=" . urlencode($msg) . "&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507167507835135096";
+                    Http::get($url);
                     return response()->json([
                         'status' => true,
                         'message' => 'Otp Send Successfully',

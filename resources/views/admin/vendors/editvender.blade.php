@@ -602,7 +602,7 @@
 
       </div>
     </div>
-
+    
 
   </section>
   <!-- /.content -->
@@ -751,21 +751,21 @@
     });
   });
 
+  
 
   function initialize() {
+    
+  var myLatlng = new google.maps.LatLng("{{ @$vendor->lat }}","{{ @$vendor->long }}");
+
+    // alert(letData);
     var map = new google.maps.Map(document.getElementById('address-map'), {
-      center: {
-        lat:<?php echo (isset($Vendor->lat) && $Vendor->lat!='') ? $Vendor->lat : 24.462200;?>,
-        lng:<?php echo (isset($Vendor->long) && $Vendor->long!='') ? $Vendor->long : 74.850403;?>
-      },
+      center:myLatlng,
       zoom: 15
 
     });
     var marker = new google.maps.Marker({
-      position: {
-       lat:<?php echo (isset($Vendor->lat) && $Vendor->lat!='') ? $Vendor->lat : 24.462200;?>,
-                    lng:<?php echo (isset($Vendor->long) && $Vendor->long!='') ? $Vendor->long : 74.850403;?>
-      },
+      position:myLatlng
+      ,
       map: map,
       draggable: true
     });

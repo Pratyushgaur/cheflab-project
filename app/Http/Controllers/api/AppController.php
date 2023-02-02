@@ -1648,7 +1648,9 @@ class AppController extends Controller
                         } else {
                             if (isset($p['variants']))
                                 foreach ($p['variants'] as $k => $v) {
-                                    $orderProductVariant = new OrderProductVariant($v);
+                                    $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->where('id', '=', $v['variant_id'])->first();
+                                    $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $v['variant_qty']);
+                                    $orderProductVariant = new OrderProductVariant($varint_array);
                                     $order_products->order_product_variants()->save($orderProductVariant);
                                 }
                         }
@@ -2671,7 +2673,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'isCancelledWithin30Second' => 'required|in:1,0',
-                    'order_id'                  => 'required|numeric'
+                    'order_id'                  => 'required|numeric|exists:orders,id'
                 ]
             );
             // if ($validateUser->fails()) {
@@ -2683,7 +2685,7 @@ class AppController extends Controller
 
 
             $order = Order::where('id', $request->order_id)
-                ->where('user_id', 34)
+                ->where('user_id', $request->user()->id)
                 ->first();
 
             if ($order->order_status != 'dispatched') {
@@ -3294,6 +3296,7 @@ class AppController extends Controller
 
     public function saveRiderRatingReviews(Request $request)
     {
+        // echo '<pre>';print_r($request->all());die;
         try {
             $validateUser = Validator::make($request->all(), [
                 'rider_id'    => 'required|numeric|exists:deliver_boy,id',

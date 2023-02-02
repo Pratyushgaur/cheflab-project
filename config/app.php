@@ -176,6 +176,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         Mccarlosen\LaravelMpdf\LaravelMpdfServiceProvider::class,
+        Kreait\Laravel\Firebase\ServiceProvider::class
         //Maatwebsite\Excel\ExcelServiceProvider::class,
         
     ],

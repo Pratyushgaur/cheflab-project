@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
-use App\Models\OrderCommision;
+use App\Models\vendor_order_statement;
 use App\Models\vendor_payout_detail;
 use App\Models\Vendors;
+use App\Models\OrderCommision;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
@@ -20,22 +21,19 @@ class AccountsettlementController extends Controller
 {
     public function index()
     {
-        
+
         return view('admin.account-vendor.list');
-    }
+    }   
 
     
+
     public function get_data_table_of_order(Request $request)
     {
        
         if ($request->ajax()) {
         
-           $data = Vendors::groupBy("vendors.id")->select('vendors.id','vendors.status','vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
+           $data = Vendors::select('vendor_order_statements.*','vendors.id','vendors.status','vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name',DB::raw('SUM(order_commisions.vendor_commision) as total'))->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id')->join('order_commisions','vendors.id','=','order_commisions.vendor_id');
            
-            // echo '<pre>';print_r($data);die;
-          
-
-
            $dateSedule = $request->datePicker;
         
            if(isset($dateSedule)){
@@ -50,11 +48,14 @@ class AccountsettlementController extends Controller
     
            
            $data = $data->get();
+        //    echo '<pre>';print_r($data);die;
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function($data){
-                    if ($data->status == 1) {
+                    if ($data->pay_status == 0) {
                         $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess").'?id='.$data->id.'">Pay</a>';
+                    }else{
+                        $btn = '<a class="btn btn-xs btn-success" href="javascript:void(0);">Success</a>';
                     } 
                     return $btn;
                 })
@@ -63,7 +64,7 @@ class AccountsettlementController extends Controller
                     return $name;
                 }) 
                 ->addColumn('total', function($data){
-                   $total = number_format($data->total,2);
+                   $total = $data->paid_amount - $data->vendor_cancel_deduction;
                     return $total;
                 })             
                
@@ -166,7 +167,8 @@ class AccountsettlementController extends Controller
     public function vendorPaymentSuccess()
     {
         $id = $_GET['id'];
-        return view('admin.account-vendor.paymentsuccess',compact('id'));
+        $data = vendor_order_statement::where(['vendor_id'=> $id, 'pay_status'=> 0])->first();
+        return view('admin.account-vendor.paymentsuccess',compact('id','data'));
     }
 
     public function payVendorPayment(Request $request)
@@ -177,8 +179,13 @@ class AccountsettlementController extends Controller
             'amount' => $request->amount,
             'bank_utr' => $request->bank_utr
         ]);
+        $dataNew = ([
+            'pay_status' => 1,
+            'total_pay_amount' => $request->amount
+        ]);
+        vendor_order_statement::where(['vendor_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
         vendor_payout_detail::create($data);
-        return response()->json(['success' => 1]);
+        return redirect()->route('admin.account.vendor.list')->with('message', 'Pay Amount '. $request->amount. ' to Vendor Successfully');
     }
 
     
