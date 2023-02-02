@@ -95,6 +95,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('delivery-boy-store', [App\Http\Controllers\admin\Deliveryboy::class, 'store_deliverboy'])->name('admin.diliverboy.store');
     Route::get('deliverboy-datatable', [App\Http\Controllers\admin\Deliveryboy::class, 'get_data_table_of_deliverboy'])->name('admin.deliverboy.datatable');
     Route::get('edit-deliverboy/{id}', [App\Http\Controllers\admin\Deliveryboy::class, 'fun_edit_deliverboy'])->name('admin.deliverboy.view');
+    Route::get('view-deliverboy/{id}', [App\Http\Controllers\admin\Deliveryboy::class, 'fun_view_deliverboy'])->name('admin.deliverboy.viewdetail');
     Route::get('delivery-boy-emailcheck', [App\Http\Controllers\admin\Deliveryboy::class, 'checkEmailExist'])->name('admin.deliverboy.emailcheck');
     Route::get('delivery-boy-mobilecheck', [App\Http\Controllers\admin\Deliveryboy::class, 'checkMobileExist'])->name('admin.deliverboy.mobilecheck');
     Route::get('delivery-boy-emailcheck-update/{id}', [App\Http\Controllers\admin\Deliveryboy::class, 'checkEmailExistUpdate'])->name('admin.deliverboy.emailcheck_update');
@@ -254,6 +255,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('notification', [App\Http\Controllers\NotificationController::class, 'admin_index'])->name('admin.notification.view')->where('id', '[0-9]+');
     Route::get('notification/create', [App\Http\Controllers\NotificationController::class, 'create'])->name('admin.notification.create');
 
+    Route::get('notification/notification_list', [App\Http\Controllers\NotificationController::class, 'notification_list'])->name('admin.notification.notification_list');
+
 
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
@@ -292,4 +295,20 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Driver Map
     Route::get('drivers-map', [DriverMapController::class,'index']);
     Route::get('drivers/{driver}/info', [DriverMapController::class,'getDriver']);
+
+    Route::post('delivery-boy/transaction', [App\Http\Controllers\admin\Deliveryboy::class, 'delivery_boy_tab'])->name('admin.delivery_boy.transaction');
+
+    Route::get('delivery-boy/review-data', [App\Http\Controllers\admin\Deliveryboy::class, 'delivery_boy_review_list'])->name('admin.delivery_boy.review.data');
+
+    Route::get('delivery-boy/transaction-data', [App\Http\Controllers\admin\Deliveryboy::class, 'delivery_boy_transaction_list'])->name('admin.delivery_boy.transaction.data');
+
+    Route::get('delivery-boy/timelog-data', [App\Http\Controllers\admin\Deliveryboy::class, 'delivery_boy_timelog_list'])->name('admin.delivery_boy.timelog.data');
+
+    Route::get('delivery-boy/status-data/{id}', [App\Http\Controllers\admin\Deliveryboy::class, 'delivery_boy_status'])->name('admin.delivery_boy.status.data');
+
+
+
+
+
+    
 });

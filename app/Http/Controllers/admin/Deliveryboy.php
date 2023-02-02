@@ -6,7 +6,9 @@ use App\Models\User;
 use App\Models\Catogory_master;
 use App\Models\RiderAssignOrders;
 use App\Models\Cuisines;
-use App\Models\Product_master;
+use App\Models\Product_master; 
+use App\Models\RiderReviewRatings;
+use App\Models\driver_total_working_perday;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryboySetting;
 use App\Models\RiderbankDetails;
@@ -17,6 +19,7 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
 use DataTables;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 class Deliveryboy extends Controller
 {
@@ -281,7 +284,7 @@ class Deliveryboy extends Controller
                                     <a class="dropdown-item text-info" href="'.route('admin.deliverboy.view',Crypt::encryptString($data->id)).'"><i class="fas fa-edit"></i> Edit</a>
                                     
                                     <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Delivery Boy" flash="City"  data-action-url="' . route('admin.deliverboy.ajax.delete') . '" title="Delete" ><i class="fa fa-trash"></i> Delete</a> 
-                                    <a class="dropdown-item text-info" href="'.route('admin.vendor.view',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View More</a>';
+                                    <a class="dropdown-item text-info" href="'.route('admin.deliverboy.viewdetail',Crypt::encryptString($data->id)).'"><i class="fa fa-eye"></i> View More</a>';
 
                                     
 
@@ -471,10 +474,163 @@ class Deliveryboy extends Controller
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
     }
 
-    public function deliver_boy_active($id){      
-      
+    public function deliver_boy_active($id){
         $user = Deliver_boy::find($id);
         Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => '1']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
     }
+
+    public function fun_view_deliverboy($id){      
+        $rider_id =  Crypt::decryptString($id);
+        $user = Deliver_boy::find($rider_id);
+        // $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
+        // $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
+        // $total_earning = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+        // $total_incentive = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+        
+        return view('admin/deliveryboy/deliverboy_view',compact('rider_id','user'));
+    }
+
+    public function delivery_boy_tab(){   
+       $type = $_POST['type'];
+       $rider_id = $_POST['rider_id'];
+       $user = Deliver_boy::find($rider_id);
+
+        if($type == 'info'){
+
+            $userData = RiderReviewRatings::where(['rider_id' => $rider_id])->count();
+
+            $excellent = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '5'])->count();
+            $good = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '4'])->count();
+            $average = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '3'])->count();
+            $below_average = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '2'])->count();
+            $poor = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '1'])->count();
+
+            $rating_arr = ([
+                'excellent_count' => $excellent,
+                'good_count' => $good,
+                'average_count' => $average,
+                'below_average_count' => $below_average,
+                'poor_count' => $poor,
+                'excellent' => ($excellent/$userData * 100),
+                'good' => ($good/$userData * 100),
+                'average' => ($average/$userData * 100),
+                'below_average' => ($below_average/$userData * 100),
+                'poor' => ($poor/$userData * 100)
+            ]);
+// echo '<pre>';print_r($rating_arr);die;
+
+            $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
+            $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
+            $total_earning = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+            $total_incentive = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+            $view = view('admin/deliveryboy/deliverboy_information_view',compact('rider_id','deliverd_order','canceled_order','total_earning','total_incentive','user','rating_arr'))->render();
+            return json_encode(['type' => $type,'view' => $view ]);
+        }else if($type == 'tran'){
+            $view = view('admin/deliveryboy/deliverboy_transaction_view',compact('rider_id','user'))->render();
+            return json_encode(['type' => $type,'view' => $view ]);
+            
+        }else if($type == 'time'){
+            $view = view('admin/deliveryboy/deliverboy_timelog_view',compact('rider_id','user'))->render();
+            return json_encode(['type' => $type,'view' => $view ]);
+            
+        }else if($type == 'conv'){
+            $view = view('admin/deliveryboy/deliverboy_conversations_view',compact('rider_id','user'))->render();
+            return json_encode(['type' => $type,'view' => $view ]);
+            
+         }
+
+    }
+
+    
+
+    public function delivery_boy_review_list(Request $request)
+    {
+        
+        if ($request->ajax()) {
+            $data = RiderReviewRatings::join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at')->get();
+      
+            return Datatables::of($data)
+                ->addIndexColumn()
+               
+            ->addColumn('date', function($data){
+                $date_with_format = date('Y-m-d',strtotime($data->created_at));
+                return $date_with_format;
+            })
+            ->addColumn('order_id', function($data){
+                $order_id = 'static data';
+                return $order_id;
+            })
+            ->rawColumns(['date','order_id'])
+
+            ->make(true);
+       }
+
+    }
+
+    public function delivery_boy_transaction_list(Request $request)
+    {
+       
+        if ($request->ajax()) {
+            $data = RiderAssignOrders::where(['rider_id' => $request->rider_id,'action' => '3'])->get();
+   
+            return Datatables::of($data)
+                ->addIndexColumn()
+               
+            ->addColumn('date', function($data){
+                $date_with_format = date('Y-m-d',strtotime($data->created_at));
+                return $date_with_format;
+            })
+            ->rawColumns(['date'])
+
+            ->make(true);
+       }
+
+    }
+
+    public function delivery_boy_timelog_list(Request $request)
+    {
+       
+        if ($request->ajax()) {
+            $data = driver_total_working_perday::where(['rider_id' => $request->rider_id])->get();
+   
+            return Datatables::of($data)    
+                ->addIndexColumn()
+               
+            ->addColumn('date', function($data){
+                $date_with_format = date('Y-m-d',strtotime($data->created_at));
+                return $date_with_format;
+            })
+
+            ->addColumn('active_time', function($data){
+                $active_time = gmdate('H:i:s', $data->total_hr);
+                return $active_time;
+            })
+
+            ->rawColumns(['date','active_time'])
+
+            ->make(true);
+       }
+
+    }
+
+    // public function delivery_boy_status($id){  
+
+    //     $rider = Deliver_boy::find($id);
+
+    //     if($rider->status == 1){
+    //         Deliver_boy::where('id', $id)->first()->update([ 'status' => 0]);
+    //         return redirect()->route('admin.deliverboy.viewdetail',encrypt($id))->with('message', 'Rider In-Active Successfully');
+    //     }else{
+    //         Deliver_boy::where('id', $id)->first()->update([ 'status' => 1]);
+    //         return redirect()->route('admin.deliverboy.viewdetail',encrypt($id))->with('message', 'Rider Active Successfully');
+    //     }
+        
+    // }
+    
+
+
+    
+    
+    
 }

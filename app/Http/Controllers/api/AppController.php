@@ -3274,6 +3274,7 @@ class AppController extends Controller
 
     public function saveRiderRatingReviews(Request $request)
     {
+        // echo '<pre>';print_r($request->all());die;
         try {
             $validateUser = Validator::make($request->all(), [
                 'rider_id'    => 'required|numeric|exists:deliver_boy,id',

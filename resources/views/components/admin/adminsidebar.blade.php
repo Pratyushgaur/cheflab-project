@@ -212,7 +212,7 @@
 						<i class="fa fa-arrow-right nav-icon"></i>
 						<p>Application Blog</p>
 						</a>
-					</li>-->
+					</li>
 
 
 
@@ -223,7 +223,7 @@
 			<li class="nav-item">
 				<a href="{{route('admin.notification.view')}}" class="nav-link">
 				  <i class="far fa-circle nav-icon"></i>
-				  <p>Notification</p>
+				  <p>Push Notification</p>
 				</a>
 			</li>
 			<li class="nav-item">
