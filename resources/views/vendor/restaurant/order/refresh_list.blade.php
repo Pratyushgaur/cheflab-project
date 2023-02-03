@@ -1,3 +1,4 @@
+
 <?php
 $status_class['pending'] = 'primary';
 $status_class['confirmed'] = 'warning';
@@ -23,10 +24,10 @@ $payment_status_class['pending'] = 'badge-danger';
             <th scope="col">Total amount</th>
             <th scope="col">Net Amount</th>
             <th scope="col">Discount</th>
-            <th scope="col">Payment Type</th>
-            <th scope="col">Payment Status</th>
+            <!-- <th scope="col">Payment Type</th>
+            <th scope="col">Payment Status</th> -->
             <th scope="col">Remaining Time</th>
-            <th scope="col"><?php if($staus_filter=='ready_to_dispatch'){echo 'OTP';}else{echo 'Order Status';} ?></th>
+            <th scope="col"><?php if($staus_filter=='ready_to_dispatch'){echo 'Rider';}else{echo 'Order Status';} ?></th>
             <th>Action</th>
         </tr>
         </thead>
@@ -45,10 +46,10 @@ $payment_status_class['pending'] = 'badge-danger';
                     <td>{{$order->total_amount}}</td>
                     <td>{{$order->net_amount}}</td>
                     <td>{{$order->discount_amount}}</td>
-                    <td>{{$order->payment_type}}</td>
+                    <!-- <td>{{$order->payment_type}}</td>
                     <td>
                         <span class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span>
-                    </td>
+                    </td> -->
                     <td>
                             @if($order->order_status=='preparing' && $order->preparation_time_to!='')
 
@@ -65,7 +66,7 @@ $payment_status_class['pending'] = 'badge-danger';
 
                         
                     </td>
-                    <td>
+                    <td col-2> 
                         @if($order->order_status!='ready_to_dispatch')
                           <?php
                                 if($order->order_status == 'confirmed'){
@@ -106,9 +107,17 @@ $payment_status_class['pending'] = 'badge-danger';
                         </div>
                         @else
                             <?php  
-                                $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->whereNotIn('action',['0','2'])->first();
+                                $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->whereNotIn('action',['0','2'])->select('rider_assign_orders.*','deliver_boy.name','deliver_boy.mobile')->first();
                                 if(!empty($rider)){
-                                    echo $rider->otp;
+                                    ?>
+                                    
+                                    <b>{{$rider->name}}</b><br>
+                                    <span>({{$rider->mobile}})</span> <br>
+                                    <b>OTP-{{$rider->otp}}</b>
+                                    <?php
+                                    
+                                }else{
+                                    echo '<button class="btn btn-danger btn-xs blink-btn" >Wait For Rider</button>';
                                 }
                             ?>
                         @endif

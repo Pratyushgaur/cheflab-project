@@ -416,11 +416,13 @@ $breadcrumb[] = ["name"  => "List",
         <?php $query_string = request()->all();
         $query_string["staus_filter"] = $staus_filter;?>
         $('#load').load('{{route('restaurant.order.refresh_list',$query_string)}}').fadeIn("slow");
+        
+        
         var auto_refresh = setInterval(
             function () {
-
+                
                 $('#load').load('{{route('restaurant.order.refresh_list',$query_string)}}').fadeIn("slow");
-            }, 300000); // refresh every 10000 milliseconds
+            }, 10000); // refresh every 10000 milliseconds
 
     </script>
 @endpush

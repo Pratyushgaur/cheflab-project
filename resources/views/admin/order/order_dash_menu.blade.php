@@ -4,3 +4,4 @@
 <a href="{{route('admin.order.dashboard.status','preparing')}}" class="btn btn-sm @if($active == 'preparing') active @endif" style="border:1px solid black;">Preparing</a>
 <a href="{{route('admin.order.dashboard.status','not_pickup_rider')}}" class="btn btn-sm @if($active == 'not_pickup_rider') active @endif" style="border:1px solid black;">Not Picked Up (Rider)</a>
 <a href="{{route('admin.order.dashboard.status','out_of_dellivery')}}" class="btn btn-sm @if($active == 'out_of_dellivery') active @endif" style="border:1px solid black;">Out for delivery</a>
+<a href="{{route('admin.order.dashboard.status','no_rider_assign')}}" class="btn btn-sm @if($active == 'no_rider_assign') active @endif" style="border:1px solid black;">No Rider Assign</a>
