@@ -174,7 +174,7 @@ Route::post('rider-otp-verify', [App\Http\Controllers\api\rider\LoginApiControll
 // home
 
 Route::post('rider-home', [App\Http\Controllers\api\rider\AppController::class, 'home']);
-Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::class, 'profile']);
+Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::class, 'profile'])->name("rider.profile");
 Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppController::class, 'register_token']);
 Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController::class, 'change_status']);
 
