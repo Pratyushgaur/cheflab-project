@@ -169,7 +169,7 @@ Route::post('send-notification', [App\Http\Controllers\api\AppController::class,
 
 //
 
-Route::post('rider-otp-send', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_send_otp']);
+Route::post('rider-otp-send', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_send_otp'])->name("rider.otp.send");
 Route::post('rider-otp-verify', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_verify_otp']);
 // home
 
