@@ -94,6 +94,7 @@ class LoginApiController extends Controller
                     'otp' => 'required|numeric|digits:4',
                 ]
             );
+
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
                 return response()->json([
@@ -102,6 +103,7 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
+
             $insertedOtp = RiderMobileOtp::where(['mobile_number' => $request->mobile_number])->first();
             if ($insertedOtp->otp == $request->otp) {
                 RiderMobileOtp::where(['mobile_number' => $request->mobile_number])->update(['status' => '1']);
@@ -119,6 +121,7 @@ class LoginApiController extends Controller
                 ], 200);
             }
         } catch (\Throwable $th) {
+
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()
