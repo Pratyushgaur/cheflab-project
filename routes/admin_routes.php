@@ -257,7 +257,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
     Route::get('notification/notification_list', [App\Http\Controllers\NotificationController::class, 'notification_list'])->name('admin.notification.notification_list');
 
+    Route::post('notification/push_notification_store', [App\Http\Controllers\NotificationController::class, 'push_notification_store'])->name('admin.push.notification.store');
 
+    
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
     Route::post('users/add/wallet/{id}', [App\Http\Controllers\admin\UserControllers::class,'add_wallet'])->name('user.wallet.add');

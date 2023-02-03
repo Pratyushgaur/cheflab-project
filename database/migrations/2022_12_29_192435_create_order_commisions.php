@@ -19,6 +19,8 @@ class CreateOrderCommisions extends Migration
             $table->unsignedBigInteger('is_cancel');
             $table->unsignedBigInteger('vendor_id');
             $table->unsignedBigInteger('order_id');
+            $table->unsignedBigInteger('cancel_by_vendor')->default('0');
+            $table->string('vendor_cancel_charge');
             $table->string('net_amount');
             $table->string('vendor_commision');
             $table->string('admin_commision');
