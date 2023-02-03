@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDriverTotalWorkingPerdaysTable extends Migration
+class CreateRiderOrderStatementTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateDriverTotalWorkingPerdaysTable extends Migration
      */
     public function up()
     {
-        Schema::create('driver_total_working_perdays', function (Blueprint $table) {
+        Schema::create('rider_order_statement', function (Blueprint $table) {
             $table->id();
-            $table->integer('rider_id')->nullable();
-            $table->string('total_hr')->nullable();
-            $table->string('current_date')->nullable();
+            $table->string('rider_id');
+            $table->string('paid_amount')->default(null)->nullable();;
+            $table->float('pay_status')->default('0');
+            $table->string('start_date');
+            $table->string('end_date');
+            $table->string('total_pay_amount');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
@@ -30,6 +33,6 @@ class CreateDriverTotalWorkingPerdaysTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('driver_total_working_perdays');
+        Schema::dropIfExists('rider_order_statement');
     }
 }

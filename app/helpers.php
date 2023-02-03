@@ -7,7 +7,7 @@ use GuzzleHttp\Client;
 use App\Models\OrderCommision;
 use App\Models\Paymentsetting;
 use App\Models\Vendors;
-use App\Models\vendor_order_statement;
+use App\Models\Vendor_order_statement;
 use App\Models\User;
 use App\Models\OrderProduct;
 
@@ -1209,14 +1209,14 @@ function orderCancel($id)
 
     $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
     $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
-    $statementData = vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+    $statementData = Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
     // echo '<pre>';print_r($statementData->paid_amount);die;
     if ($statementData) {
         $total = ($statementData->paid_amount + $net_receivables);
         $updateData = ([
             'paid_amount' => $total
         ]);
-        return vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+        return Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
     } else {
         $createData = array(
             'vendor_id' => $order->vendor_id,
@@ -1226,7 +1226,7 @@ function orderCancel($id)
             'end_date' => $current_end_date
         );
         
-       return vendor_order_statement::create($createData);
+       return Vendor_order_statement::create($createData);
     }
 }
 
@@ -1552,14 +1552,14 @@ function orderCancelByVendor($id)
 
     $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
     $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
-    $statementData = vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+    $statementData = Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
     // echo '<pre>';print_r($current_start_date);die;
     if ($statementData) {
         $total = ($statementData->vendor_cancel_deduction + $vendor_charges);
         $updateData = ([
             'vendor_cancel_deduction' => $total
         ]);
-        return vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+        return Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
     } else {
         $createData = array(
             'vendor_id' => $order->vendor_id,
@@ -1569,7 +1569,7 @@ function orderCancelByVendor($id)
             'end_date' => $current_end_date
         );
         
-       return vendor_order_statement::create($createData);
+       return Vendor_order_statement::create($createData);
     }
 }
 

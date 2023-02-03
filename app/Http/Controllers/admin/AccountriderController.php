@@ -8,6 +8,9 @@ use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\Vendors;
+use App\Models\RiderAssignOrders;
+use App\Models\RiderOrderStatement;
+use App\Models\RiderPayoutDetail;
 use App\Models\Deliver_boy;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
@@ -17,7 +20,6 @@ class AccountriderController extends Controller
 {
     public function index()
     {
-       
         return view('admin.account-rider.list');
     }
 
@@ -26,8 +28,8 @@ class AccountriderController extends Controller
     {
         
         if ($request->ajax()) {
-        
-           $data = Deliver_boy::select('deliver_boy.*','riderbank_details.bank_name','riderbank_details.holder_name','riderbank_details.account_no','riderbank_details.ifsc')->join('riderbank_details','deliver_boy.id','=','riderbank_details.rider_id');
+      
+        $data = Deliver_boy::select('rider_order_statements.*','deliver_boy.boy_id','deliver_boy.id as riderId','deliver_boy.id','deliver_boy.status','deliver_boy.name','riderbank_details.bank_name','riderbank_details.account_no','deliver_boy.pancard_number','riderbank_details.ifsc','riderbank_details.holder_name')->join('riderbank_details','deliver_boy.id','=','riderbank_details.rider_id')->join('rider_order_statements','deliver_boy.id','=','rider_order_statements.rider_id');
            
             
 
@@ -39,7 +41,7 @@ class AccountriderController extends Controller
            $end_time = $packagetime[1].' 23:59:59';
            }
 
-        //    echo '<pre>'; print_r($end_time);die;
+           
            if(!empty($start_time) && !empty($end_time)) {
             $data = $data->whereBetween('deliver_boy.created_at', [$start_time, $end_time]);
            
@@ -50,12 +52,12 @@ class AccountriderController extends Controller
         //    echo '<pre>'; print_r($data);die;
             return Datatables::of($data)
                 ->addIndexColumn()
-                ->addColumn('deliver_boy.status', function($data){
-                    if ($data->status == 1) {
-                        $btn = 'Active';
-                    } elseif($data->status == 0) {
-                        $btn = 'InActive';
-                    }
+                ->addColumn('status', function($data){
+                    if ($data->pay_status == 0) {
+                        $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.rider.riderPaymentSuccess").'?id='.$data->riderId.'">Pay</a>';
+                    }else{
+                        $btn = '<a class="btn btn-xs btn-success" href="javascript:void(0);">Success</a>';
+                    } 
                     return $btn;
                 })
                 
@@ -154,5 +156,31 @@ class AccountriderController extends Controller
            ->rawColumns(['product_name']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
            ->make(true);
         }
+    }
+
+
+    public function riderPaymentSuccess()
+    {
+        
+        $id = $_GET['id'];
+        $data = RiderOrderStatement::where(['rider_id'=> $id, 'pay_status'=> 0])->first();
+        return view('admin.account-rider.paymentsuccess',compact('id','data'));
+    }
+
+    public function payRiderPayment(Request $request)
+    {
+        
+        $data = ([
+            'rider_id' => $request->id,
+            'amount' => $request->amount,
+            'bank_utr' => $request->bank_utr
+        ]);
+        $dataNew = ([
+            'pay_status' => 1,
+            'total_pay_amount' => $request->amount
+        ]);
+        RiderOrderStatement::where(['rider_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
+        RiderPayoutDetail::create($data);
+        return redirect()->route('admin.account.rider.list')->with('message', 'Pay Amount '. $request->amount. ' to Rider Successfully');
     }
 }

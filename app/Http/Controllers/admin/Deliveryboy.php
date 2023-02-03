@@ -8,7 +8,7 @@ use App\Models\RiderAssignOrders;
 use App\Models\Cuisines;
 use App\Models\Product_master; 
 use App\Models\RiderReviewRatings;
-use App\Models\driver_total_working_perday;
+use App\Models\Driver_total_working_perday;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryboySetting;
 use App\Models\RiderbankDetails;
@@ -506,19 +506,35 @@ class Deliveryboy extends Controller
             $below_average = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '2'])->count();
             $poor = RiderReviewRatings::where(['rider_id' => $rider_id,'rating' => '1'])->count();
 
-            $rating_arr = ([
-                'excellent_count' => $excellent,
-                'good_count' => $good,
-                'average_count' => $average,
-                'below_average_count' => $below_average,
-                'poor_count' => $poor,
-                'excellent' => ($excellent/$userData * 100),
-                'good' => ($good/$userData * 100),
-                'average' => ($average/$userData * 100),
-                'below_average' => ($below_average/$userData * 100),
-                'poor' => ($poor/$userData * 100)
-            ]);
-// echo '<pre>';print_r($rating_arr);die;
+            if($userData == '0'){
+                $rating_arr = ([
+                    'excellent_count' => 0,
+                    'good_count' => 0,
+                    'average_count' => 0,
+                    'below_average_count' => 0,
+                    'poor_count' => 0,
+                    'excellent' => 0,
+                    'good' => 0,
+                    'average' => 0,
+                    'below_average' => 0,
+                    'poor' => 0
+                ]);   
+            }else{
+                $rating_arr = ([
+                    'excellent_count' => $excellent,
+                    'good_count' => $good,
+                    'average_count' => $average,
+                    'below_average_count' => $below_average,
+                    'poor_count' => $poor,
+                    'excellent' => ($excellent/$userData * 100),
+                    'good' => ($good/$userData * 100),
+                    'average' => ($average/$userData * 100),
+                    'below_average' => ($below_average/$userData * 100),
+                    'poor' => ($poor/$userData * 100)
+                ]);
+            }
+            
+
 
             $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
             $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
@@ -546,9 +562,9 @@ class Deliveryboy extends Controller
 
     public function delivery_boy_review_list(Request $request)
     {
-        
+    
         if ($request->ajax()) {
-            $data = RiderReviewRatings::join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at')->get();
+            $data = RiderReviewRatings::Where('rider_review_ratings.rider_id', $request->riderId)->join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at')->get();
       
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -592,7 +608,7 @@ class Deliveryboy extends Controller
     {
        
         if ($request->ajax()) {
-            $data = driver_total_working_perday::where(['rider_id' => $request->rider_id])->get();
+            $data = Driver_total_working_perday::where(['rider_id' => $request->rider_id])->get();
    
             return Datatables::of($data)    
                 ->addIndexColumn()
