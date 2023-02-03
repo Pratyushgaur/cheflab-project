@@ -825,7 +825,39 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function checkRiderActive(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id',
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
 
+                ], 401);
+            }
+            $status = Deliver_boy::where('id','=',$request->user_id)->select(\DB::raw('IFNULL(status,0) as rider_status'))->first();
+
+            return response()->json([
+                'status'   => true,
+                'rider_status'  => $status->rider_status
+
+            ], 200);    
+            
+           
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
     // public function orderHistory(Request $request)
     // {
     //     try {

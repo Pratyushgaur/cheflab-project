@@ -37,3 +37,4 @@ Cheflab-api.postman_collection.json
 Cheflab-api.postman_collection_created_by_shivani.json
 .gitignore
 .gitignore
+composer.lock
