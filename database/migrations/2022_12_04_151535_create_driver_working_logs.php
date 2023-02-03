@@ -18,6 +18,7 @@ class CreateDriverWorkingLogs extends Migration
             $table->unsignedBigInteger('rider_id');
             $table->foreign('rider_id')->references('id')->on('deliver_boy');
             $table->enum('status',['0','1'])->default('0')->comment('0=offline 1= online');
+            $table->string('working_hr');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
