@@ -32,7 +32,9 @@ class LoginApiController extends Controller
 
 
             $deliveryBoy =  Deliver_boy::where(['mobile' => $request->username])->orWhere('username', '=', $request->username);
+
             $deliveryBoyData = Deliver_boy::where('deliver_boy.mobile', $request->username)->first();
+
             if ($deliveryBoy->exists()) {
                 if ($deliveryBoyData->status == 1) {
                     $data =  $deliveryBoy->first();

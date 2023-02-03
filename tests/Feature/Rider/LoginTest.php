@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Rider;
 
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class LoginTest extends TestCase
@@ -42,16 +43,31 @@ class LoginTest extends TestCase
         $this->assertStringContainsString("User Not Found", $response->json()["error"]);
     }
 
+    public function test_it_check_the_delivery_boy_status_0()
+    {
+        $user = $this->createDeliveryBoy(["username" => "1234567890", "mobile" => "1234567890", "status" => 0]);
+        $response = $this->postJson(route("rider.otp.send"), ["username" => $user->username]);
+        $response->assertJsonStructure([
+            "status",
+            "error",
+        ]);
+        $this->assertStringContainsString("Your Account is Inactive. cantact with admin to process", $response->json()["error"]);
+    }
+
     public function test_it_can_send_the_otp_to_the_user()
     {
+        Http::fake([
+            "http://bulksms.msghouse.in/*" => Http::response([], 200)
+        ]);
+        $user = $this->createDeliveryBoy(["username" => "1234567890", "mobile" => "1234567890"]);
+        $response = $this->postJson(route("rider.otp.send"), ["username" => $user->username]);
+        $response->assertJsonStructure([
+            "message",
+            "otp",
+            "mobile"
+        ]);
 
-        // $user = $this->createUser(["username" => "1234567890"]);
-        // $response = $this->postJson(route("rider.otp.send"), ["username" => $user->mobile_number]);
-
-        // $response->assertJsonStructure([
-        //     "message",
-        //     "otp"
-        // ]);
-        // $this->assertStringContainsString("Otp Send Successfully", $response->json()["message"]);
+        $this->assertStringContainsString("Otp Send Successfully", $response->json()["message"]);
+        $this->assertStringContainsString($user->mobile, $response->json()["mobile"]);
     }
 }
