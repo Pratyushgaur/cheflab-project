@@ -188,6 +188,7 @@ Route::post('rider-latLng-update', [App\Http\Controllers\api\rider\AppController
 Route::post('rider-deliver-otp', [App\Http\Controllers\api\rider\AppController::class, 'deliverOtpCheck']);
 Route::post('rider-login-history', [App\Http\Controllers\api\rider\AppController::class, 'logInHistory']);
 Route::post('rider-update-version', [\App\Http\Controllers\api\rider\LoginApiController::class, 'checkVersion']);
+Route::post('rider-active-status', [\App\Http\Controllers\api\rider\AppController::class, 'checkRiderActive']);
 
 
 
