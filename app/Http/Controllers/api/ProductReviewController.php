@@ -65,15 +65,16 @@ class ProductReviewController extends Controller
 
                 ], 401);
             }
+            
             // $review =  \App\Models\VendorReview::where('vendor_id', '=', $request->vendor_id)->where('user_id', '=',$request->user_id)->select('id','user_id','vendor_id','rating','review')->get();
-            $review             = new ProductReview();
+            $review             = new ProductReview;
             $review->user_id    = $request->user()->id;
             $review->product_id = $request->product_id;
             $review->rating     = $request->rating;
             $review->review     = $request->review;
             $review->save();
-
-            $rating                 = ProductReview::select(\DB::raw('AVG(rating) as rating'))->where('product_id', $request->vendor_id)->first();
+            
+            $rating                 = ProductReview::select(\DB::raw('AVG(rating) as rating'))->where('product_id', $request->product_id)->first();
             $vendor                 = Product_master::find($request->product_id);
             $vendor->product_rating = $rating->rating;
             $vendor->save();
