@@ -32,7 +32,9 @@ class LoginApiController extends Controller
 
 
             $deliveryBoy =  Deliver_boy::where(['mobile' => $request->username])->orWhere('username', '=', $request->username);
+
             $deliveryBoyData = Deliver_boy::where('deliver_boy.mobile', $request->username)->first();
+
             if ($deliveryBoy->exists()) {
                 if ($deliveryBoyData->status == 1) {
                     $data =  $deliveryBoy->first();
@@ -92,6 +94,7 @@ class LoginApiController extends Controller
                     'otp' => 'required|numeric|digits:4',
                 ]
             );
+
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
                 return response()->json([
@@ -100,6 +103,7 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
+
             $insertedOtp = RiderMobileOtp::where(['mobile_number' => $request->mobile_number])->first();
             if ($insertedOtp->otp == $request->otp) {
                 RiderMobileOtp::where(['mobile_number' => $request->mobile_number])->update(['status' => '1']);
@@ -117,6 +121,7 @@ class LoginApiController extends Controller
                 ], 200);
             }
         } catch (\Throwable $th) {
+
             return response()->json([
                 'status' => false,
                 'error' => $th->getMessage()

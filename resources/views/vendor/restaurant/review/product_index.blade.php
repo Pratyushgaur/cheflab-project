@@ -31,34 +31,31 @@ $breadcrumb[] = ["name"  => "Product Review",
                             @foreach($VendorReview as $k=>$review)
                             <li class="ms-list-item">
                                 <a href="#" class="media clearfix">
-                                    <img src="{{url('/').'/default_user.jpg'}}" class="ms-img-round ms-img-small" alt="This is another feature">
-
+                                    <img src="{{asset('products').'/'.$review->product_image}}" class="ms-img-round ms-img-small" alt="This is another feature">
                                     <div class="media-body">
                                         <div class="d-flex justify-content-between">
-                                            <h6 class="ms-feed-user mb-0">{{$review->name}} <code>{{$review->product_name}}</code></h6>
+                                            <h6 class="ms-feed-user mb-0"><code>{{$review->product_name}}</code></h6>
 
-                                            <span class="badge "> <ul class="ms-star-rating rating-fill rating-circle ratings-new">
-                                            <?php
-                                                    $black_star=5-$review->rating;
-                                                    for ($i=1;$i<=$black_star;$i++){
-                                                        echo '<li class="ms-rating-item"><i class="material-icons">star</i></li>';
-                                                    }
-                                                    for ($i=1;$i<=$review->rating;$i++){
-                                                        echo '<li class="ms-rating-item rated"><i class="material-icons">star</i></li>';
-                                                    }
+                                            <span class="badge "> 
+                                                <ul class="ms-star-rating rating-fill rating-circle ratings-new">
+                                                    <?php
+                                                        $black_star=5-$review->product_rating;
+                                                        for ($i=1;$i<=$black_star;$i++){
+                                                            echo '<li class="ms-rating-item"><i class="material-icons">star</i></li>';
+                                                        }
+                                                        for ($i=1;$i<=$review->product_rating;$i++){
+                                                            echo '<li class="ms-rating-item rated"><i class="material-icons">star</i></li>';
+                                                        }
                                                     ?>
 
-                                        </ul> </span>
-                                        </div> <span class="my-2 d-block"> <i class="material-icons">date_range</i> {{front_end_date_time($review->created_at)}}</span>
-                                        <p class="d-block">{{$review->review}}</p>
+                                                </ul> 
+                                            </span>
+                                        </div> 
+                                        
 
                                         <div class="d-flex justify-content-between align-items-end">
                                             <div class="ms-feed-controls"> <span>
-{{--                            <i class="material-icons">chat</i> 16--}}
-                          </span>
-                                                <span>
-{{--                            <i class="material-icons">attachment</i> 3--}}
-                          </span>
+                                        </span>
                                             </div>
                                         </div>
                                     </div>

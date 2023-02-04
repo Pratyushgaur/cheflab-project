@@ -34,9 +34,11 @@
                         <th scope="col">Code Name</th>
                         <th scope="col">Code</th>
                         <th scope="col">Discount Type</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Exp. To</th>
+                        <th scope="col">Apply Status</th>
+                        <th scope="col">Durations</th>
+                        <th scope="col">Running</th>
                         <th scope="col">Action</th>
+                        
                       </tr>
                     </thead>
                     <tbody>
@@ -69,7 +71,9 @@
             {data: 'code', name: 'code'},
             {data: 'discount_type', name: 'discount_type'},
             {data: 'status', name: 'status'},
-            {data: 'to', name: 'to'},
+            {data: 'duration', name: 'duration',orderable: false ,searchable: false},
+            {data: 'expired', name: 'expired',orderable: false ,searchable: false},
+            
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
@@ -92,6 +96,8 @@
               
             }
       });
+      $(this).removeClass('couponOff');
+      $(this).addClass('couponON');
   });
   $(document).on('click', '.couponON', function () {
        var id = $(this).data('id');
@@ -112,6 +118,8 @@
               
             }
       });
+      $(this).removeClass('couponON');
+      $(this).addClass('couponOff');
   });
   })(jQuery);
 </script>

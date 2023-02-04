@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Deliveryboy;
 use App\Models\AdminMasters;
 use App\Models\Deliver_boy;
 use App\Models\Mobileotp;
+use App\Models\RiderMobileOtp;
 use App\Models\User;
 use App\Models\User_faq;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,5 +45,10 @@ abstract class TestCase extends BaseTestCase
     public function createDeliveryBoy($args = [], $num = null)
     {
         return Deliver_boy::factory()->count($num)->create($args);
+    }
+
+    public function createRiderOtp($args = [], $num = null)
+    {
+        return RiderMobileOtp::factory()->count($num)->create($args);
     }
 }

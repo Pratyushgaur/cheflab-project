@@ -103,11 +103,24 @@ class VendorCoupon extends Controller
                     }
                     return $btn;
                 })
+                ->addColumn('duration', function($data){
+                    return $html = "(".date('D M Y',strtotime($data->from)).")".' TO ('.date('D M Y',strtotime($data->to)).")";
+                })
 
+                ->addColumn('expired', function($data){
+                    if( \Carbon\Carbon::now()->gte($data->to)){
+                        return '<b class="text-danger">Expired</b>';
+                    }elseif(\Carbon\Carbon::now()->lt($data->from)){
+                        return '<b class="text-warning">Waiting</b>';
+                    }elseif(\Carbon\Carbon::now()->gte($data->from) && \Carbon\Carbon::now()->lte($data->to)){
+                        return '<b class="text-success">Running</b>';
+                    }
+                })
 
+                
 
-                ->rawColumns(['date','action-js','status','discount_type'])
-                ->rawColumns(['action-js','status','discount_type'])
+                ->rawColumns(['date','action-js','status','discount_type','duration'])
+                ->rawColumns(['action-js','status','discount_type',"expired"])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);

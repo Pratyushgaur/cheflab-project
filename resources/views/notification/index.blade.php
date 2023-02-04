@@ -24,7 +24,10 @@
                             <ul class="ms-list ms-feed ms-twitter-feed ms-recent-support-tickets">
 
                                 @foreach($notifications as $k=>$notification)
+
                                     <?php
+                                        $notification->markAsRead();
+
 //                                    dd($notification);
                                     // $user = \App\Models\User::find($notification->data['user_id']);?>
                                     <li class="ms-list-item">

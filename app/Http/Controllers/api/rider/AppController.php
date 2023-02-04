@@ -444,7 +444,6 @@ class AppController extends Controller
     function genarateIncentive($riderId)
     {
 
-
         $rider = \App\Models\Deliver_boy::where('id', '=', $riderId)->select('ratings')->first();
         $incentive = 0;
         if ($rider->ratings >= 4.3 && $rider->ratings <= 4.7) {
@@ -478,6 +477,7 @@ class AppController extends Controller
         }
 
 
+
         $riderOrder = RiderAssignOrders::where(['order_id' => 1])->first();
         $net_receivables = $riderOrder->earning;
         $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
@@ -499,9 +499,6 @@ class AppController extends Controller
 
             RiderOrderStatement::create($createData);
         }
-
-
-
 
         if ($incentive > 0) {
             $RiderIncentives = new \App\Models\RiderIncentives;
@@ -552,6 +549,7 @@ class AppController extends Controller
 
             $today_date = date('d-m-Y');
 
+
             $driver_total_working_perday = Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->first();
             if ($driver_total_working_perday) {
                 if (isset($hr)) {
@@ -560,6 +558,7 @@ class AppController extends Controller
             } else {
                 if (isset($hr)) {
                     Driver_total_working_perday::create(['rider_id' => $request->user_id, 'total_hr' => $hr, 'current_date' => $today_date]);
+
                 }
             }
 
@@ -831,7 +830,37 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function checkRiderActive(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id',
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
 
+                ], 401);
+            }
+            $status = Deliver_boy::where('id', '=', $request->user_id)->select(\DB::raw('IFNULL(status,0) as rider_status'))->first();
+
+            return response()->json([
+                'status'   => true,
+                'rider_status'  => $status->rider_status
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
     // public function orderHistory(Request $request)
     // {
     //     try {

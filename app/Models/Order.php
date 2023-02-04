@@ -41,6 +41,6 @@ class Order extends Model
 
     public function rider_assign_orders()
     {
-        return $this->belongsToMany(Deliver_boy::class,'rider_assign_orders','order_id','rider_id')->withPivot('action','cancel_reason');
+        return $this->belongsToMany(Deliver_boy::class,'rider_assign_orders','order_id','rider_id')->withPivot('action','cancel_reason','otp');
     }
 }

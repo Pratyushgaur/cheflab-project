@@ -49,6 +49,7 @@ $breadcrumb[] = ["name"  => "Restaurant Rating Review",
 
                                         </ul> </span>
                                         </div> <span class="my-2 d-block"> <i class="material-icons">date_range</i> {{front_end_date_time($review->created_at)}}</span>
+                                        <p class="d-block">{{$review->rating}} Star</p>
                                         <p class="d-block">{{$review->review}}</p>
 
                                         <div class="d-flex justify-content-between align-items-end">

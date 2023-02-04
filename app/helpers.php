@@ -139,9 +139,9 @@ function show_time_slots($start_time, $end_time, $duration, $break)
 function vendorOrderCountByStatus($vendor_id, $status)
 {
     if ($status == '')
-        return Orders::where(['vendor_id' => $vendor_id])->count();
+        return Orders::where(['vendor_id' => $vendor_id])->where('order_status','!=','pending')->count();
 
-    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->count();
+    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status ])->where('order_status','!=','pending')->count();
 }
 
 function vendorTodayOrderCount($vendor_id)
@@ -552,22 +552,24 @@ function front_end_currency($number)
     return $result . '  &#8377; ';
 }
 
-function get_delivery_boy_near_me($lat, $lng, $order)
+function get_delivery_boy_near_me($lat, $lng, $order_id)
 {
-    // if ($order->user_id == 4) {
-    //     return \App\Models\Deliver_boy::where('id','=',2)->first();
-    // } else {
-    //     return \App\Models\Deliver_boy::where('id','=',1)->first();
-    // }
-    //
+    
+    $riders =\App\Models\RiderAssignOrders::where(['order_id'=>$order_id,'action'=>'2'])->orWhereIn('action',["0","1","4"])->get()->pluck('rider_id')->toArray();
     $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(deliver_boy.lat))) ";
     $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
     $boy = $boy->where('lat','!=','');
     $boy = $boy->where('lng','!=','');
+    $boy = $boy->where('lat','!=','');
+    $boy = $boy->where('lng','!=','');
+    if(!empty($riders)){
+        $boy = $boy->whereNotIn('id',$riders);
+    }
     $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+    
     $boy = $boy->orderBy('distance','ASC');
-    $boy = $boy->limit(1);
-    return $boy->first();
+    
+    return $boy->get();
 
 }
 
@@ -948,15 +950,16 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 //         return true;
 // }
 
-function sendNotification($title, $body, $token, $data = null, $sound = 'default')
+function sendNotification($title, $body, $token, $data = null, $sound = 'default', $image = null)
 {
+    // echo $image;die;
     $server_key = env('FIREBASE_SERVER_KEY');
     // $headers = [
     //     'Authorization' => 'key='.$server_key,
     //     'Content-Type'  => 'application/json',
     // ];
     $url = "https://fcm.googleapis.com/fcm/send";
-    $notification = array('title' => $title, 'body' => $body, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
+    $notification = array('title' => $title, 'body' => $body,'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
     $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
     $fields = json_encode($arrayToSend);
     // $client = new Client();
@@ -983,7 +986,7 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     //Send the request
-    return $response = curl_exec($ch);
+    $response = curl_exec($ch);
     //Close request
     if ($response === FALSE) {
         die('FCM Send Error: ' . curl_error($ch));
@@ -1273,23 +1276,24 @@ function orderComplete($id)
 }
 function orderDetailForUser($order_id)
 {
-    $order =   \App\Models\Order::where('id', '=', $order_id)->first();
-    $order->order_date =  date("d M Y  h:i A", strtotime($order->created_at));
-    $vendor = \App\Models\Vendors::where('id', '=', $order->vendor_id)->select('name', 'image', 'lat', 'long')->first();
-    $order->vendor_name = $vendor->name;
-    $order->image = asset('vendors') . '/' . $vendor->image;
-    $order->vendor_lat = $vendor->lat;
-    $order->vendor_long = $vendor->long;
-    if ($order->order_status == 'preparing') {
-        if (\Carbon\Carbon::now()->lt($order->preparation_time_to)) {
+    $order =   \App\Models\Order::where('id', '=', $order_id)->first()->toArray();
+    
+    $order['order_date'] =  date("d M Y  h:i A", strtotime($order['created_at']));
+    $vendor = \App\Models\Vendors::where('id', '=', $order['vendor_id'])->select('name', 'image', 'lat', 'long')->first();
+    $order['vendor_name'] = $vendor->name;
+    $order['image'] = asset('vendors') . '/' . $vendor->image;
+    $order['vendor_lat'] = $vendor->lat;
+    $order['vendor_long'] = $vendor->long;
+    if ($order['order_status'] == 'preparing') {
+        if (\Carbon\Carbon::now()->lt($order['preparation_time_to'])) {
             $start  = \Carbon\Carbon::now();
-            $end    = new Carbon($order->preparation_time_to);
-            $order->preparingdiffrence = $start->diff($end)->format('%I');
+            $end    = new Carbon($order['preparation_time_to']);
+            $order['preparingdiffrence'] = $start->diff($end)->format('%I');
         } else {
-            $order->preparingdiffrence = '0';
+            $order['preparingdiffrence'] = '0';
         }
     }
-    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get();
+    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get()->toArray();
 
     // foreach ($products as $k => $v) {
     //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
@@ -1302,28 +1306,29 @@ function orderDetailForUser($order_id)
     //     }
 
     // }
-    $order->products = $products;
+    $order['products'] = $products;
 
-    if ($order->accepted_driver_id != null) {
-        $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' => $order->accepted_driver_id])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id', 'desc')->limit(1);
+    if ($order['accepted_driver_id'] != null) {
+        $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' => $order['accepted_driver_id']])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id', 'desc')->limit(1);
         if ($riderAssign->exists()) {
             $riderAssign = $riderAssign->first();
-            $order->rider_id = $riderAssign->rider_id;
-            $order->order_row_id = $riderAssign->order_id;
-            $order->distance = $riderAssign->distance;
-            $order->earning = $riderAssign->earning;
-            $order->cancel_reason = $riderAssign->cancel_reason;
-            $order->action = $riderAssign->action;
-            $order->otp = $riderAssign->otp;
+            $order['rider_id'] = $riderAssign->rider_id;
+            $order['order_row_id'] = $riderAssign->order_id;
+            $order['distance'] = $riderAssign->distance;
+            $order['earning'] = $riderAssign->earning;
+            $order['cancel_reason'] = $riderAssign->cancel_reason;
+            $order['action'] = $riderAssign->action;
+            $order['otp'] = $riderAssign->otp;
             $driver = \App\Models\Deliver_boy::where('id', '=', $riderAssign->rider_id)->select('*');
             $driver = $driver->addSelect(\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'));
             $driver = $driver->first();
-            $order->driver_name = $driver->name;
-            $order->driver_email = $driver->email;
-            $order->mobile = $driver->mobile;
-            $order->driver_image = $driver->image;
+            $order['driver_name'] = $driver->name;
+            $order['driver_email'] = $driver->email;
+            $order['mobile'] = $driver->mobile;
+            $order['driver_image'] = $driver->image;
         }
     }
+    
     return $order;
 }
 

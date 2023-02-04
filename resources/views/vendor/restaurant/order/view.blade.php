@@ -11,6 +11,8 @@
     $status_class['payment_pending'] = 'warning';
     $status_class['cancelled_by_vendor'] = 'danger';
     $status_class['cancelled_by_customer'] = 'danger';
+    $status_class['confirmed'] = 'info';
+
 
     ?>
     <div class="ms-content-wrapper">
@@ -50,8 +52,8 @@
                                     <p>{{ $order->delivery_address }}</p>
                                 @endif
                                 <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
-                                <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
-                                <p class="mb-0"><b>City :</b> {{$order->pincode}}</p>
+                                <!-- <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
+                                <p class="mb-0"><b>City :</b> {{$order->pincode}}</p> -->
                                 <p class="mb-0"><b>Send Cutlery :</b> <?php if($order->send_cutlery == '1'){echo 'Yes';}else{echo 'No';} ?></p>
                                 <p class="mb-0"><b>Message to Chef :</b> <?php echo $order->chef_message ; ?></p>
 
@@ -204,6 +206,7 @@
                                                     if($order->order_status == 'confirmed'){
                                                     ?>
                                                     <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
+                                                    <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
                                                     <?php }
                                                     if($order->order_status == 'preparing') {?>
                                                     <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}" onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready
@@ -218,7 +221,7 @@
                                                         $order->order_status != 'cancelled_by_vendor' &&
                                                         $order->order_status != 'dispatched'){?>
 
-                                                    <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>
+                                                    
                                                     <?php } ?>
                                                 </div>
                                             </div>

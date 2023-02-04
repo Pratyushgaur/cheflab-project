@@ -1,3 +1,4 @@
+
 <?php
 $status_class['pending'] = 'primary';
 $status_class['confirmed'] = 'warning';
@@ -23,10 +24,10 @@ $payment_status_class['pending'] = 'badge-danger';
             <th scope="col">Total amount</th>
             <th scope="col">Net Amount</th>
             <th scope="col">Discount</th>
-            <th scope="col">Payment Type</th>
-            <th scope="col">Payment Status</th>
+            <!-- <th scope="col">Payment Type</th>
+            <th scope="col">Payment Status</th> -->
             <th scope="col">Remaining Time</th>
-            <th scope="col"><?php if($staus_filter=='ready_to_dispatch'){echo 'OTP';}else{echo 'Order Status';} ?></th>
+            <th scope="col"><?php if($staus_filter=='ready_to_dispatch'){echo 'Rider';}else{echo 'Order Status';} ?></th>
             <th>Action</th>
         </tr>
         </thead>
@@ -45,10 +46,10 @@ $payment_status_class['pending'] = 'badge-danger';
                     <td>{{$order->total_amount}}</td>
                     <td>{{$order->net_amount}}</td>
                     <td>{{$order->discount_amount}}</td>
-                    <td>{{$order->payment_type}}</td>
+                    <!-- <td>{{$order->payment_type}}</td>
                     <td>
                         <span class="badge {{$payment_status_class[$order->payment_status]}}"> {{ucwords(str_replace('_',' ',$order->payment_status))}}</span>
-                    </td>
+                    </td> -->
                     <td>
                             @if($order->order_status=='preparing' && $order->preparation_time_to!='')
 
@@ -65,7 +66,7 @@ $payment_status_class['pending'] = 'badge-danger';
 
                         
                     </td>
-                    <td>
+                    <td col-2> 
                         @if($order->order_status!='ready_to_dispatch')
                           <?php
                                 if($order->order_status == 'confirmed'){
@@ -77,16 +78,12 @@ $payment_status_class['pending'] = 'badge-danger';
                             <div class="">
                                 <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$status))}}</button>
                                 <div class="dropdown-menu">
-                                    <?php //if($order->order_status == 'pending') { ?>
-                                    {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
-                                    {{--                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept--}}
-                                    {{--                                                                    and send for preparing</a>--}}
-                                    {{--                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
                                     <?php
-                                    //                                                                } else
+                                    
                                     if($order->order_status == 'confirmed'){
                                     ?>
                                     <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
+                                    <a data-toggle="modal" data-target="#modal-confirm" class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" data-id="{{$order->id}}" onclick="confirm_reject('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})" >Reject</a>
                                     <?php }
                                     if($order->order_status == 'preparing') {?>
                                     <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}" onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready
@@ -99,16 +96,24 @@ $payment_status_class['pending'] = 'badge-danger';
                                     $order->order_status != 'cancelled_by_vendor' &&
                                     $order->order_status != 'dispatched' && $order->order_status != 'ready_to_dispatch'){?>
 
-                                    <a data-toggle="modal" data-target="#modal-confirm" class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" data-id="{{$order->id}}" onclick="confirm_reject('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})" >Reject</a>
+                                    
                                     <?php } ?>
                                 </div>
                             </div>
                         </div>
                         @else
                             <?php  
-                                $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->whereNotIn('action',['0','2'])->first();
+                                $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->whereNotIn('action',['0','2'])->select('rider_assign_orders.*','deliver_boy.name','deliver_boy.mobile')->first();
                                 if(!empty($rider)){
-                                    echo $rider->otp;
+                                    ?>
+                                    
+                                    <b>{{$rider->name}}</b><br>
+                                    <span>({{$rider->mobile}})</span> <br>
+                                    <b>OTP-{{$rider->otp}}</b>
+                                    <?php
+                                    
+                                }else{
+                                    echo '<button class="btn btn-danger btn-xs blink-btn" >Wait For Rider</button>';
                                 }
                             ?>
                         @endif

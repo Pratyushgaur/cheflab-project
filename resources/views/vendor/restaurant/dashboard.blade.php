@@ -252,7 +252,7 @@
                     </div>
                     <div class="ms-panel-body">
                         <div class="row">
-                            @foreach($product as $key =>$value)
+                            @forelse($product as $key =>$value)
                                 <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
                                     <div class="ms-card no-margin">
                                         <div class="ms-card-img">
@@ -272,78 +272,12 @@
                                         </div>
                                     </div>
                                 </div>
-                        @endforeach
-                        <!-- <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-5.jpg" alt="card_img">
-                    </div>
-                    <div class="ms-card-body">
-                      <div class="ms-card-heading-title">
-                        <h6>Meat Stew </h6>
-                        <span class="green-text"><strong>$25.00</strong></span>
-                      </div>
-
-                      <div class="ms-card-heading-title">
-                        <p>Orders <span class="red-text">15</span></p>
-
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-                        <!--<div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-2.jpg" alt="card_img">
-                    </div>
-                    <div class="ms-card-body">
-                      <div class="ms-card-heading-title">
-                        <h6>Pancake</h6>
-                        <span class="green-text"><strong>$50.00</strong></span>
-                      </div>
-
-                      <div class="ms-card-heading-title">
-                        <p>Orders <span class="red-text">75</span></p>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-4.jpg" alt="card_img">
-                    </div>
-                    <div class="ms-card-body">
-                      <div class="ms-card-heading-title">
-                        <h6>Burger</h6>
-                        <span class="green-text"><strong>$45.00</strong></span>
-                      </div>
-
-                      <div class="ms-card-heading-title">
-                        <p>Orders <span class="red-text">85</span></p>
-
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6">
-                  <div class="ms-card no-margin">
-                    <div class="ms-card-img">
-                      <img src="{{asset('frontend')}}/assets/img/costic/food-3.jpg" alt="card_img">
-                    </div>
-                    <div class="ms-card-body">
-                      <div class="ms-card-heading-title">
-                        <h6>Saled</h6>
-                        <span class="green-text"><strong>$85.00</strong></span>
-                      </div>
-                      <div class="ms-card-heading-title">
-                        <p>Orders <span class="red-text">175</span></p>
-
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
+                                @empty
+                                  <div class="col-lg-3 col-md-6 col-sm-6">
+                                      <h5>No Product Found </h5>
+                                  </div>
+                              @endforelse
+                        
 
                         </div>
                     </div>
@@ -359,14 +293,11 @@
                     </div>
                     <div class="ms-panel-body">
                         <div class="row">
-                            @foreach($top_rated_products as $k=>$product)
+                            @forelse($top_rated_products as $k=>$product)
                             <div class="col-lg-3 col-md-6 col-sm-6">
                                 <div class="ms-card no-margin">
                                     <div class="ms-card-body">
                                         <div class="media fs-14">
-{{--                                            <div class="mr-2 align-self-center">--}}
-{{--                                                <img src="{{asset('frontend')}}/assets/img/costic/customer-1.jpg" class="ms-img-round" alt="people">--}}
-{{--                                            </div>--}}
                                             <div class="media-body">
                                                 <h6>{{$product->product_name}} </h6>
                                             </div>
@@ -399,7 +330,12 @@
                                     </div> -->
                                 </div>
                             </div>
-                            @endforeach
+                            @empty
+                            <div class="col-lg-3 col-md-6 col-sm-6">
+                                <h5>No Product Found </h5>
+                            </div>
+                            @endforelse
+
                         </div>
                     </div>
                 </div>

@@ -123,8 +123,9 @@
                         <li class="ms-scrollable ms-dropdown-list">
 
                             <?php
-
-                            foreach ($user->unreadNotifications as $notification) {
+                            $user = Auth::guard('vendor')->user();
+                            $notification = $user->unreadNotifications->take(5);
+                            foreach ($notification as $notification) {
                             ?>
                             <a class="media p-2" href="#">
                                 <div class="media-body"><span> <?php echo @$notification->data['msg']; ?></span>

@@ -119,12 +119,18 @@ class NotificationController extends Controller
         }
         
         $title = $request->title;
-        $body = $request->description;
+        $allBody = $request->description . " Zone " . $request->zone;
+        $body = strip_tags($allBody);
+        $image = "asset('push_notify_banner') . '/' . $filename";
+        // $image = "https://www.shutterstock.com/image-photo/rajwada-historical-palace-indore-city-260nw-567029827.jpg";
+        $data = null;
+        $sound = "default";
 
-        sendNotification($title, $body, $allToken);
+
+        sendNotification($title, $body, $allToken,$data ,$sound ,$image);
        
         return redirect()->route('admin.notification.view')->with('message', 'Notification Send To '. $send_data .' Successfully');
- 
+        
 
     }
 

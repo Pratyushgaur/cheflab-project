@@ -20,14 +20,16 @@ class ReviewController extends Controller
     }
 
     public function product_index(){
-        $product_ids=Product_master::where('userId',Auth::guard('vendor')->user()->id)->pluck('id');
-        if($product_ids=='')
-            $product_ids=[];
-        $VendorReview=ProductReview::select('products.*','product_review_rating.*','product_review_rating.created_at as created_at','users.name','users.image')
-            ->join('products','products.id','product_review_rating.product_id')->join('users','users.id','user_id')
-            ->whereIn('product_review_rating.product_id', $product_ids)
-            ->orderBy('product_review_rating.id','desc')
-            ->paginate(15);
+        // $product_ids=Product_master::where('userId',Auth::guard('vendor')->user()->id)->pluck('id');
+        // if($product_ids=='')
+        //     $product_ids=[];
+        // $VendorReview=ProductReview::select('products.*','product_review_rating.*','product_review_rating.created_at as created_at','users.name','users.image')
+        //     ->join('products','products.id','product_review_rating.product_id')->join('users','users.id','user_id')
+        //     ->whereIn('product_review_rating.product_id', $product_ids)
+        //     ->orderBy('product_review_rating.id','desc')
+        //     ->paginate(15);
+
+        $VendorReview = Product_master::where('userId',Auth::guard('vendor')->user()->id)->orderBy('product_rating','DESC')->paginate(15);
         return view('vendor.restaurant.review.product_index', compact('VendorReview'));
     }
 }

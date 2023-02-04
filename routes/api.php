@@ -170,11 +170,11 @@ Route::post('send-notification', [App\Http\Controllers\api\AppController::class,
 //
 
 Route::post('rider-otp-send', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_send_otp'])->name("rider.otp.send");
-Route::post('rider-otp-verify', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_verify_otp']);
+Route::post('rider-otp-verify', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_verify_otp'])->name("rider.otp.verify");
 // home
 
 Route::post('rider-home', [App\Http\Controllers\api\rider\AppController::class, 'home']);
-Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::class, 'profile']);
+Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::class, 'profile'])->name("rider.profile");
 Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppController::class, 'register_token']);
 Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController::class, 'change_status']);
 
@@ -187,7 +187,8 @@ Route::post('rider-incentive-history', [App\Http\Controllers\api\rider\AppContro
 Route::post('rider-latLng-update', [App\Http\Controllers\api\rider\AppController::class, 'updateLatLng']);
 Route::post('rider-deliver-otp', [App\Http\Controllers\api\rider\AppController::class, 'deliverOtpCheck']);
 Route::post('rider-login-history', [App\Http\Controllers\api\rider\AppController::class, 'logInHistory']);
-Route::post('rider-update-version', [\App\Http\Controllers\api\rider\LoginApiController::class, 'checkVersion']);
+Route::post('rider-update-version', [\App\Http\Controllers\api\rider\LoginApiController::class, 'checkVersion'])->name("rider.update.version");
+Route::post('rider-active-status', [\App\Http\Controllers\api\rider\AppController::class, 'checkRiderActive']);
 
 
 

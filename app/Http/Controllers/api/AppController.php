@@ -3302,6 +3302,7 @@ class AppController extends Controller
                 'rider_id'    => 'required|numeric|exists:deliver_boy,id',
                 'rating' => 'required|numeric',
                 'review' => 'required',
+                'order_id' => 'required',
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
@@ -3312,6 +3313,7 @@ class AppController extends Controller
             $review->rider_id = $request->rider_id;
             $review->rating = $request->rating;
             $review->review     = $request->review;
+            $review->order_id     = $request->order_id;
             $review->save();
             //
             $rating = \App\Models\RiderReviewRatings::select(\DB::raw('AVG(rating) as rating'), \DB::raw('COUNT(id) as total_review'))->where('rider_id', $request->rider_id)->first();
