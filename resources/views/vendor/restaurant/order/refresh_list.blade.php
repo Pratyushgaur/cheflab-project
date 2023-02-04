@@ -78,16 +78,12 @@ $payment_status_class['pending'] = 'badge-danger';
                             <div class="">
                                 <button class="btn {{'btn-'.@$status_class[$order->order_status]}}  dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="{{$order->id}}" style="padding: 0.25rem 0.5rem !important;  line-height: 1 !important">{{ucfirst(str_replace('_',' ',$status))}}</button>
                                 <div class="dropdown-menu">
-                                    <?php //if($order->order_status == 'pending') { ?>
-                                    {{--                                                                    <a class="dropdown-item  {{'ms-text-'.$status_class['accepted']}}" onclick="ajax_post_on_link('{{route('restaurant.order.accept',[$order->id])}}',{{$order->id}})">Accept</a>--}}
-                                    {{--                                                                <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['accepted']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept--}}
-                                    {{--                                                                    and send for preparing</a>--}}
-                                    {{--                                                                <a class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" onclick="ajax_post_on_link('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})">Reject</a>--}}
                                     <?php
-                                    //                                                                } else
+                                    
                                     if($order->order_status == 'confirmed'){
                                     ?>
                                     <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
+                                    <a data-toggle="modal" data-target="#modal-confirm" class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" data-id="{{$order->id}}" onclick="confirm_reject('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})" >Reject</a>
                                     <?php }
                                     if($order->order_status == 'preparing') {?>
                                     <a class="dropdown-item {{'ms-text-'.$status_class['ready_to_dispatch']}}" onclick="ajax_post_on_link('{{route('restaurant.order.ready_to_dispatch',[$order->id])}}',{{$order->id}})">Ready
@@ -100,7 +96,7 @@ $payment_status_class['pending'] = 'badge-danger';
                                     $order->order_status != 'cancelled_by_vendor' &&
                                     $order->order_status != 'dispatched' && $order->order_status != 'ready_to_dispatch'){?>
 
-                                    <a data-toggle="modal" data-target="#modal-confirm" class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" data-id="{{$order->id}}" onclick="confirm_reject('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})" >Reject</a>
+                                    
                                     <?php } ?>
                                 </div>
                             </div>

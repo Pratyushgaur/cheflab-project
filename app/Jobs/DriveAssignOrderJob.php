@@ -67,7 +67,7 @@ class DriveAssignOrderJob implements ShouldQueue
         }else{
             $noRiderAssignOrders = new \App\Models\NoRiderAssignOrders;
             $noRiderAssignOrders->order_id  = $this->order->id;
-            $noRiderAssignOrders->status = 0;
+            $noRiderAssignOrders->status = '0';
             $noRiderAssignOrders->save();
         }
 

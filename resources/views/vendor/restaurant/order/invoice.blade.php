@@ -82,8 +82,12 @@
                         <p>{{ $order->delivery_address }}</p>
                     @endif
                     <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
-                    <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
-                    <p class="mb-0"><b>City :</b> {{$order->pincode}}</p>
+                    
+                    @if(!empty($rider))
+                        
+                        <p class="mb-0"><b>Pickup OTP :</b> {{$rider->otp}}</p>
+
+                    @endif
 
                 </div>
             </div>

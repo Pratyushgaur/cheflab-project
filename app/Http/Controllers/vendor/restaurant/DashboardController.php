@@ -25,8 +25,8 @@ class DashboardController extends Controller
         // dd($d->toArray());
         $product = Product_master::where('userId', '=', Auth::guard('vendor')->user()->id);
         $product = $product->select('products.product_name', 'products.id as product_id', 'product_image', 'product_price');
-        $product = $product->addSelect(\DB::raw('(SELECT IFNULL(COUNT(id),0) as total FROM order_products WHERE  order_products.product_id =  products.id ) AS orderTotal'));
-        $product = $product->orderBy('product_rating', 'DESC')->limit(4)->get();
+        $product = $product->addSelect(\DB::raw('(SELECT IFNULL(COUNT(order_products.id),0) as total FROM order_products join orders on order_products.order_id=orders.id WHERE  order_products.product_id =  products.id and orders.order_status="completed" ) AS orderTotal'));    
+        $product = $product->orderBy('orderTotal', 'DESC')->having('orderTotal','>','0')->limit(4)->get();
         $text    = "Till Now";
 
         //order count
@@ -78,8 +78,7 @@ class DashboardController extends Controller
             ->addSelect(\DB::raw("created_at, COUNT(`created_at`) as order_count,SUM(`net_amount`) as total_net_amount, DATE_FORMAT(`created_at` , '%m') AS Month_Group"))
             ->groupBy('Month_Group')
             ->get();
-
-        $top_rated_products = Product_master::where('userId', Auth::guard('vendor')->user()->id)->orderBy('product_rating', 'desc')->limit(4)->get();
+        $top_rated_products = Product_master::where('userId', Auth::guard('vendor')->user()->id)->where('product_rating','>',0)->orderBy('product_rating', 'desc')->limit(4)->get();
 
         return view('vendor.restaurant.dashboard', compact('product', 'total_order', 'total_completed', 'total_prepairing', 'total_dispatched', 'total_ready_to_dispatch', 'total_confirmed', 'text', 'total_refund', 'graph_data', 'top_rated_products'));
     }

@@ -150,7 +150,7 @@ class OrderController extends Controller
 
     public function view($id)
     {
-        $order = Order::with('products', 'user', 'order_product_details', 'rider_assign_orders')->find($id);
+        $order = Order::with('products', 'user', 'order_product_details')->where('vendor_id','=',Auth::guard('vendor')->user()->id)->findOrFail($id);
         $coupon = \App\Models\Coupon::find($order->coupon_id);
 
         if (!$order)
@@ -165,9 +165,11 @@ class OrderController extends Controller
     {
         $order = Order::with('products', 'user', 'order_product_details')->find($id);
         //        dd($order);
+        
         if (!$order)
             return redirect()->back()->with('error', 'Order not found');
-        return view('vendor.restaurant.order.invoice', compact('order'));
+            $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->whereIn('action',["1","4","3"])->first();
+        return view('vendor.restaurant.order.invoice', compact('order','rider'));
     }
 
     public function get_preparation_time(Request $request)
