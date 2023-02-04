@@ -554,7 +554,7 @@ class Deliveryboy extends Controller
                 ->addIndexColumn()
                
             ->addColumn('date', function($data){
-                $date_with_format = date('Y-m-d',strtotime($data->created_at));
+                $date_with_format = date('Y-m-d H:m:s',strtotime($data->created_at));
                 return $date_with_format;
             })
             ->rawColumns(['date'])
