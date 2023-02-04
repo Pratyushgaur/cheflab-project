@@ -548,20 +548,16 @@ class Deliveryboy extends Controller
     {
         
         if ($request->ajax()) {
-            $data = RiderReviewRatings::join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at')->get();
+            $data = RiderReviewRatings::join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at','rider_review_ratings.order_id')->get();
       
             return Datatables::of($data)
                 ->addIndexColumn()
                
             ->addColumn('date', function($data){
-                $date_with_format = date('Y-m-d',strtotime($data->created_at));
+                $date_with_format = date('Y-m-d H:m:s',strtotime($data->created_at));
                 return $date_with_format;
             })
-            ->addColumn('order_id', function($data){
-                $order_id = 'static data';
-                return $order_id;
-            })
-            ->rawColumns(['date','order_id'])
+            ->rawColumns(['date'])
 
             ->make(true);
        }
