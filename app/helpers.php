@@ -950,15 +950,16 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 //         return true;
 // }
 
-function sendNotification($title, $body, $token, $data = null, $sound = 'default')
+function sendNotification($title, $body, $token, $data = null, $sound = 'default', $image = null)
 {
+    // echo $image;die;
     $server_key = env('FIREBASE_SERVER_KEY');
     // $headers = [
     //     'Authorization' => 'key='.$server_key,
     //     'Content-Type'  => 'application/json',
     // ];
     $url = "https://fcm.googleapis.com/fcm/send";
-    $notification = array('title' => $title, 'body' => $body, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
+    $notification = array('title' => $title, 'body' => $body,'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
     $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
     $fields = json_encode($arrayToSend);
     // $client = new Client();
