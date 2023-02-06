@@ -56,7 +56,7 @@ class VendorPromotionController extends Controller
 
     public function store_slot(Request $request)
     {
-//        dd($request->all());
+       
         $this->validate($request, [
             'date'            => 'required|after:tomorrow',
             'booked_for'      => 'required',
@@ -66,7 +66,7 @@ class VendorPromotionController extends Controller
             'for'             => 'required',
             'price'           => 'required'
         ]);
-//        dd($request->all());
+        //dd($request->all());
         $time_frame = explode('-', $request->booked_for_time);
 
         $date_from                     = mysql_date_time_marge($request->date, $time_frame[0]);
@@ -78,8 +78,7 @@ class VendorPromotionController extends Controller
             $date_to = mysql_add_days($date_from, $promotion_time_frame_add_days[$promotion_time_frame]);
             $date_to = mysql_date_time_marge($date_to, $time_frame[1]);
         }
-
-        if (SloteBook::where('from_date', '=', $date_from)->where('to_date', '=', $date_to)
+        if (SloteBook::where('from_date', '>=', $date_from)->where('to_date', '<=', $date_to)
             ->where('vendor_id', '=', Auth::guard('vendor')->user()->id)->where('from_time', $time_frame[0])
             ->where('to_time', $time_frame[1])->exists()) {
             return redirect()->back()->with('error', 'duplicate entry.');
@@ -90,9 +89,9 @@ class VendorPromotionController extends Controller
         $slot->to_date                 = $date_to;
         $slot->from_time               = $time_frame[0];
         $slot->to_time                 = $time_frame[1];
-//        $slot->cheflab_banner_image_id = $request->id;
+        $slot->cheflab_banner_image_id = $request->id;
         $slot->price                   = $request->price;
-        $slot->cheflab_banner_image_id = $request->position;
+        //$slot->cheflab_banner_image_id = $request->position;
         $slot->for                     = $request->for;
         $slot->payment_status          = '0';
         $slot->is_active               = '0';

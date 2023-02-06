@@ -23,6 +23,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
     Route::post('getProductDetail', [App\Http\Controllers\api\AppController::class, 'getProductDetail']);
     //
+    Route::post('pending-order-rating', [App\Http\Controllers\api\AppController::class, 'pendingOrderRatings']);
+    Route::post('reject-order-rating', [App\Http\Controllers\api\AppController::class, 'rejectOrderRatings']);
+    Route::post('detail-order-rating', [App\Http\Controllers\api\AppController::class, 'detailOrderRating']);
+    Route::post('save-order-rating', [App\Http\Controllers\api\AppController::class, 'saveOrderRating']);
+    
     // restaurant home page api
 
     Route::post('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage']);

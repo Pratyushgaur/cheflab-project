@@ -3343,4 +3343,125 @@ class AppController extends Controller
             ], 500);
         }
     }
+    function rejectOrderRatings(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'order_id' => 'required|exists:orders,id',
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('id','=',$request->order_id)->update(['user_review_done'=>'2']);
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully'
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    function pendingOrderRatings(){
+        try {
+            $pendingReview = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('user_review_done','=','0')->where('order_status','=','completed')->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id')->orderBy('orders.id','desc')->limit(1)->first();
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $pendingReview
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    function detailOrderRating(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'order_id' => 'required|exists:orders,id',
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $order = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('orders.id','=',$request->order_id)->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id as order_id','orders.vendor_id')->first();
+            $order->products = \App\Models\OrderProduct::where('order_id','=',$request->order_id)->join('products','order_products.product_id','=','products.id')->select('order_products.product_name','product_id','type')->get();
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $order
+
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    function saveOrderRating(Request $request){
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'order_id' => 'required|exists:orders,id',
+                'vendor_id' => 'required|exists:vendors,id',
+                'rating' => 'required',
+                'review' => 'required',
+                'products.*.product_id'   => 'required|numeric|exists:products,id',
+                'products.*.rating'  => 'required'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $review = new \App\Models\VendorReview;
+            $review->user_id =$request->user()->id;
+            $review->vendor_id = $request->vendor_id;
+            $review->rating =$request->rating;
+            $review->review	 =$request->review	;
+            $review->save();
+            //
+            $rating=\App\Models\VendorReview::select(\DB::raw('AVG(rating) as rating'),\DB::raw('COUNT(id) as total_review'))->where('vendor_id',$request->vendor_id)->first();
+            $vendor=\App\Models\Vendors::find($request->vendor_id);
+            $vendor->vendor_ratings=$rating->rating;
+            $vendor->review_count=$rating->total_review;
+            $vendor->save();
+            //
+            
+            foreach($request->products as $key =>$value){
+                
+                $review             = new \App\Models\ProductReview;
+                $review->user_id    = $request->user()->id;
+                $review->product_id = $value['product_id'];
+                $review->rating     = $value['rating'];
+                $review->review     = '-';
+                $review->save();
+                
+                //
+                $rating                 = \App\Models\ProductReview::select(\DB::raw('AVG(rating) as rating'))->where('product_id', $value['product_id'])->first();
+                $totalRating                 = \App\Models\Product_master::find($value['product_id']);
+                $totalRating->product_rating = $rating->rating;
+                $totalRating->save();
+            }
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully'
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }
