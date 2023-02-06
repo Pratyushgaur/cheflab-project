@@ -3452,6 +3452,7 @@ class AppController extends Controller
                 $totalRating->product_rating = $rating->rating;
                 $totalRating->save();
             }
+            \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('id','=',$request->order_id)->update(['user_review_done'=>'1']);
 
             return response()->json([
                 'status'   => true,
