@@ -3153,10 +3153,10 @@ class AppController extends Controller
             \DB::beginTransaction();
             $cart            = Cart::where('user_id', '=', $request->user()->id);
             if ($cart->exists()) {
-                $cartProduct     =  CartProduct::where('cart_id', '=', $cart->first()->id);
+                $cartProduct     =  \App\Models\CartProduct::where('cart_id', '=', $cart->first()->id);
                 $cartProductIds  = $cartProduct->get()->pluck('id');
-                CartProductVariant::whereIn('cart_product_id', $cartProductIds)->delete();
-                CartProductAddon::whereIn('cart_product_id', $cartProductIds)->delete();
+                \App\Models\CartProductVariant::whereIn('cart_product_id', $cartProductIds)->delete();
+                \App\Models\CartProductAddon::whereIn('cart_product_id', $cartProductIds)->delete();
                 $cartProduct->delete();
                 $cart->delete();
             }
