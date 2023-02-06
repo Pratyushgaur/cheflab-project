@@ -1276,7 +1276,7 @@ function orderComplete($id)
 }
 function orderDetailForUser($order_id)
 {
-    $order =   \App\Models\Order::where('id', '=', $order_id)->first()->toArray();
+    $order =   \App\Models\Order::where('id', '=', $order_id)->select('*')->addSelect(\DB::Raw('IFNULL( CONCAT("' . asset(`pdf_url`) . '", pdf_url), null ) as pdf_url'))->first()->toArray();
     
     $order['order_date'] =  date("d M Y  h:i A", strtotime($order['created_at']));
     $vendor = \App\Models\Vendors::where('id', '=', $order['vendor_id'])->select('name', 'image', 'lat', 'long')->first();
@@ -1293,19 +1293,19 @@ function orderDetailForUser($order_id)
             $order['preparingdiffrence'] = '0';
         }
     }
-    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id')->get()->toArray();
+    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id','products.customizable')->get()->toArray();
 
-    // foreach ($products as $k => $v) {
-    //     $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
-    //     $OrderProductVariant = OrderProductVariant::where('order_product_id', '=', $v->order_product_id)->select('variant_name', 'variant_price', 'variant_qty')->first();
-    //     if (!empty($OrderProductVariant)) {
-    //         $products[$k]->variant = $OrderProductVariant;
-    //     }
-    //     if (!empty($OrderProductAddon->toArray())) {
-    //         $products[$k]->addons = $OrderProductAddon;
-    //     }
+    foreach ($products as $k => $v) {
+        $OrderProductAddon   = \App\Models\OrderProductAddon::where('order_product_id', '=', $v['order_product_id'])->select('addon_name', 'addon_price', 'addon_qty')->get();
+        $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', '=', $v['order_product_id'])->select('variant_name', 'variant_price', 'variant_qty')->first();
+        if (!empty($OrderProductVariant)) {
+            $products[$k]['variant'] = $OrderProductVariant;
+        }
+        if (!empty($OrderProductAddon->toArray())) {
+            $products[$k]['addons'] = $OrderProductAddon;
+        }
 
-    // }
+    }
     $order['products'] = $products;
 
     if ($order['accepted_driver_id'] != null) {
