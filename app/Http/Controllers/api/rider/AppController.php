@@ -10,7 +10,8 @@ use App\Models\OrderProduct;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\DriverWorkingLogs;
-use App\Models\driver_total_working_perday;
+use App\Models\RiderOrderStatement;
+use App\Models\Driver_total_working_perday;
 use Carbon\Carbon;
 use App\jobs\UserOrderNotification;
 use Illuminate\Support\Facades\DB;
@@ -455,6 +456,7 @@ class AppController extends Controller
 
     function genarateIncentive($riderId)
     {
+
         $rider = \App\Models\Deliver_boy::where('id', '=', $riderId)->select('ratings')->first();
         $incentive = 0;
         if ($rider->ratings >= 4.3 && $rider->ratings <= 4.7) {
@@ -486,6 +488,31 @@ class AppController extends Controller
                 }
             }
         }
+
+
+
+        $riderOrder = RiderAssignOrders::where(['order_id' => 1])->first();
+        $net_receivables = $riderOrder->earning;
+        $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+        $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+        $statementData = RiderOrderStatement::where(['rider_id' => $riderOrder->rider_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+        if ($statementData) {
+            $total = ($statementData->paid_amount + $net_receivables);
+            $updateData = ([
+                'paid_amount' => $total
+            ]);
+            RiderOrderStatement::where(['rider_id' => $riderOrder->rider_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+        } else {
+            $createData = array(
+                'rider_id' => $riderOrder->rider_id,
+                'paid_amount' => $net_receivables,
+                'start_date' => $current_start_date,
+                'end_date' => $current_end_date
+            );
+
+            RiderOrderStatement::create($createData);
+        }
+
         if ($incentive > 0) {
             $RiderIncentives = new \App\Models\RiderIncentives;
             $RiderIncentives->rider_id = $riderId;
@@ -535,14 +562,16 @@ class AppController extends Controller
 
             $today_date = date('d-m-Y');
 
-            $driver_total_working_perday = driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->first();
+
+            $driver_total_working_perday = Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->first();
             if ($driver_total_working_perday) {
                 if (isset($hr)) {
-                    driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->update(['total_hr' => ($driver_total_working_perday->total_hr + $hr)]);
+                    Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->update(['total_hr' => ($driver_total_working_perday->total_hr + $hr)]);
                 }
             } else {
                 if (isset($hr)) {
-                    driver_total_working_perday::create(['rider_id' => $request->user_id, 'total_hr' => $hr, 'current_date' => $today_date]);
+                    Driver_total_working_perday::create(['rider_id' => $request->user_id, 'total_hr' => $hr, 'current_date' => $today_date]);
+
                 }
             }
 

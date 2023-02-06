@@ -7,7 +7,7 @@ use App\Models\Orders;
 use App\Models\Product_master;
 use App\Models\Vendortransition;
 use App\Models\OrderCommision;
-use App\Models\vendor_payout_detail;
+use App\Models\Vendor_payout_detail;
 use Illuminate\Support\Facades\Crypt;
 use Auth;
 use DataTables;
@@ -59,7 +59,7 @@ class MisController extends Controller
         $deductions = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('deductions');
         $net_receivables = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('net_receivables');
 
-        $your_settlement = vendor_payout_detail::where('vendor_id', $vendorId)->sum('amount');
+        $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->sum('amount');
 // echo '<pre>';print_r($your_settlement);die;
         
         return view('vendor.mis.renvenue_ajax', compact('order_sum','order_count','additions_count','deductions','net_receivables','your_settlement'));
@@ -160,7 +160,7 @@ class MisController extends Controller
      public function settlements_view(Request $request)
     {
         $vendorId = Auth::guard('vendor')->user()->id;
-        $settlements_list = vendor_payout_detail::where('vendor_id', $vendorId)->get();
+        $settlements_list = Vendor_payout_detail::where('vendor_id', $vendorId)->get();
         return view('vendor.mis.settlements_view', compact('settlements_list'));
     }
 

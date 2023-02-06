@@ -292,8 +292,10 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
 
     Route::get('account-settlement/rider', [App\Http\Controllers\admin\AccountriderController::class, 'index'])->name('admin.account.rider.list');
     Route::get('rider-list-data', [App\Http\Controllers\admin\AccountriderController::class, 'get_data_table_of_order'])->name('admin.account.rider.data');
+    Route::get('rider-riderPaymentSuccess-data', [App\Http\Controllers\admin\AccountriderController::class, 'riderPaymentSuccess'])->name('admin.account.rider.riderPaymentSuccess');
+    Route::post('rider-payRider-data', [App\Http\Controllers\admin\AccountriderController::class, 'payRiderPayment'])->name('admin.account.rider.payRider');
 
-
+    
     // Payout setting
     Route::get('payout-setting', [App\Http\Controllers\admin\PaymentsettingController::class,'index'])->name('admin.payout.setting');
     Route::post('payout-setting-store', [App\Http\Controllers\admin\PaymentsettingController::class,'storeGernel'])->name('admin.payout.storeGernel');

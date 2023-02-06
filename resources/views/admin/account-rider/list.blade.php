@@ -59,7 +59,7 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header card-header d-flex justify-content-between clear-both">
-                      <h3 class="card-title">Account Vendor</h3>
+                      <h3 class="card-title">Account Rider</h3>
                       <!-- <a href="javascript:void(0);" id="ExportReporttoExcel" class=" me-2 btn btn-info text-white rounded-0 px-4 py-2">
                         <i class="fa fa-file-excel-o" aria-hidden="true"></i>              
                         My new button
@@ -70,11 +70,11 @@
                             <thead>
                                   <tr role="row">
                                     <th class="text-center">S. No.</th>
-                                    <th>Name</th>
+                                    <th>Rider Name</th>
                                     <th>Id</th>
-                                    <th>Delivery Amount</th>
-                                    <th>Delivery Bank Name</th>
-                                    <th>Delivery Bank Account Name</th>
+                                    <th>Rider Amount</th>
+                                    <th>Rider Bank Name</th>
+                                    <th>Rider Bank Account Name</th>
                                     <th>Bank Account Number</th>
                                     <th>IFSC Code </th>
                                     <th>Status </th>
@@ -171,9 +171,9 @@ $('#reportrange').daterangepicker({
         },
         columns: [
           {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'boy_id', name: 'boy_id'},
-            {data: 'wallet', name: 'wallet'},           
+          {data: 'name', name: 'name'},
+          {data: 'boy_id', name: 'boy_id'},
+            {data: 'paid_amount', name: 'paid_amount'},
             {data: 'bank_name', name: 'bank_name'},
             {data: 'holder_name', name: 'holder_name'},
             {data: 'account_no', name: 'account_no'},

@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
-use App\Models\vendor_order_statement;
-use App\Models\vendor_payout_detail;
+use App\Models\Vendor_order_statement;
+use App\Models\Vendor_payout_detail;
 use App\Models\Vendors;
 use App\Models\OrderCommision;
 use App\Models\User;
@@ -167,7 +167,7 @@ class AccountsettlementController extends Controller
     public function vendorPaymentSuccess()
     {
         $id = $_GET['id'];
-        $data = vendor_order_statement::where(['vendor_id'=> $id, 'pay_status'=> 0])->first();
+        $data = Vendor_order_statement::where(['vendor_id'=> $id, 'pay_status'=> 0])->first();
         return view('admin.account-vendor.paymentsuccess',compact('id','data'));
     }
 
@@ -183,8 +183,8 @@ class AccountsettlementController extends Controller
             'pay_status' => 1,
             'total_pay_amount' => $request->amount
         ]);
-        vendor_order_statement::where(['vendor_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
-        vendor_payout_detail::create($data);
+        Vendor_order_statement::where(['vendor_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
+        Vendor_payout_detail::create($data);
         return redirect()->route('admin.account.vendor.list')->with('message', 'Pay Amount '. $request->amount. ' to Vendor Successfully');
     }
 

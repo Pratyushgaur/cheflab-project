@@ -187,7 +187,7 @@
 
     </div>
     <!-- Main row -->
-
+<input type="hidden" value="{{ @$rider_id }}" id="riderId">
     <!-- /.row -->
 </div><!--/. container-fluid -->
 <script type="text/javascript">
@@ -204,7 +204,9 @@
         // buttons: true,
         ajax: {
             url: "{{ route('admin.delivery_boy.review.data') }}",
-            data: function(d) {}
+            data: function(d) {
+                d.riderId = $('#riderId').val()
+            }
         },
         columns: [{
                 data: 'DT_RowIndex',

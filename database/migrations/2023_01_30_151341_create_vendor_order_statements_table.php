@@ -22,7 +22,8 @@ class CreateVendorOrderStatementsTable extends Migration
             $table->string('end_date');
             $table->string('vendor_cancel_deduction');
             $table->string('total_pay_amount');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

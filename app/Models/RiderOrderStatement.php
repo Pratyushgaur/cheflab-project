@@ -5,8 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class PushNotification extends Model
+class RiderOrderStatement extends Model
 {
     use HasFactory;
-    protected $fillable=['title', 'zone', 'send_to', 'notification_banner', 'description', 'status'];
+    public $fillable = ['rider_id','paid_amount', 'pay_status','total_pay_amount', 'start_date','end_date'];
 }

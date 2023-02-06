@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Superadmin;
-use App\Models\pushNotification;
+use App\Models\PushNotification;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\User;
@@ -55,7 +55,7 @@ class NotificationController extends Controller
     public function notification_list(Request $request)
     {
         if ($request->ajax()) {
-            $data = pushNotification::get();
+            $data = PushNotification::get();
    
             return Datatables::of($data)    
                 ->addIndexColumn()
