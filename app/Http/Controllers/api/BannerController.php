@@ -132,7 +132,7 @@ class BannerController extends Controller
                         ->where('to_time', '>=', $current_time)
                         ->where([ 'slotbooking_table.is_active' => '1' ]);
             })
-            ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('slot-vendor-image') . '/", bannerImage) AS bannerImage,'
+            ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('admin-banner') . '/", bannerImage) AS bannerImage,'
 //        .'from_date,to_date,name,slotbooking_table.id as slot_id,cheflab_banner_image.id as banner_id,slotbooking_table.price as slot_price,cheflab_banner_image.price as banner_price,'
                     . 'cheflab_banner_image.position as banner_position,slotbooking_table.vendor_id')
                 ->orderBy('cheflab_banner_image.position', 'asc')
