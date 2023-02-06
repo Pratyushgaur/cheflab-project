@@ -93,29 +93,31 @@
                     <table class="table table-bordered mt-1 mb-1">
                         <thead>
                             <tr>
+                                <th class="initial-38-6">S.No.</th>
                                 <th class="initial-38-6">QTY</th>
                                 <th class="initial-38-7">DESC</th>
                                 <th class="initial-38-7">Price</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($product as $val) { ?>
+                            <?php 
+                            $i = 1;
+                            foreach ($orderProduct as $val) { ?>
                                 <tr>
                                     <td class="">
-                                        1
+                                    <?php echo $i; ?>
+                                    </td>
+                                    <td class="">
+                                    {{$val['product_qty']}}
                                     </td>
                                     <td class="">
                                         {{$val['product_name']}} <br>
-                                        <div class="font-size-sm text-body">
-                                            <span>Price : </span>
-                                            <span class="font-weight-bold">{{ $val['product_price'] }}</span>
-                                        </div>
                                     </td>
                                     <td class="w-28p">
                                         {{ $val['product_price'] }}
                                     </td>
                                 </tr>
-                            <?php } ?>
+                            <?php $i++; } ?>
                         </tbody>
                     </table>
                     <span class="initial-38-5" style="border-bottom: 2px dashed #838383;"></span>
@@ -123,15 +125,15 @@
                         <table class="table">
                             <tr>
                                 <th style="width:50%">Items Price:</th>
-                                <td>{{$order->total_amount}}</td>
+                                <td>{{ $orderProductAmount }}</td>
                             </tr>
                             <tr>
                                 <th>Tax ({{$vendor->tax}}%)</th>
-                                <td>{{$order->gross_amount}}</td>
+                                <td>{{ $taxAmount }}</td>
                             </tr>
                             <tr>
                                 <th>Total:</th>
-                                <td>{{$order->net_amount}}</td>
+                                <td>{{ $totalAmount }}</td>
                             </tr>
                         </table>
                     </div>
