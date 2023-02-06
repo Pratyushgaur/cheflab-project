@@ -121,25 +121,24 @@ class BannerController extends Controller
             $current_time     = mysql_time();
             $current_date     = mysql_date_time();
             $number_of_slides = config('custom_app_setting.promotion_banner_number_of_slides');
-
-            $slots = \App\Models\SloteBook::rightJoin('cheflab_banner_image', 'cheflab_banner_image.id', '=', 'slotbooking_table.cheflab_banner_image_id')
-                ->where([ 'cheflab_banner_image.is_active' => '1' ])
-                ->where([ 'cheflab_banner_image.banner_for' =>  $request->for])
-                ->whereOr(function ($q) use ($vendor_ids, $current_date, $current_time) {
-                    $q->whereIn('vendor_id', $vendor_ids)
+            $slots = \App\Models\SloteBook::where([ 'cheflab_banner_image.is_active' => '1' ])
+            ->where([ 'cheflab_banner_image.banner_for' =>  $request->for])
+            ->rightJoin('cheflab_banner_image',function($join) use ($vendor_ids, $current_date, $current_time){
+                $join->on('cheflab_banner_image.id', '=', 'slotbooking_table.cheflab_banner_image_id');
+                $join->whereIn('vendor_id', $vendor_ids)
                         ->where('from_date', '<=', $current_date)
                         ->where('to_date', '>=', $current_date)
                         ->where('from_time', '<=', $current_time)
                         ->where('to_time', '>=', $current_time)
                         ->where([ 'slotbooking_table.is_active' => '1' ]);
-                })
-                ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('slot-vendor-image') . '/", bannerImage) AS bannerImage,'
+            })
+            ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('slot-vendor-image') . '/", bannerImage) AS bannerImage,'
 //        .'from_date,to_date,name,slotbooking_table.id as slot_id,cheflab_banner_image.id as banner_id,slotbooking_table.price as slot_price,cheflab_banner_image.price as banner_price,'
                     . 'cheflab_banner_image.position as banner_position,slotbooking_table.vendor_id')
                 ->orderBy('cheflab_banner_image.position', 'asc')
                 ->limit($number_of_slides)
                 ->get();
-//dd($slots->toArray());
+
             $response = [];
             foreach ($slots as $k => $slot) {
                 if ($slot->slot_id != '')
