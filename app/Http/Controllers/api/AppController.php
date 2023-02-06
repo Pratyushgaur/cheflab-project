@@ -1719,7 +1719,7 @@ class AppController extends Controller
             }
             if ($request->order_for == 'restaurant') {
                 $order = Order::where('user_id', '=', request()->user()->id);
-                $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id', 'vendors.name as vendor_name', 'order_status', 'net_amount', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"), 'delivery_address', 'orders.lat', 'orders.long', 'vendors.lat as vendor_lat', 'vendors.long as vendor_lng', 'vendors.fssai_lic_no', 'orders.deliver_otp', 'vendors.address as vendor_address', 'orders.created_at');
+                $order = $order->select(\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image'), 'orders.id as order_id','orders.order_id as user_order_id', 'vendors.name as vendor_name', 'order_status', 'total_amount', 'gross_amount', 'wallet_apply', 'wallet_cut','discount_amount', 'net_amount','tex','platform_charges','delivery_charge', 'payment_type', \DB::raw("DATE_FORMAT(orders.created_at, '%d %b %Y at %H:%i %p') as order_date"), 'delivery_address', 'orders.lat', 'orders.long', 'vendors.lat as vendor_lat', 'vendors.long as vendor_lng', 'vendors.fssai_lic_no', 'orders.deliver_otp','accepted_driver_id', 'vendors.address as vendor_address', 'orders.created_at');
                 $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
                 $order = $order->where('vendors.vendor_type', '=', 'restaurant');
                 $order = $order->orderBy('orders.id', 'desc');
@@ -1727,7 +1727,7 @@ class AppController extends Controller
                 $order = $order->get();
 
                 foreach ($order as $key => $value) {
-                    $products = OrderProduct::where('order_id', '=', $value->order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'order_products.id as order_product_id')->get();
+                    $products = OrderProduct::where('order_id', '=', $value->order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'order_products.id as order_product_id','products.customizable')->get();
                     foreach ($products as $k => $v) {
                         $OrderProductAddon   = OrderProductAddon::where('order_product_id', '=', $v->order_product_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
                         $OrderProductVariant = OrderProductVariant::where('order_product_id', '=', $v->order_product_id)->select('variant_name', 'variant_price', 'variant_qty')->first();
@@ -1739,6 +1739,16 @@ class AppController extends Controller
                         }
                     }
                     $order[$key]->products = $products;
+                    if($value->accepted_driver_id!=null){
+                        $driver = \App\Models\RiderAssignOrders::where('order_id','=',$value->order_id)->where('rider_id','=',$value->accepted_driver_id)->whereIn('action',["1","4","3"])->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->select('rider_assign_orders.*','deliver_boy.name','deliver_boy.mobile',\DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),'email')->first();
+                        if(!empty($driver)){
+                            $order[$key]->rider_id = $value->accepted_driver_id;
+                            $order[$key]->driver_name = $driver->name;
+                            $order[$key]->driver_email = $driver->email;
+                            $order[$key]->mobile = $driver->mobile;
+                            $order[$key]->driver_image = $driver->image;
+                        }
+                    }
                 }
 
                 return response()->json([
