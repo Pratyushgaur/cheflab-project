@@ -108,6 +108,7 @@
               <select class="banner-for" onchange="reload_table();">
                 <option value="cheflab">APP ROOT BANNER</option>
                 <option value="restaurant">APP RESTAURANT BANNER</option>
+                <option value="order_traking">APP ORDER TRACK BANNER</option>
                 <option value="chef">APP CHEF BANNER</option>
                 
               </select>
