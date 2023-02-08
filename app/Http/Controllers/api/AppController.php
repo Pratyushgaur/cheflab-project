@@ -1989,8 +1989,8 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $user = User::where('id', '=', request()->user()->id)->select('referralCode', 'by_earn')->get();
-            $transactions = \App\Models\UserWalletTransactions::where('user_id', '=', request()->user()->id)->orderBy('id', 'desc')->get();
+            $user = User::where('id', '=', request()->user()->id)->select('referralCode', 'by_earn','wallet_amount')->get();
+            $transactions = \App\Models\UserWalletTransactions::where('user_id', '=', request()->user()->id)->select('*')->addSelect(\DB::raw("DATE_FORMAT(created_at, '%d %b %Y') as created_at"))->orderBy('id', 'desc')->get();
             $amount = \App\Models\AdminMasters::find(1)->select('refer_amount', 'refer_earn_msg')->first();
             return response()->json([
                 'status'       => true,
