@@ -5,6 +5,7 @@ namespace Tests;
 use App\Http\Controllers\Admin\Deliveryboy;
 use App\Models\AdminMasters;
 use App\Models\Deliver_boy;
+use App\Models\DeliveryBoyTokens;
 use App\Models\Mobileotp;
 use App\Models\RiderMobileOtp;
 use App\Models\User;
@@ -45,6 +46,10 @@ abstract class TestCase extends BaseTestCase
     public function createDeliveryBoy($args = [], $num = null)
     {
         return Deliver_boy::factory()->count($num)->create($args);
+    }
+    public function createDeliveryBoyTokens($args = [], $num = null)
+    {
+        return DeliveryBoyTokens::factory()->count($num)->create($args);
     }
 
     public function createRiderOtp($args = [], $num = null)
