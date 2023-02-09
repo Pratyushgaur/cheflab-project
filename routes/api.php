@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('reject-order-rating', [App\Http\Controllers\api\AppController::class, 'rejectOrderRatings']);
     Route::post('detail-order-rating', [App\Http\Controllers\api\AppController::class, 'detailOrderRating']);
     Route::post('save-order-rating', [App\Http\Controllers\api\AppController::class, 'saveOrderRating']);
-    
+
     // restaurant home page api
 
     Route::post('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage']);
@@ -178,9 +178,9 @@ Route::post('rider-otp-send', [App\Http\Controllers\api\rider\LoginApiController
 Route::post('rider-otp-verify', [App\Http\Controllers\api\rider\LoginApiController::class, 'login_verify_otp'])->name("rider.otp.verify");
 // home
 
-Route::post('rider-home', [App\Http\Controllers\api\rider\AppController::class, 'home']);
+Route::post('rider-home', [App\Http\Controllers\api\rider\AppController::class, 'home'])->name("rider.home");
 Route::post('rider-profile', [App\Http\Controllers\api\rider\AppController::class, 'profile'])->name("rider.profile");
-Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppController::class, 'register_token']);
+Route::post('rider-register-token', [App\Http\Controllers\api\rider\AppController::class, 'register_token'])->name("rider.register.token");
 Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController::class, 'change_status']);
 
 
