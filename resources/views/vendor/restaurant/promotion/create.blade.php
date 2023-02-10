@@ -129,9 +129,7 @@ $breadcrumb[] = ["name"  => "Create Promotion",
                                     <label for="validationCustom10">Select Position <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         {{ Form::select('position', [], null, ['class'=>"form-control", 'id' => 'validationCustom22','placeholder'=>'Select Slide Position']) }}
-                                        {{--                                        <select class="form-control" name="position" id="validationCustom22">--}}
-
-                                        {{--                                        </select>--}}
+                                        
                                     </div>
                                     <span class="banner_error text-danger"></span>
                                     <div id="price">
