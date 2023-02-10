@@ -43,7 +43,7 @@ class AccountriderController extends Controller
 
            
            if(!empty($start_time) && !empty($end_time)) {
-            $data = $data->whereBetween('deliver_boy.created_at', [$start_time, $end_time]);
+            $data = $data->whereBetween('rider_order_statements.created_at', [$start_time, $end_time]);
            
            }
     
@@ -60,6 +60,14 @@ class AccountriderController extends Controller
                     } 
                     return $btn;
                 })
+                ->addColumn('start_date', function($data){
+                    $start_date = date('m-Y-d H:m:s', strtotime($data->start_date));
+                     return $start_date;
+                 }) 
+                 ->addColumn('end_date', function($data){
+                    $end_date = date('m-Y-d H:m:s', strtotime($data->end_date));
+                     return $end_date;
+                 }) 
                 
                
 
