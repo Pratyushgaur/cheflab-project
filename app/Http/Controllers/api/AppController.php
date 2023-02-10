@@ -1671,6 +1671,7 @@ class AppController extends Controller
                 //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
                 //$riderAssign->saveOrFail();
                 AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
+                $Order->notificationClickurl = route('restaurant.order.view', $Order->order_id);
                 DB::commit();
                 \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(30));
 
