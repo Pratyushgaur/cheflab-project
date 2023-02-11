@@ -412,7 +412,7 @@ class AppController extends Controller
                 $riderAssing = RiderAssignOrders::where('id', '=', $request->rider_assign_order_id);
                 $riderAssing->update(['action' => '3']);
                 $earningData = $riderAssing->select('earning', 'rider_id')->first();
-                $this->genarateIncentive($earningData->rider_id);
+                $this->genarateIncentive($earningData->rider_id, $request->rider_assign_order_id);
                 $user = \App\Models\User::where('id', '=', $orderdata->first()->user_id)->select('fcm_token', 'referby')->first();
                 $totalOrders = Order::where('user_id', '=', $orderdata->first()->user_id)->where('order_status', '=', 'completed')->count();
                 if ($user->referby != '' && $totalOrders == 1) {
@@ -455,7 +455,7 @@ class AppController extends Controller
         }
     }
 
-    function genarateIncentive($riderId)
+    function genarateIncentive($riderId,$rider_assign_order_id)
     {
 
         $rider = \App\Models\Deliver_boy::where('id', '=', $riderId)->select('ratings')->first();
@@ -491,8 +491,7 @@ class AppController extends Controller
         }
 
 
-
-        $riderOrder = RiderAssignOrders::where(['order_id' => 1])->first();
+        $riderOrder = RiderAssignOrders::where(['id' => $rider_assign_order_id])->first();
         $net_receivables = $riderOrder->earning;
         $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
         $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');

@@ -286,6 +286,12 @@
 
 
 					</li>
+					<li class="nav-item">
+						<a href="{{ route('admin.account.mis.invoices') }}" class="nav-link">
+						  <i class="fa fa-arrow-right  nav-icon"></i>
+						  <p>Invoices</p>
+						</a>
+					</li>
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">
