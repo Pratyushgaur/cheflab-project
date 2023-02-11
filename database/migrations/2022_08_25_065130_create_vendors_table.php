@@ -27,7 +27,7 @@ class CreateVendorsTable extends Migration
             $table->string('deal_categories',255);
             $table->string('deal_cuisines',255)->nullable();
             $table->enum('status', ['1', '0'])->default('1')->comment('1-active 0-inactive');
-            $table->string('mobile',20)->unique();
+            $table->string('mobile',20);
             $table->string('alt_mobile',20)->nullable();
             $table->string('pincode',8)->nullable();
             $table->text('address')->nullable();
