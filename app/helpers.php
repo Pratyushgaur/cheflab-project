@@ -568,7 +568,7 @@ function get_delivery_boy_near_me($lat, $lng, $order_id)
     $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
     
     $boy = $boy->orderBy('distance','ASC');
-    
+    $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
     return $boy->get();
 
 }
@@ -584,6 +584,7 @@ function orderAssignToDeliveryBoy($lat, $lng,$order){
     }
     $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
     $boy = $boy->orderBy('distance','ASC');
+    $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
     $boy = $boy->limit(1);
     return $boy->first();
     

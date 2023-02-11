@@ -614,11 +614,13 @@ class AppController extends Controller
             $rejectedOrders = new RiderAssignOrders;
             $RiderIncentives = new \App\Models\RiderIncentives;
             $RiderReviewRatings = new \App\Models\RiderReviewRatings;
+            $Driver_total_working_perday = new \App\Models\Driver_total_working_perday;
             if ($request->report_for == 'today') {
                 $RiderAssignOrders = $RiderAssignOrders->whereDate('created_at', Carbon::now());
                 $rejectedOrders = $rejectedOrders->whereDate('created_at', Carbon::now());
                 $RiderIncentives = $RiderIncentives->whereDate('created_at', Carbon::now());
                 $RiderReviewRatings = $RiderReviewRatings->whereDate('created_at', Carbon::now());
+                $Driver_total_working_perday = $Driver_total_working_perday->whereDate('current_date', Carbon::now());
             }
             if ($request->report_for == 'last_week') {
                 $RiderAssignOrders = $RiderAssignOrders->whereBetween(
@@ -635,6 +637,10 @@ class AppController extends Controller
                 );
                 $RiderReviewRatings = $RiderReviewRatings->whereBetween(
                     'created_at',
+                    [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
+                $Driver_total_working_perday = $Driver_total_working_perday->whereBetween(
+                    'current_date',
                     [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
             }
@@ -655,14 +661,30 @@ class AppController extends Controller
                     'created_at',
                     [Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
                 );
+                $Driver_total_working_perday = $Driver_total_working_perday->whereBetween(
+                    'current_date',
+                    [Carbon::now()->subWeek(4)->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()]
+                );
             }
             $earning_and_orders = $RiderAssignOrders->where(['action' => '3', 'rider_id' => $request->user_id])->select(\DB::raw('IFNULL(SUM(earning),0) as earning'), \DB::raw('IFNULL(COUNT(id),0) as order_count'))->first();
             $rejectedOrders     = $rejectedOrders->where(['action' => '2', 'rider_id' => $request->user_id])->select(\DB::raw('IFNULL(COUNT(id),0) as rejectOrders'))->first();
             $RiderIncentives    = $RiderIncentives->where(['rider_id' => $request->user_id])->select(\DB::raw('IFNULL(SUM(amount),0) as amount'))->first();
             $RiderReviewRatings    = $RiderReviewRatings->where(['rider_id' => $request->user_id])->select(\DB::raw('IFNULL(AVG(rating),0.0) as rating'))->first();
+            $Driver_total_working_perday    = $Driver_total_working_perday->where(['rider_id' => $request->user_id])->select(\DB::raw('IFNULL(SUM(total_hr),0) as total_working_seconds'))->first();
             //$workingHours = calculateWorkingHours($request->user_id,Carbon::now(),Carbon::now());
             //[now()->subdays(30), now()->subday()]
-            $response = ['earning' => $earning_and_orders->earning, 'order_delivered' => $earning_and_orders->order_count, 'rejected_orders' => $rejectedOrders->rejectOrders, 'incentive' => $RiderIncentives->amount, 'rating' => $RiderReviewRatings->rating, 'workingHours' => 0];
+            if($Driver_total_working_perday->total_working_seconds < 0){
+                $init = 0;
+            }else{
+                $init = $Driver_total_working_perday->total_working_seconds;
+            }
+            
+            $day = floor($init / 86400);
+            $hours = floor(($init -($day*86400)) / 3600);
+            $minutes = floor(($init / 60) % 60);
+            $time = date('H:i',strtotime($hours.'.'.$minutes));
+            
+            $response = ['earning' => $earning_and_orders->earning, 'order_delivered' => $earning_and_orders->order_count, 'rejected_orders' => $rejectedOrders->rejectOrders, 'incentive' => $RiderIncentives->amount, 'rating' => $RiderReviewRatings->rating, 'workingHours' => $time];
             //
             $chart = [];
             if ($request->report_for == 'today') {

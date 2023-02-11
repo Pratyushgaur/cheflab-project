@@ -8,7 +8,7 @@ return [
 
     //radius that should be cover by a restaurant
     'near_by_distance'                  => 100,//in miles
-
+    'near_by_driver_distance'                  => 35,
 
     //-----------------Promotion Settings---------------------------
     //slot booking
