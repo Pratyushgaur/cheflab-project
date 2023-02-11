@@ -72,6 +72,8 @@
                                     <th>Vendor’s Bank Account Name</th>
                                     <th>Bank Account Number</th>
                                     <th>IFSC Code </th>
+                                    <th>Start Date - H:M:S</th>
+                                    <th>End Date - H:M:S </th>
                                     <th>Status </th>
                                   </tr>
                             </thead>
@@ -170,7 +172,9 @@ $(function() {
             {data: 'holder_name', name: 'holder_name'},
             {data: 'account_no', name: 'account_no'},
             {data: 'ifsc', name: 'ifsc'},
-            {data: 'status', name: 'status'},
+            {data: 'start_date', name: 'start_date'},
+            {data: 'end_date', name: 'end_date'},
+            {data: 'status', name: 'status'}, 
         ]
     });
     // table.buttons().container()

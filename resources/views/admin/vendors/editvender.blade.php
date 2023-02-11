@@ -665,8 +665,8 @@
           required: true,
           minlength: 10,
           maxlength: 10,
-          number: true,
-          remote: '{{route("admin.vendor.mobilecheckUpdate",$vendor->id)}}',
+          number: true
+          //remote: '{{route("admin.vendor.mobilecheckUpdate",$vendor->id)}}',
         },
         pincode: {
           required: true,
@@ -716,9 +716,9 @@
           minlength: "pincode cannot be Less than 6 characters",
           number: "Pincode must be an number"
         },
-        phone: {
-          remote: "Mobile Number Already use in Onther Account"
-        },
+        // phone: {
+        //   remote: "Mobile Number Already use in Onther Account"
+        // },
         tax: {
           remote: "Tax is required"
         },

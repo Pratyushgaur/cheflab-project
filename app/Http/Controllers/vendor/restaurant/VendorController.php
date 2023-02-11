@@ -97,7 +97,7 @@ class VendorController extends Controller
         $categories      = Catogory_master::where('is_active', '=', '1')->pluck('name', 'id');
         $cuisines        = Cuisines::where('is_active', '=', '1')->pluck('name', 'id');
         $resturant       = Vendors::find(\Auth::guard('vendor')->user()->id);
-        $product_count   = Product_master::where('status', 1)->where('product_approve', 1)->groupBy('userId')->count();
+        $product_count   = Product_master::where('userid', \Auth::guard('vendor')->user()->id)->where('product_approve', 1)->groupBy('userId')->count();
         $like_user_count = UserVendorLike::where('vendor_id', \Auth::guard('vendor')->user()->id)->groupBy('vendor_id')->count();
         return view('vendor.restaurant.vendor.profile', compact('categories', 'cuisines', 'resturant', 'product_count', 'like_user_count'));
     }

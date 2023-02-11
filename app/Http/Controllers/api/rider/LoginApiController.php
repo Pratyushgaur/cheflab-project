@@ -51,7 +51,7 @@ class LoginApiController extends Controller
                 } else {
                     return response()->json([
                         'status' => false,
-                        'error' => 'Your Account is Inactive. cantact with admin to process'
+                        'error' => 'Your Account is Inactive. contact with admin to process'
 
                     ], 401);
                 }

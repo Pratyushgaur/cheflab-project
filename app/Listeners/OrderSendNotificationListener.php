@@ -40,7 +40,7 @@ class OrderSendNotificationListener
        $vendor->notify(new OrderCreateNotification($event->order_id, $customer->name,
             'New Order',
             "You have received new Order #" . $event->order_id . ' from ' . $customer->name,
-            route('restaurant.order.view', $event->order_id),
+            $event->notificationClickurl,
             $vendor->fcm_token
         ));
         $token []= $vendor->fcm_token;

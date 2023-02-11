@@ -31,9 +31,11 @@ class AccountsettlementController extends Controller
     {
        
         if ($request->ajax()) {
+
          
             $data = Vendors::select('vendor_order_statements.*','vendors.id as vendor_id','vendors.status','vendors.name','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name')->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id');
            
+
            $dateSedule = $request->datePicker;
         
            if(isset($dateSedule)){
@@ -46,7 +48,6 @@ class AccountsettlementController extends Controller
             $data = $data->whereBetween('vendor_order_statements.created_at', [$start_time, $end_time]);
            }
     
-           
            $data = $data->get();
 
             return Datatables::of($data)
@@ -66,10 +67,18 @@ class AccountsettlementController extends Controller
                 ->addColumn('total', function($data){
                    $total = $data->paid_amount - $data->vendor_cancel_deduction;
                     return $total;
-                })             
-               
+                }) 
+                ->addColumn('start_date', function($data){
+                    $start_date = date('m-Y-d H:m:s', strtotime($data->start_date));
+                     return $start_date;
+                 }) 
+                 ->addColumn('end_date', function($data){
+                    $end_date = date('m-Y-d H:m:s', strtotime($data->end_date));
+                     return $end_date;
+                 })             
+                
 
-                ->rawColumns(['status','name','total'])
+                ->rawColumns(['status','name','total','start_date','end_date'])
                 
                ->make(true);
         }

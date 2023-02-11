@@ -952,7 +952,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 
 function sendNotification($title, $body, $token, $data = null, $sound = 'default', $image = null)
 {
-    // echo $image;die;
+    echo $image;die;
     $server_key = env('FIREBASE_SERVER_KEY');
     // $headers = [
     //     'Authorization' => 'key='.$server_key,
@@ -1419,20 +1419,25 @@ function createPdf($id)
     $order = Orders::where('id', $id)->first();
     $vendor = Vendors::findOrFail($order->vendor_id);
     $users = User::findOrFail($order->user_id);
-    $orderProduct = OrderProduct::findOrFail($id);
-    $product_id = $orderProduct->product_id;
-    $product = Product_master::where('id', '=', $product_id)->select('id', 'product_name', 'product_image', 'primary_variant_name', 'product_price', 'type')->get();
-
+    $orderProduct = OrderProduct::where(['order_id' => $id])->get();
+    $orderProductAmount = OrderProduct::where(['order_id' => $id])->sum('product_price');
+    $taxAmount = ($orderProductAmount * $vendor->tax)/100;
+    $totalAmount = $orderProductAmount + $taxAmount;
     $invoiceName = rand(9999, 99999) . $id . '.pdf';
-    $pdf = PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order', 'vendor', 'users', 'product'));
+    $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order','vendor','users','orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount'));
+
     $pdf->save(public_path('uploads/invoices/' . $invoiceName));
     $url = 'uploads/invoices/' . $invoiceName;
 
     $pdfUrl = Orders::where('id', '=', $id)->first();
+
+    
     $pdfUrl->pdf_url = $url;
     $pdfUrl->save();
     return true;
+
 }
+
 function updateDriverLatLngFromFcm(){
     try {
         $ids = \App\Models\Deliver_boy::where('is_online','=','1')->where('status','=','1')->get()->pluck('id');
