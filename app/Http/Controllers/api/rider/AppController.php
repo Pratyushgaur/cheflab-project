@@ -797,7 +797,8 @@ class AppController extends Controller
                     $day = floor($init / 86400);
                     $hours = floor(($init -($day*86400)) / 3600);
                     $minutes = floor(($init / 60) % 60);
-                    $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => $hours.'.'.$minutes);
+                    $time = date('H:i',strtotime($hours.'.'.$minutes));
+                    $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => $time);
                 }else{
                     $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => "0");
                 }
