@@ -783,8 +783,25 @@ class AppController extends Controller
             }
             $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
             $response = [];
+            
             foreach ($period as $Key => $value) {
-                $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => 0);
+                
+                $res = \App\Models\Driver_total_working_perday::where('current_date','=',Carbon::parse($value)->format('Y-m-d'))->where('rider_id','=',$request->user_id)->select(\DB::Raw('IFNULL( `total_hr` , 0 ) as totalHour'))->first();
+                if($res){
+                    if($res->totalHour < 0){
+                        $init = 0;
+                    }else{
+                        $init = $res->totalHour;
+                    }
+                    
+                    $day = floor($init / 86400);
+                    $hours = floor(($init -($day*86400)) / 3600);
+                    $minutes = floor(($init / 60) % 60);
+                    $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => $hours.'.'.$minutes);
+                }else{
+                    $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => "0");
+                }
+                
             }
             return response()->json([
                 'status'   => true,

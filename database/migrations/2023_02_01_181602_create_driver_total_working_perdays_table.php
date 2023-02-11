@@ -17,7 +17,7 @@ class CreateDriverTotalWorkingPerdaysTable extends Migration
             $table->id();
             $table->integer('rider_id')->nullable();
             $table->string('total_hr')->nullable();
-            $table->date('current_date')->nullable();
+            $table->string('current_date')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
