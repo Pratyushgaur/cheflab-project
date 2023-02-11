@@ -15,6 +15,7 @@ class OrderCreateJob implements ShouldQueue
 
     //public $user;
     public $order_id;
+    public $url;
     //public $user_id;
     //public $vendor_id;
 
@@ -25,13 +26,14 @@ class OrderCreateJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Order $order)
+    public function __construct(Order $order,$url)
     {
         // $this->order_id = $user->id;
         // $this->user_id = $user->user_id;
         // $this->vendor_id = $user->vendor_id;
         // $this->$user = $user;
         $this->order_id = $order->id;
+        $this->url = $url;
     }
 
     /**
@@ -41,10 +43,9 @@ class OrderCreateJob implements ShouldQueue
      */
     public function handle(Order $order_obj)
     {
-
         $orderdata = Order::where('id','=',$this->order_id)->first();
         if($orderdata->order_status != 'cancelled_by_customer_before_confirmed'){
-            event(new \App\Events\OrderCreateEvent($orderdata, $orderdata->id, $orderdata->user_id, $orderdata->vendor_id));
+            event(new \App\Events\OrderCreateEvent($orderdata, $orderdata->id, $orderdata->user_id, $orderdata->vendor_id,$this->url));
         }
         
 

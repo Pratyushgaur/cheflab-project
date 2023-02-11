@@ -36,11 +36,10 @@ class OrderSendNotificationListener
         //send notification
         $customer = User::find($event->user_id);
         $vendor   = Vendors::find($event->vendor_id);
-
-       $vendor->notify(new OrderCreateNotification($event->order_id, $customer->name,
+        $vendor->notify(new OrderCreateNotification($event->order_id, $customer->name,
             'New Order',
             "You have received new Order #" . $event->order_id . ' from ' . $customer->name,
-            $event->notificationClickurl,
+            $event->clickUrl,
             $vendor->fcm_token
         ));
         $token []= $vendor->fcm_token;

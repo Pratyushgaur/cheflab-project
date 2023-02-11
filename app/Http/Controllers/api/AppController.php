@@ -1668,27 +1668,9 @@ class AppController extends Controller
                             $order_products->order_product_addons()->save($OrderProductAddon);
                         }
                 }
-                //$riderAssign = new RiderAssignOrders(array('rider_id' => '1', 'order_id' => $order_id));
-                //$riderAssign->saveOrFail();
                 AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
-                $Order->notificationClickurl = route('restaurant.order.view', $Order->order_id);
                 DB::commit();
-                \App\Jobs\OrderCreateJob::dispatch($Order)->delay(now()->addSeconds(30));
-
-                //                $on = \Carbon\Carbon::now()->addSecond(30);
-                //                dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
-                //                \App\Jobs\OrderCreateJob::dispatch()->delay(now()->addSeconds(30));
-                //sleep(30);
-
-
-                // dispatch(function () use ($order_id)   {
-                //     $order = new Order;
-                //     //$request = new Request;
-                //     $order->where('id','=',$order_id)->update(['order_status'=>'confirmed']);
-                //     //event(new OrderCreateEvent($this->Order,$order_id, $this->request->user_id, $this->request->vendor_id));
-                // })->delay(now()->addSeconds('10'));
-                //});
-                //event(new OrderCreateEvent($Order,$order_id, $request->user_id, $request->vendor_id));
+                \App\Jobs\OrderCreateJob::dispatch($Order,route('restaurant.order.view', $Order->order_id))->delay(now()->addSeconds(30));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy

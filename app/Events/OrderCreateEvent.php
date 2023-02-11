@@ -15,19 +15,20 @@ class OrderCreateEvent
     use Dispatchable, InteractsWithSockets, SerializesModels, Queueable;
 
 
-    public $order_obj, $order_id, $user_id, $vendor_id;
+    public $order_obj, $order_id, $user_id, $vendor_id ,$clickUrl;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(Order $order_obj, $order_id, $user_id, $vendor_id)
+    public function __construct(Order $order_obj, $order_id, $user_id, $vendor_id,$clickUrl)
     {
         $this->order_obj = $order_obj;
         $this->order_id  = $order_id;
         $this->user_id   = $user_id;
         $this->vendor_id = $vendor_id;
+        $this->clickUrl = $clickUrl;
     }
 
     /**

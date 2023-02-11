@@ -333,24 +333,11 @@
 
                           <div class="form-group clearfix">
                             <div class="icheck-success d-inline">
-                              @if($vendor->vendor_food_type == '1')
-                              <input type="radio" id="veg" name="type" value="1" checked>
-                              <label for="veg">Veg</label>
-                              @elseif($vendor->vendor_food_type != '1')
-                              <input type="radio" id="veg" name="type" value="1">
-                              <label for="veg">Veg</label>
-                              @endif
+                              <input type="radio" id="veg" name="type" value="1" @if($vendor->vendor_food_type == '1')checked @elseif($vendor->vendor_food_type == '') checked  @endif><label for="veg">Veg</label>
                             </div>
 
                             <div class="icheck-danger d-inline">
-                              @if($vendor->vendor_food_type == '3')
-                              <input type="radio" id="non_veg" name="type" value="3" checked>
-                              <label for="non_veg">Veg + Non Veg</label>
-                              @elseif($vendor->vendor_food_type != '3')
-                              <input type="radio" id="non_veg" name="type" value="3">
-
-                              <label for="non_veg">Veg + Non Veg</label>
-                              @endif
+                              <input type="radio" id="non_veg" name="type" value="3" @if($vendor->vendor_food_type == '3')checked @elseif($vendor->vendor_food_type == '2') checked  @endif><label for="non_veg">Veg + Non Veg</label>
                             </div>
 
 
@@ -443,7 +430,7 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label>Cancel Check</label>
+                          <label>Cancel Cheque</label>
                           <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check" value="{{ @$bankDetail->cancel_check }}">
                         </div>
                       </div>
