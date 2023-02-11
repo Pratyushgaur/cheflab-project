@@ -553,7 +553,7 @@ class AppController extends Controller
 
                 $workingLogsData_new = DriverWorkingLogs::where(['rider_id' => $request->user_id, 'status' => '0', 'working_hr' => 0])->first();
 
-                if ($workingLogsData_new) {
+                if (!empty($workingLogsData_new)) {
                     $day1 = $workingLogsData_old->created_at;
                     $day_1 = strtotime($day1);
                     $day2 = $workingLogsData_new->created_at;
