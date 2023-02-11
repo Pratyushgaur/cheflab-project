@@ -541,39 +541,45 @@ class AppController extends Controller
 
                 ], 401);
             }
-            Deliver_boy::where('id', '=', $request->user_id)->update(['is_online' => $request->status]);
-            $DriverWorkingLogs = new DriverWorkingLogs;
-            $DriverWorkingLogs->rider_id = $request->user_id;
-            $DriverWorkingLogs->status = $request->status;
-            $DriverWorkingLogs->saveOrFail();
+            $status = Deliver_boy::where('id', '=', $request->user_id)->select('is_online')->first();
+            if($status->is_online !=  $request->status){
+                Deliver_boy::where('id', '=', $request->user_id)->update(['is_online' => $request->status]);
+                $DriverWorkingLogs = new DriverWorkingLogs;
+                $DriverWorkingLogs->rider_id = $request->user_id;
+                $DriverWorkingLogs->status = $request->status;
+                $DriverWorkingLogs->saveOrFail();
 
-            $workingLogsData_old = DriverWorkingLogs::where(['rider_id' => $request->user_id, 'status' => '1', 'working_hr' => 0])->first();
+                $workingLogsData_old = DriverWorkingLogs::where(['rider_id' => $request->user_id, 'status' => '1', 'working_hr' => 0])->first();
 
-            $workingLogsData_new = DriverWorkingLogs::where(['rider_id' => $request->user_id, 'status' => '0', 'working_hr' => 0])->first();
+                $workingLogsData_new = DriverWorkingLogs::where(['rider_id' => $request->user_id, 'status' => '0', 'working_hr' => 0])->first();
 
-            if ($workingLogsData_new) {
-                $day1 = $workingLogsData_old->created_at;
-                $day_1 = strtotime($day1);
-                $day2 = $workingLogsData_new->created_at;
-                $day_2 = strtotime($day2);
-                $hr = ($day_2 - $day_1);
-
-                DriverWorkingLogs::where(['rider_id' => $request->user_id, 'working_hr' => 0])->update(['working_hr' => $hr]);
-            }
-
-            $today_date = date('d-m-Y');
-
-
-            $driver_total_working_perday = Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->first();
-            if ($driver_total_working_perday) {
-                if (isset($hr)) {
-                    Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->update(['total_hr' => ($driver_total_working_perday->total_hr + $hr)]);
+                if ($workingLogsData_new) {
+                    $day1 = $workingLogsData_old->created_at;
+                    $day_1 = strtotime($day1);
+                    $day2 = $workingLogsData_new->created_at;
+                    $day_2 = strtotime($day2);
+                    $hr = ($day_2 - $day_1);
+                    if($hr > 0){
+                        DriverWorkingLogs::where(['rider_id' => $request->user_id, 'working_hr' => 0])->update(['working_hr' => $hr]);
+                    }
+                    
                 }
-            } else {
-                if (isset($hr)) {
-                    Driver_total_working_perday::create(['rider_id' => $request->user_id, 'total_hr' => $hr, 'current_date' => $today_date]);
+
+                $today_date = date('d-m-Y');
+
+
+                $driver_total_working_perday = Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->first();
+                if ($driver_total_working_perday) {
+                    if (isset($hr) && $hr > 0) {
+                        Driver_total_working_perday::where(['rider_id' => $request->user_id, 'current_date' => $today_date])->update(['total_hr' => ($driver_total_working_perday->total_hr + $hr)]);
+                    }
+                } else {
+                    if (isset($hr) && $hr > 0) {
+                        Driver_total_working_perday::create(['rider_id' => $request->user_id, 'total_hr' => $hr, 'current_date' => $today_date]);
+                    }
                 }
             }
+            
 
             return response()->json([
                 'status'   => true,
