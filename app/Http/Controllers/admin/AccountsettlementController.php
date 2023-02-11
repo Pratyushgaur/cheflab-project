@@ -31,8 +31,10 @@ class AccountsettlementController extends Controller
     {
        
         if ($request->ajax()) {
-      
-        $data = Vendor_order_statement::select('vendor_order_statements.*','vendors.name','vendors.wallet','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name')->join('bank_details','vendor_order_statements.vendor_id','=','bank_details.vendor_id')->join('vendors','vendor_order_statements.vendor_id','=','vendors.id');
+
+         
+            $data = Vendors::select('vendor_order_statements.*','vendors.id as vendor_id','vendors.status','vendors.name','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name')->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id');
+           
 
            $dateSedule = $request->datePicker;
         
@@ -47,7 +49,7 @@ class AccountsettlementController extends Controller
            }
     
            $data = $data->get();
-        //    echo '<pre>';print_r($data);die;
+
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function($data){
@@ -173,28 +175,28 @@ class AccountsettlementController extends Controller
 
     public function vendorPaymentSuccess()
     {
+        
         $id = $_GET['id'];
-        $data = Vendor_order_statement::where(['vendor_id'=> $id, 'pay_status'=> 0])->first();
+        $data = Vendor_order_statement::where(['id'=> $id, 'pay_status'=> 0])->first();
         return view('admin.account-vendor.paymentsuccess',compact('id','data'));
     }
 
     public function payVendorPayment(Request $request)
     {
-        
+      
         $data = ([
             'vendor_id' => $request->id,
             'amount' => $request->amount,
             'bank_utr' => $request->bank_utr
         ]);
+        
         $dataNew = ([
             'pay_status' => 1,
             'total_pay_amount' => $request->amount
         ]);
-        Vendor_order_statement::where(['vendor_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
+        Vendor_order_statement::where(['id'=> $request->id, 'pay_status'=> '0'])->update($dataNew);
         Vendor_payout_detail::create($data);
         return redirect()->route('admin.account.vendor.list')->with('message', 'Pay Amount '. $request->amount. ' to Vendor Successfully');
     }
 
-    
-    
 }
