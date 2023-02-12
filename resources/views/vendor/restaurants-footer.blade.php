@@ -1,7 +1,7 @@
 <audio class="alert-audio" style="display:none" controls >
     <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
 </audio>
-<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}" allow="autoplay">></audio>
+<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}" allow="autoplay" muted="true">></audio>
 
 <!-- MODALS -->
 <!-- Quick bar -->
