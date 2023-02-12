@@ -1602,29 +1602,22 @@ class AppController extends Controller
                     if ($user->wallet_amount <= 0) {
                         return response()->json(['status' => False, 'error' => "No Wallet Balance available"], 401);
                     }
-                    if ($user->wallet_amount <= $request->net_amount) {
-                        $walletCut = $user->wallet_amount;
-                        $available = 0;
-                    } else {
-                        $walletCut = $request->net_amount;
-                        $available = $user->wallet_amount - $request->net_amount;
-                    }
+                    $available = $user->wallet_amount - $request->wallet_cut;
                     User::where('id', '=', $request->user_id)->update(['wallet_amount' => $available]);
                     $UserWalletTransactions = new \App\Models\UserWalletTransactions;
                     $UserWalletTransactions->user_id = $request->user_id;
                     $UserWalletTransactions->amount = $walletCut;
                     $UserWalletTransactions->narration = "Order";
+                    $UserWalletTransactions->transaction_type = "0";
                     $UserWalletTransactions->save();
-                } else {
-                    $walletCut = 0;
-                }
+                } 
                 //
 
                 //
                 if (is_array($request->payment_string))
                     $data['payment_string'] = serialize($request->payment_string);
                 $insertData               = $request->all();
-                $insertData['wallet_cut'] = $walletCut;
+                $insertData['wallet_cut'] = $request->wallet_cut;
                 $insertData['order_id'] = getOrderId();
                 $insertData['landmark_address'] = $request->reach;
                 $insertData['deliver_otp'] = rand(1000, 9999);
