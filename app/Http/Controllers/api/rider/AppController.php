@@ -397,7 +397,7 @@ class AppController extends Controller
                 ], 401);
             }
 
-
+            DB::beginTransaction();
             $order = Order::where('id', '=', $request->order_row_id)->select('deliver_otp')->first();
             if (empty($order)) {
                 return response()->json([
@@ -416,7 +416,7 @@ class AppController extends Controller
                 $user = \App\Models\User::where('id', '=', $orderdata->first()->user_id)->select('fcm_token', 'referby')->first();
                 $totalOrders = Order::where('user_id', '=', $orderdata->first()->user_id)->where('order_status', '=', 'completed')->count();
                 if ($user->referby != '' && $totalOrders == 1) {
-                    $refUser = \App\Models\User::where('referralCode', '=', $user->referby)->select('id', \DB::raw('IFNULL(wallet_amount,0) as wallet_amount'))->first();
+                    $refUser = \App\Models\User::where('id', '=', $user->referby)->select('id', \DB::raw('IFNULL(wallet_amount,0) as wallet_amount'))->first();
                     if (!empty($refUser)) {
                         $amount = \App\Models\AdminMasters::where('id', '=', 1)->select('refer_amount')->first();
                         \App\Models\User::where('id', '=', $refUser->id)->update(['wallet_amount' => $refUser->wallet_amount + $amount->refer_amount]);
@@ -434,7 +434,7 @@ class AppController extends Controller
                 }
 
                 //
-
+                DB::commit();
                 return response()->json([
                     'status'   => true,
                     'message'  => 'Status Updated Successfully',
