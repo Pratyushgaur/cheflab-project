@@ -219,7 +219,7 @@
   }
 
 
-  function additions() {
+  function additions(start_date,end_date) {
     $('#renvenue .modal-content').html('');
     $.ajax({
       headers: {
@@ -227,7 +227,9 @@
       },
       url: "{{ route('restaurant.mis.renvenue.addition') }}",
       method: "GET",
-      data: {},
+      data: {
+        'start_date':start_date,'end_date':end_date
+      },
       success: function(res) {
         $('#renvenue .modal-content').html(res);
         $('#renvenue').modal('show');
@@ -235,7 +237,8 @@
     });
   }
 
-  function deductions() {
+  function deductions(start_date,end_date) {
+
     $('#renvenue .modal-content').html('');
     $.ajax({
       headers: {
@@ -243,7 +246,9 @@
       },
       url: "{{ route('restaurant.mis.renvenue.deductions') }}",
       method: "GET",
-      data: {},
+      data: {
+        'start_date':start_date,'end_date':end_date
+      },
       success: function(res) {
         $('#renvenue .modal-content').html(res);
         $('#renvenue').modal('show');

@@ -4,16 +4,22 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
-use App\Models\Vendors;
+use App\Models\Vendor_payout_detail;
 use App\Models\User;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
 use Config;
 use Auth;
+
+use Carbon\Carbon;
+use App\Models\MonthlyInvoice;
+use App\Models\Vendors;
+use App\Models\AdminMasters;
+use App\Models\Orders;
+
 class AccountmisController extends Controller
 {
     public function index()
@@ -177,4 +183,84 @@ class AccountmisController extends Controller
            ->make(true);
         }
     }
+
+
+    public function monthly_invoice(Request $request)
+    {
+        
+        return view('admin.mis.monthly_invoice');
+    }
+
+    public function monthly_invoice_list(Request $request)
+    {
+       
+        if ($request->ajax()) {
+	
+        $data = MonthlyInvoice::select('monthly_invoices.*','vendors.name')->join('vendors','monthly_invoices.vendor_id','=','vendors.id');
+
+           if(!empty($start_time) && !empty($end_time)) {
+            $data = $data->whereBetween('monthly_invoices.created_at', [$start_time, $end_time]);
+           }
+           $data = $data->get();
+
+            return Datatables::of($data)
+
+                ->addIndexColumn()
+                ->addColumn('action', function($data){
+                    $btn = '<a class="btn btn-xs btn-danger" href="'. asset("$data->invoice_file").'" download>Download Invoice</a>';
+                    return $btn;
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+    }
+  
+    public function genrate_invoice(Request $request)
+    {
+
+        $vendorData = Vendors::get();
+
+        // $scheduleTime =\Carbon\Carbon::createFromTimestampUTC($request->datepicker)->diffInSeconds();
+        // $month = gmdate("m", $scheduleTime);
+        // $year = gmdate("Y", $scheduleTime);
+        // $monthYear = gmdate("M - Y", $scheduleTime);
+
+        $month = 02;
+        $year = 2023;
+        $monthYear = "Jan - 2023";
+
+
+        $totalAmount = Orders::where(['vendor_id'=> $vendorData->id, 'order_status'=> "dispatched"])->whereMonth('created_at', '=', $month)->whereYear('created_at', '=', $year)->get()->sum('total_amount');
+
+        $adminDetail = AdminMasters::select('admin_masters.email','admin_masters.phone','admin_masters.suport_phone','admin_masters.office_addres','admin_masters.gstno')->first();
+        
+        $vendorDetail = Vendors::where(['vendor_id'=> $vendorData->id ])->select('vendors.name','vendors.owner_name','vendors.email','vendors.mobile','vendors.pincode','vendors.address','vendors.fssai_lic_no','vendors.gst_no','vendors.commission')->first();
+
+        $commission = ($totalAmount * $vendorDetail->commission) / 100;
+
+        $sgst = ($totalAmount * 9) / 100;
+        $cgst = ($totalAmount * 9) / 100;
+        $invoiceNo = rand(99999, 999999);
+
+        $totalAdminCommission = $commission + $sgst + $cgst;
+      
+        $invoiceName = rand(9999, 99999) . $vendorData->id . '.pdf';
+        $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorDetail','commission','sgst','cgst','totalAdminCommission','monthYear','invoiceNo'));
+
+        $pdf->save(public_path('uploads/invoices/' . $invoiceName));
+        $url = 'uploads/invoices/' . $invoiceName;
+
+        
+        $pdfData = new MonthlyInvoice;
+        $pdfData->vendor_id = $vendorData->id;
+        $pdfData->invoice_number = $invoiceNo;
+        $pdfData->invoice_file = $url;
+        $pdfData->total_amount = $totalAdminCommission;
+        $pdfData->month_year = $monthYear;
+        $pdfData->save();
+        return true;
+
+        
+    }       
 }

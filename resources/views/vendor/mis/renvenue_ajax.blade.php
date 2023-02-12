@@ -39,7 +39,7 @@
                       <div class="card-footer py-3 bg-red-light">
                         <div class="row align-items-center text-red">
                           <div class="col-10">
-                           <a href="javascript:void(0);" class="mb-0 text-decoration-underline" data-toggle="modal" data-target="#renvenue" onclick="additions()">View Detail</a>
+                           <a href="javascript:void(0);" class="mb-0 text-decoration-underline" data-toggle="modal" data-target="#renvenue" onclick="additions('{{$start_date}}','{{$end_date}}')">View Detail</a>
                           </div>
                           <div class="col-2 text-end"><i class="fas fa-caret-up"></i>
                           </div>
@@ -63,7 +63,7 @@
                       <div class="card-footer py-3 bg-red-light">
                         <div class="row align-items-center text-red">
                           <div class="col-10">
-                           <a href="javascript:void(0);" class="mb-0 text-decoration-underline" data-toggle="modal" data-target="#renvenue" onclick="deductions()">View Detail</a>
+                           <a href="javascript:void(0);" class="mb-0 text-decoration-underline" data-toggle="modal" data-target="#renvenue" onclick="deductions('{{$start_date}}','{{$end_date}}')">View Detail</a>
                           </div>
                           <div class="col-2 text-end"><i class="fas fa-caret-up"></i>
                           </div>
