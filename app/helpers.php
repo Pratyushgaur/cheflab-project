@@ -953,7 +953,7 @@ function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 
 function sendNotification($title, $body, $token, $data = null, $sound = 'default', $image = null)
 {
-    echo $image;die;
+    //echo $image;die;
     $server_key = env('FIREBASE_SERVER_KEY');
     // $headers = [
     //     'Authorization' => 'key='.$server_key,
