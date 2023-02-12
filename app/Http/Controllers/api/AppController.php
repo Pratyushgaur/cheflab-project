@@ -1606,7 +1606,7 @@ class AppController extends Controller
                     User::where('id', '=', $request->user_id)->update(['wallet_amount' => $available]);
                     $UserWalletTransactions = new \App\Models\UserWalletTransactions;
                     $UserWalletTransactions->user_id = $request->user_id;
-                    $UserWalletTransactions->amount = $walletCut;
+                    $UserWalletTransactions->amount = $request->wallet_cut;
                     $UserWalletTransactions->narration = "Order";
                     $UserWalletTransactions->transaction_type = "0";
                     $UserWalletTransactions->save();
