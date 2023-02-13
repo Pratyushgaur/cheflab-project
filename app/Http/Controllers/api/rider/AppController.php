@@ -235,7 +235,15 @@ class AppController extends Controller
                 ], 401);
             }
 
-            $profile = Deliver_boy::where('id', '=', $request->user_id)->select('id', 'name', 'email', 'username', 'mobile', 'is_online', \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
+            $profile = Deliver_boy::where('id', '=', $request->user_id)->select('id', 'name', 'email', 'username', 'mobile', 'is_online', \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),'status')->first();
+            if($profile->status == "0"){
+                return response()->json([
+                    'status'   => true,
+                    'active_user'=>$profile->status,
+                    'message'  => 'Account Deactive'
+    
+                ], 200);
+            }
             $asing = RiderAssignOrders::where('id', '=', $request->rider_assign_order_id);
             if ($request->status == '1' || $request->status == '2') {
                 if ($asing->first()->action == '0') {
@@ -243,6 +251,7 @@ class AppController extends Controller
                 } else {
                     return response()->json([
                         'status' => false,
+                        'active_user'=>$profile->status,
                         'error'  => 'You Can Not Accept This Order'
                     ], 500);
                 }
@@ -282,6 +291,7 @@ class AppController extends Controller
 
             return response()->json([
                 'status'   => true,
+                'active_user'=>$profile->status,
                 'message'  => 'Status Updated Successfully',
                 'order'    => $order,
                 'profile'  => $profile
@@ -540,7 +550,10 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $old = Deliver_boy::where('id', '=', $request->user_id)->select('is_online')->first();
+            $old = Deliver_boy::where('id', '=', $request->user_id)->select('is_online','status')->first();
+            if($old->status == '0'){
+                return response()->json(['status' => false,'error'  => 'You Can Not Change Your Status'], 500);
+            }
             if($old->is_online != $request->status){
                 Deliver_boy::where('id', '=', $request->user_id)->update(['is_online' => $request->status]);
                 $DriverWorkingLogs = new DriverWorkingLogs;

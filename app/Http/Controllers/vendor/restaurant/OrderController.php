@@ -60,6 +60,14 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'cancelled_by_vendor';
         $order->save();
+        $user                = \App\Models\User::find($order->user_id);
+        $user->wallet_amount = $user->wallet_amount + $order->net_amount;
+        $user->save();
+        $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+        $UserWalletTransactions->user_id = $order->user_id;
+        $UserWalletTransactions->amount = $order->net_amount;
+        $UserWalletTransactions->narration = "Refund";
+        $UserWalletTransactions->save();
         if ($order->accepted_driver_id != null) {
             event(new OrderCancelDriverEmitEvent($order, $order->accepted_driver_id));
         }

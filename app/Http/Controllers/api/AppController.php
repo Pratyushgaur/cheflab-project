@@ -2697,6 +2697,13 @@ class AppController extends Controller
                 $user                = User::find($request->user()->id);
                 $user->wallet_amount = $user->wallet_amount + $order->net_amount;
                 $user->save();
+                //
+                $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                $UserWalletTransactions->user_id = $request->user()->id;
+                $UserWalletTransactions->amount = $order->net_amount;
+                $UserWalletTransactions->narration = "Cancel Refund";
+                $UserWalletTransactions->save();
+
             } else {
                 if ($order->order_status == 'confirmed') { // if order cancel by user after  30 second and order arrived to vendor
                     $order->order_status = 'cancelled_by_customer_after_confirmed';
