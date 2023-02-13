@@ -46,6 +46,7 @@ class DriveAssignOrderJob implements ShouldQueue
             $charges = calculateRiderCharge($delivery_boy->distance,$vendor->lat,$vendor->long,$this->order->lat,$this->order->long);
             $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id,'earning'=>$charges['charges'],'distance'=>$charges['resToUserDistance'],'total_ride_distance'=>$charges['totalDistance']));
             $riderAssign->saveOrFail();
+            $riderAssignId = $riderAssign->id;
             //$riderAssign = RiderAssignOrders::where(['id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
 
             $token = DeliveryBoyTokens::where('rider_id','=',$delivery_boy->id)->orderBy('id','desc')->get()->pluck('token');
@@ -62,8 +63,8 @@ class DriveAssignOrderJob implements ShouldQueue
                 $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign),'notify_sound');
                 
             }
-            var_dump("rider assign id is  $riderAssign->id");
-            \App\Jobs\DriverCheckAcceptJob::dispatch($riderAssign->id)->delay(now()->addSeconds(60));
+            var_dump("rider assign id is  $riderAssignId");
+            \App\Jobs\DriverCheckAcceptJob::dispatch($riderAssignId)->delay(now()->addSeconds(60));
 
 
         }else{
