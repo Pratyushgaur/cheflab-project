@@ -63,7 +63,6 @@ class DriveAssignOrderJob implements ShouldQueue
                 $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign),'notify_sound');
                 
             }
-            var_dump("rider assign id is  $riderAssignId");
             \App\Jobs\DriverCheckAcceptJob::dispatch($riderAssignId)->delay(now()->addSeconds(60));
 
 

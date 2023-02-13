@@ -34,9 +34,8 @@ class DriverCheckAcceptJob implements ShouldQueue
      */
     public function handle()
     {
-        var_dump("rider assign id Find in check jon is   $this->riderAssignId");
         $assigndata = RiderAssignOrders::where('id','=',$this->riderAssignId);
-        var_dump($assigndata->first());
+        
         if($assigndata->exists()){
             $assigndata = $assigndata->first();
             if($assigndata->action == '0'){
