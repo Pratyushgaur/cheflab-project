@@ -261,7 +261,8 @@ class AppController extends Controller
 
             $order = [];
             if ($request->status == '1') {
-                RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['distance' => $request->distance, 'earning' => $request->earning]);;
+                $otp = rand(1000, 9999);
+                RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['distance' => $request->distance, 'earning' => $request->earning,'otp'=>$otp]);
                 $order = RiderAssignOrders::where('rider_assign_orders.id', '=', $request->rider_assign_order_id);
                 $order = $order->join('orders', 'rider_assign_orders.order_id', '=', 'orders.id');
                 $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');

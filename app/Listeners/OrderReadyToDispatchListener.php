@@ -26,10 +26,7 @@ class OrderReadyToDispatchListener
     public function handle(OrderReadyToDispatchEvent $event)
     {
         $id = $event->order_id;
-        $otp = $event->otp;
-        
-        \App\Models\RiderAssignOrders::where('order_id','=',$id)->where('rider_id','=',$event->driver_id)->update(['otp'=>$otp]);
-            $token = \App\Models\DeliveryBoyTokens::where('rider_id','=',$event->driver_id)->orderBy('id','desc')->get()->pluck('token');
+        $token = \App\Models\DeliveryBoyTokens::where('rider_id','=',$event->driver_id)->orderBy('id','desc')->get()->pluck('token');
             if(!empty($token)){
                 $riderAssign =  \App\Models\RiderAssignOrders::where('rider_assign_orders.order_id','=',$id)->where('rider_id','=',$event->driver_id);
                 $riderAssign = $riderAssign->join('orders','rider_assign_orders.order_id','=','orders.id');
