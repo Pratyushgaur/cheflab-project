@@ -35,7 +35,7 @@ class DriverCheckAcceptJob implements ShouldQueue
     public function handle()
     {
         $assigndata = RiderAssignOrders::where('id','=',$this->riderAssignId);
-        var_dump($assigndata);
+        var_dump($assigndata->first());
         if($assigndata->exists()){
             $assigndata = $assigndata->first();
             if($assigndata->action == '0'){
