@@ -22,7 +22,7 @@ class DriverCheckAcceptJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($riderAssignId)
+    public function __construct(RiderAssignOrders $riderAssignId)
     {
         $this->riderAssignId = $riderAssignId;
     }
@@ -34,6 +34,7 @@ class DriverCheckAcceptJob implements ShouldQueue
      */
     public function handle()
     {
+        var_dump("rider assign id Find in check jon is   $this->riderAssignId");
         $assigndata = RiderAssignOrders::where('id','=',$this->riderAssignId);
         var_dump($assigndata->first());
         if($assigndata->exists()){
