@@ -49,6 +49,8 @@ class DriverCheckAcceptJob implements ShouldQueue
                     $body = "Due to Deley accept Your Order #$orderData->order_id is rejected  By You Automatically";
                     $res = sendNotification($title,$body,$token,array('type'=>4,'data'=>$assigndata),'notify_sound');
                 }
+            }else{
+                var_dump('order accepted');
             }
         }
     }
