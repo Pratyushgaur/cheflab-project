@@ -698,7 +698,7 @@ class AppController extends Controller
             $minutes = floor(($init / 60) % 60);
             $time = date('H:i',strtotime($hours.'.'.$minutes));
             
-            $response = ['earning' => $earning_and_orders->earning, 'order_delivered' => $earning_and_orders->order_count, 'rejected_orders' => $rejectedOrders->rejectOrders, 'incentive' => $RiderIncentives->amount, 'rating' => $RiderReviewRatings->rating, 'workingHours' => $time];
+            $response = ['earning' => $earning_and_orders->earning, 'order_delivered' => $earning_and_orders->order_count, 'rejected_orders' => $rejectedOrders->rejectOrders, 'incentive' => $RiderIncentives->amount, 'rating' => round($RiderReviewRatings->rating,2), 'workingHours' => $time];
             //
             $chart = [];
             if ($request->report_for == 'today') {

@@ -66,7 +66,7 @@ class OrderCreateNotification extends Notification
             'msg' => $this->msg,
             'sender_name' => $this->sender_name,
             // 'vendor_id'=>$this->vendor_id,
-            'link' => route('restaurant.order.view', $this->order_id)
+            'link' => $this->link
         ];
     }
 

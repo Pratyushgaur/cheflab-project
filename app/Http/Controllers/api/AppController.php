@@ -40,6 +40,11 @@ class AppController extends Controller
 {
     function sendNotification()
     {
+        
+        //\App\Jobs\DriverCheckAcceptJob::dispatch("17")->delay(now()->addSeconds(10));
+        echo 'done';
+        die;
+        //
         $url = "https://fcm.googleapis.com/fcm/send";
         $token = "ekElJ6_hR9ez2Y9PDIm5SX:APA91bFrhilpGDE1KEB4QlXSYGQ04dYbz-aB6G8A7F5Fsaw5DnHUVL6ttcewpOyvHRM2Uih2lk4TXmk-DiZfotrLGkfRxN2VFVPjn_8BpvNIFopRnJrEQfyJLGo6O_7J7MFX0u4SYGlY";
         $serverKey = env('FIREBASE_SERVER_KEY');
