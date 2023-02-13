@@ -46,9 +46,10 @@ class DriverCheckAcceptJob implements ShouldQueue
                 }
                 $token = DeliveryBoyTokens::where('rider_id','=',$assigndata->rider_id)->orderBy('id','desc')->get()->pluck('token');
                 if(!empty($token)){
-                    $title = 'Time Up For Order Accept ';
+                    $
+                    $title = 'Time Up ! Order is Rejected. ';
                     $body = "Due to Deley accept Your Order #$orderData->order_id is rejected  By You Automatically";
-                    $res = sendNotification($title,$body,$token,array('type'=>4,'data'=>$assigndata),'notify_sound');
+                    $res = sendNotification($title,$body,$token,array('type'=>4,'data'=>$assigndata,'message'=>'Time Up ! Order is Rejected'),'notify_sound');
                 }
             }else{
                 var_dump('order accepted');
