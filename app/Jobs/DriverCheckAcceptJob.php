@@ -22,7 +22,7 @@ class DriverCheckAcceptJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(RiderAssignOrders $riderAssignId)
+    public function __construct($riderAssignId)
     {
         $this->riderAssignId = $riderAssignId;
     }
