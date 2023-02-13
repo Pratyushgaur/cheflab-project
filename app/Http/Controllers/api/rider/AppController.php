@@ -252,7 +252,7 @@ class AppController extends Controller
                     return response()->json([
                         'status' => false,
                         'active_user'=>$profile->status,
-                        'error'  => 'You Can Not Accept This Order'
+                        'error'  => 'You Can Not Process With This Order'
                     ], 500);
                 }
             } else {
@@ -286,6 +286,8 @@ class AppController extends Controller
                 }
             } elseif ($request->status == '2') {
                 RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['cancel_reason' => $request->cancel_reason]);
+                $orderData = Order::where('id', '=', $request->order_row_id);
+                \App\Jobs\DriveAssignOrderJob::dispatch($orderData);
             }
 
 
@@ -702,7 +704,7 @@ class AppController extends Controller
             if ($request->report_for == 'today') {
                 $date = Carbon::now()->startOfWeek();;
                 for ($i = 0; $i < 7; $i++) {
-                    $dayData = RiderAssignOrders::whereDate('created_at', $date)->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
+                    $dayData = RiderAssignOrders::whereDate('created_at', $date)->where('rider_id','=',$request->user_id)->where('action','=','3')->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
                     $dayData->day = date('D', strtotime($date));
                     $dayData->date = date('d-m-Y', strtotime($date));
                     $date = $date->addDays(1);
