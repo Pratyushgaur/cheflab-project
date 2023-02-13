@@ -52,6 +52,8 @@ class DriverCheckAcceptJob implements ShouldQueue
             }else{
                 var_dump('order accepted');
             }
+        }else{
+            var_dump('No Rider assign data  Found ');
         }
     }
 }
