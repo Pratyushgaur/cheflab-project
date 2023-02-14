@@ -987,6 +987,7 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
     //Send the request
     $response = curl_exec($ch);
