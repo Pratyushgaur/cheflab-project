@@ -32,52 +32,63 @@ class DashboardController extends Controller
         //order count
         \DB::enableQueryLog();
         $order_obj = Orders::where('vendor_id', Auth::guard('vendor')->user()->id);
-        $where = [['vendor_id', '=', Auth::guard('vendor')->user()->id]];
-
+        //$where = [['vendor_id', '=', Auth::guard('vendor')->user()->id]];
+        $total_confirmed = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->whereNotIn('order_status', ['pending','cancelled_by_customer_before_confirmed','cancelled_by_customer_after_confirmed','cancelled_by_customer_during_prepare','cancelled_by_vendor']);
+        $total_dispatched        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where('order_status', 'dispatched');
+        $total_ready_to_dispatch        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where('order_status', 'ready_to_dispatch');
+        $total_prepairing        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where('order_status', 'preparing');
+        $total_completed        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where('order_status', 'completed');
+        $total_order        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where('order_status','!=', 'pending');
+        $graph_data         = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where('order_status','completed');
         if ($request->filter == 1) {
             $text  = "Today";
-            $where = [
-                ['created_at', '=', mysql_date()]
-            ];
+            
+            $total_confirmed = $total_confirmed->whereDate('created_at','=',mysql_date());
+            $total_dispatched = $total_dispatched->whereDate('created_at','=',mysql_date());
+            $total_ready_to_dispatch = $total_ready_to_dispatch->whereDate('created_at','=',mysql_date());
+            $total_prepairing = $total_prepairing->whereDate('created_at','=',mysql_date());
+            $total_completed = $total_completed->whereDate('created_at','=',mysql_date());
+            $total_order = $total_order->whereDate('created_at','=',mysql_date());
+            $graph_data = $graph_data->whereDate('created_at','=',mysql_date());
+
         } else if ($request->filter == 2) {
             $start  = date('Y-m-d 00:00:00', strtotime('1 weeks ago'));
             $finish = date('Y-m-d H:i:s');
             $text   = front_end_short_date_time($start) . " - " . front_end_short_date_time($finish);
-            $where  = [
-                ['created_at', '=>', $start],
-                ['created_at', '<=', $finish]
-            ];
+            $total_confirmed = $total_confirmed->whereBetween('created_at',[$start,$finish]);
+            $total_dispatched = $total_dispatched->whereBetween('created_at',[$start,$finish]);
+            $total_ready_to_dispatch = $total_ready_to_dispatch->whereBetween('created_at',[$start,$finish]);
+            $total_prepairing = $total_prepairing->whereBetween('created_at',[$start,$finish]);
+            $total_completed = $total_completed->whereBetween('created_at',[$start,$finish]);
+            $total_order = $total_order->whereBetween('created_at',[$start,$finish]);
+            $graph_data = $graph_data->whereBetween('created_at',[$start,$finish]);
         }
         if ($request->filter == 3) {
             $start  = date("Y-m-01", time());
             $finish = date('Y-m-d H:i:s');
             $text   = front_end_short_date_time($start) . " - " . front_end_short_date_time($finish);
-            $where  = [
-                ['created_at', '>', $start],
-                ['created_at', '<=', $finish]
-            ];
-        }
+            
+            $total_confirmed = $total_confirmed->whereBetween('created_at',[$start,$finish]);
+            $total_dispatched = $total_dispatched->whereBetween('created_at',[$start,$finish]);
+            $total_ready_to_dispatch = $total_ready_to_dispatch->whereBetween('created_at',[$start,$finish]);
+            $total_prepairing = $total_prepairing->whereBetween('created_at',[$start,$finish]);
+            $total_completed = $total_completed->whereBetween('created_at',[$start,$finish]);
+            $total_order = $total_order->whereBetween('created_at',[$start,$finish]);
+            $graph_data = $graph_data->whereBetween('created_at',[$start,$finish]);
 
-        $total_order             = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->count();
-        $total_completed         = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'completed')->count();
-        $total_prepairing        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'preparing')->count();
-        $total_ready_to_dispatch = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'ready_to_dispatch')->count();
-        $total_dispatched        = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('order_status', 'dispatched')->count();
-        $total_confirmed         = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->whereNotIn('order_status', ['pending',
-                                                                                                                                             'cancelled_by_customer_before_confirmed',
-                                                                                                                                             'cancelled_by_customer_after_confirmed',
-                                                                                                                                             'cancelled_by_customer_during_prepare',
-                                                                                                                                             'cancelled_by_vendor'])->count();
-        $total_refund            = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)->where($where)->where('refund', '2')->count();
+        }
+        $total_confirmed            = $total_confirmed->count();
+        $total_dispatched           = $total_dispatched->count();
+        $total_ready_to_dispatch    = $total_ready_to_dispatch->count();
+        $total_prepairing           = $total_prepairing->count();
+        $total_completed            = $total_completed->count();
+        $total_order                = $total_order->count();
+        $total_refund               = 0;
 
 //        dd(\DB::getQueryLog());
-        $graph_data = Orders::where('vendor_id', Auth::guard('vendor')->user()->id)
-//            ->where('payment_status','paid')
-            ->where('order_status', 'completed')
-//            ->where('refund',0)
-            ->addSelect(\DB::raw("created_at, COUNT(`created_at`) as order_count,SUM(`net_amount`) as total_net_amount, DATE_FORMAT(`created_at` , '%m') AS Month_Group"))
-            ->groupBy('Month_Group')
-            ->get();
+        $graph_data = $graph_data->select(\DB::raw("created_at, COUNT(`created_at`) as order_count,SUM(`net_amount`) as total_net_amount, DATE_FORMAT(`created_at` , '%b-%d') AS Month_Group"))->groupBy('Month_Group')->get();
+        
+            
         $top_rated_products = Product_master::where('userId', Auth::guard('vendor')->user()->id)->where('product_rating','>',0)->orderBy('product_rating', 'desc')->limit(4)->get();
 
         return view('vendor.restaurant.dashboard', compact('product', 'total_order', 'total_completed', 'total_prepairing', 'total_dispatched', 'total_ready_to_dispatch', 'total_confirmed', 'text', 'total_refund', 'graph_data', 'top_rated_products'));

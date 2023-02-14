@@ -69,7 +69,7 @@
                 <a href="{{route('restaurant.order.list','completed')}}" class="{{ request()->is('vendor/restaurant/orders/completed') ? 'active' : '' }}">Completed <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'completed')}}</span></a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','cancelled_by_vendor')}}" class="{{ request()->is('vendor/restaurant/orders/cancelled_by_vendor') ? 'active' : '' }}">Cancelled By vendor <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'cancelled_by_vendor')}}</span></a>
+                <a href="{{route('restaurant.order.list','cancelled_by_vendor')}}" class="{{ request()->is('vendor/restaurant/orders/cancelled_by_vendor') ? 'active' : '' }}">Rejected <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'cancelled_by_vendor')}}</span></a>
             </li>
             <li>
                 <a href="{{route('restaurant.order.list','refunded')}}" class="{{ request()->is('vendor/restaurant/orders/refunded') ? 'active' : '' }}">Refunded <span class="badge badge-success">{{vendorOrderCountByRefund(Auth::guard('vendor')->user()->id,2)}}</span></a>
@@ -123,7 +123,7 @@
         </li>
 
         <li class="menu-item ">
-            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Dishes (Top Rated/Review)</span></a>
+            <a href="{{route('restaurant.product.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Dishes (Top Rated)</span></a>
         </li>
         <li class="menu-item ">
             <a href="{{route('restaurant.vendor.change_password')}}" class=""> <span><i class="nav-icon fa fa-cogs fs-16"></i>Update Password</span></a>

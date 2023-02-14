@@ -30,7 +30,7 @@ $breadcrumb[] = ["name"  => "Restaurant Rating Review",
                             @foreach($VendorReview as $k=>$review)
                             <li class="ms-list-item">
                                 <a href="#" class="media clearfix">
-                                    <img src="{{url('/').'/default_user.jpg'}}" class="ms-img-round ms-img-small" alt="This is another feature">
+                                    <!-- <img src="{{url('/').'/default_user.jpg'}}" class="ms-img-round ms-img-small" alt="This is another feature"> -->
 
                                     <div class="media-body">
                                         <div class="d-flex justify-content-between">

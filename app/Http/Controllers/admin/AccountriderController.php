@@ -189,6 +189,12 @@ class AccountriderController extends Controller
         ]);
         RiderOrderStatement::where(['rider_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
         RiderPayoutDetail::create($data);
+        $riderTransactions = new RiderTransactions;
+        $riderTransactions->rider_id = $request->id;
+        $riderTransactions->type = 'Payout';
+        $riderTransactions->transaction_id = $request->bank_utr;
+        $riderTransactions->amount = $request->amount;
+        $riderTransactions->save();
         return redirect()->route('admin.account.rider.list')->with('message', 'Pay Amount '. $request->amount. ' to Rider Successfully');
     }
 }

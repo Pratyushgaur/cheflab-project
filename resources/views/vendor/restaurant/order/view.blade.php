@@ -173,7 +173,7 @@
             <div class="col-xl-4 col-md-12">
                 <div class="ms-panel {{--ms-panel-fh--}}">
                     <div class="ms-panel-header">
-                        <h6>    <a style="width: 100%" href="{{route('restaurant.order.invoice',$order->id)}}" class="btn btn-primary">Send Invoice</a> </h6>
+                        <h6>    <a style="width: 100%" href="{{route('restaurant.order.invoice',$order->id)}}" class="btn btn-primary">Print Invoice</a> </h6>
                     </div>
                     <div class="ms-panel-body p-0">
                         <ul class="ms-list ms-feed ms-twitter-feed">

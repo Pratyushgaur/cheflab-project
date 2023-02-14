@@ -152,17 +152,18 @@
                 </a>
             </div> -->
 
-
+            @if(count($graph_data) > 1)
             <div class="col-xl-12 col-md-12">
                 <div class="ms-panel">
                     <div class="ms-panel-header">
-                        <h6>Line Chart</h6>
+                        <h6>Sale Chart</h6>
                     </div>
                     <div class="ms-panel-body">
                         <canvas id="line-chart"></canvas>
                     </div>
                 </div>
             </div>
+            @endif
 
             <!-- Recent Orders Requested -->
         <!-- <div class="col-xl-6 col-md-12">
@@ -767,6 +768,104 @@
 @push('scripts')
     <script>
         //Line Chart
+        // var ctx = document.getElementById('line-chart').getContext("2d");
+        // var gradientStroke = ctx.createLinearGradient(0, 0, 0, 450);
+        // gradientStroke.addColorStop(0, '#ff0018');
+
+        // var gradientFill = ctx.createLinearGradient(0, 0, 0, 450);
+        // gradientFill.addColorStop(0, "rgba(53,127,250,0.4)");
+        // gradientFill.addColorStop(1, "rgba(255,255,255,0)");
+
+        
+        // var data_1 = [
+        //     @foreach($graph_data as $k=>$v)
+        //     {{$v['total_net_amount']}},
+        //     @endforeach];
+
+        // var data_2 = [
+        //     @foreach($graph_data as $k=>$v)
+        //     {{$v['order_count']}},
+        //     @endforeach];
+
+
+        // var labels =[
+        //     @foreach($graph_data as $k=>$v)
+        //     "{{ date('F-Y', strtotime($v['created_at']))}}" ,
+        //     @endforeach];
+
+
+
+        // var lineChart = new Chart(ctx, {
+        //     type: 'line',
+        //     data: {
+        //         labels: labels,
+        //         datasets: [{
+        //             label: "Total earning Rs.",
+        //             borderColor: gradientStroke,
+        //             pointBorderColor: gradientStroke,
+        //             pointBackgroundColor: gradientStroke,
+        //             pointHoverBackgroundColor: gradientStroke,
+        //             pointHoverBorderColor: gradientStroke,
+        //             pointBorderWidth: 1,
+        //             pointHoverRadius: 4,
+        //             pointHoverBorderWidth: 1,
+        //             pointRadius: 2,
+        //             fill: true,
+        //             backgroundColor: gradientFill,
+        //             borderWidth: 1,
+        //             data: data_1
+        //         },
+        //             {
+        //                 label: "No. of orders completed",
+        //                 borderColor: gradientStroke,
+        //                 pointBorderColor: gradientStroke,
+        //                 pointBackgroundColor: gradientStroke,
+        //                 pointHoverBackgroundColor: gradientStroke,
+        //                 pointHoverBorderColor: gradientStroke,
+        //                 pointBorderWidth: 1,
+        //                 pointHoverRadius: 4,
+        //                 pointHoverBorderWidth: 1,
+        //                 pointRadius: 2,
+        //                 fill: true,
+        //                 backgroundColor: gradientFill,
+        //                 borderWidth: 1,
+        //                 data: data_2
+        //             }]
+        //     },
+        //     options: {
+        //         legend: {
+        //             display: false,
+        //             position: "bottom"
+        //         },
+        //         scales: {
+        //             yAxes: [{
+        //                 ticks: {
+        //                     fontColor: "rgba(0,0,0,0.5)",
+        //                     fontStyle: "bold",
+        //                     beginAtZero: true,
+        //                     maxTicksLimit: 200,
+        //                     padding: 20
+        //                 },
+        //                 gridLines: {
+        //                     drawTicks: false,
+        //                     display: false
+        //                 }
+
+        //             }],
+        //             xAxes: [{
+        //                 gridLines: {
+        //                     zeroLineColor: "transparent"
+        //                 },
+        //                 ticks: {
+        //                     padding: 20,
+        //                     fontColor: "rgba(0,0,0,0.5)",
+        //                     fontStyle: "bold"
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // });
+        @if(count($graph_data) > 1)
         var ctx = document.getElementById('line-chart').getContext("2d");
         var gradientStroke = ctx.createLinearGradient(0, 0, 0, 450);
         gradientStroke.addColorStop(0, '#ff0018');
@@ -776,99 +875,73 @@
         gradientFill.addColorStop(1, "rgba(255,255,255,0)");
 
         // all data
-        // var data_1 = [1800, 1600, 2300, 2800, 3600, 2900, 3000, 3800, 3600];
-        // var data_2 = [4100, 3800, 3200, 3400, 2700, 2600, 3300, 3000, 2900];
-        // var labels = ["Jan-11", "Jan-12", "Jan-13", "Jan-14", "Jan-15", "Jan-16", "Jan-17", "Jan-18", "Jan-19"];
-
         var data_1 = [
-            @foreach($graph_data as $k=>$v)
+          @foreach($graph_data as $k=>$v)
             {{$v['total_net_amount']}},
-            @endforeach];
-
-        var data_2 = [
-            @foreach($graph_data as $k=>$v)
-            {{$v['order_count']}},
-            @endforeach];
-
-
-        var labels =[
-            @foreach($graph_data as $k=>$v)
-            "{{ date('F-Y', strtotime($v['created_at']))}}" ,
-            @endforeach];
-
-
+            @endforeach
+        ];
+        //var data_2 = [4100, 3800, 3200, 3400, 2700, 2600, 3300, 3000, 2900];
+        var labels = [
+          @foreach($graph_data as $k=>$v)
+            "{{$v['Month_Group']}}",
+            @endforeach
+        ];
 
         var lineChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: "Total earning Rs.",
-                    borderColor: gradientStroke,
-                    pointBorderColor: gradientStroke,
-                    pointBackgroundColor: gradientStroke,
-                    pointHoverBackgroundColor: gradientStroke,
-                    pointHoverBorderColor: gradientStroke,
-                    pointBorderWidth: 1,
-                    pointHoverRadius: 4,
-                    pointHoverBorderWidth: 1,
-                    pointRadius: 2,
-                    fill: true,
-                    backgroundColor: gradientFill,
-                    borderWidth: 1,
-                    data: data_1
-                },
-                    {
-                        label: "No. of orders completed",
-                        borderColor: gradientStroke,
-                        pointBorderColor: gradientStroke,
-                        pointBackgroundColor: gradientStroke,
-                        pointHoverBackgroundColor: gradientStroke,
-                        pointHoverBorderColor: gradientStroke,
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 4,
-                        pointHoverBorderWidth: 1,
-                        pointRadius: 2,
-                        fill: true,
-                        backgroundColor: gradientFill,
-                        borderWidth: 1,
-                        data: data_2
-                    }]
-            },
-            options: {
-                legend: {
-                    display: false,
-                    position: "bottom"
-                },
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            fontColor: "rgba(0,0,0,0.5)",
-                            fontStyle: "bold",
-                            beginAtZero: true,
-                            maxTicksLimit: 200,
-                            padding: 20
-                        },
-                        gridLines: {
-                            drawTicks: false,
-                            display: false
-                        }
+          type: 'line',
+          data: {
+              labels: labels,
+              datasets: [{
+                  label: "Order Amount",
+                  borderColor: gradientStroke,
+                  pointBorderColor: gradientStroke,
+                  pointBackgroundColor: gradientStroke,
+                  pointHoverBackgroundColor: gradientStroke,
+                  pointHoverBorderColor: gradientStroke,
+                  pointBorderWidth: 1,
+                  pointHoverRadius: 4,
+                  pointHoverBorderWidth: 1,
+                  pointRadius: 2,
+                  fill: true,
+                  backgroundColor: gradientFill,
+                  borderWidth: 1,
+                  data: data_1
+              }]
+          },
+          options: {
+              legend: {
+              display: false,
+              position: "bottom"
+              },
+              scales: {
+                yAxes: [{
+                  ticks: {
+                    fontColor: "rgba(0,0,0,0.5)",
+                    fontStyle: "bold",
+                    beginAtZero: true,
+                    maxTicksLimit: 200,
+                    padding: 20
+                  },
+                  gridLines: {
+                    drawTicks: false,
+                    display: false
+                  }
 
-                    }],
-                    xAxes: [{
-                        gridLines: {
-                            zeroLineColor: "transparent"
-                        },
-                        ticks: {
-                            padding: 20,
-                            fontColor: "rgba(0,0,0,0.5)",
-                            fontStyle: "bold"
-                        }
-                    }]
-                }
+              }],
+              xAxes: [{
+                  gridLines: {
+                    zeroLineColor: "transparent"
+                  },
+                  ticks: {
+                    padding: 20,
+                    fontColor: "rgba(0,0,0,0.5)",
+                    fontStyle: "bold"
+                  }
+              }]
             }
+          }
         });
-
+        @endif
         $("#dashboard_input").change(function() {
             this.form.submit();
         });

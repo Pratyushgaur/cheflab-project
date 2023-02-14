@@ -1,3 +1,4 @@
+
 <audio class="alert-audio" style="display:none" controls >
     <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
 </audio>
@@ -444,14 +445,12 @@
 <script src="{{asset('frontend')}}/assets/js/bootstrap.min.js"></script>
 <script src="{{asset('frontend')}}/assets/js/perfect-scrollbar.js">
 </script>
-<script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js">
-<!-- </script> -->
+<script src="{{asset('frontend')}}/assets/js/jquery-ui.min.js"></script>
 <!-- Global Required Scripts End -->
 <!-- Page Specific Scripts Start -->
 
-<script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js">
-<!-- </script> -->
-<script src="{{asset('frontend')}}/assets/js/widgets.js"></script>
+<script src="{{asset('frontend')}}/assets/js/Chart.bundle.min.js"></script>
+<!-- <script src="{{asset('frontend')}}/assets/js/widgets.js"></script> -->
 <script src="{{asset('frontend')}}/assets/js/clients.js"></script>
 <script src="{{asset('frontend')}}/assets/js/Chart.Financial.js"></script>
 <script src="{{asset('frontend')}}/assets/js/d3.v3.min.js">
@@ -504,18 +503,13 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 {{--<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>--}}
 <!-- TODO: Add SDKs for Firebase products that you want to use
         https://firebase.google.com/docs/web/setup#available-libraries -->
-<script>
-</script>
 @stack('scripts')
 @yield('page-js');
 
 @stack('model')
 
 <script>
-
-
     $(document).ready(function () {
-
         toastr.options =
             {
                 "closeButton": false,

@@ -165,10 +165,10 @@ if (is_array($banners))
                                 <h3 class="ms-count">{{$like_user_count}}</h3>
                                 <span>Favorite </span>
                             </li>
-                            <li>
-                                <h3 class="ms-count"><?php echo front_end_currency($resturant->wallet)?></h3>
+                            <!-- <li>
+                                <h3 class="ms-count"><?php //echo front_end_currency($resturant->wallet)?></h3>
                                 <span>Wallet</span>
-                            </li>
+                            </li> -->
 
                             <li>
                                 <h3 class="ms-count"><?php echo $resturant->vendor_ratings;?></h3>

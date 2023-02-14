@@ -83,18 +83,17 @@
                     @endif
                     <p class="mb-0"><b>Landmark address :</b> {{$order->landmark_address}}</p>
                     
-                    @if(!empty($rider))
-                        
-                        <p class="mb-0"><b>Pickup OTP :</b> {{$rider->otp}}</p>
-
-                    @endif
+                   
 
                 </div>
             </div>
             <div class="col-md-6 text-md-right">
+                @if(!empty($rider))
+                <h3>{{$rider->otp}} </h3>
+                @endif
+
                 <ul class="invoice-date">
                     <li><b>Invoice Date :</b> {{front_end_date($order->created_at)}}</li>
-                    {{--                                <li>Due Date : Sunday, April 19 2020</li>--}}
                 </ul>
             </div>
         </div>

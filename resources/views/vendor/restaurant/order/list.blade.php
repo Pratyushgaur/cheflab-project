@@ -112,9 +112,9 @@ $breadcrumb[] = ["name"  => "List",
                             <label>Add More Minute for  preparation </label>
                             <!-- <input type="number" readonly placeholder="preparation time in minutes" class="form-control" name="preparation_time" value="" step="1" id="preparation_time1"> -->
                             <select name="preparation_time" id="" class="form-control">
-                                <option value="20">20 Minute</option>
-                                <option value="20">20 Minute</option>
-                                <option value="20">20 Minute</option>
+                                <option value="5"> 5 Minute</option>
+                                <option value="10">10 Minute</option>
+                                <option value="15">15 Minute</option>
                             </select>
                             <i class="material-icons">timer</i>
                             <!-- <code>This much amount of time already lapse</code>
