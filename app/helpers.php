@@ -1446,7 +1446,7 @@ function createPdf($id)
     $users = User::findOrFail($order->user_id);
     $orderProduct = OrderProduct::where(['order_id' => $id])->get();
     $orderProductAmount = OrderProduct::where(['order_id' => $id])->sum('product_price');
-    $adminDetail = AdminMasters::select('admin_masters.email','admin_masters.phone','admin_masters.suport_phone','admin_masters.office_addres','admin_masters.gstno')->first();
+    $adminDetail = \App\Models\AdminMasters::select('admin_masters.email','admin_masters.phone','admin_masters.suport_phone','admin_masters.office_addres','admin_masters.gstno')->first();
     $taxAmount = ($orderProductAmount * $vendor->tax)/100;
     $totalAmount = $orderProductAmount + $taxAmount;
     $invoiceName = rand(9999, 99999) . $id . '.pdf';
