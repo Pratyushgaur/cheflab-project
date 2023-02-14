@@ -8,6 +8,7 @@ use App\Models\Orders;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\Vendors;
+use App\Models\AdminMasters;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
@@ -17,7 +18,12 @@ class OrderController extends Controller
 {
     public function index()
     {
-        return view('admin.order.list');
+
+   
+
+
+    return view('admin.order.list');
+
     }
     public function dineoutlist(){
         return view('admin.dineout.list');
@@ -353,8 +359,12 @@ class OrderController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
                     $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'" ><i class="fa fa-eye"></i></a>';
+                    if($data->pdf_url){
+                        $btn .= '<a href="'. asset("$data->pdf_url").'" download><i class="fa fa-print"></i></a>';
+                    }else{
+                        $btn .= '';
+                    }
                     
-                    $btn .= '<a href="'. asset("$data->pdf_url").'" download><i class="fa fa-print"></i></a>';
                     
                     return $btn;
                 })

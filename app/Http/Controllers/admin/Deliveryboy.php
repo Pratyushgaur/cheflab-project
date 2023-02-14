@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Catogory_master;
 use App\Models\RiderAssignOrders;
 use App\Models\Cuisines;
+use App\Models\RiderIncentives;
 use App\Models\Product_master; 
 use App\Models\RiderReviewRatings;
 use App\Models\Driver_total_working_perday;
@@ -468,7 +469,8 @@ class Deliveryboy extends Controller
         }
     }
 
-    public function deliver_boy_inactive($id){            
+    public function deliver_boy_inactive($id){   
+        // echo "hello";die;         
         $user = Deliver_boy::find($id);
         Deliver_boy::where('id','=', $user->id)->limit(1)->update( ['status' => '0']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
@@ -539,7 +541,7 @@ class Deliveryboy extends Controller
             $deliverd_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->count();
             $canceled_order = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '2'])->count();
             $total_earning = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
-            $total_incentive = RiderAssignOrders::where(['rider_id' => $rider_id,'action' => '3'])->sum('earning');
+            $total_incentive = RiderIncentives::where(['rider_id' => $rider_id])->sum('amount');
             $view = view('admin/deliveryboy/deliverboy_information_view',compact('rider_id','deliverd_order','canceled_order','total_earning','total_incentive','user','rating_arr'))->render();
             return json_encode(['type' => $type,'view' => $view ]);
         }else if($type == 'tran'){
@@ -565,7 +567,7 @@ class Deliveryboy extends Controller
     
         if ($request->ajax()) {
 
-            $data = RiderReviewRatings::Where('rider_review_ratings.rider_id', $request->riderId)->join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at','rider_review_ratings.order_id')->get();
+            $data = RiderReviewRatings::Where('rider_review_ratings.rider_id', $request->riderId)->join('users','rider_review_ratings.user_id','=','users.id')->select('rider_review_ratings.review','users.name','rider_review_ratings.created_at','rider_review_ratings.order_id','rider_review_ratings.rating')->get();
       
             return Datatables::of($data)
                 ->addIndexColumn()
