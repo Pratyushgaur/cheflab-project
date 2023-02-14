@@ -235,13 +235,13 @@ class AppController extends Controller
                 ], 401);
             }
 
-            $profile = Deliver_boy::where('id', '=', $request->user_id)->select('id', 'name', 'email', 'username', 'mobile', 'is_online', \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'),'status')->first();
-            if($profile->status == "0"){
+            $profile = Deliver_boy::where('id', '=', $request->user_id)->select('id', 'name', 'email', 'username', 'mobile', 'is_online', \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'), 'status')->first();
+            if ($profile->status == "0") {
                 return response()->json([
                     'status'   => true,
-                    'active_user'=>$profile->status,
+                    'active_user' => $profile->status,
                     'message'  => 'Account Deactive'
-    
+
                 ], 200);
             }
             $asing = RiderAssignOrders::where('id', '=', $request->rider_assign_order_id);
@@ -251,7 +251,7 @@ class AppController extends Controller
                 } else {
                     return response()->json([
                         'status' => false,
-                        'active_user'=>$profile->status,
+                        'active_user' => $profile->status,
                         'error'  => 'You Can Not Process With This Order'
                     ], 500);
                 }
@@ -262,7 +262,7 @@ class AppController extends Controller
             $order = [];
             if ($request->status == '1') {
                 $otp = rand(1000, 9999);
-                RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['distance' => $request->distance, 'earning' => $request->earning,'otp'=>$otp]);
+                RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['distance' => $request->distance, 'earning' => $request->earning, 'otp' => $otp]);
                 $order = RiderAssignOrders::where('rider_assign_orders.id', '=', $request->rider_assign_order_id);
                 $order = $order->join('orders', 'rider_assign_orders.order_id', '=', 'orders.id');
                 $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
@@ -294,7 +294,7 @@ class AppController extends Controller
 
             return response()->json([
                 'status'   => true,
-                'active_user'=>$profile->status,
+                'active_user' => $profile->status,
                 'message'  => 'Status Updated Successfully',
                 'order'    => $order,
                 'profile'  => $profile
@@ -468,7 +468,7 @@ class AppController extends Controller
         }
     }
 
-    function genarateIncentive($riderId,$rider_assign_order_id)
+    function genarateIncentive($riderId, $rider_assign_order_id)
     {
 
         $rider = \App\Models\Deliver_boy::where('id', '=', $riderId)->select('ratings')->first();
@@ -553,11 +553,11 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $old = Deliver_boy::where('id', '=', $request->user_id)->select('is_online','status')->first();
-            if($old->status == '0'){
-                return response()->json(['status' => false,'error'  => 'You Can Not Change Your Status'], 500);
+            $old = Deliver_boy::where('id', '=', $request->user_id)->select('is_online', 'status')->first();
+            if ($old->status == '0') {
+                return response()->json(['status' => false, 'error'  => 'You Can Not Change Your Status'], 500);
             }
-            if($old->is_online != $request->status){
+            if ($old->is_online != $request->status) {
                 Deliver_boy::where('id', '=', $request->user_id)->update(['is_online' => $request->status]);
                 $DriverWorkingLogs = new DriverWorkingLogs;
                 $DriverWorkingLogs->rider_id = $request->user_id;
@@ -592,7 +592,7 @@ class AppController extends Controller
                     }
                 }
             }
-            
+
 
             return response()->json([
                 'status'   => true,
@@ -688,24 +688,24 @@ class AppController extends Controller
             $Driver_total_working_perday    = $Driver_total_working_perday->where(['rider_id' => $request->user_id])->select(\DB::raw('IFNULL(SUM(total_hr),0) as total_working_seconds'))->first();
             //$workingHours = calculateWorkingHours($request->user_id,Carbon::now(),Carbon::now());
             //[now()->subdays(30), now()->subday()]
-            if($Driver_total_working_perday->total_working_seconds < 0){
+            if ($Driver_total_working_perday->total_working_seconds < 0) {
                 $init = 0;
-            }else{
+            } else {
                 $init = $Driver_total_working_perday->total_working_seconds;
             }
-            
+
             $day = floor($init / 86400);
-            $hours = floor(($init -($day*86400)) / 3600);
+            $hours = floor(($init - ($day * 86400)) / 3600);
             $minutes = floor(($init / 60) % 60);
-            $time = date('H:i',strtotime($hours.'.'.$minutes));
-            
-            $response = ['earning' => $earning_and_orders->earning, 'order_delivered' => $earning_and_orders->order_count, 'rejected_orders' => $rejectedOrders->rejectOrders, 'incentive' => $RiderIncentives->amount, 'rating' => round($RiderReviewRatings->rating,2), 'workingHours' => $time];
+            $time = date('H:i', strtotime($hours . '.' . $minutes));
+
+            $response = ['earning' => $earning_and_orders->earning, 'order_delivered' => $earning_and_orders->order_count, 'rejected_orders' => $rejectedOrders->rejectOrders, 'incentive' => $RiderIncentives->amount, 'rating' => round($RiderReviewRatings->rating, 2), 'workingHours' => $time];
             //
             $chart = [];
             if ($request->report_for == 'today') {
                 $date = Carbon::now()->startOfWeek();;
                 for ($i = 0; $i < 7; $i++) {
-                    $dayData = RiderAssignOrders::whereDate('created_at', $date)->where('rider_id','=',$request->user_id)->where('action','=','3')->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
+                    $dayData = RiderAssignOrders::whereDate('created_at', $date)->where('rider_id', '=', $request->user_id)->where('action', '=', '3')->select(\DB::raw('IFNULL(SUM(earning),0) as earning'))->first();
                     $dayData->day = date('D', strtotime($date));
                     $dayData->date = date('d-m-Y', strtotime($date));
                     $date = $date->addDays(1);
@@ -820,26 +820,25 @@ class AppController extends Controller
             }
             $period = \Carbon\CarbonPeriod::create(Carbon::now()->subDays(6), Carbon::now());
             $response = [];
-            
+
             foreach ($period as $Key => $value) {
-                
-                $res = \App\Models\Driver_total_working_perday::where('current_date','=',Carbon::parse($value)->format('Y-m-d'))->where('rider_id','=',$request->user_id)->select(\DB::Raw('IFNULL( `total_hr` , 0 ) as totalHour'))->first();
-                if($res){
-                    if($res->totalHour < 0){
+
+                $res = \App\Models\Driver_total_working_perday::where('current_date', '=', Carbon::parse($value)->format('Y-m-d'))->where('rider_id', '=', $request->user_id)->select(\DB::Raw('IFNULL( `total_hr` , 0 ) as totalHour'))->first();
+                if ($res) {
+                    if ($res->totalHour < 0) {
                         $init = 0;
-                    }else{
+                    } else {
                         $init = $res->totalHour;
                     }
-                    
+
                     $day = floor($init / 86400);
-                    $hours = floor(($init -($day*86400)) / 3600);
+                    $hours = floor(($init - ($day * 86400)) / 3600);
                     $minutes = floor(($init / 60) % 60);
-                    $time = date('H:i',strtotime($hours.'.'.$minutes));
+                    $time = date('H:i', strtotime($hours . '.' . $minutes));
                     $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => $time);
-                }else{
+                } else {
                     $response[] = array('date' => Carbon::parse($value)->format('d-m-Y'), 'hour' => "0");
                 }
-                
             }
             return response()->json([
                 'status'   => true,
