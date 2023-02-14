@@ -175,6 +175,7 @@
                                 <th>Reviewer</th>
                                 <th>Order Id</th>
                                 <th>Review</th>
+                                <th>Rating</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
@@ -223,6 +224,10 @@
             {
                 data: 'review',
                 name: 'review'
+            },
+            {
+                data: 'rating',
+                name: 'rating'
             },
             {
                 data: 'date',
