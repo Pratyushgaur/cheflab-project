@@ -26,8 +26,8 @@ class UserFactory extends Factory
             'name' => $this->faker->name,
             'surname' => $this->faker->lastName,
             'email' => $this->faker->unique()->safeEmail,
-            "mobile_number" => $this->faker->unique()->numberBetween(100000000, 2147483647),
-            "alternative_number" => $this->faker->unique()->numberBetween(100000000,2147483647),
+            "mobile_number" => $this->faker->unique()->numberBetween(1000000000, 2147483647),
+            "alternative_number" => $this->faker->unique()->numberBetween(1000000000, 2147483647),
             "image" => $this->faker->imageUrl(),
             "referralCode" =>  Str::random(10),
         ];
