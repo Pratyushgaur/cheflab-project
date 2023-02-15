@@ -51,7 +51,7 @@ class LoginTest extends TestCase
             "status",
             "error",
         ]);
-        $this->assertStringContainsString("Your Account is Inactive. cantact with admin to process", $response->json()["error"]);
+        $this->assertStringContainsString("Your Account is Inactive. contact with admin to process", $response->json()["error"]);
     }
 
     public function test_it_can_send_the_otp_to_the_user()
