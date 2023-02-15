@@ -229,7 +229,7 @@
                            <div class="inner_invoice">
                               <h4 style="font-size:18px;margin: 0;line-height: 33px;">TAX INVOICE </h4>
                               <p style="font-size:14px;margin: 15px 0;">Original for Recipient</p>
-                              <h5 style="font-size:13px;margin-top:12px;text-transform: uppercase;text-align: left;">cheflab Limited (Formerly known as cheflab private limited and cheflab media private limited) </h5>
+                              <h5 style="font-size:13px;margin-top:12px;text-transform: uppercase;text-align: left;">CHOTU 18 SERVICES PRIVATELIMITED </h5>
                            </div>
                         </div>
 
@@ -296,22 +296,22 @@
                            <td><b>Merchant Details</b></td>
                         </tr>
                         <tr>
-                           <td><b>Entity Name:</b> {{$vendorDetail->owner_name}}</td>
+                           <td><b>Entity Name:</b> {{$vendorData->owner_name}}</td>
                         </tr>
                         <!-- <tr>
                            <td><b>Merchant ID:</b> 146926 </td>
                         </tr> -->
                         <tr>
-                           <td><b>Trade Name:</b> {{$vendorDetail->name}}</td>
+                           <td><b>Trade Name:</b> {{$vendorData->name}}</td>
                         </tr>
                         <tr>
-                           <td><b>Address:</b> {{$vendorDetail->address}}</td>
+                           <td><b>Address:</b> {{$vendorData->address}}</td>
                         </tr>
                         <tr>
-                           <td><b>Email:</b> {{$vendorDetail->email}}</td>
+                           <td><b>Email:</b> {{$vendorData->email}}</td>
                         </tr>
                         <tr>
-                           <td><b>Contact Number:</b> {{$vendorDetail->mobile}}</td>
+                           <td><b>Contact Number:</b> {{$vendorData->mobile}}</td>
                         </tr>
                      </table>
                   </td>
@@ -324,13 +324,13 @@
                            <td><b>Restaurant ID:</b> 18801646</td>
                         </tr> -->
                         <tr>
-                           <td><b>Pin Code:</b>{{$vendorDetail->pincode}}</td>
+                           <td><b>Pin Code:</b>{{$vendorData->pincode}}</td>
                         </tr>
                         <tr>
-                           <td><b>GSTIN:</b>@if($vendorDetail->gst_no){{$vendorDetail->gst_no}} @else Not Registered @endif </td>
+                           <td><b>GSTIN:</b>@if($vendorData->gst_no){{$vendorData->gst_no}} @else Not Registered @endif </td>
                         </tr>
                         <tr>
-                           <td><b>FSSAI Licence Number:</b> {{$vendorDetail->fssai_lic_no}}</td>
+                           <td><b>FSSAI Licence Number:</b> {{$vendorData->fssai_lic_no}}</td>
                         </tr>
                         <!-- <tr>
                            <td style="padding-top:35px;"><b>Place of supply:</b>Madhya Pradesh (23)</td>
@@ -380,7 +380,7 @@
                <tbody>
                   <tr>
                      <td></td>
-                     <td><b>Period: </b> {{ $monthYear }}</td>
+                     <td><b>Period: </b> {{ $monthYearData }}</td>
                      <td></td>
                   </tr>
                   <!-- <tr>
@@ -421,14 +421,14 @@
             <p>Amount INR {{ $totalAdminCommission }} settled through digital mode through multiple transactions net payout settlement dated {{ $currentDate }}</p>
          </div>
          <div class="authorized_box" style="text-align:right;">
-            <p><b>For CHEFLAB LIMITED (FORMERLY KNOWN AS CHEFLAB PRIVATE LIMITED AND CHEFLAB MEDIA PRIVATE LIMITED)</b></p>
+            <p><b>For CHOTU 18 SERVICESPRIVATE LIMITED</b></p>
             <div class="sign_box" style="margin:5px 0;">
                <p>Authorized Signatory</p>
             </div>
          </div>
          <div class="invoice_address" style="text-align:center;">
-            <p>Communication Address: Ground Floor, Tower C, Vipul Tech Square, Sector 43, Golf Course Road, Gurugram - 122009, Haryana, India</p>
-            <p>Please refer to <a href="http://cheflab.local.com/">http://cheflab.local.com/</a> for current version of full terms & conditions which are incorporated in this invoice by reference. By enrolling in Cheflab's Online Ordering Services, you agree to and intend to be bound by Cheflab's current terms & conditions with respect to online ordering.</p>
+            <p>Communication Address: Flat201,Antilia Sky Luxuria, Antilia2,Nipania Road,Indore - 452010</p>
+            <p>This is a computer generated invoice</p>
          </div>
       </div>
 </body>

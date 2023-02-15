@@ -139,9 +139,9 @@ function show_time_slots($start_time, $end_time, $duration, $break)
 function vendorOrderCountByStatus($vendor_id, $status)
 {
     if ($status == '')
-        return Orders::where(['vendor_id' => $vendor_id])->where('order_status','!=','pending')->count();
+        return Orders::where(['vendor_id' => $vendor_id])->where('order_status', '!=', 'pending')->count();
 
-    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status ])->where('order_status','!=','pending')->count();
+    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->where('order_status', '!=', 'pending')->count();
 }
 
 function vendorTodayOrderCount($vendor_id)
@@ -554,58 +554,58 @@ function front_end_currency($number)
 
 function get_delivery_boy_near_me($lat, $lng, $order_id)
 {
-    
-    $riders =\App\Models\RiderAssignOrders::where(['order_id'=>$order_id,'action'=>'2'])->orWhereIn('action',["0","1","4"])->get()->pluck('rider_id')->toArray();
-    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(deliver_boy.lat))) ";
+
+    $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order_id, 'action' => '2'])->orWhereIn('action', ["0", "1", "4"])->get()->pluck('rider_id')->toArray();
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
     $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
-    $boy = $boy->where('lat','!=','');
-    $boy = $boy->where('lng','!=','');
-    $boy = $boy->where('lat','!=','');
-    $boy = $boy->where('lng','!=','');
-    if(!empty($riders)){
-        $boy = $boy->whereNotIn('id',$riders);
+    $boy = $boy->where('lat', '!=', '');
+    $boy = $boy->where('lng', '!=', '');
+    $boy = $boy->where('lat', '!=', '');
+    $boy = $boy->where('lng', '!=', '');
+    if (!empty($riders)) {
+        $boy = $boy->whereNotIn('id', $riders);
     }
     $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
-    
-    $boy = $boy->orderBy('distance','ASC');
+
+    $boy = $boy->orderBy('distance', 'ASC');
     $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
     return $boy->get();
-
 }
 
-function orderAssignToDeliveryBoy($lat, $lng,$order){
-    $riders =\App\Models\RiderAssignOrders::where(['order_id'=>$order->id,'action'=>'2'])->orWhereIn('action',["0","1","4"])->get()->pluck('rider_id')->toArray();
-    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" .$lat. ")) * sin(radians(deliver_boy.lat))) ";
+function orderAssignToDeliveryBoy($lat, $lng, $order)
+{
+    $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order->id, 'action' => '2'])->orWhereIn('action', ["0", "1", "4"])->get()->pluck('rider_id')->toArray();
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
     $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
-    $boy = $boy->where('lat','!=','');
-    $boy = $boy->where('lng','!=','');
-    if(!empty($riders)){
-        $boy = $boy->whereNotIn('id',$riders);
+    $boy = $boy->where('lat', '!=', '');
+    $boy = $boy->where('lng', '!=', '');
+    if (!empty($riders)) {
+        $boy = $boy->whereNotIn('id', $riders);
     }
     $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
-    $boy = $boy->orderBy('distance','ASC');
+    $boy = $boy->orderBy('distance', 'ASC');
     $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
     $boy = $boy->limit(1);
     return $boy->first();
-    
 }
-function calculateRiderCharge($riderToRestaurantDistance,$vendorLat,$vendorLng,$orderlat,$orderLng){
+function calculateRiderCharge($riderToRestaurantDistance, $vendorLat, $vendorLng, $orderlat, $orderLng)
+{
     $distance =  getDrivingDistance($vendorLat, $vendorLng, $orderlat, $orderLng);
     $distance = floatval($distance);
     $setting = App\Models\DeliveryboySetting::first();
     $riderToRescharge = 0;
-    if($riderToRestaurantDistance <= 2){
-        $riderToRescharge = $setting->below_one_five_km*$riderToRestaurantDistance;
-    }else{
-        $rem  = $riderToRestaurantDistance-2;
-        $riderToRescharge = $setting->below_one_five_km*2;
-        if($rem > 1){
-            $riderToRescharge = $riderToRescharge+$setting->above_one_five_km*$rem;
+    if ($riderToRestaurantDistance <= 2) {
+        $riderToRescharge = $setting->below_one_five_km * $riderToRestaurantDistance;
+    } else {
+        $rem  = $riderToRestaurantDistance - 2;
+        $riderToRescharge = $setting->below_one_five_km * 2;
+        if ($rem > 1) {
+            $riderToRescharge = $riderToRescharge + $setting->above_one_five_km * $rem;
         }
     }
 
     // restaturnat to user calculations
-    $riderToRescharge = $riderToRescharge+$setting->first_three_km_charge_admin;
+    $riderToRescharge = $riderToRescharge + $setting->first_three_km_charge_admin;
     if ($distance > 3) {
         $remainingkm = $distance - 3.0;
         if ($remainingkm >= 3) {
@@ -621,13 +621,11 @@ function calculateRiderCharge($riderToRestaurantDistance,$vendorLat,$vendorLng,$
             $thirdCharge = $remainingkm * $setting->six_km_above_admin;
             $riderToRescharge      = $riderToRescharge + $thirdCharge;
         }
-
     }
     if ($setting->extra_charge_active) {
         $riderToRescharge = $riderToRescharge + $setting->extra_charges_admin;
     }
-    return array('charges'=>round($riderToRescharge),'resToUserDistance'=>$distance,'totalDistance'=>$distance+$riderToRestaurantDistance);
-    
+    return array('charges' => round($riderToRescharge), 'resToUserDistance' => $distance, 'totalDistance' => $distance + $riderToRestaurantDistance);
 }
 // function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offset = null, $limit = null)
 // {
@@ -960,7 +958,7 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
     //     'Content-Type'  => 'application/json',
     // ];
     $url = "https://fcm.googleapis.com/fcm/send";
-    $notification = array('title' => $title, 'body' => $body,'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
+    $notification = array('title' => $title, 'body' => $body, 'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "ChefLab_Delivery");
     $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
     $fields = json_encode($arrayToSend);
     // $client = new Client();
@@ -986,7 +984,7 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
     //Send the request
@@ -1164,11 +1162,11 @@ function promotionRowSetup($Blogs, $request, $user_id)
 }
 function orderCancel($id)
 {
-    // echo 'hello';die;
+
 
     $order = Orders::where('id', $id)->first();
 
-
+    $vendorData = Vendors::where('id', $order->vendor_id)->first();
     $payout = Paymentsetting::first();
     $order_amount = $order->net_amount;
     $vendor_cancellation = $payout->additions;
@@ -1177,20 +1175,17 @@ function orderCancel($id)
     $tax = 18;
 
     $gross_revenue = $order->gross_amount;
-    // $vendor_commision = ($vendor_cancellation / 100) * $order_amount;
     $vendor_commision = 0;
-    $admin_per = ($admin_commision / 100) * $vendor_commision;
 
-    $tax_commision = ($tax / 100) * $admin_per;
-
-    $convenience_commision = ($convenience_fee / 100) * ($gross_revenue + $vendor_commision);
-
+    $admin_per = ($gross_revenue * $vendorData->commission) / 100;
+    $tax_commision = ($admin_per * $tax) / 100;
+    $convenience_commision = ($gross_revenue * $convenience_fee) / 100;
     $deduction =  $admin_per + $tax_commision + $convenience_commision;
 
 
     $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
     $ordercommision = array(
-        'is_cancel' => 1,
+        'is_cancel' => 0,
         'vendor_id' => $order->vendor_id,
         'order_id' => $order->id,
         'vendor_commision' => $vendor_commision,
@@ -1211,7 +1206,7 @@ function orderCancel($id)
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s')
     );
-   
+
     OrderCommision::create($ordercommision);
 
     $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
@@ -1232,14 +1227,14 @@ function orderCancel($id)
             'start_date' => $current_start_date,
             'end_date' => $current_end_date
         );
-        
-       return Vendor_order_statement::create($createData);
+
+        return Vendor_order_statement::create($createData);
     }
 }
 
 function orderComplete($id)
 {
-    
+
     $order = Orders::where('id', $id)->first();
     $payout = Paymentsetting::first();
     $order_amount = $order->net_amount;
@@ -1281,7 +1276,7 @@ function orderComplete($id)
 function orderDetailForUser($order_id)
 {
     $order =   \App\Models\Order::where('id', '=', $order_id)->select('*')->addSelect(\DB::Raw('IFNULL( CONCAT("' . asset(`pdf_url`) . '", pdf_url), null ) as pdf_url'))->first()->toArray();
-    
+
     $order['order_date'] =  date("d M Y  h:i A", strtotime($order['created_at']));
     $vendor = \App\Models\Vendors::where('id', '=', $order['vendor_id'])->select('name', 'image', 'lat', 'long')->first();
     $order['vendor_name'] = $vendor->name;
@@ -1297,7 +1292,7 @@ function orderDetailForUser($order_id)
             $order['preparingdiffrence'] = '0';
         }
     }
-    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id','products.customizable')->get()->toArray();
+    $products = \App\Models\OrderProduct::where('order_id', '=', $order_id)->join('products', 'order_products.product_id', 'products.id')->select('product_id', 'order_products.product_name', 'order_products.product_price', 'product_qty', 'type', 'order_products.id as order_product_id', 'products.customizable')->get()->toArray();
 
     foreach ($products as $k => $v) {
         $OrderProductAddon   = \App\Models\OrderProductAddon::where('order_product_id', '=', $v['order_product_id'])->select('addon_name', 'addon_price', 'addon_qty')->get();
@@ -1308,7 +1303,6 @@ function orderDetailForUser($order_id)
         if (!empty($OrderProductAddon->toArray())) {
             $products[$k]['addons'] = $OrderProductAddon;
         }
-
     }
     $order['products'] = $products;
 
@@ -1332,7 +1326,7 @@ function orderDetailForUser($order_id)
             $order['driver_image'] = $driver->image;
         }
     }
-    
+
     return $order;
 }
 
@@ -1420,75 +1414,53 @@ function blogPromotionPriceUpdate($request, $id)
 function createPdf($id)
 {
 
-    // $order = Orders::where('id', $id)->first();
-    // $vendor = Vendors::findOrFail($order->vendor_id);
-    // $users = User::findOrFail($order->user_id);
-    // $orderProduct = OrderProduct::where(['order_id' => $id])->get();
-    // $orderProductAmount = OrderProduct::where(['order_id' => $id])->sum('product_price');
-    // $taxAmount = ($orderProductAmount * $vendor->tax)/100;
-    // $totalAmount = $orderProductAmount + $taxAmount;
-    // $invoiceName = rand(9999, 99999) . $id . '.pdf';
-    // $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order','vendor','users','orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount'));
-
-    // $pdf->save(public_path('uploads/invoices/' . $invoiceName));
-    // $url = 'uploads/invoices/' . $invoiceName;
-
-    // $pdfUrl = Orders::where('id', '=', $id)->first();
-
-    
-    // $pdfUrl->pdf_url = $url;
-    // $pdfUrl->save();
-
-    
     $order = Orders::where('id', $id)->first();
-   
+
     $vendor = Vendors::findOrFail($order->vendor_id);
     $users = User::findOrFail($order->user_id);
     $orderProduct = OrderProduct::where(['order_id' => $id])->get();
     $orderProductAmount = OrderProduct::where(['order_id' => $id])->sum('product_price');
-    $adminDetail = \App\Models\AdminMasters::select('admin_masters.email','admin_masters.phone','admin_masters.suport_phone','admin_masters.office_addres','admin_masters.gstno')->first();
-    $taxAmount = ($orderProductAmount * $vendor->tax)/100;
+    $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
+    $taxAmount = ($orderProductAmount * ($vendor->tax) / 2) / 100;
     $totalAmount = $orderProductAmount + $taxAmount;
     $invoiceName = rand(9999, 99999) . $id . '.pdf';
     $invoiceNumber = rand(9999, 99999) . $id;
     $currentDate = date('Y-m-d H:m:s');
     $allTotalAmount =  $totalAmount + $order->delivery_charge + $order->platform_charges;
-    $netTotalAmount =   $order->net_amount - $order->discount_amount;            
-    
-    $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order','vendor','users','orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount','invoiceNumber','currentDate','adminDetail','allTotalAmount','netTotalAmount'));
-   
+    $netTotalAmount =   $order->net_amount - $order->discount_amount;
+
+    $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order', 'vendor', 'users', 'orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount', 'invoiceNumber', 'currentDate', 'adminDetail', 'allTotalAmount', 'netTotalAmount'));
+
     $pdf->save(public_path('uploads/invoices/' . $invoiceName));
     $url = 'uploads/invoices/' . $invoiceName;
 
     $pdfUrl = Orders::where('id', '=', $id)->first();
 
-    
+
     $pdfUrl->pdf_url = $url;
     $pdfUrl->save();
     return true;
-
 }
 
-function updateDriverLatLngFromFcm(){
+function updateDriverLatLngFromFcm()
+{
     try {
-        $ids = \App\Models\Deliver_boy::where('is_online','=','1')->where('status','=','1')->get()->pluck('id');
-        if(!empty($ids)){
+        $ids = \App\Models\Deliver_boy::where('is_online', '=', '1')->where('status', '=', '1')->get()->pluck('id');
+        if (!empty($ids)) {
             $database = app('firebase.database');
-            foreach($ids as $key =>$value){
+            foreach ($ids as $key => $value) {
                 $reference = $database->getReference('locations')->getChild($value)->getvalue();
-                if(!empty($reference)){
-                    $deliverBoy = \App\Models\Deliver_boy::where('id','=',$reference['driver_id'])->where('is_online','=','1')->first();     
-                    if(!empty($deliverBoy)){
-                        \App\Models\Deliver_boy::where('id','=',$reference['driver_id'])->update(['lng'=>$reference['long'],'lat'=>$reference['lat'] ]);
+                if (!empty($reference)) {
+                    $deliverBoy = \App\Models\Deliver_boy::where('id', '=', $reference['driver_id'])->where('is_online', '=', '1')->first();
+                    if (!empty($deliverBoy)) {
+                        \App\Models\Deliver_boy::where('id', '=', $reference['driver_id'])->update(['lng' => $reference['long'], 'lat' => $reference['lat']]);
                     }
                 }
             }
         }
-    } catch (Exception $e){
-         return $e;
+    } catch (Exception $e) {
+        return $e;
     }
-   
-    
 }
 
 function orderCancelByCustomer($order_id)
@@ -1557,7 +1529,7 @@ function orderCancelByCustomer($order_id)
 
 function orderCancelByVendor($id)
 {
-    
+
 
     $order = Orders::where('id', $id)->first();
     $charges = Paymentsetting::first();
@@ -1609,8 +1581,7 @@ function orderCancelByVendor($id)
             'start_date' => $current_start_date,
             'end_date' => $current_end_date
         );
-        
-       return Vendor_order_statement::create($createData);
+
+        return Vendor_order_statement::create($createData);
     }
 }
-

@@ -79,7 +79,7 @@ class OrderExport implements FromCollection, WithHeadings, WithMapping, WithEven
         }elseif($order->is_cancel == 1){
             $status = 'Cancel';
         }else{
-            $status = '';
+            $status = 'Pending';
         }
        
         return [
