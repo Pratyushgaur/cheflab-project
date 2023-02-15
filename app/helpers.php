@@ -497,7 +497,171 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
     //dd($product);
     return $product;
 }
+function topRatedProducts($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = null, $limit = null, $return_total_count = false, $product_ids = null)
+{
+    DB::enableQueryLog();
+    //for pagination
 
+    $product = Product_master::where(['products.status' => '1'])
+        ->where(['products.product_approve' => '1'])->where(['products.status' => '1']);
+
+
+        $product->where($product_where);
+        $product->where('products.product_rating','>','0');
+        $product->join('vendors', 'products.userId', '=', 'vendors.id');
+        $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image');
+        $product = $product->leftJoin('vendor_order_time', function ($join) {
+            $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+                //--------------commented, we are sending is open and is_closed
+                ->where('start_time', '<=', mysql_time())
+                ->where('end_time', '>', mysql_time())
+                ->where('available', '=', 1);
+        });
+        $product->where('available', 1);
+        $product->whereIn('userId',$where_vendor_in);
+
+    if ($user_id != '') {
+        $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
+
+        $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
+            $join->on('products.id', '=', 'user_product_like.product_id');
+            //$join->where('products.cuisines', '=', 'cuisines.id');
+            //$join->where('products.category', '=', 'categories.id');
+            $join->where('user_product_like.user_id', '=', $user_id);
+        });
+    }
+
+    $product = $product->leftJoin('variants', 'variants.product_id', 'products.id')
+        ->leftJoin('addons', function ($join) {
+            $join->whereRaw(DB::raw("FIND_IN_SET(addons.id, products.addons)"));
+            $join->whereNull('addons.deleted_at');
+            $join->orderBy('variants.id', 'ASC');
+        });
+    //$product = $product->orderBy('variants.id', 'ASC');
+    $product->orderBy('products.product_rating', 'DESC');
+    $product->offset($offset)->limit($limit);
+
+        
+    //    dd($product->get()->toArray());
+    $qty     = '0';
+    $product = $product->addSelect(
+        DB::raw('products.userId as vendor_id'),
+        'variants.id as variant_id',
+        'variants.variant_name',
+        'variants.variant_price',
+        'preparation_time',
+        'chili_level',
+        'type',
+        'addons.id as addon_id',
+        'addons.addon',
+        'addons.price as addon_price',
+        'products.id as product_id',
+        'products.dis as description',
+        'products.product_name',
+        'product_price',
+        'dis',
+        'customizable',
+        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+        'dis as description',
+        'products.id as product_id',
+        DB::raw('ROUND(product_rating,2) AS product_rating'),
+        'dis',
+        'chili_level',
+        'primary_variant_name'
+    )
+        ->get();
+    //dd($product->toArray());
+    //    dd(\DB::getQueryLog());
+    $variant = [];
+    //dd($user_id);
+    $cart = \App\Models\Cart::where('user_id', $user_id)->first();
+    //    dd($cart);
+    if (count($product->toArray())) {
+        foreach ($product as $i => $p) {
+            $qty = 0; //dd("sdf");
+            if (isset($cart->id) && $cart->id != '') {
+
+                $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])
+                    ->selectRaw('SUM(product_qty) as product_qty,id')->groupBy('product_id')->first();
+                if (isset($cart_p->product_qty)) {
+                    $qty          = $cart_p->product_qty;
+                    $cart_variant = \App\Models\CartProductVariant::where('cart_product_id', $cart_p->id)->pluck('variant_qty', 'variant_id');
+                    $cart_addons  = \App\Models\CartProductAddon::where('cart_product_id', $cart_p->id)->pluck('addon_qty', 'addon_id');
+                }
+            }
+
+            if (!isset($variant[$p['product_id']])) {
+                $variant[$p['product_id']] = [
+                    'product_id'           => $p['product_id'],
+                    'product_name'         => $p['product_name'],
+                    'product_price'        => $p['product_price'],
+                    'dis'                  => $p['dis'],
+                    'customizable'         => $p['customizable'],
+                    'image'                => $p['image'],
+                    'type'                 => $p['type'],
+                    'product_rating'       => $p['product_rating'],
+                    'category'             => $p['categoryName'],
+                    'is_like'              => $p['is_like'],
+                    'primary_variant_name' => $p['primary_variant_name'],
+                    'preparation_time'     => $p['preparation_time'],
+                    'vendor_id'            => $p['vendor_id'],
+                    'chili_level'          => $p['chili_level'],
+                    'cuisines'             => $p['cuisinesName'],
+                    'categorie'            => $p['categorieName'],
+                    'cart_qty'             => $qty
+                ];
+                if ($with_restaurant_name) {
+                    $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
+                    //  $variant[$p['product_id']] ['fssai_lic_no'] = $p['fssai_lic_no'];
+                    // $variant[$p['product_id']] ['tax'] = $p['tax'];
+                    $variant[$p['product_id']]['vendor_image'] = asset('vendors') . '/' . $p['vendor_image'];
+
+                    $banners = json_decode($p['banner_image']);
+
+                    if (is_array($banners))
+                        $variant[$p['product_id']]['banner_image'] = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                        $variant[$p['product_id']]['banner_image'] = [];
+                }
+            }
+            if ($p->variant_id != '') {
+                $v_qty = 0;
+                if (isset($cart_variant[$p->variant_id]))
+                    $v_qty = $cart_variant[$p->variant_id];
+                $variant[$p['product_id']]['options'][$p->variant_id] = [
+                    'id'               => $p->variant_id,
+                    'variant_name'     => $p->variant_name,
+                    'variant_price'    => $p->variant_price,
+                    'cart_variant_qty' => $v_qty
+                ];
+            }
+            if ($p->addon_id != '') {
+                $a_qty = 0;
+                if (isset($cart_addons[$p->addon_id]))
+                    $a_qty = $cart_addons[$p->addon_id];
+
+                $variant[$p['product_id']]['addons'][$p->addon_id] = [
+                    'id'             => $p->addon_id,
+                    'addon'          => $p->addon,
+                    'price'          => $p->addon_price,
+                    "cart_addon_qty" => $a_qty
+                ];
+            }
+        }
+    }
+    foreach ($variant as $i => $v) {
+        if (isset($variant[$i]['options']))
+            $variant[$i]['options'] = array_values($variant[$i]['options']);
+        if (isset($variant[$i]['addons']))
+            $variant[$i]['addons'] = array_values($variant[$i]['addons']);
+    }
+    $product = array_values($variant);
+    //dd($product);
+    return $product;
+}
 function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = null, $limit = null, $group_by = true)
 {
 
