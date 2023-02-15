@@ -338,6 +338,7 @@ class AppController extends Controller
 
                 ], 401);
             }
+
             if ($order->otp == $request->otp) {
                 RiderAssignOrders::where('id', '=', $order->id)->update(['action' => '4']);
                 $orderdata = Order::where('id', '=', $request->order_row_id);

@@ -14,8 +14,6 @@ class RiderAssignOrdersFactory extends Factory
      */
     public function definition()
     {
-        return [
-            "rider_id" => Deliver_boy::factory()->count(null)->create(),
-        ];
+        return [];
     }
 }

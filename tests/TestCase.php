@@ -7,9 +7,12 @@ use App\Models\AdminMasters;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\Mobileotp;
+use App\Models\Order;
+use App\Models\RiderAssignOrders;
 use App\Models\RiderMobileOtp;
 use App\Models\User;
 use App\Models\User_faq;
+use App\Models\Vendors;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -55,5 +58,20 @@ abstract class TestCase extends BaseTestCase
     public function createRiderOtp($args = [], $num = null)
     {
         return RiderMobileOtp::factory()->count($num)->create($args);
+    }
+
+    public function createOrder($args = [], $num = null)
+    {
+        return Order::factory()->count($num)->create($args);
+    }
+
+    public function createVendor($args = [], $num = null)
+    {
+        return Vendors::factory()->count($num)->create($args);
+    }
+
+    public function createRiderAssignOrders($args = [], $num = null)
+    {
+        return RiderAssignOrders::factory()->count($num)->create($args);
     }
 }
