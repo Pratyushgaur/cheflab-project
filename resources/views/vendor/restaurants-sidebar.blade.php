@@ -1,4 +1,5 @@
 <aside id="ms-side-nav" class="side-nav fixed ms-aside-scrollable ms-aside-left">
+
     <!-- Logo -->
     <div class="logo-sn ms-d-block-lg">
       <a class="pl-0 ml-0 text-center" href="{{route('restaurant.dashboard')}}" style="padding:0px !important;">
@@ -9,6 +10,7 @@
     <!-- Navigation -->
     <ul class="accordion ms-main-aside fs-14" id="side-nav-accordion">
       <!-- Dashboard -->
+      
       <li class="menu-item ">
         <a href="{{route('restaurant.dashboard')}}" class="{{ Request::routeIs('restaurant.dashboard') ? 'active' : '' }}"> <span><i class="material-icons fs-16 ">home</i>Home</span>
         </a>
@@ -50,29 +52,29 @@
         <ul id="orders" class="collapse  {{ request()->is('vendor/restaurant/orders*') ? 'show' : '' }}" aria-labelledby="product" data-parent="#side-nav-accordion">
 
             <li>
-                <a href="{{route('restaurant.order.list','all')}}" class="{{ request()->is('vendor/restaurant/orders/all') ? 'active' : '' }}">All <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'')}}</a>
+                <a href="{{route('restaurant.order.list','all')}}" class="{{ request()->is('vendor/restaurant/orders/all') ? 'active' : '' }}">All <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','confirmed')}}" class="{{ request()->is('vendor/restaurant/orders/confirmed') ? 'active' : '' }}">Pending <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'confirmed')}}</a>
+                <a href="{{route('restaurant.order.list','confirmed')}}" class="{{ request()->is('vendor/restaurant/orders/confirmed') ? 'active' : '' }}">Pending <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'confirmed')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','preparing')}}" class="{{ request()->is('vendor/restaurant/orders/preparing') ? 'active' : '' }}">Preparing <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'preparing')}}</a>
+                <a href="{{route('restaurant.order.list','preparing')}}" class="{{ request()->is('vendor/restaurant/orders/preparing') ? 'active' : '' }}">Preparing <span class="badge badge-success " style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'preparing')}}</a>
             </li>
 
             <li>
-                <a href="{{route('restaurant.order.list','ready_to_dispatch')}}" class="{{ request()->is('vendor/restaurant/orders/ready_to_dispatch') ? 'active' : '' }}">Ready For Delivery <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'ready_to_dispatch')}}</a>
+                <a href="{{route('restaurant.order.list','ready_to_dispatch')}}" class="{{ request()->is('vendor/restaurant/orders/ready_to_dispatch') ? 'active' : '' }}">Ready For Delivery <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'ready_to_dispatch')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','dispatched')}}" class="{{ request()->is('vendor/restaurant/orders/dispatched') ? 'active' : '' }}">Out For Delivery <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'dispatched')}}</a>
+                <a href="{{route('restaurant.order.list','dispatched')}}" class="{{ request()->is('vendor/restaurant/orders/dispatched') ? 'active' : '' }}">Out For Delivery <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'dispatched')}}</a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','completed')}}" class="{{ request()->is('vendor/restaurant/orders/completed') ? 'active' : '' }}">Completed <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'completed')}}</span></a>
+                <a href="{{route('restaurant.order.list','completed')}}" class="{{ request()->is('vendor/restaurant/orders/completed') ? 'active' : '' }}">Completed <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'completed')}}</span></a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','cancelled_by_vendor')}}" class="{{ request()->is('vendor/restaurant/orders/cancelled_by_vendor') ? 'active' : '' }}">Rejected <span class="badge badge-success">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'cancelled_by_vendor')}}</span></a>
+                <a href="{{route('restaurant.order.list','cancelled_by_vendor')}}" class="{{ request()->is('vendor/restaurant/orders/cancelled_by_vendor') ? 'active' : '' }}">Rejected <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByStatus(Auth::guard('vendor')->user()->id,'cancelled_by_vendor')}}</span></a>
             </li>
             <li>
-                <a href="{{route('restaurant.order.list','refunded')}}" class="{{ request()->is('vendor/restaurant/orders/refunded') ? 'active' : '' }}">Refunded <span class="badge badge-success">{{vendorOrderCountByRefund(Auth::guard('vendor')->user()->id,2)}}</span></a>
+                <a href="{{route('restaurant.order.list','refunded')}}" class="{{ request()->is('vendor/restaurant/orders/refunded') ? 'active' : '' }}">Refunded <span class="badge badge-success" style="color:#fff;">{{vendorOrderCountByRefund(Auth::guard('vendor')->user()->id,2)}}</span></a>
             </li>
 
         </ul>

@@ -85,7 +85,7 @@
 
         <div class="imagePreview">
             @if((auth()->guard('vendor')->user()->aadhar_card_image!=''))
-                <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}">
+                <a href="{{ url('/').'/aadhar' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}" target="_blank"><img src="{{ url('/').'/aadhar' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
             @endif
         </div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->aadhar_card_image != '') ? "Aadhar Already uploaded" : 'Upload Aadhar Card'?>
@@ -97,7 +97,7 @@
         <input type="hidden" class="imaage-data" name="pancard_image">
         <div class="imagePreview">
             @if((auth()->guard('vendor')->user()->pancard_image!=''))
-                <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->pancard_image}}">
+            <a href="{{ url('/').'/pancard' . '/' . auth()->guard('vendor')->user()->pancard_image}}" target="_blank"><img src="{{ url('/').'/pancard' . '/' . auth()->guard('vendor')->user()->pancard_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
             @endif</div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->pancard_image != '') ? "Pan card Already uploaded" : 'Pan card image'?>
             <input accept="image/*" type="file" data-from="pancard_image" class="uploadFile img" value="Upload Pan Card" style="width: 0px;height: 0px;overflow: hidden;"></label>
@@ -108,7 +108,7 @@
         <input type="hidden" class="imaage-data" name="fassi_image">
         <div class="imagePreview">
             @if((auth()->guard('vendor')->user()->licence_image!=''))
-                <img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->licence_image}}">
+            <a href="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->licence_image}}" target="_blank"><img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->licence_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
             @endif</div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->licence_image != '') ? "FSSAI Already uploaded" : 'FSSAI image'?>
             <input accept="image/*" type="file" data-from="fassi_image" class="uploadFile img" value="Upload fassi" style="width: 0px;height: 0px;overflow: hidden;"></label>
@@ -118,7 +118,7 @@
         <input type="hidden" class="imaage-data" name="cancel_check">
         <div class="imagePreview">
             @if(isset($bankDetail) && @$bankDetail->cancel_check!='')
-                <img src="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}">
+            <a href="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}" target="_blank"><img src="{{ url('/').'/vendor-documents' . '/' . $bankDetail->cancel_check}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
             @endif
         </div>
         <label class="btn btn-primary button-lable"><?php echo (@$bankDetail->cancel_check != '') ? "Cancelled Cheque Already uploaded" : 'Cancelled Cheque'?>

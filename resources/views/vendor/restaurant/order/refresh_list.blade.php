@@ -21,12 +21,13 @@ $payment_status_class['pending'] = 'badge-danger';
             <th scope="col">Order ID</th>
             <th scope="col">Customer Name</th>
             <th scope="col">Address</th>
-            <th scope="col">Total amount</th>
+            <th scope="col">Item Total</th>
             <th scope="col">Net Amount</th>
             <th scope="col">Discount</th>
             <!-- <th scope="col">Payment Type</th>
             <th scope="col">Payment Status</th> -->
             <th scope="col">Remaining Time</th>
+            <th scope="col">Date</th>
             <th scope="col"><?php if($staus_filter=='ready_to_dispatch'){echo 'Rider';}else{echo 'Order Status';} ?></th>
             <th>Action</th>
         </tr>
@@ -66,6 +67,7 @@ $payment_status_class['pending'] = 'badge-danger';
 
                         
                     </td>
+                    <td>{{date('d M Y h:i A',strtotime($order->created_at))}}</td>
                     <td col-2> 
                         @if($order->order_status!='ready_to_dispatch')
                           <?php

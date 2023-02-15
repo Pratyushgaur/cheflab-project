@@ -9,7 +9,13 @@
 
             <div class="col-md-4">
                 <form   action="{{route('restaurant.dashboard')}}">
-                {{ Form::select('filter',[1=>'Today',2=>'This Week',3=>'This Month'],request()->filter,['class' => 'select2 form-control','placeholder' => 'Filter','id'=>'dashboard_input']) }}
+                <!-- {{ Form::select('filter',[1=>'Today',2=>'This Week',3=>'This Month'],request()->filter,['class' => 'select2 form-control','placeholder' => 'Filter','id'=>'dashboard_input']) }} -->
+                  <select class="select2 form-control" id="dashboard_input" name="filter">
+                    <option value="1" @if(request()->filter == '1' ) selected @endif>Today</option>
+                    <option value="2" @if(request()->filter == '2' ) selected @endif>This Week</option>
+                    <option value="3" @if(request()->filter == '3' ) selected @endif>This Month</option>
+                    <option value="4" @if(request()->filter == '4' ) selected @endif>All</option>
+                  </select>
                 </form>
             </div>
         </div>
@@ -32,6 +38,20 @@
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
+                            <h6>Pending</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_pending}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
+            </div>
+            
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
                             <h6>Preparing</h6>
                             <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_prepairing}}
                             </p>
@@ -47,7 +67,7 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Ready for Delivery</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_completed}}
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_ready_to_dispatch}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
                         </div>
@@ -61,6 +81,45 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Out For Delivery</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_dispatched}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Completed</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_completed}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Rejected</h6>
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_rejected}}
+                            </p>
+                            <p class="fs-12">{{$text}}</p>
+                        </div>
+                    </div>
+                    <i class="flaticon-statistics"></i>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6">
+                <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
+                    <div class="ms-card-body media">
+                        <div class="media-body">
+                            <h6>Refunded</h6>
                             <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_dispatched}}
                             </p>
                             <p class="fs-12">{{$text}}</p>

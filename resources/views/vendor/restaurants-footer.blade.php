@@ -1,11 +1,17 @@
-
+<!-- 
 <audio class="alert-audio" style="display:none" controls >
     <source src="{{asset('fcm_notification_sound.mp3')}}"  type="audio/mpeg">
-</audio>
-<audio id="beep__hover" src="{{asset('fcm_notification_sound.mp3')}}" allow="autoplay" muted="true">></audio>
+</audio> -->
+<!-- <audio  src="{{asset('fcm_notification_sound.mp3')}}" muted autoplay >></audio> -->
+
 
 <!-- MODALS -->
 <!-- Quick bar -->
+<audio id="beep__hover" controls  >
+  <source src="{{asset('fcm_notification_sound.ogg')}}" type="audio/ogg">
+  <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
 <aside id="ms-quick-bar" class="ms-quick-bar fixed ms-d-block-lg">
 
     <ul class="nav nav-tabs ms-quick-bar-list" role="tablist">
@@ -590,7 +596,7 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         initFirebaseMessagingRegistration();
 
         messaging.onMessage((payload) => {
-            console.log(payload.notification.title);
+            console.log(payload);
             new Notification(payload.notification.title, {body: payload.notification.body});
             if (payload.data.link === void 0) {
                 toastr.info(payload.notification.title, payload.notification.body);
@@ -601,7 +607,7 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                     console.log('clicked');
                 }
 
-                toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="'+payload.data.link+'">View</a>', payload.notification.title,);
+                toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" target="_blank" href="#">View</a>', payload.notification.title,);
 
             }
             //$("#beep__hover").get(0).play();

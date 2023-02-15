@@ -229,7 +229,7 @@ class OrderController extends Controller
 
     public function refresh_list(Request $request, $staus_filter = null)
     {
-        $order_obj = Order::select('orders.id', 'orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
+        $order_obj = Order::select('orders.id', 'orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name','orders.created_at')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->join('order_products', 'order_products.order_id', '=', 'orders.id')
             ->join('products', 'products.id', '=', 'order_products.product_id')
