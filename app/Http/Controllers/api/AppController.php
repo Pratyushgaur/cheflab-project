@@ -201,7 +201,7 @@ class AppController extends Controller
 
             $vendor_ids = get_active_time_restaurant_ids_near_me($request->lat, $request->lng, $where, false)->toArray(); //not need to pass offset; limit set on products
             //get productd's shoud display in pagination
-            $products_ids = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.id', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
+            $products_ids = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.product_rating', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
             // product details
             $products = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.product_rating', 'desc', true, false, $vendor_ids, null, null, false, $products_ids);
             // total products
