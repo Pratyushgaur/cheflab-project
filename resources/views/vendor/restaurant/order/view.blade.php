@@ -182,7 +182,7 @@
                                 <div class="media clearfix">
                                     {{--                                        <img src="{{url('/').'/dliver-boy/'.$rider->image}}" class="ms-img-round ms-img-small" alt="people">--}}
                                     <div class="media-body">
-                                        <p><b>Payment Methode : </b>{{$order->payment_type}}</p>
+                                        <p><b>Payment Method : </b>{{$order->payment_type}}</p>
                                         <p><b>Payment Staus : </b>
                                             @if($order->payment_status=='pending')
                                                 <span class="badge badge-primary">Pending</span>

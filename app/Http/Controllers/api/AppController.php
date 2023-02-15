@@ -197,7 +197,7 @@ class AppController extends Controller
             $where   = ['vendor_type' => 'restaurant'];
             $whereIn = []; //[36,1391,75,899,976,990,242,253,329,1390];
             $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
-            $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.id', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+            $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.vendor_ratings', 'desc')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
 
             $vendor_ids = get_restaurant_ids_near_me($request->lat, $request->lng, $where, false)->toArray(); //not need to pass offset; limit set on products
             //get productd's shoud display in pagination
