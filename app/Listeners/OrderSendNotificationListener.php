@@ -42,6 +42,7 @@ class OrderSendNotificationListener
             $event->clickUrl,
             $vendor->fcm_token
         ));
+        var_dump($event->clickUrl);
         $token []= $vendor->fcm_token;
         $res = sendNotification('New Order',"You have received new Order #" . $event->order_id . ' from ' . $customer->name,$token,['msg_type' => 'info','link' => $event->clickUrl]);
 
