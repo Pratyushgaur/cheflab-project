@@ -193,5 +193,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('mis/renvenue/settlements-list', [App\Http\Controllers\vendor\restaurant\MisController::class, 'settlements_list'])->name('restaurant.mis.renvenue.settlements.list');
 
         Route::get('mis/order-invoice-pdf', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_invoice'])->name('restaurant.mis.order.invoice.pdf');
+
+        Route::get('mis/order-monthly-invoice-list', [App\Http\Controllers\vendor\restaurant\MisController::class, 'monthly_invoice_list'])->name('restaurant.mis.monthly_invoice_list');
+
+        Route::get('mis/order-monthly-invoice-list-data', [App\Http\Controllers\vendor\restaurant\MisController::class, 'monthly_invoice_list_data'])->name('restaurant.mis.monthly_invoice_list_data');
     });
 });

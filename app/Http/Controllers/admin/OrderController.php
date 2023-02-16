@@ -18,11 +18,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-
-   
-
-
-    return view('admin.order.list');
+      
+        return view('admin.order.list');
 
     }
     public function dineoutlist(){

@@ -87,6 +87,9 @@
           <li>
              <a href="{{ route('restaurant.mis.renvenue') }}" class="">Statement of Accounts</a>
           </li>
+          <li>
+             <a href="{{ route('restaurant.mis.monthly_invoice_list') }}" class="{{ request()->is('vendor/mis/order-monthly-invoice-list') ? 'active' : '' }}">Invoices</a>
+          </li>
         </ul>
       </li>
 

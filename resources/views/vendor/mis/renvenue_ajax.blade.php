@@ -52,7 +52,7 @@
                       <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
-                            <h4 class="fw-normal text-dark">₹{{ $deductions }}</h4>
+                            <h4 class="fw-normal text-dark">₹{{ number_format($deductions,2) }}</h4>
                             <p class="subtitle text-sm text-muted mb-0">Deductions</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
@@ -76,7 +76,7 @@
                       <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
-                            <h4 class="fw-normal text-dark">₹{{ $net_receivables }}</h4>
+                            <h4 class="fw-normal text-dark">₹{{ number_format($net_receivables,2) }}</h4>
                             <p class="subtitle text-sm text-muted mb-0">Net receivable[A+B-C]</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
@@ -100,7 +100,7 @@
                       <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
-                            <h4 class="fw-normal text-dark">₹{{ $your_settlement }}</h4>
+                            <h4 class="fw-normal text-dark">₹{{ number_format($your_settlement,2) }}</h4>
                             <p class="subtitle text-sm text-muted mb-0">Your Settlements (Bank UTRs)</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
