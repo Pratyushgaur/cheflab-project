@@ -19,7 +19,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Commission</td>
-                                            <td class="text-right"><b>₹{{ $admin_amount }}</b></td>
+                                            <td class="text-right"><b>₹{{ number_format($admin_amount,2) }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -29,7 +29,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Tax On Commission</td>
-                                            <td class="text-right"><b>₹{{ $tax_amount }}</b></td>
+                                            <td class="text-right"><b>₹{{ number_format($tax_amount,2) }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -41,7 +41,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Convenience fee</td>
-                                            <td class="text-right"><b>₹{{ $convenience_amount }}</b></td>
+                                            <td class="text-right"><b>₹{{ number_format($convenience_amount,2) }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -52,7 +52,7 @@
                                     <tbody>
                                         <tr>
                                             <td>Order canceled Deduction</td>
-                                            <td class="text-right"><b>₹{{ $calceled_order }}</b></td>
+                                            <td class="text-right"><b>₹{{ number_format($calceled_order, 2) }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -60,7 +60,7 @@
                         </tr>
                         <tr>
                              <td>Net Amount</td>                                           
-                             <td class="text-right"><b>₹{{ $net_amount }}</b></td>                                       
+                             <td class="text-right"><b>₹{{ number_format($admin_amount + $tax_amount + $convenience_amount + $calceled_order, 2)}}</b></td>                                       
                         </tr>
                     </tbody>
                   </table>

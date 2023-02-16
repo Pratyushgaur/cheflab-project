@@ -5,6 +5,9 @@ use App\Http\Controllers\DriverMapController;
 Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // City Module
     Route::get('dashbord-admin', [App\Http\Controllers\admin\Dashboard::class, 'index'])->name('admin.dashboard');
+
+    Route::get('cron', [App\Http\Controllers\admin\CronController::class, 'index'])->name('admin.cron');
+
     Route::get('city', [App\Http\Controllers\admin\City::class, 'index'])->name('city');
     Route::post('city-action', [App\Http\Controllers\admin\City::class, 'cityAction'])->name('city.action');
     Route::post('city-update', [App\Http\Controllers\admin\City::class, 'update'])->name('city.update');

@@ -14,6 +14,7 @@ use Auth;
 use DataTables;
 use Illuminate\Http\Request;
 use App\Exports\OrderExport;
+use App\Models\MonthlyInvoice;
 use App\Models\Vendors;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -35,7 +36,7 @@ class MisController extends Controller
 
         $vendorId = Auth::guard('vendor')->user()->id;
         $order_sum = OrderCommision::where('vendor_id', $vendorId)->sum('gross_revenue');
-        $order_count = OrderCommision::where('vendor_id', $vendorId)->where('is_approve', 1)->count();  
+        $order_count = OrderCommision::where('vendor_id', $vendorId)->where('is_approve', 1)->count();
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->sum('additions');
         $deductions = OrderCommision::where('vendor_id', $vendorId)->sum('deductions');
         $net_receivables = OrderCommision::where('vendor_id', $vendorId)->sum('net_receivables');
@@ -58,42 +59,50 @@ class MisController extends Controller
         $order_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->count();
         //  echo '<pre>';print_r($order_count);die;
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('additions');
-        $deductions = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('deductions');
-        
+
+        $paymentSetting = Paymentsetting::first();
+        $vendorData = Vendors::where('id', $vendorId)->first();
+        $admin_amount = ($order_sum * $vendorData->commission) / 100;
+        $tax_amount = ($admin_amount * 18) / 100;
+        $convenience_amount = ($order_sum * $paymentSetting->convenience_fee) / 100;
+        $calceled_order = OrderCommision::where(['vendor_id' => $vendorId, 'cancel_by_vendor' => 1])->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('vendor_cancel_charge');
+
+        $deductions = $admin_amount + $tax_amount + $convenience_amount  + $calceled_order;
+
         $net_receivables = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('net_receivables');
 
-        $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->sum('amount');
+        $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->whereBetween('vendor_payout_details.created_at', [$start_date, $end_date])->sum('amount');
 
-        return view('vendor.mis.renvenue_ajax', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables', 'your_settlement','start_date','end_date'));
+        return view('vendor.mis.renvenue_ajax', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables', 'your_settlement', 'start_date', 'end_date'));
     }
     public function addition_view(Request $request)
     {
-       
+
         $vendorId = Auth::guard('vendor')->user()->id;
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('additions');
         return view('vendor.mis.addition_view', compact('additions_count'));
     }
     public function deductions_view(Request $request)
     {
-       
+
         $vendorId = Auth::guard('vendor')->user()->id;
-        $vendorData = Vendors::where('id' , $vendorId)->first();
+        $vendorData = Vendors::where('id', $vendorId)->first();
         $paymentSetting = Paymentsetting::first();
 
         $order_sum = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('gross_revenue');
 
-        $admin_amount = ($order_sum*$vendorData->commission)/100;
-        $tax_amount = ($admin_amount*18)/100;
-        $convenience_amount = ($order_sum*$paymentSetting->convenience_fee)/100;
+        $admin_amount = ($order_sum * $vendorData->commission) / 100;
+        $tax_amount = ($admin_amount * 18) / 100;
+        $convenience_amount = ($order_sum * $paymentSetting->convenience_fee) / 100;
         $net_amount = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('deductions');
 
         //$calceled_order = OrderCommision::join('orders','order_commisions.order_id','=','orders.id')->where(['vendor_id'=> $vendorId, 'order.order_status'=> 'cancelled_by_vendor'])->sum('deductions');
 
-        $calceled_order = OrderCommision::where(['vendor_id' => $vendorId, 'cancel_by_vendor' => 1])->sum('vendor_cancel_charge');
+        $calceled_order = OrderCommision::where(['vendor_id' => $vendorId, 'cancel_by_vendor' => 1])->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('vendor_cancel_charge');
         return view('vendor.mis.deductions_view', compact('admin_amount', 'tax_amount', 'convenience_amount', 'net_amount', 'calceled_order'));
     }
 
-    
+
 
     public function order_list()
     {
@@ -104,7 +113,7 @@ class MisController extends Controller
 
         if ($request->ajax()) {
 
-            $data = OrderCommision::where('orders.vendor_id', $request->vendorId)->join('orders', 'order_commisions.order_id', '=', 'orders.id')->select('order_commisions.*', 'orders.payment_type', 'orders.payment_status');
+            $data = OrderCommision::where('orders.vendor_id', $request->vendorId)->join('orders', 'order_commisions.order_id', '=', 'orders.id')->select('order_commisions.*', 'orders.payment_type', 'orders.payment_status', 'orders.order_status');
 
 
             $dateSedule = $request->datePicker;
@@ -134,7 +143,11 @@ class MisController extends Controller
                         $btn = '<span class="text-success">Delivered</span>';
                     } elseif ($data->is_cancel == 1) {
                         $btn = '<span class="text-danger">Cancel</span>';
+                    } elseif($data->is_approve == 0){
+                        $btn = '<span class="text-danger">Pending</span>';
                     }
+                    // $btn = '<span class="text-danger">' . "$data->order_status" . '</span>';
+                    
                     return $btn;
                 })
 
@@ -148,12 +161,24 @@ class MisController extends Controller
     }
     public function order_detail($id)
     {
-        $order = OrderCommision::where('order_commisions.id', $id)->join('orders', 'order_commisions.order_id', '=', 'orders.id')->select('order_commisions.*', 'orders.payment_type', 'orders.payment_status')->first();
-        return view('vendor.mis.order_detail', compact('order'));
+
+        $order = OrderCommision::where('order_commisions.id', $id)->join('orders', 'order_commisions.order_id', '=', 'orders.id')->select('order_commisions.*', 'orders.payment_type', 'orders.payment_status', 'orders.order_status', 'order_commisions.is_approve', 'order_commisions.is_cancel')->first();
+        if ($order->is_approve == 1) {
+            $status = "Delivered";
+        } elseif ($order->is_cancel == 1) {
+            $status = "Cancel";
+        } elseif($order->is_approve == 0){
+            $status = "Pending";
+        }
+
+
+        return view('vendor.mis.order_detail', compact('order','status'));
+
     }
 
     public function oredr_export(Request $request)
     {
+        
         return Excel::download(new OrderExport($request), 'order.xlsx');
     }
 
@@ -172,10 +197,49 @@ class MisController extends Controller
         return view('vendor.mis.settlements_view', compact('settlements_list'));
     }
 
-    // public function settlements_list(Request $request)
-    // {
+    public function monthly_invoice_list(Request $request)
+    {
     //    echo "hello";die;
-    // }
+    $settlements_list = 1;
+    return view('vendor.mis.monthly_invoice_list', compact('settlements_list'));
+    }
+
+
+    public function monthly_invoice_list_data(Request $request)
+    {
+
+        $vendorId = Auth::guard('vendor')->user()->id;
+        if ($request->ajax()) {
+
+            $data = MonthlyInvoice::where('monthly_invoices.vendor_id', $vendorId);
+ 
+            $data = $data->get();
+            // echo '<pre>';print_r($data);die;
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action-js', function ($data) {
+                    $btn = '<a class="btn btn-xs btn-danger" href="' . asset("$data->invoice_file") . '" download>Download Invoice</a>';
+                    return $btn;
+                })
+                ->addColumn('month_year', function ($data) {
+                    $strtotimedata = strtotime($data->month_year);
+                    $month_year = date("M - Y", $strtotimedata);
+                    return $month_year;
+                })
+
+
+
+                ->rawColumns(['month_year', 'action-js'])
+
+
+                ->make(true);
+        }
+   
+    }
+
+    
+
+    
 
 
 }

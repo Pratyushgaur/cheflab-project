@@ -24,198 +24,206 @@ class AccountmisController extends Controller
 {
     public function index()
     {
-       
+
         return view('admin.mis.list');
     }
 
-    
+
     public function get_data_table_of_order(Request $request)
     {
         // echo "hello";die;
         if ($request->ajax()) {
 
-            
-           $data = Orders::join('order_commisions','orders.id','=','order_commisions.order_id')->join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->join('coupons','orders.coupon_id','=','coupons.id')->join('rider_assign_orders','order_commisions.order_id','=','rider_assign_orders.order_id')->select('orders.order_id','orders.transaction_id','orders.coupon_id','orders.preparation_time_from','orders.preparation_time_to','orders.customer_name','vendors.name as vendor_name','order_commisions.net_amount','order_commisions.vendor_commision','order_commisions.admin_commision','order_commisions.admin_amount','orders.created_at','users.name','orders.platform_charges','orders.tex','orders.discount_amount','orders.wallet_cut','vendors.commission','rider_assign_orders.earning','orders.delivery_charge','coupons.code');	
 
-           if($request->status != ''){
-            $data = $data->where('payment_status','=',$request->status);
-           }
-           if($request->role != ''){
-            $data = $data->where('vendors.vendor_type','=',$request->role);
-           }
-           if($request->vendor != ''){
-            $data = $data->where('orders.vendor_id','=',$request->vendor);
-           }
+            $data = Orders::join('order_commisions', 'orders.id', '=', 'order_commisions.order_id')->join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'order_commisions.order_id', '=', 'rider_assign_orders.order_id')->select('orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'order_commisions.net_amount', 'order_commisions.vendor_commision', 'order_commisions.admin_commision', 'order_commisions.admin_amount', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code');
 
-           $dateSedule = $request->datePicker;
-        
-           if(isset($dateSedule)){
-           $packagetime = explode('/', $dateSedule);
-           $start_time = $packagetime[0].' 00:00:00';
-           $end_time = $packagetime[1].' 23:59:59';
-           }
+            if ($request->status != '') {
+                $data = $data->where('payment_status', '=', $request->status);
+            }
+            if ($request->role != '') {
+                $data = $data->where('vendors.vendor_type', '=', $request->role);
+            }
+            if ($request->vendor != '') {
+                $data = $data->where('orders.vendor_id', '=', $request->vendor);
+            }
 
-           if(!empty($start_time) && !empty($end_time)) {
-            $data = $data->whereBetween('orders.created_at', [$start_time, $end_time]);
-           }
-    
-           
-           $data = $data->get();
+            $dateSedule = $request->datePicker;
+
+            if (isset($dateSedule)) {
+                $packagetime = explode('/', $dateSedule);
+                $start_time = $packagetime[0] . ' 00:00:00';
+                $end_time = $packagetime[1] . ' 23:59:59';
+            }
+
+            if (!empty($start_time) && !empty($end_time)) {
+                $data = $data->whereBetween('orders.created_at', [$start_time, $end_time]);
+            }
+
+
+            $data = $data->get();
             return Datatables::of($data)
                 ->addIndexColumn()
                 // ->addColumn('wallet_cut', function($data){
                 //     $wallet_cut = 0;
                 //     return $wallet_cut;
                 // })
-                 ->addColumn('rider_earning', function($data){
-                    if($data->earning == ''){
+                ->addColumn('rider_earning', function ($data) {
+                    if ($data->earning == '') {
                         $rider_earning = 0;
-                    }else{
+                    } else {
                         $rider_earning = $data->earning;
                     }
                     return $rider_earning;
                 })
 
-                
 
-                ->rawColumns(['wallet_cut','rider_earning','action-js'])
 
-                ->addColumn('admin_erning', function($data){
+                ->rawColumns(['wallet_cut', 'rider_earning', 'action-js'])
+
+                ->addColumn('admin_erning', function ($data) {
                     $admin_erning = $data->admin_commision + $data->admin_amount;
                     return $admin_erning;
                 })
 
 
-                ->rawColumns(['wallet_cut','admin_erning','action-js'])
+                ->rawColumns(['wallet_cut', 'admin_erning', 'action-js'])
 
                 ->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
-               // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
-                
-               ->make(true);
+                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+
+                ->make(true);
         }
     }
 
     public function getVendorByRole(Request $request)
     {
-        return Vendors::where('vendor_type','=',$request->role)->select('id','name')->get();
+        return Vendors::where('vendor_type', '=', $request->role)->select('id', 'name')->get();
     }
-    public function vieworder($encrypt_id){
+    public function vieworder($encrypt_id)
+    {
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
-            $order_id =$id;
+            $id =  Crypt::decryptString($encrypt_id);
+            $order_id = $id;
             $order = Orders::findOrFail($id);
 
             $vendor_id = $order->vendor_id;
             $user_id = $order->user_id;
             $orderProduct = OrderProduct::findOrFail($order_id);
             $product_id = $orderProduct->product_id;
-            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
+            $product = Product_master::where('id', '=', $product_id)->select('id', 'product_name', 'product_image', 'primary_variant_name', 'product_price', 'type')->get();
             $vendor = Vendors::findOrFail($vendor_id);
             $users = User::findOrFail($user_id);
-            
-            return view('admin.order.view',compact('order','orderProduct','product','vendor','users'));
+
+            return view('admin.order.view', compact('order', 'orderProduct', 'product', 'vendor', 'users'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
-        } 
+        }
     }
-    public function invoiceorder($order_id){
-        $order = Orders::where('order_id',$order_id)->first();
+    public function invoiceorder($order_id)
+    {
+        $order = Orders::where('order_id', $order_id)->first();
         $vendor = Vendors::findOrFail($order->vendor_id);
         $users = User::findOrFail($order->user_id);
         $orderProduct = OrderProduct::findOrFail($order_id);
-            $product_id = $orderProduct->product_id;
-            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
-        return view('admin.order.invoice',compact('order','vendor','users','product'));
+        $product_id = $orderProduct->product_id;
+        $product = Product_master::where('id', '=', $product_id)->select('id', 'product_name', 'product_image', 'primary_variant_name', 'product_price', 'type')->get();
+        return view('admin.order.invoice', compact('order', 'vendor', 'users', 'product'));
         // echo '<pre>'; print_r($order);die;
     }
-    public function status_update(Request $request){
-      
+    public function status_update(Request $request)
+    {
+
         $status = $request->status;
         $id = $request->id;
         $orders = Orders::where('id', '=',  $id)->first();
         $orders->order_status = $status;
         $orders->save();
-       
-        return ;
+
+        return;
     }
 
-    public function invoice($encrypt_id){
+    public function invoice($encrypt_id)
+    {
         try {
-            $id =  Crypt::decryptString($encrypt_id);  
-            $order_id =$id;
+            $id =  Crypt::decryptString($encrypt_id);
+            $order_id = $id;
             $order = Orders::findOrFail($id);
             $vendor_id = $order->vendor_id;
             $orderProduct = OrderProduct::findOrFail($order_id);
             $product_id = $orderProduct->product_id;
-            $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price')->get();
+            $product = Product_master::where('id', '=', $product_id)->select('id', 'product_name', 'product_image', 'primary_variant_name', 'product_price')->get();
             $vendor = Vendors::findOrFail($vendor_id);
-            return view('admin.order.invoice',compact('order','orderProduct','product','vendor'));
+            return view('admin.order.invoice', compact('order', 'orderProduct', 'product', 'vendor'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
-        } 
+        }
     }
-    public function get_data_table_of_product(Request $request,$id)
+    public function get_data_table_of_product(Request $request, $id)
     {
-       
+
         $product_id = $id;
         if ($request->ajax()) {
-        
-           //$data = Product_master::join('vendors','orders.vendor_id','=','vendors.id')->select('orders.id','orders.customer_name','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
-           $data = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','product_price','primary_variant_name')->get();
-           return Datatables::of($data)
-           ->addIndexColumn()
-          
 
-           ->addColumn('date', function($data){
-               $date_with_format = date('d M Y',strtotime($data->created_at));
-               return $date_with_format;
-           })
-          
-           ->addColumn('product_name', function ($data) {
-            $btn = ' <img src="' . asset('products') . '/' . $data->product_image . '" data-pretty="prettyPhoto" style="width:50px; height:30px;" alt="Trolltunga, Norway"> <div id="myModal" class="modal">
+            //$data = Product_master::join('vendors','orders.vendor_id','=','vendors.id')->select('orders.id','orders.customer_name','orders.order_status','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
+            $data = Product_master::where('id', '=', $product_id)->select('id', 'product_name', 'product_image', 'product_price', 'primary_variant_name')->get();
+            return Datatables::of($data)
+                ->addIndexColumn()
+
+
+                ->addColumn('date', function ($data) {
+                    $date_with_format = date('d M Y', strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+                ->addColumn('product_name', function ($data) {
+                    $btn = ' <img src="' . asset('products') . '/' . $data->product_image . '" data-pretty="prettyPhoto" style="width:50px; height:30px;" alt="Trolltunga, Norway"> <div id="myModal" class="modal">
             <img class="modal-content" id="img01">
             </div>' . $data->product_name . '';
-            return $btn;
-        })
+                    return $btn;
+                })
 
-           ->rawColumns(['date'])
-           ->rawColumns(['product_name']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
-           ->make(true);
+                ->rawColumns(['date'])
+                ->rawColumns(['product_name']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                ->make(true);
         }
     }
 
 
     public function monthly_invoice(Request $request)
     {
-        
+
         return view('admin.mis.monthly_invoice');
     }
 
     public function monthly_invoice_list(Request $request)
     {
-       
-        if ($request->ajax()) {
-	
-        $data = MonthlyInvoice::select('monthly_invoices.*','vendors.name')->join('vendors','monthly_invoices.vendor_id','=','vendors.id');
 
-           if(!empty($start_time) && !empty($end_time)) {
-            $data = $data->whereBetween('monthly_invoices.created_at', [$start_time, $end_time]);
-           }
-           $data = $data->get();
+        if ($request->ajax()) {
+
+            $data = MonthlyInvoice::select('monthly_invoices.*', 'vendors.name')->join('vendors', 'monthly_invoices.vendor_id', '=', 'vendors.id');
+
+            if (!empty($start_time) && !empty($end_time)) {
+                $data = $data->whereBetween('monthly_invoices.created_at', [$start_time, $end_time]);
+            }
+            $data = $data->get();
 
             return Datatables::of($data)
 
                 ->addIndexColumn()
-                ->addColumn('action', function($data){
-                    $btn = '<a class="btn btn-xs btn-danger" href="'. asset("$data->invoice_file").'" download>Download Invoice</a>';
+                ->addColumn('action', function ($data) {
+                    $btn = '<a class="btn btn-xs btn-danger" href="' . asset("$data->invoice_file") . '" download>Download Invoice</a>';
                     return $btn;
                 })
-
-                ->rawColumns(['action'])
+                ->addColumn('month_year', function ($data) {
+                    $strtotimedata = strtotime($data->month_year);
+                    $month_year = date("M - Y", $strtotimedata);
+                    return $month_year;
+                })
+                ->rawColumns(['action','month_year'])
                 ->make(true);
         }
     }
-  
+
     public function genrate_invoice(Request $request)
     {
 
@@ -231,11 +239,11 @@ class AccountmisController extends Controller
         $monthYear = "Jan - 2023";
 
 
-        $totalAmount = Orders::where(['vendor_id'=> $vendorData->id, 'order_status'=> "dispatched"])->whereMonth('created_at', '=', $month)->whereYear('created_at', '=', $year)->get()->sum('total_amount');
+        $totalAmount = Orders::where(['vendor_id' => $vendorData->id, 'order_status' => "dispatched"])->whereMonth('created_at', '=', $month)->whereYear('created_at', '=', $year)->get()->sum('total_amount');
 
-        $adminDetail = AdminMasters::select('admin_masters.email','admin_masters.phone','admin_masters.suport_phone','admin_masters.office_addres','admin_masters.gstno')->first();
-        
-        $vendorDetail = Vendors::where(['vendor_id'=> $vendorData->id ])->select('vendors.name','vendors.owner_name','vendors.email','vendors.mobile','vendors.pincode','vendors.address','vendors.fssai_lic_no','vendors.gst_no','vendors.commission')->first();
+        $adminDetail = AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
+
+        $vendorDetail = Vendors::where(['vendor_id' => $vendorData->id])->select('vendors.name', 'vendors.owner_name', 'vendors.email', 'vendors.mobile', 'vendors.pincode', 'vendors.address', 'vendors.fssai_lic_no', 'vendors.gst_no', 'vendors.commission')->first();
 
         $commission = ($totalAmount * $vendorDetail->commission) / 100;
 
@@ -244,14 +252,14 @@ class AccountmisController extends Controller
         $invoiceNo = rand(99999, 999999);
 
         $totalAdminCommission = $commission + $sgst + $cgst;
-      
+
         $invoiceName = rand(9999, 99999) . $vendorData->id . '.pdf';
-        $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorDetail','commission','sgst','cgst','totalAdminCommission','monthYear','invoiceNo'));
+        $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorDetail', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo'));
 
         $pdf->save(public_path('uploads/invoices/' . $invoiceName));
         $url = 'uploads/invoices/' . $invoiceName;
 
-        
+
         $pdfData = new MonthlyInvoice;
         $pdfData->vendor_id = $vendorData->id;
         $pdfData->invoice_number = $invoiceNo;
@@ -260,7 +268,5 @@ class AccountmisController extends Controller
         $pdfData->month_year = $monthYear;
         $pdfData->save();
         return true;
-
-        
-    }       
+    }
 }
