@@ -384,6 +384,7 @@ class AppController extends Controller
             ], 500);
         }
     }
+
     public function deliverOtpCheck(Request $request)
     {
 
