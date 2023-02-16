@@ -2,14 +2,15 @@
 
 namespace Tests;
 
-use App\Http\Controllers\Admin\Deliveryboy;
 use App\Models\AdminMasters;
 use App\Models\Deliver_boy;
 use App\Models\DeliveryBoyTokens;
 use App\Models\Mobileotp;
 use App\Models\Order;
 use App\Models\RiderAssignOrders;
+use App\Models\RiderIncentives;
 use App\Models\RiderMobileOtp;
+use App\Models\RiderReviewRatings;
 use App\Models\User;
 use App\Models\User_faq;
 use App\Models\Vendors;
@@ -73,5 +74,15 @@ abstract class TestCase extends BaseTestCase
     public function createRiderAssignOrders($args = [], $num = null)
     {
         return RiderAssignOrders::factory()->count($num)->create($args);
+    }
+
+    public function createRiderIncentives($args = [], $num = null)
+    {
+        return RiderIncentives::factory()->count($num)->create($args);
+    }
+
+    public function createRiderReviewRatings($args = [], $num = null)
+    {
+        return RiderReviewRatings::factory()->count($num)->create($args);
     }
 }
