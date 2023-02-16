@@ -400,7 +400,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
         'dis as description',
         'products.id as product_id',
-        'product_rating',
+        DB::raw('ROUND(product_rating,1) AS product_rating'),
         'dis',
         'chili_level',
         'primary_variant_name'
