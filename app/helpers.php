@@ -905,7 +905,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         'vendor_order_time.day_no',
         'vendors.name',
         "vendor_food_type",
-        'vendor_ratings',
+        DB::raw('ROUND(vendor_ratings,1) AS vendor_ratings'),
         'vendors.lat',
         'vendors.long',
         'deal_categories',

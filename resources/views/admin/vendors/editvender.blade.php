@@ -564,13 +564,13 @@
                     <div class="col-md-6 mb-3">
                       <label>Latitude</label>
                       <div class="input-group">
-                        <input type="text" name="lat" class="form-control newLatitude" placeholder="Latitude" value="{{ @$vendor->lat }}" readonly><br>
+                        <input type="text" name="lat" class="form-control newLatitude" placeholder="Latitude" value="{{ @$vendor->lat }}" ><br>
                       </div>
                     </div>
                     <div class="col-md-6 mb-2">
                       <label>Longitude</label>
                       <div class="input-group">
-                        <input type="text" name="lng" class="form-control newLongitude" placeholder="Latitude" value="{{ @$vendor->long }}" readonly><br>
+                        <input type="text" name="lng" class="form-control newLongitude" placeholder="Latitude" value="{{ @$vendor->long }}" ><br>
                       </div>
                     </div>
                   </div>
