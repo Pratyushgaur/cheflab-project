@@ -4,11 +4,11 @@ namespace Tests\Feature\Rider;
 
 use Tests\TestCase;
 
-class IncentiveHistoryTest extends TestCase
+class LoginInHistoryTest extends TestCase
 {
     public function test_it_can_check_the_required_validation_of_order_earning()
     {
-        $response = $this->postJson(route("rider.incentive.history"), [
+        $response = $this->postJson(route("rider.login.history"), [
             "user_id" => "",
         ]);
         $response->assertJsonStructure([
@@ -19,7 +19,7 @@ class IncentiveHistoryTest extends TestCase
 
     public function test_it_can_check_the_numeric_validation_of_analytics()
     {
-        $response = $this->postJson(route("rider.incentive.history"), [
+        $response = $this->postJson(route("rider.login.history"), [
             "user_id" => "asbs",
         ]);
         $response->assertJsonStructure([
@@ -30,7 +30,7 @@ class IncentiveHistoryTest extends TestCase
 
     public function test_it_can_check_the_not_exists_validation_of_analytics()
     {
-        $response = $this->postJson(route("rider.incentive.history"), [
+        $response = $this->postJson(route("rider.login.history"), [
             "user_id" => "123",
         ]);
         $response->assertJsonStructure([
