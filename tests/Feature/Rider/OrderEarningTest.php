@@ -17,7 +17,7 @@ class OrderEarningTest extends TestCase
         $this->assertStringContainsString("The user id field is required.", $response->json()["error"][0]);
     }
 
-    public function test_it_can_check_the_numeric_validation_of_analytics()
+    public function test_it_can_check_the_numeric_validation_of_order_earning()
     {
         $response = $this->postJson(route("rider.order.earning"), [
             "user_id" => "asbs",
@@ -28,7 +28,7 @@ class OrderEarningTest extends TestCase
         $this->assertStringContainsString("The user id must be a number.", $response->json()["error"][0]);
     }
 
-    public function test_it_can_check_the_not_exists_validation_of_analytics()
+    public function test_it_can_check_the_not_exists_validation_of_order_earning()
     {
         $response = $this->postJson(route("rider.order.earning"), [
             "user_id" => "123",
