@@ -247,8 +247,8 @@ class AccountmisController extends Controller
 
         $commission = ($totalAmount * $vendorDetail->commission) / 100;
 
-        $sgst = ($totalAmount * 9) / 100;
-        $cgst = ($totalAmount * 9) / 100;
+        $sgst = ($commission * 9) / 100;
+        $cgst = ($commission * 9) / 100;
         $invoiceNo = rand(99999, 999999);
 
         $totalAdminCommission = $commission + $sgst + $cgst;

@@ -229,7 +229,7 @@
                            <div class="inner_invoice">
                               <h4 style="font-size:18px;margin: 0;line-height: 33px;">TAX INVOICE </h4>
                               <p style="font-size:14px;margin: 15px 0;">Original for Recipient</p>
-                              <h5 style="font-size:13px;margin-top:12px;text-transform: uppercase;text-align: left;">CHOTU 18 SERVICES PRIVATELIMITED </h5>
+                              <h5 style="font-size:13px;margin-top:12px;text-transform: uppercase;text-align: left;">CHOTU 18 SERVICES PRIVATE LIMITED </h5>
                            </div>
                         </div>
 
@@ -295,9 +295,9 @@
                         <tr>
                            <td><b>Merchant Details</b></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                            <td><b>Entity Name:</b> {{$vendorData->owner_name}}</td>
-                        </tr>
+                        </tr> -->
                         <!-- <tr>
                            <td><b>Merchant ID:</b> 146926 </td>
                         </tr> -->
@@ -420,12 +420,7 @@
             <!-- <p>Total Amount: Indian Rupee One Hundred Sixty Nine And Ninety Six Paisa only</p> -->
             <p>Amount INR {{ $totalAdminCommission }} settled through digital mode through multiple transactions net payout settlement dated {{ $currentDate }}</p>
          </div>
-         <div class="authorized_box" style="text-align:right;">
-            <p><b>For CHOTU 18 SERVICESPRIVATE LIMITED</b></p>
-            <div class="sign_box" style="margin:5px 0;">
-               <p>Authorized Signatory</p>
-            </div>
-         </div>
+         
          <div class="invoice_address" style="text-align:center;">
             <p>Communication Address: Flat201,Antilia Sky Luxuria, Antilia2,Nipania Road,Indore - 452010</p>
             <p>This is a computer generated invoice</p>

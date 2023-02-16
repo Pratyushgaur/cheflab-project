@@ -69,7 +69,7 @@ class MisController extends Controller
 
         $deductions = $admin_amount + $tax_amount + $convenience_amount  + $calceled_order;
 
-        $net_receivables = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('net_receivables');
+        $net_receivables = $order_sum - ($admin_amount + $tax_amount + $convenience_amount  + $calceled_order);
 
         $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->whereBetween('vendor_payout_details.created_at', [$start_date, $end_date])->sum('amount');
 
