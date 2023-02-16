@@ -63,7 +63,7 @@ class Userwallet extends Controller
             $UserWalletTransactions->save();
             //
             $users = User::where('id', '=', $request->user_id)->select('wallet_amount')->first();
-            $total = $request->amount + $user->wallet_amount;
+            $total = $request->amount + $users->wallet_amount;
             $update = User::where('id', '=', $request->user_id)->update(['wallet_amount' => $total]);
             return response()->json([
                 'status' => true,
