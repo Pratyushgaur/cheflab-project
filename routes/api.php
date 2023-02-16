@@ -186,7 +186,7 @@ Route::post('rider-chage-status', [App\Http\Controllers\api\rider\AppController:
 
 Route::post('rider-order-status', [App\Http\Controllers\api\rider\AppController::class, 'orderStatus'])->name("rider.order.status");
 Route::post('rider-pick-up-otp', [App\Http\Controllers\api\rider\AppController::class, 'pickupOtpCheck'])->name("rider.pick.up.otp");
-Route::post('rider-analytics', [App\Http\Controllers\api\rider\AppController::class, 'analytics']);
+Route::post('rider-analytics', [App\Http\Controllers\api\rider\AppController::class, 'analytics'])->name("rider.analytics");
 Route::post('rider-order-earnings', [App\Http\Controllers\api\rider\AppController::class, 'orderEarnings']);
 Route::post('rider-incentive-history', [App\Http\Controllers\api\rider\AppController::class, 'incentiveHistory']);
 Route::post('rider-latLng-update', [App\Http\Controllers\api\rider\AppController::class, 'updateLatLng']);
