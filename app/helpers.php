@@ -1263,6 +1263,8 @@ function promotionRowSetup($Blogs, $request, $user_id)
                         }
                     );
                     $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
+                    $resturant->whereDate('app_promotion_blog_bookings.from_date', '<=', mysql_date_time());
+                    $resturant->whereDate('app_promotion_blog_bookings.to_date', '>=', mysql_date_time());
                     $resturant->addSelect(
                         'app_promotion_blog_bookings.app_promotion_blog_id',
                         'app_promotion_blog_bookings.app_promotion_blog_setting_id',
@@ -1315,6 +1317,8 @@ function promotionRowSetup($Blogs, $request, $user_id)
                     );
 
                     $resturant->where('app_promotion_blog_bookings.app_promotion_blog_id', $blog->id);
+                    $resturant->whereDate('app_promotion_blog_bookings.from_date', '<=', mysql_date_time());
+                    $resturant->whereDate('app_promotion_blog_bookings.to_date', '>=', mysql_date_time());
 
                     $resturant->addSelect(
                         'app_promotion_blog_bookings.app_promotion_blog_id',
