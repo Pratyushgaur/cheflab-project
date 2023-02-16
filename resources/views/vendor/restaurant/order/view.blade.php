@@ -42,8 +42,8 @@
                         <div class="col-md-6">
                             <div class="invoice-address">
                                 <h3>Reciever: </h3>
-                                <!-- <h5>{{$order->customer_name}}</h5>
-                                <p>{{$order->mobile_number}}</p> -->
+                                <h5>{{$order->customer_name}}</h5>
+                                <!-- <p>{{$order->mobile_number}}</p> -->
                                 @if (isset($order->lat) && isset($order->long))
                                     <a target="_blank" href="http://maps.google.com/maps?z=12&t=m&q=loc:{{$order->lat }}+{{$order->long }}">
                                         {{ trim($order->delivery_address) }}
