@@ -112,9 +112,10 @@ class DashboardController extends Controller
         $total_completed            = $total_completed->count();
         $total_rejected             = $total_rejected->count();
         $total_refunded             = $total_refunded->count();
-        $order_sum                  = $order_sum->first()->gross_revenue;
-        $cancelled_orders           = $cancelled_orders->first()->vendor_cancel_charge;
-        $total_refundAmount         = $total_refundAmount->first()->additions;
+        
+        $order_sum                  = (empty($order_sum->first())) ? (0) : ($order_sum->first()->gross_revenue);
+        $cancelled_orders           = (empty($cancelled_orders->first())) ? (0) : ($cancelled_orders->first()->vendor_cancel_charge);
+        $total_refundAmount         = (empty($total_refundAmount->first())) ? (0) : ($total_refundAmount->first()->additions);
         $paymentSetting = \App\Models\Paymentsetting::first();
         $admin_amount = ($order_sum * Auth::guard('vendor')->user()->commission) / 100;
         $tax_amount = ($admin_amount * 18) / 100;
