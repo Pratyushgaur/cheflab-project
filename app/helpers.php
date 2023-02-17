@@ -1386,6 +1386,7 @@ function orderCancel($id)
 
     $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
     $ordercommision = array(
+        'is_approve' => 1,
         'is_cancel' => 0,
         'vendor_id' => $order->vendor_id,
         'order_id' => $order->id,

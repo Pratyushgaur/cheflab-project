@@ -39,8 +39,8 @@ class CronController extends Controller
                 $adminDetail = AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
                 $commission = ($totalAmount * $vendorData->commission) / 100;
 
-                $sgst = ($totalAmount * 9) / 100;
-                $cgst = ($totalAmount * 9) / 100;
+                $sgst = ($commission * 9) / 100;
+                $cgst = ($commission * 9) / 100;
                 $invoiceNo = rand(99999, 999999);
 
                 $totalAdminCommission = $commission + $sgst + $cgst;
