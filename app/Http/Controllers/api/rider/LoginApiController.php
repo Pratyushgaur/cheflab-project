@@ -40,7 +40,7 @@ class LoginApiController extends Controller
                     $data =  $deliveryBoy->first();
                     $otp = $this->otp_generate($data->mobile);
                     $msg = "OTP to Login to your ChefLab Rider App is $otp DO NOT share this OTP to anyone for security reasons.";
-                    $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$data->mobile&message=" . urlencode($msg) . "&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507167507835135096";
+                    $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$data->mobile&message=" . urlencode($msg) . "&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1707167661191218732";
                     Http::get($url);
                     return response()->json([
                         'status' => true,
