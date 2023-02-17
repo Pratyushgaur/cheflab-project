@@ -103,6 +103,12 @@
 						  <p>All Delivery Boy</p>
 						</a>
 					</li>
+					<li class="nav-item">
+						<a href="{{route('driver_map')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Delivery Map</p>
+						</a>
+					</li>
 					<!-- <li class="nav-item">
 						<a href="{{route('admin.deliverboy.review')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>

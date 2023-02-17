@@ -307,7 +307,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('payout-setting-store', [App\Http\Controllers\admin\PaymentsettingController::class,'storeGernel'])->name('admin.payout.storeGernel');
 
     // Driver Map
-    Route::get('drivers-map', [DriverMapController::class,'index']);
+    Route::get('drivers-map', [DriverMapController::class,'index'])->name('driver_map');
     Route::get('drivers/{driver}/info', [DriverMapController::class,'getDriver']);
 
     Route::post('delivery-boy/transaction', [App\Http\Controllers\admin\Deliveryboy::class, 'delivery_boy_tab'])->name('admin.delivery_boy.transaction');
