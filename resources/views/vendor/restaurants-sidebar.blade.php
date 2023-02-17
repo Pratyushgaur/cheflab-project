@@ -40,9 +40,9 @@
           <li>
              <a href="{{route('restaurant.shop.promotion')}}" class="{{ Request::routeIs('restaurant.shop.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.shop.promotion.create') ? 'active' : '' }}">Restaurant Promotion</a>
           </li>
-          <li>
+          <!-- <li>
               <a href="{{route('restaurant.product.promotion')}}" class="{{ Request::routeIs('restaurant.product.promotion') ? 'active' : '' }}{{ Request::routeIs('restaurant.product.promotion.create') ? 'active' : '' }}">Product Promotion</a>
-          </li>
+          </li> -->
 
         </ul>
       </li>

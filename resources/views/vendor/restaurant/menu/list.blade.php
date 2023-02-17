@@ -34,6 +34,7 @@
                         <th scope="col">Menu</th>
                         <th scope="col">No Of Products</th>
                         <th scope="col">Position</th>
+                        <th scope="col">Status</th>
                         <th scope="col">Date</th>
                         <th scope="col">Action</th>
                       </tr>
@@ -67,11 +68,57 @@
             {data: 'menuName', name: 'name'},
             {data: 'count', name: 'count'},
             {data: 'position', name: 'position'},
+            {data: 'status', name: 'status', orderable: false, searchable: false},
             {data: 'date', name: 'date'},
 
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
+
+    $(document).on('click', '.offmenu', function () {
+            var id = $(this).data('id');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '{{route("restaurant.product.status")}}', // This is what I have updated
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": id,
+                    "status":"0"
+                },
+                success: function (response) {
+                    toastr.info('Menu Catalogue Inactive On App Successfully', 'Alert');
+                    $('#menu-catalogue-table').DataTable().ajax.reload();
+                }
+            });
+        });
+        $(document).on('click', '.onMenu', function () {
+            var id = $(this).data('id');
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '{{route("restaurant.product.status")}}', // This is what I have updated
+                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                data: {
+                    "_token": "{{ csrf_token() }}",
+                    "id": id,
+                    "status":"1"
+                },
+                success: function (response) {
+                    toastr.info('Your Menu Catalogue is Active On App ');
+                    $('#menu-catalogue-table').DataTable().ajax.reload();
+                }
+            });
+        });
   })(jQuery);
 </script>
 @endsection

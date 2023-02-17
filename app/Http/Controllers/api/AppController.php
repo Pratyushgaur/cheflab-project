@@ -439,7 +439,7 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $category = VendorMenus::select('menuName', 'vendor_menus.id')->where('vendor_menus.vendor_id', '=', $request->vendor_id)->orderBy('vendor_menus.position', 'ASC')->get();
+            $category = VendorMenus::select('menuName', 'vendor_menus.id')->where('vendor_menus.vendor_id', '=', $request->vendor_id)->where('status', '=', "1")->orderBy('vendor_menus.position', 'ASC')->get();
             $date    = today()->format('Y-m-d');
             $coupon  = Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=', 1)->where('from', '<=', $date)->where('to', '>=', $date)->select('*')->get();
             $catData = [];
@@ -563,6 +563,7 @@ class AppController extends Controller
             //
             $category = VendorMenus::select('menuName', 'vendor_menus.id as menu_id')
                 ->where('vendor_menus.vendor_id', '=', $request->vendor_id)
+                ->where('status', '=', "1")
                 ->orderBy('position', 'ASC')
                 ->get();
             $new = [];

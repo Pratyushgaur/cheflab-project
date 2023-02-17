@@ -54,15 +54,26 @@ class MenuController extends Controller
                     ';
                     return $btn;
                 })
-
+                ->addColumn('status',function($data){
+                    
+                        if($data->status == "1"){
+                            $btn = '<label class="ms-switch"><input type="checkbox" checked> <span class="ms-switch-slider round offmenu" data-id="' . $data->id . '"></span></label>';
+                        }
+                        if($data->status == "0"){
+                            $btn = '<label class="ms-switch"><input type="checkbox" > <span class="ms-switch-slider round onMenu" data-id="' . $data->id . '"></span></label>';
+                             
+                        }
+                        
+                        return  $btn;
+                    
+                })
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y',strtotime($data->created_at));
                     return $date_with_format;
                 })
 
 
-                ->rawColumns(['date','action-js'])
-                ->rawColumns(['action-js'])
+                ->rawColumns(['date','action-js',"status"])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
@@ -129,5 +140,12 @@ class MenuController extends Controller
             return redirect()->back()->with('error', 'something went wrong');
 //            return \Response::json(['error' => true,'success' => false , 'error_message' => $e->getMessage()], 200);
         }
+    }
+    public function menuStatus(Request $request)
+    {
+        $id     = $request->id;
+        $status = $request->status;
+        $update = VendorMenus::where('id', $id)->update(['status' => $status]);
+        return \Response::json($update);
     }
 }

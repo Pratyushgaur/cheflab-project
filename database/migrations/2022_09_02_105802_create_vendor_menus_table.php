@@ -19,6 +19,7 @@ class CreateVendorMenusTable extends Migration
             $table->integer('position')->unsigned()->default(0);
             $table->unsignedBigInteger('vendor_id');
             $table->foreign('vendor_id')->references('id')->on('vendors')->onDelete('cascade');
+            $table->enum('status',["0","1"])->default("1")->comment('0=inactive,1=active');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
