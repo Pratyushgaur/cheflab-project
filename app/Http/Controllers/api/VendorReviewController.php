@@ -114,7 +114,7 @@ class VendorReviewController extends Controller
             $review = $review->addSelect('vendors.id as vendor_id');
             $review = $review->addSelect('deal_cuisines')->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service');
             $review = $review->addSelect( \DB::raw('COUNT(*) as product_count'));
-            $review = $review->skip($request->offset)->take($request->limit);
+            //$review = $review->skip($request->offset)->take($request->limit);
             $review = $review->groupBy('vendors.id')->having('product_count', '>',0);
             $data = $review->get();
             $baseurl = URL::to('vendor-banner/') . '/';
