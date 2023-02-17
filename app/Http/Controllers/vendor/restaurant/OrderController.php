@@ -175,7 +175,7 @@ class OrderController extends Controller
 
     public function invoice($id)
     {
-        $order = Order::with('products', 'user', 'order_product_details')->find($id);
+        $order = Order::with('products', 'user', 'order_product_details')->where('vendor_id','=',Auth::guard('vendor')->user()->id)->find($id);
         $vendorData = Vendors::where('id', Auth::guard('vendor')->user()->id)->first();
             //    dd($order->toArray());
         $strtotime = strtotime($order->created_at);
@@ -190,7 +190,7 @@ class OrderController extends Controller
     public function qot($id)
     {
       
-        $order = Order::with('products', 'user', 'order_product_details')->find($id);
+        $order = Order::with('products', 'user', 'order_product_details')->where('vendor_id','=',Auth::guard('vendor')->user()->id)->find($id);
         $product_qty = OrderProduct::where('order_id', $id)->get()->count();
         $strtotime = strtotime($order->created_at);
         $order_date = date('d M Y h:m a',$strtotime);

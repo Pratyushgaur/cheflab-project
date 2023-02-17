@@ -107,7 +107,10 @@
                     </thead>
                     <tbody>
                         @foreach($order->products as $k=>$product)
-
+                        <?php 
+                                $Product_master = \App\Models\Product_master::withTrashed()->find($product->product_id);
+                                
+                            ?>
                         <tr>
                             <td class="text-center w-5">
                                 <h6>{{$product->product_qty}} X </h6>
@@ -118,9 +121,9 @@
                                 
                                 <?php
 
-                                $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->get();
-                                if (!$OrderProductVariant) {
-                                    echo "<br/> <b>Variant :</b> $OrderProductVariant->variant_name";
+                                $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->first();
+                                if (!empty($OrderProductVariant) && $Product_master->customizable == 'true') {
+                                    echo " ($OrderProductVariant->variant_name)";
 
                                     $unit_price = $OrderProductVariant->variant_price / $OrderProductVariant->variant_qty;
                                     $price      = $OrderProductVariant->variant_price;
@@ -130,14 +133,33 @@
                                 }
 
                                 ?>
-                                <h6>test</h6>
-                                <br />
+                                
 
                             </td>
                             <td class="text-left">
                                 <h6><?php echo "&#8377;" . $unit_price; ?></h6>
                             </td>
                         </tr>
+                        <?php 
+                        $addons=\App\Models\OrderProductAddon::join('addons','addons.id','order_product_addons.addon_id')->where('order_product_id',$product->id)->get();
+                            if(isset($addons[0])){
+                                foreach ($addons as $k1=>$addon)
+                                        if(isset($addon->addon) && $addon->addon!=''){
+                                            
+                                            ?>
+                                            <tr>
+                                                <td class="text-center w-5"><h6>1 X </h6></td>
+                                                <td class="text-left"><h6>{{$addon->addon}}</h6></td>
+                                                <td class="text-left">
+                                                    <h6><?php echo "&#8377;" . $addon->addon_price; ?></h6>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+
+                            }
+
+                        ?>
                         @endforeach
                         <tr>
                             <td colspan="2">
