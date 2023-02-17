@@ -35,7 +35,7 @@ class CreateOrders extends Migration
             $table->float('wallet_cut', 8, 2)->default(0);
             $table->float('discount_amount', 6, 2)->default(0);
             $table->unsignedBigInteger('coupon_id')->nullable()->default(null);
-            $table->enum('payment_type', ['COD', 'online'])->default('COD');
+            $table->enum('payment_type', ['COD', 'Online'])->default('COD');
             $table->enum('payment_status', ['paid', 'pending'])->default('pending');
             $table->text('transaction_id')->nullable()->default(null);
             $table->text('payment_string')->nullable()->default(null)->comment('payment gatway return json string');

@@ -40,7 +40,7 @@
     <div class="col-md-6 mb-3">
         <label>IFSC Code <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('ifsc', null, ['class' => 'form-control',  'placeholder' => 'IFSC', 'min' => 3]) }}
+            {{ Form::text('ifsc', null, ['class' => 'form-control',  'placeholder' => 'IFSC']) }}
             @if ($errors->has('ifsc'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('ifsc') }}</strong></span>
             @endif
@@ -60,7 +60,7 @@
     <div class="col-md-6 mb-3">
         <label>Pan Number <code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::text('pancard_number', \Auth::guard('vendor')->user()->pancard_number, ['class' => 'form-control',  'placeholder' => 'Pan number', 'min' => 3]) }}
+            {{ Form::text('pancard_number', \Auth::guard('vendor')->user()->pancard_number, ['class' => 'form-control',  'placeholder' => 'Pan number']) }}
             @if ($errors->has('pancard_number'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('pancard_number') }}</strong></span>
             @endif
