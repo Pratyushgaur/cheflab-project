@@ -7,9 +7,9 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
                   'middleware' => ['isRestaurant']], function () {
 
                     Route::post('/time-model', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_model'])->name('restaurant.time.model');
-        Route::post('restaurent/time-model/save', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_save'])->name('restaurant.time.save');
-        Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
-            Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
+                    Route::post('restaurent/time-model/save', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'time_save'])->name('restaurant.time.save');
+                    Route::group(['middleware' => 'IsVendorDoneSettingsMiddleware'], function () {
+                    Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 
             Route::get('menus', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'index'])->name('restaurant.menu.list');
             Route::get('menus/create', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'create'])->name('restaurant.menu.create');
@@ -20,6 +20,8 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('menus/duplicate_menu', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'check_duplicate_menu'])->name('restaurant.menu.check_duplicate');
             Route::get('menus/edit/duplicate_menu/{id}', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'check_edit_duplicate_menu'])->name('restaurant.menu.check_duplicate.edit');
             Route::get('menu-delete', [App\Http\Controllers\vendor\restaurant\MenuController::class, 'soft_delete'])->name('restaurant.menu.delete');
+            Route::post('menu-inactive', [App\Http\Controllers\vendor\restaurant\MenuController::class,'menuStatus'])->name('restaurant.product.status');
+
 
             //vendor product
             Route::get('product', [App\Http\Controllers\vendor\restaurant\ProductController::class, 'index'])->name('restaurant.product.list');
