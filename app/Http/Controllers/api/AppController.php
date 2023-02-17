@@ -1606,6 +1606,7 @@ class AppController extends Controller
                     return response()->json(['status' => False, 'error' => "Vendor not available"], 401);
                 $data = $request->all();
                 $user = User::where('id', '=', $request->user_id)->first();
+                $orderId = getOrderId();
                 if ($request->wallet_apply) {
                     if ($user->wallet_amount <= 0) {
                         return response()->json(['status' => False, 'error' => "No Wallet Balance available"], 401);
@@ -1617,7 +1618,10 @@ class AppController extends Controller
                     $UserWalletTransactions->amount = $request->wallet_cut;
                     $UserWalletTransactions->narration = "Order";
                     $UserWalletTransactions->transaction_type = "0";
+                    $UserWalletTransactions->transaction_id = $orderId;
+                    
                     $UserWalletTransactions->save();
+                    $walletTransaction = $UserWalletTransactions->id;
                 } 
                 //
 
@@ -1626,7 +1630,7 @@ class AppController extends Controller
                     $data['payment_string'] = serialize($request->payment_string);
                 $insertData               = $request->all();
                 $insertData['wallet_cut'] = $request->wallet_cut;
-                $insertData['order_id'] = getOrderId();
+                $insertData['order_id'] = $orderId;
                 $insertData['landmark_address'] = $request->reach;
                 $insertData['deliver_otp'] = rand(1000, 9999);
                 $insertData['delivery_charge'] = intval($request->delivery_charge);
