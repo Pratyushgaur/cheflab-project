@@ -11,6 +11,7 @@ use App\Models\Vendors;
 use App\Models\AdminMasters;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
+use App\Events\OrderCancelDriverEmitEvent;
 use DataTables;
 use Config;
 use Auth;
@@ -422,13 +423,71 @@ class OrderController extends Controller
     }
     public function status_update(Request $request){
       
-        $status = $request->status;
         $id = $request->id;
         $orders = Orders::where('id', '=',  $id)->first();
-        $orders->order_status = $status;
-        $orders->save();
+        $status = $request->status;
+        $error= false;
+        if($status == 'cancelled_by_customer_before_confirmed'){
+            if($orders->order_status == 'pending'){
+                $error = false;
+                $orders->order_status = $status;
+                //
+                $user                = User::find($orders->user_id);
+                $user->wallet_amount = $user->wallet_amount + $orders->net_amount;
+                $user->save();
+                //
+                $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                $UserWalletTransactions->user_id = $orders->user_id;
+                $UserWalletTransactions->amount = $orders->net_amount;
+                $UserWalletTransactions->transaction_id = $orders->order_id;
+                $UserWalletTransactions->narration = "Cancel Refund";
+                $UserWalletTransactions->save();
+            }else{
+                $error = true;
+            }
+        }
+        if($status == 'cancelled_by_customer_after_confirmed' || $status == 'cancelled_by_vendor'){
+            if($orders->order_status == 'confirmed'){
+                $error = false;
+                $orders->order_status = $status;
+                if($status == 'cancelled_by_vendor'){
+                    orderCancelByVendor($id);
+                }
+            }else{
+                $error = true;
+            }
+        }
+        if($status == 'cancelled_by_customer_during_prepare'){
+            if($orders->order_status == 'preparing' || $orders->order_status == 'ready_to_dispatch'){
+                $error = false;
+                $orders->order_status = $status;
+            }else{
+                $error = true;
+            }
+        }
+        if($status == 'cancelled_by_customer_after_disptch'){
+            if($orders->order_status == 'dispatched'){
+                $error = false;
+                $orders->order_status = $status;
+            }else{
+                $error = true;
+            }
+        }
+        
+        
+        if($error == false){
+            $orders->order_status = $status;
+            $orders->save();
+            if ($orders->accepted_driver_id != null) {
+                event(new OrderCancelDriverEmitEvent($orders, $orders->accepted_driver_id));
+            }
+            return true;
+        }else{
+            return false;
+        }
+        
        
-        return ;
+        
     }
 
     public function invoice($encrypt_id){

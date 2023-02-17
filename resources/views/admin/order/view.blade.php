@@ -164,72 +164,37 @@
                </div>
             </div>
             <div class="col-md-4">
-               <!-- <div class="card card-primary card-outline">
+               <div class="card card-primary card-outline">
                   <div class="card-body box-profile">
                      <div class="invoice-col">
                       <h5 class="text-center mb-3"> Order Setup</h5>
                         <address>
                            <div class="form-group">
                               <label for="exampleInputEmail1">Change Order Status<span class="text-danger">*</span></label>
-                              @if ($order->order_status != 'refunded')
-                              <div>
-                                 <div class="dropdown">
-                                    <div class="dropdown-menu text-capitalize" aria-labelledby="dropdownMenuButton">
-                                       <h6>
-                                          <span>{{ __('messages.status') }} :</span>
-                                          @if ($order['order_status'] == 'pending')
-                                          <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ __('messages.pending') }}
-                                          </span>
-                                          @elseif($order['order_status'] == 'confirmed')
-                                          <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ __('messages.confirmed') }}
-                                          </span>
-                                          @elseif($order['order_status'] == 'processing')
-                                          <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ __('messages.processing') }}
-                                          </span>
-                                          @elseif($order['order_status'] == 'picked_up')
-                                          <span class="badge badge-soft-warning ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ __('messages.out_for_delivery') }}
-                                          </span>
-                                          @elseif($order['order_status'] == 'delivered')
-                                          <span class="badge badge-soft-success ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ __('messages.delivered') }}
-                                          </span>
-                                          @elseif($order['order_status'] == 'failed')
-                                          <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ __('messages.payment') }}
-                                          {{ __('messages.failed') }}
-                                          </span>
-                                          @else
-                                          <span class="badge badge-soft-danger ml-2 ml-sm-3 text-capitalize font-medium">
-                                          {{ str_replace('_', ' ', $order['order_status']) }}
-                                          </span>
-                                          @endif
-                                       </h6>
-                                    </div>
-                                 </div>
-                              </div>
-                              @endif
+                              
                            </div>
                          <select class="form-control" name="status" onchange="change_status(this,{{ $order->id }})">
-                            <option value="pending" <?php if($order->payment_status == 'pending'){echo 'selected';}else{echo '';}?>>Pending</option>
-                            <option value="preparing" <?php if($order->payment_status == 'preparing'){echo 'selected';}else{echo '';}?>>Preparing</option>
-                            <option value="ready_to_dispatch" <?php if($order->payment_status == 'ready_to_dispatch'){echo 'selected';}else{echo '';}?>>Ready to Dispatch</option>
-
-                            <option value="dispatched" <?php if($order->payment_status == 'dispatched'){echo 'selected';}else{echo '';}?>>Dispatch</option>
-
-                            <option value="cancelled_by_customer" <?php if($order->payment_status == 'cancelled_by_customer'){echo 'selected';}else{echo '';}?>>Cancelled by Customer</option>
-                            <option value="cancelled_by_vendor" <?php if($order->payment_status == 'cancelled_by_vendor'){echo 'selected';}else{echo '';}?>>Cancelled by Vendor</option>
-                            <option value="completed" <?php if($order->payment_status == 'completed'){echo 'selected';}else{echo '';}?>>Completed</option>
-                            <option value="accepted" <?php if($order->payment_status == 'accepted'){echo 'selected';}else{echo '';}?>>Accepted</option>
-                            <option value="payment_pending" <?php if($order->payment_status == 'payment_pending'){echo 'selected';}else{echo '';}?>>Payment Pending</option>
+                           <option value=""></option>
+                           
+                            @if($order->order_status == 'pending')
+                            <option value="cancelled_by_customer_before_confirmed">Cancel By Customer And Refund Amount</option>
+                            @endif
+                            @if($order->order_status == 'confirmed')
+                            <option value="cancelled_by_customer_after_confirmed">Cancel By Customer</option>
+                            <option value="cancelled_by_vendor">Reject By Vendor</option>
+                            @endif 
+                            @if($order->order_status == 'preparing' || $order->order_status == 'ready_to_dispatch')
+                            <option value="cancelled_by_customer_during_prepare">Cancel By Customer</option>
+                            @endif 
+                            @if($order->order_status == 'dispatched' )
+                            <option value="cancelled_by_customer_after_disptch">Cancel By Customer</option>
+                            @endif    
+                            
                          </select>
                         </address>
                      </div>
                   </div>
-               </div> -->
+               </div>
                <div class="">
                   <div class="card">
                      <div class="card-body pt-3">
@@ -345,19 +310,22 @@
    
 function change_status(e,id){
   var status = $(e).val();
-if(confirm('Are You Ready For status Update ?')){
-  $.ajax({
-      headers: {
-               'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-      },
-       method:"POST",
-       url:"{{ route('admin.status.update') }}",
-       data:{status:status,id:id},
-       success:function(){
-        location.reload();
-       }
+  if(status != ''){
+      if(confirm('Are You Ready For status Update ?')){
+      $.ajax({
+         headers: {
+                  'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+         },
+         method:"POST",
+         url:"{{ route('admin.status.update') }}",
+         data:{status:status,id:id},
+         success:function(){
+         location.reload();
+         }
      })
     }
+  }
+   
 }
 
 

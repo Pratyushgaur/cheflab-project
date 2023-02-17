@@ -141,7 +141,7 @@ function vendorOrderCountByStatus($vendor_id, $status)
     if ($status == '')
         return Orders::where(['vendor_id' => $vendor_id])->where('order_status', '!=', 'pending')->count();
 
-    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->where('order_status', '!=', 'pending')->count();
+    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->where('order_status', '!=', 'pending')->where('order_status','!=','cancelled_by_customer_before_confirmed')->count();
 }
 
 function vendorTodayOrderCount($vendor_id)

@@ -213,8 +213,8 @@
 
                                 <label for="file-input4">
                                     <div class="upload-icon4">
-                                        @if($vendor->banner_image == null)
-                                        <img class="icon4" src="{{asset('add-image.png')}}">
+                                        @if($vendor->banner_image == null || $vendor->banner_image == '' || $vendor->banner_image == 'null')
+                                          <img class="icon4" src="{{asset('add-image.png')}}">
                                         @else
                                             <?php
                                               $baner=json_decode($vendor->banner_image);

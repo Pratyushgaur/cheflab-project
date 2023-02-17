@@ -149,7 +149,7 @@ class OrderController extends Controller
         $order               = Order::find($id);
         $order->order_status = 'dispatched';
         $order->save();
-        orderCancel($id);
+        //orderCancel($id);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'dispatched',

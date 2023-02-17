@@ -8,8 +8,8 @@
 <!-- MODALS -->
 <!-- Quick bar -->
 <audio id="beep__hover" controls  style="display:none;">
-  <source src="{{asset('fcm_notification_sound.ogg')}}" type="audio/ogg">
-  <source src="{{asset('fcm_notification_sound.mpeg')}}" type="audio/mpeg">
+  <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/ogg">
+  <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/mpeg">
   Your browser does not support the audio element.
 </audio>
 <aside id="ms-quick-bar" class="ms-quick-bar fixed ms-d-block-lg">

@@ -25,7 +25,7 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Total Orders</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_confirmed}}
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_orders}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
                         </div>
@@ -120,7 +120,7 @@
                     <div class="ms-card-body media">
                         <div class="media-body">
                             <h6>Refunded</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_dispatched}}
+                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_refunded}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
                         </div>
@@ -142,27 +142,27 @@
                     </div>
                 </a>
             </div> -->
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-6 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
-                            <i class="fa fa-truck fa-6" aria-hidden="true"></i>
+                            <i class="fas fa-rupee-sign"></i>
                             <div class="media-body">
-                                <h6>{{$total_completed}}</h6>
-                                <span>Total <br> Revenue</span>
+                                <h6>{{$net_receivables}}</h6>
+                                <span>Total  Revenue</span>
                             </div>
                         </div>
                     </div>
                 </a>
             </div>
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-6 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
-                            <i class="material-icons">cached</i>
+                        <i class="fas fa-rupee-sign"></i>
                             <div class="media-body">
-                                <h6>{{$total_refund}}</h6>
-                                <span>Total <br> Refunds </span>
+                                <h6>{{$total_refundAmount}}</h6>
+                                <span>Total Refunds </span>
                             </div>
                         </div>
                     </div>
@@ -182,7 +182,7 @@
                     </div>
                 </a>
             </div> -->
-            <div class="col-xl-3 col-md-6">
+            <!-- <div class="col-xl-3 col-md-6">
                 <a href="#">
                     <div class="ms-panel ms-panel-hoverable has-border ms-widget ms-has-new-msg ms-notification-widget">
                         <div class="ms-panel-body media">
@@ -194,7 +194,7 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </div> -->
 
 
             <!-- <div class="col-xl-3 col-md-6">
@@ -203,7 +203,7 @@
                         <div class="ms-panel-body media">
                             <i class="material-icons">functions</i>
                             <div class="media-body">
-                                <h6>{{$total_order}}</h6>
+                                <h6></h6>
                                 <span>Total order</span>
                             </div>
                         </div>
