@@ -84,7 +84,7 @@ $breadcrumb[] = ["name"  => "List",
                                                             data-prefill.name="{{$banner->name}}"
                                                             data-prefill.email="{{\Auth::guard('vendor')->user()->email}}"
                                                             data-prefill.contact="{{\Auth::guard('vendor')->user()->mobile}}"
-                                                            data-theme.color="#ff7529">
+                                                            data-theme.color="#F05151">
                                                     </script>
                                                     <input type="hidden" name="_token" value="{!!csrf_token()!!}">
                                                     <input type="hidden" name="id" value="{{$banner->id}}">
