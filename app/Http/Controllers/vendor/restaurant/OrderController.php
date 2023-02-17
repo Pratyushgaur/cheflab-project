@@ -8,6 +8,9 @@ use App\Events\OrderCancelDriverEmitEvent;
 use App\Http\Controllers\Controller;
 use App\Models\AdminMasters;
 use App\Models\Order;
+use App\Models\Vendors;
+use App\Models\OrderProduct;
+use App\Models\Product_master;
 use Auth;
 use Config;
 use DataTables;
@@ -88,7 +91,7 @@ class OrderController extends Controller
         $order->preparation_time_to   = mysql_add_time($order->preparation_time_from, $request->preparation_time);
         $order->save();
         //        event(new OrderSendToPrepareEvent($id, $order->user_id, $order->vendor_id, $request->preparation_time));
-        orderCancel($id);
+        // orderCancel($id);
         event(new OrderSendToPrepareEvent($order, $request->preparation_time));
         return redirect()->back()->with('success', "# $id Order send for preparing");
     }
@@ -133,7 +136,7 @@ class OrderController extends Controller
         if ($order->accepted_driver_id != null) {
             event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id, $otp));
         }
-        orderCancel($id);
+        // orderCancel($id);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',
@@ -172,12 +175,28 @@ class OrderController extends Controller
     public function invoice($id)
     {
         $order = Order::with('products', 'user', 'order_product_details')->find($id);
-        //        dd($order);
+        $vendorData = Vendors::where('id', Auth::guard('vendor')->user()->id)->first();
+            //    dd($order->toArray());
+        $strtotime = strtotime($order->created_at);
+        $order_date = date('d M Y h:m a',$strtotime);
         
         if (!$order)
             return redirect()->back()->with('error', 'Order not found');
             $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->whereIn('action',["1","4","3"])->first();
-        return view('vendor.restaurant.order.invoice', compact('order','rider'));
+        return view('vendor.restaurant.order.invoice', compact('order','rider','order_date','vendorData'));
+    }
+
+    public function qot($id)
+    {
+      
+        $order = Order::with('products', 'user', 'order_product_details')->find($id);
+        $product_qty = OrderProduct::where('order_id', $id)->get()->count();
+        $strtotime = strtotime($order->created_at);
+        $order_date = date('d M Y h:m a',$strtotime);
+        if (!$order)
+            return redirect()->back()->with('error', 'Order not found');
+            $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->whereIn('action',["1","4","3"])->first();
+        return view('vendor.restaurant.order.qot', compact('order','rider','product_qty','order_date'));
     }
 
     public function get_preparation_time(Request $request)
