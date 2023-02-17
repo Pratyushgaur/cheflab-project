@@ -228,7 +228,7 @@
                   <td>
                      <div class="invoice-title">
                         <div class="invoice_logo">
-                           <h6 style="font-size:11px;"><img src="http://cheflab.local.com/commonarea/logo1.png" style="width:100px;"> </h6>
+                           <h6 style="font-size:11px;"><img src="{{asset('commonarea/logo.png')}}" style="width:100px;"> </h6>
                         </div>
 
                      </div>

@@ -124,7 +124,8 @@ $payment_status_class['pending'] = 'badge-danger';
                     <td>
 
                         <a href="{{route('restaurant.order.view',$order->id)}}"><i class="fa fa-eye text-success "></i></a>
-                        <a href="{{route('restaurant.order.invoice',$order->id)}}"><i class="fa fa-print text-info "></i></a>
+                        <a class="btn btn-xs btn-success invoice_btn" href="{{route('restaurant.order.invoice',$order->id)}}">Invoice</a>
+                        <a class="btn btn-xs btn-danger invoice_btn" href="{{route('restaurant.order.qot',$order->id)}}">KOT</a>
                         {{--                                                    <a href="#"><i class="fas fa-pencil-alt text-secondary"></i></a>--}}
                         {{--                                                    <a href="a.html"><i class="far fa-trash-alt ms-text-danger"></i></a>--}}
                     </td>
