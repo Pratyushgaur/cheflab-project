@@ -46,7 +46,8 @@ class Userwallet extends Controller
             [
                 'user_id' => 'required|numeric',
                 'amount' => 'required|numeric',
-                'type' => 'required|numeric'
+                'type' => 'required|numeric',
+                'transaction_id' => 'required'
             ]);
             if($validateUser->fails()){
                 $error = $validateUser->errors();
@@ -60,6 +61,8 @@ class Userwallet extends Controller
             $UserWalletTransactions->user_id = $request->user_id;
             $UserWalletTransactions->amount = $request->amount;
             $UserWalletTransactions->narration = "Recharge";
+            $UserWalletTransactions->transaction_id = $request->transaction_id;
+            
             $UserWalletTransactions->save();
             //
             $users = User::where('id', '=', $request->user_id)->select('wallet_amount')->first();

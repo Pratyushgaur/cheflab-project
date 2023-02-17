@@ -2709,6 +2709,7 @@ class AppController extends Controller
                 $UserWalletTransactions = new \App\Models\UserWalletTransactions;
                 $UserWalletTransactions->user_id = $request->user()->id;
                 $UserWalletTransactions->amount = $order->net_amount;
+                $UserWalletTransactions->transaction_id = $order->order_id;
                 $UserWalletTransactions->narration = "Cancel Refund";
                 $UserWalletTransactions->save();
 

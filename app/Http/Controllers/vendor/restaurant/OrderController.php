@@ -66,6 +66,7 @@ class OrderController extends Controller
         $UserWalletTransactions = new \App\Models\UserWalletTransactions;
         $UserWalletTransactions->user_id = $order->user_id;
         $UserWalletTransactions->amount = $order->net_amount;
+        $UserWalletTransactions->transaction_id = $order->order_id;
         $UserWalletTransactions->narration = "Refund";
         $UserWalletTransactions->save();
         if ($order->accepted_driver_id != null) {

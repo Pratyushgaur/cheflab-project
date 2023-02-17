@@ -155,13 +155,13 @@ class Deliveryboy extends Controller
             $filename = time().'-pancard_image-image-'.rand(100,999).'.'.$request->pancard_image->extension();
             $request->pancard_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->pancard_image  = $filename;
-            $vendors->pancard_number  = $request->pancard_image;
+            $vendors->pancard_number  = $request->pancard_number;
         } 
         if($request->has('aadhar_image')){
             $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
             $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->aadhar_image  = $filename;
-            $vendors->aadhar_image  = $request->aadhar_image;
+            $vendors->aadhar_number  = $request->aadhar_number;
         }  
         if($request->has('varification_image')){
             $filename = time().'-varification_image-image-'.rand(100,999).'.'.$request->varification_image->extension();
@@ -417,18 +417,49 @@ class Deliveryboy extends Controller
             $request->image->move(public_path('dliver-boy'),$filename);
             $vendors->image  = $filename;
         }
-       
-        if($request->has('identity_image')){
-            $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
-            $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
-            $vendors->identity_image  = $filename;
-            $vendors->identity_number  = $request->identity_number;
+        if($request->has('license_image')){
+            $filename = time().'-license-image-'.rand(100,999).'.'.$request->license_image->extension();
+            $request->license_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->licence_image  = $filename;
+            $vendors->licence_number  = $request->license_number;
+        }  
+        if($request->has('rc_image')){
+            $filename = time().'-rc_image-image-'.rand(100,999).'.'.$request->rc_image->extension();
+            $request->rc_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->rc_image  = $filename;
+            $vendors->rc_number  = $request->rc_number;
         }
+        if($request->has('insurance_image')){
+            $filename = time().'-insurance_image-image-'.rand(100,999).'.'.$request->insurance_image->extension();
+            $request->insurance_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->insurance_image  = $filename;
+            $vendors->insurance_number  = $request->insurance_number;
+        }
+        if($request->has('pancard_image')){
+            $filename = time().'-pancard_image-image-'.rand(100,999).'.'.$request->pancard_image->extension();
+            $request->pancard_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->pancard_image  = $filename;
+            $vendors->pancard_number  = $request->pancard_number;
+        } 
         if($request->has('aadhar_image')){
             $filename = time().'-aadhar_image-image-'.rand(100,999).'.'.$request->aadhar_image->extension();
             $request->aadhar_image->move(public_path('dliver-boy-documents'),$filename);
             $vendors->aadhar_image  = $filename;
+            $vendors->aadhar_number  = $request->aadhar_number;
+        }  
+        if($request->has('varification_image')){
+            $filename = time().'-varification_image-image-'.rand(100,999).'.'.$request->varification_image->extension();
+            $request->varification_image->move(public_path('dliver-boy-documents'),$filename);
+            $vendors->police_varification_image  = $filename;
         } 
+        // if($request->has('identity_image')){
+        //     $filename = time().'-identity_image-'.rand(100,999).'.'.$request->identity_image->extension();
+        //     $request->identity_image->move(public_path('dliver-boy-documents'),$filename);
+        //     $vendors->identity_image  = $filename;
+        //     $vendors->identity_number  = $request->identity_number;
+        // }
+        
+         
         $vendors->save();
         
         $bankdetail = RiderbankDetails::where('rider_id', '=',  $vendors->id)->first();

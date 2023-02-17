@@ -19,6 +19,7 @@ class CreateUserWalletTransactions extends Migration
             $table->decimal('amount',8,2)->default('0');
             $table->enum('transaction_type',["0","1"])->default('1')->comment('0=cut 1=add');
             $table->text('narration');
+            $table->string('transaction_id',255)->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

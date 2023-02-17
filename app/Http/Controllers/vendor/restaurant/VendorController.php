@@ -108,7 +108,7 @@ class VendorController extends Controller
         $this->validate($request, [
             'restaurant_name'   => 'required',
             'pincode'           => 'required',
-            'phone'             => 'required|unique:vendors,mobile,' . \Auth::guard('vendor')->user()->id,
+            'phone'             => 'required',
             'address'           => 'required',
             'fssai_lic_no'      => 'required',
             //            'categories'        => 'required',
