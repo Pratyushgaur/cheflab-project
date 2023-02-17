@@ -106,7 +106,7 @@
 					<li class="nav-item">
 						<a href="{{route('driver_map')}}" class="nav-link">
 						  <i class="fa fa-arrow-right nav-icon"></i>
-						  <p>Delivery Map</p>
+						  <p>Rider Live Map</p>
 						</a>
 					</li>
 					<!-- <li class="nav-item">
