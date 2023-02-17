@@ -294,7 +294,7 @@ class OrderController extends Controller
     function assignToRider(Request $request){
         
         try {
-            if(!\App\Models\RiderAssignOrders::where('order_id','=',$request->order_id)->exists()){
+            if(!\App\Models\RiderAssignOrders::where('order_id','=',$request->order_id)->whereIn('action',["0","1","3"])->exists()){
                 if(!\App\Models\RiderAssignOrders::where('rider_id','=',$request->id)->whereIn('action',['0','1','4'])->exists()){
                     $order = Orders::findOrFail($request->order_id);
                     $vendor = \App\Models\Vendors::findOrFail($order->vendor_id);
