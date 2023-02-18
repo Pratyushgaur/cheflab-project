@@ -92,7 +92,7 @@
                 // // Place each marker on the map
                 map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
 
-                data.map((mkr) => {
+                Object.values(data).map((mkr) => {
                     var position = new google.maps.LatLng(mkr.lat, mkr.long);
                     bounds.extend(position);
 
