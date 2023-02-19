@@ -2020,22 +2020,25 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $user = User::find(request()->user()->id);
+            $userUpdate = User::find(request()->user()->id);
             if ($request->has('image')) {
                 $filename = time() . '-image-' . rand(100, 999) . '.' . $request->image->extension();
                 $request->image->move(public_path('user-profile'), $filename);
                 // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
-                $user->image = $filename;
+                $userUpdate->image = $filename;
             }
-            $user->save();
-            $userUpdate = User::where('id', '=', request()->user()->id);
+            
+            //$userUpdate = User::where('id', '=', request()->user()->id);
             $userUpdate->name = $request->name;
             $userUpdate->surname = $request->lastname;
             $userUpdate->email = $request->email;
             if ($request->alternative_number != null) {
-                $userUpdate->alternative_number = $request->alternative_number;
+                if($userUpdate->alternative_number != $request->alternative_number){
+                    $userUpdate->alternative_number = $request->alternative_number;
+                }
+                
             }
-            $user->save();
+            $userUpdate->save();
             return response()->json([
                 'status'  => true,
                 'message' => 'User Updated Successfully'
