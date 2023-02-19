@@ -868,7 +868,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
 {
     date_default_timezone_set('Asia/Kolkata');
     if ($lat != '' && $lat != '')
-        $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
+        return $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
     else
         $vendors = \App\Models\Vendors::where("vendors.is_all_setting_done", 1)->where('vendors.status', 1);
 

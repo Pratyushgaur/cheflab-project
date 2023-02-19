@@ -110,6 +110,7 @@ class VendorReviewController extends Controller
                 ], 401);
             }
             $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)->orderBy('vendor_ratings','DESC');
+            return $review->get();
             $review = $review->offset($request->offset)->limit($request->limit);
             $data = $review->get();
             $baseurl = URL::to('vendor-banner/') . '/';
