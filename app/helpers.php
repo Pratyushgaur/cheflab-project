@@ -1528,8 +1528,11 @@ function orderDetailForUser($order_id)
             $order['driver_image'] = $driver->image;
         }
     }
-    if($order['coupon_id']!='0'){
+    
+    if($order['coupon_id'] != 0){
+        
         $coupon = \App\Models\Coupon::where('id','=',$order['coupon_id'])->first();
+        
         if(!empty($coupon)){
             $order['coupon_name'] = $coupon->code;
         }
