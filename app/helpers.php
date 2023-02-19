@@ -674,7 +674,8 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
     $vendors->where("vendors.is_all_setting_done", 1)
         ->where('vendors.status', 1)->where('vendors.is_online', 1);
     if ($group_by)
-        $vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
+        //$vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
+        $vendors->withCount(['products as product_count'])->having('product_count', '>', 0);
 
     if (empty($where))
         $vendors->where($where);

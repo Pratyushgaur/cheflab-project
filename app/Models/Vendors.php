@@ -19,6 +19,13 @@ class Vendors extends Authenticatable
         $this->hasMany(Order_time::class);
     }
 
+    public function products()
+    {
+        return $this->hasMany(Product_master::class,'userId');
+        
+        
+    }
+
     static function is_avaliavle($vendor_id)
     {
 //        date_default_timezone_set(config('app.timezone'));
