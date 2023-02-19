@@ -64,7 +64,7 @@
         <div class="d-flex">
         <h4>ChefLab Order Id : {{$order->order_id}}</h4>
         </div>
-        <h5>OTP :  @if(!empty($rider)) {{$rider->otp}} @endif </h5> 
+        <h5>OTP :  {{$order->pickup_otp}} </h5> 
     </div>
     <div class="ms-panel-body">
         <!-- Invoice To -->
