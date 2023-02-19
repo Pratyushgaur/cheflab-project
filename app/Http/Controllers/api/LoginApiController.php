@@ -189,7 +189,15 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
-            if (User::where(['mobile_number' => $request->mobile_number])->exists()) {
+            $user = User::where(['mobile_number' => $request->mobile_number]);
+            if ($user->exists()) {
+                if($user->first()->status == '0'){
+                    return response()->json([
+                        'status' => false,
+                        'error' => 'Account Deactivated'
+    
+                    ], 401);
+                }
                 $otp = $this->otp_generate($request->mobile_number);
 
                 $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";
