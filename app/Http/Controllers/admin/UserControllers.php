@@ -643,7 +643,8 @@ class UserControllers extends Controller
         $categories = Catogory_master::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
         $cuisines   = Cuisines::where('is_active', '=', '1')->orderby('position', 'ASC')->select('id', 'name')->get();
         $net_receivables = OrderCommision::where('vendor_id',$id)->sum('net_receivables');
-        return view('admin/vendors/view-vendor', compact('vendor', 'categories', 'cuisines', 'vendorLike','net_receivables'));
+        $reviews = \App\Models\VendorReview::where('vendor_id',$id)->join('users','vendor_review_rating.user_id','=','users.id')->orderBy('vendor_review_rating.id','desc')->select('vendor_review_rating.*','users.name')->get();
+        return view('admin/vendors/view-vendor', compact('vendor', 'categories', 'cuisines', 'vendorLike','net_receivables','reviews'));
     }
 
     public function chef_product_list(Request $request, $userId)

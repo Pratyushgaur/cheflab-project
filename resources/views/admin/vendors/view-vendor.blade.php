@@ -78,11 +78,11 @@
                     <!-- /.card -->
 
                     <!-- About Me Box -->
-                    <div class="card card-primary">
+                    <!-- <div class="card card-primary">
                       <div class="card-header">
                         <h3 class="card-title">About Me</h3>
                       </div>
-                      <!-- /.card-header -->
+                      
                       <div class="card-body">
                         <strong><i class="fas fa-map-marker-alt mr-1"></i> Location</strong>
                         <hr>
@@ -96,9 +96,9 @@
                         
 
                       </div>
-                      <!-- /.card-body -->
-                    </div>
-                    <!-- /.card -->
+                     
+                    </div> -->
+                    
                   </div>
                   <!-- /.col -->
                   <div class="col-md-9">
@@ -135,7 +135,7 @@
                           <!-- /.tab-pane -->
                           <div class="tab-pane" id="timeline">
                             <!-- The timeline -->
-                              <table id="order" class="table2 table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
+                              <table id="order" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                                 <thead>
                                       <tr role="row">
                                         <th  class="text-center">Sr No.</th>
@@ -157,13 +157,25 @@
                                 <thead>
                                       <tr role="row">
                                         <th  class="text-center">Sr No.</th>
-                                        <th >	Food</th>
-                                        <th> Reviewer Info</th>
+                                        <th>User</th>
+                                        <th>Rating</th>
                                         <th  >Review</th>
                                         <th  >Date	</th>
-                                        <th  >Status</th>
                                       </tr>
                                 </thead>
+                                <tbody>
+                                  <?php $i=1; ?>
+                                  @foreach($reviews as $key =>$value)
+                                      <tr>
+                                        <td>{{$i}}</td>
+                                        <td>{{$value->name}}</td>
+                                        <td>{{$value->rating}}</td>
+                                        <td>{{$value->review}}</td>
+                                        <td>{{date('d-m-Y',strtotime($value->created_at))}}</td>
+                                      </tr>
+                                      <?php $i++; ?>
+                                  @endforeach
+                                </tbody>
                                 
                               </table>
                           </div>

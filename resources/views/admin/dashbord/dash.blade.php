@@ -496,10 +496,10 @@
                           <span class="badge badge-success">Completed</span>
                           @endif
                           @if($value->order_status == 'cancelled_by_customer_before_confirmed')
-                          <span class="badge badge-danger">cancelled by customer In 30 Min</span>
+                          <span class="badge badge-danger">cancelled by customer In 30 Seconds</span>
                           @endif
                           @if($value->order_status == 'cancelled_by_customer_after_confirmed')
-                          <span class="badge badge-danger">cancelled by customer After 30 Min</span>
+                          <span class="badge badge-danger">cancelled by customer After 30 Seconds</span>
                           @endif
                           @if($value->order_status == 'cancelled_by_customer_during_prepare')
                           <span class="badge badge-danger">cancelled by customer After Accept</span>
