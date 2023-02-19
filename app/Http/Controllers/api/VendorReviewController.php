@@ -114,7 +114,7 @@ class VendorReviewController extends Controller
             $review = $review->addSelect('vendors.id as vendor_id');
             $review = $review->addSelect('deal_cuisines')->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service');
             $review = $review->addSelect( \DB::raw('COUNT(*) as product_count'));
-            //$review = $review->skip($request->offset)->take($request->limit);
+            $review = $review->skip($request->offset)->take($request->limit);
             $review = $review->groupBy('vendors.id')->having('product_count', '>',0);
             $data = $review->get();
             $baseurl = URL::to('vendor-banner/') . '/';
@@ -166,7 +166,7 @@ class VendorReviewController extends Controller
             }
             //
             $review = VendorReview::join('users','vendor_review_rating.user_id','=','users.id')->where('vendor_id','=',$request->vendor_id)
-            ->skip($request->offset)->take($request->limit)
+            //->skip($request->offset)->take($request->limit)
             ->orderBy('vendor_review_rating.id','desc')
             ->select('users.name',\DB::raw('CONCAT("' . asset('vendors') . '/", image) AS image') , 'vendor_review_rating.rating','review',\DB::raw("DATE_FORMAT(vendor_review_rating.created_at, '%d %b %Y at %H:%i %p') as date"))->get();
             return response()->json([
