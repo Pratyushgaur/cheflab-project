@@ -110,10 +110,6 @@ class VendorReviewController extends Controller
                 ], 401);
             }
             $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)->orderBy('vendor_ratings','DESC');
-            //$review = $review->leftJoin('products','vendors.id','=','products.userId');
-            $review = $review->addSelect('vendors.id as vendor_id');
-            $review = $review->addSelect('deal_cuisines')->addSelect('banner_image', 'vendor_food_type', 'fssai_lic_no', 'table_service');
-            //$review = $review->addSelect( \DB::raw('COUNT(*) as product_count'));
             $review = $review->offset($request->offset)->limit($request->limit);
             $data = $review->get();
             $baseurl = URL::to('vendor-banner/') . '/';
