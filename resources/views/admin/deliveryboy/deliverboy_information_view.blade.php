@@ -104,7 +104,7 @@
                         <!-- /.col -->
                         <div class="col-md-4">
                             <p class="text-center">
-                                <strong\>User Review</strong>
+                                <strong\>User Rating</strong>
                             </p>
 
 
@@ -118,28 +118,28 @@
                             <!-- /.progress-group -->
 
                             <div class="progress-group">
-                                Good
+                                Very Good
                                 <span class="float-right"><b>{{ $rating_arr['good_count'] }}</b></span>
                                 <div class="progress progress-sm">
                                     <div class="progress-bar bg-danger" style="width:{{ $rating_arr['good'] }}%"></div>
                                 </div>
                             </div>
                             <div class="progress-group">
-                                Average
+                                Good
                                 <span class="float-right"><b>{{ $rating_arr['average_count'] }}</b></span>
                                 <div class="progress progress-sm">
                                     <div class="progress-bar bg-danger" style="width:{{ $rating_arr['average'] }}%"></div>
                                 </div>
                             </div>
                             <div class="progress-group">
-                                Below Average
+                                Average
                                 <span class="float-right"><b>{{ $rating_arr['below_average_count'] }}</b></span>
                                 <div class="progress progress-sm">
                                     <div class="progress-bar bg-danger" style="width:{{ $rating_arr['below_average'] }}%"></div>
                                 </div>
                             </div>
                             <div class="progress-group">
-                                Poor
+                                Bad
                                 <span class="float-right"><b>{{ $rating_arr['poor_count'] }}</b></span>
                                 <div class="progress progress-sm">
                                     <div class="progress-bar bg-danger" style="width:{{ $rating_arr['poor'] }}%"></div>
