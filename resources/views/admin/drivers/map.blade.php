@@ -86,11 +86,15 @@
                 marker, i;
 
             let markers = []
+            // // Place each marker on the map
+            map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
+            const markerArray = [];
+
             database.ref('locations').on('value', (snapshot) => {
                 const data = snapshot.val();
+                console.log('hhihiu');
 
-                // // Place each marker on the map
-                map = new google.maps.Map(document.getElementById("mapCanvas"), mapOptions);
+                markerArray.map(marker => marker.setMap(null));
 
                 Object.values(data).map((mkr) => {
                     var position = new google.maps.LatLng(mkr.lat, mkr.long);
@@ -112,6 +116,8 @@
                         icon: svgMarker,
                         title: "Driver",
                     });
+                    markerArray.push(marker)
+                    // marker.setMap(null);
 
                     // Add info window to marker
                     google.maps.event.addListener(marker, 'click', (function(marker, i) {
@@ -124,9 +130,9 @@
                                 .then(res => res.json())
                                 .then((data) => {
                                     infoWindow.setContent(`
-                                    <p><b>(${data.id}) ${data.name}</b></p>
-                                    <p>Mobile: <b style='cursor:pointer' id='${data.id}'>${data.mobile}</b></p>
-                                    `);
+                                <p><b>(${data.id}) ${data.name}</b></p>
+                                <p>Mobile: <b style='cursor:pointer' id='${data.id}'>${data.mobile}</b></p>
+                                `);
                                     infoWindow.open(map, marker);
                                     const el = document.getElementById(mkr.driver_id)
                                     el.addEventListener('click', () => {
@@ -139,8 +145,8 @@
                     })(marker, i));
 
                     // Center the map to fit all markers on the screen
-                    map.fitBounds(bounds);
                 })
+                map.fitBounds(bounds);
             })
 
         }
