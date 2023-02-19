@@ -329,7 +329,7 @@ class AppController extends Controller
                 ], 401);
             }
 
-
+            $otp = Order::where('id', '=', $request->order_row_id)->select('pickup_otp')->first();
             $order = RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->first();
             if (empty($order)) {
                 return response()->json([
@@ -339,7 +339,7 @@ class AppController extends Controller
                 ], 401);
             }
 
-            if ($order->otp == $request->otp) {
+            if ($otp->pickup_otp == $request->otp) {
                 RiderAssignOrders::where('id', '=', $order->id)->update(['action' => '4']);
                 $orderdata = Order::where('id', '=', $request->order_row_id);
                 $orderdata->update(['order_status' => 'dispatched', 'pickup_time' => mysql_date_time()]);

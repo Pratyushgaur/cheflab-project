@@ -2,7 +2,8 @@
 <x-admin.head />
 <x-admin.header />
 <x-admin.adminsidebar />
-<x-admin.navbar />
+<!-- <x-admin.navbar /> -->
+@yield('content')
 
 
 <x-admin.footer />

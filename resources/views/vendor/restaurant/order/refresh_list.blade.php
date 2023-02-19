@@ -111,7 +111,7 @@ $payment_status_class['pending'] = 'badge-danger';
                                     
                                     <b>{{$rider->name}}</b><br>
                                     <span>({{$rider->mobile}})</span> <br>
-                                    <b>OTP-{{$rider->otp}}</b>
+                                    <b>OTP-{{$order->pickup_otp}}</b>
                                     <?php
                                     
                                 }else{

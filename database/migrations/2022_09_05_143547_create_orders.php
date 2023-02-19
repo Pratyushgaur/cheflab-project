@@ -55,6 +55,7 @@ class CreateOrders extends Migration
             $table->unsignedBigInteger('cancel_by_user')->default(0);
             $table->unsignedBigInteger('accepted_driver_id')->nullable()->comment('Driver id who accepted this order and going to delivery');
             $table->string('deliver_otp')->nullable()->comment('Otp for deliver to user');
+            $table->string('pickup_otp')->nullable()->comment('Otp for pickup');
             $table->timestamp('pickup_time')->nullable()->comment('driver order pick up time');
             $table->timestamp('delivered_time')->nullable()->comment('driver order delivered time');
             $table->enum('user_review_done', ["0", "1", "2"])->default('0')->comment('0=pending,1=done review,2reject');

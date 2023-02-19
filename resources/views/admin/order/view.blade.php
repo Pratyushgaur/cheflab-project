@@ -134,6 +134,10 @@
                                  <td>{{number_format($order->total_amount,2)}}</td>
                               </tr>
                               <tr>
+                                 <th>Discount</th>
+                                 <td>-{{number_format( (float)$order->discount_amount,2)}}</td>
+                              </tr>
+                              <tr>
                                  <th>Tax & Plateform Charge</th>
                                  <td>{{number_format( (float)$order->tex+$order->platform_charges,2)}}</td>
                               </tr>
@@ -150,7 +154,7 @@
                               @if($order->wallet_apply)
                               <tr>
                                  <th>Wallet Cut</th>
-                                 <td>{{$order->wallet_cut}}</td>
+                                 <td>-{{$order->wallet_cut}}</td>
                               </tr>
                               @endif
                               <tr>

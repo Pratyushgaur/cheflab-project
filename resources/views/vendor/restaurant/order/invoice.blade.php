@@ -63,7 +63,7 @@
                 <h4>ChefLab Order Id : {{$order->order_id}}</h4>
 
             </div>
-            <h4>OTP : @if(!empty($rider)) {{$rider->otp}} @endif </h4>
+            <h4>OTP : {{$order->pickup_otp}} </h4>
         </div>
         <div class="ms-panel-body">
             <!-- Invoice To -->
@@ -124,12 +124,11 @@
                                 $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $product->id)->first();
                                 if (!empty($OrderProductVariant) && $Product_master->customizable == 'true') {
                                     echo " ($OrderProductVariant->variant_name)";
-
-                                    $unit_price = $OrderProductVariant->variant_price / $OrderProductVariant->variant_qty;
-                                    $price      = $OrderProductVariant->variant_price;
+                                    $unit_price = $OrderProductVariant->variant_price;
+                                    $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
                                 } else {
-                                    $unit_price = @(@$product->product_price / @$product->product_qty);
-                                    $price      = $product->product_price;
+                                    $unit_price = @(@$product->product_price);
+                                    $price      = $product->product_price*$product->product_qty;
                                 }
 
                                 ?>
@@ -137,7 +136,7 @@
 
                             </td>
                             <td class="text-left">
-                                <h6><?php echo "&#8377;" . $unit_price; ?></h6>
+                                <h6><?php echo "&#8377;" . $price; ?></h6>
                             </td>
                         </tr>
                         <?php 
