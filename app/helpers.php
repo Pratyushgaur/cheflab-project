@@ -1528,6 +1528,10 @@ function orderDetailForUser($order_id)
             $order['driver_image'] = $driver->image;
         }
     }
+    if($order['coupon_id']!='0'){
+        $order['coupon_name'] = \App\Models\Coupon::find($order['coupon_id'])->select('code')->first()->code;
+    }
+    
 
     return $order;
 }
