@@ -13,7 +13,7 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/fontawesome-free/css/all.min.css')}}">
   <!-- Ionicons -->
- 
+  <link rel="icon" type="image/x-icon" href="{{asset('cheflab-fav-icon.png')}}">
   <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css')}}">
   <!-- iCheck -->
   <link rel="stylesheet" href="{{asset('commonarea/ass/plugins/icheck-bootstrap/icheck-bootstrap.min.css')}}">

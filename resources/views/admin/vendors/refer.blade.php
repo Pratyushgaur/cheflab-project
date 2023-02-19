@@ -39,7 +39,7 @@
                         <div class="card card-primary card-outline">
 
                             <div class="card-header">
-                                <h3 class="card-title">Listing User Refer Adn Earn </h3>
+                                <h3 class="card-title">Listing User Refer And Earn </h3>
 
 
                             </div>
@@ -52,8 +52,8 @@
                                         <th>Email/Mob No</th>
                                         <th> Refer By</th>
                                         <th>Email/Mob No</th>
-                                        <th> Refer Code</th>
-                                        <th>Earn Ammount</th>
+                                        <th>Refer Code</th>
+                                        <th>Earn Amount</th>
                                         <th>created at</th>
                                         <th>First Order Date</th>
                                     </tr>

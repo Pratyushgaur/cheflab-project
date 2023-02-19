@@ -999,7 +999,9 @@ class UserControllers extends Controller
         return redirect()->route('admin.globle.setting')->with('message', 'Refer Amount  Update Successfully');
     }
     public function refundlist(){
-        return view('admin/vendors/refundlist');
+        $orders = \App\Models\Order::where('order_status','=','cancelled_by_customer_before_confirmed')->join('vendors','orders.vendor_id','=','vendors.id')->select('orders.id','order_id','net_amount','orders.created_at','vendors.name as vendor_name','customer_name')->get();
+        
+        return view('admin/vendors/refundlist',compact('orders'));
     }
 
     public function truncateVendorData(Request $request)

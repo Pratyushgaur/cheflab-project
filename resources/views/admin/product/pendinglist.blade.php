@@ -108,7 +108,8 @@
                   <div class="card card-primary card-outline">
 
                     <div class="card-header">
-                      <h3 class="card-title">Vendor Product List </h3>
+                      <h3 class="card-title">Vendor Product List  <a class="btn btn-warning btn-sm pull-right" onclick="return confirm('Are you sure to Approve all products?')" href="{{route('admin.globle.productactive')}}">Approve All Products</a></h3>
+                      
                    </div>
                     <div class="card-body pad table-responsive">
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">

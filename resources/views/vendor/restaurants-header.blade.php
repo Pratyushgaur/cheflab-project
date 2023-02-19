@@ -8,6 +8,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Cheflab || Restaurant Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="{{asset('cheflab-fav-icon.png')}}">
+
   <!-- Iconic Fonts -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="{{asset('frontend')}}/vendors/iconic-fonts/font-awesome/css/all.min.css" rel="stylesheet">

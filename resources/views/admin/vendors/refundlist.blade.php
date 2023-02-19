@@ -30,14 +30,27 @@
                                     <th  class="text-center">Sr No.</th>
                                     <th >Name</th>
                                     <th  >Order Id</th>
-                                    <th> Ammount</th>
-                                    <th> Date</th>
-                                    <th  >Wallet</th>
+                                    <th> Amount</th>
+                                    
                                     <th  >created at</th>
                                     <th  >Action</th>
                                   </tr>
                             </thead>
-                            
+                            <tbody>
+                              <?php $no=1; ?>
+                              @foreach($orders as $key =>$value)
+                              <tr>
+                                <td>{{$no}}</td>
+                                <td>{{$value->customer_name}}</td>
+                                <td>{{$value->order_id}}</td>
+                                <td>{{$value->net_amount}}</td>
+                                <td>{{date('d-m-Y h:i A',strtotime($value->created_at))}}</td>
+                                <td>Credited</td>
+                              </tr>
+                              <?php $no++; ?>
+                              @endforeach
+                              
+                            </tbody>
                         </table>
                     </div>
                   </div>

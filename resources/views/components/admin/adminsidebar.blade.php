@@ -328,7 +328,7 @@
 
 				  <i class="far fa-user nav-icon"></i>
 				  <p>
-					 Feed Back
+					 Feedback
 					<i class="fas fa-angle-left right"></i>
 				  </p>
 				</a>
@@ -362,7 +362,7 @@
 			<li class="nav-item">
 				<a href="{{route('admin.globle.setting')}}" class="nav-link">
 				  <i class="nav-icon fa fa-cog"></i>
-				  <p>GlobleSetting</p>
+				  <p>Global Setting</p>
 				</a>
 			</li>
 			<li class="nav-item">
@@ -371,12 +371,12 @@
 				  <p>Payout Setting</p>
 				</a>
 			</li>
-			<li class="nav-item">
+			<!-- <li class="nav-item">
 				<a href="{{route('admin.globle.productactive')}}" class="nav-link">
 				  <i class="nav-icon fa fa-cog"></i>
 				  <p>Product Active</p>
 				</a>
-			</li>
+			</li> -->
 			<li class="nav-item">
 				<a href="{{route('admin.logout')}}" class="nav-link">
 				  <i class="nav-icon fas fa-power-off"></i>

@@ -192,7 +192,7 @@
                                 @endif
                               </div>
                               <div class="row">
-                                  <div class="col-md-6">
+                                  <div class="col-md-6" style="display:none;">
                                       <div>
                                         <label for="">Company  Logo</label>
                                       </div>
@@ -205,7 +205,7 @@
                                           <input id="file-input" type="file" name="logo">
                                       </div>   
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-6" style="display:none;">
                                        <div>
                                         <label for="">Company Favicon </label>
                                       </div>
@@ -234,14 +234,14 @@
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                      <label for="exampleInputEmail1">Conteact Number<span class="text-danger">*</span></label>
-                                      <input type="text" value="{{$data->phone}}" name="phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Conteact Number">
+                                      <label for="exampleInputEmail1">Contact Number<span class="text-danger">*</span></label>
+                                      <input type="text" value="{{$data->phone}}" name="phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Contact Number">
                                     </div>
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
-                                      <label for="exampleInputEmail1">Suport Conteact Number<span class="text-danger">*</span></label>
-                                      <input type="text" value="{{$data->suport_phone}}" name="suport_phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Suport Conteact Number">
+                                      <label for="exampleInputEmail1">Support Contact Number<span class="text-danger">*</span></label>
+                                      <input type="text" value="{{$data->suport_phone}}" name="suport_phone" class="form-control"  id="exampleInputEmail1" placeholder="Enter Support Conteact Number">
                                     </div>
                                   </div>
                                   <div class="col-md-6">
@@ -256,7 +256,7 @@
                                       <input type="text" value="{{$data->gstno}}" name="gstno" class="form-control"  id="exampleInputEmail1" placeholder="Enter GST NO">
                                     </div>
                                   </div>
-                                  <div class="col-md-6">
+                                  <div class="col-md-6" style="display:none;">
                                     <div class="form-group">
                                       <label for="exampleInputEmail1">Google Map Key<span class="text-danger">*</span></label>
                                       <input type="text" name="goofle_map_key" value="{{$data->goofle_map_key}}" class="form-control"  id="" placeholder="Enter Google Map Key">
@@ -319,50 +319,7 @@
                   </div>
                 </div>
                 <!-- End of Genral Setting -->
-                <div class="col-lg-12 col-6">
-                    <!-- small box -->
-                  <div class="card card-primary card-outline">
-                    
-                    <div class="card-header">
-                      <h3 class="card-title">Update Payemnt Setting </h3>
-                      
-                    </div>
-                    <div class="card-body pad table-responsive">
-                      <form id="restaurant-form" action="{{route('admin.globle.storePaytm')}}" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                        <div class="card card-default">
-                            <div class="card-header">
-                                <h3 class="card-title text-bold" >Basic Information</h3>
-                            </div>
-                            <div class="card-body">
-                              <div class="error">
-                                @if($errors->any())
-                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                                @endif
-                              </div>
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Razorpay Publish Key<span class="text-danger">*</span></label>
-                                    <input type="text" value="{{$data->razorpay_publish_key}}" name="razorpay_publish_key" class="form-control"  id="exampleInputEmail1" placeholder="Razorpay Publish Key">
-                                    <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Paytm Publish Key<span class="text-danger">*</span></label>
-                                    <input type="text" value="{{$data->paytm_publish_key}}" name="paytm_publish_key" class="form-control"  id="exampleInputEmail1" placeholder="Razorpay Publish Key">
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                        </div>
-                         <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
-                          </div>
-                      </form>
-                    </div>
-
-                  </div>
-                </div>
+                
                 
                 <!-- End of Payemnt Setting -->
                 <!-- application version and update setting  -->
