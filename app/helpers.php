@@ -1529,7 +1529,8 @@ function orderDetailForUser($order_id)
         }
     }
     if($order['coupon_id']!='0'){
-        $order['coupon_name'] = \App\Models\Coupon::find($order['coupon_id'])->select('code')->first()->code;
+        $coupon = \App\Models\Coupon::where('id','=',$order['coupon_id'])->select('code')->first();
+        $order['coupon_name'] = $coupon->code;
     }
     
 
