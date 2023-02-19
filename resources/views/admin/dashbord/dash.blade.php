@@ -480,7 +480,7 @@
                         <td>{{$value->name}}</td>
                         <td>
                           @if($value->order_status == 'confirmed')
-                          <span class="badge badge-warning">Shipped</span>
+                          <span class="badge badge-warning">Pending</span>
                           @endif
                           @if($value->order_status == 'preparing')
                           <span class="badge badge-success">Preparing</span>
