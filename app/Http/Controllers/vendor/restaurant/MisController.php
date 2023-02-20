@@ -60,27 +60,36 @@ class MisController extends Controller
         //  echo '<pre>';print_r($order_count);die;
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('additions');
 
+
+
+        $admin_discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 1])->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('coupon_amount');
+
+        // $vendor_discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 2])->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('coupon_amount');
+
         $paymentSetting = Paymentsetting::first();
         $vendorData = Vendors::where('id', $vendorId)->first();
-        $admin_amount = ($order_sum * $vendorData->commission) / 100;
+        $admin_amount = (($order_sum + $admin_discount_sum) * $vendorData->commission) / 100;
         $tax_amount = ($admin_amount * 18) / 100;
-        $convenience_amount = ($order_sum * $paymentSetting->convenience_fee) / 100;
+        $convenience_amount = (($order_sum + $admin_discount_sum) * $paymentSetting->convenience_fee) / 100;
         $calceled_order = OrderCommision::where(['vendor_id' => $vendorId, 'cancel_by_vendor' => 1])->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('vendor_cancel_charge');
 
-        $deductions = $admin_amount + $tax_amount + $convenience_amount  + $calceled_order;
+        $deductions = $admin_amount + $tax_amount + $convenience_amount  + $calceled_order ;
 
-        $net_receivables = $order_sum - ($admin_amount + $tax_amount + $convenience_amount  + $calceled_order);
+        $net_receivables = ($order_sum + $admin_discount_sum) - ($admin_amount + $tax_amount + $convenience_amount  + $calceled_order);
 
         $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->whereBetween('vendor_payout_details.created_at', [$start_date, $end_date])->sum('amount');
 
-        return view('vendor.mis.renvenue_ajax', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables', 'your_settlement', 'start_date', 'end_date'));
+        return view('vendor.mis.renvenue_ajax', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables', 'your_settlement', 'start_date', 'end_date','admin_discount_sum'));
     }
     public function addition_view(Request $request)
     {
 
         $vendorId = Auth::guard('vendor')->user()->id;
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('additions');
-        return view('vendor.mis.addition_view', compact('additions_count'));
+
+        $discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 1])->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('coupon_amount');
+
+        return view('vendor.mis.addition_view', compact('additions_count','discount_sum'));
     }
     public function deductions_view(Request $request)
     {
@@ -91,9 +100,13 @@ class MisController extends Controller
 
         $order_sum = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('gross_revenue');
 
-        $admin_amount = ($order_sum * $vendorData->commission) / 100;
+        $admin_discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 1])->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('coupon_amount');
+
+        
+
+        $admin_amount = (($order_sum + $admin_discount_sum) * $vendorData->commission) / 100;
         $tax_amount = ($admin_amount * 18) / 100;
-        $convenience_amount = ($order_sum * $paymentSetting->convenience_fee) / 100;
+        $convenience_amount = (($order_sum + $admin_discount_sum) * $paymentSetting->convenience_fee) / 100;
         $net_amount = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('deductions');
 
         //$calceled_order = OrderCommision::join('orders','order_commisions.order_id','=','orders.id')->where(['vendor_id'=> $vendorId, 'order.order_status'=> 'cancelled_by_vendor'])->sum('deductions');

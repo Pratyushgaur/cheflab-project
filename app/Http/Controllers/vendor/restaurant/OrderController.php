@@ -137,7 +137,7 @@ class OrderController extends Controller
         if ($order->accepted_driver_id != null) {
             event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id, $otp));
         }
-        // orderCancel($id);
+         
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',

@@ -9,6 +9,7 @@ use App\Models\Paymentsetting;
 use App\Models\Vendors;
 use App\Models\Vendor_order_statement;
 use App\Models\User;
+use App\Models\Coupon;
 use App\Models\OrderProduct;
 
 function time_diffrence_in_minutes($datetime1, $datetime2)
@@ -141,7 +142,7 @@ function vendorOrderCountByStatus($vendor_id, $status)
     if ($status == '')
         return Orders::where(['vendor_id' => $vendor_id])->where('order_status', '!=', 'pending')->count();
 
-    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->where('order_status', '!=', 'pending')->where('order_status','!=','cancelled_by_customer_before_confirmed')->count();
+    return Orders::where(['vendor_id' => $vendor_id, 'order_status' => $status])->where('order_status', '!=', 'pending')->where('order_status', '!=', 'cancelled_by_customer_before_confirmed')->count();
 }
 
 function vendorTodayOrderCount($vendor_id)
@@ -506,20 +507,20 @@ function topRatedProducts($product_where = [], $user_id = '', $order_by_column =
         ->where(['products.product_approve' => '1'])->where(['products.status' => '1']);
 
 
-        $product->where($product_where);
-        $product->where('products.product_rating','>','0');
-        $product->join('vendors', 'products.userId', '=', 'vendors.id');
-        $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image');
-        $product = $product->leftJoin('vendor_order_time', function ($join) {
-            $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
-                ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
-                //--------------commented, we are sending is open and is_closed
-                ->where('start_time', '<=', mysql_time())
-                ->where('end_time', '>', mysql_time())
-                ->where('available', '=', 1);
-        });
-        $product->where('available', 1);
-        $product->whereIn('userId',$where_vendor_in);
+    $product->where($product_where);
+    $product->where('products.product_rating', '>', '0');
+    $product->join('vendors', 'products.userId', '=', 'vendors.id');
+    $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image');
+    $product = $product->leftJoin('vendor_order_time', function ($join) {
+        $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+            ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+            //--------------commented, we are sending is open and is_closed
+            ->where('start_time', '<=', mysql_time())
+            ->where('end_time', '>', mysql_time())
+            ->where('available', '=', 1);
+    });
+    $product->where('available', 1);
+    $product->whereIn('userId', $where_vendor_in);
 
     if ($user_id != '') {
         $product->addSelect('user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
@@ -542,7 +543,7 @@ function topRatedProducts($product_where = [], $user_id = '', $order_by_column =
     $product->orderBy('products.product_rating', 'DESC');
     $product->offset($offset)->limit($limit);
 
-        
+
     //    dd($product->get()->toArray());
     $qty     = '0';
     $product = $product->addSelect(
@@ -1382,13 +1383,30 @@ function orderCancel($id)
     $admin_per = ($gross_revenue * $vendorData->commission) / 100;
     $tax_commision = ($admin_per * $tax) / 100;
     $convenience_commision = ($gross_revenue * $convenience_fee) / 100;
-    $deduction =  $admin_per + $tax_commision + $convenience_commision;
 
+
+
+    $is_coupon = 0;
+    $discount_amount = 0;
+        if ($order->coupon_id != null) {
+            $couponData = Coupon::where(['id' => $order->coupon_id, 'status' => 1])->first();
+
+            if ($couponData->create_by == "admin") {
+                $is_coupon = 1;
+                $discount_amount = $order->discount_amount;
+            } else if ($couponData->create_by == "vendor") {
+                $is_coupon = 2;
+                $discount_amount = $order->discount_amount;
+            }
+        }
+        $deduction =  $admin_per + $tax_commision + $convenience_commision;
 
     $net_receivables = ($gross_revenue + $vendor_commision) - $deduction;
     $ordercommision = array(
         'is_approve' => 1,
         'is_cancel' => 0,
+        'is_coupon' => $is_coupon,
+        'coupon_amount' => $discount_amount,
         'vendor_id' => $order->vendor_id,
         'order_id' => $order->id,
         'vendor_commision' => $vendor_commision,
@@ -1529,17 +1547,16 @@ function orderDetailForUser($order_id)
             $order['driver_image'] = $driver->image;
         }
     }
-    
-    if($order['coupon_id'] != 0){
-        
-        $coupon = \App\Models\Coupon::where('id','=',$order['coupon_id'])->first();
-        
-        if(!empty($coupon)){
+
+    if ($order['coupon_id'] != 0) {
+
+        $coupon = \App\Models\Coupon::where('id', '=', $order['coupon_id'])->first();
+
+        if (!empty($coupon)) {
             $order['coupon_name'] = $coupon->code;
         }
-        
     }
-    
+
 
     return $order;
 }
