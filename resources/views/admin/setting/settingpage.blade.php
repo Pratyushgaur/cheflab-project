@@ -256,6 +256,21 @@
                                       <input type="text" value="{{$data->gstno}}" name="gstno" class="form-control"  id="exampleInputEmail1" placeholder="Enter GST NO">
                                     </div>
                                   </div>
+
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">CIN NO<span class="text-danger">*</span></label>
+                                      <input type="text" value="{{$data->cin_no}}" name="cin_no" class="form-control"  id="exampleInputEmail1" placeholder="Enter CIN NO">
+                                    </div>
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">FSSAI NO<span class="text-danger">*</span></label>
+                                      <input type="text" value="{{$data->fssai_no}}" name="fssai_no" class="form-control"  id="exampleInputEmail1" placeholder="Enter FSSAI NO">
+                                    </div>
+                                  </div>
+
+
                                   <div class="col-md-6" style="display:none;">
                                     <div class="form-group">
                                       <label for="exampleInputEmail1">Google Map Key<span class="text-danger">*</span></label>
