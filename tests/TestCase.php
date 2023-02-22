@@ -16,6 +16,7 @@ use App\Models\User_faq;
 use App\Models\Vendors;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Laravel\Sanctum\Sanctum;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -26,6 +27,15 @@ abstract class TestCase extends BaseTestCase
         parent::setup();
         $this->withoutExceptionHandling();
     }
+
+    public function authUser($args = [], $num = null)
+    {
+        $user = $this->createUser($args, $num);
+        Sanctum::actingAs($user);
+
+        return $user;
+    }
+
 
     public function createUser($args = [], $num = null)
     {
