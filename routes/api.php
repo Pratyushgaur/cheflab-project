@@ -200,6 +200,6 @@ Route::post('rider-active-status', [\App\Http\Controllers\api\rider\AppControlle
 
 //
 
-Route::post('rider-order-history', [App\Http\Controllers\api\rider\OrderApiController::class, 'orderhistory']);
+Route::post('rider-order-history', [App\Http\Controllers\api\rider\OrderApiController::class, 'orderhistory'])->name("rider.order.history");
 Route::get('getDistance', [App\Http\Controllers\api\rider\LoginApiController::class, 'getDistance']);
 Route::get('getDistance2', [App\Http\Controllers\api\rider\LoginApiController::class, 'getDistance2']);
