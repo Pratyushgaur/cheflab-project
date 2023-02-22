@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
-    Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories']);
-    Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
+    Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories'])->name("get.categories");
+    Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines'])->name("get.cuisines");
     Route::post('getProductDetail', [App\Http\Controllers\api\AppController::class, 'getProductDetail']);
     //
     Route::post('pending-order-rating', [App\Http\Controllers\api\AppController::class, 'pendingOrderRatings']);
