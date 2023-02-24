@@ -3386,7 +3386,7 @@ class AppController extends Controller
     function pendingOrderRatings(){
         try {
             $pendingReview = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('user_review_done','=','0')->where('order_status','=','completed')->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id')->orderBy('orders.id','desc')->limit(1)->first();
-            $ongoingOrders = \App\Models\Orders::where('user_id','=',request()->user()->id)->whereNotIn('order_status',["pending","cancelled_by_customer_before_confirmed","cancelled_by_customer_after_confirmed","cancelled_by_customer_during_prepare","cancelled_by_customer_after_disptch","cancelled_by_vendor","completed"])->select('id','order_id','order_status','deliver_otp')->get();
+            $ongoingOrders = \App\Models\Orders::where('user_id','=',request()->user()->id)->join('vendors','orders.vendor_id','=','vendors.id')->whereNotIn('order_status',["pending","cancelled_by_customer_before_confirmed","cancelled_by_customer_after_confirmed","cancelled_by_customer_during_prepare","cancelled_by_customer_after_disptch","cancelled_by_vendor","completed"])->select('orders.id','order_id','order_status','deliver_otp','vendors.name as vendor_name')->get();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully',
@@ -3410,7 +3410,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $order = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('orders.id','=',$request->order_id)->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id as order_id','orders.vendor_id')->first();
+            $order = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('orders.id','=',$request->order_id)->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name',\DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),'orders.id as order_id','orders.vendor_id')->first();
             $order->products = \App\Models\OrderProduct::where('order_id','=',$request->order_id)->join('products','order_products.product_id','=','products.id')->select('order_products.product_name','product_id','type')->get();
 
             return response()->json([
