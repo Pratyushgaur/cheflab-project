@@ -129,6 +129,8 @@ class OrderController extends Controller
 
     public function order_ready_to_dispatch($id)
     {
+
+        // orderDeliverd($id);
         createPdf($id);
         $order               = Order::find($id);
         $order->order_status = 'ready_to_dispatch';
@@ -137,7 +139,7 @@ class OrderController extends Controller
         if ($order->accepted_driver_id != null) {
             event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id, $otp));
         }
-         
+        
         return response()->json([
             'status'       => 'success',
             'order_status' => 'ready_to_dispatch',

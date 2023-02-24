@@ -1700,7 +1700,7 @@ function orderCancelByCustomer($order_id)
     $order = Orders::where('id', $order_id)->first();
 
     $payout = Paymentsetting::first();
-    $order_amount = $order->net_amount;
+    $order_amount = $order->total_amount;
     $vendor_cancellation = $payout->additions;
     $convenience_fee = $payout->convenience_fee;
     $admin_commision = $payout->admin_commision;
@@ -1761,37 +1761,49 @@ function orderCancelByCustomer($order_id)
 function orderCancelByVendor($id)
 {
 
-
+    
     $order = Orders::where('id', $id)->first();
     $charges = Paymentsetting::first();
-    $order_amount = $order->net_amount;
+    $order_amount = $order->total_amount;
     $vendor_cancellation = $charges->order_rejection;
 
     $vendor_charges = ($vendor_cancellation / 100) * $order_amount;
+    // echo $vendor_cancellation;die;
     $ordercommision = array(
+        'is_approve' => 0,
         'is_cancel' => 1,
+        'is_coupon' => 0,
+        'coupon_amount' => 0,
         'cancel_by_vendor' => 1,
         'vendor_cancel_charge' => $vendor_charges,
         'vendor_id' => $order->vendor_id,
         'order_id' => $order->id,
         'vendor_commision' => 0,
         'admin_commision' => 0,
+        'tax_on_commission' => 0,
         'net_amount' => $order_amount,
         'gross_revenue' => 0,
         'additions' => 0,
         'deductions' => $vendor_charges,
         'net_receivables' => 0,
         'convenience_tax' => 0,
+        'total_convenience_fee' => 0,
         'addition_tax' => 0,
         'admin_tax' => 0,
         'tax' => 0,
         'convenience_amount' => 0,
+        'convenience_tax' => 0,
         'tax_amount' => 0,
         'admin_amount' => 0,
+        'platform_fee' => 0,
         'order_date' => date('Y-m-d H:i:s'),
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s')
+
     );
+
+    
+
     OrderCommision::create($ordercommision);
 
     $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
@@ -1809,6 +1821,104 @@ function orderCancelByVendor($id)
             'vendor_id' => $order->vendor_id,
             'paid_amount' => 0,
             'vendor_cancel_deduction' => $vendor_charges,
+            'start_date' => $current_start_date,
+            'end_date' => $current_end_date
+        );
+
+        return Vendor_order_statement::create($createData);
+    }
+}
+
+
+
+function orderDeliverd($id)
+{
+
+
+    $order = Orders::where('id', $id)->first();
+    $vendorData = Vendors::where('id', $order->vendor_id)->first();
+    $payout = Paymentsetting::first();
+
+    $gross_revenue = $order->total_amount;
+
+    $is_coupon = 0;
+    $discount_amount = 0;
+    if ($order->coupon_id != null) {
+            
+        $couponData = Coupon::where(['id' => $order->coupon_id, 'status' => 1])->first();
+       
+        if ($couponData->create_by == "admin") {
+            $is_coupon = 1;
+            $discount_amount = 0;
+        } else if ($couponData->create_by == "vendor") {
+            $is_coupon = 2;
+            $discount_amount = $order->discount_amount;
+            
+            $gross_revenue = $gross_revenue - $discount_amount;
+            
+        }
+    }
+
+
+    $tax = ($gross_revenue * $order->tex)/100;     //5%
+    $plateform_fee = $order->platform_charges;  //5%
+    $admin_commision = $gross_revenue*($vendorData->commission)/100;     //9%
+    $tax_on_commission = ($admin_commision * 18) / 100;
+    $convenience_fee_amount = ($gross_revenue - $admin_commision)*($payout->convenience_fee)/100;
+    $tax_on_convenience = ($convenience_fee_amount * 18)/100;
+    $total_convenience_fee = $convenience_fee_amount + $tax_on_convenience;
+    $net_amount = ($gross_revenue - $admin_commision);
+    $vendor_sattlement_amount = ($gross_revenue - $admin_commision - $tax_on_commission - $total_convenience_fee);
+    
+    $deduction =  $admin_commision + $tax_on_commission + $total_convenience_fee;
+
+    $ordercommision = array(
+        'is_approve' => 1,
+        'is_cancel' => 0,
+        'is_coupon' => $is_coupon,
+        'coupon_amount' => $discount_amount,
+        'vendor_id' => $order->vendor_id,
+        'order_id' => $order->id,
+        'vendor_commision' => 0,
+        'admin_commision' => $admin_commision,
+        'tax_on_commission' => $tax_on_commission,
+        'net_amount' => $net_amount,
+        'gross_revenue' => $gross_revenue,
+        'additions' => 0,
+        'deductions' => $deduction,
+        'net_receivables' => $vendor_sattlement_amount,
+        'convenience_amount' => $convenience_fee_amount,
+        'convenience_tax' => $tax_on_convenience,
+        'total_convenience_fee' => $total_convenience_fee,
+        'addition_tax' => 0,
+        'admin_tax' => 0,
+        'tax' => 18,
+        'tax_amount' => $tax,
+        'admin_amount' => 0,
+        'vendor_cancel_charge' => 0,
+        'platform_fee' => $plateform_fee,
+        'order_date' => date('Y-m-d H:i:s'),
+        'created_at' => date('Y-m-d H:i:s'),
+        'updated_at' => date('Y-m-d H:i:s')
+    );
+    
+    OrderCommision::create($ordercommision);
+
+    $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+    $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+    $statementData = Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+    // echo '<pre>';print_r($statementData->paid_amount);die;
+    if ($statementData) {
+        $total = ($statementData->paid_amount + $vendor_sattlement_amount);
+        $updateData = ([
+            'paid_amount' => $total
+        ]);
+        return Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+    } else {
+        $createData = array(
+            'vendor_id' => $order->vendor_id,
+            'paid_amount' => $vendor_sattlement_amount,
+            'vendor_cancel_deduction' => 0,
             'start_date' => $current_start_date,
             'end_date' => $current_end_date
         );
