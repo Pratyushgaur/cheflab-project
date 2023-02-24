@@ -2459,7 +2459,8 @@ class AppController extends Controller
                 DB::raw('if(available,false,true)  as isClosed')
             );
             $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
-            $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
+            $product = $product->addSelect('vendors.name as restaurantName','vendors.vendor_ratings', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
+            // dd($product->toArray());
             $product = $product->addSelect('user_product_like.user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
             $data = $product->get();
             $cart = \App\Models\Cart::where('user_id', $user_id)->first();
@@ -2492,6 +2493,8 @@ class AppController extends Controller
                             'primary_variant_name' => $p['primary_variant_name'],
                             'preparation_time'     => $p['preparation_time'],
                             'vendor_id'            => $p['vendor_id'],
+                            'vendor_ratings'            => $p['vendor_ratings'],
+                            'review_count'            => $p['review_count'],
                             'chili_level'          => $p['chili_level'],
                             'product_cuisines'     => $p['cuisinesName'],
                             'categorie'            => $p['categorieName'],
@@ -2561,6 +2564,8 @@ class AppController extends Controller
         }
     }
 
+    
+
     public function getAllLikerestaurants(Request $request)
     {
         try {
@@ -2602,6 +2607,7 @@ class AppController extends Controller
                     $data[$key]->next_available = next_available_day($value->id);
                 }
             }
+ 
 
             return response()->json([
                 'status'  => true,

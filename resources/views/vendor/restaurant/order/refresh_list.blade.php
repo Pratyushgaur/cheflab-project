@@ -102,7 +102,9 @@ $payment_status_class['pending'] = 'badge-danger';
                                     <?php } ?>
                                 </div>
                             </div>
+
                         </div>
+                        <b>OTP-{{$order->pickup_otp}}</b>
                         @else
                             <?php  
                                 $rider = \App\Models\RiderAssignOrders::where('order_id','=',$order->id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->whereNotIn('action',['0','2'])->select('rider_assign_orders.*','deliver_boy.name','deliver_boy.mobile')->first();
