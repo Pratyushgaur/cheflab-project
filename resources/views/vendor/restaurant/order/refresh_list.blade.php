@@ -84,7 +84,7 @@ $payment_status_class['pending'] = 'badge-danger';
                                     
                                     if($order->order_status == 'confirmed'){
                                     ?>
-                                    <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Preparing</a>
+                                    <a data-toggle="modal" data-target="#modal-7" class="dropdown-item {{'ms-text-'.$status_class['preparing']}}" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})">Accept & Prepare</a>
                                     <a data-toggle="modal" data-target="#modal-confirm" class="dropdown-item {{'ms-text-'.$status_class['cancelled_by_vendor']}}" data-id="{{$order->id}}" onclick="confirm_reject('{{route('restaurant.order.vendor_reject',[$order->id])}}',{{$order->id}})" >Reject</a>
                                     <?php }
                                     if($order->order_status == 'preparing') {?>

@@ -47,6 +47,9 @@ Route::get('admin-logout', function () {
 })->name('admin.logout');
 Route::view('admin', 'admin/login-2')->name('admin.login')->middleware('isadminloginAuth');
 Route::post('check-login-for-admin', [ App\Http\Controllers\admin\Cn_login::class, 'admin_login' ]);
+Route::get('check-login-for-admin', function(){
+    return view('admin/login-2');
+});
 
 @require_once 'admin_routes.php';
 
@@ -54,6 +57,10 @@ Route::post('check-login-for-admin', [ App\Http\Controllers\admin\Cn_login::clas
 //////////////////////////////////////vendor route ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Route::view('vendor/login', 'vendor/login')->name('vendor.login')->middleware(isVendorLoginAuth::class);
+Route::get('check-login-on-vendor', function(){
+    return view('vendor/login');
+});
+
 Route::post('check-login-on-vendor', [ App\Http\Controllers\vendor\LoginController::class, 'login' ])->name('action.vendor.login');
 Route::get('vendor-logout', function () {
     Auth::guard('vendor')->logout();

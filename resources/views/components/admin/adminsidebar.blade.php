@@ -27,6 +27,36 @@
 				  <p>Dashboard</p>
 				</a>
 			</li>
+			<li class="nav-item has-treeview">
+				<a href="#" class="nav-link">
+
+				  <i class="far fa-circle nav-icon "></i>
+				  <p>
+					 Order Management
+					<i class="fas fa-angle-left right"></i>
+				  </p>
+				</a>
+				<ul class="nav nav-treeview">
+				    <li class="nav-item">
+						<a href="{{route('admin.order.list')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Vendor Orders</p>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="{{route('admin.order.dashboard')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Order Dashbord</p>
+						</a>
+					</li>
+					<!-- <li class="nav-item">
+						<a href="{{route('admin.dineout.list')}}" class="nav-link">
+						  <i class="fa fa-arrow-right nav-icon"></i>
+						  <p>Dineout Orders</p>
+						</a>
+					</li> -->
+				</ul>
+			</li>
 	  		<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 				  <i class="nav-icon fas fa-edit"></i>
@@ -152,36 +182,7 @@
 				  <p>Coupon Management</p>
 				</a>
 			</li>
-			<li class="nav-item has-treeview">
-				<a href="#" class="nav-link">
-
-				  <i class="far fa-circle nav-icon "></i>
-				  <p>
-					 Order Management
-					<i class="fas fa-angle-left right"></i>
-				  </p>
-				</a>
-				<ul class="nav nav-treeview">
-				    <li class="nav-item">
-						<a href="{{route('admin.order.list')}}" class="nav-link">
-						  <i class="fa fa-arrow-right nav-icon"></i>
-						  <p>Vendor Orders</p>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="{{route('admin.order.dashboard')}}" class="nav-link">
-						  <i class="fa fa-arrow-right nav-icon"></i>
-						  <p>Order Dashbord</p>
-						</a>
-					</li>
-					<!-- <li class="nav-item">
-						<a href="{{route('admin.dineout.list')}}" class="nav-link">
-						  <i class="fa fa-arrow-right nav-icon"></i>
-						  <p>Dineout Orders</p>
-						</a>
-					</li> -->
-				</ul>
-			</li>
+			
 			<li class="nav-item has-treeview">
 				<a href="#" class="nav-link">
 

@@ -20,21 +20,33 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-xl-3 col-md-6">
+        
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','all')}}" >
+            
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
-                    <div class="ms-card-body media">
-                        <div class="media-body">
-                            <h6>Total Orders</h6>
-                            <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_orders}}
-                            </p>
-                            <p class="fs-12">{{$text}}</p>
-                        </div>
-                    </div>
+                    
+                      <div class="ms-card-body media">
+                        
+                            <div class="media-body">
+                              
+                                  <h6>Total Orders</h6>
+                                  
+                                    <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_orders}}
+                                    </p>
+                                  
+                                  <p class="fs-12">{{$text}}</p>
+                                
+                            </div>
+                        
+                      </div>
+                    
                     <i class="flaticon-statistics"></i>
                 </div>
+                
             </div>
+            
 
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','confirmed')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
@@ -48,11 +60,11 @@
                 </div>
             </div>
             
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','preparing')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
-                            <h6>Preparing</h6>
+                            <h6>Accept & Prepare</h6>
                             <p class="ms-card-change"><i class="material-icons">arrow_upward</i> {{$total_prepairing}}
                             </p>
                             <p class="fs-12">{{$text}}</p>
@@ -62,7 +74,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','ready_to_dispatch')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
@@ -76,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','dispatched')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
@@ -89,7 +101,7 @@
                     <i class="flaticon-statistics"></i>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','completed')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
@@ -102,7 +114,7 @@
                     <i class="flaticon-statistics"></i>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','cancelled_by_vendor')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
@@ -115,7 +127,7 @@
                     <i class="flaticon-statistics"></i>
                 </div>
             </div>
-            <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6 click-box" data-link="{{route('restaurant.order.list','refunded')}}">
                 <div class="ms-card card-gradient-success ms-widget ms-infographics-widget">
                     <div class="ms-card-body media">
                         <div class="media-body">
@@ -1004,6 +1016,10 @@
         $("#dashboard_input").change(function() {
             this.form.submit();
         });
+        $('.click-box').click(function(){
+          
+            window.location.href = $(this).attr('data-link');
+        })
     </script>
 @endpush
 
