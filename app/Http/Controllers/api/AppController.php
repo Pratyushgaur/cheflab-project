@@ -1557,6 +1557,7 @@ class AppController extends Controller
 
     public function create_order(Request $request)
     {
+        // echo "hello";die;
         //        date_default_timezone_set(config('app.timezone'));
         // return '#'.str_pad(1 + 100, 8, "0", STR_PAD_LEFT);
         try {

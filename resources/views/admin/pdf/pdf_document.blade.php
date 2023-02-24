@@ -53,21 +53,16 @@
 
       .address {
          width: 100%;
-         /* clear: both; */
       }
 
       .invoice_info {
          text-align: right;
-         /* width: 47%; */
-         /* float: right; */
          font-size: 10px;
       }
 
       .billingDetails_1,
       .invoice_info {
          text-align: right;
-         /* width: 55%; */
-         /* float: right; */
          font-size: 10px;
       }
 
@@ -141,15 +136,6 @@
          /* width: 92%; */
          /* float: left; */
       }
-
-      /* .heading_invoice {
-    width: 88%;
-    float: left;
-}
-.logo_image {
-    width: 12%;
-    float: right;
-} */
       .address_box p,
       .work_description p {
          margin: 0;
@@ -202,20 +188,11 @@
       .sign_box p {
          font-size: 11px;
       }
-      /* .order_table tr td {
-        border-right: 1px solid #121111;
-    }
-    .order_table tr td {
-        border-bottom: 1px solid #121111;
-    }
-    .order_table tr th {
-        border-bottom: 1px solid black;
-        border-right: 1px solid black;
-    }
-    .order_table tr  {
-        border-bottom: 1px solid black;
-        
-    } */
+
+      .address {
+         list-style: none;
+         text-align: left;
+      }
    </style>
 </head>
 
@@ -242,7 +219,6 @@
                         <div class="heading_invoice">
                            <div class="inner_invoice">
                               <h4 style="font-size:18px;margin: 0;line-height: 33px;">TAX INVOICE </h4>
-                              <p style="font-size:14px;margin: 15px 0;">ChefLab</p>
                               <h5 style="font-size:13px;margin-top:12px;text-transform: uppercase;text-align: left;">(operated by Chotu 18 Services PVT LTD) </h5>
                            </div>
                         </div>
@@ -263,16 +239,16 @@
                   <td style="width:50%;">
                      <table>
                         <tr>
-                            <td><b>Restaurant Name-</b></td>
-                         </tr>
-                        <tr>  
+                           <td><b>Restaurant Name-</b></td>
+                        </tr>
+                        <tr>
                            <td style="padding-top: 5px;"><b> Name:</b> {{ $vendor->name }}</td>
                         </tr>
-                        <tr>                          
-                           <td><b>Address:</b> {{ $vendor->address }}</td>                           
+                        <tr>
+                           <td><b>Address:</b> {{ $vendor->address }}</td>
                         </tr>
-                        <tr>                         
-                           <td><b> GST No.:</b> {{ $vendor->gst_no }}  </td>
+                        <tr>
+                           <td><b> GST No.:</b> {{ $vendor->gst_no }} </td>
                         </tr>
                         <tr>
                            <td><b> FSSAI License No:</b> {{ $vendor->fssai_lic_no }}</td>
@@ -310,220 +286,131 @@
                            <td><b>Customer Details-</b></td>
                         </tr>
                         <tr>
-                           <td style="padding-top: 5px;"><b>Customer Name:</b>  {{ $users->name }}</td>
+                           <td style="padding-top: 5px;"><b>Customer Name:</b> {{ $users->name }}</td>
                         </tr>
-                        <!-- <tr>
-                           <td><b>Merchant ID:</b> 146926 </td>
-                        </tr> -->
                         <tr>
                            <td><b>Delivery Address:</b> {{ $order->delivery_address }}</td>
                         </tr>
                         <tr>
                            <td><b>Contact Number:</b> {{ $users->mobile_number }}</td>
                         </tr>
-                        <tr>
-                            <td><b>Company Address :</b>{{ $adminDetail->office_addres }}</td>
-                         </tr>
                      </table>
                   </td>
-                  <!-- <td style="width:50%;">
-                     <table>
-                     <thead>
-                            <tr>
-                                <th class="initial-38-6">S.No.</th>
-                                <th class="initial-38-6">Description</th>
-                                <th class="initial-38-7">Quantity</th>
-                                <th class="initial-38-7">Rate</th>
-                                <th class="initial-38-7">Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $i = 1;
-                            foreach ($orderProduct as $val) { ?>
-                                <tr>
-                                    <td class="">
-                                    <?php echo $i; ?>
-                                    </td>
-                                    <td class="">
-                                    {{$val['product_name']}}
-                                    </td>
-                                    <td class="">
-                                        {{$val['product_qty']}} <br>
-                                    </td>
-                                    <td class="w-28p">
-                                        {{ $val['product_price'] }}
-                                    </td>
-                                    <td class="w-28p">
-                                    <?php echo ($val['product_qty'] * $val['product_price']); ?>
-                                    </td>
-                                </tr>
-                            <?php $i++; } ?>
-                        </tbody>
-                     </table>
-                  </td> -->
                </tr>
             </table>
          </div>
          <div class="sevice_detail" style="margin-top:0px;">
             <table class="order_table" cellpadding="5" border="1" style="width:100%;margin-top: 20px;border-collapse: collapse;">
-                <thead>
-                    <th>S.No.</th>
-                    <th>Description</th>
-                    <th>Quantity</th>
-                    <th>Rate</th>
-                    <th>Price</th>
-                    
-                </thead>
-                <tbody>
+               <thead>
+               <tr>
+                  <th>S.No.</th>
+                  <th>Description</th>
+                  <th>Quantity</th>
+                  <th>Rate</th>
+                  <th>Price</th>
+   </tr>
+               </thead>
+               <tbody>
 
-                    <tr>
-                        <td style="padding:12px;"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                       
-                        
+                  <?php
+                  $i = 1;
+                  foreach ($orderProduct as $val) { ?>
+                     <tr>
+                        <td class="">
+                           <?php echo $i; ?>
+                        </td>
+                        <td class="">
+                           {{$val['product_name']}}
+                        </td>
+                        <td class="">
+                           {{$val['product_qty']}} <br>
+                        </td>
+                        <td class="w-28p">
+                           {{ $val['product_price'] }}
+                        </td>
+                        <td class="w-28p">
+                           <?php echo ($val['product_qty'] * $val['product_price']); ?>
+                        </td>
                      </tr>
-                    <?php 
-                    $i = 1;
-                    foreach ($orderProduct as $val) { ?>
-                        <tr>
-                            <td class="">
-                            <?php echo $i; ?>
-                            </td>
-                            <td class="">
-                            {{$val['product_name']}}
-                            </td>
-                            <td class="">
-                                {{$val['product_qty']}} <br>
-                            </td>
-                            <td class="w-28p">
-                                {{ $val['product_price'] }}
-                            </td>
-                            <td class="w-28p">
-                            <?php echo ($val['product_qty'] * $val['product_price']); ?>
-                            </td>
-                        </tr>
-                    <?php $i++; } ?>
+                  <?php $i++;
+                  } ?>
 
-                    <tr>
-                        <td></td>
-                        <td colspan="2" style="text-align:right;padding-right:20px;"><b>Tax:</b></td>
-                        <td><b>SGST: {{$vendor->tax/2}} %</b></td>
-                        <td>{{ $taxAmount }}</td>
-                       
-                        
-                     </tr>
-                
-                     <tr>
-                        
-                        <td></td>
-                        <td colspan="2"></td>
-                        <td><b>CGST: {{$vendor->tax/2}} %</b></td>
-                        <td>{{ $taxAmount }}</td>
-                       
-                        
-                     </tr>
+                  <tr>
+                     <td></td>
+                     <td colspan="2" style="text-align:right;padding-right:20px;"><b>Tax:</b></td>
+                     <td><b>SGST: {{$vendor->tax/2}} %</b></td>
+                     <td>{{ $taxAmount }}</td>
 
-                    <tr>
-                       <td></td>
-                       <td colspan="3" style="text-align:right;padding-right:20px;"><b>Item Subtotal:</b></td>
-                       <td>{{ $order->total_amount }} </td>
-                      
-                       
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td colspan="3" style="text-align:right;padding-right:20px;"><b>Total Amount :</b></td>
-                        <td>{{ $order->net_amount }}</td>
-                        
-                     </tr>
 
-                     <tr>
-                        <td></td>
-                        <td colspan="3" style="text-align:right;padding-right:20px;"><b>Net Amount:</b></td>
-                        <td>{{ $netTotalAmount }}</td>
-                        
-                     </tr>
-                     <tr>
-                        <td></td>
-                        <td colspan="3" style="text-align:right;padding-right:20px;"><b>Platform Fee: </b></td>
-                        <td>{{ $order->platform_charges }}</td>
-                        
-                     </tr>
-                     <tr>
-                        <td></td>
-                        <td colspan="3" style="text-align:right;padding-right:20px;"><b>Delivery Charges :</b></td>
-                        <td>{{ $order->delivery_charge }}</td>
-                        
-                     </tr>
-                     <tr>
-                        <td></td>
-                        <td colspan="3" style="text-align:right;padding-right:20px;"><b>Discount (if any):</b></td>
-                        <td>{{ $order->discount_amount }}</td>
-                        
-                     </tr>
-                     <tr>
-                        <td></td>
-                        <td colspan="3" style="text-align:right;padding-right:20px;"><b>GST No.:</b></td>
-                        <td>{{ $adminDetail->gstno }}</td>
-                        
-                     </tr>
-                     
+                  </tr>
 
-                </tbody>
+                  <tr>
+
+                     <td></td>
+                     <td colspan="2"></td>
+                     <td><b>CGST: {{$vendor->tax/2}} %</b></td>
+                     <td>{{ $taxAmount }}</td>
+
+
+                  </tr>
+
+                  <tr>
+                     <td></td>
+                     <td colspan="3" style="text-align:right;padding-right:20px;"><b>Item Subtotal:</b></td>
+                     <td>{{ $order->total_amount }} </td>
+
+
+                  </tr>
+                  <tr>
+                     <td></td>
+                     <td colspan="3" style="text-align:right;padding-right:20px;"><b>Platform Fee: </b></td>
+                     <td>{{ $order->platform_charges }}</td>
+
+                  </tr>
+                  <tr>
+                     <td></td>
+                     <td colspan="3" style="text-align:right;padding-right:20px;"><b>Delivery Charges :</b></td>
+                     <td>{{ $order->delivery_charge }}</td>
+
+                  </tr>
+                  <tr>
+                     <td></td>
+                     <td colspan="3" style="text-align:right;padding-right:20px;"><b>Discount (if any):</b></td>
+                     <td>{{ $order->discount_amount }}</td>
+
+                  </tr>
+                  <tr>
+                     <td></td>
+                     <td colspan="3" style="text-align:right;padding-right:20px;"><b>Total Amount :</b></td>
+                     <td>{{ $order->net_amount }}</td>
+
+                  </tr>
+               </tbody>
 
             </table>
-
-
-            <!-- <table style="width:100%;">
-               <tr>
-                  <td style="width:50%;">
-                     <table>
-                       
-                        <tr>
-                           <td style="padding-top:5px;"><b>Tax (SGST : {{$vendor->tax/2}} % , CGST : {{$vendor->tax/2}} %)</b></td>
-                        </tr>6
-                        <tr>
-                           <td style="padding-top:5px;"><b>Item Subtotal : </b>{{ $order->total_amount }}</td>
+            <div class="user_detail">
+               <table style="width: 100%; margin-top:10px;">
+                  <tbody>
+                     <tr>
+                        <td><b>Company Address : </b>{{ $adminDetail->office_addres }} </td>
+                     </tr>
+                     <tr>
+                        <td><b>GST No. : </b>{{ $adminDetail->gstno }} </td>
                         </tr>
                         <tr>
-                           <td style="padding-top:5px;"><b>Platform Fee : </b>{{ $order->platform_charges }}</td>
+                        <td><b>CIN : </b>{{ $adminDetail->cin_no }}</td>
                         </tr>
                         <tr>
-                           <td style="padding-top:5px;"><b>Delivery Charges : </b>{{ $order->delivery_charge }}</td>
-                        </tr>
-                        <tr>
-                           <td style="padding-top:5px;"><b>Total Amount : </b>{{ $order->net_amount }}</td>
-                        </tr>
-                        <tr>
-                           <td style="padding-top:5px;"><b>Discount (if any) :</b>{{ $order->discount_amount }}</td>
-                        </tr>
-                        <tr>
-                           <td style="padding-top:5px;"><b>Net Amount : </b>{{ $netTotalAmount }}</td>
-                        </tr>
-
-                        <tr>
-                           <td style="padding-top:5px;"><b>Company Address : </b>{{ $adminDetail->office_addres }}</td>
-                        </tr>
-                        <tr>
-                           <td style="padding-top:5px;"><b>GST No. : </b>{{ $adminDetail->gstno }}</td>
-                        </tr>
-
-                     </table>
-                  </td>
-                  <td style="width:50%;">
-                     <table>
-
-                     </table>
-                  </td>
-               </tr>
-            </table> -->
-
-
+                        <td><b>FSSAI : </b>{{ $adminDetail->fssai_no }}</td>
+                     </tr>
+                  </tbody>
+               </table>
+               <div>
+                  <p>*This is computer generated invoice.</p>
+               </div>
+            </div>
          </div>
-         
+
       </div>
 </body>
 
