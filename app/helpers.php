@@ -1077,8 +1077,15 @@ function getDrivingDistance($lat1, $long1, $lat2, $long2)
     $dist       = $response_a['rows'][0]['elements'][0]['distance']['text'];
     $time       = $response_a['rows'][0]['elements'][0]['duration']['text'];
     $dist       = str_replace(',', '.', $dist);
-    return $dist = str_replace('km', '', $dist);
-    return array('distance' => $dist, 'time' => $time);
+    if(str_contains($dist, "km")){
+        $dist = str_replace('km', '', $dist);
+        return $dist = str_replace('m', '', $dist);
+    }else{
+        return 0;
+    }
+    // $dist = str_replace('km', '', $dist);
+    // return $dist = str_replace('m', '', $dist);
+    // return array('distance' => $dist, 'time' => $time);
 }
 
 function getOrderId()
