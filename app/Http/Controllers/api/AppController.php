@@ -2460,7 +2460,8 @@ class AppController extends Controller
                 DB::raw('if(available,false,true)  as isClosed')
             );
             $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
-            $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
+            $product = $product->addSelect('vendors.name as restaurantName','vendors.vendor_ratings', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
+            // dd($product->toArray());
             $product = $product->addSelect('user_product_like.user_id', DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'));
             $data = $product->get();
             $cart = \App\Models\Cart::where('user_id', $user_id)->first();
@@ -2493,6 +2494,8 @@ class AppController extends Controller
                             'primary_variant_name' => $p['primary_variant_name'],
                             'preparation_time'     => $p['preparation_time'],
                             'vendor_id'            => $p['vendor_id'],
+                            'vendor_ratings'            => $p['vendor_ratings'],
+                            'review_count'            => $p['review_count'],
                             'chili_level'          => $p['chili_level'],
                             'product_cuisines'     => $p['cuisinesName'],
                             'categorie'            => $p['categorieName'],
@@ -2562,6 +2565,8 @@ class AppController extends Controller
         }
     }
 
+    
+
     public function getAllLikerestaurants(Request $request)
     {
         try {
@@ -2603,6 +2608,7 @@ class AppController extends Controller
                     $data[$key]->next_available = next_available_day($value->id);
                 }
             }
+ 
 
             return response()->json([
                 'status'  => true,
@@ -3381,10 +3387,12 @@ class AppController extends Controller
     function pendingOrderRatings(){
         try {
             $pendingReview = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('user_review_done','=','0')->where('order_status','=','completed')->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id')->orderBy('orders.id','desc')->limit(1)->first();
+            $ongoingOrders = \App\Models\Orders::where('user_id','=',request()->user()->id)->whereNotIn('order_status',["pending","cancelled_by_customer_before_confirmed","cancelled_by_customer_after_confirmed","cancelled_by_customer_during_prepare","cancelled_by_customer_after_disptch","cancelled_by_vendor","completed"])->select('id','order_id','order_status','deliver_otp')->get();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully',
-                'response' => $pendingReview
+                'response' => $pendingReview,
+                'ongoing_orders'=>$ongoingOrders
 
             ], 200);
         } catch (Throwable $th) {

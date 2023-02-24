@@ -19,8 +19,8 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
-    Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories']);
-    Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines']);
+    Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories'])->name("get.categories");
+    Route::post('getCuisines', [App\Http\Controllers\api\AppMasterController::class, 'getCuisines'])->name("get.cuisines");
     Route::post('getProductDetail', [App\Http\Controllers\api\AppController::class, 'getProductDetail']);
     //
     Route::post('pending-order-rating', [App\Http\Controllers\api\AppController::class, 'pendingOrderRatings']);
@@ -30,8 +30,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // restaurant home page api
 
-    Route::post('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage']);
-    Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory']);
+    Route::post('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage'])->name("restaurant.home");
+    Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory'])->name("get.restaurant.by.category");
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
 
@@ -200,6 +200,6 @@ Route::post('rider-active-status', [\App\Http\Controllers\api\rider\AppControlle
 
 //
 
-Route::post('rider-order-history', [App\Http\Controllers\api\rider\OrderApiController::class, 'orderhistory']);
+Route::post('rider-order-history', [App\Http\Controllers\api\rider\OrderApiController::class, 'orderhistory'])->name("rider.order.history");
 Route::get('getDistance', [App\Http\Controllers\api\rider\LoginApiController::class, 'getDistance']);
 Route::get('getDistance2', [App\Http\Controllers\api\rider\LoginApiController::class, 'getDistance2']);

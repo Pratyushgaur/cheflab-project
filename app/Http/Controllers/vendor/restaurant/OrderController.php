@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 class OrderController extends Controller
 {
     public function index($staus_filter = null)
-    {
+    { 
         $orders = [];
         $order_obj = Order::select('orders.id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name')
             ->join('users', 'users.id', '=', 'orders.user_id')
@@ -193,6 +193,7 @@ class OrderController extends Controller
     {
       
         $order = Order::with('products', 'user', 'order_product_details')->where('vendor_id','=',Auth::guard('vendor')->user()->id)->find($id);
+
         $product_qty = OrderProduct::where('order_id', $id)->get()->count();
         $strtotime = strtotime($order->created_at);
         $order_date = date('d M Y h:m a',$strtotime);
@@ -251,7 +252,7 @@ class OrderController extends Controller
 
     public function refresh_list(Request $request, $staus_filter = null)
     {
-        $order_obj = Order::select('orders.id', 'orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name','orders.created_at')
+        $order_obj = Order::select('orders.id', 'orders.order_id', 'vendor_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'payment_type', 'payment_status', 'preparation_time_to', 'order_products.product_name','orders.created_at','orders.pickup_otp')
             ->join('users', 'users.id', '=', 'orders.user_id')
             ->join('order_products', 'order_products.order_id', '=', 'orders.id')
             ->join('products', 'products.id', '=', 'order_products.product_id')
