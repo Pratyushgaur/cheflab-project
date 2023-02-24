@@ -148,6 +148,8 @@ class GlobleSetting extends Controller
         $general->suport_phone = $request->suport_phone;
         $general->office_addres = $request->office_addres;
         $general->gstno = $request->gstno;
+        $general->fssai_no = $request->fssai_no;
+        $general->cin_no = $request->cin_no;
         $general->goofle_map_key = $request->goofle_map_key;
         $general->facebook_link = $request->facebook_link;
         $general->instagram_link = $request->instagram_link;

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\Vendor_payout_detail;
+use App\Models\OrderCommision;
 use App\Models\User;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Crypt;
@@ -31,12 +32,24 @@ class AccountmisController extends Controller
 
     public function get_data_table_of_order(Request $request)
     {
-        // echo "hello";die;
+        
         if ($request->ajax()) {
 
 
-            $data = Orders::join('order_commisions', 'orders.id', '=', 'order_commisions.order_id')->join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'order_commisions.order_id', '=', 'rider_assign_orders.order_id')->select('orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'order_commisions.net_amount', 'order_commisions.vendor_commision', 'order_commisions.admin_commision', 'order_commisions.admin_amount', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code');
+            // $data = Orders::join('order_commisions', 'orders.id', '=', 'order_commisions.order_id')->join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'order_commisions.order_id', '=', 'rider_assign_orders.order_id')->select('orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'order_commisions.net_amount', 'order_commisions.vendor_commision', 'order_commisions.admin_commision', 'order_commisions.admin_amount', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code');
 
+            // $data = Orders::
+            // join('order_commisions', 'orders.id', '=', 'order_commisions.order_id')
+            // ->join('vendors', 'orders.vendor_id', '=', 'vendors.id')
+            // ->join('users', 'orders.user_id', '=', 'users.id')
+            // ->join('coupons', 'orders.coupon_id', '=', 'coupons.id')
+            // ->join('rider_assign_orders', 'order_commisions.order_id', '=', 'rider_assign_orders.order_id')
+            // select('orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'orders.created_at', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'orders.delivery_charge');
+
+
+
+            $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code','rider_assign_orders.action', 'orders.total_amount', 'orders.net_amount');
+            
             if ($request->status != '') {
                 $data = $data->where('payment_status', '=', $request->status);
             }
@@ -46,6 +59,7 @@ class AccountmisController extends Controller
             if ($request->vendor != '') {
                 $data = $data->where('orders.vendor_id', '=', $request->vendor);
             }
+            $data = $data->where('rider_assign_orders.action', '!=', '2');
 
             $dateSedule = $request->datePicker;
 
@@ -61,6 +75,7 @@ class AccountmisController extends Controller
 
 
             $data = $data->get();
+            
             return Datatables::of($data)
                 ->addIndexColumn()
                 // ->addColumn('wallet_cut', function($data){
@@ -76,17 +91,56 @@ class AccountmisController extends Controller
                     return $rider_earning;
                 })
 
+                ->addColumn('date', function($data){
+                    $date_with_format = date('d M Y h:i A',strtotime($data->created_at));
+                    return $date_with_format;
+                })
+
+                ->addColumn('admin_earning_vendor', function($data){
+                    $ordercommission = OrderCommision::where('order_id', $data->id)->first();
+                    if($ordercommission != ''){
+                        $admin_earning_vendor = $ordercommission->admin_commision;
+                    }else{
+                        $admin_earning_vendor = '0';
+                    }
+                    return $admin_earning_vendor;
+                })
+
+                ->addColumn('vendor_settlement', function($data){
+                    $vendor_settlement_amount = OrderCommision::where('order_id', $data->id)->first();
+                    if($vendor_settlement_amount != ''){
+                        $vendor_settlement = $vendor_settlement_amount->net_receivables;
+                    }else{
+                        $vendor_settlement = '0';
+                    }
+                    return $vendor_settlement;
+                })
 
 
-                ->rawColumns(['wallet_cut', 'rider_earning', 'action-js'])
+                ->addColumn('admin_earning_rider', function($data){
+
+                    $admin_earning_rider = $data->delivery_charge - $data->earning;
+                    
+                    return $admin_earning_rider;
+                })
+
+
+
+                
 
                 ->addColumn('admin_erning', function ($data) {
-                    $admin_erning = $data->admin_commision + $data->admin_amount;
+                    $ordercommission = OrderCommision::where('order_id', $data->id)->first();
+                    if($ordercommission != ''){
+                        $admin_earning_vendor = $ordercommission->admin_commision;
+                    }else{
+                        $admin_earning_vendor = '0';
+                    }
+                    $admin_erning = $admin_earning_vendor + $data->delivery_charge - $data->earning;
                     return $admin_erning;
                 })
 
 
-                ->rawColumns(['wallet_cut', 'admin_erning', 'action-js'])
+                ->rawColumns(['wallet_cut', 'admin_erning','admin_earning_vendor','date','admin_earning_rider','rider_earning', 'action-js'])
 
                 ->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this

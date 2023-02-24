@@ -28,7 +28,7 @@
                       <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
-                            <h4 class="fw-normal text-dark">₹{{ number_format($additions_count,2) }}</h4>
+                            <h4 class="fw-normal text-dark">₹{{ number_format($additions_count + $admin_discount_sum,2) }}</h4>
                             <p class="subtitle text-sm text-muted mb-0">Additions</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
