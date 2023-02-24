@@ -74,6 +74,8 @@
                                     <th>IFSC Code </th>
                                     <th>Start Date - H:M:S</th>
                                     <th>End Date - H:M:S </th>
+                                    <th>UTR</th>
+                                    <th>Payment Date - H:M:S</th>
                                     <th>Status </th>
                                   </tr>
                             </thead>
@@ -104,7 +106,7 @@
 
 
 <!-- <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script> -->
-<link href="{{ asset('js/bootstrap-datepicker3.css') }}" rel="stylesheet">
+<link href="{{ asset('js/bootstrap-datepicker3.css') }}" rel="stylesheet"> 
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.bootstrap4.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
@@ -115,6 +117,8 @@
     $(this).bootstrapSwitch('state', $(this).prop('checked'));
   })
 </script>
+
+ 
 
 <script type="text/javascript">
 
@@ -174,6 +178,8 @@ $(function() {
             {data: 'ifsc', name: 'ifsc'},
             {data: 'start_date', name: 'start_date'},
             {data: 'end_date', name: 'end_date'},
+            {data: 'bank_utr_number', name: 'bank_utr_number'},
+            {data: 'payment_success_date', name: 'payment_success_date'},
             {data: 'status', name: 'status'}, 
         ]
     });
@@ -207,4 +213,8 @@ $(function() {
 
 
  </style>
+
+
+
+
 @endsection
