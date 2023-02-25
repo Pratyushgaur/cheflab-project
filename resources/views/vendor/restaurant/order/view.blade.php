@@ -308,7 +308,7 @@
                                             @endif
                                             @if($rider->pivot->action==2)
                                                 <span class="badge badge-dark">Rejected</span>
-                                                <p>Cancel Reason : {{$rider->cancel_reason}}</p>
+                                                <p>Cancel Reason : {{$rider->pivot->cancel_reason}}</p>
                                             @endif
                                             @if($rider->pivot->action==3)
                                                 <span class="badge badge-info">Delivered</span>

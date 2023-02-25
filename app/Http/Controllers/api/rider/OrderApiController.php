@@ -55,7 +55,7 @@ class OrderApiController extends Controller
             $order = $order->select('orders.customer_name', \DB::raw("DATE_FORMAT(orders.created_at, '%d/%b/%y %H:%i %p') as order_date"), 'orders.order_id', 'orders.id as order_row_id', 'net_amount', 'rider_assign_orders.cancel_reason', 'rider_assign_orders.distance', 'rider_assign_orders.earning', 'send_cutlery', 'chef_message', 'avoid_ring_bell', 'leave_at_door', 'avoid_calling', 'direction_to_reach', 'direction_instruction', 'action');
             $order = $order->addSelect('vendors.name as vendor_name', 'vendors.mobile as vendor_mobile', 'vendors.lat as vendor_lat', 'vendors.long as vendor_lng', 'vendors.address as vendor_address', 'orders.lat as customer_lat', 'orders.long as customer_lng', 'orders.delivery_address', 'orders.mobile_number as customer_mobile');
             if ($request->status == 'completed') {
-                $order = $order->addSelect(\DB::raw("DATE_FORMAT(orders.pickup_time, '%h:%i %p, %d/%m/%y') as pickup_time"), \DB::raw("DATE_FORMAT(orders.delivered_time, '%h:%i %p, %d/%m/%y') as delivered_time"));
+                $order = $order->addSelect(\DB::raw("DATE_FORMAT(orders.pickup_time, '%h:%i %p, %d/%m/%y') as pickup_time"), \DB::raw("DATE_FORMAT(orders.delivered_time, '%h:%i %p, %d/%m/%y') as delivered_time"),"earning");
                 //10:32 AM, 20/09/22
 
             }

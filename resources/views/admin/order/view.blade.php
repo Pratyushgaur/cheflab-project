@@ -281,6 +281,7 @@
                   </div>
                   <!--  -->
                   @if(!empty($rider))
+                  @foreach($rider as $riders)
                   <div class="">
                      <div class="card">
                         <div class="card-body">
@@ -289,25 +290,57 @@
                            </h5>
                            <a class="media align-items-center deco-none resturant--information-single">
                               <div class="avatar avatar-circle">
-                                 <img class="avatar-img pr-2 rounded" src="@if($rider->image!='')
-                                        {{url('/').'/dliver-boy/'.$rider->image}}@else{{url('/').'/default_user.jpg'}} @endif" alt="Image Description" width="80">
+                                 <img class="avatar-img pr-2 rounded" src="@if($riders->image!='')
+                                        {{url('/').'/dliver-boy/'.$riders->image}}@else{{url('/').'/default_user.jpg'}} @endif" alt="Image Description" width="80">
                               </div>
                               <div class="media-body">
                                  <span class="text-body text-hover-primary text-break"></span>
                                  <span class="fz--14px text--title font-semibold text-hover-primary d-block">
-                                    {{ ucwords($rider->name) }} &nbsp;
+                                    {{ ucwords($riders->name) }} &nbsp;
                                  </span>
                                  <span class="text--title">
-                                    <i class="tio-call-talking-quiet"></i> ({{ $rider->mobile }})
+                                    <i class="tio-call-talking-quiet"></i> ({{ $riders->mobile }})
                                  </span>
-                                 <span class="text--title">
-                                 
-                                 </span>
+                                 @if($riders->action==0)
+                                    
+                                    <span class="text--title">
+                                       <i class="tio-call-talking-quiet"></i> Pending
+                                    </span>
+                                 @endif
+                                 @if($riders->action==1)
+                                    <span class="text--title">
+                                       <i class="tio-call-talking-quiet"></i> Accepted
+                                    </span>
+                                 @endif
+                                 @if($riders->action==2)
+                                    <span class="text--title">
+                                       <i class="tio-call-talking-quiet"></i> Rejected
+                                    </span>
+                                    <p>Cancel Reason : {{$riders->cancel_reason}}</p>
+                                 @endif
+                                 @if($riders->action==3)
+                                    <span class="text--title">
+                                       <i class="tio-call-talking-quiet"></i> Delivered
+                                    </span>
+                                 @endif
+                                 @if($riders->action==4)
+                                    <span class="text--title">
+                                       <i class="tio-call-talking-quiet"></i> Picked up
+                                    </span>
+                                 @endif
+                                 @if($riders->action==6)
+                                    
+                                    <span class="text--title">
+                                       <i class="tio-call-talking-quiet"></i> User Cancelled
+                                    </span>
+                                 @endif
+                                
                               </div>
                            </a>
                         </div>
                      </div>
                   </div>
+                  @endforeach
                   @endif
                </div>
             </div>
