@@ -576,7 +576,6 @@ function topRatedProducts($product_where = [], $user_id = '', $order_by_column =
     //    dd(\DB::getQueryLog());
     $variant = [];
     //dd($user_id);
-    return $product->toArray();
     $cart = \App\Models\Cart::where('user_id', $user_id)->first();
     //    dd($cart);
     if (count($product->toArray())) {
