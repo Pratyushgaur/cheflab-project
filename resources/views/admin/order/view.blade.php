@@ -279,6 +279,36 @@
                         </div>
                      </div>
                   </div>
+                  <!--  -->
+                  @if(!empty($rider))
+                  <div class="">
+                     <div class="card">
+                        <div class="card-body">
+                           <h5 class="mb-3">
+                              <span><i class="fa fa-home pr-2" aria-hidden="true"></i> Rider Information</span>
+                           </h5>
+                           <a class="media align-items-center deco-none resturant--information-single">
+                              <div class="avatar avatar-circle">
+                                 <img class="avatar-img pr-2 rounded" src="@if($rider->image!='')
+                                        {{url('/').'/dliver-boy/'.$rider->image}}@else{{url('/').'/default_user.jpg'}} @endif" alt="Image Description" width="80">
+                              </div>
+                              <div class="media-body">
+                                 <span class="text-body text-hover-primary text-break"></span>
+                                 <span class="fz--14px text--title font-semibold text-hover-primary d-block">
+                                    {{ ucwords($rider->name) }} &nbsp;
+                                 </span>
+                                 <span class="text--title">
+                                    <i class="tio-call-talking-quiet"></i> ({{ $rider->mobile }})
+                                 </span>
+                                 <span class="text--title">
+                                 
+                                 </span>
+                              </div>
+                           </a>
+                        </div>
+                     </div>
+                  </div>
+                  @endif
                </div>
             </div>
          </div>

@@ -406,7 +406,8 @@ class OrderController extends Controller
             $vendor = Vendors::findOrFail($vendor_id);
             $users = User::findOrFail($user_id);
             $coupon = \App\Models\Coupon::find($order->coupon_id);
-            return view('admin.order.view',compact('order','product','vendor','users','coupon'));
+            $rider = \App\Models\RiderAssignOrders::where('order_id',$id)->whereIn('action',["0","1","4","3"])->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->select('deliver_boy.name','mobile','rider_assign_orders.rider_id','action')->first();
+            return view('admin.order.view',compact('order','product','vendor','users','coupon','rider'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 

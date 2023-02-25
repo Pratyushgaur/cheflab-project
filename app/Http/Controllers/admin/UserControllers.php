@@ -273,6 +273,7 @@ class UserControllers extends Controller
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->lat           = $request->lat;
+        $vendors->status           = "1";
         $vendors->long           = $request->lng;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
@@ -950,13 +951,13 @@ class UserControllers extends Controller
     public function user_inactive($id){
         $id   = decrypt($id);
         $user = User::find($id);
-        User::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
+        User::where('id','=', $user->id)->limit(1)->update( ['status' => "0"]);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Inactive Successfully' ], 200);
     }
     public function user_active($id){
         $id   = decrypt($id);
         $user = User::find($id);
-        User::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        User::where('id','=', $user->id)->limit(1)->update( ['status' => "1"]);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'User Active Successfully' ], 200);
     }
     public function vendor_inactive($id){
@@ -964,13 +965,13 @@ class UserControllers extends Controller
         $id   = Crypt::decryptString($id);
         
         $user = Vendors::find($id);
-        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 0]);
+        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => '0']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Inactive Successfully' ], 200);
     }
     public function vendor_active($id){
         $id   = Crypt::decryptString($id);
         $user = Vendors::find($id);
-        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => 1]);
+        Vendors::where('id','=', $user->id)->limit(1)->update( ['status' => '1']);
         return \Response::json([ 'error' => false, 'success' => true, 'message' => 'Vendor Active Successfully' ], 200);
         return redirect()->back()->with('message', 'User Active Successfully.');
     }
@@ -1008,8 +1009,13 @@ class UserControllers extends Controller
         $general->save();
         return redirect()->route('admin.globle.setting')->with('message', 'Refer Amount  Update Successfully');
     }
-    public function refundlist(){
-        $orders = \App\Models\Order::where('order_status','=','cancelled_by_customer_before_confirmed')->join('vendors','orders.vendor_id','=','vendors.id')->select('orders.id','order_id','net_amount','orders.created_at','vendors.name as vendor_name','customer_name')->get();
+    public function refundlist(Request $request){
+        $orders = \App\Models\Order::where('order_status','=','cancelled_by_customer_before_confirmed')->join('vendors','orders.vendor_id','=','vendors.id')->select('orders.id','order_id','net_amount','orders.created_at','vendors.name as vendor_name','customer_name');
+        if($request->get('from_date')!='' && $request->get('to_date')!=''){
+            $orders = $orders->whereBetween('orders.created_at',[$request->get('from_date'), $request->get('to_date')]);
+        }
+        
+        $orders = $orders->get();
         
         return view('admin/vendors/refundlist',compact('orders'));
     }

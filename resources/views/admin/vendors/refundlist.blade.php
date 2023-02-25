@@ -13,7 +13,34 @@
 
           <!-- Main content -->
           <section class="content">
-            
+          <div class="row">
+              <div class="col-md-12"> 
+                  <div class="card card-primary card-outline">
+                    <div class="card-body pad table-responsive">
+                       
+                          <form action="">
+                            <div class="row">
+                              <div class="form-group col-md-3">
+                                  <input type="date" name="from_date" class="form-control" placeholder="From Date" required>
+                              </div>
+                              <div class="form-group col-md-3">
+                                  <input type="date" name="to_date" class="form-control" placeholder="To Date" required  >
+                                  
+                              </div>
+                              <div class="form-group col-md-3">
+                                  
+                                  <button class="btn btn-sm btn-primary">Submit</button>
+                              </div>
+                            </div>
+                          </form>
+                        
+                        
+                    </div>
+                  </div>
+
+                </div>
+                
+              </div>
               <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
@@ -28,12 +55,11 @@
                             <thead>
                                   <tr role="row">
                                     <th  class="text-center">Sr No.</th>
-                                    <th >Name</th>
-                                    <th  >Order Id</th>
-                                    <th> Amount</th>
-                                    
-                                    <th  >created at</th>
-                                    <th  >Action</th>
+                                    <th>Name</th>
+                                    <th>Order Id</th>
+                                    <th>Amount</th>
+                                    <th>created at</th>
+                                    <th>Action</th>
                                   </tr>
                             </thead>
                             <tbody>

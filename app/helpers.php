@@ -872,7 +872,7 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
     if ($lat != '' && $lat != '')
         $vendors = get_restaurant_ids_near_me($lat, $lng, $where, true);
     else
-        $vendors = \App\Models\Vendors::where("vendors.is_all_setting_done", 1)->where('vendors.status', 1);
+        $vendors = \App\Models\Vendors::where("vendors.is_all_setting_done", 1)->where('vendors.status', 1)->where('vendors.is_online', 1);
 
     $vendors->leftJoin('vendor_order_time', function ($join) {
         $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')

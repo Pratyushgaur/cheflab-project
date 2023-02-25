@@ -191,7 +191,7 @@ class LoginApiController extends Controller
             }
             $user = User::where(['mobile_number' => $request->mobile_number]);
             if ($user->exists()) {
-                if($user->first()->status == '0'){
+                if($user->first()->status == '0' || $user->first()->status == ''){
                     return response()->json([
                         'status' => false,
                         'error' => 'Account Deactivated'

@@ -192,7 +192,7 @@
                                     </div>
                                   </div>
                                   <div class="col-md-6">
-                                  <label for="additions">Convenience Fee for vendor (Including GST)</label>
+                                  <label for="additions">Convenience Fee for vendor (Excluding GST)</label>
                                     <div class="custom-control custom-switch">
                                       
                                       <input type="checkbox" class="custom-control-input" id="switch1" name="toggle" onchange="get_toggle()" value="0" @if($data->toggle == '1') checked @endif>

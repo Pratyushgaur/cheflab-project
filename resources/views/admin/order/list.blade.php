@@ -178,6 +178,11 @@
         }
       }); 
   })
+  var auto_refresh = setInterval(
+    function () {
+      reload_table();
+        
+    }, 10000);
 
  </script>
 @endsection

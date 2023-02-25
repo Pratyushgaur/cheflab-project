@@ -730,7 +730,7 @@ class AppController extends Controller
             } elseif ($request->search_for == 'dishes') {
                 $user_id = request()->user()->id;
                 //$data = get_product_with_variant_and_addons([['product_name', 'like', '%' . $request->keyword . '%'], ['products.status', '=', '1'], ['product_for', '=', '3']], $user_id, '', '', true);
-                 $product_ids = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%')->where('vendors.status','=','1')->where('available', 1)
+                 $product_ids = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%')->where('vendors.status','=','1')->where('vendors.is_online','=','1')->where('available', 1)
                         
                 ->skip($request->offset)->take(5)
                 ->join('vendors','products.userId','=','vendors.id')
