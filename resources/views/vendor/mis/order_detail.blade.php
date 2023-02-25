@@ -81,7 +81,7 @@
                           <td class="border-bottom">
                             <h6>Status</h6>
                           </td>
-                          <td class="border-bottom">{{ $status }}</td>
+                          <td class="border-bottom">{{ $order->order_status }}</td>
                         </tr>
                         <tr>
                           <td class="border-bottom">
@@ -102,10 +102,10 @@
                           <td class="border-bottom">{{ $order->payment_status }}</td>
                         </tr>
                         <tr>
-                          <td class="border-bottom">
+                          <!-- <td class="border-bottom">
                             <h6>Unsettled amount</h6>
                           </td>
-                          <td class="border-bottom">₹0</td>
+                          <td class="border-bottom">₹0</td> -->
                         </tr>
                       </tbody>
                     </table>
@@ -128,34 +128,28 @@
                           <td class="border-bottom">
                             <h6>Commission</h6>
                           </td>
-                          <td class="border-bottom">₹{{ $order->admin_amount }}</td>
+                          <td class="border-bottom">₹{{ $order->admin_commision }}</td>
                         </tr>
                         <tr>
                           <td class="border-bottom">
                             <h6>Tax On Commission</h6>
                           </td>
-                          <td class="border-bottom">₹{{ $order->tax_amount }}</td>
+                          <td class="border-bottom">₹{{ $order->tax_on_commission }}</td>
                         </tr>
 
                       </tbody>
                     </table>
                   </td>
-
-
                   <td>
                     <table class="table table-borderless">
                       <tbody>
                         <tr>
                           <td class="border-bottom">
-                            <h6>Convenience Fee</h6>
+                            <h6>Convenience Fee (Including Tax)</h6>
                           </td>
-                          <td class="border-bottom">₹{{ $order->convenience_amount }}</td>
+                          <td class="border-bottom">₹{{ $order->total_convenience_fee }}</td>
                         </tr>
-                        <tr>
-                          <td class="border-bottom">
-                            <h6>TDS amount</h6>
-                          </td>
-                          <td class="border-bottom">₹0</td>
+                        <tr> 
                         </tr>
 
                       </tbody>
@@ -168,29 +162,7 @@
             </table>
           </div>
           <hr>
-          <!-- <div class="table_box">
-            <h6 class="mb-4 mt-3 text-primary">Settlement</h6>
-            <table class="table table-bordered">
-              <thead class="bg-light">
-                <tr>
-                  <th>Transaction</th>
-                  <th>Status</th>
-                  <th>Transaction Date</th>
-                  <th>Amount</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>ABDFG4356465785</td>
-                  <td>Settled</td>
-                  <td>5 Auguest ,2021 12:00 AM</td>
-                  <td>₹83.02</td>
-                  <td>CREDIT</td>
-                </tr>
-              </tbody>
-            </table>
-          </div> -->
+           
         </div>
       </div>
     </div>

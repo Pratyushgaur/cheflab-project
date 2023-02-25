@@ -34,19 +34,7 @@ class AccountmisController extends Controller
     {
         
         if ($request->ajax()) {
-
-
-            // $data = Orders::join('order_commisions', 'orders.id', '=', 'order_commisions.order_id')->join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'order_commisions.order_id', '=', 'rider_assign_orders.order_id')->select('orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'order_commisions.net_amount', 'order_commisions.vendor_commision', 'order_commisions.admin_commision', 'order_commisions.admin_amount', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code');
-
-            // $data = Orders::
-            // join('order_commisions', 'orders.id', '=', 'order_commisions.order_id')
-            // ->join('vendors', 'orders.vendor_id', '=', 'vendors.id')
-            // ->join('users', 'orders.user_id', '=', 'users.id')
-            // ->join('coupons', 'orders.coupon_id', '=', 'coupons.id')
-            // ->join('rider_assign_orders', 'order_commisions.order_id', '=', 'rider_assign_orders.order_id')
-            // select('orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'orders.created_at', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'orders.delivery_charge');
-
-
+ 
 
             $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code','rider_assign_orders.action', 'orders.total_amount', 'orders.net_amount');
             
@@ -78,10 +66,7 @@ class AccountmisController extends Controller
             
             return Datatables::of($data)
                 ->addIndexColumn()
-                // ->addColumn('wallet_cut', function($data){
-                //     $wallet_cut = 0;
-                //     return $wallet_cut;
-                // })
+                
                 ->addColumn('rider_earning', function ($data) {
                     if ($data->earning == '') {
                         $rider_earning = 0;
@@ -124,10 +109,7 @@ class AccountmisController extends Controller
                     return $admin_earning_rider;
                 })
 
-
-
-                
-
+ 
                 ->addColumn('admin_erning', function ($data) {
                     $ordercommission = OrderCommision::where('order_id', $data->id)->first();
                     if($ordercommission != ''){
@@ -142,8 +124,7 @@ class AccountmisController extends Controller
 
                 ->rawColumns(['wallet_cut', 'admin_erning','admin_earning_vendor','date','admin_earning_rider','rider_earning', 'action-js'])
 
-                ->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
-                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
+                 
 
                 ->make(true);
         }
@@ -155,6 +136,7 @@ class AccountmisController extends Controller
     }
     public function vieworder($encrypt_id)
     {
+    
         try {
             $id =  Crypt::decryptString($encrypt_id);
             $order_id = $id;

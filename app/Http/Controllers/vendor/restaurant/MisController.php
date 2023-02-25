@@ -183,16 +183,8 @@ class MisController extends Controller
     {
 
         $order = OrderCommision::where('order_commisions.id', $id)->join('orders', 'order_commisions.order_id', '=', 'orders.id')->select('order_commisions.*', 'orders.payment_type', 'orders.payment_status', 'orders.order_status', 'order_commisions.is_approve', 'order_commisions.is_cancel')->first();
-        if ($order->is_approve == 1) {
-            $status = "Delivered";
-        } elseif ($order->is_cancel == 1) {
-            $status = "Cancel";
-        } elseif($order->is_approve == 0){
-            $status = "Pending";
-        }
-
-
-        return view('vendor.mis.order_detail', compact('order','status'));
+         
+        return view('vendor.mis.order_detail', compact('order'));
 
     }
 

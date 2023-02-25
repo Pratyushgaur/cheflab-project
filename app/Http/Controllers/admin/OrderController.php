@@ -19,32 +19,6 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $id = 1;
-        $order = Orders::where('id', $id)->first();
-
-        $vendor = Vendors::findOrFail($order->vendor_id);
-        $users = User::findOrFail($order->user_id);
-        $orderProduct = OrderProduct::where(['order_id' => $id])->get();
-        $orderProductAmount = OrderProduct::where(['order_id' => $id])->sum('product_price');
-        $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno', 'admin_masters.cin_no', 'admin_masters.fssai_no')->first();
-        $taxAmount = ($orderProductAmount * ($vendor->tax) / 2) / 100;
-        $totalAmount = $orderProductAmount + $taxAmount;
-        $invoiceName = rand(9999, 99999) . $id . '.pdf';
-        $invoiceNumber = rand(9999, 99999) . $id;
-        $currentDate = date('Y-m-d H:m:s');
-        $allTotalAmount =  $totalAmount + $order->delivery_charge + $order->platform_charges;
-        $netTotalAmount =   $order->net_amount - $order->discount_amount;
-
-        $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order', 'vendor', 'users', 'orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount', 'invoiceNumber', 'currentDate', 'adminDetail', 'allTotalAmount', 'netTotalAmount'));
-
-        $pdf->save(public_path('uploads/invoices/' . $invoiceName));
-        $url = 'uploads/invoices/' . $invoiceName;
-
-        $pdfUrl = Orders::where('id', '=', $id)->first();
-
-
-        $pdfUrl->pdf_url = $url;
-        $pdfUrl->save();
 
         return view('admin.order.list');
 
@@ -294,7 +268,7 @@ class OrderController extends Controller
         
         $trhtml = '';
         $i=1;
-        foreach($order as $k =>$v){
+        foreach($order as $k =>$v){ 
             $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td><td><a href="#" data-vendorlat="'.$v["vendorlat"].'" data-vendorlong="'.$v["vendorlong"].'" data-order_id="'.$v["id"].'" class="btn btn-success btn-sm find-rider">Find Rider</a></td>';
             $i++;
         }
