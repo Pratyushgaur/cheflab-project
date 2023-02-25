@@ -338,12 +338,12 @@
                 
                 <!-- End of Payemnt Setting -->
                 <!-- application version and update setting  -->
-                <div class="col-lg-12 col-6">
+                <div class="col-lg-12 col-12">
                     <!-- small box -->
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Application (User) Version And Update Setup </h3>
+                      <h3 class="card-title">Application (User) Version And Update Setup for Android </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
@@ -395,7 +395,171 @@
 
                   </div>
                 </div>
+                <div class="col-lg-12 col-12">
+                    <!-- small box -->
+                  <div class="card card-primary card-outline">
+                    
+                    <div class="card-header">
+                      <h3 class="card-title">Application (User) Version And Update Setup for Ios </h3>
+                      
+                    </div>
+                    <div class="card-body pad table-responsive">
+                      <form id="restaurant-form" action="{{route('admin.globle.store_ios_user_app_version')}}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title text-bold" >User Application Update</h3>
+                            </div>
+                            <div class="card-body">
+                              <div class="error">
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Current Version of User IOS App<span class="text-danger">*</span></label>
+                                    <input type="text" value="{{$data->ios_user_app_version}}" name="user_app_current_version" class="form-control"  id="exampleInputEmail1" placeholder="User App Current Version" required>
+                                    <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Soft Update</label>
+                                    
+                                    <select name="soft_update" class="form-control soft_update2">
+                                      <option value="0" @if($data->ios_user_app_soft_update == "0") selected @endif  >false</option>
+                                      <option value="1" @if($data->ios_user_app_soft_update == "1") selected @endif>True</option>
+                                    </select>
+                                  </div>
+                                  <!--  -->
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Force Update</label>
+                                    
+                                    <select name="force_update" class="form-control force_update2">
+                                      <option value="0" @if($data->ios_user_app_force_update == "0") selected @endif>false</option>
+                                      <option value="1" @if($data->ios_user_app_force_update == "1") selected @endif>True</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                         <div class="card-footer">
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
+                          </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="col-lg-12 col-12">
+                    <!-- small box -->
+                  <div class="card card-primary card-outline">
+                    
+                    <div class="card-header">
+                      <h3 class="card-title">Application (Rider) Version And Update Setup  </h3>
+                      
+                    </div>
+                    <div class="card-body pad table-responsive">
+                      <form id="restaurant-form" action="{{route('admin.globle.store_rider_app_version')}}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title text-bold" >User Application Update</h3>
+                            </div>
+                            <div class="card-body">
+                              <div class="error">
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Current Version of Rider App<span class="text-danger">*</span></label>
+                                    <input type="text" value="{{$data->driver_app_current_version}}" name="user_app_current_version" class="form-control"  id="exampleInputEmail1" placeholder="User App Current Version" required>
+                                    <input type="hidden" name="id" value="{{$data->id}}" class="form-control"  id="exampleInputEmail1" placeholder="Enter Business Name">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Soft Update</label>
+                                    
+                                    <select name="soft_update" class="form-control soft_update3">
+                                      <option value="0" @if($data->driver_app_soft_update == "0") selected @endif  >false</option>
+                                      <option value="1" @if($data->driver_app_soft_update == "1") selected @endif>True</option>
+                                    </select>
+                                  </div>
+                                  <!--  -->
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Force Update</label>
+                                    
+                                    <select name="force_update" class="form-control force_update3">
+                                      <option value="0" @if($data->driver_app_force_update == "0") selected @endif>false</option>
+                                      <option value="1" @if($data->driver_app_force_update == "1") selected @endif>True</option>
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                         <div class="card-footer">
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
+                          </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
                 <!-- end of version setting -->
+                <!-- Change Password start  -->
+                <div class="col-lg-12 col-6">
+                    <!-- small box -->
+                  <div class="card card-primary card-outline">
+                    
+                    <div class="card-header">
+                      <h3 class="card-title">Change Password </h3>
+                      
+                    </div>
+                    <div class="card-body pad table-responsive">
+                      <form id="restaurant-form" action="{{route('admin.globle.change_password')}}" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
+                        <div class="card card-default">
+                            <div class="card-header">
+                                <h3 class="card-title text-bold" >Change Admin Panel Password to access</h3>
+                            </div>
+                            <div class="card-body">
+                              <div class="error">
+                                @if($errors->any())
+                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                @endif
+                              </div>
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Old Password<span class="text-danger">*</span></label>
+                                    <input type="password" value="" name="old_password" class="form-control"  id="exampleInputEmail1" placeholder="Enter Old Password" required>
+                                    
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">New Password <span class="text-danger">*</span></label>
+                                    <input type="password" value="" name="new_password" class="form-control"  id="exampleInputEmail1" placeholder="Enter New Password" required>
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
+                                    <input type="password" value="" name="confirm_password" class="form-control"  id="exampleInputEmail1" placeholder="Enter Confirm Password" required>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                         <div class="card-footer">
+                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
+                          </div>
+                      </form>
+                    </div>
+
+                  </div>
+                </div>
+                <!-- Change Password -->
                 <div class="col-lg-12 col-6">
                     <!-- small box -->
                   <div class="card card-primary card-outline">
@@ -622,6 +786,34 @@
         $('.soft_update').val('1');
       }else{
         $('.soft_update').val('0');
+      }
+    });
+    $('.soft_update2').change(function(){
+      if($(this).val() == '0'){
+        $('.force_update2').val('1');
+      }else{
+        $('.force_update2').val('0');
+      }
+    });
+    $('.force_update2').change(function(){
+      if($(this).val() == '0'){
+        $('.soft_update2').val('1');
+      }else{
+        $('.soft_update2').val('0');
+      }
+    });
+    $('.soft_update3').change(function(){
+      if($(this).val() == '0'){
+        $('.force_update3').val('1');
+      }else{
+        $('.force_update3').val('0');
+      }
+    });
+    $('.force_update3').change(function(){
+      if($(this).val() == '0'){
+        $('.soft_update3').val('1');
+      }else{
+        $('.soft_update3').val('0');
       }
     });
         

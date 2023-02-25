@@ -912,10 +912,18 @@ class UserControllers extends Controller
         }
     }
 
-    public function user_list()
+    public function user_list(Request $request)
     {
-        $users = User::orderBy('id', 'desc')->paginate(15);
-        return view('admin/vendors/user_list', compact('users'));
+        $user = User::orderBy('id', 'desc');
+        $keyword = $request->search;
+        if($request->search != ''){
+            $user = $user->where('name', 'like', '%' . $request->search . '%');
+            $user = $user->orWhere('email', 'like', '%' . $request->search . '%');
+            $user = $user->orWhere('mobile_number', 'like', '%' . $request->search . '%');
+        }
+        
+        $users = $user->paginate(15)->appends(request()->query());
+        return view('admin/vendors/user_list', compact('users','keyword'));
     }
     public function add_wallet(Request $request ,$id)
     {

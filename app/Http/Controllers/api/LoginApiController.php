@@ -263,7 +263,15 @@ class LoginApiController extends Controller
             ], 500);
         }
     }
-
+    function guestLogin(){
+        $user = User::where('is_guest', '=', '1')->select('id', 'name', 'mobile_number', 'email')->first();
+        $token = $user->createToken('cheflab-app-token')->plainTextToken;
+        return response()->json([
+            'status' => true,
+            'message' => 'User Login Successfully',
+            'token' => array('name' => $user->name, 'email' => $user->email, 'mobile' => $user->mobile_number, 'user_id' => $user->id, 'token' => $token)
+        ], 200);
+    }
     public function checkVersion(Request $request)
     {
         try {

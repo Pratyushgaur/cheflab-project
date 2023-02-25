@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('image');
             $table->string('referralCode',)->unique()->nullable();
             $table->string('referby',)->nullable();
+            $table->enum('is_guest',["0","1"])->default('0');
             //            $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

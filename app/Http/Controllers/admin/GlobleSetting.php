@@ -128,6 +128,22 @@ class GlobleSetting extends Controller
         $general->save();
         return redirect()->route('admin.globle.setting')->with('message', 'Update Application Version Setup Successfully');
     }
+    public function storeUserIosAppVersion(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->ios_user_app_version = $request->user_app_current_version;
+        $general->ios_user_app_force_update = $request->force_update;
+        $general->ios_user_app_soft_update	 = $request->soft_update;
+        $general->save();
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Application Version Setup Successfully');
+    }
+    public function storeRiderAppVersion(Request $request){
+        $general = AdminMasters::find($request->id);
+        $general->driver_app_current_version = $request->user_app_current_version;
+        $general->driver_app_force_update = $request->force_update;
+        $general->driver_app_soft_update	 = $request->soft_update;
+        $general->save();
+        return redirect()->route('admin.globle.setting')->with('message', 'Update Application Version Setup Successfully');
+    }
     public function storeDelivery(Request $request){
         $general = AdminMasters::find($request->id);
         $general->platform_charges = $request->platform_charges;
@@ -507,5 +523,27 @@ class GlobleSetting extends Controller
        return redirect()->route('admin.dashboard')->with('message', 'Product Active Successfully');
     }
     
+
+    public function changePassword(Request $request)
+    {
+        $this->validate($request, [
+            'old_password' => 'required',
+            'new_password' => 'required|same:confirm_password',
+            'confirm_password' => 'required',
+        ]);
+        
+        return  $oldpass = \Hash::make($request->old_password);
+        
+        $admin = \App\Models\Superadmin::findOrfail(1);
+        if($admin->password == $oldpass){
+            $admin->password = \Hash::make($request->new_password);
+            $admin->save();
+            return redirect()->route('admin.dashboard')->with('message', 'Password Change Successfully');
+        }else{
+            return \Redirect::back()->withErrors(['msg' => 'Old Password Not Matches']);
+        }
+
+
+    }
     
 }

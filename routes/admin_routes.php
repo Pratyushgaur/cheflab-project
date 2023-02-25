@@ -202,12 +202,15 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('globle-privacy-general', [App\Http\Controllers\admin\GlobleSetting::class,'general'])->name('admin.globle.general');
     Route::post('globle-general-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeGernel'])->name('admin.globle.storeGernel');
     Route::get('globle-static-page', [App\Http\Controllers\admin\GlobleSetting::class,'staticpage'])->name('admin.globle.staticpage');
+    Route::post('globle-password-change', [App\Http\Controllers\admin\GlobleSetting::class,'changePassword'])->name('admin.globle.change_password');
 
     Route::get('globle-delivery-charge', [App\Http\Controllers\admin\GlobleSetting::class,'delivery_charge'])->name('admin.globle.delivery_charge');
     Route::post('globle-store-deliverycharge', [App\Http\Controllers\admin\GlobleSetting::class,'storeDelivery'])->name('admin.globle.storeDelivercharge');
     Route::get('globle-payment-setting', [App\Http\Controllers\admin\GlobleSetting::class,'payment'])->name('admin.globle.payment.setting');
     Route::post('globle-payment-store', [App\Http\Controllers\admin\GlobleSetting::class,'storePaytm'])->name('admin.globle.storePaytm');
     Route::post('globle-userapp-setup-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeUserAppVersion'])->name('admin.globle.store_user_app_version');
+    Route::post('globle-ios-userapp-setup-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeUserIosAppVersion'])->name('admin.globle.store_ios_user_app_version');
+    Route::post('globle-rider-app-setup-store', [App\Http\Controllers\admin\GlobleSetting::class,'storeRiderAppVersion'])->name('admin.globle.store_rider_app_version');
     Route::get('app-user-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'feedbacklist'])->name('admin.app.feedbacklist');
     Route::get('app-vendor-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'vendorfeedbacklist'])->name('admin.app.vendorfeedbacklist');
     Route::get('app-deliverboy-feedbacklist', [App\Http\Controllers\admin\GlobleSetting::class,'DeliveryBoyfeedbacklist'])->name('admin.app.deliveryfeedbacklist');

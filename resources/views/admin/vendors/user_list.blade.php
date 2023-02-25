@@ -15,11 +15,11 @@
         <section class="content">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12 col-sm-12 col-lg-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
                                 <form action="{{route('admin.user.list')}}">
-                                    <input type="text" name="search">
+                                    <input type="text" name="search" style="width:40%;" placeholder="Search" value="{{$keyword}}">
                                     <input type="submit" class="btn btn-sm btn-primary" value="Search">
                                 </form>
 

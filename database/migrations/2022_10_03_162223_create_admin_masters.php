@@ -16,6 +16,8 @@ class CreateAdminMasters extends Migration
         Schema::create('admin_masters', function (Blueprint $table) {
             $table->id();
             $table->text('privacy_policy');
+            $table->string('cin_no')->nullable();
+            $table->string('fssai_no')->nullable();
             $table->text('terms_conditions_vendor');
             $table->text('terms_conditions_cheflab');
             $table->text('terms_conditions_deliverboy');
@@ -37,6 +39,10 @@ class CreateAdminMasters extends Migration
             $table->string('user_app_current_version',20);
             $table->string('user_app_force_update',20);
             $table->string('user_app_soft_update',20);
+            $table->string('ios_user_app_version',20);
+            $table->enum('ios_user_app_force_update',["0","1"])->default('0');
+            $table->enum('ios_user_app_soft_update',["0","1"])->default('1');
+
             $table->string('driver_app_current_version',20);
             $table->string('driver_app_force_update',20);
             $table->string('driver_app_soft_update',20);
