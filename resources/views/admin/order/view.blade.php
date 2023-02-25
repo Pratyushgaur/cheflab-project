@@ -301,38 +301,31 @@
                                  <span class="text--title">
                                     <i class="tio-call-talking-quiet"></i> ({{ $riders->mobile }})
                                  </span>
+                                 <br>
                                  @if($riders->action==0)
-                                    
-                                    <span class="text--title">
-                                       <i class="tio-call-talking-quiet"></i> Pending
-                                    </span>
+                                    <button class="btn btn-xs btn-primary"> Pending</button>
                                  @endif
                                  @if($riders->action==1)
-                                    <span class="text--title">
-                                       <i class="tio-call-talking-quiet"></i> Accepted
-                                    </span>
+                                    <button class="btn btn-xs btn-info"> Accepted</button>
                                  @endif
                                  @if($riders->action==2)
-                                    <span class="text--title">
-                                       <i class="tio-call-talking-quiet"></i> Rejected
-                                    </span>
+                                    <button class="btn btn-xs btn-danger"> Rejected</button>
+
                                     <p>Cancel Reason : {{$riders->cancel_reason}}</p>
                                  @endif
                                  @if($riders->action==3)
-                                    <span class="text--title">
-                                       <i class="tio-call-talking-quiet"></i> Delivered
-                                    </span>
+                                    <button class="btn btn-xs btn-success"> Delivered</button>
+
                                  @endif
                                  @if($riders->action==4)
-                                    <span class="text--title">
-                                       <i class="tio-call-talking-quiet"></i> Picked up
-                                    </span>
+                                    
+                                    <button class="btn btn-xs btn-warning"> Picked up</button>
+
                                  @endif
                                  @if($riders->action==6)
                                     
-                                    <span class="text--title">
-                                       <i class="tio-call-talking-quiet"></i> User Cancelled
-                                    </span>
+                                    <button class="btn btn-xs btn-warning"> User Cancelled</button>
+
                                  @endif
                                 
                               </div>
