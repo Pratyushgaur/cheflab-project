@@ -309,6 +309,43 @@ class LoginApiController extends Controller
             ], 500);
         }
     }
+    public function checkIosVersion(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'version' => 'required'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $version = floatval($request->version);
+            $record = \App\Models\AdminMasters::select('ios_user_app_version', 'ios_user_app_force_update', 'ios_user_app_soft_update')->first();
+            if (floatval($request->version) < floatval($record->ios_user_app_version)) {
+                return response()->json([
+                    'status' => true,
+                    'data' => array('current_version' => $record->ios_user_app_version, 'force_update' => $record->ios_user_app_force_update, 'user_app_soft_update' => $record->ios_user_app_soft_update)
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => true,
+                    'data' => []
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 
     function getData(Request $request)
     {

@@ -169,6 +169,7 @@ Route::post('guest-login', [App\Http\Controllers\api\LoginApiController::class, 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq'])->name("user.faq");
 
 Route::post('get-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkVersion'])->name("update.version");
+Route::post('get-ios-update-version', [\App\Http\Controllers\api\LoginApiController::class, 'checkIosVersion'])->name("update.version");
 
 
 Route::post('send-notification', [App\Http\Controllers\api\AppController::class, 'sendNotification']);
