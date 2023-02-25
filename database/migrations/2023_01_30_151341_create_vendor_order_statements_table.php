@@ -16,12 +16,14 @@ class CreateVendorOrderStatementsTable extends Migration
         Schema::create('vendor_order_statements', function (Blueprint $table) {
             $table->id();
             $table->string('vendor_id');
-            $table->string('paid_amount')->default(null)->nullable();;
+            $table->string('paid_amount')->default(null)->nullable();
             $table->float('pay_status')->default('0');
             $table->string('start_date');
             $table->string('end_date');
             $table->string('vendor_cancel_deduction');
             $table->string('total_pay_amount');
+            $table->string('payment_success_date')->nullable();
+            $table->string('bank_utr_number')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

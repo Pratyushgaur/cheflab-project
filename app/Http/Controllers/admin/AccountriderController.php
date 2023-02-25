@@ -11,6 +11,7 @@ use App\Models\Vendors;
 use App\Models\RiderAssignOrders;
 use App\Models\RiderOrderStatement;
 use App\Models\RiderPayoutDetail;
+use App\Models\RiderTransactions;
 use App\Models\Deliver_boy;
 use Illuminate\Support\Facades\Crypt;
 use DataTables;
@@ -69,8 +70,6 @@ class AccountriderController extends Controller
                      return $end_date;
                  }) 
                 
-               
-
                 ->rawColumns(['status'])
                 
                ->make(true);
@@ -109,7 +108,7 @@ class AccountriderController extends Controller
             $product_id = $orderProduct->product_id;
             $product = Product_master::where('id','=',$product_id)->select('id','product_name','product_image','primary_variant_name','product_price','type')->get();
         return view('admin.order.invoice',compact('order','vendor','users','product'));
-        // echo '<pre>'; print_r($order);die;
+        
     }
     public function status_update(Request $request){
       
@@ -185,7 +184,9 @@ class AccountriderController extends Controller
         ]);
         $dataNew = ([
             'pay_status' => 1,
-            'total_pay_amount' => $request->amount
+            'total_pay_amount' => $request->amount,
+            'bank_utr_number' => $request->bank_utr,
+            'payment_success_date' => date('d-m-Y H:m:s')
         ]);
         RiderOrderStatement::where(['rider_id'=> $request->id, 'pay_status'=> 0])->first()->update($dataNew);
         RiderPayoutDetail::create($data);
