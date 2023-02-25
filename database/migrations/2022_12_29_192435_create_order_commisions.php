@@ -38,6 +38,9 @@ class CreateOrderCommisions extends Migration
             $table->string('tax_amount');
             $table->string('admin_amount');
             $table->string('order_date');
+            $table->string('tax_on_commission');
+            $table->string('total_convenience_fee');
+            $table->string('platform_fee');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

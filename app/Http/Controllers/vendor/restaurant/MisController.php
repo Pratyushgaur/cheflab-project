@@ -130,7 +130,7 @@ class MisController extends Controller
     }
     public function order_data(Request $request)
     {
-
+         
         if ($request->ajax()) {
 
             $data = OrderCommision::where('orders.vendor_id', $request->vendorId)->join('orders', 'order_commisions.order_id', '=', 'orders.id')->select('order_commisions.*', 'orders.payment_type', 'orders.payment_status', 'orders.order_status');
@@ -165,12 +165,18 @@ class MisController extends Controller
                         $btn = '<span class="text-danger">Cancel</span>';
                     } else{
                         $btn = '';
-                    }
-                    // $btn = '<span class="text-danger">' . "$data->order_status" . '</span>';
-                    
+                    } 
                     return $btn;
                 })
-
+                ->addColumn('net_receivables', function ($data) {
+                    if ($data->net_receivables) {
+                        $net_receivables =  number_format($data->net_receivables,2);
+                    }else{
+                        $net_receivables = '';
+                    } 
+                    return $net_receivables;
+                })
+                
 
 
                 ->rawColumns(['status', 'action-js'])

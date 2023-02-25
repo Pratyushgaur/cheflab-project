@@ -79,6 +79,8 @@
                                     <th>IFSC Code </th>
                                     <th>Start Date - H:M:S</th>
                                     <th>End Date - H:M:S </th>
+                                    <th>UTR</th>
+                                    <th>Payment Date - H:M:S</th>
                                     <th>Status </th>
                                   </tr>
                             </thead>
@@ -144,9 +146,7 @@ $('#reportrange').daterangepicker({
        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     }
 }, cb);
-
-// cb(start, end);
-
+ 
 });
 
 
@@ -182,6 +182,8 @@ $('#reportrange').daterangepicker({
             {data: 'ifsc', name: 'ifsc'},
             {data: 'start_date', name: 'start_date'},
             {data: 'end_date', name: 'end_date'},
+            {data: 'bank_utr_number', name: 'bank_utr_number'},
+            {data: 'payment_success_date', name: 'payment_success_date'},
             {data: 'status', name: 'status'},
         ]
     });
