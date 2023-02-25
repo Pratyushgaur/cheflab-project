@@ -927,6 +927,7 @@ class UserControllers extends Controller
     }
     public function add_wallet(Request $request ,$id)
     {
+        
         try {   
              $user = User::findOrfail($id);
              if($user->wallet_amount  == null){

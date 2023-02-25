@@ -57,7 +57,7 @@ class AccountsettlementController extends Controller
                     if ($data->pay_status == 0) {
                         $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess").'?id='.$data->id.'">Pay</a>';
                     }else{
-                        $btn = '<a class="btn btn-xs btn-success" href="javascript:void(0);">Success</a>';
+                        $btn = '<a href="#" class="btn btn-xs btn-success" >Success</a>';
                     } 
                     return $btn;
                 })
@@ -70,16 +70,20 @@ class AccountsettlementController extends Controller
                     return $total;
                 }) 
                 ->addColumn('start_date', function($data){
-                    $start_date = date('m-Y-d H:m:s', strtotime($data->start_date));
+                    $start_date = date('d-m-Y H:m:s', strtotime($data->start_date));
                      return $start_date;
                  }) 
                  ->addColumn('end_date', function($data){
-                    $end_date = date('m-Y-d H:m:s', strtotime($data->end_date));
+                    $end_date = date('d-m-Y H:m:s', strtotime($data->end_date));
                      return $end_date;
+                 })   
+                 ->addColumn('utr_number', function($data){
+                    $utr_number = date('d-m-Y H:m:s', strtotime($data->end_date));
+                     return $utr_number;
                  })             
                 
 
-                ->rawColumns(['status','name','total','start_date','end_date'])
+                ->rawColumns(['status','name','total','start_date','end_date'.'utr_number'])
                 
                ->make(true);
         }
@@ -193,11 +197,19 @@ class AccountsettlementController extends Controller
         
         $dataNew = ([
             'pay_status' => 1,
-            'total_pay_amount' => $request->amount
+            'total_pay_amount' => $request->amount,
+            'bank_utr_number' =>$request->bank_utr,
+            'payment_success_date' => date('d-m-Y H:m:s')
         ]);
         Vendor_order_statement::where(['id'=> $request->id, 'pay_status'=> '0'])->update($dataNew);
         Vendor_payout_detail::create($data);
         return redirect()->route('admin.account.vendor.list')->with('message', 'Pay Amount '. $request->amount. ' to Vendor Successfully');
+    }
+
+    public function utr_number(Request $request)
+    {
+    
+echo "hello";die;
     }
 
 }

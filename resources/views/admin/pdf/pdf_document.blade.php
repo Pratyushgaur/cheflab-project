@@ -229,7 +229,7 @@
             </tbody>
          </table>
          <?php
-         $currentDate = date('Y-m-d');
+         $currentDate = date('d-m-Y');
          $invoiceNo = rand(99999, 999999);
          ?>
 
@@ -238,8 +238,14 @@
                <tr>
                   <td style="width:50%;">
                      <table>
+                     <tr>
+                           <td><b>Invoice No:</b> {{ $invoiceNumber }}</td>
+                        </tr>
                         <tr>
-                           <td><b>Restaurant Name-</b></td>
+                           <td><b>Date:</b> {{ $currentDate }}</td>
+                        </tr><br>
+                        <tr>
+                           <td style="padding-top: 7px;"><b>Restaurant Details-</b></td>
                         </tr>
                         <tr>
                            <td style="padding-top: 5px;"><b> Name:</b> {{ $vendor->name }}</td>
@@ -266,12 +272,7 @@
                         <!-- <tr>
                            <td><b>CIN:</b> U93030DL2010PTC198141</td>
                         </tr> -->
-                        <tr>
-                           <td><b>Invoice No:</b> {{ $invoiceNumber }}</td>
-                        </tr>
-                        <tr>
-                           <td><b>Date:</b> {{ $currentDate }}</td>
-                        </tr>
+                        
                      </table>
                   </td>
                </tr>
