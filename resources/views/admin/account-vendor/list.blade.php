@@ -22,9 +22,12 @@
                       <form id="member_filter" enctype="multipart/form-data"> 
                           <div class="row">
                           
-                            <div class="col-md-4">
-                            <input type="text" class="form-control" name="start_date" value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday 1 week')) }}" placeholder="" id="datePicker">
-                               
+                          <div class="col-md-4">
+                              <input type="hidden" class="form-control" name="datePicker" id="datePicker"  placeholder="Date" required value="" autocomplete="off" >
+                                <div   id="reportrange"  style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                                  <i class="fa fa-calendar"></i>&nbsp;
+                                  <span >{{ date('F D, Y') }}</span> <i class="fa fa-caret-down"></i>
+                                </div>
                             </div>
                            
                             <div class="col-md-3" id="filter_yester" style="display:none;">
@@ -122,28 +125,31 @@
 
 <script type="text/javascript">
 
-$(function() {
-  
-  var startDate,
-        endDate;
-        
-      $('#datePicker').datepicker({
-        autoclose: true,
-        format :'yyyy-mm-dd',
-        forceParse :false
-    }).on("changeDate", function(e) {
-        //console.log(e.date);
-        var date = e.date;
-        startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
-        endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay()+6);
-        //$('#datepicker').datepicker("setDate", startDate);
-        $('#datePicker').datepicker('update', startDate);
-        $('#datePicker').val(startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate() + ' / ' + endDate.getFullYear() + '-' + (endDate.getMonth() + 1) + '-' + endDate.getDate());
-    });
-        
-        
-       
 
+
+$(function() {
+
+var start = moment().subtract(29, 'days');
+var end = moment();
+
+function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    $('#datePicker').val(start.format('YYYY-MM-DD') + ' / ' + end.format('YYYY-MM-DD'));
+}
+
+$('#reportrange').daterangepicker({
+    startDate: start,
+    endDate: end,
+    ranges: {
+       'Today': [moment(), moment()],
+       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+       'This Month': [moment().startOf('month'), moment().endOf('month')],
+       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+}, cb);
+ 
 });
 
 

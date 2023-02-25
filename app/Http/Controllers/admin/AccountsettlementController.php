@@ -77,13 +77,8 @@ class AccountsettlementController extends Controller
                     $end_date = date('d-m-Y H:m:s', strtotime($data->end_date));
                      return $end_date;
                  })   
-                 ->addColumn('utr_number', function($data){
-                    $utr_number = date('d-m-Y H:m:s', strtotime($data->end_date));
-                     return $utr_number;
-                 })             
-                
-
-                ->rawColumns(['status','name','total','start_date','end_date'.'utr_number'])
+                   
+                ->rawColumns(['status','name','total','start_date','end_date'])
                 
                ->make(true);
         }

@@ -21,6 +21,8 @@ class CreateRiderOrderStatementTable extends Migration
             $table->string('start_date');
             $table->string('end_date');
             $table->string('total_pay_amount');
+            $table->string('payment_success_date')->nullable();
+            $table->string('bank_utr_number')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

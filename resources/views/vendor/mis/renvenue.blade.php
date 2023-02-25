@@ -28,7 +28,13 @@
                 <lable><b>Weekly Date: </b></lable>
               </div>
               <div class="col-md-9 px-md-0">
-                <input type="text" class="form-control" name="start_date" value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday')) }}" placeholder="" id="datePicker">
+              
+                              <input type="hidden" class="form-control" name="start_date" id="datePicker"  placeholder="Date" required value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday')) }}" autocomplete="off" >
+                                <div   id="reportrange"  style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                                  <i class="fa fa-calendar"></i>&nbsp;
+                                  <span >{{ date('F D, Y') }}</span> <i class="fa fa-caret-down"></i>
+                                </div>
+                             
               </div>
             </div>
           </div>
@@ -103,39 +109,41 @@
 
 @push('scripts')
 
+ 
+<script src="{{asset('commonarea/ass/plugins/moment/moment.min.js')}}"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<script src="{{ asset('js/jquery/jquery.min.js') }}"></script>
-
-<script src="{{ asset('js/bootstrap-datepicker.js') }}"></script>
-<script src="{{ asset('js/bootstrap-datepicker.min.js') }}"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-<script src="{{asset('frontend')}}/assets/js/datatables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<!-- <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script> -->
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.bootstrap4.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 
 <script>
-  $(function() {
+ $(function() {
 
-    var startDate,
-      endDate;
+var start = moment().subtract(29, 'days');
+var end = moment();
 
-    $('#datePicker').datepicker({
-      weekStart: 1,
-      autoclose: true,
-      format: 'yyyy-mm-dd',
-      forceParse: false
-    }).on("changeDate", function(e) {
-      //console.log(e.date);
-      var date = e.date;
-      startDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay());
-      endDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() - date.getDay() + 6);
-      //$('#datepicker').datepicker("setDate", startDate);
-      $('#datePicker').datepicker('update', startDate);
-      $('#datePicker').val(startDate.getFullYear() + '-' + (startDate.getMonth() + 1) + '-' + startDate.getDate() + ' / ' + endDate.getFullYear() + '-' + (endDate.getMonth() + 1) + '-' + endDate.getDate());
-    });
+function cb(start, end) {
+    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+    $('#datePicker').val(start.format('YYYY-MM-DD') + ' / ' + end.format('YYYY-MM-DD'));
+}
 
-
-
-
-  });
+$('#reportrange').daterangepicker({
+    startDate: start,
+    endDate: end,
+    ranges: {
+       'Today': [moment(), moment()],
+       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+       'This Month': [moment().startOf('month'), moment().endOf('month')],
+       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+    }
+}, cb);
+ 
+});
   var start_date = $('#datePicker').val();
   revenue_ajax(start_date);
 

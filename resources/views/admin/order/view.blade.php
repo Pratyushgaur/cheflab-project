@@ -32,7 +32,7 @@
                         <div class="col-sm-6 invoice-col text-right">
                            <div class="mb-3">
                               <!-- <button type="button" class="btn btn-outline-primary"><i class="nav-icon fas fa-edit" aria-hidden="true"></i> Edit Order</button> -->
-                              <a  href="{{ url('admin/order/generate-invoice/') }}/{{ $order->order_id }}" class="btn  btn-primary"><i class="fa fa-print" aria-hidden="true"></i>  Print Invoice</a>
+                              <!-- <a  href="{{ url('admin/order/generate-invoice/') }}/{{ $order->order_id }}" class="btn  btn-primary"><i class="fa fa-print" aria-hidden="true"></i>  Print Invoice</a> -->
                            </div>
                            <address class="mainpart">
                               <p class="mb-1"><small>Status</small>:
