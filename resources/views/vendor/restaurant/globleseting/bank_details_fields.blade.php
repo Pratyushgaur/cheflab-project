@@ -30,7 +30,8 @@
     <div class="col-md-6 mb-3">
         <label>Confirm Account number<code class="ms-text-danger">*</code></label>
         <div class="input-group">
-            {{ Form::number('confirm_account_no', null, ['class' => 'form-control', 'placeholder' => 'Account Number']) }}
+            {{ Form::number('confirm_account_no', (!empty($bankDetail))?$bankDetail->account_no :null, ['class' => 'form-control', 'placeholder' => 'Account Number']) }}
+            
             @if ($errors->has('confirm_account_no'))
                 <span class="ms-text-danger"> <strong>{{ $errors->first('confirm_account_no') }}</strong></span>
             @endif
@@ -85,7 +86,7 @@
 
         <div class="imagePreview">
             @if((auth()->guard('vendor')->user()->aadhar_card_image!=''))
-                <a href="{{ url('/').'/aadhar' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}" target="_blank"><img src="{{ url('/').'/aadhar' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
+                <a href="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}" target="_blank"><img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->aadhar_card_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
             @endif
         </div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->aadhar_card_image != '') ? "Aadhar Already uploaded" : 'Upload Aadhar Card'?>
@@ -97,7 +98,7 @@
         <input type="hidden" class="imaage-data" name="pancard_image">
         <div class="imagePreview">
             @if((auth()->guard('vendor')->user()->pancard_image!=''))
-            <a href="{{ url('/').'/pancard' . '/' . auth()->guard('vendor')->user()->pancard_image}}" target="_blank"><img src="{{ url('/').'/pancard' . '/' . auth()->guard('vendor')->user()->pancard_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
+            <a href="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->pancard_image}}" target="_blank"><img src="{{ url('/').'/vendor-documents' . '/' . auth()->guard('vendor')->user()->pancard_image}}" onerror="this.onerror=null;this.src='{{url("/")}}/no_image.png';"></a>
             @endif</div>
         <label class="btn btn-primary button-lable"><?php echo (auth()->guard('vendor')->user()->pancard_image != '') ? "Pan card Already uploaded" : 'Pan card image'?>
             <input accept="image/*" type="file" data-from="pancard_image" class="uploadFile img" value="Upload Pan Card" style="width: 0px;height: 0px;overflow: hidden;"></label>

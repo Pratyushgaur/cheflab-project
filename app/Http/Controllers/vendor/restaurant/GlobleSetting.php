@@ -362,7 +362,7 @@ class GlobleSetting extends Controller
                         'holder_name' => 'required',
                         'ifsc' => 'required',
                         'bank_name' => 'required',
-                        'account_no' => ['required', 'regex:/^\w{1,17}$/','required_with:password_confirmation','same:password_confirmation'],
+                        'account_no' => ['required', 'regex:/^\w{1,17}$/','required_with:confirm_account_no','same:confirm_account_no'],
                         'confirm_account_no' => 'required',
                         'aadhar_number' => "required",
                         'fssai_lic_no' => "required",
@@ -406,11 +406,6 @@ class GlobleSetting extends Controller
             $bank->cancel_check = $folderPath . $name . '.' . $image_type;
             file_put_contents($bank->cancel_check, $image_base64);
             $bank->cancel_check = $name . '.' . $image_type;;
-            //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
-            //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
-            //            $bank['cancel_check'] = $filename;
-
-//            dd($bank->cancel_check);
         }
 
         if ($request->has('fassi_image') && $request->fassi_image != '') {
@@ -459,8 +454,6 @@ class GlobleSetting extends Controller
             //remove old img
             if ($vendor->aadhar_card_image != '')
                 @unlink(public_path('vendor-documents') . '/' . $vendor->aadhar_card_image);
-
-
             $image_parts               = explode(";base64,", $img);
             $image_type_aux            = explode("image/", $image_parts[0]);
             $image_type                = $image_type_aux[1];
@@ -469,9 +462,6 @@ class GlobleSetting extends Controller
             $vendor->aadhar_card_image = $folderPath . $name . '.' . $image_type;
             file_put_contents($vendor->aadhar_card_image, $image_base64);
             $vendor->aadhar_card_image = $name . '.' . $image_type;;
-            //            $filename = time() . '-cancel_check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
-            //            $request->cancel_check->move(public_path('vendor-documents'), $filename);
-            //            $bank['cancel_check'] = $filename;
         }
 
         $bank->holder_name = $request->holder_name;
