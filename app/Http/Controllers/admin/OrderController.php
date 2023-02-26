@@ -261,6 +261,7 @@ class OrderController extends Controller
         $order = \App\Models\NoRiderAssignOrders::where('no_rider_assign_orders.status','=','0');
         $order = $order->join('orders','no_rider_assign_orders.order_id','=','orders.id');
         $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->whereIn('orders.order_status',["preparing","ready_to_dispatch","dispatched"]);
         $order = $order->select('orders.*','vendors.name','vendors.lat as vendorlat','vendors.long as vendorlong','vendors.mobile','alt_mobile');
         $order = $order->orderBy("no_rider_assign_orders.id","DESC");
 
