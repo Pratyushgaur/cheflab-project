@@ -2016,7 +2016,8 @@ class AppController extends Controller
             $validateUser = Validator::make($request->all(), [
                 'name'               => 'required',
                 'lastname'               => 'required',
-                'email'              => 'required'
+                'email'              => 'required|unique:users,email,'.request()->user()->id,
+                'alternative_number'              => 'unique:users,alternative_number,'.request()->user()->id,
             ]);
             if ($validateUser->fails()) {
                 $error = $validateUser->errors();
