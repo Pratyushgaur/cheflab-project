@@ -287,7 +287,7 @@ class AppController extends Controller
                 }
             } elseif ($request->status == '2') {
                 RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['cancel_reason' => $request->cancel_reason]);
-                $orderData = Order::where('id', '=', $request->order_row_id);
+                $orderData = Order::where('id', '=', $request->order_row_id)->first();
                 \App\Jobs\DriveAssignOrderJob::dispatch($orderData);
             }
 
