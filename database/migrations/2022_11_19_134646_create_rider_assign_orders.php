@@ -25,6 +25,7 @@ class CreateRiderAssignOrders extends Migration
             $table->enum('action', ['0', '1', '2', '3', '4', '5', '6'])->default('0')->comment('0=pending 1= accept 2= reject by driver , 4=pickup , 3=delivered , 5=cancelled , 6=cancell by user');
             $table->string('otp', 10)->nullable()->comment('Pick Up otp');
             $table->string('total_ride_distance')->nullable();
+            $table->enum('is_rejected',['0','1','2'])->default('0')->comment('0=no reject 1=driver reject 2= system reject');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

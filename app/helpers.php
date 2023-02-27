@@ -543,8 +543,6 @@ function topRatedProducts($product_where = [], $user_id = '', $order_by_column =
     $product->orderBy('products.product_rating', 'DESC');
     $product->offset($offset)->limit($limit);
 
-
-    //    dd($product->get()->toArray());
     $qty     = '0';
     $product = $product->addSelect(
         DB::raw('products.userId as vendor_id'),
@@ -1933,5 +1931,94 @@ function orderDeliverd($id)
         );
 
         return Vendor_order_statement::create($createData);
+    }
+}
+function generateIncentive(){
+    //return Carbon::now()->subDays(1)->startOfWeek();
+//    return Carbon::now()->subWeek()->startOfWeek()->format('d-m-Y');
+    $drivers =  \App\Models\Orders::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('accepted_driver_id','!=','')->select('accepted_driver_id')->distinct()->get()->pluck('accepted_driver_id');
+    if(!empty($drivers)){
+        $deliverySetting =  \App\Models\DeliveryboySetting::first();
+        foreach ($drivers as $key => $value) {
+            $thisWeekRejectedOrders = \App\Models\RiderAssignOrders::whereBetween("created_at", [Carbon::now()->subWeek()->startOfWeek(),Carbon::now()->subWeek()->endOfWeek()])->where('action', '=', '2')->where('rider_id', '=', $value)->count();
+            if($thisWeekRejectedOrders < $deliverySetting->no_of_order_cancel){
+                $date = Carbon::now()->subWeek()->startOfWeek();
+                $hourChecker = true;
+                for($i = 0; $i < 7; $i++){
+                    $hour = \App\Models\Driver_total_working_perday::where('current_date','=',$date->format('Y-m-d'))->where('rider_id','=',$value)->select(\DB::raw('IFNULL(`total_hr`,"0") as total_hr'))->first();
+                    if(empty($hour)){
+                        $init="0";
+                    }else{
+                        $init = $hour->total_hr;
+                    }
+                    $day = floor($init / 86400);
+                    $hours = floor(($init - ($day * 86400)) / 3600);
+                    if($hours < 9){
+                        $hourChecker = false;
+                    }
+                    
+                }
+                
+                if($hourChecker){
+                    $incentive = 0;
+                    $rider = \App\Models\Deliver_boy::where('id', '=', $value)->select('ratings')->first();
+                    if ($rider->ratings >= 4.3 && $rider->ratings <= 4.7) {
+                         $thisWeekOrders = \App\Models\RiderAssignOrders::whereBetween("created_at", [Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d'), Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d')])->where('action', '=', '3')->where('rider_id', '=', $value)->count();
+                        if ($thisWeekOrders >= 50 && $thisWeekOrders < 75) {
+                            $incentive = $deliverySetting->fifteen_order_incentive_4;
+                        } elseif ($thisWeekOrders >= 75 && $thisWeekOrders < 100) {
+                            $incentive = $deliverySetting->sentientfive_order_incentive_4;
+                        } elseif ($thisWeekOrders >= 100) {
+                            $incentive = $deliverySetting->hundred_order_incentive_4;
+                        }
+                    }elseif($rider->ratings >= 4.8 && $rider->ratings <= 5.0){
+                        $thisWeekOrders = \App\Models\RiderAssignOrders::whereBetween("created_at", [Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d'), Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d')])->where('action', '=', '3')->where('rider_id', '=', $value)->count();
+                        if ($thisWeekOrders >= 50 && $thisWeekOrders < 75) {
+                            $incentive = $deliverySetting->fifteen_order_incentive_5;
+                        } elseif ($thisWeekOrders >= 75 && $thisWeekOrders < 100) {
+                            $incentive = $deliverySetting->sentientfive_order_incentive_5;
+                        } elseif ($thisWeekOrders >= 100) {
+                            $incentive = $deliverySetting->hundred_order_incentive_5;
+                        }
+                    }
+                    //
+                    $riderOrder = \App\Models\RiderAssignOrders::whereBetween("created_at", [Carbon::now()->subWeek()->startOfWeek()->format('Y-m-d'), Carbon::now()->subWeek()->endOfWeek()->format('Y-m-d')])->where('action', '=', '3')->where('rider_id', '=', $value)->select(\DB::raw('IFNULL(sum(earning),"0") as total_earning'))->first();
+                    if(!empty($riderOrder)){
+                        $net_receivables = $riderOrder->total_earning;
+                    }else{
+                        $net_receivables = 0;
+                    }
+                    
+                    $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+                    $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+                    $statementData = \App\Models\RiderOrderStatement::where(['rider_id' => $value, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+                    if ($statementData) {
+                        $total = ($statementData->paid_amount + $net_receivables);
+                        $updateData = ([
+                            'paid_amount' => $total
+                        ]); 
+                        \App\Models\RiderOrderStatement::where(['rider_id' => $value, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+                    } else {
+                        $createData = array(
+                            'rider_id' => $value,
+                            'paid_amount' => $net_receivables,
+                            'start_date' => $current_start_date,
+                            'end_date' => $current_end_date
+                        );
+                        \App\Models\RiderOrderStatement::create($createData);
+                    }
+                    if ($incentive > 0) {
+                        $RiderIncentives = new \App\Models\RiderIncentives;
+                        $RiderIncentives->rider_id = $value;
+                        $RiderIncentives->amount     = $incentive;
+                        $RiderIncentives->save();
+                    }
+                    
+
+                }
+                
+            }
+        }
+        echo 'done';
     }
 }

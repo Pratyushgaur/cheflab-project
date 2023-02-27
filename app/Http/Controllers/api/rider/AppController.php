@@ -295,7 +295,7 @@ class AppController extends Controller
                     \App\Jobs\UserOrderNotification::dispatch('Order Assigned to Delivery Patner', 'Your Order has been Assigned to Delivery Boy', $user->fcm_token, 2, $data);
                 }
             } elseif ($request->status == '2') {
-                RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['cancel_reason' => $request->cancel_reason]);
+                RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['cancel_reason' => $request->cancel_reason,'is_rejected' => '1']);
                 $orderData = Order::where('id', '=', $request->order_row_id)->first();
                 \App\Jobs\DriveAssignOrderJob::dispatch($orderData);
             }

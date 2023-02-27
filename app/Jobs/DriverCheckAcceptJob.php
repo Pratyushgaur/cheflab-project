@@ -39,7 +39,7 @@ class DriverCheckAcceptJob implements ShouldQueue
         if($assigndata->exists()){
             $assigndata = $assigndata->first();
             if($assigndata->action == '0'){
-                RiderAssignOrders::where('id','=',$this->riderAssignId)->update(['action'=>'2','cancel_reason'=>'Time Out Rejection']);
+                RiderAssignOrders::where('id','=',$this->riderAssignId)->update(['action'=>'2','cancel_reason'=>'Time Out Rejection','is_rejected' => '2']);
                 $orderData = Order::where('id', '=', $assigndata->order_id)->first();
                 if(!empty($orderData)){
                     \App\Jobs\DriveAssignOrderJob::dispatch($orderData);
