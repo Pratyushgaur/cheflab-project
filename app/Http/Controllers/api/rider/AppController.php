@@ -183,20 +183,21 @@ class AppController extends Controller
 
                 ], 401);
             }
-            if (!DeliveryBoyTokens::where(['rider_id' => $request->user_id, 'token' => $request->token])->exists()) {
-                // DeliveryBoyTokens::where('rider_id','!=',$request->user_id)->where('token','=',$request->token)->delete();
-                // DeliveryBoyTokens::where('rider_id','=',$request->user_id)->delete();
-                if(DeliveryBoyTokens::where('rider_id', '=',$request->user_id)->exists()){
-                    DeliveryBoyTokens::where('rider_id','=',$request->user_id)->update(['token'=>$request->token]);
-                }else{
-                    $DeliveryBoyTokens = new DeliveryBoyTokens;
-                    $DeliveryBoyTokens->rider_id = $request->user_id;
-                    $DeliveryBoyTokens->token = $request->token;
-                    $DeliveryBoyTokens->saveOrFail();
-                }
-                 DeliveryBoyTokens::where('rider_id','!=',$request->user_id)->where('token','=',$request->token)->delete();
+            // if (!DeliveryBoyTokens::where(['rider_id' => $request->user_id, 'token' => $request->token])->exists()) {
+            //     // DeliveryBoyTokens::where('rider_id','!=',$request->user_id)->where('token','=',$request->token)->delete();
+            //     // DeliveryBoyTokens::where('rider_id','=',$request->user_id)->delete();
                 
+                
+            // }
+            if(DeliveryBoyTokens::where('rider_id', '=',$request->user_id)->exists()){
+                DeliveryBoyTokens::where('rider_id','=',$request->user_id)->update(['token'=>$request->token]);
+            }else{
+                $DeliveryBoyTokens = new DeliveryBoyTokens;
+                $DeliveryBoyTokens->rider_id = $request->user_id;
+                $DeliveryBoyTokens->token = $request->token;
+                $DeliveryBoyTokens->saveOrFail();
             }
+             DeliveryBoyTokens::where('rider_id','!=',$request->user_id)->where('token','=',$request->token)->delete();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Token Register Successfully'
