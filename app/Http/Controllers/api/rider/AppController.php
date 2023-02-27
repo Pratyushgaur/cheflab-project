@@ -184,8 +184,8 @@ class AppController extends Controller
                 ], 401);
             }
             if (!DeliveryBoyTokens::where(['rider_id' => $request->user_id, 'token' => $request->token])->exists()) {
-                DeliveryBoyTokens::where('user_id','!=',$request->user_id)->where('token','=',$request->token)->delete();
-                DeliveryBoyTokens::where('user_id','=',$request->user_id)->delete();
+                DeliveryBoyTokens::where('rider_id','!=',$request->user_id)->where('token','=',$request->token)->delete();
+                DeliveryBoyTokens::where('rider_id','=',$request->user_id)->delete();
                 $DeliveryBoyTokens = new DeliveryBoyTokens;
                 $DeliveryBoyTokens->rider_id = $request->user_id;
                 $DeliveryBoyTokens->token = $request->token;
