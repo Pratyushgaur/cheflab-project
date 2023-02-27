@@ -3389,11 +3389,14 @@ class AppController extends Controller
         try {
             $pendingReview = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('user_review_done','=','0')->where('order_status','=','completed')->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id')->orderBy('orders.id','desc')->limit(1)->first();
             $ongoingOrders = \App\Models\Orders::where('user_id','=',request()->user()->id)->join('vendors','orders.vendor_id','=','vendors.id')->whereNotIn('order_status',["pending","cancelled_by_customer_before_confirmed","cancelled_by_customer_after_confirmed","cancelled_by_customer_during_prepare","cancelled_by_customer_after_disptch","cancelled_by_vendor","completed"])->select('orders.id','order_id','order_status','deliver_otp','vendors.name as vendor_name')->get();
+            $appRun = \App\Models\AdminMasters::where('id','=',1)->select('app_run','app_close_reason')->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully',
                 'response' => $pendingReview,
-                'ongoing_orders'=>$ongoingOrders
+                'ongoing_orders'=>$ongoingOrders,
+                'app_run'=>$appRun->app_run,
+                'reason'=>$appRun->app_close_reason
 
             ], 200);
         } catch (Throwable $th) {
