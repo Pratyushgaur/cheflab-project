@@ -3330,7 +3330,7 @@ class AppController extends Controller
             $validateUser = Validator::make($request->all(), [
                 'rider_id'    => 'required|numeric|exists:deliver_boy,id',
                 'rating' => 'required|numeric',
-                'review' => 'required',
+                //'review' => 'required',
                 'order_id' => 'required',
             ]);
             if ($validateUser->fails()) {
@@ -3439,7 +3439,7 @@ class AppController extends Controller
                 'order_id' => 'required|exists:orders,id',
                 'vendor_id' => 'required|exists:vendors,id',
                 'rating' => 'required',
-                'review' => 'required',
+                //'review' => 'required',
                 'products.*.product_id'   => 'required|numeric|exists:products,id',
                 'products.*.rating'  => 'required'
             ]);
