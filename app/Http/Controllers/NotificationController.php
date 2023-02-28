@@ -120,7 +120,12 @@ class NotificationController extends Controller
         $title = $request->title;
         $allBody = $request->description;
         $body = strip_tags($allBody);
-        $image = asset('push_notify_banner') . '/' . $filename;
+        if($request->has('notification_banner')){
+            $image = asset('push_notify_banner') . '/' . $filename;
+        }else{
+            $image=null;
+        }
+        
         // $image = "https://www.shutterstock.com/image-photo/rajwada-historical-palace-indore-city-260nw-567029827.jpg";
         $data = null;
         $sound = "default";
