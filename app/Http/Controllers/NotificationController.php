@@ -131,7 +131,7 @@ class NotificationController extends Controller
         $sound = "default";
         //dd($allToken->toArray());
         foreach($allToken as $key => $value){
-            dd($value->toArray());
+            
             $res =  sendNotification($title, $body, $value->toArray(),$data ,$sound ,$image);
             
         }
