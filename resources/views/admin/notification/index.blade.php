@@ -279,7 +279,7 @@
       rules: {
         send_to: {
           required: true,
-        }
+        },
         title: {
           required: true,
         },
@@ -288,9 +288,6 @@
       messages: {
         send_to: {
           required: "Please Select User Or Rider",
-        },
-        zone: {
-          required: "Please Enter Zone",
         },
         title: {
           required: "Please Enter Title",
