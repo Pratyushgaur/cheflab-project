@@ -110,11 +110,11 @@ class NotificationController extends Controller
 
         if($request->send_to == 1){
             $send_data = "Rider";
-            $allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , NULL)->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token');
+            $allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , NULL)->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token')->chunk(300);
 
         }else{
             $send_data = "User";
-            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , NULL)->orderBy('id','desc')->get()->pluck('fcm_token');
+            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , NULL)->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
         }
         
         $title = $request->title;
@@ -129,10 +129,15 @@ class NotificationController extends Controller
         // $image = "https://www.shutterstock.com/image-photo/rajwada-historical-palace-indore-city-260nw-567029827.jpg";
         $data = null;
         $sound = "default";
-        dd($allToken);
+        foreach($allToken as $key => $value){
+            //dd($value->toArray());
+            $res =  sendNotification($title, $body, $value->toArray(),$data ,$sound ,$image);
+            
+        }
+        //dd($allToken);
 
-        $response =  sendNotification($title, $body, $allToken,$data ,$sound ,$image);
-        dd($response);
+        //$response =  sendNotification($title, $body, $allToken,$data ,$sound ,$image);
+        //dd($response);
        
         return redirect()->route('admin.notification.view')->with('message', 'Notification Send To '. $send_data .' Successfully');
         
