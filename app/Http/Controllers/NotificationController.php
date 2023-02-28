@@ -114,7 +114,7 @@ class NotificationController extends Controller
 
         }else{
             $send_data = "User";
-            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , NULL)->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
+            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , NULL)->where('users.id','=',4)->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
         }
         
         $title = $request->title;
