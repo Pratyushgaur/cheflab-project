@@ -110,11 +110,11 @@ class NotificationController extends Controller
 
         if($request->send_to == 1){
             $send_data = "Rider";
-            $allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , NULL)->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token')->chunk(300);
+            $allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , '')->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token')->chunk(300);
 
         }else{
             $send_data = "User";
-            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , NULL)->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
+            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , '')->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
         }
         
         $title = $request->title;
