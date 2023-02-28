@@ -132,7 +132,7 @@ class NotificationController extends Controller
         foreach($allToken as $key => $value){
             //dd($value->toArray());
             $res =  sendNotification($title, $body, $value->toArray(),$data ,$sound ,$image);
-            
+            dd($res);
         }
         //dd($allToken);
 
