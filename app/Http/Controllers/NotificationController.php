@@ -61,7 +61,7 @@ class NotificationController extends Controller
                 ->addIndexColumn()
                
             ->addColumn('date', function($data){
-                $date_with_format = date('Y-m-d',strtotime($data->created_at));
+                $date_with_format = date('Y-m-d h:i A',strtotime($data->created_at));
                 return $date_with_format;
             })
 
@@ -75,7 +75,14 @@ class NotificationController extends Controller
             })
 
             ->addColumn('image', function($data){
-                $image = "<img src=" . asset('push_notify_banner') . '/' . $data->notification_banner . "  style='width: 50px;' />";
+                if ($data->notification_banner == '') {
+                    $image = "-";
+
+                } else {
+                    $image = "<img src=" . asset('push_notify_banner') . '/' . $data->notification_banner . "  style='width: 50px;' />";
+
+                }
+                
                 return $image;
             })
             
@@ -135,7 +142,7 @@ class NotificationController extends Controller
             $res =  sendNotification($title, $body, $value->toArray(),$data ,$sound ,$image);
             
         }
-        dd($res);
+        
         //dd($allToken);
 
         //$response =  sendNotification($title, $body, $allToken,$data ,$sound ,$image);

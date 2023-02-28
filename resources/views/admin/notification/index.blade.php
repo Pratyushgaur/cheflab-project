@@ -187,9 +187,11 @@
                                 <tr role="row">
                                     <th class="text-center">Sr No.</th>
                                     <th>Title</th>
-                                    <th>Zone</th>
+                                    <th>Description</th>
                                     <th>Send To</th>
                                     <th>Notification Banner</th>
+                                    
+                                    <th>Date</th>
                                     <!-- <th>Description</th> -->
                                     <!-- <th>Status</th> -->
                                 </tr>
@@ -244,8 +246,8 @@
                 name: 'title'
             },
             {
-                data: 'zone',
-                name: 'zone'
+                data: 'description',
+                name: 'description'
             },
             {
                 data: 'type',
@@ -255,10 +257,11 @@
                 data: 'image',
                 name: 'image'
             },
-            // {
-            //     data: 'description',
-            //     name: 'description'
-            // },
+            
+            {
+                data: 'date',
+                name: 'date'
+            },
             // {
             //     data: 'status',
             //     name: 'status'
