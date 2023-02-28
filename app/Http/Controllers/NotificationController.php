@@ -129,7 +129,7 @@ class NotificationController extends Controller
         // $image = "https://www.shutterstock.com/image-photo/rajwada-historical-palace-indore-city-260nw-567029827.jpg";
         $data = null;
         $sound = "default";
-
+        dd($allToken);
 
         $response =  sendNotification($title, $body, $allToken,$data ,$sound ,$image);
         dd($response);
