@@ -1194,7 +1194,7 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
     //Send the request
-    $response = curl_exec($ch);
+    return $response = curl_exec($ch);
     //Close request
     if ($response === FALSE) {
         die('FCM Send Error: ' . curl_error($ch));

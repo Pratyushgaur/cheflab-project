@@ -105,12 +105,7 @@
                                         <input type="text" name="title" class="form-control" placeholder="Enter Title">
                                     </div>
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label for="category_name">Zone <span class="text-danger">*</span></label>
-                                        <input type="text" name="zone" class="form-control" placeholder="Enter Zone">
-                                    </div>
-                                </div>
+                                
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Send To <span class="text-danger">*</span></label>
@@ -140,7 +135,7 @@
                                 </div> -->
                                 <div class="col-md-4">
                                     <div>
-                                        <label for="">Notification Banner ( Ratio 1:1 )</label>
+                                        <label for="">Notification Banner ( Ratio 3:1 )</label>
                                     </div>
                                     <div class="image-upload">
                                         <label for="file-input">
@@ -284,10 +279,7 @@
       rules: {
         send_to: {
           required: true,
-        },
-        zone: {
-          required: true,
-        },
+        }
         title: {
           required: true,
         },

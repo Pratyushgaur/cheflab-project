@@ -91,13 +91,12 @@ class NotificationController extends Controller
     {
         $this->validate($request, [
             'title'   => 'required',
-            'zone'   => 'required',
-            'send_to'   => 'required',
+            'send_to'   => 'required'
            
         ]);
         $notification = new PushNotification;
         $notification->title = $request->title;
-        $notification->zone = $request->zone;
+        
         $notification->send_to = $request->send_to;
         $notification->description = $request->description;
        
@@ -119,7 +118,7 @@ class NotificationController extends Controller
         }
         
         $title = $request->title;
-        $allBody = $request->description . " Zone " . $request->zone;
+        $allBody = $request->description;
         $body = strip_tags($allBody);
         $image = asset('push_notify_banner') . '/' . $filename;
         // $image = "https://www.shutterstock.com/image-photo/rajwada-historical-palace-indore-city-260nw-567029827.jpg";
@@ -127,7 +126,8 @@ class NotificationController extends Controller
         $sound = "default";
 
 
-        sendNotification($title, $body, $allToken,$data ,$sound ,$image);die;
+        $response =  sendNotification($title, $body, $allToken,$data ,$sound ,$image);
+        dd($response);
        
         return redirect()->route('admin.notification.view')->with('message', 'Notification Send To '. $send_data .' Successfully');
         
