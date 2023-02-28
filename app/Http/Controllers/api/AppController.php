@@ -2023,7 +2023,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $userUpdate = User::where('id','=',request()->user()->id);
+            $userUpdate = User::FindOrFail(request()->user()->id);
             if ($request->has('image')) {
                 $filename = time() . '-image-' . rand(100, 999) . '.' . $request->image->extension();
                 $request->image->move(public_path('user-profile'), $filename);
@@ -2037,11 +2037,6 @@ class AppController extends Controller
             $userUpdate->email = $request->email;
             if ($request->alternative_number != null) {
                 $userUpdate->alternative_number = $request->alternative_number;
-
-                // if($userUpdate->alternative_number != $request->alternative_number){
-                //     $userUpdate->alternative_number = $request->alternative_number;
-                // }
-                
             }
             $userUpdate->save();
             return response()->json([
