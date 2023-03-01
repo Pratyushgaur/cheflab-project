@@ -34,9 +34,9 @@ class AccountmisController extends Controller
     {
         
         if ($request->ajax()) {
- 
-
-            $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('coupons', 'orders.coupon_id', '=', 'coupons.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'vendors.name as vendor_name', 'orders.created_at', 'users.name', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'vendors.commission', 'rider_assign_orders.earning', 'orders.delivery_charge', 'coupons.code','rider_assign_orders.action', 'orders.total_amount', 'orders.net_amount');
+            
+             
+            $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'orders.created_at', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'orders.delivery_charge', 'orders.total_amount', 'orders.net_amount', 'vendors.name as vendor_name', 'vendors.commission', 'users.name', 'rider_assign_orders.earning');
             
             if ($request->status != '') {
                 $data = $data->where('payment_status', '=', $request->status);
@@ -62,8 +62,7 @@ class AccountmisController extends Controller
             }
 
 
-            $data = $data->get();
-            
+            $data = $data->get(); 
             return Datatables::of($data)
                 ->addIndexColumn()
                 
@@ -121,8 +120,30 @@ class AccountmisController extends Controller
                     return $admin_erning;
                 })
 
+                ->addColumn('code', function ($data) {
+                    
+                    if($data->coupon_id != ''){
+                        $couponCode = Coupon::where('id', $data->coupon_id)->first();
+                        $code = $couponCode->code;
+                    }else{
+                        $code = '-';
+                    }
+                    return $code;
+                })
 
-                ->rawColumns(['wallet_cut', 'admin_erning','admin_earning_vendor','date','admin_earning_rider','rider_earning', 'action-js'])
+                ->addColumn('discount_amount', function ($data) {
+                    
+                    if($data->coupon_id != ''){
+                        $couponCode = Coupon::where('id', $data->coupon_id)->first();
+                        $discount_amount = $couponCode->discount;
+                    }else{
+                        $discount_amount = '-';
+                    }
+                    return $discount_amount;
+                })
+
+
+                ->rawColumns(['wallet_cut', 'admin_erning', 'code','admin_earning_vendor','date','admin_earning_rider','rider_earning', 'action-js'])
 
                  
 
