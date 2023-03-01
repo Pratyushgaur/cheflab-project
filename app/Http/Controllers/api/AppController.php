@@ -251,6 +251,87 @@ class AppController extends Controller
         }
     }
 
+    public function restaurantHomePage2(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat'            => 'required|numeric',
+                    'lng'            => 'required|numeric',
+                    'vendor_offset'  => 'required|numeric',
+                    'vendor_limit'   => 'required|numeric',
+                    'product_offset' => 'required|numeric',
+                    'product_limit'  => 'required|numeric',
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+
+            $userid  = request()->user()->id;
+            $where   = ['vendor_type' => 'restaurant'];
+            $whereIn = []; //[36,1391,75,899,976,990,242,253,329,1390];
+            $vendors = get_restaurant_near_me($request->lat, $request->lng, $where, request()->user()->id, null, null);
+            $vendors = $vendors->addSelect('deal_cuisines', 'banner_image')->orderBy('vendors.vendor_ratings', 'desc')->where('vendors.vendor_ratings','>','0')->offset($request->vendor_offset)->limit($request->vendor_limit)->get();
+
+            $vendor_ids = get_active_time_restaurant_ids_near_me($request->lat, $request->lng, $where, false)->toArray(); //not need to pass offset; limit set on products
+            //get productd's shoud display in pagination
+            //$products_ids = get_product_with_variant_and_addons(['product_for' => '3'], request()->user()->id, 'products.product_rating', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit);
+            
+            // product details
+            $products = topRatedProducts2(['product_for' => '3'], request()->user()->id, 'products.product_rating', 'desc', true, false, $vendor_ids, $request->product_offset, $request->product_limit, false, null);
+            
+            // total products
+
+
+            foreach ($vendors as $key => $value) {
+                $banners = json_decode($value->banner_image);
+                if (is_array($banners))
+                    $urlbanners = array_map(function ($banner) {
+                        return URL::to('vendor-banner/') . '/' . $banner;
+                    }, $banners);
+                else
+                    $urlbanners = [];
+                $vendors[$key]->banner_image   = $urlbanners;
+                $vendors[$key]->cuisines       = Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                $category                      = Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                $vendors[$key]->categories     = $category;
+                $vendors[$key]->next_available = next_available_day($value->id);
+            }
+            // get Promotional Blogs 
+            $Blogs         = \App\Models\AppPromotionBlogs::select('id', 'blog_type', 'name', 'from', 'to')
+                ->where(function ($p) {
+                    $p->where('from', '<=', mysql_date_time())->where('to', '>', mysql_date_time());
+                })
+                ->where(['vendor_type' => '1', 'blog_for' => '0'])
+                ->get();
+            $reponce =  promotionRowSetup($Blogs, $request, request()->user()->id);
+            //////////////////////////
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => [
+                    'vendors'  => $vendors,
+                    'products' => $products,
+                    'blogs' => $reponce
+                ]
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status'     => false,
+                'error'      => $th->getMessage(),
+                'errortrace' => $th->getTrace()
+            ], 500);
+        }
+    }
+
     public function getRestaurantByCategory(Request $request)
     {
         try {

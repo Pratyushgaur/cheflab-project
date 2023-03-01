@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // restaurant home page api
 
     Route::post('home', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage'])->name("restaurant.home");
+    Route::post('home2', [App\Http\Controllers\api\AppController::class, 'restaurantHomePage2'])->name("restaurant.home2");
     Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory'])->name("get.restaurant.by.category");
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
