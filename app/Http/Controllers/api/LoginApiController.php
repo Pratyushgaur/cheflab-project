@@ -392,4 +392,37 @@ class LoginApiController extends Controller
             return $code;
         }
     }
+    public function deleteUser(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'delete_reason' => 'required'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $user = \App\Models\User::where('id','=',request()->user()->id);
+            $user->update(['account_delete_reason'=>$request->delete_reason]);
+            $user->delete();
+
+            
+            return response()->json([
+                'status' => true,
+                'data' => 'Inactive Success'
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
 }

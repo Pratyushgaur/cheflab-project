@@ -24,9 +24,10 @@ return new class extends Migration
             $table->string('referralCode',)->unique()->nullable();
             $table->string('referby',)->nullable();
             $table->enum('is_guest',["0","1"])->default('0');
-            //            $table->softDeletes();
+            $table->string('account_delete_reason')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+            $table->timestamp('deleted_at')->nullable();
         });
     }
 

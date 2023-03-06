@@ -148,6 +148,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     // user driver location
     Route::post('get-driver-live', [\App\Http\Controllers\api\AppController::class, 'getDriveLocation']);
 
+    //
+    Route::post('delete-user', [\App\Http\Controllers\api\LoginApiController::class, 'deleteUser']);
 
 
 
