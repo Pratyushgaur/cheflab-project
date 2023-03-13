@@ -247,6 +247,7 @@ class UserControllers extends Controller
             'pancard_image'     => 'required',
             'aadhar_number'     => 'required',
             'aadhar_card_image' => 'required',
+            'platform_fee'      => 'required',
             // 'bank_name'   => 'required',
             // 'holder_name'   => 'required',
             // 'account_no'   => 'required',
@@ -272,9 +273,10 @@ class UserControllers extends Controller
         $vendors->aadhar_number    = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
-        $vendors->lat           = $request->lat;
+        $vendors->lat              = $request->lat;
         $vendors->status           = "1";
-        $vendors->long           = $request->lng;
+        $vendors->long             = $request->lng;
+        $vendors->platform_fee     = $request->platform_fee;
         $vendors->deal_categories  = implode(',', $request->categories);
         $vendors->deal_cuisines    = implode(',', $request->deal_cuisines);
 
@@ -442,6 +444,7 @@ class UserControllers extends Controller
             'lng'     => 'required',
             //  'deal_cuisines' => 'required',
             'tax'               => 'required',
+            'platform_fee'      => 'required'
             // 'bank_name'   => 'required',
             // 'holder_name'   => 'required',
             // 'account_no'   => 'required',
@@ -462,8 +465,9 @@ class UserControllers extends Controller
         $vendors->commission       = $request->vendor_commission;
         $vendors->vendor_food_type = $request->type;
         $vendors->tax              = $request->tax;
-        $vendors->pancard_number = $request->pancard_number;
-        $vendors->aadhar_number = $request->aadhar_number;
+        $vendors->platform_fee     = $request->platform_fee;
+        $vendors->pancard_number   = $request->pancard_number;
+        $vendors->aadhar_number    = $request->aadhar_number;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;
         $vendors->deal_categories  = implode(',', $request->categories);

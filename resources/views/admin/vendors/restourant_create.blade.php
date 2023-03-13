@@ -331,7 +331,7 @@
                           <input type="text" name="address" class="form-control" id="" placeholder="Enter Restaurant Address">
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-3">
                         <div class="form-group">
 
                           <label for="exampleInputEmail1">Vendor Food Type</label><br>
@@ -350,7 +350,12 @@
                           </div>
                         </div>
                       </div>
-
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Vendor Platform Fee <span class="text-danger">*</span></label>
+                          <input type="text" name="platform_fee" value="" class="form-control" id="platform_fee" placeholder="Enter Plat Form Fee" required>
+                        </div>
+                      </div>
                       <div class="col-md-4">
                         <div class="form-group">
                           <label for="exampleInputEmail1">Vendor Commission Persentage<span class="text-danger">*</span></label>

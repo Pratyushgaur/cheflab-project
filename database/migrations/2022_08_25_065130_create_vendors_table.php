@@ -54,6 +54,7 @@ class CreateVendorsTable extends Migration
             $table->boolean('is_auto_send_for_prepare')->default(0)->comment('1=automatically order goes for prepare status ');
             $table->integer('auto_accept_prepration_time')->default(0)->comment('auto accepted prepration time which define in create order');
             $table->string('password_change_otp')->nullable();
+            $table->decimal('platform_fee',8,2)->unsigned()->default(0.0);
             $table->softDeletes();
             $table->timestamps();
         });

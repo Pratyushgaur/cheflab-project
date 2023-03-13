@@ -326,7 +326,7 @@
                           <input type="text" name="address" value="{{$vendor->address}}" class="form-control" id="" placeholder="Enter Restaurant Address">
                         </div>
                       </div>
-                      <div class="col-md-6">
+                      <div class="col-md-3">
                         <div class="form-group">
 
                           <label for="exampleInputEmail1">Vendor Food Type</label><br>
@@ -342,6 +342,12 @@
 
 
                           </div>
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="exampleInputEmail1">Vendor Platform Fee <span class="text-danger">*</span></label>
+                          <input type="text" name="platform_fee" value="{{$vendor->platform_fee}}" class="form-control" id="platform_fee" placeholder="Enter Plat Form Fee">
                         </div>
                       </div>
                       <div class="col-md-3">
@@ -676,6 +682,10 @@
         },
         lng:{
           required: true,
+        },
+        platform_fee:{
+          required: true,
+          number: true
         }
 
 
