@@ -141,7 +141,8 @@ class LoginTest extends TestCase
             [
                 "driver_app_current_version" => "2.0",
                 "driver_app_force_update" => "2.0",
-                "driver_app_soft_update" => "2.0"
+                "driver_app_soft_update" => "2.0",
+                "ios_user_app_version" => "2.0"
             ]
         );
         $response = $this->postJson(route("rider.update.version"), ["version" => "2.0"]);
@@ -156,7 +157,8 @@ class LoginTest extends TestCase
         $this->createAdminMasters([
             "driver_app_current_version" => "2.0",
             "driver_app_force_update" => "2.0",
-            "driver_app_soft_update" => "2.0"
+            "driver_app_soft_update" => "2.0",
+            "ios_user_app_version" => "2.0"
         ]);
         $response = $this->postJson(route("rider.update.version"), ["version" => "1.0"]);
         $response->assertJsonStructure([

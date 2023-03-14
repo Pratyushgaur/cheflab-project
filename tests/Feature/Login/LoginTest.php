@@ -44,19 +44,16 @@ class LoginTest extends TestCase
         $this->assertStringContainsString("Not Found", $response->json()["error"]);
     }
 
-    public function test_it_can_send_the_otp_to_the_user()
+    public function test_it_can_send_the_deactivate_message_to_the_user()
     {
         Http::fake([
             "http://bulksms.msghouse.in/*" => Http::response([], 200)
         ]);
         $user = $this->createUser(["mobile_number" => "1234567890"]);
         $response = $this->postJson(route("login.otp.send"), ["mobile_number" => $user->mobile_number]);
-
         $response->assertJsonStructure([
-            "message",
-            "otp"
+            "error",
         ]);
-        $this->assertStringContainsString("Otp Send Successfully", $response->json()["message"]);
     }
 
     public function test_it_can_check_the_required_validation_of_mobile_otp_verify()
@@ -129,7 +126,8 @@ class LoginTest extends TestCase
             [
                 "user_app_current_version" => "2.0",
                 "user_app_force_update" => "2.0",
-                "user_app_soft_update" => "2.0"
+                "user_app_soft_update" => "2.0",
+                "ios_user_app_version" => "2.0"
             ]
         );
         $response = $this->postJson(route("update.version"), ["version" => "2.0"]);
@@ -144,7 +142,8 @@ class LoginTest extends TestCase
         $this->createAdminMasters([
             "user_app_current_version" => "2.0",
             "user_app_force_update" => "2.0",
-            "user_app_soft_update" => "2.0"
+            "user_app_soft_update" => "2.0",
+            "ios_user_app_version" => "2.0"
         ]);
         $response = $this->postJson(route("update.version"), ["version" => "1.0"]);
         $response->assertJsonStructure([
