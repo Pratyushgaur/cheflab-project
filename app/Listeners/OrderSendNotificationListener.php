@@ -29,6 +29,8 @@ class OrderSendNotificationListener
     public function handle(OrderCreateEvent $event)
     {
         //order_status ===>'pending' to 'confirmed'
+        \App\Models\OrderActionLogs::create(['orderid'=> $event->order_obj->id,'action' => 'Order Confirmed After 30 Sec']);
+
         $event->order_obj->order_status = 'confirmed';
         $event->order_obj->deliver_otp = rand(1000,9999);  
         $event->order_obj->save();
@@ -54,6 +56,8 @@ class OrderSendNotificationListener
             $event->order_obj->preparation_time_from = mysql_date_time();
             $event->order_obj->preparation_time_to   = mysql_add_time($event->order_obj->preparation_time_from, $auto_accept_prepration_time);
             $event->order_obj->save();
+            \App\Models\OrderActionLogs::create(['orderid'=> $event->order_obj->id,'action' => 'Order Auto Accept By Vendor']);
+            
             event(new OrderSendToPrepareEvent($event->order_obj, $auto_accept_prepration_time));
             $event->order_obj->save();
         }

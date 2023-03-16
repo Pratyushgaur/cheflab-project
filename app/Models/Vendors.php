@@ -32,7 +32,7 @@ class Vendors extends Authenticatable
         $v = Vendors::find($vendor_id);
     //    dd($v);
         if (!$v->is_online)
-            return ['offline'];
+            return false;
         return \App\Models\Order_time::where('vendor_id',$vendor_id)
             ->where('day_no',Carbon::now()->dayOfWeek)
             ->where('start_time','<=',date('H:i:s'))

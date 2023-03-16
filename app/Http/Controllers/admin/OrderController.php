@@ -340,7 +340,14 @@ class OrderController extends Controller
         
         if ($request->ajax()) {
         
-           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','orders.pdf_url','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type');
+           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','orders.order_id as order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','orders.pdf_url','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type','vendors.mobile as vendor_mobile','vendors.alt_mobile','deliver_boy.name as delivery_boy_name');
+           $data = $data->leftJoin('rider_assign_orders', function ($join) {
+            $join->on('orders.id', '=', 'rider_assign_orders.order_id')
+                ->whereIn('rider_assign_orders.action', ['1','4','3']);
+           });
+           $data = $data->leftJoin('deliver_boy', function ($join) {
+            $join->on('rider_assign_orders.rider_id', '=', 'deliver_boy.id');
+           });
            if($request->status != ''){
             $data = $data->where('order_status','=',$request->status);
            }
@@ -368,14 +375,56 @@ class OrderController extends Controller
                     return $btn;
                 })
                 
+                
                 ->addColumn('date', function($data){
                     $date_with_format = date('d M Y h:i A',strtotime($data->created_at));
                     return $date_with_format;
                 })
                 
+                ->addColumn('vendor_mobile', function($data){
+                    return $data->vendor_mobile.'/'.$data->alt_mobile;
+                   
+                })
+
+                ->addColumn('order_status', function($data){
+
+                        if ($data->order_status == 'confirmed') {
+                            return '<span class="badge badge-warning">Pending</span>';
+                        }
+                        if ($data->order_status == 'preparing') {
+                            return '<span class="badge badge-success">Preparing</span>';
+                        }
+                        if ($data->order_status == 'ready_to_dispatch') {
+                            return '<span class="badge badge-success">Ready To Dispatch</span>';
+                        }
+                        if ($data->order_status == 'dispatched') {
+                            return '<span class="badge badge-warning">Dispatched</span>';
+                        }
+                        if ($data->order_status == 'completed') {
+                            return '<span class="badge badge-success">Completed</span>';
+                        }
+                        if ($data->order_status == 'cancelled_by_customer_before_confirmed') {
+                            return '<span class="badge badge-danger">cancelled by customer In 30 Seconds</span>';
+                        }
+                        if ($data->order_status == 'cancelled_by_customer_after_confirmed') {
+                            return '<span class="badge badge-danger">cancelled by customer After 30 Seconds</span>';
+                        }
+                        if ($data->order_status == 'cancelled_by_customer_during_prepare') {
+                            return '<span class="badge badge-danger">cancelled by customer After Accept</span>';
+                        }
+                        if ($data->order_status == 'cancelled_by_customer_after_disptch') {
+                            return '<span class="badge badge-danger">cancelled by customer After Dispatched</span>';
+                        }
+                        if ($data->order_status == 'cancelled_by_vendor') {
+                            return '<span class="badge badge-danger">Reject By Vendor</span>';
+                        } 
+                })
+                
+               
+                
 
 
-                ->rawColumns(['date','action-js'])
+                ->rawColumns(['date','action-js','vendor_mobile','order_status'])
                 //->rawColumns(['action-js']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);

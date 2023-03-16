@@ -1641,6 +1641,7 @@ class AppController extends Controller
         // echo "hello";die;
         //        date_default_timezone_set(config('app.timezone'));
         // return '#'.str_pad(1 + 100, 8, "0", STR_PAD_LEFT);
+        \App\Models\OrderRequestLogs::create(['serialize_data'=>serialize($request->all())]);
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -1764,6 +1765,7 @@ class AppController extends Controller
                 }
                 AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
                 DB::commit();
+                \App\Models\OrderActionLogs::create(['orderid'=> $Order->id,'action' => 'Order Placed By customer']);
                 \App\Jobs\OrderCreateJob::dispatch($Order,route('restaurant.order.view', $Order->order_id))->delay(now()->addSeconds(30));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             } catch (PDOException $e) {
@@ -2795,8 +2797,7 @@ class AppController extends Controller
 
             if (!isset($order->id))
                 return response()->json(['status' => false, 'error' => "order not found.You can only cancel orders placed by you."], 401);
-
-
+                \App\Models\OrderActionLogs::create(['orderid'=> $order->id,'action' => 'Order Cancel By customer']);
 
 
             if ($request->isCancelledWithin30Second) { // if order cancel by user in 30 second

@@ -286,6 +286,7 @@ class AppController extends Controller
                 }
                 $order->products = $products;
                 RiderAssignOrders::where('order_id', '=', $request->order_row_id)->update(['distance' => $request->distance, 'earning' => $request->earning]);
+                \App\Models\OrderActionLogs::create(['orderid'=> $request->order_row_id,'action' => 'Rider Accepted Order' ,'rider_id'=>$request->user_id]);
                 $orderdata = Order::where('id', '=', $request->order_row_id);
                 $orderdata->update(['accepted_driver_id' => $request->user_id]);
                 $user = \App\Models\User::where('id', '=', $orderdata->first()->user_id)->first();
@@ -296,6 +297,7 @@ class AppController extends Controller
                 }
             } elseif ($request->status == '2') {
                 RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['cancel_reason' => $request->cancel_reason,'is_rejected' => '1']);
+                \App\Models\OrderActionLogs::create(['orderid'=> $request->order_row_id,'action' => 'Rider Rejected Order' ,'rider_id'=>$request->user_id]);
                 $orderData = Order::where('id', '=', $request->order_row_id)->first();
                 \App\Jobs\DriveAssignOrderJob::dispatch($orderData);
             }
@@ -350,6 +352,7 @@ class AppController extends Controller
 
             if ($otp->pickup_otp == $request->otp) {
                 RiderAssignOrders::where('id', '=', $order->id)->update(['action' => '4']);
+                \App\Models\OrderActionLogs::create(['orderid'=> $request->order_row_id,'action' => 'Rider Pickup Order' ,'rider_id'=>$request->user_id]);
                 $orderdata = Order::where('id', '=', $request->order_row_id);
                 $orderdata->update(['order_status' => 'dispatched', 'pickup_time' => mysql_date_time()]);
                 orderDeliverd($request->order_row_id);
@@ -436,6 +439,7 @@ class AppController extends Controller
                 $orderdata->update(['order_status' => 'completed', 'delivered_time' => mysql_date_time()]);
                 $riderAssing = RiderAssignOrders::where('id', '=', $request->rider_assign_order_id);
                 $riderAssing->update(['action' => '3']);
+                \App\Models\OrderActionLogs::create(['orderid'=> $request->order_row_id,'action' => 'Rider Deliverd Order' ,'rider_id'=>$request->user_id]);
                 $earningData = $riderAssing->select('earning', 'rider_id')->first();
                 $this->genarateIncentive($earningData->rider_id, $request->rider_assign_order_id);
                 $user = \App\Models\User::where('id', '=', $orderdata->first()->user_id)->select('fcm_token', 'referby')->first();

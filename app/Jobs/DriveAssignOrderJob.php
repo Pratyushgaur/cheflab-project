@@ -47,6 +47,8 @@ class DriveAssignOrderJob implements ShouldQueue
             $riderAssign = new RiderAssignOrders(array('rider_id' => $delivery_boy->id, 'order_id' => $this->order->id,'earning'=>$charges['charges'],'distance'=>$charges['resToUserDistance'],'total_ride_distance'=>$charges['totalDistance']));
             $riderAssign->saveOrFail();
             $riderAssignId = $riderAssign->id;
+            \App\Models\OrderActionLogs::create(['orderid'=> $this->order->id,'action' => 'Order Assign to Rider','rider_id' =>$delivery_boy->id]);
+            
             //$riderAssign = RiderAssignOrders::where(['id' =>$request->user_id,'action' =>'0'])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->orderBy('rider_assign_orders.id','desc')->limit(1);
 
             $token = DeliveryBoyTokens::where('rider_id','=',$delivery_boy->id)->orderBy('id','desc')->get()->pluck('token');
@@ -61,6 +63,7 @@ class DriveAssignOrderJob implements ShouldQueue
                 $title = 'New Delivery Request';
                 $body = "Vendor address:".$vendor->address.' Deliver to :'.$this->order->delivery_address;
                 $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign),'notify_sound');
+                \App\Models\OrderActionLogs::create(['orderid'=> $this->order->id,'action' => 'Notification Send to Rider','rider_id' =>$delivery_boy->id]);
                 
             }
             \App\Jobs\DriverCheckAcceptJob::dispatch($riderAssignId)->delay(now()->addSeconds(120));
@@ -71,6 +74,8 @@ class DriveAssignOrderJob implements ShouldQueue
             $noRiderAssignOrders->order_id  = $this->order->id;
             $noRiderAssignOrders->status = '0';
             $noRiderAssignOrders->save();
+            \App\Models\OrderActionLogs::create(['orderid'=> $this->order->id,'action' => 'No Rider found entry goes to no rider assign']);
+
         }
 
 

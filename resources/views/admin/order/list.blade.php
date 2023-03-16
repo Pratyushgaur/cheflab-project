@@ -76,7 +76,8 @@
                                     <th>Mobile</th>
                                     <th>Status</th>
                                     <th>Order Amount</th>
-                                    <th>payment Type</th>
+                                    <th>Vendor Contact</th>
+                                    <th>Rider</th>
                                     <th>Date</th>
 
                                     <th>Action</th>
@@ -133,8 +134,11 @@
             {data: 'mobile', name: 'mobile'},
             {data: 'order_status', name: 'status'},
             {data: 'net_amount', name: 'net_amount'},
-            {data: 'payment_type', name: 'payment_type'},
+            {data: 'vendor_mobile', name: 'vendor_mobile',orderable: false, searchable: false},
+            {data: 'delivery_boy_name', name: 'delivery_boy_name',orderable: false, searchable: false},
+            
             {data: 'date', name: 'created_at'},
+            
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
         ]
     });
