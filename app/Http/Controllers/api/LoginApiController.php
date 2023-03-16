@@ -191,11 +191,11 @@ class LoginApiController extends Controller
             }
             $user = User::where(['mobile_number' => $request->mobile_number]);
             if ($user->exists()) {
-                if($user->first()->status == '0' || $user->first()->status == ''){
+                if ($user->first()->status == '0' || $user->first()->status == '') {
                     return response()->json([
                         'status' => false,
                         'error' => 'Account Deactivated'
-    
+
                     ], 401);
                 }
                 $otp = $this->otp_generate($request->mobile_number);
@@ -263,7 +263,8 @@ class LoginApiController extends Controller
             ], 500);
         }
     }
-    function guestLogin(){
+    function guestLogin()
+    {
         $user = User::where('is_guest', '=', '1')->select('id', 'name', 'mobile_number', 'email')->first();
         $token = $user->createToken('cheflab-app-token')->plainTextToken;
         return response()->json([
@@ -409,11 +410,11 @@ class LoginApiController extends Controller
 
                 ], 401);
             }
-            $user = \App\Models\User::where('id','=',request()->user()->id);
-            $user->update(['account_delete_reason'=>$request->delete_reason]);
+            $user = \App\Models\User::where('id', '=', request()->user()->id);
+            $user->update(['account_delete_reason' => $request->delete_reason]);
             $user->delete();
 
-            
+
             return response()->json([
                 'status' => true,
                 'data' => 'Inactive Success'

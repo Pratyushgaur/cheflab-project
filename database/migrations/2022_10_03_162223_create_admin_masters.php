@@ -25,10 +25,8 @@ class CreateAdminMasters extends Migration
             $table->text('aboutus');
             $table->string('delivery_charges_fix');
             $table->string('delivery_charges_per_km');
-            $table->string('cin_no');
-            $table->string('fssai_no');
-//            $table->string('max_cod_amount')->comment('if order more then this then disable COD');
-//            $table->string('max_preparation_time')->comment('max preparation time');
+            //            $table->string('max_cod_amount')->comment('if order more then this then disable COD');
+            //            $table->string('max_preparation_time')->comment('max preparation time');
 
             $table->string('company_name');
             $table->string('logo');
@@ -38,16 +36,16 @@ class CreateAdminMasters extends Migration
             $table->text('goofle_map_key');
             $table->text('razorpay_publish_key');
             $table->text('dine_out_reject_reason');
-            $table->string('user_app_current_version',20);
-            $table->string('user_app_force_update',20);
-            $table->string('user_app_soft_update',20);
-            $table->string('ios_user_app_version',20);
-            $table->enum('ios_user_app_force_update',["0","1"])->default('0');
-            $table->enum('ios_user_app_soft_update',["0","1"])->default('1');
+            $table->string('user_app_current_version', 20);
+            $table->string('user_app_force_update', 20);
+            $table->string('user_app_soft_update', 20);
+            $table->string('ios_user_app_version', 20);
+            $table->enum('ios_user_app_force_update', ["0", "1"])->default('0');
+            $table->enum('ios_user_app_soft_update', ["0", "1"])->default('1');
 
-            $table->string('driver_app_current_version',20);
-            $table->string('driver_app_force_update',20);
-            $table->string('driver_app_soft_update',20);
+            $table->string('driver_app_current_version', 20);
+            $table->string('driver_app_force_update', 20);
+            $table->string('driver_app_soft_update', 20);
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
