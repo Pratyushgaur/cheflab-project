@@ -961,7 +961,7 @@ function calculateRiderCharge($riderToRestaurantDistance, $vendorLat, $vendorLng
     } else {
         $rem  = $riderToRestaurantDistance - 2;
         $riderToRescharge = $setting->below_one_five_km * 2;
-        if ($rem > 1) {
+        if ($rem >= 1) {
             $riderToRescharge = $riderToRescharge + $setting->above_one_five_km * $rem;
         }
     }
