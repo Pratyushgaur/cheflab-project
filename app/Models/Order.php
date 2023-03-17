@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $fillable=['vendor_id', 'order_id', 'user_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'coupon_id', 'payment_type', 'payment_status', 'transaction_id', 'payment_string', 'order_time','lat','long','pincode','city','wallet_apply','wallet_cut','landmark_address','mobile_number','platform_charges','tex','send_cutlery','chef_message','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction','delivery_charge','pickup_otp'];
+    protected $fillable=['vendor_id', 'order_id', 'user_id', 'customer_name', 'delivery_address', 'order_status', 'total_amount', 'gross_amount', 'net_amount', 'discount_amount', 'coupon_id', 'payment_type', 'payment_status', 'transaction_id', 'payment_string', 'order_time','lat','long','pincode','city','wallet_apply','wallet_cut','landmark_address','mobile_number','platform_charges','tex','send_cutlery','chef_message','avoid_ring_bell','leave_at_door','avoid_calling','direction_to_reach','direction_instruction','delivery_charge','pickup_otp','gateway_response'];
 
 
     public function products()

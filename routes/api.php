@@ -280,6 +280,8 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api'], function
     Route::post('re-order', [App\Http\Controllers\api\AppController::class, 'reOrder']);
     Route::post('get-order-time-diff', [App\Http\Controllers\api\AppController::class, 'orderTimeDiff']);
     Route::post('get-order-details', [App\Http\Controllers\api\AppController::class, 'orderDetails']);
+    Route::post('make-order-refund', [App\Http\Controllers\api\AppController::class, 'orderRefundToUser']);
+
 
     //profile
     Route::post('get-user-info', [App\Http\Controllers\api\AppController::class, 'getUserInfo']);

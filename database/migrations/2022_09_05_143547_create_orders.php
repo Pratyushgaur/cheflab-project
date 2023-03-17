@@ -39,6 +39,7 @@ class CreateOrders extends Migration
             $table->enum('payment_status', ['paid', 'pending'])->default('pending');
             $table->text('transaction_id')->nullable()->default(null);
             $table->text('payment_string')->nullable()->default(null)->comment('payment gatway return json string');
+            $table->text('gateway_response')->nullable()->comment('Gateway all response');
             $table->datetime('preparation_time_from')->nullable()->default(null);
             $table->datetime('preparation_time_to')->nullable()->default(null);
             $table->boolean('is_need_more_time')->default(0)->comment('1=if more preparation time extends');

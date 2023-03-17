@@ -1692,7 +1692,7 @@ class AppController extends Controller
                 DB::beginTransaction();
 
                 if (!Vendors::is_avaliavle($request->vendor_id))
-                    return response()->json(['status' => False, 'error' => "Vendor not available"], 401);
+                    return response()->json(['status' => False, 'error' => "Vendor not available",'gateway_amount'=> (isset($request->gateway_amount)) ? $request->gateway_amount : 0  ], 406);
                 $data = $request->all();
                 $user = User::where('id', '=', $request->user_id)->first();
                 $orderId = getOrderId();
@@ -1724,6 +1724,9 @@ class AppController extends Controller
                 $insertData['deliver_otp'] = rand(1000, 9999);
                 $insertData['pickup_otp'] = rand(1000, 9999);
                 $insertData['delivery_charge'] = intval($request->delivery_charge);
+                if(isset($request->gateway_response) && is_array($request->gateway_response)){
+                    $insertData['gateway_response'] = serialize($request->gateway_response);
+                }
                 $Order                    = new Order($insertData);
                 $Order->saveOrFail();
                 $order_id = $Order->id;
@@ -3557,6 +3560,39 @@ class AppController extends Controller
             }
             \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('id','=',$request->order_id)->update(['user_review_done'=>'1']);
 
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully'
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function orderRefundToUser(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'amount' => 'required|numeric'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            //
+            $user                = User::find($request->user()->id);
+            $user->wallet_amount = $user->wallet_amount + $request->amount;
+            $user->save();
+            //
+            $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+            $UserWalletTransactions->user_id = $request->user()->id;
+            $UserWalletTransactions->amount = $request->amount;
+            $UserWalletTransactions->narration = "Refund";
+            $UserWalletTransactions->save();
+            //
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully'
