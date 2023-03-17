@@ -88,16 +88,20 @@ class OrderController extends Controller
     public function order_preparing(Request $request, $id)
     {
         // createPdf($id);
-        $order                        = Order::find($id);
-        $order->order_status          = 'preparing';
-        $order->preparation_time_from = mysql_date_time();
-        $order->preparation_time_to   = mysql_add_time($order->preparation_time_from, $request->preparation_time);
-        $order->save();
         \App\Models\OrderActionLogs::create(['orderid'=> $id,'action' => 'Order Accept By Vendor']);
-        //        event(new OrderSendToPrepareEvent($id, $order->user_id, $order->vendor_id, $request->preparation_time));
-        // orderCancel($id);
-        event(new OrderSendToPrepareEvent($order, $request->preparation_time));
-        return redirect()->back()->with('success', "# $id Order send for preparing");
+        $order                        = Order::find($id);
+        if($order->order_status == 'confirmed'){
+            $order->order_status          = 'preparing';
+            $order->preparation_time_from = mysql_date_time();
+            $order->preparation_time_to   = mysql_add_time($order->preparation_time_from, $request->preparation_time);
+            $order->save();
+            event(new OrderSendToPrepareEvent($order, $request->preparation_time));
+            return redirect()->back()->with('success', "# $id Order send for preparing");
+        }else{
+            return redirect()->back()->with('error', "Order is in Wrong Status");
+
+        }
+        
     }
 
     // public function order_need_more_time(Request $request, $id)

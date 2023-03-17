@@ -366,7 +366,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary shadow-none" {{--data-dismiss="modal"--}} id="submit_model">
+                        <button type="button"  class="btn btn-primary shadow-none prepration-submit-button" {{--data-dismiss="modal"--}} id="submit_model">
                             Submit
                         </button>
                     </div>
@@ -381,7 +381,13 @@
 
 @push('scripts')
     <script>
-
+        $(document).ready(function(){
+            $('.prepration-submit-button').click(function(){
+                $(this).prop('disabled', true);
+                $('#preparation_form').submit();    
+                
+            })
+        })
         function ajax_post_on_link(url, id) {
 
             $.ajax({

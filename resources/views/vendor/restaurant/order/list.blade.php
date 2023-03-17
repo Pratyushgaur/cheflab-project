@@ -83,7 +83,7 @@ $breadcrumb[] = ["name"  => "List",
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary shadow-none" {{--data-dismiss="modal"--}} id="submit_model">
+                        <button type="button"  class="btn btn-primary shadow-none prepration-submit-button" {{--data-dismiss="modal"--}} id="submit_model">
                             Submit
                         </button>
                     </div>
@@ -236,6 +236,11 @@ $breadcrumb[] = ["name"  => "List",
                 ajax_post_on_link(url,id);
                 $('#modal-confirm').modal('hide');
 
+            })
+            $('.prepration-submit-button').click(function(){
+                $(this).prop('disabled', true);
+                $('#preparation_form').submit();
+                
             })
         })
         
