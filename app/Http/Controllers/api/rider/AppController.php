@@ -361,7 +361,7 @@ class AppController extends Controller
                     if ($user->fcm_token != '') {
                         //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
                         $data = orderDetailForUser($request->order_row_id);
-                        \App\Jobs\UserOrderNotification::dispatch('Order dispated from restauran', 'Your Order has been Dispatched', $user->fcm_token, 4, $data);
+                        \App\Jobs\UserOrderNotification::dispatch('Order Dispatched from Restaurant', 'Your Order has been Dispatched', $user->fcm_token, 4, $data);
                     }
                 }
 
