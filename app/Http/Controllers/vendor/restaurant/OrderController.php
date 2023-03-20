@@ -140,21 +140,30 @@ class OrderController extends Controller
         // orderDeliverd($id);
         createPdf($id);
         $order               = Order::find($id);
-        $order->order_status = 'ready_to_dispatch';
-        $order->save();
-        \App\Models\OrderActionLogs::create(['orderid'=> $id,'action' => 'Order Ready for Dispatch']);
+        if($order->order_status == 'preparing'){
+            $order->order_status = 'ready_to_dispatch';
+            $order->save();
+            \App\Models\OrderActionLogs::create(['orderid'=> $id,'action' => 'Order Ready for Dispatch']);
 
-        $otp = rand(1000, 9999);
-        if ($order->accepted_driver_id != null) {
-            event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id, $otp));
+            $otp = rand(1000, 9999);
+            if ($order->accepted_driver_id != null) {
+                event(new OrderReadyToDispatchEvent($id, $order->accepted_driver_id, $otp));
+            }
+            
+            return response()->json([
+                'status'       => 'success',
+                'order_status' => 'ready_to_dispatch',
+                'msg'          => "# $id Order ready to dispatch.",
+                'otp'          => $otp
+            ], 200);
+        }else{
+            return response()->json([
+                'status'       => 'error',
+                'order_status' => '',
+                'msg'          => ""
+            ], 200);
         }
         
-        return response()->json([
-            'status'       => 'success',
-            'order_status' => 'ready_to_dispatch',
-            'msg'          => "# $id Order ready to dispatch.",
-            'otp'          => $otp
-        ], 200);
     }
 
     public function order_dispatched($id)
