@@ -154,7 +154,7 @@
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Discount Type <span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="discount_type" style="width: 100%;">
+                                        <select class="form-control discount_type" name="discount_type" style="width: 100%;">
                                           <option value="1">Percent</option>
                                           <option value="0">Amount</option>
                                         </select>
@@ -235,7 +235,7 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Redeem Count (How Much time a user can redeem this coupon)<span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="promo_redeem_count" style="width: 100%;">
+                                        <select class="form-control" name="promo_redeem_count" style="width: 100%;">
                                           <option value="1">1</option>
                                           <option value="2">2</option>
                                           <option value="3">3</option>
@@ -252,11 +252,11 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Validity(Once a day/week/month or Lifetime)<span class="text-danger">*</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                        <select class="form-control select2" name="promocode_use" style="width: 100%;">
+                                        <select class="form-control" name="promocode_use" style="width: 100%;">
                                           <option value="1">Once a Day</option>
                                           <option value="2">Once a Week</option>
                                           <option value="3">Once a Month</option>
-                                          <option value="4">Lifetime</option>
+                                          <option value="4" selected>Lifetime</option>  
                                         </select>
                                     </div>  
                                   </div>
@@ -331,6 +331,7 @@
               },
               code: {
                   required: true,
+                  alphanumeric: true,
                   remote: '{{route("admin.coupon.couponcheck")}}',
               },
               discount_type: {
@@ -339,6 +340,13 @@
               discount: {
                   required: true,
                   number: true,
+                  max: function() {
+                      if($('.discount_type').val() == '1'){
+                        return 100;
+                      }else{
+                        return 1000000;
+                      }
+                  }
               },
               maxim_dis_amount: {
                 required: true,
@@ -374,6 +382,7 @@
               },
               code: {
                   required: "Coupon code is required",
+                  alphanumeric:"Can Not Use Special Characters in Code",
                   remote: "Coupon code is already Taken"
               },
               discount_type: {

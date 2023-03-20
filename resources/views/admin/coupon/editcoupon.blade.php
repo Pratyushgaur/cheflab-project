@@ -129,7 +129,7 @@
                       <h3 class="card-title">Edit Coupon </h3>
                     </div>
                     <div class="card-body pad table-responsive">
-                      <form id="restaurant-form" action="{{route('admin.coupon.store')}}" method="post" enctype="multipart/form-data">
+                      <form id="restaurant-form" action="{{route('admin.coupon.update')}}" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                           <div class="card card-default">
                               <div class="card-header">
@@ -155,7 +155,7 @@
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Discount Type <span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="discount_type" style="width: 100%;">
+                                        <select class="form-control discount_type" name="discount_type" style="width: 100%;">
                                         @if($coupon->discount_type == '1')
                                           <option value="1">Percent</option>
                                           <option value="0">Amount</option>
@@ -201,7 +201,7 @@
                                     @if($coupon->show_in == '1')
                                         <input class="form-check-input" name="show_in" type="checkbox" value="1" id="flexCheckDefault" checked>
                                     @else
-                                      <input class="form-check-input" name="show_in" type="checkbox" value="1" id="flexCheckDefault" checked>
+                                      <input class="form-check-input" name="show_in" type="checkbox" value="1" id="flexCheckDefault">
                                     @endif
                                         <label for="flexCheckDefault">
                                             Show In Customer App
@@ -217,23 +217,26 @@
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>From:</label>
-                                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                            <input type="date" class="form-control" name="from" value="{{date('Y-m-d',strtotime($coupon->from))}}">
+                                                  <!-- <div class="input-group date" id="reservationdate" data-target-input="nearest">
                                                     <input type="text" name="from" class="form-control datetimepicker-input" value="{{$coupon->from}}" data-target="#reservationdate"/>
                                                     <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
-                                                </div>
+                                                  </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label>To:</label>
-                                                <div class="input-group date" id="reservationdate1" data-target-input="nearest">
+                                            <input type="date" class="form-control" name="to" value="{{date('Y-m-d',strtotime($coupon->to))}}">
+
+                                                <!-- <div class="input-group date" id="reservationdate1" data-target-input="nearest">
                                                     <input type="text" name="to" class="form-control datetimepicker-input" value="{{$coupon->to}}" data-target="#reservationdate"/>
                                                     <div class="input-group-append" data-target="#reservationdate1" data-toggle="datetimepicker">
                                                         <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                         </div>
                                     </div>
                                     <div class="col-md-6">
@@ -245,34 +248,33 @@
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Redeem Count (How Much time a user can redeem this coupon)<span class="text-danger">*</span></label>
-                                        <select class="form-control select2" name="promo_redeem_count" style="width: 100%;">
-                                         <option value="{{$coupon->promo_redeem_count}}">{{$coupon->promo_redeem_count}}</option>
-                                          <option value="1">1</option>
-                                          <option value="2">2</option>
-                                          <option value="3">3</option>
-                                          <option value="4">4</option>
-                                          <option value="5">5</option>
-                                          <option value="6">6</option>
-                                          <option value="7">7</option>
-                                          <option value="8">8</option>
-                                          <option value="9">9</option>
-                                          <option value="10">10</option>
+                                        <select class="form-control " name="promo_redeem_count" style="width: 100%;">
+                                          <option value="1" @if($coupon->promo_redeem_count == '1') selected @endif>1</option>
+                                          <option value="2" @if($coupon->promo_redeem_count == '2') selected @endif>2</option>
+                                          <option value="3" @if($coupon->promo_redeem_count == '3') selected @endif>3</option>
+                                          <option value="4" @if($coupon->promo_redeem_count == '4') selected @endif>4</option>
+                                          <option value="5" @if($coupon->promo_redeem_count == '5') selected @endif>5</option>
+                                          <option value="6" @if($coupon->promo_redeem_count == '6') selected @endif>6</option>
+                                          <option value="7" @if($coupon->promo_redeem_count == '7') selected @endif>7</option>
+                                          <option value="8" @if($coupon->promo_redeem_count == '8') selected @endif>8</option>
+                                          <option value="9" @if($coupon->promo_redeem_count == '9') selected @endif>9</option>
+                                          <option value="10" @if($coupon->promo_redeem_count == '10') selected @endif>10</option>
                                         </select>
                                     </div>  
                                   </div>
                                   <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Coupon Validity(Once a day/week/month or Lifetime)<span class="text-danger">*</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-                                        <select class="form-control select2" name="promocode_use" style="width: 100%;">
-                                          <option value="{{$coupon->promocode_use}}">{{$coupon->promocode_use}}</option>
-                                          <option value="1">Once a Day</option>
-                                          <option value="2">Once a Week</option>
-                                          <option value="3">Once a Month</option>
-                                          <option value="4">Lifetime</option>
+                                        <select class="form-control " name="promocode_use" style="width: 100%;">
+                                          
+                                          <option value="1" @if($coupon->promocode_use == '1') selected @endif>Once a Day</option>
+                                          <option value="2" @if($coupon->promocode_use == '2') selected @endif>Once a Week</option>
+                                          <option value="3" @if($coupon->promocode_use == '3') selected @endif>Once a Month</option>
+                                          <option value="4" @if($coupon->promocode_use == '4') selected @endif>Lifetime</option>
                                         </select>
                                     </div>  
                                   </div>
-                                    <div class="col-md-6">
+                                    <!-- <div class="col-md-6">
                                       <div class="form-group">
                                             <div>
                                               <label for="">Images </label>
@@ -290,7 +292,7 @@
                                                 <input id="file-input" type="file" name="image" required/>
                                             </div>      
                                       </div>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 
                               </div>
@@ -303,7 +305,7 @@
                           </div>
                           <!-- schedule information end -->
                           <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i> Create Coupon </button>
+                            <button class="btn btn-success" ><i class="fa fa-save"></i> Update Coupon </button>
                           </div>
                       </form>
                       
@@ -347,7 +349,7 @@
               },
               code: {
                   required: true,
-                  remote: '{{route("admin.coupon.couponcheck")}}',
+                  remote: '{{route("admin.coupon.couponcheckedit",$coupon->id)}}',
               },
               discount_type: {
                   required: true,
@@ -355,6 +357,13 @@
               discount: {
                   required: true,
                   number: true,
+                  max: function() {
+                      if($('.discount_type').val() == '1'){
+                        return 100;
+                      }else{
+                        return 1000000;
+                      }
+                  }
               },
               maxim_dis_amount: {
                 required: true,

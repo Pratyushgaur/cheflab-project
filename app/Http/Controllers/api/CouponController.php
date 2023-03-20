@@ -94,11 +94,11 @@ class CouponController extends Controller
             }
             //$date = today()->format('m/d/Y');Y-m-d
             $date = today()->format('m/d/Y');
-            $vendor_coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)
+            $vendor_coupon =  Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=',1)->where('show_in','1')
                 ->where('from', '<=',mysql_date_time($date))->where('to', '>=',mysql_date_time($date))
                 ->select('*')->get();
           //  $admin_coupon =  \App\Models\Coupon::where('create_by', '=', 'admin')->where('status', '=',1)->where('to', '>',$date)->select('name','discount_type','coupon_valid_x_user','description')->get();
-            $admin_coupon = Coupon::where(['create_by' => 'admin'])
+            $admin_coupon = Coupon::where(['create_by' => 'admin'])->where('status', '=',1)->where('show_in','1')
                 ->where('from', '<=',mysql_date_time($date))->where('to', '>=',mysql_date_time($date))
                 ->select('*',\DB::raw('CONCAT("'.asset('coupon-admin').'/", image) AS image'),'id')
                 ->get();

@@ -144,7 +144,7 @@ class CouponController extends Controller
         }
     }
     public  function checkCoupon(Request $request ,$id=null){
-        if (Coupon::where('code','=',$request->code)->exists()) {
+        if (Coupon::where('code','=',$request->code)->whereDate('to','>=',today()->format('Y-m-d'))->exists()) {
             $data =Coupon::where('code','=',$request->code)->select('id','to')->get();
             $date = today()->format('Y-m-d');
            // echo $date;die;
@@ -187,7 +187,7 @@ class CouponController extends Controller
     public function update(Request $request){
         $this->validate($request, [
             'name' => 'required',
-            'code' => 'required',
+            'code' => 'required|unique:coupons,code,'.$request->id,
             'discount_type' => 'required',
             'discount' => 'required',
             'maxim_dis_amount' => 'required',
@@ -198,12 +198,13 @@ class CouponController extends Controller
             'to' => 'required',
             'description' => 'required',
         ]);
+        $coupon = Coupon::findOrFail($request->id);
         $coupon->name = $request->name;
         $coupon->code = $request->code;
         $coupon->discount_type = $request->discount_type;
         $coupon->discount  = $request->discount;
         $coupon->description  = $request->description;
-        $coupon->show_in  = $request->show_in;
+        $coupon->show_in  = (isset($request->show_in)) ? $request->show_in : '0' ;
         $coupon->coupon_valid_x_user  = $request->coupon_valid_x_user;
         $coupon->maxim_dis_amount  = $request->maxim_dis_amount;
         $coupon->minimum_order_amount  = $request->minimum_order_amount;
