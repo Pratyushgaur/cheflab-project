@@ -1730,6 +1730,17 @@ class AppController extends Controller
                 $Order                    = new Order($insertData);
                 $Order->saveOrFail();
                 $order_id = $Order->id;
+                if($request->coupon_id != '' || $request->coupon_id != '0'){
+                    $coupon = \App\Models\Coupon::where('id','=',$request->coupon_id)->first();
+                    if(!empty($coupon)){
+                        $couponHistory = new \App\Models\CouponHistory;
+                        $couponHistory->user_Id  = $request->user_id;
+                        $couponHistory->coupon_name  = $coupon->name;
+                        $couponHistory->code  = $coupon->code;
+                        $couponHistory->coupon_id  = $request->coupon_id;
+                        $couponHistory->save();
+                    }
+                }
                 foreach ($request->products as $k => $p) {
                     $checkcustomizable = Product_master::where('products.id', '=', $p['product_id'])->select('customizable')->first();
                     $order_products = new OrderProduct;
