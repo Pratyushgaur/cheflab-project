@@ -556,9 +556,7 @@ class AppController extends Controller
                 $request->all(),
                 [
                     'vendor_id' => 'required|numeric',
-                    'keyword'   => 'required',
-                    'offset'    => 'required',
-                    'limit'    => 'required'
+                    'keyword'   => 'required'
                 ]
             );
             if ($validateUser->fails()) {
