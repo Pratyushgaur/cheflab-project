@@ -35,6 +35,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory'])->name("get.restaurant.by.category");
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
+    Route::post('search-RestaurantDetail-Page', [App\Http\Controllers\api\AppController::class, 'searchRestaurantDetailPage']);
 
     //    Route::post('getRestaurantDetailPage_old', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage_old']);
 
@@ -230,7 +231,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api'], function
     Route::post('getRestaurantByCategory', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCategory']);
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
-    Route::post('searchRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'searchRestaurantDetailPage']);
+    Route::post('search-RestaurantDetail-Page', [App\Http\Controllers\api\AppController::class, 'searchRestaurantDetailPage']);
 
     //    Route::post('getRestaurantDetailPage_old', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage_old']);
 

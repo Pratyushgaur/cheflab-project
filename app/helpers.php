@@ -330,7 +330,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 
     if (!empty($product_where))
         $product->where($product_where);
-    
+        
     //    if (!empty($where_vendor_in))
     if ($where_vendor_in != null && is_array($where_vendor_in))
         $product->whereIn('products.userId', $where_vendor_in);
