@@ -3673,4 +3673,10 @@ class AppController extends Controller
             ], 500);
         }
     }
+
+    public function command_test(Type $var = null)
+    {
+        $output = exec("ps -aux | grep queue:work");
+        var_dump($output);
+    }
 }

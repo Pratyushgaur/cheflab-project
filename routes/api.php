@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+Route::get('cmd-test', [App\Http\Controllers\api\AppController::class, 'command_test']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
     Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories'])->name("get.categories");
