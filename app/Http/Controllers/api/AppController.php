@@ -34,8 +34,6 @@ use Throwable;
 use URL;
 use Validator;
 use App\Notifications\SendPushNotification;
-
-
 class AppController extends Controller
 {
     function sendNotification()
@@ -3640,6 +3638,33 @@ class AppController extends Controller
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully'
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function getDriverRatingData(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'order_id' => 'required|numeric||exists:orders,id'
+            ]);
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            //
+            $data = orderDetailForUser($request->order_id);
+            //
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Successfully',
+                'response' => $data
+                
             ], 200);
         } catch (Throwable $th) {
             return response()->json([

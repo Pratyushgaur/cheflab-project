@@ -223,6 +223,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api'], function
     Route::post('reject-order-rating', [App\Http\Controllers\api\AppController::class, 'rejectOrderRatings']);
     Route::post('detail-order-rating', [App\Http\Controllers\api\AppController::class, 'detailOrderRating']);
     Route::post('save-order-rating', [App\Http\Controllers\api\AppController::class, 'saveOrderRating']);
+    Route::post('get-driver-rating-data', [App\Http\Controllers\api\AppController::class, 'getDriverRatingData']);
 
     // restaurant home page api
 
