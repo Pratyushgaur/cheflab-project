@@ -319,7 +319,7 @@ function in_between_equal_to($check_number, $from, $to)
 //     return $product;
 // }
 //
-function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = null, $limit = null, $return_total_count = false, $product_ids = null)
+function get_product_with_variant_and_addons($product_where = [], $user_id = '', $order_by_column = '', $order_by_order = '', $with_restaurant_name = false, $is_chefleb_product = false, $where_vendor_in = null, $offset = null, $limit = null, $return_total_count = false, $product_ids = null , $serchingKeyword = null)
 {
     DB::enableQueryLog();
     //for pagination
@@ -330,7 +330,7 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
 
     if (!empty($product_where))
         $product->where($product_where);
-
+    
     //    if (!empty($where_vendor_in))
     if ($where_vendor_in != null && is_array($where_vendor_in))
         $product->whereIn('products.userId', $where_vendor_in);
@@ -348,6 +348,10 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         $product1 = $product;
         return $product_ids = $product1->offset($offset)->limit($limit)->pluck('id');
         $product->whereIn('products.id', $product_ids);
+    }
+
+    if($serchingKeyword !=null){
+        $product->where('product_name','like','%' . $serchingKeyword . '%');
     }
 
     if ($product_ids != null)

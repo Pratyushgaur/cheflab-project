@@ -549,6 +549,41 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function searchRestaurantDetailPage(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'vendor_id' => 'required|numeric',
+                    'keyword'   => 'required',
+                    'offset'    => 'required',
+                    'limit'    => 'required'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $variant = get_product_with_variant_and_addons(['product_for' => '3','userId' => $request->vendor_id ], request()->user()->id, '', '', false,false,null,null,null,false,false,$request->keyword);
+            
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $variant
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 
     public function getRestaurantDetailByFoodtype(Request $request)
     {
