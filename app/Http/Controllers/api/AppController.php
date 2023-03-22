@@ -3469,7 +3469,7 @@ class AppController extends Controller
             $review->order_id     = $request->order_id;
             $review->save();
             //
-            $orders = Orders::find($request->order_id);
+            $orders = \App\Models\Orders::find($request->order_id);
             $orders->driver_rating_done = '1';
             $orders->save();
             //
