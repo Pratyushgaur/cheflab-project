@@ -3469,6 +3469,10 @@ class AppController extends Controller
             $review->order_id     = $request->order_id;
             $review->save();
             //
+            $orders = Orders::find($request->order_id);
+            $orders->driver_rating_done = '1';
+            $orders->save();
+            //
             $rating = \App\Models\RiderReviewRatings::select(\DB::raw('AVG(rating) as rating'), \DB::raw('COUNT(id) as total_review'))->where('rider_id', $request->rider_id)->first();
             $deliver_boy = \App\Models\Deliver_boy::find($request->rider_id);
             $deliver_boy->ratings = $rating->rating;
@@ -3512,12 +3516,14 @@ class AppController extends Controller
     function pendingOrderRatings(){
         try {
             $pendingReview = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('user_review_done','=','0')->where('order_status','=','completed')->join('vendors','orders.vendor_id','=','vendors.id')->select('vendors.name','orders.id')->orderBy('orders.id','desc')->limit(1)->first();
+            $pendingDriver = \App\Models\Orders::where('user_id','=',request()->user()->id)->where('driver_rating_done','=','0')->where('order_status','=','completed')->join('deliver_boy','orders.accepted_driver_id','=','deliver_boy.id')->select('deliver_boy.name as driver_name','orders.id')->orderBy('orders.id','desc')->limit(1)->first();
             $ongoingOrders = \App\Models\Orders::where('user_id','=',request()->user()->id)->join('vendors','orders.vendor_id','=','vendors.id')->whereNotIn('order_status',["pending","cancelled_by_customer_before_confirmed","cancelled_by_customer_after_confirmed","cancelled_by_customer_during_prepare","cancelled_by_customer_after_disptch","cancelled_by_vendor","completed"])->select('orders.id','order_id','order_status','deliver_otp','vendors.name as vendor_name')->get();
             $appRun = \App\Models\AdminMasters::where('id','=',1)->select('app_run','app_close_reason')->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Successfully',
                 'response' => $pendingReview,
+                'pending_driver_review'=>$pendingDriver,
                 'ongoing_orders'=>$ongoingOrders,
                 'app_run'=>$appRun->app_run,
                 'reason'=>$appRun->app_close_reason

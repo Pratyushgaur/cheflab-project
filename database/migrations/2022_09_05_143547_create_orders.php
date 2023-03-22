@@ -60,6 +60,7 @@ class CreateOrders extends Migration
             $table->timestamp('pickup_time')->nullable()->comment('driver order pick up time');
             $table->timestamp('delivered_time')->nullable()->comment('driver order delivered time');
             $table->enum('user_review_done', ["0", "1", "2"])->default('0')->comment('0=pending,1=done review,2reject');
+            $table->enum('driver_rating_done', ["0", "1", "2"])->default('0')->comment('0=pending,1=done review,2reject');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             $table->boolean('delivery_charge')->default(0);
