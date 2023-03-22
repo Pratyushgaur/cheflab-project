@@ -3499,7 +3499,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('id','=',$request->order_id)->update(['user_review_done'=>'2']);
+            \App\Models\Orders::where('user_id','=',request()->user()->id)->where('order_status','=','completed')->where('id','=',$request->order_id)->update(['user_review_done'=>'2','driver_rating_done'=>'2']);
 
             return response()->json([
                 'status'   => true,
