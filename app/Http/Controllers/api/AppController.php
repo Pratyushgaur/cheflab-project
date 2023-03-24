@@ -501,6 +501,38 @@ class AppController extends Controller
         }
     }
 
+    public function getVendorById(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'vendor_id'     => 'required|numeric',
+                    'lat'           => 'required|numeric',
+                    'lng'           => 'required|numeric',
+
+                ]
+            );
+            
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            $response =  getVendorByIdForApp($request->lat,$request->lng,$request->vendor_id,request()->user()->id);
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $response
+            ], 200);
+            
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    } 
+
     public function getRestaurantDetailPage(Request $request)
     {
         try {

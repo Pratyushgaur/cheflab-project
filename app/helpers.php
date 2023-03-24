@@ -2101,8 +2101,6 @@ function orderDeliverd($id)
     }
 }
 function generateIncentive(){
-    //return Carbon::now()->subDays(1)->startOfWeek();
-//    return Carbon::now()->subWeek()->startOfWeek()->format('d-m-Y');
     $drivers =  \App\Models\Orders::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('accepted_driver_id','!=','')->select('accepted_driver_id')->distinct()->get()->pluck('accepted_driver_id');
     if(!empty($drivers)){
         $deliverySetting =  \App\Models\DeliveryboySetting::first();
@@ -2188,4 +2186,59 @@ function generateIncentive(){
         }
         echo 'done';
     }
+}
+function getVendorByIdForApp($lat=null,$lng=null,$vendorId,$current_user_id)
+{
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(vendors.lat))) ";
+    $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1' ,'vendors.id' => $vendorId]);
+    $vendors = $vendors->selectRaw("ROUND({$select}) AS distance")->addSelect("vendors.id" , 'is_online');
+    $vendors->withCount(['products as product_count']);
+    $vendors->leftJoin('user_vendor_like', function ($join) use ($current_user_id) {
+        $join->on('vendors.id', '=', 'user_vendor_like.vendor_id');
+        $join->where('user_vendor_like.user_id', '=', $current_user_id);
+    })->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'));
+    $vendors->leftJoin('vendor_order_time', function ($join) {
+        $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+            ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+            //--------------commented, we are sending is open and is_closed
+            ->where('start_time', '<=', mysql_time())
+            ->where('end_time', '>', mysql_time());
+    });
+    $vendors->addSelect(
+        'vendor_type',
+        'is_all_setting_done',
+        'start_time',
+        'end_time',
+        'vendor_order_time.day_no',
+        'vendors.name',
+        "vendor_food_type",
+        DB::raw('ROUND(vendor_ratings,1) AS vendor_ratings'),
+        'vendors.lat',
+        'vendors.long',
+        'deal_categories',
+        \DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),
+        DB::raw('if(available,false,true)  as isClosed'),
+        "vendors.fssai_lic_no",
+        'review_count',
+        'table_service',
+        'vendors.id as vendor_id',
+        'banner_image',
+        'deal_cuisines'
+    );
+    
+    $vendors =  $vendors->first();
+
+    $banners = json_decode($vendors->banner_image);
+    if (is_array($banners))
+        $urlbanners = array_map(function ($banner) {
+            return URL::to('vendor-banner/') . '/' . $banner;
+        }, $banners);
+    else
+        $urlbanners = [];
+    $vendors->banner_image   = $urlbanners;
+    $vendors->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $vendors->deal_cuisines))->pluck('name');
+    $category                = \App\Models\Catogory_master::whereIn('id', explode(',', $vendors->deal_categories))->pluck('name');
+    $vendors->categories     = $category;
+    $vendors->next_available = next_available_day($vendors->id);
+    return $vendors;
 }
