@@ -134,7 +134,7 @@ class BannerController extends Controller
             })
             ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('admin-banner') . '/", bannerImage) AS bannerImage,'
                     . 'cheflab_banner_image.position as banner_position,slotbooking_table.vendor_id')
-            ->addSelect('cheflab_banner_image.redirect_vendor_id    ')
+            // ->addSelect('cheflab_banner_image.redirect_vendor_id    ')
                 ->orderBy('cheflab_banner_image.position', 'asc')
                 ->limit($number_of_slides)
                 ->get();
