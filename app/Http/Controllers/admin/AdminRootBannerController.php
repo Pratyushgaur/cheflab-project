@@ -42,7 +42,8 @@ class AdminRootBannerController extends Controller
         try {
             $id =  Crypt::decryptString($encrypt_id);  
             $root = RootImage::findOrFail($id);
-            return view('admin/banner/root/editimage',compact('root'));
+            $vendors = \App\Models\Vendors::where('is_all_setting_done',1)->where('status',1)->select('id','name')->get();
+            return view('admin/banner/root/editimage',compact('root','vendors'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
         } 
@@ -59,6 +60,7 @@ class AdminRootBannerController extends Controller
            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);  
             $root->bannerImage  = $filename;
         }
+        $root->redirect_vendor_id = $request->vendor_id;
         $root->save();
         return redirect()->route('admin.root.banner')->with('message', 'Banner Update Successfully');
     }   

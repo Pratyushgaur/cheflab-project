@@ -138,6 +138,16 @@
                         <input id="file-input" type="file" name="bannerImage" required/>
                     </div>      
                 </div>
+                <div class="form-group">
+                  <label for="">Vendor</label>
+                  <select class="form-control select2" name="vendor_id" > 
+                    <option value="">Do Not Redirect</option>
+                    @foreach($vendors as $key=>$value)
+                      <option value="{{$value->id}}" @if($root->redirect_vendor_id == $value->id) selected @endif>{{$value->name}}</option>
+                    @endforeach
+                  </select>
+                
+                </div>
             </div>
             <!-- /.card-body -->
         </div>

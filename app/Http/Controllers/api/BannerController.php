@@ -133,8 +133,8 @@ class BannerController extends Controller
                         ->where([ 'slotbooking_table.is_active' => '1' ]);
             })
             ->selectRaw('slotbooking_table.id as slot_id,CONCAT("' . asset('slot-vendor-image') . '/", slot_image) AS slot_image,CONCAT("' . asset('admin-banner') . '/", bannerImage) AS bannerImage,'
-//        .'from_date,to_date,name,slotbooking_table.id as slot_id,cheflab_banner_image.id as banner_id,slotbooking_table.price as slot_price,cheflab_banner_image.price as banner_price,'
                     . 'cheflab_banner_image.position as banner_position,slotbooking_table.vendor_id')
+            ->addSelect('cheflab_banner_image.redirect_vendor_id    ')
                 ->orderBy('cheflab_banner_image.position', 'asc')
                 ->limit($number_of_slides)
                 ->get();
@@ -144,7 +144,7 @@ class BannerController extends Controller
                 if ($slot->slot_id != '')
                     $response[] = [ 'image' => $slot->slot_image, 'position' => $slot->banner_position,'vendor_id'=> $slot->vendor_id];
                 else
-                    $response[] = [ 'image' => $slot->bannerImage, 'position' => $slot->banner_position ,'vendor_id'=>''];
+                    $response[] = [ 'image' => $slot->bannerImage, 'position' => $slot->banner_position ,'vendor_id'=>$slot->redirect_vendor_id];
             }
 
             return response()->json([
