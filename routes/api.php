@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('getRestaurantByCuisines', [App\Http\Controllers\api\AppController::class, 'getRestaurantByCuisines']);
     Route::post('getRestaurantDetailPage', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage']);
     Route::post('search-RestaurantDetail-Page', [App\Http\Controllers\api\AppController::class, 'searchRestaurantDetailPage']);
+    Route::post('get-restaurant-detail', [App\Http\Controllers\api\AppController::class, 'getVendorById']);
 
     //    Route::post('getRestaurantDetailPage_old', [App\Http\Controllers\api\AppController::class, 'getRestaurantDetailPage_old']);
 
