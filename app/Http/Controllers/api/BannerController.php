@@ -29,7 +29,7 @@ class BannerController extends Controller
 
             $data = \App\Models\RootImage::where([ 'is_active' => '1' ])
                 ->where('banner_for',$request->for)
-                ->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id')
+                ->select('name', \DB::raw('CONCAT("' . asset('admin-banner') . '/", bannerImage) AS image'), 'id' ,'redirect_vendor_id as vendor_id')
                 ->orderBy('position', 'ASC')->get();
             return response()->json([
                 'status'   => true,
