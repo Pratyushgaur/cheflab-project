@@ -122,7 +122,7 @@ class VendorController extends Controller
         $vendors->address          = $request->address;
         //$vendors->fssai_lic_no     = $request->fssai_lic_no;
         //$vendors->commission       = $request->vendor_commission;
-        $vendors->vendor_food_type = $request->type;
+        //$vendors->vendor_food_type = $request->type;
         //$vendors->tax              = $request->tax;
         $vendors->gst_available    = $request->gst_available;
         $vendors->gst_no           = $request->gst_no;

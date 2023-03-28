@@ -140,16 +140,27 @@ class LoginApiController extends Controller
                         ], 401);
                     }
                 }
+                if(User::where('mobile_number', '=', $request->mobile_number)->exists()){
+                    User::where('mobile_number', '=', $request->mobile_number)->update([
+                                'name'=>$request->name,
+                                'surname'=>$request->lastname,
+                                'email'=>$request->email,
+                                'mobile_number'=>$request->mobile_number,
+                                'alternative_number'=>$request->alternative_mobile,
+                            ]);
+                    $user= User::where('mobile_number','=',$request->mobile_number)->first();
+                }else{  
+                    $user->name = $request->name;
+                    $user->surname = $request->lastname;
+                    $user->email = $request->email;
+                    $user->mobile_number = $request->mobile_number;
+                    //  $user->by_earn = $refer_amount;
+                    $user->alternative_number = $request->alternative_mobile;
+                    $user->referralCode = $this->generateReferralCode($request->name);
 
-                $user->name = $request->name;
-                $user->surname = $request->lastname;
-                $user->email = $request->email;
-                $user->mobile_number = $request->mobile_number;
-                //  $user->by_earn = $refer_amount;
-                $user->alternative_number = $request->alternative_mobile;
-                $user->referralCode = $this->generateReferralCode($request->name);
-
-                $user->save();
+                    $user->save();
+                }
+                
 
                 $token = $user->createToken('cheflab-app-token')->plainTextToken;
                 return response()->json([
@@ -419,6 +430,112 @@ class LoginApiController extends Controller
                 'status' => true,
                 'data' => 'Inactive Success'
             ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function login_send_otp_v2(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'mobile_number' => 'required|numeric|digits:10'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $user = User::where(['mobile_number' => $request->mobile_number]);
+            if ($user->exists()) {
+                if ($user->first()->status == '0' || $user->first()->status == '') {
+                    return response()->json([
+                        'status' => false,
+                        'error' => 'Account Deactivated'
+
+                    ], 401);
+                }
+                $otp = $this->otp_generate($request->mobile_number);
+
+                $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";
+                $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$request->mobile_number&message=" . urlencode($msg) . "&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507166723953585920";
+                Http::get($url);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Otp Send Successfully',
+                    'otp' => $otp
+                ], 200);
+            } else {
+                $otp = $this->otp_generate($request->mobile_number);
+                $msg = "OTP to Login to your ChefLab account is $otp DO NOT share this OTP to anyone for security reasons.";
+                $url = "http://bulksms.msghouse.in/api/sendhttp.php?authkey=9470AY23GFzFZs6315d117P11&mobiles=$request->mobile_number&message=" . urlencode($msg) . "&sender=CHEFLB&route=4&country=91&DLT_TE_ID=1507166723953585920";
+                Http::get($url);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Otp Send Successfully',
+                    'otp' => $otp
+                ], 200);
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+    public function login_verify_otp_v2(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'mobile_number' => 'required|numeric|digits:10',
+                    'otp' => 'required|numeric|digits:4',
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error' => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $insertedOtp = Mobileotp::where(['mobile_number' => $request->mobile_number])->first();
+            if ($insertedOtp->otp == $request->otp) {
+                Mobileotp::where(['mobile_number' => $request->mobile_number])->update(['status' => '1']);
+                if(User::where('mobile_number', '=', $request->mobile_number)->exists()){
+                    $user = User::where('mobile_number', '=', $request->mobile_number)->select('id', 'name', 'mobile_number', 'email')->first();
+                    $token = $user->createToken('cheflab-app-token')->plainTextToken;
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'User Login Successfully',
+                        'token' => array('name' => $user->name, 'email' => $user->email, 'mobile' => $user->mobile_number, 'user_id' => $user->id, 'token' => $token , 'is_exists'=>true)
+                    ], 200);
+                }else{
+                    return response()->json([
+                        'status' => true,
+                        'message' => 'User Login Successfully',
+                        'token' => array('is_exists'=>false,'mobile_number'=>$request->mobile_number)
+                    ], 200);
+                }
+                
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'error' => 'Invalid OTP',
+                ], 200);
+            }
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,

@@ -171,6 +171,10 @@ Route::post('register-verify-otp', [App\Http\Controllers\api\LoginApiController:
 Route::post('register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user'])->name("register.user.verify");
 Route::post('login-otp-send', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp'])->name("login.otp.send");
 Route::post('login-otp-verify', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp'])->name("login.verify.otp");
+//  login version 2 api
+Route::post('login-otp-send-v2', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp_v2'])->name("login.otp.send.v2");
+Route::post('login-otp-verify-v2', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp_v2'])->name("login.verify.otp.v2");
+// 
 Route::post('guest-login', [App\Http\Controllers\api\LoginApiController::class, 'guestLogin'])->name("login.guest");
 
 Route::get('user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq'])->name("user.faq");
@@ -373,6 +377,9 @@ Route::post('system-api/register-verify-otp', [App\Http\Controllers\api\LoginApi
 Route::post('system-api/register-verified-user', [App\Http\Controllers\api\LoginApiController::class, 'register_user']);
 Route::post('system-api/login-otp-send', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp']);
 Route::post('system-api/login-otp-verify', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp']);
+//  login version 2 api
+Route::post('system-api/login-otp-send-v2', [App\Http\Controllers\api\LoginApiController::class, 'login_send_otp_v2'])->name("login.otp.send.v2");
+Route::post('system-api/login-otp-verify-v2', [App\Http\Controllers\api\LoginApiController::class, 'login_verify_otp_v2'])->name("login.verify.otp.v2");
 Route::post('system-api/guest-login', [App\Http\Controllers\api\LoginApiController::class, 'guestLogin']);
 
 Route::get('system-api/user-faq', [\App\Http\Controllers\api\UserFaqApiController::class, 'get_user_faq']);

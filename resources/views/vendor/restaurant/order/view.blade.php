@@ -55,7 +55,7 @@
                                 <!-- <p class="mb-0"><b>Pincode :</b> {{$order->pincode}}</p>
                                 <p class="mb-0"><b>City :</b> {{$order->pincode}}</p> -->
                                 <p class="mb-0"><b>Send Cutlery :</b> <?php if($order->send_cutlery == '1'){echo 'Yes';}else{echo 'No';} ?></p>
-                                <p class="mb-0"><b>Message to Chef :</b> <?php echo $order->chef_message ; ?></p>
+                                <p class="mb-0"><b>Message to Chef :</b> <b class="text-danger"><?php echo strtoupper($order->chef_message) ; ?></b></p>
 
                             </div>
                         </div>
