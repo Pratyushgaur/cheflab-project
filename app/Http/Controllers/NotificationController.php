@@ -106,8 +106,6 @@ class NotificationController extends Controller
         
         $notification->send_to = $request->send_to;
         $notification->description = $request->description;
-       
-
         if ($request->has('notification_banner')) {
             $filename = time() . '-notification-' . rand(100, 999) . '.' . $request->notification_banner->extension();
             $request->notification_banner->move(public_path('push_notify_banner'), $filename);
@@ -116,12 +114,15 @@ class NotificationController extends Controller
         $notification->save();
 
         if($request->send_to == 1){
-            $send_data = "Rider";
-            $allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , '')->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token')->chunk(300);
+            $topicId = "ChefLab_Rider";
+            $to = "Rider";
+            //$allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , '')->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token')->chunk(300);
 
         }else{
-            $send_data = "User";
-            $allToken = User::where('status' , 1)->where('fcm_token', '!=' , '')->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
+            $topicId = "ChefLab_User";
+            $to = "User";
+
+            //$allToken = User::where('status' , 1)->where('fcm_token', '!=' , '')->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
         }
         
         $title = $request->title;
@@ -132,23 +133,11 @@ class NotificationController extends Controller
         }else{
             $image=null;
         }
-        
         // $image = "https://www.shutterstock.com/image-photo/rajwada-historical-palace-indore-city-260nw-567029827.jpg";
         $data = null;
         $sound = "default";
-        //dd($allToken->toArray());
-        foreach($allToken as $key => $value){
-            
-            $res =  sendNotification($title, $body, $value->toArray(),$data ,$sound ,$image);
-            
-        }
-        
-        //dd($allToken);
-
-        //$response =  sendNotification($title, $body, $allToken,$data ,$sound ,$image);
-        //dd($response);
-       
-        return redirect()->route('admin.notification.view')->with('message', 'Notification Send To '. $send_data .' Successfully');
+        $res =  sendToAllNotification($title, $body, $topicId,$data ,$sound ,$image);
+        return redirect()->route('admin.notification.view')->with('message', 'Notification Send To '. $to .' Successfully');
         
 
     }
