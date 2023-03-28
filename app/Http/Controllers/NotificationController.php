@@ -55,7 +55,7 @@ class NotificationController extends Controller
     public function notification_list(Request $request)
     {
         if ($request->ajax()) {
-            $data = PushNotification::get();
+            $data = PushNotification::orderBy('id','desc')->get();
    
             return Datatables::of($data)    
                 ->addIndexColumn()
