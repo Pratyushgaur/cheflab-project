@@ -1840,11 +1840,92 @@ class AppController extends Controller
                             $order_products->order_product_addons()->save($OrderProductAddon);
                         }
                 }
-                AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
+                //AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
                 DB::commit();
                 \App\Models\OrderActionLogs::create(['orderid'=> $Order->id,'action' => 'Order Placed By customer']);
                 \App\Jobs\OrderCreateJob::dispatch($Order,route('restaurant.order.view', $Order->order_id))->delay(now()->addSeconds(30));
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
+            } catch (PDOException $e) {
+                // Woopsy
+                DB::rollBack();
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
+            }
+        } catch (Throwable $th) {
+            return response()->json([
+                'status'      => False,
+                'error'       => $th->getMessage(),
+                'error_trace' => $th->getTrace()
+            ], 500);
+        }
+    }
+
+    public function create_order_for_gateway(Request $request)
+    {
+        // echo "hello";die;
+        //        date_default_timezone_set(config('app.timezone'));
+        // return '#'.str_pad(1 + 100, 8, "0", STR_PAD_LEFT);
+        
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id'          => 'required|numeric',
+                    'vendor_id'        => 'required|numeric',
+                    'customer_name'    => 'required|string',
+                    'delivery_address' => 'required|string',
+                    'city'             => 'required|string',
+                    'pincode'          => 'required|string',
+                    'lat'              => 'required|string',
+                    'long'             => 'required|string',
+
+                    'total_amount'    => 'required|numeric',
+                    'gross_amount'    => 'required|numeric',
+                    'net_amount'      => 'required|numeric',
+                    'wallet_apply'    => 'required',
+                    'discount_amount' => 'required|numeric',
+                    'coupon_id'       => 'nullable|numeric',
+                    'payment_type'    => 'nullable|string',
+                    'payment_status'  => 'nullable|string',
+                    'transaction_id'  => 'nullable|string',
+                    'payment_string'  => 'nullable|string',
+                    // 'send_cutlery'    => 'required',
+
+                    'products.*.product_id'   => 'required|numeric',
+                    'products.*.product_qty'  => 'required|numeric',
+                    'products.*.product_name' => 'required|string',
+
+                    'products.*.variants.*.variant_id'    => 'numeric|nullable',
+                    'products.*.variants.*.variant_qty'   => 'numeric|nullable',
+                    'products.*.variants.*.variant_price' => 'numeric|nullable',
+                    'products.*.variants.*.variant_name'  => 'string|nullable',
+
+                    'products.*.addons.*.addon_id'    => 'numeric|nullable',
+                    'products.*.addons.*.addon_qty'   => 'numeric|nullable',
+                    'products.*.addons.*.addon_price' => 'numeric|nullable',
+                    'products.*.addons.*.addon_name'  => 'string|nullable',
+                ]
+
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            global $cart_id;
+            try {
+                DB::beginTransaction();
+
+                if (!Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available",'gateway_amount'=> (isset($request->gateway_amount)) ? $request->gateway_amount : 0  ], 406);
+                $data = $request->all();
+                $PendingOrders = new \App\Models\PendingOrders;
+                $pendingOrders->request_data = serialize($data);
+                $pendingOrders->payment_status = "0";
+                $pendingOrders->save();
+                $id = $pendingOrders->id;
+                $transactionId = rand(1000,9999).$id;
+                App\Models\PendingOrders::where('id','=',$id)->update(['transaction_id'=>$transactionId]);
+                DB::commit();
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => $transactionId]], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
