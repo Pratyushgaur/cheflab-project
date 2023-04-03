@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class PendingOrders extends Model
 {
     use HasFactory;
+    protected $table ='pending_payment_orders';	
 }
