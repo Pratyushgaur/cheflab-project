@@ -25,6 +25,7 @@ use App\Models\VendorMenus;
 use App\Models\VendorOrderTime;
 use App\Models\Vendors;
 use App\Models\RiderAssignOrders;
+use App\Models\PendingPaymentOrders;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -1917,13 +1918,14 @@ class AppController extends Controller
                 if (!Vendors::is_avaliavle($request->vendor_id))
                     return response()->json(['status' => False, 'error' => "Vendor not available",'gateway_amount'=> (isset($request->gateway_amount)) ? $request->gateway_amount : 0  ], 406);
                 $data = $request->all();
-                $PendingOrders = new \App\Models\PendingOrders;
+                
+                $pendingOrders = new PendingPaymentOrders;
                 $pendingOrders->request_data = serialize($data);
                 $pendingOrders->payment_status = "0";
                 $pendingOrders->save();
                 $id = $pendingOrders->id;
                 $transactionId = rand(1000,9999).$id;
-                App\Models\PendingOrders::where('id','=',$id)->update(['transaction_id'=>$transactionId]);
+                PendingPaymentOrders::where('id','=',$id)->update(['transaction_id'=>$transactionId]);
                 DB::commit();
                 return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => $transactionId]], 200);
             } catch (PDOException $e) {
