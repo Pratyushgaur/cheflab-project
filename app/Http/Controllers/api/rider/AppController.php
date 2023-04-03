@@ -293,7 +293,7 @@ class AppController extends Controller
                 if ($user->fcm_token != '') {
                     //sendUserAppNotification('Order Assigned to Delivery Patner',"Your Order has been Assigned to Delivery Boy",$user->fcm_token,array('type'=>2,'data'=>array('data'=>$profile)));
                     $data = orderDetailForUser($request->order_row_id);
-                    \App\Jobs\UserOrderNotification::dispatch('Order Assigned to Delivery Patner', 'Your Order has been Assigned to Delivery Boy', $user->fcm_token, 2, $data);
+                    \App\Jobs\UserOrderNotification::dispatch('Delivery partner assigned', 'Our Delivery Partner is on their way to the restaurant.', $user->fcm_token, 2, $data);
                 }
             } elseif ($request->status == '2') {
                 RiderAssignOrders::where('id', '=', $request->rider_assign_order_id)->update(['cancel_reason' => $request->cancel_reason,'is_rejected' => '1']);
@@ -361,7 +361,7 @@ class AppController extends Controller
                     if ($user->fcm_token != '') {
                         //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
                         $data = orderDetailForUser($request->order_row_id);
-                        \App\Jobs\UserOrderNotification::dispatch('Order Dispatched from Restaurant', 'Your Order has been Dispatched', $user->fcm_token, 4, $data);
+                        \App\Jobs\UserOrderNotification::dispatch('Out for delivery', 'Delivery Partner is on their way. They will reach you shortly.', $user->fcm_token, 4, $data);
                     }
                 }
 
@@ -459,7 +459,7 @@ class AppController extends Controller
                 if ($user->fcm_token != '') {
                     //sendUserAppNotification('Order Delivered Successfully',"Your Order has been Delivered Successfully",$user->fcm_token,array('type'=>5,'data'=>array('data'=>array())));
                     $data = orderDetailForUser($request->order_row_id);
-                    \App\Jobs\UserOrderNotification::dispatch('Order Delivered Successfully', 'Your Order has been Delivered Successfully', $user->fcm_token, 5, $data);
+                    \App\Jobs\UserOrderNotification::dispatch('Order delivered', 'Enjoy your Meal :)', $user->fcm_token, 5, $data);
                 }
 
                 //

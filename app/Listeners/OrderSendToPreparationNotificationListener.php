@@ -38,7 +38,7 @@ class OrderSendToPreparationNotificationListener
         if(!empty($customer)){
             if($customer->fcm_token!=''){
                 $data = orderDetailForUser($event->order->id);
-                sendUserAppNotification('Order Accepted by Restaurant',"Your Order is accepted by restaurant",$customer->fcm_token,array('type'=>1,'data'=>$data));
+                sendUserAppNotification('Order Accepted',"Your food is under preparation now",$customer->fcm_token,array('type'=>1,'data'=>$data));
             }
         }
         $vendor->notify(new OrderSendToPreparationNotification($event->order->id,$customer->name,'Send for preparation',"You have send Order #".$event->order->id." for preparation.",''));

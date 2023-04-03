@@ -289,7 +289,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api'], function
 
     // order
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
-    Route::post('v2-create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
+    Route::post('v2-create-order', [App\Http\Controllers\api\AppController::class, 'create_order_for_gateway']);
     Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
     Route::post('check-vendor-available', [App\Http\Controllers\api\AppController::class, 'checkVendorAvailable']);
     Route::post('re-order', [App\Http\Controllers\api\AppController::class, 'reOrder']);
