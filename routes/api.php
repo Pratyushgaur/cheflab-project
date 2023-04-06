@@ -17,10 +17,12 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
-Route::post('razorpay-success', function (Request $request) {
+// Route::post('razorpay-success', function (Request $request) {
     
-    \App\Models\AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
-});
+//     \App\Models\AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
+// });
+Route::get('razorpay-success',[App\Http\Controllers\api\AppController::class, 'razorpaySuccessRes']);
+Route::get('razorpay-cancel',[App\Http\Controllers\api\AppController::class, 'razorpayCancelRes']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
     Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories'])->name("get.categories");
@@ -87,11 +89,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     // order
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
+    Route::post('v2-create-order', [App\Http\Controllers\api\AppController::class, 'create_order_for_gateway']);
     Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
+    Route::post('get-temporary-order-detail', [App\Http\Controllers\api\AppController::class, 'get_temporary_order_detail']);
     Route::post('check-vendor-available', [App\Http\Controllers\api\AppController::class, 'checkVendorAvailable']);
     Route::post('re-order', [App\Http\Controllers\api\AppController::class, 'reOrder']);
     Route::post('get-order-time-diff', [App\Http\Controllers\api\AppController::class, 'orderTimeDiff']);
     Route::post('get-order-details', [App\Http\Controllers\api\AppController::class, 'orderDetails']);
+    Route::post('make-order-refund', [App\Http\Controllers\api\AppController::class, 'orderRefundToUser']);
 
     //profile
     Route::post('get-user-info', [App\Http\Controllers\api\AppController::class, 'getUserInfo']);
@@ -291,6 +296,7 @@ Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api'], function
     Route::post('create-order', [App\Http\Controllers\api\AppController::class, 'create_order']);
     Route::post('v2-create-order', [App\Http\Controllers\api\AppController::class, 'create_order_for_gateway']);
     Route::post('get-order', [App\Http\Controllers\api\AppController::class, 'get_order']);
+    Route::post('get-temporary-order-detail', [App\Http\Controllers\api\AppController::class, 'get_temporary_order_detail']);
     Route::post('check-vendor-available', [App\Http\Controllers\api\AppController::class, 'checkVendorAvailable']);
     Route::post('re-order', [App\Http\Controllers\api\AppController::class, 'reOrder']);
     Route::post('get-order-time-diff', [App\Http\Controllers\api\AppController::class, 'orderTimeDiff']);

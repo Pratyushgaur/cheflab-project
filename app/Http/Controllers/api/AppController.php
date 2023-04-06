@@ -3795,4 +3795,259 @@ class AppController extends Controller
         }
     }
 
+    public function razorpaySuccessRes(Request $request)
+    {
+        //return isset($request->test->test4->test5->submit->sakshi);
+       
+        try {
+            //&& $request->payload->payment->entity->notes->payment_for == 'order'
+            if($request->entity != 'event' &&  $request->event != 'payment.captured' ){
+            
+                $transactionId =  '19744';//$request->payload->payment->entity->notes->transaction_id;
+                $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
+                if($pendingOrder->exists()){
+                    $requestData = $pendingOrder->first();
+                    $pendingOrder->update(['payment_status'=>'1']);
+                    $data = (object) unserialize($requestData->request_data);
+                    $data->temporary_transaction_id = $transactionId;
+                    $data->gateway_amount = 100;;
+                    $response = $this->create_payment_confirm_order($data);
+                    if($response['status'] ==false){
+                        $this->pendingOrderUpdate(['transaction_id'=>$transactionId],["order_generated"=>"2","order_generate_error"=>$response['error']]);
+                        $user                = User::find($data->user_id);
+                        $user->wallet_amount = $user->wallet_amount + $data->gateway_amount;
+                        $user->save();
+                        //
+                        $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                        $UserWalletTransactions->user_id = $data->user_id;
+                        $UserWalletTransactions->amount = $data->gateway_amount;
+                        $UserWalletTransactions->narration = "Refund";
+                        $UserWalletTransactions->save();
+                    }else{
+                        $this->pendingOrderUpdate(['transaction_id'=>$transactionId],["order_generated"=>"1"]);
+                        $user = User::find($data->user_id);
+                        if($user->fcm_token!=''){
+                            sendUserAppNotification('Order Placed',"Your Order Place Successfully.",$user->fcm_token);
+                        }
+    
+                    }
+                }else{
+                    $webhook_error  =  new \App\Models\WebhookErrors;
+                    $webhook_error->message = 'Invalid Transaction id';
+                    $webhook_error->request_data = serialize($request->all());
+                    $webhook_error->save();
+                    echo 'Invalid Transaction id';
+    
+                }
+            }else{
+                $webhook_error  =  new \App\Models\WebhookErrors;
+                $webhook_error->message = 'Invalid Event';
+                $webhook_error->request_data = serialize($request->all());
+                $webhook_error->save();
+                echo 'Invalid Event';
+    
+    
+            }
+        } catch (Throwable $th) {
+            $webhook_error  =  new \App\Models\WebhookErrors;
+            $webhook_error->message = $th->getMessage();
+            $webhook_error->request_data = serialize($request->all());
+            $webhook_error->save();
+            echo 'Invalid Event';
+        }
+        
+    }
+    public function razorpayCancelRes(Request $request)
+    {
+        //return isset($request->test->test4->test5->submit->sakshi);
+       
+        try {
+            if($request->entity == 'event' &&  $request->event == 'payment.failed' && $request->payload->payment->entity->notes->payment_for == 'order'){
+            
+                $transactionId =  $request->payload->payment->entity->notes->transaction_id;
+                $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
+                if($pendingOrder->exists()){
+                    $requestData = $pendingOrder->first();
+                    $pendingOrder->update(['payment_status'=>'2']);
+                }else{
+                    $webhook_error  =  new \App\Models\WebhookErrors;
+                    $webhook_error->message = 'Invalid Transaction id';
+                    $webhook_error->request_data = serialize($request->all());
+                    $webhook_error->save();
+                    echo 'Invalid Transaction id';
+    
+                }
+            }else{
+                $webhook_error  =  new \App\Models\WebhookErrors;
+                $webhook_error->message = 'Invalid Event';
+                $webhook_error->request_data = serialize($request->all());
+                $webhook_error->save();
+                echo 'Invalid Event';
+    
+    
+            }
+        } catch (Throwable $th) {
+            $webhook_error  =  new \App\Models\WebhookErrors;
+            $webhook_error->message = $th->getMessage();
+            $webhook_error->request_data = serialize($request->all());
+            $webhook_error->save();
+            echo 'Invalid Event';
+        }
+        
+    }
+    public function pendingOrderUpdate($where,$record)
+    {
+        $record = \App\Models\PendingPaymentOrders::where($where)->update($record);        
+    }
+    public function create_payment_confirm_order($request)
+    {
+        try {
+            DB::beginTransaction();
+            //dd(Vendors::is_avaliavle($request->vendor_id));
+            if (!Vendors::is_avaliavle($request->vendor_id)){
+                DB::rollBack();
+                return ['status'=>false,'error' => 'Vendor not available'];
+            }
+                
+                
+            $user = User::where('id', '=', $request->user_id)->first();
+            $orderId = getOrderId();
+            if (!$request->wallet_apply) {
+                if ($user->wallet_amount <= 0) {
+                    DB::rollBack();
+                    return array('status'=>false,'error' => 'No Wallet Balance available') ;
+                }
+                $available = $user->wallet_amount - $request->wallet_cut;
+                User::where('id', '=', $request->user_id)->update(['wallet_amount' => $available]);
+                $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                $UserWalletTransactions->user_id = $request->user_id;
+                $UserWalletTransactions->amount = $request->wallet_cut;
+                $UserWalletTransactions->narration = "Order";
+                $UserWalletTransactions->transaction_type = "0";
+                $UserWalletTransactions->transaction_id = $orderId;
+                
+                $UserWalletTransactions->save();
+                $walletTransaction = $UserWalletTransactions->id;
+            } 
+            //
+
+            //
+            if (is_array($request->payment_string))
+                $request->payment_string = serialize($request->payment_string);
+            $request->order_id = $orderId;
+            $request->landmark_address = $request->reach;
+            $request->deliver_otp = rand(1000, 9999);
+            $request->pickup_otp = rand(1000, 9999);
+            $request->delivery_charge = intval($request->delivery_charge);
+            
+            // $insertData['order_id'] = $orderId;
+            // $insertData['landmark_address'] = $request->reach;
+            // $insertData['deliver_otp'] = rand(1000, 9999);
+            // $insertData['pickup_otp'] = rand(1000, 9999);
+            // $insertData['delivery_charge'] = intval($request->delivery_charge);
+            if(isset($request->gateway_response) && is_array($request->gateway_response)){
+                $request->gateway_response = serialize($request->gateway_response);
+            }
+            
+            $insertData = $request;
+            $Order                    = new Order((array) $insertData);
+            $Order->saveOrFail();
+            $order_id = $Order->id;
+            if($request->coupon_id != '' || $request->coupon_id != '0'){
+                $coupon = \App\Models\Coupon::where('id','=',$request->coupon_id)->first();
+                if(!empty($coupon)){
+                    $couponHistory = new \App\Models\CouponHistory;
+                    $couponHistory->user_Id  = $request->user_id;
+                    $couponHistory->coupon_name  = $coupon->name;
+                    $couponHistory->code  = $coupon->code;
+                    $couponHistory->coupon_id  = $request->coupon_id;
+                    $couponHistory->save();
+                }
+            }
+            foreach ($request->products as $k => $p) {
+                $checkcustomizable = Product_master::where('products.id', '=', $p['product_id'])->select('customizable')->first();
+                $order_products = new OrderProduct;
+                $order_products->order_id = $order_id;
+                $order_products->product_id = $p['product_id'];
+                $order_products->product_name = $p['product_name'];
+                $order_products->product_price = $p['product_price'];
+                $order_products->product_qty = $p['product_qty'];
+                $order_products->save();
+                $orderProductId = $order_products->id;
+                // $order_products = new OrderProduct($p);
+                // $orderProductId =  $Order->products()->save($order_products)->id;
+                if (!empty($checkcustomizable)) {
+                    if ($checkcustomizable->customizable == 'false') {
+                        $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->orderBy('variants.id', 'ASC')->first();
+                        $v = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $p['product_qty']);
+                        $orderProductVariant = new OrderProductVariant($v);
+                        $order_products->order_product_variants()->save($orderProductVariant);
+                    } else {
+                        if (isset($p['variants']))
+                            foreach ($p['variants'] as $k => $v) {
+                                $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->where('id', '=', $v['variant_id'])->first();
+                                $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $v['variant_qty']);
+                                $orderProductVariant = new OrderProductVariant($varint_array);
+                                $order_products->order_product_variants()->save($orderProductVariant);
+                            }
+                    }
+                }
+
+
+                if (isset($p['addons']))
+                    foreach ($p['addons'] as $k => $a) {
+                        $OrderProductAddon = new OrderProductAddon($a);
+                        $order_products->order_product_addons()->save($OrderProductAddon);
+                    }
+            }
+            //AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
+            DB::commit();
+            \App\Models\OrderActionLogs::create(['orderid'=> $Order->id,'action' => 'Order Placed By customer']);
+            \App\Jobs\OrderCreateJob::dispatch($Order,route('restaurant.order.view', $Order->order_id))->delay(now()->addSeconds(30));
+            //return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
+            return ['status'=>true ,'order_id' => $order_id];
+
+        } catch (PDOException $e) {
+            // Woopsy
+            DB::rollBack();
+            return ['status'=>false ,'error' => $e->getMessage()];
+
+        }
+    }
+
+    public function get_temporary_order_detail(Request $request)
+    {
+        $validateUser = Validator::make($request->all(), [
+            'temporary_transaction_id' => 'required|numeric|exists:pending_payment_orders,transaction_id'
+        ]);
+        if ($validateUser->fails()) {
+            $error = $validateUser->errors();
+            return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+        }
+        try {
+            $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$request->temporary_transaction_id)->firstOrFail();
+            if($pendingOrder->payment_status == '1'){
+                if($pendingOrder->order_generated == '0'){
+                    return response()->json(['status' => false, 'error' =>'Order Pending'], 403);
+                }
+                if($pendingOrder->order_generated == '1'){
+                    $orderid = \App\Models\Orders::where('temporary_transaction_id','=',$pendingOrder->transaction_id)->select('id')->first();
+                    $order = orderDetailForUser($orderid->id);
+                    return response()->json(['status' => true, 'response' =>$order], 200);
+                }elseif($pendingOrder->order_generated == '2'){
+                    return response()->json(['status' => false, 'error' => $pendingOrder->order_generate_error], 401);
+                }
+            }else{
+                return response()->json(['status' => false, 'error' => $pendingOrder->cancel_reason], 401);
+            }
+
+        } catch (PDOException $e) {
+           
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
 }

@@ -61,6 +61,7 @@
                                                     data-prefill.name="{{$blog->name}}"
                                                     data-prefill.email="{{\Auth::guard('vendor')->user()->email}}"
                                                     data-prefill.contact="{{\Auth::guard('vendor')->user()->mobile}}"
+                                                    data-notes.payment_for="banner_promotion"
                                                     data-theme.color="#F05151">
                                             </script>
                                             <input type="hidden" name="_token" value="{!!csrf_token()!!}">
