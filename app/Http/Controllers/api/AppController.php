@@ -3842,7 +3842,7 @@ class AppController extends Controller
             }else{
                 $webhook_error  =  new \App\Models\WebhookErrors;
                 $webhook_error->message = 'Invalid Event';
-                $webhook_error->request_data = serialize($request->all());
+                $webhook_error->request_data = json_encode($request->all());
                 $webhook_error->save();
                 echo 'Invalid Event';
     
