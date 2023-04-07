@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Route;
     
 //     \App\Models\AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
 // });
-Route::get('razorpay-success',[App\Http\Controllers\api\AppController::class, 'razorpaySuccessRes']);
-Route::get('razorpay-cancel',[App\Http\Controllers\api\AppController::class, 'razorpayCancelRes']);
+Route::post('razorpay-success',[App\Http\Controllers\api\AppController::class, 'razorpaySuccessRes']);
+Route::post('razorpay-cancel',[App\Http\Controllers\api\AppController::class, 'razorpayCancelRes']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // master
     Route::post('getCategories', [App\Http\Controllers\api\AppMasterController::class, 'getCategories'])->name("get.categories");
