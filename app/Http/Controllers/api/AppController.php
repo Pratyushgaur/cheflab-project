@@ -3851,7 +3851,7 @@ class AppController extends Controller
         } catch (Throwable $th) {
             $webhook_error  =  new \App\Models\WebhookErrors;
             $webhook_error->message = $th->getMessage();
-            $webhook_error->request_data = serialize($request->all());
+            $webhook_error->request_data = json_encode($request->all());
             $webhook_error->save();
             echo 'Invalid Event';
         }
