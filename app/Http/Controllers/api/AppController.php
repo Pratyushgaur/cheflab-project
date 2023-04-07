@@ -4032,12 +4032,14 @@ class AppController extends Controller
                 }
                 if($pendingOrder->order_generated == '1'){
                     $orderid = \App\Models\Orders::where('temporary_transaction_id','=',$pendingOrder->transaction_id)->select('id')->first();
-                    $order = orderDetailForUser($orderid->id);
-                    return response()->json(['status' => true, 'response' =>$order], 200);
+                    //$order = orderDetailForUser($orderid->id);
+                    return response()->json(['status' => true, 'response' =>["order_id" => $orderid->id]], 200);
                 }elseif($pendingOrder->order_generated == '2'){
-                    return response()->json(['status' => false, 'error' => $pendingOrder->order_generate_error], 401);
+                    return response()->json(['status' => false, 'error' => $pendingOrder->order_generate_error], 405);
                 }
-            }else{
+            }elseif($pendingOrder->payment_status == '0'){
+                return response()->json(['status' => false, 'error' =>'Order Is Pending in our system Wait for Confirmation'], 402);
+            }elseif($pendingOrder->payment_status == '2'){
                 return response()->json(['status' => false, 'error' => $pendingOrder->cancel_reason], 401);
             }
 
