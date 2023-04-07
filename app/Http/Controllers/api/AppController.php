@@ -3803,7 +3803,7 @@ class AppController extends Controller
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request->payload->payment->entity->notes->payment_for == 'order' ){
             
-                $transactionId =  '19744';//$request->payload->payment->entity->notes->transaction_id;
+                $transactionId =  $request->payload->payment->entity->notes->transaction_id;
                 $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
