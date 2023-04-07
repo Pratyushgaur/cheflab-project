@@ -3797,14 +3797,11 @@ class AppController extends Controller
 
     public function razorpaySuccessRes(Request $request)
     {
-        //return isset($request->test->test4->test5->submit->sakshi);
-       
         try {
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
-            if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request->payload->payment->entity->notes->payment_for == 'order' ){
-            
-                $transactionId =  $request->payload->payment->entity->notes->transaction_id;
-                $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
+            if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['payment_for'] == 'order' ){
+                 $transactionId =  $request['payload']['payment']['entity']['notes']['transaction_id'];
+                 $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
                     $pendingOrder->update(['payment_status'=>'1']);
@@ -3862,9 +3859,8 @@ class AppController extends Controller
         //return isset($request->test->test4->test5->submit->sakshi);
        
         try {
-            if($request->entity == 'event' &&  $request->event == 'payment.failed' && $request->payload->payment->entity->notes->payment_for == 'order'){
-            
-                $transactionId =  $request->payload->payment->entity->notes->transaction_id;
+            if($request->entity == 'event' &&  $request->event == 'payment.failed' && $request['payload']['payment']['entity']['notes']['payment_for'] == 'order'){
+                $transactionId =  $request['payload']['payment']['entity']['notes']['transaction_id'];
                 $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
