@@ -3807,19 +3807,21 @@ class AppController extends Controller
                     $pendingOrder->update(['payment_status'=>'1']);
                     $data = (object) unserialize($requestData->request_data);
                     $data->temporary_transaction_id = $transactionId;
-                    $data->gateway_amount = 100;;
                     $response = $this->create_payment_confirm_order($data);
                     if($response['status'] ==false){
                         $this->pendingOrderUpdate(['transaction_id'=>$transactionId],["order_generated"=>"2","order_generate_error"=>$response['error']]);
-                        $user                = User::find($data->user_id);
-                        $user->wallet_amount = $user->wallet_amount + $data->gateway_amount;
-                        $user->save();
-                        //
-                        $UserWalletTransactions = new \App\Models\UserWalletTransactions;
-                        $UserWalletTransactions->user_id = $data->user_id;
-                        $UserWalletTransactions->amount = $data->gateway_amount;
-                        $UserWalletTransactions->narration = "Refund";
-                        $UserWalletTransactions->save();
+                        if($data->gateway_amount > 0){  
+                            $user                = User::find($data->user_id);
+                            $user->wallet_amount = $user->wallet_amount + $data->gateway_amount;
+                            $user->save();
+                            //
+                            $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                            $UserWalletTransactions->user_id = $data->user_id;
+                            $UserWalletTransactions->amount = $data->gateway_amount;
+                            $UserWalletTransactions->narration = "Refund";
+                            $UserWalletTransactions->save();
+                        }
+                        
                     }else{
                         $this->pendingOrderUpdate(['transaction_id'=>$transactionId],["order_generated"=>"1"]);
                         $user = User::find($data->user_id);
@@ -3908,7 +3910,7 @@ class AppController extends Controller
                 
             $user = User::where('id', '=', $request->user_id)->first();
             $orderId = getOrderId();
-            if (!$request->wallet_apply) {
+            if ($request->wallet_apply) {
                 if ($user->wallet_amount <= 0) {
                     DB::rollBack();
                     return array('status'=>false,'error' => 'No Wallet Balance available') ;
