@@ -1922,6 +1922,7 @@ class AppController extends Controller
                 $pendingOrders = new PendingPaymentOrders;
                 $pendingOrders->request_data = serialize($data);
                 $pendingOrders->payment_status = "0";
+                $pendingOrders->cancel_reason = "Checking";
                 $pendingOrders->save();
                 $id = $pendingOrders->id;
                 $transactionId = rand(1000,9999).$id;
