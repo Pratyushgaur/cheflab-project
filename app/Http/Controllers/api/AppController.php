@@ -1922,7 +1922,7 @@ class AppController extends Controller
                 $pendingOrders = new PendingPaymentOrders;
                 $pendingOrders->request_data = serialize($data);
                 $pendingOrders->payment_status = "0";
-                $pendingOrders->cancel_reason = "Checking";
+                //$pendingOrders->cancel_reason = "Checking";
                 $pendingOrders->save();
                 $id = $pendingOrders->id;
                 $transactionId = rand(1000,9999).$id;
@@ -3798,6 +3798,12 @@ class AppController extends Controller
 
     public function razorpaySuccessRes(Request $request)
     {
+        $webhook_error  =  new \App\Models\WebhookErrors;
+        $webhook_error->message = 'Invalid Event';
+        $webhook_error->request_data = json_encode($request->all());
+        $webhook_error->save();
+        echo 'Invalid Event';
+        die;
         try {
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['payment_for'] == 'order' ){
