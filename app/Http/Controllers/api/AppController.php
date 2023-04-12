@@ -1913,6 +1913,88 @@ class AppController extends Controller
             }
             global $cart_id;
             try {
+                // DB::beginTransaction();
+
+                // if (!Vendors::is_avaliavle($request->vendor_id))
+                //     return response()->json(['status' => False, 'error' => "Vendor not available",'gateway_amount'=> (isset($request->gateway_amount)) ? $request->gateway_amount : 0  ], 406);
+                // $data = $request->all();
+                
+                // $pendingOrders = new PendingPaymentOrders;
+                // $pendingOrders->request_data = serialize($data);
+                // $pendingOrders->payment_status = "0";
+                // //$pendingOrders->cancel_reason = "Checking";
+                // $pendingOrders->save();
+                // $id = $pendingOrders->id;
+                // $transactionId = rand(1000,9999).$id;
+                // PendingPaymentOrders::where('id','=',$id)->update(['transaction_id'=>$transactionId]);
+                // DB::commit();
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => '0']], 200);
+            } catch (PDOException $e) {
+                // Woopsy
+                DB::rollBack();
+                return response()->json(['status' => false, 'error' => $e->getMessage()], 500);
+            }
+        } catch (Throwable $th) {
+            return response()->json([
+                'status'      => False,
+                'error'       => $th->getMessage(),
+                'error_trace' => $th->getTrace()
+            ], 500);
+        }
+    }
+    public function create_order_for_gateway2(Request $request)
+    {
+        // echo "hello";die;
+        //        date_default_timezone_set(config('app.timezone'));
+        // return '#'.str_pad(1 + 100, 8, "0", STR_PAD_LEFT);
+        
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id'          => 'required|numeric',
+                    'vendor_id'        => 'required|numeric',
+                    'customer_name'    => 'required|string',
+                    'delivery_address' => 'required|string',
+                    'city'             => 'required|string',
+                    'pincode'          => 'required|string',
+                    'lat'              => 'required|string',
+                    'long'             => 'required|string',
+
+                    'total_amount'    => 'required|numeric',
+                    'gross_amount'    => 'required|numeric',
+                    'net_amount'      => 'required|numeric',
+                    'wallet_apply'    => 'required',
+                    'discount_amount' => 'required|numeric',
+                    'coupon_id'       => 'nullable|numeric',
+                    'payment_type'    => 'nullable|string',
+                    'payment_status'  => 'nullable|string',
+                    'transaction_id'  => 'nullable|string',
+                    'payment_string'  => 'nullable|string',
+                    // 'send_cutlery'    => 'required',
+
+                    'products.*.product_id'   => 'required|numeric',
+                    'products.*.product_qty'  => 'required|numeric',
+                    'products.*.product_name' => 'required|string',
+
+                    'products.*.variants.*.variant_id'    => 'numeric|nullable',
+                    'products.*.variants.*.variant_qty'   => 'numeric|nullable',
+                    'products.*.variants.*.variant_price' => 'numeric|nullable',
+                    'products.*.variants.*.variant_name'  => 'string|nullable',
+
+                    'products.*.addons.*.addon_id'    => 'numeric|nullable',
+                    'products.*.addons.*.addon_qty'   => 'numeric|nullable',
+                    'products.*.addons.*.addon_price' => 'numeric|nullable',
+                    'products.*.addons.*.addon_name'  => 'string|nullable',
+                ]
+
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+            }
+            global $cart_id;
+            try {
                 DB::beginTransaction();
 
                 if (!Vendors::is_avaliavle($request->vendor_id))
@@ -1928,7 +2010,7 @@ class AppController extends Controller
                 $transactionId = rand(1000,9999).$id;
                 PendingPaymentOrders::where('id','=',$id)->update(['transaction_id'=>$transactionId]);
                 DB::commit();
-                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => $transactionId]], 200);
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => '0']], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
@@ -3806,8 +3888,8 @@ class AppController extends Controller
         die;
         try {
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
-            if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['payment_for'] == 'order' ){
-                 $transactionId =  $request['payload']['payment']['entity']['notes']['transaction_id'];
+            if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
+                 $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
                  $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
