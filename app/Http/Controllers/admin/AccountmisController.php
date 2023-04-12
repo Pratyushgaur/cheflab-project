@@ -122,9 +122,13 @@ class AccountmisController extends Controller
 
                 ->addColumn('code', function ($data) {
                     
-                    if($data->coupon_id != '0' ){
+                    if($data->coupon_id != '0' && $data->coupon_id != '' ){
                         $couponCode = Coupon::where('id', $data->coupon_id)->first();
-                        $code = $couponCode->code;
+                        if(!empty($couponCode)){
+                            $code = $couponCode->code;
+                        }else{
+                            $code = '-';    
+                        }
                     }else{
                         $code = '-';
                     }
