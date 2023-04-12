@@ -2010,7 +2010,7 @@ class AppController extends Controller
                 $transactionId = rand(1000,9999).$id;
                 PendingPaymentOrders::where('id','=',$id)->update(['transaction_id'=>$transactionId]);
                 DB::commit();
-                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => '0']], 200);
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["transactionId" => $transactionId]], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
@@ -3880,12 +3880,6 @@ class AppController extends Controller
 
     public function razorpaySuccessRes(Request $request)
     {
-        $webhook_error  =  new \App\Models\WebhookErrors;
-        $webhook_error->message = 'Invalid Event';
-        $webhook_error->request_data = json_encode($request->all());
-        $webhook_error->save();
-        echo 'Invalid Event';
-        die;
         try {
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
@@ -3950,8 +3944,8 @@ class AppController extends Controller
         //return isset($request->test->test4->test5->submit->sakshi);
        
         try {
-            if($request->entity == 'event' &&  $request->event == 'payment.failed' && $request['payload']['payment']['entity']['notes']['payment_for'] == 'order'){
-                $transactionId =  $request['payload']['payment']['entity']['notes']['transaction_id'];
+            if($request->entity == 'event' &&  $request->event == 'payment.failed' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order'){
+                $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
                 $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
