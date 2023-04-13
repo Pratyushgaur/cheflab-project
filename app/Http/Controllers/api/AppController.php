@@ -2002,7 +2002,7 @@ class AppController extends Controller
                 $data = $request->all();
                 
                 $pendingOrders = new PendingPaymentOrders;
-                $pendingOrders->request_data = serialize($data);
+                $pendingOrders->request_data = json_encode($data);
                 $pendingOrders->payment_status = "0";
                 //$pendingOrders->cancel_reason = "Checking";
                 $pendingOrders->save();
@@ -3888,6 +3888,8 @@ class AppController extends Controller
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
                     $pendingOrder->update(['payment_status'=>'1']);
+                    echo 'done';
+                    die;
                     $data = (object) unserialize($requestData->request_data);
                     $data->temporary_transaction_id = $transactionId;
                     $response = $this->create_payment_confirm_order($data);
