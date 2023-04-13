@@ -173,7 +173,9 @@ var x
           { extend: 'excel', className: 'btn-info' }
         ],
         processing: true,
+        paging: false,
         serverSide: true,
+        lengthChange: true,
         // buttons: true,
         ajax:{
             url:"{{ route('admin.account.order.data') }}",
