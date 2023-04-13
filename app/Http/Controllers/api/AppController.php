@@ -3885,12 +3885,12 @@ class AppController extends Controller
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
                  $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
                  $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
+                 $pendingOrder->exists();
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
                     $pendingOrder->update(['payment_status'=>'1']);
-                    echo 'done';
-                    die;
-                    $data = (object) unserialize($requestData->request_data);
+                    
+                    $data = json_decode($requestData->request_data);
                     $data->temporary_transaction_id = $transactionId;
                     $response = $this->create_payment_confirm_order($data);
                     if($response['status'] ==false){
@@ -3918,7 +3918,7 @@ class AppController extends Controller
                 }else{
                     $webhook_error  =  new \App\Models\WebhookErrors;
                     $webhook_error->message = 'Invalid Transaction id';
-                    $webhook_error->request_data = serialize($request->all());
+                    $webhook_error->request_data = json_encode($request->all());
                     $webhook_error->save();
                     echo 'Invalid Transaction id';
     
@@ -3937,7 +3937,7 @@ class AppController extends Controller
             $webhook_error->message = $th->getMessage();
             $webhook_error->request_data = json_encode($request->all());
             $webhook_error->save();
-            echo 'Invalid Event';
+            echo $th->getMessage();
         }
         
     }
@@ -3955,7 +3955,7 @@ class AppController extends Controller
                 }else{
                     $webhook_error  =  new \App\Models\WebhookErrors;
                     $webhook_error->message = 'Invalid Transaction id';
-                    $webhook_error->request_data = serialize($request->all());
+                    $webhook_error->request_data = json_encode($request->all());
                     $webhook_error->save();
                     echo 'Invalid Transaction id';
     
@@ -3963,7 +3963,7 @@ class AppController extends Controller
             }else{
                 $webhook_error  =  new \App\Models\WebhookErrors;
                 $webhook_error->message = 'Invalid Event';
-                $webhook_error->request_data = serialize($request->all());
+                $webhook_error->request_data = json_encode($request->all());
                 $webhook_error->save();
                 echo 'Invalid Event';
     
@@ -3972,7 +3972,7 @@ class AppController extends Controller
         } catch (Throwable $th) {
             $webhook_error  =  new \App\Models\WebhookErrors;
             $webhook_error->message = $th->getMessage();
-            $webhook_error->request_data = serialize($request->all());
+            $webhook_error->request_data = json_encode($request->all());
             $webhook_error->save();
             echo 'Invalid Event';
         }
@@ -4015,14 +4015,16 @@ class AppController extends Controller
             //
 
             //
-            if (is_array($request->payment_string))
+            
+            if (isset($request->payment_string) && is_array($request->payment_string))
                 $request->payment_string = serialize($request->payment_string);
+            
+                
             $request->order_id = $orderId;
             $request->landmark_address = $request->reach;
             $request->deliver_otp = rand(1000, 9999);
             $request->pickup_otp = rand(1000, 9999);
             $request->delivery_charge = intval($request->delivery_charge);
-            
             // $insertData['order_id'] = $orderId;
             // $insertData['landmark_address'] = $request->reach;
             // $insertData['deliver_otp'] = rand(1000, 9999);
@@ -4031,7 +4033,6 @@ class AppController extends Controller
             if(isset($request->gateway_response) && is_array($request->gateway_response)){
                 $request->gateway_response = serialize($request->gateway_response);
             }
-            
             $insertData = $request;
             $Order                    = new Order((array) $insertData);
             $Order->saveOrFail();
@@ -4048,6 +4049,7 @@ class AppController extends Controller
                 }
             }
             foreach ($request->products as $k => $p) {
+                $p = (array) $p;
                 $checkcustomizable = Product_master::where('products.id', '=', $p['product_id'])->select('customizable')->first();
                 $order_products = new OrderProduct;
                 $order_products->order_id = $order_id;
@@ -4060,7 +4062,7 @@ class AppController extends Controller
                 // $order_products = new OrderProduct($p);
                 // $orderProductId =  $Order->products()->save($order_products)->id;
                 if (!empty($checkcustomizable)) {
-                    if ($checkcustomizable->customizable == 'false') {
+                    if ($checkcustomizable['customizable'] == 'false') {
                         $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->orderBy('variants.id', 'ASC')->first();
                         $v = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $p['product_qty']);
                         $orderProductVariant = new OrderProductVariant($v);
@@ -4068,8 +4070,8 @@ class AppController extends Controller
                     } else {
                         if (isset($p['variants']))
                             foreach ($p['variants'] as $k => $v) {
-                                $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->where('id', '=', $v['variant_id'])->first();
-                                $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $v['variant_qty']);
+                                $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->where('id', '=', $v->variant_id)->first();
+                                $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $v->variant_qty);
                                 $orderProductVariant = new OrderProductVariant($varint_array);
                                 $order_products->order_product_variants()->save($orderProductVariant);
                             }
@@ -4083,6 +4085,7 @@ class AppController extends Controller
                         $order_products->order_product_addons()->save($OrderProductAddon);
                     }
             }
+            
             //AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
             DB::commit();
             \App\Models\OrderActionLogs::create(['orderid'=> $Order->id,'action' => 'Order Placed By customer']);
