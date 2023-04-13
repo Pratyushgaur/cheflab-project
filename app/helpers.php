@@ -2209,7 +2209,9 @@ function getVendorByIdForApp($lat=null,$lng=null,$vendorId,$current_user_id)
     );
     
     $vendors =  $vendors->first();
-
+    if($vendors->is_online == '0'){
+        $vendors->isClosed = true;
+    }
     $banners = json_decode($vendors->banner_image);
     if (is_array($banners))
         $urlbanners = array_map(function ($banner) {
