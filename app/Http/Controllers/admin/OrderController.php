@@ -293,6 +293,54 @@ class OrderController extends Controller
 
         return $html;
     }
+    function autoRefreshFail_order_generate(){
+        $order = \App\Models\PendingPaymentOrders::where('payment_status','!=','2')->where('order_generated',"!=",'1');
+        $order = $order->orderBy("id","DESC");
+        $order = $order->get()->toArray();
+        
+        $trhtml = '';
+        $i=1;
+        foreach($order as $k =>$v){ 
+            $data = json_decode($v['request_data']);
+            $orderGenButton = '';
+            if($v['payment_status'] == '0'){
+                $payment_status =  '<button class="btn btn-xs btn-primary">Pending</button>';
+            }elseif($v['payment_status'] == '1'){
+                $payment_status =  '<button class="btn btn-xs btn-success">Success</button>';
+            }
+            if($v['order_generated'] == '0'){
+                $order_generated =  '<button class="btn btn-xs btn-primary">Pending</button>';
+            }elseif($v['order_generated'] == '2'){
+                $order_generated =  '<button class="btn btn-xs btn-danger">Failed</button>';
+            }
+            if($v['payment_status'] == '0' && $v['order_generated'] == '0' || $v['payment_status'] == '1' && $v['order_generated'] == '0'){
+                $orderGenButton = '<a href="#" class="btn btn-xs btn-success generateOrder" >Generate Order</a>';
+            }
+            $trhtml.='<tr><td>'.$i.'</td><td><a>'.$data->customer_name.'</a></td><td>'.$v['transaction_id'].'</td><td>'.$payment_status.'</td><td>'.$order_generated.'</td><td>'.$v['order_generate_error'].'</td><td>'.$orderGenButton.'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td></tr>';
+            $i++;
+        }
+        $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
+                    <thead>
+                        <tr role="row">
+                            <th class="text-center">Sr No.</th>
+                            <th> User </th>
+                            <th> Transaction id </th>
+                            <th>Payment Status</th>
+                            <th>Order Generate</th>
+                            <th>Order Generate Error</th>
+                            <th>Generate</th>
+                            <th>Order Date</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                            '.$trhtml.'
+                    </tbody>
+
+                </table>';
+
+        return $html;
+    }
     function assignToRider(Request $request){
         
         try {
@@ -340,7 +388,7 @@ class OrderController extends Controller
         
         if ($request->ajax()) {
         
-           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','orders.order_id as order_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','orders.pdf_url','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type','vendors.mobile as vendor_mobile','vendors.alt_mobile','deliver_boy.name as delivery_boy_name');
+           $data = Orders::join('vendors','orders.vendor_id','=','vendors.id')->join('users','orders.user_id','=','users.id')->select('orders.id','orders.order_id as order_id','vendor_id','orders.customer_name','users.mobile_number as mobile','orders.order_status','orders.pdf_url','net_amount','payment_type','orders.created_at', 'vendors.name as vendor_name','vendors.vendor_type','vendors.mobile as vendor_mobile','vendors.alt_mobile','deliver_boy.name as delivery_boy_name');
            $data = $data->leftJoin('rider_assign_orders', function ($join) {
             $join->on('orders.id', '=', 'rider_assign_orders.order_id')
                 ->whereIn('rider_assign_orders.action', ['1','4','3']);
@@ -370,7 +418,8 @@ class OrderController extends Controller
                     }else{
                         $btn .= '';
                     }
-                    
+                    $btn .= '<a href="#" onClick="loginVendor(`' . $data->vendor_id. '`)" title="Vendor Login"><i class="fa fa-key"></i></a>';
+                                        
                     
                     return $btn;
                 })

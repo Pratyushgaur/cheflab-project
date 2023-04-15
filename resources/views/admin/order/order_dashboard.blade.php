@@ -123,6 +123,8 @@
 <?php $url = route("admin.order.dashboard.out_of_delivery"); ?>
 @elseif($active=='no_rider_assign')
 <?php $url = route("admin.order.dashboard.no_rider_assign"); ?>
+@elseif($active=='fail_order_generate')
+<?php $url = route("admin.order.dashboard.fail_order_generate"); ?>
 
   
 @endif
@@ -169,6 +171,11 @@
           }
         }
       }); 
+    });
+
+    $(document).on('click','.generateOrder',function(){
+      var id  =$(this).attr('data-id');
+      
     })
  })
 

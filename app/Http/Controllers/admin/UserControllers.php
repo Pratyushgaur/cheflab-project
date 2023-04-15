@@ -142,15 +142,15 @@ class UserControllers extends Controller
                                 <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item text-info" href="' . route('admin.vendor.view', Crypt::encryptString($data->id)) . '"> <i class="fa fa-eye"></i> View More</a>
-                                        <a href="javascript:void(0);" data-id="' . $data->id. '" class="btn btn-danger btn-xs delete-vendor-records" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" >Delete</a> ';
-                    if($data->vendor_type == 'restaurant'){
-                        $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>';
-                    }elseif($data->vendor_type == 'chef'){
-                        $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.editchef', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit Chef</a><a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
-                    }
-                    $btn .= '<button class="dropdown-item text-info" onClick="loginVendor(`' . $data->id. '`)"><i class="fas fa-edit"></i> Login</a>';
+                                        <a href="javascript:void(0);" data-id="' . $data->id. '" class=" delete-vendor-records" data-alert-message="Are You Sure to Delete this Vendor" flash="City"  data-action-url="' . route('admin.vendors.ajax.delete') . '" title="Delete" ><i class="fas fa-trash"></i> Delete</a> ';
+                                        if($data->vendor_type == 'restaurant'){
+                                            $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.edit', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit</a>';
+                                        }elseif($data->vendor_type == 'chef'){
+                                            $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.editchef', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit Chef</a><a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
+                                        }
+                                        $btn .= '<button class="dropdown-item text-info" onClick="loginVendor(`' . $data->id. '`)"><i class="fas fa-key"></i> Login</a>';
 
-                    $btn .= '</div>
+                                        $btn .= '</div>
                                 </li>
                             </ul>';
                     //$btn = '<a href="'. url("/edit-city") ."/". Crypt::encryptString($data->id).'" class="edit btn btn-warning btn-xs"><i class="fa fa-pencil"></i></a>  <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" flash="City" table="' . Crypt::encryptString('mangao_city_masters') . '" redirect-url="' . Crypt::encryptString('admin-dashboard') . '" title="Delete" ><i class="fa fa-trash"></i></a><a href="'.route('admin.vendor.product.create',Crypt::encryptString($data->id)).'" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-info btn-xs"    title="Add Product" >Add Product</a> ';
