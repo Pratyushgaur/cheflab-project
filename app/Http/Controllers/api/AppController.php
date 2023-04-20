@@ -1787,7 +1787,7 @@ class AppController extends Controller
                 $insertData['landmark_address'] = $request->reach;
                 $insertData['deliver_otp'] = rand(1000, 9999);
                 $insertData['pickup_otp'] = rand(1000, 9999);
-                $insertData['delivery_charge'] = intval($request->delivery_charge);
+                $insertData['delivery_charge'] = $request->delivery_charge;
                 if(isset($request->gateway_response) && is_array($request->gateway_response)){
                     $insertData['gateway_response'] = serialize($request->gateway_response);
                 }
