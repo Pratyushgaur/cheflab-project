@@ -65,7 +65,7 @@ class CreateOrders extends Migration
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
-            $table->boolean('delivery_charge')->default(0);
+            $table->integer('delivery_charge')->default(0);
         });
     }
 

@@ -36,31 +36,12 @@ class AccountmisController extends Controller
         if ($request->ajax()) {
             
              
-            $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'orders.created_at', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'orders.delivery_charge', 'orders.total_amount', 'orders.net_amount', 'vendors.name as vendor_name', 'vendors.commission', 'users.name', 'rider_assign_orders.earning');
-            
-            if ($request->status != '') {
-                $data = $data->where('payment_status', '=', $request->status);
-            }
-            if ($request->role != '') {
-                $data = $data->where('vendors.vendor_type', '=', $request->role);
-            }
-            if ($request->vendor != '') {
-                $data = $data->where('orders.vendor_id', '=', $request->vendor);
+            $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'orders.created_at', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'orders.delivery_charge', 'orders.total_amount', 'orders.net_amount', 'vendors.name as vendor_name', 'vendors.commission', 'users.name', 'rider_assign_orders.earning','accepted_driver_id');
+            $data = $data->where('orders.order_status','=','completed');
+            if ($request->from != '' &&  $request->todate != '') {
+                $data = $data->whereBetween('orders.created_at', [$request->from,$request->todate]);
             }
             $data = $data->where('rider_assign_orders.action', '!=', '2');
-
-            $dateSedule = $request->datePicker;
-
-            if (isset($dateSedule)) {
-                $packagetime = explode('/', $dateSedule);
-                $start_time = $packagetime[0] . ' 00:00:00';
-                $end_time = $packagetime[1] . ' 23:59:59';
-            }
-
-            if (!empty($start_time) && !empty($end_time)) {
-                $data = $data->whereBetween('orders.created_at', [$start_time, $end_time]);
-            }
-
 
             $data = $data->get(); 
             return Datatables::of($data)
@@ -135,23 +116,61 @@ class AccountmisController extends Controller
                     return $code;
                 })
 
-                ->addColumn('discount_amount', function ($data) {
+                // ->addColumn('discount_amount', function ($data) {
                     
-                    if($data->coupon_id != '0' && $data->coupon_id != ''){
-                        $couponCode = Coupon::where('id', $data->coupon_id)->first();
-                        if(!empty($couponCode)){
-                            $discount_amount = $couponCode->discount;
+                //     if($data->coupon_id != '0' && $data->coupon_id != ''){
+                //         $couponCode = Coupon::where('id', $data->coupon_id)->first();
+                //         if(!empty($couponCode)){
+                //             $discount_amount = $couponCode->discount;
+                //         }else{
+                //             $discount_amount = '0';
+                //         }
+                //     }else{
+                //         $discount_amount = '0';
+                //     }
+                //     return $discount_amount;
+                // })
+                
+                ->addColumn('rider_name', function ($data) {
+                    
+                    if ($data->accepted_driver_id != null) {
+                        $rider = \App\Models\Deliver_boy::where('id','=',$data->accepted_driver_id)->select('name')->first();
+                        if(!empty($rider)){
+                            $rider = $rider->name;
                         }else{
-                            $discount_amount = '-';
+                            $rider = '';
                         }
-                    }else{
-                        $discount_amount = '-';
+                        
+                    } else {
+                        $rider = '';
                     }
-                    return $discount_amount;
+                    return $rider;
+                    
+                })
+                ->addColumn('net_order_value', function ($data) {
+                    return $data->total_amount-$data->discount_amount;
+                })
+                ->addColumn('gst_per', function ($data) {
+                     $net =  $data->total_amount-$data->discount_amount;
+                    $gst_per = $data->tex/$net*100;
+                    return round($gst_per);
+                })
+                ->addColumn('order_value_inc_tax', function ($data) {
+                    $netorder = $data->total_amount-$data->discount_amount;
+                    return $netorder+$data->tex;
+                })
+                ->addColumn('exclusive_delivery_charge', function ($data) {
+                    $tx = $data->delivery_charge*18/100;
+                    return round($data->delivery_charge-$tx,2);
+                })
+                ->addColumn('exclusive_platform_charge', function ($data) {
+                    $tx = $data->platform_charges*18/100;
+                    return round($data->platform_charges-$tx,2);
                 })
 
 
-                ->rawColumns(['wallet_cut', 'admin_erning', 'code','admin_earning_vendor','date','admin_earning_rider','rider_earning', 'action-js'])
+
+                ->rawColumns(['wallet_cut', 'admin_erning', 'code','admin_earning_vendor','date','admin_earning_rider','rider_earning', 'action-js' ,'rider_name','net_order_value','order_value_inc_tax','exclusive_delivery_charge','exclusive_platform_charge'])
 
                  
 

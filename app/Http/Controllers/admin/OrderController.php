@@ -15,6 +15,7 @@ use App\Events\OrderCancelDriverEmitEvent;
 use DataTables;
 use Config;
 use Auth;
+use Validator;
 class OrderController extends Controller
 {
     public function index()
@@ -314,7 +315,7 @@ class OrderController extends Controller
                 $order_generated =  '<button class="btn btn-xs btn-danger">Failed</button>';
             }
             if($v['payment_status'] == '0' && $v['order_generated'] == '0' || $v['payment_status'] == '1' && $v['order_generated'] == '0'){
-                $orderGenButton = '<a href="#" class="btn btn-xs btn-success generateOrder" >Generate Order</a>';
+                $orderGenButton = '<a href="#" class="btn btn-xs btn-success generateOrder" data-id="'.$v['id'].'">Generate Order</a>';
             }
             $trhtml.='<tr><td>'.$i.'</td><td><a>'.$data->customer_name.'</a></td><td>'.$v['transaction_id'].'</td><td>'.$payment_status.'</td><td>'.$order_generated.'</td><td>'.$v['order_generate_error'].'</td><td>'.$orderGenButton.'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td></tr>';
             $i++;
@@ -382,6 +383,45 @@ class OrderController extends Controller
         updateDriverLatLngFromFcm();
         $drivers = get_delivery_boy_near_me($request->lat,$request->lng,$request->orderid );
         return $drivers;
+    }
+    public function generateSuccessPaymentOrder(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'id' => 'required|numeric',
+                ]
+
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return ['status' => false, 'error' => $validateUser->errors()->all()];
+            }
+            $pendingOrder = \App\Models\PendingPaymentOrders::where('id','=',$request->id)->firstOrFail();
+            $check = \App\Models\Orders::where('temporary_transaction_id','=',$pendingOrder->transaction_id)->exists();
+            if($check){
+                return ['status' => false ,'error' =>'Order Already Generated'];
+            }
+            $data = json_decode($pendingOrder->request_data);
+            $data->temporary_transaction_id = $pendingOrder->transaction_id;
+            $res = app('App\Http\Controllers\api\AppController')->create_payment_confirm_order($data);
+            if($res['status'] ==false){
+                return ['status' => false ,'error' =>$res['error']];
+            }else{
+                \App\Models\PendingPaymentOrders::where('id','=',$request->id)->update(["order_generated"=>"1"]);
+                $user = User::find($data->user_id);
+                if($user->fcm_token!=''){
+                    sendUserAppNotification('Order Placed',"Your Order Place Successfully.",$user->fcm_token,array('type'=>'Payment_confirm','data'=>array('order_id'=>$res['order_id'])));
+                }
+                return ['status' => true ];
+
+            }
+
+            
+        } catch (\Throwable $th) {
+            return ['status' => false ,'error' =>$th->getMessage()];
+        }
     }
     public function get_data_table_of_order(Request $request)
     {

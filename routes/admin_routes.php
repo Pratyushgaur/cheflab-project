@@ -193,7 +193,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('orders/dashboard/fail_order_generate/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshFail_order_generate'])->name('admin.order.dashboard.fail_order_generate');
     Route::post('orders/dashboard/nearbyRider/data', [App\Http\Controllers\admin\OrderController::class, 'nearByDriver'])->name('admin.order.dashboard.nearbyRiderData');
     Route::get('orders/assignToRider', [App\Http\Controllers\admin\OrderController::class, 'assignToRider'])->name('admin.order.dashboard.assignOrder');
-    
+    Route::post('orders/dashboard/SuccessPayment/create/order', [App\Http\Controllers\admin\OrderController::class, 'generateSuccessPaymentOrder'])->name('admin.order.dashboard.generateSuccessPaymentOrder');
 
     // Order Dineout
     Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');

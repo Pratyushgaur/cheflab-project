@@ -20,37 +20,23 @@
                 <div class="col-md-12">
                   <div class="card card-primary card-outline">
                       <div class="card-header">
-                      <form id="member_filter" enctype="multipart/form-data"> 
-                          <div class="row">
-                        
-                            <div class="col-md-4">
-                              <input type="hidden" class="form-control" name="datePicker" id="datePicker"  placeholder="Date" required value="" autocomplete="off" >
-                                <div   id="reportrange"  style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                                  <i class="fa fa-calendar"></i>&nbsp;
-                                  <span >{{ date('F D, Y') }}</span> <i class="fa fa-caret-down"></i>
-                                </div>
-                            </div>
-                           
-                            <div class="col-md-3" id="filter_yester" style="display:none;">
-                                <input type="date" class="form-con">
-                            </div>
-
-                            <div class="col-3 mt-0 mb-3">
-                                <div class="exportbtn text-end d-flex">
-                                  <!-- <button type="submit" class="me-2 btn btn-info text-white rounded-0 px-4 py-2">
-                                  Apply
-                                  </button> -->
-                                  <button type="button" onclick="getSearchView();" class="me-2 btn btn-info text-white rounded-0 px-4 py-2">Apply</button>
-                                  &nbsp;
-                                           <button type="button" class="btn btn-info text-white rounded-0 px-4 py-2" class="clearbtn" onclick="clearfilter()">
-                                          Clear
-                                          </button>
-                                </div>
-                            </div>              
-                            </div>
+                        <div class="row">
+                          <div class="col-md-3">
+                            <input type="date" class="form-control from_date" value="{{date('Y-m-d')}}">
                           </div>
-                        </form>
-                          
+                          <div class="col-md-3">
+                            <input type="date" class="form-control to_date" value="{{date('Y-m-d')}}" >
+                          </div>
+                          <div class="col-md-3">
+                            <button class="btn btn-xs btn-success" onclick="reload_table()">Search</button>
+                          </div>
+                          <!-- <div class="col-md-3">
+                            <select name="" id="" class="form-control select2">
+                              <option value=""></option>
+                            </select>
+                          </div>     -->
+                        </div>
+                      </div>  
                       
                   </div>
                 </div>
@@ -76,14 +62,28 @@
                                     <th>User (Customer Name)</th>
                                     <th>Vendor Name</th>
                                     <th>Rider Name & ID</th>
-                                    <th>Item Subtotal</th>
-                                    <th>Order Amount</th>
-                                    <th>Platform Charges</th>
-                                    <th>Taxes</th>
-                                    <th>Transaction ID</th>
-                                    <th>Coupon Used/ Coupon Code (Coupon amount and code both will be visible)</th>
+                                    <th>Gross Order Value</th>
+                                    <th>Coupon Code</th>
                                     <th>Coupon Amount</th>
-                                    <th>Delivery Charges (User App)</th>
+                                    <th>Net order value</th>
+                                    <th>GST%</th>
+                                    <th>GST Rate</th>
+                                    <th>Order Value Inc Tax</th>
+                                    <th>Delivery Charge</th>
+                                    <th>Delivery Charge Tax %</th>
+                                    <th>Delivery Charge Tax Amount</th>
+                                    <th>Delivery Charges Inc Tax</th>
+                                    <th>Platform Charges</th>
+                                    <th>Platform Charge Tax %</th>
+                                    <th>Platform Charge Tax Amount</th>
+                                    <th>Platform Charge Inc Tax</th>
+                                    
+                                    <th>Order Amount</th>
+                                    
+                                    
+                                    
+                                    
+                                    
                                     <th>Wallet Cut</th>
                                     <th>Vendor Comission (%)</th>
                                     <th>Vendor Settlement(Final)</th>
@@ -131,113 +131,83 @@
 
 <script type="text/javascript">
 
-$(function() {
-
-var start = moment().subtract(29, 'days');
-var end = moment();
-
-function cb(start, end) {
-    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-    $('#datePicker').val(start.format('YYYY-MM-DD') + ' / ' + end.format('YYYY-MM-DD'));
-}
-
-$('#reportrange').daterangepicker({
-    startDate: start,
-    endDate: end,
-    ranges: {
-       'Today': [moment(), moment()],
-       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-       'This Month': [moment().startOf('month'), moment().endOf('month')],
-       'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    }
-}, cb);
-
-// cb(start, end);
-
-});
-
-
-
-
-
-var x 
-
-
-  // $(function () {
     let table = $('#example').dataTable({        
-       
-        dom: 'Bfrtip',
-        buttons: [
-          { extend: 'excel', className: 'btn-info' }
-        ],
-        processing: true,
-        paging: false,
-        serverSide: true,
-        lengthChange: true,
-        // buttons: true,
-        ajax:{
-            url:"{{ route('admin.account.order.data') }}",
-            data: function (d) {
-                d.status = $('#filter-by-status').val(),
-                d.role = $('#filter-by-role').val(),
-                d.vendor = $('#filter-by-vendor').val()
-                d.datePicker = $('#datePicker').val()
-            }
-        },
-        columns: [
-          {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'order_id', name: 'order_id'},
-            {data: 'date', name: 'date'},
-            {data: 'name', name: 'name'},
-            {data: 'vendor_name', name: 'vendor_name'},
-            {data: 'customer_name', name: 'customer_name'},
-            {data: 'total_amount', name: 'total_amount'},
-            {data: 'net_amount', name: 'net_amount'},
-            {data: 'platform_charges', name: 'platform_charges'},
-            {data: 'tex', name: 'tex'},
-            {data: 'transaction_id', name: 'transaction_id'},
-            {data: 'code', name: 'code'},
-            {data: 'discount_amount', name: 'discount_amount'},
-            {data: 'delivery_charge', name: 'delivery_charge'},
-            {data: 'wallet_cut', name: 'wallet_cut'},
-            {data: 'commission', name: 'commission'}, 
-            {data: 'vendor_settlement', name: 'vendor_settlement'}, 
-            {data: 'rider_earning', name: 'rider_earning'}, 
-            {data: 'admin_earning_vendor', name: 'admin_earning_vendor'},
-            {data: 'admin_earning_rider', name: 'admin_earning_rider'},
-            {data: 'admin_erning', name: 'admin_erning'},
-        ]
+       dom: 'Bfrtip',
+       buttons: [
+         { extend: 'excel', className: 'btn-info' }
+       ],
+       processing: true,
+       paging: false,
+       serverSide: true,
+       lengthChange: true,
+       // buttons: true,
+       ajax:{
+           url:"{{ route('admin.account.order.data') }}",
+           data: function (d) {
+               d.from = $('.from_date').val(),
+               d.todate = $('.to_date').val()
+           }
+       },
+       columns: [
+         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+           {data: 'order_id', name: 'order_id'},
+           {data: 'date', name: 'date'},
+           {data: 'name', name: 'name'},
+           {data: 'vendor_name', name: 'vendor_name'},
+           {data: 'rider_name', name: 'rider_name'},
+           {data: 'total_amount', name: 'total_amount'},
+           {data: 'code', name: 'code'},
+           {data: 'discount_amount', name: 'discount_amount'},
+           {data: 'net_order_value', name: 'net_order_value'},
+           {data: 'gst_per', name: 'gst_per'},
+           {data: 'tex', name: 'tex'},
+           {data: 'order_value_inc_tax', name: 'order_value_inc_tax'},
+           {data: 'exclusive_delivery_charge', name: 'exclusive_delivery_charge'},
+           {data: function(data, type, row){
+                  return '18';
+           }},
+           {data: function(data, type, row){
+                  return data.delivery_charge*18/100;
+           }},
+
+           {data: 'delivery_charge', name: 'delivery_charge'},
+           {data: 'exclusive_platform_charge', name: 'exclusive_platform_charge'},
+           {data: function(data, type, row){
+                  return '18';
+           }},
+           {data: function(data, type, row){
+                  return data.platform_charges*18/100;
+           }},
+
+           {data: 'platform_charges', name: 'platform_charges'},
+           //
+           {data: 'net_amount', name: 'net_amount'},
+          //  {data: 'platform_charges', name: 'platform_charges'},
+           
+           
+           
+           {data: 'wallet_cut', name: 'wallet_cut'},
+           {data: 'commission', name: 'commission'}, 
+           {data: 'vendor_settlement', name: 'vendor_settlement'}, 
+           {data: 'rider_earning', name: 'rider_earning'}, 
+           {data: 'admin_earning_vendor', name: 'admin_earning_vendor'},
+           {data: 'admin_earning_rider', name: 'admin_earning_rider'},
+           {data: 'admin_erning', name: 'admin_erning'},
+       ]
     });
-    // table.buttons().container()
-        // .appendTo( '#example_wrapper .col-md-6:eq(0)' );
-  // });
-
-  ;
-
-  function reload_table() {
-      table.DataTable().ajax.reload(null, false);
-  }
-
-  function getSearchView(){
-    table.DataTable().ajax.reload(null, false);
-   } 
-
-   function clearfilter(){
-   $('#datePicker').val('');
-   $('#member_filter')[0].reset();
-   table.DataTable().ajax.reload(null, false);
-  }
-
- 
-    //
-
-
+    function reload_table() {
+        table.DataTable().ajax.reload(null, false);
+    }
+    
+  
  </script>
  <style>
   th {
-    white-space: nowrap;
-}
+      white-space: nowrap;
+  }
+  tbody{
+    min-height:500px !important;
+    overflow:scroll  !important;
+  }
  </style>
 @endsection

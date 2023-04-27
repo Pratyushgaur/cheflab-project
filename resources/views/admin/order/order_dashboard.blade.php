@@ -175,7 +175,43 @@
 
     $(document).on('click','.generateOrder',function(){
       var id  =$(this).attr('data-id');
-      
+      var url = "{{route('admin.order.dashboard.generateSuccessPaymentOrder')}}";
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+        type: "POST",
+        url: url,
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: { "_token": "{{ csrf_token() }}","id":id},
+        success: function(response){
+          console.log(response.status);
+          if(response.status == false ){
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: response.error,
+              subtitle: '',
+              //body: response.error
+            })
+          }else if(response.status == true){
+            $(document).Toasts('create', {
+              class: 'bg-success',
+              title: 'Order Created Successfully',
+              subtitle: '',
+              //body: 'Order Created Successfully'
+            });
+          }else{
+            $(document).Toasts('create', {
+              class: 'bg-danger',
+              title: 'Something went wrong',
+              subtitle: '',
+              //body: ''
+            });
+          }
+        }
+      });
     })
  })
 

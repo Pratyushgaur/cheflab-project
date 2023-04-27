@@ -140,6 +140,7 @@
  //
  Route::post('delete-user', [\App\Http\Controllers\api\LoginApiController::class, 'deleteUser']);
 
-
-
  //
+ Route::get('test-route',function(){
+    return 'route confirm';
+ });
