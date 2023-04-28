@@ -49,9 +49,9 @@ class CronController extends Controller
 
                 $invoiceName = rand(9999, 99999) . $vendorData->id . '.pdf';
                 //return view('admin.pdf.monthly_invoice',  compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
-                // $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
-                $pdf = PDF::loadView('admin.pdf.monthly_invoice',compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
-                return $pdf->stream('resume.pdf');
+                 $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
+                //$pdf = PDF::loadView('admin.pdf.monthly_invoice',compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
+                //return $pdf->stream('resume.pdf');
 
                 $pdf->save(public_path('uploads/invoices/' . $invoiceName));
                 $url = 'uploads/invoices/' . $invoiceName;
