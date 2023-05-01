@@ -25,8 +25,8 @@ class AccountmisController extends Controller
 {
     public function index()
     {
-
-        return view('admin.mis.list');
+        $vendor = Vendors::select('id','name')->orderBy('id','desc')->get();
+        return view('admin.mis.list',compact('vendor'));
     }
 
 
@@ -35,11 +35,16 @@ class AccountmisController extends Controller
         
         if ($request->ajax()) {
             
-             
+            $todate = \Carbon\Carbon::parse($request->todate);
+            $todate = $todate->addDays(1);
             $data = Orders::join('vendors', 'orders.vendor_id', '=', 'vendors.id')->join('users', 'orders.user_id', '=', 'users.id')->join('rider_assign_orders', 'orders.order_id', '=', 'rider_assign_orders.order_id')->select('orders.id','orders.order_id', 'orders.transaction_id', 'orders.coupon_id', 'orders.preparation_time_from', 'orders.preparation_time_to', 'orders.customer_name', 'orders.created_at', 'orders.platform_charges', 'orders.tex', 'orders.discount_amount', 'orders.wallet_cut', 'orders.delivery_charge', 'orders.total_amount', 'orders.net_amount', 'vendors.name as vendor_name', 'vendors.commission', 'users.name', 'rider_assign_orders.earning','accepted_driver_id');
+            if($request->vendor_id != ''){
+                $data = $data->where('orders.vendor_id',$request->vendor_id);
+            }
+            $data = $data->orderBy('orders.id','DESC');
             $data = $data->where('orders.order_status','=','completed');
             if ($request->from != '' &&  $request->todate != '') {
-                $data = $data->whereBetween('orders.created_at', [$request->from,$request->todate]);
+                $data = $data->whereBetween('orders.created_at', [$request->from,$todate]);
             }
             $data = $data->where('rider_assign_orders.action', '!=', '2');
 

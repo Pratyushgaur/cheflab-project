@@ -27,7 +27,7 @@ class CronController extends Controller
         $fromDate = \Carbon\Carbon::now()->subMonth()->startOfMonth()->toDateString();
         $tillDate = \Carbon\Carbon::now()->subMonth()->endOfMonth()->toDateString();
         //$vendorDatas = Vendors::get();
-        $vendors = Orders::whereBetween('created_at',[$fromDate,$tillDate])->whereIn('order_status',['completed','dispatched'])->select('vendor_id')->distinct()->get();
+        $vendors = Orders::whereBetween('orders.created_at',[$fromDate,$tillDate])->whereIn('orders.order_status',['completed','dispatched'])->join('order_commisions','orders.id','=','order_commisions.order_id')->select('orders.vendor_id')->distinct()->get();
         
         foreach ($vendors as $vdata) {
             $vendorData =  Vendors::find($vdata->vendor_id);
@@ -36,10 +36,16 @@ class CronController extends Controller
             if ($checkData) {
                 
             } else {
-                $totalAmount = Orders::where(['vendor_id' => $vendorData->id,])->whereIn('order_status',['completed','dispatched'])->whereMonth('created_at', '=', $month)->whereYear('created_at', '=', $year)->get()->sum('total_amount');
+                $totalAmount = Orders::where(['orders.vendor_id' => $vendorData->id,])->whereIn('orders.order_status',['completed','dispatched'])->whereMonth('orders.created_at', '=', $month)->whereYear('orders.created_at', '=', $year);
+                $totalAmount = $totalAmount->join('order_commisions','orders.id','=','order_commisions.order_id');
+                $totalAmount = $totalAmount->select('vendor_commission_percentage',\DB::raw("SUM(total_amount-discount_amount) as total_amounts"));
+                $totalAmount = $totalAmount->first();
+                $vendorCommission = $totalAmount->vendor_commission_percentage;
+                $totalAmount = $totalAmount->total_amounts;
+                //->get()->sum('total_amount');
 
                 $adminDetail = AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
-                $commission = ($totalAmount * $vendorData->commission) / 100;
+                $commission = ($totalAmount * $vendorCommission) / 100;
 
                 $sgst = ($commission * 9) / 100;
                 $cgst = ($commission * 9) / 100;
@@ -49,19 +55,22 @@ class CronController extends Controller
 
                 $invoiceName = rand(9999, 99999) . $vendorData->id . '.pdf';
                 //return view('admin.pdf.monthly_invoice',  compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
-                 $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
+                //$pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
                 //$pdf = PDF::loadView('admin.pdf.monthly_invoice',compact('adminDetail', 'vendorData', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo','monthYearData'));
                 //return $pdf->stream('resume.pdf');
 
-                $pdf->save(public_path('uploads/invoices/' . $invoiceName));
-                $url = 'uploads/invoices/' . $invoiceName;
+                //$pdf->save(public_path('uploads/invoices/' . $invoiceName));
+                //$url = 'uploads/invoices/' . $invoiceName;
 
                 $pdfData = new MonthlyInvoice;
                 $pdfData->vendor_id = $vendorData->id;
                 $pdfData->invoice_number = $invoiceNo;
-                $pdfData->invoice_file = $url;
+                $pdfData->invoice_file = '';
                 $pdfData->total_amount = $totalAdminCommission;
                 $pdfData->month_year = $monthYear;
+                $pdfData->commission = $commission;
+                $pdfData->cgst = $cgst;
+                $pdfData->sgst = $sgst;
                 $pdfData->save();
             }
         }

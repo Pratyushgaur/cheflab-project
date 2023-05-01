@@ -4088,7 +4088,7 @@ class AppController extends Controller
             
             //AdminMasters::where('id', '=', 1)->update(['terms_conditions_vendor' => serialize($request->all())]);
             DB::commit();
-            \App\Models\OrderActionLogs::create(['orderid'=> $Order->id,'action' => 'Order Placed By customer']);
+            \App\Models\OrderActionLogs::create(['orderid'=> $Order->id,'action' => 'Order Placed By Razorpay success']);
             \App\Jobs\OrderCreateJob::dispatch($Order,route('restaurant.order.view', $Order->order_id))->delay(now()->addSeconds(30));
             //return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["order_id" => $order_id]], 200);
             return ['status'=>true ,'order_id' => $order_id];

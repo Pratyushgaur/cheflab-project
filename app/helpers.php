@@ -1810,7 +1810,7 @@ function createPdf($id)
         $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno', 'admin_masters.cin_no', 'admin_masters.fssai_no')->first();
         $taxAmount = ($order->tex / 2);
         $totalAmount = $orderProductAmount + $taxAmount;
-        $invoiceName = rand(9999, 99999) . $id . '.pdf';
+        $invoiceName = rand(9999, 99999) . $id . time(). '.pdf';
         $invoiceNumber = rand(9999, 99999) . $id;
         $currentDate = date('Y-m-d H:m:s');
         $allTotalAmount =  $totalAmount + $order->delivery_charge + $order->platform_charges;
@@ -1821,11 +1821,11 @@ function createPdf($id)
         $pdf->save(public_path('uploads/invoices/' . $invoiceName));
         $url = 'uploads/invoices/' . $invoiceName;
     
-        $pdfUrl = Orders::where('id', '=', $id)->first();
+        //$pdfUrl = Orders::where('id', '=', $id)->first();
     
     
-        $pdfUrl->pdf_url = $url;
-        $pdfUrl->save();
+        $order->pdf_url = $url;
+        $order->save();
     return true;
 }
 
@@ -2016,7 +2016,8 @@ function orderDeliverd($id)
     }
 
 
-    $tax = ($gross_revenue * $order->tex)/100;     //5%
+    //$tax = ($gross_revenue * $order->tex)/100;     //5%
+    $tax = $order->tex;    //5%
     $plateform_fee = $order->platform_charges;  //5%
     $admin_commision = $gross_revenue*($vendorData->commission)/100;     //9%
     $tax_on_commission = ($admin_commision * 18) / 100;
@@ -2053,9 +2054,11 @@ function orderDeliverd($id)
         'admin_amount' => 0,
         'vendor_cancel_charge' => 0,
         'platform_fee' => $plateform_fee,
+        'vendor_commission_percentage'=> $vendorData->commission,
         'order_date' => date('Y-m-d H:i:s'),
         'created_at' => date('Y-m-d H:i:s'),
         'updated_at' => date('Y-m-d H:i:s')
+
     );
     
     OrderCommision::create($ordercommision);

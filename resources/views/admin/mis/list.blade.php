@@ -27,6 +27,17 @@
                           <div class="col-md-3">
                             <input type="date" class="form-control to_date" value="{{date('Y-m-d')}}" >
                           </div>
+                          <div class="col-md-6">
+                            <div class="form-group">
+                              <select class="form-control select2 vendor_id" name="vendor_id" > 
+                                <option value="">Select Vendor</option>
+                                @foreach($vendor as $key =>$value)
+                                  <option value="{{$value->id}}">{{$value->name}}</option>
+                                @endforeach
+                              </select>
+                            
+                            </div>
+                          </div>
                           <div class="col-md-3">
                             <button class="btn btn-xs btn-success" onclick="reload_table()">Search</button>
                           </div>
@@ -85,6 +96,7 @@
                                     
                                     
                                     <th>Wallet Cut</th>
+                                    <th>Pay by Gateway</th>
                                     <th>Vendor Comission (%)</th>
                                     <th>Vendor Settlement(Final)</th>
                                     <th>Rider Settlement(Final)</th>
@@ -145,7 +157,8 @@
            url:"{{ route('admin.account.order.data') }}",
            data: function (d) {
                d.from = $('.from_date').val(),
-               d.todate = $('.to_date').val()
+               d.todate = $('.to_date').val(),
+               d.vendor_id = $('.vendor_id').val()
            }
        },
        columns: [
@@ -187,6 +200,9 @@
            
            
            {data: 'wallet_cut', name: 'wallet_cut'},
+           {data: function(data, type, row){
+                  return data.net_amount-data.wallet_cut;
+           }},
            {data: 'commission', name: 'commission'}, 
            {data: 'vendor_settlement', name: 'vendor_settlement'}, 
            {data: 'rider_earning', name: 'rider_earning'}, 
