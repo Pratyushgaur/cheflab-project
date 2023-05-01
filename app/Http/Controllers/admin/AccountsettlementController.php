@@ -37,17 +37,9 @@ class AccountsettlementController extends Controller
             $data = Vendors::select('vendor_order_statements.*','vendors.id as vendor_id','vendors.status','vendors.name','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name')->join('bank_details','vendors.id','=','bank_details.vendor_id')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id');
            
 
-           $dateSedule = $request->datePicker;
-        
-           if(isset($dateSedule)){
-           $packagetime = explode('/', $dateSedule);
-           $start_time = $packagetime[0].' 00:00:00';
-           $end_time = $packagetime[1].' 23:59:59';
-           }
-
-           if(!empty($start_time) && !empty($end_time)) {
-            $data = $data->whereBetween('vendor_order_statements.created_at', [$start_time, $end_time]);
-           }
+            if (!empty($start_time) && !empty($end_time)) {
+                $data = $data->whereBetween('vendor_order_statements.created_at', [$start_time, $end_time]);
+            }
     
            $data = $data->get();
 
@@ -70,11 +62,11 @@ class AccountsettlementController extends Controller
                     return $total;
                 }) 
                 ->addColumn('start_date', function($data){
-                    $start_date = date('d-m-Y H:m:s', strtotime($data->start_date));
+                    $start_date = date('d-m-Y', strtotime($data->start_date));
                      return $start_date;
                  }) 
                  ->addColumn('end_date', function($data){
-                    $end_date = date('d-m-Y H:m:s', strtotime($data->end_date));
+                    $end_date = date('d-m-Y', strtotime($data->end_date));
                      return $end_date;
                  })   
                    
