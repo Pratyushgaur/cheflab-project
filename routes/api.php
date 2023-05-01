@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::get('order_gen',function(){
+    orderDeliverd(995);
+});
 Route::post('razorpay-success',[App\Http\Controllers\api\AppController::class, 'razorpaySuccessRes']);
 Route::post('razorpay-cancel',[App\Http\Controllers\api\AppController::class, 'razorpayCancelRes']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
