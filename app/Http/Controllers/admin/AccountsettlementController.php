@@ -177,9 +177,10 @@ class AccountsettlementController extends Controller
     {
       
         $data = ([
-            'vendor_id' => $request->id,
+            'vendor_id' => $request->vendor_id,
             'amount' => $request->amount,
-            'bank_utr' => $request->bank_utr
+            'bank_utr' => $request->bank_utr,
+            'vendor_order_statements' =>$request->id
         ]);
         
         $dataNew = ([

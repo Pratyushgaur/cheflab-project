@@ -34,15 +34,27 @@
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
                             <thead>
                                   <tr role="row">
-                                    <th>Bank UTRs</th>
+                                    <th>From date Settlement</th>
+                                    <th>To date Settlement</th>
                                     <th>Amount</th>
+                                    <th>Deduction</th>
+                                    <th>Bank UTRs</th>
+                                    <th>Pay Date Settlement</th>
+                                    <th>Download Recipt</th>
                                   </tr>
                             </thead>
                             <tbody>
                               <?php foreach($settlements_list as $list){ ?>
                                 <tr>
-                                  <td class="border-bottom"><h6>{{$list->bank_utr}}</h6></td>
+                                  <td class="border-bottom">{{date('d m Y',strtotime($list->start_date))}}</td>
+                                  <td class="border-bottom">{{date('d m Y',strtotime($list->end_date))}}</td>
                                   <td class="border-bottom">{{$list->amount}}</td>
+                                  <td class="border-bottom">{{$list->vendor_cancel_deduction}}</td>
+                                  <td class="border-bottom">{{$list->bank_utr}}</td>
+                                  <td class="border-bottom">{{date('d m Y',strtotime($list->created_at))}}</td>
+                                  <td class="border-bottom"><a href="{{route('restaurant.mis.payout.download_recipt',$list->id)}}" class="">Download</a></td>
+
+
                                 </tr> 
                               <?php } ?>
                                 

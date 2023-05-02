@@ -16,6 +16,7 @@ class CreateVendorPayoutDetailsTable extends Migration
         Schema::create('vendor_payout_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('vendor_id');
+            $table->string('vendor_order_statements');
             $table->string('amount');
             $table->string('bank_utr');
             $table->timestamp('created_at')->useCurrent();

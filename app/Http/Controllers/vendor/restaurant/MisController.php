@@ -210,7 +210,7 @@ class MisController extends Controller
     public function settlements_view(Request $request)
     {
         $vendorId = Auth::guard('vendor')->user()->id;
-        $settlements_list = Vendor_payout_detail::where('vendor_id', $vendorId)->get();
+        $settlements_list = Vendor_payout_detail::where('vendor_payout_details.vendor_id', $vendorId)->join('vendor_order_statements','vendor_payout_details.vendor_order_statements','=','vendor_order_statements.id')->select('vendor_payout_details.*','vendor_order_statements.start_date','vendor_order_statements.end_date','vendor_cancel_deduction')->get();
         return view('vendor.mis.settlements_view', compact('settlements_list'));
     }
 
@@ -224,7 +224,6 @@ class MisController extends Controller
 
     public function monthly_invoice_list_data(Request $request)
     {
-
         $vendorId = Auth::guard('vendor')->user()->id;
         if ($request->ajax()) {
 
@@ -254,7 +253,14 @@ class MisController extends Controller
         }
    
     }
-
+    public function download_recipt($id)
+    {
+        $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
+        $vendorData =  Vendors::find(Auth::guard('vendor')->user()->id);
+        $payout = Vendor_payout_detail::where('vendor_payout_details.id', $id)->join('vendor_order_statements','vendor_payout_details.vendor_order_statements','=','vendor_order_statements.id')->select('vendor_payout_details.*','vendor_order_statements.start_date','vendor_order_statements.end_date','vendor_cancel_deduction')->first();
+        $pdf = PDF::loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout'));
+        return $pdf->download('settlement_receipt_'.$id.'.pdf');
+    }
     
 
     

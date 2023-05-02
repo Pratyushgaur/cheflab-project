@@ -187,6 +187,7 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::post('mis/renvenue-ajax', [App\Http\Controllers\vendor\restaurant\MisController::class, 'renvenue_ajax'])->name('restaurant.mis.renvenue.ajax');
         Route::get('mis/order/view/{id}', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_detail'])->name('restaurant.mis.order.view');
         Route::get('mis/order/export', [App\Http\Controllers\vendor\restaurant\MisController::class, 'oredr_export'])->name('restaurant.mis.order.export');
+        Route::get('mis/renvenue/recipt/download/{id}', [App\Http\Controllers\vendor\restaurant\MisController::class, 'download_recipt'])->name('restaurant.mis.payout.download_recipt');
 
         Route::get('mis/order-data', [App\Http\Controllers\vendor\restaurant\MisController::class, 'order_data'])->name('restaurant.mis.order.data');
         Route::get('mis/renvenue/addition-view', [App\Http\Controllers\vendor\restaurant\MisController::class, 'addition_view'])->name('restaurant.mis.renvenue.addition');

@@ -17,6 +17,7 @@
         
           <input type="hidden" value=" {{ csrf_token() }}" name="_token">
           <input type="hidden" value=" {{ $id }}" name="id">
+          <input type="hidden" value=" {{ $data->vendor_id }}" name="vendor_id">
               <div class="row"> 
                
                 <div class="col-6"> 
