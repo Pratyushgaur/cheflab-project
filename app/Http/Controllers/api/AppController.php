@@ -1744,6 +1744,8 @@ class AppController extends Controller
                     'products.*.addons.*.addon_qty'   => 'numeric|nullable',
                     'products.*.addons.*.addon_price' => 'numeric|nullable',
                     'products.*.addons.*.addon_name'  => 'string|nullable',
+                    'products.*.variants'             => 'required',
+
                 ]
 
             );
@@ -1977,8 +1979,8 @@ class AppController extends Controller
                     'products.*.product_qty'  => 'required|numeric',
                     'products.*.product_name' => 'required|string',
 
-                    'products.*.variants.*.variant_id'    => 'numeric|nullable',
-                    'products.*.variants.*.variant_qty'   => 'numeric|nullable',
+                    'products.*.variants.*.variant_id'    => 'numeric|nullable|required',
+                    'products.*.variants.*.variant_qty'   => 'numeric|nullable|required',
                     'products.*.variants.*.variant_price' => 'numeric|nullable',
                     'products.*.variants.*.variant_name'  => 'string|nullable',
 
@@ -1986,6 +1988,8 @@ class AppController extends Controller
                     'products.*.addons.*.addon_qty'   => 'numeric|nullable',
                     'products.*.addons.*.addon_price' => 'numeric|nullable',
                     'products.*.addons.*.addon_name'  => 'string|nullable',
+                    'products.*.variants'           => 'required',
+
                 ]
 
             );
@@ -1993,6 +1997,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+            
             global $cart_id;
             try {
                 DB::beginTransaction();
