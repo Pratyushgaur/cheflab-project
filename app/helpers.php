@@ -2229,3 +2229,5 @@ function getVendorByIdForApp($lat=null,$lng=null,$vendorId,$current_user_id)
     $vendors->next_available = next_available_day($vendors->id);
     return $vendors;
 }
+// *************** recreation v3 code ******************//
+@require_once 'helpers_v3.php';

@@ -76,3 +76,8 @@ Route::post('system-api/get-ios-update-version', [\App\Http\Controllers\api\Logi
 Route::post('system-api/send-notification', [App\Http\Controllers\api\AppController::class, 'sendNotification']);
 
 //
+
+// v3 new creation api
+Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api/v3'], function () {
+    @require_once 'system_api_v3.php';
+});
