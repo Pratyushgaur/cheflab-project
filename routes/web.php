@@ -8,7 +8,7 @@ Route::get('/check-queue-work', function() {
     return exec('ps -aux | grep queue:work');
 });
 Route::get('/queue-work', function() {
-    return Artisan::call('nohup php artisan queue:work --daemon &');
+    return exec('nohup php artisan queue:work --daemon &');
 });
 Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 Route::get('/clear-cache', function() {
