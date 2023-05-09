@@ -5,6 +5,19 @@
    .mainpart p{
    font-size: 18px;
    }
+   .loader {
+      border: 16px solid #f3f3f3; /* Light grey */
+      border-top: 16px solid #3498db; /* Blue */
+      border-radius: 50%;
+      width: 120px;
+      height: 120px;
+      animation: spin 2s linear infinite;
+   }
+
+   @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+   }
 </style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -36,21 +49,22 @@
                            </div>
                            <address class="mainpart">
                               <p class="mb-1"><small>Status</small>:
-                              <?php 
-                                if($order->order_status == 'pending'){
-                                  $color = 'warining';
-                                }elseif($order->order_status == 'completed'){
-                                  $color = 'success';
-                                }elseif($order->order_status == 'accepted'){
-                                  $color = 'primary';
-                                }else{
-                                  $color = 'danger';
-                                }
-                              ?>
+                                 <?php 
+                                 if($order->order_status == 'pending'){
+                                    $color = 'warining';
+                                 }elseif($order->order_status == 'completed'){
+                                    $color = 'success';
+                                 }elseif($order->order_status == 'accepted'){
+                                    $color = 'primary';
+                                 }else{
+                                    $color = 'danger';
+                                 }
+                                 ?>
 
-                              <button type="button" class="ml-2 btn px-2 py-1 btn-sm  btn-outline-{{ $color }}">{{ ucwords($order->order_status) }}</button>
-                            </p>
+                                 <button type="button" class="ml-2 btn px-2 py-1 btn-sm  btn-outline-{{ $color }}">{{ ucwords($order->order_status) }}</button>
+                              </p>
                               <p class="mb-1"><small class="ml-2">Payment Method</small>: {{ $order->payment_type }}</p>
+                              <a href="{{route('admin.order.assign_no_rider',$order->id)}}" onclick="return confirm('Are You sure ?')" class="text-danger btn btn-xs bg-red">Enter In No Rider Assign</a>
                               <!-- <p class="mb-1"> <small>Reference Code</small>: <button type="button" class="ml-2 btn px-2 py-1 btn-sm btn-outline-primary badge badge-soft-success">Add</button></p> -->
                               <!-- <p class="mb-1"><small>Payment Status</small>: <small class="text-danger ml-2"><b>{{ ucwords($order->payment_status) }} </b></small></p> -->
 
@@ -287,6 +301,9 @@
                         <div class="card-body">
                            <h5 class="mb-3">
                               <span><i class="fa fa-home pr-2" aria-hidden="true"></i> Rider Information</span>
+                              @if($riders->action!=3)
+                              <a class="link" href="{{route('admin.orders.rider.remove',$riders->rider_assign_order_id)}}" onclick="return confirm('are you sure to remove this rider from database')"  title="Change Rider" href="javascript:"><i class="fa fa-trash"></i></a>
+                              @endif
                            </h5>
                            <a class="media align-items-center deco-none resturant--information-single">
                               <div class="avatar avatar-circle">
@@ -343,6 +360,7 @@
 </section>
 <!-- /.content -->
 </div>
+
 <!-- /.content-wrapper -->
 <!-- /.content-wrapper -->
 <!-- /.row -->
@@ -426,6 +444,9 @@ function change_status(e,id){
          }
        }); 
    })
+</script>
+<script>
+   
    
 </script>
 @endsection

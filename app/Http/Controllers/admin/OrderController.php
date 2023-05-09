@@ -545,7 +545,7 @@ class OrderController extends Controller
             $vendor = Vendors::findOrFail($vendor_id);
             $users = User::findOrFail($user_id);
             $coupon = \App\Models\Coupon::find($order->coupon_id);
-            $rider = \App\Models\RiderAssignOrders::where('order_id',$id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->select('deliver_boy.name','mobile','rider_assign_orders.rider_id','action','deliver_boy.image','cancel_reason')->get();
+            $rider = \App\Models\RiderAssignOrders::where('order_id',$id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->select('deliver_boy.name','mobile','rider_assign_orders.rider_id','action','deliver_boy.image','cancel_reason','rider_assign_orders.id as rider_assign_order_id')->get();
             return view('admin.order.view',compact('order','product','vendor','users','coupon','rider'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
@@ -739,5 +739,47 @@ class OrderController extends Controller
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
+    }
+
+    public function removeRiderFromAssign($id)
+    {
+        $rider = \App\Models\RiderAssignOrders::findOrFail($id);
+        if($rider->action == 3) {
+            return redirect()->back()->withErrors('message', 'Order Delivered By this Driver');
+        }
+        if($rider->action == 1 || $rider->action == 4){
+            $order = Orders::findOrFail($rider->order_id);
+            $order->accepted_driver_id = null;
+            $order->save();
+        }
+        $rider->delete();
+        $OrderActionLogs  = new \App\Models\OrderActionLogs;
+        $OrderActionLogs->orderid = $rider->order_id;
+        $OrderActionLogs->action = 'Rider Removed by admin in rider assign table';
+        $OrderActionLogs->rider_id = $rider->rider_id;
+        $OrderActionLogs->save();
+        return redirect()->back()->with('message', 'Rider Remove Success');
+                
+                    
+        
+
+    }
+    public function add_no_rider_assing($id)
+    {
+        $order = Orders::findOrFail($id);
+        $noRiderAssignOrders = new \App\Models\NoRiderAssignOrders;
+        $noRiderAssignOrders->order_id  = $id;
+        $noRiderAssignOrders->status = '0';
+        $noRiderAssignOrders->save();
+        //
+        $OrderActionLogs  = new \App\Models\OrderActionLogs;
+        $OrderActionLogs->orderid =  $id;
+        $OrderActionLogs->action = 'No Rider assign entry by admin';
+        $OrderActionLogs->save();
+        return redirect()->route('admin.order.dashboard.status','no_rider_assign')->with('message', 'Success');
+                
+                    
+        
+
     }
 }

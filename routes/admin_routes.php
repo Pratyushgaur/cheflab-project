@@ -194,6 +194,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::post('orders/dashboard/nearbyRider/data', [App\Http\Controllers\admin\OrderController::class, 'nearByDriver'])->name('admin.order.dashboard.nearbyRiderData');
     Route::get('orders/assignToRider', [App\Http\Controllers\admin\OrderController::class, 'assignToRider'])->name('admin.order.dashboard.assignOrder');
     Route::post('orders/dashboard/SuccessPayment/create/order', [App\Http\Controllers\admin\OrderController::class, 'generateSuccessPaymentOrder'])->name('admin.order.dashboard.generateSuccessPaymentOrder');
+    Route::get('admin/orders/rider/remove/{id}', [App\Http\Controllers\admin\OrderController::class, 'removeRiderFromAssign'])->name('admin.orders.rider.remove');
+    Route::get('admin/orders/add/no_rider_assign/{id}', [App\Http\Controllers\admin\OrderController::class, 'add_no_rider_assing'])->name('admin.order.assign_no_rider');
 
     // Order Dineout
     Route::get('dineout-orders', [App\Http\Controllers\admin\OrderController::class, 'dineoutlist'])->name('admin.dineout.list');
