@@ -133,67 +133,56 @@ class CartApiController extends Controller
             try {
                 DB::beginTransaction();
                 $cart_obj = Cart::where('user_id', $request->user_id)->where('vendor_id', $request->vendor_id)->first();
-                $cart_obj = new Cart();
-                    $cart_obj->user_id   = $request->user_id;
-                    $cart_obj->vendor_id = $request->vendor_id;
-                    $cart_obj->saveOrFail();
-                    $cart_id = $cart_obj->id;
-                    foreach ($request->products as $k => $p) {
-                        $product=Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->first();
-                        if (!isset($product->id)) {
-                            return response()->json(['status' => false, 'error' => 'provided product not available under given vendor.'], 401);
-                        }
-                        $cart_products = new CartProduct($p);
-                        $cart_obj->products()->save($cart_products);
-                        if($product->customizable=='false'){//if product is not customizable ,then product qty=primary variant qty
-                            $verint_obj=Variant::where('product_id',$product->id)->first();
-                            if(!empty($verint_obj)){
-                                $CartProductVariant                  = new CartProductVariant();
-                                $CartProductVariant->cart_product_id = $cart_products->id;
-                                $CartProductVariant->variant_id      = $verint_obj->id;
-                                $CartProductVariant->variant_qty     = $p['product_qty'];
-                                $CartProductVariant->save();
-                            }else{
-                                return response()->json(['status' => false, 'error' => 'Product '.$product->product_name.' has no variant found'], 401);
 
-                            }
-                        }
+                if (!isset($cart_obj->id))
+                    $cart_obj = new Cart();
 
-                        if (isset($p['variants']) && $product->customizable=='true'){
-                            foreach ($p['variants'] as $k => $v) {
-                                $CartProductVariant                  = new CartProductVariant();
-                                $CartProductVariant->cart_product_id = $cart_products->id;
-                                $CartProductVariant->variant_id      = $v['variant_id'];
-                                $CartProductVariant->variant_qty     = $v['variant_qty'];
-                                $CartProductVariant->save();
-                            }
-                        }
-                            
 
-                        if (isset($p['addons'])){
-                            foreach ($p['addons'] as $k => $a) {
-                                $CartProductAddon                  = new CartProductAddon();
-                                $CartProductAddon->cart_product_id = $cart_products->id;
-                                $CartProductAddon->addon_id        = $a['addon_id'];
-                                $CartProductAddon->addon_qty       = $a['addon_qty'];
-                                $CartProductAddon->save();
-                            }
+                $cart_obj->user_id   = $request->user_id;
+                $cart_obj->vendor_id = $request->vendor_id;
+                $cart_obj->saveOrFail();
+                $cart_id = $cart_obj->id;
+                foreach ($request->products as $k => $p) {
+                    $product=Product_master::where('userId', $request->vendor_id)->where('id', $p['product_id'])->first();
+                    if (!isset($product->id)) {
+                        return response()->json(['status' => false, 'error' => 'provided product not available under given vendor.'], 401);
+                    }
+                    $cart_products = new CartProduct($p);
+                    $cart_obj->products()->save($cart_products);
+
+                    if($product->customizable=='false'){//if product is not customizable ,then product qty=primary variant qty
+                        $verint_obj=Variant::where('product_id',$product->id)->first();
+                        if(isset($verint_obj->id)){
+                            $CartProductVariant                  = new CartProductVariant();
+                            $CartProductVariant->cart_product_id = $cart_products->id;
+                            $CartProductVariant->variant_id      = $verint_obj->id;
+                            $CartProductVariant->variant_qty     = $p['product_qty'];
+                            $CartProductVariant->save();
                         }
-                            
                     }
 
-                    DB::commit();
+                    if (isset($p['variants']) && $product->customizable=='true')
+                        foreach ($p['variants'] as $k => $v) {
+                            $CartProductVariant                  = new CartProductVariant();
+                            $CartProductVariant->cart_product_id = $cart_products->id;
+                            $CartProductVariant->variant_id      = $v['variant_id'];
+                            $CartProductVariant->variant_qty     = $v['variant_qty'];
+                            $CartProductVariant->save();
+                        }
 
-                    return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
-                // if (!isset($cart_obj->id)){
-                    
-                // }else{
-                //     DB::rollBack();
-                //     return response()->json(['status' => false, 'error' => 'Already added in cart this please use update cart route'], 500);
-                // }
-                    
+                    if (isset($p['addons']))
+                        foreach ($p['addons'] as $k => $a) {
+                            $CartProductAddon                  = new CartProductAddon();
+                            $CartProductAddon->cart_product_id = $cart_products->id;
+                            $CartProductAddon->addon_id        = $a['addon_id'];
+                            $CartProductAddon->addon_qty       = $a['addon_qty'];
+                            $CartProductAddon->save();
+                        }
+                }
 
-                
+                DB::commit();
+
+                return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
             } catch (PDOException $e) {
                 // Woopsy
                 DB::rollBack();
