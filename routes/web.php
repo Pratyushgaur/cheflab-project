@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/check-queue-work', function() {
-    return Artisan::call('ps -aux | grep queue:work');
+    return exec('ps -aux | grep queue:work');
 });
 Route::get('/queue-work', function() {
     return Artisan::call('nohup php artisan queue:work --daemon &');
