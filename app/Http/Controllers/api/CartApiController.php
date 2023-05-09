@@ -133,9 +133,7 @@ class CartApiController extends Controller
             try {
                 DB::beginTransaction();
                 $cart_obj = Cart::where('user_id', $request->user_id)->where('vendor_id', $request->vendor_id)->first();
-                
-                if (!isset($cart_obj->id)){
-                    $cart_obj = new Cart();
+                $cart_obj = new Cart();
                     $cart_obj->user_id   = $request->user_id;
                     $cart_obj->vendor_id = $request->vendor_id;
                     $cart_obj->saveOrFail();
@@ -187,10 +185,12 @@ class CartApiController extends Controller
                     DB::commit();
 
                     return response()->json(['status' => true, 'message' => 'Data Get Successfully', 'response' => ["cart_id" => $cart_id]], 200);
-                }else{
-                    DB::rollBack();
-                    return response()->json(['status' => false, 'error' => 'Already added in cart this please use update cart route'], 500);
-                }
+                // if (!isset($cart_obj->id)){
+                    
+                // }else{
+                //     DB::rollBack();
+                //     return response()->json(['status' => false, 'error' => 'Already added in cart this please use update cart route'], 500);
+                // }
                     
 
                 
