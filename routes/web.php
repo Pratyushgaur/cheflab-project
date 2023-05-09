@@ -4,22 +4,12 @@ use App\Http\Middleware\isVendorLoginAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/test', function () {
-    $Order=\App\Models\Order::find(3);
-//    dd($Order);
-//    $on = \Carbon\Carbon::now()->addSecond(3);
-//    dispatch(new \App\Jobs\OrderCreateJob($Order))->delay($on);
-
-
-   event(new \App\Events\OrderCreateEvent($Order,$Order->id, 1, 1));
-   dispatch(function(){
-       echo mysql_date_time();
-   })->delay(now()->addSeconds(30));
-
-    \App\Jobs\OrderCreateJob::dispatch($Order)
-        ->delay(now()->addSeconds(3));
-})->name('test');
-
+Route::get('/check-queue-work', function() {
+    return Artisan::call('ps -aux | grep queue:work');
+});
+Route::get('/queue-work', function() {
+    return Artisan::call('nohup php artisan queue:work --daemon &');
+});
 Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 Route::get('/clear-cache', function() {
     Artisan::call('view:clear');
