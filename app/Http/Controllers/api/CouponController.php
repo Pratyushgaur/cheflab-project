@@ -134,9 +134,18 @@ class CouponController extends Controller
             }
             date_default_timezone_set('Asia/Kolkata');
             //check code is valid or not
-             $coupon =  Coupon::where('code','=',strtoupper($request->code));
+            $coupon =  Coupon::where('code','=',strtoupper($request->code));
              if($coupon->exists()){
                 $coupon = $coupon->first();
+                if($coupon->create_by == 'vendor'){
+                    $cart = \App\Models\Cart::where('user_id','=',request()->user_id)->first();
+                    if(empty($cart)){
+                        return response()->json(['status' => false,'error' => 'No item found of this user in cart'], 401);
+                    }
+                    if($cart->vendor_id != $coupon->vendor_id){
+                        return response()->json(['status' => false,'error' => 'Coupon Is not this vendor'], 401);
+                    }   
+                }
                 if(Carbon::now()->between(\Illuminate\Support\Carbon::createFromFormat('Y-m-d', mysql_date($coupon->from)),
                     \Illuminate\Support\Carbon::createFromFormat('Y-m-d', mysql_date($coupon->to))->addDay())){
                     // check coupon use Limit
