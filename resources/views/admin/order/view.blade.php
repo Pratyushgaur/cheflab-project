@@ -152,7 +152,7 @@
                                  <td>-{{number_format( (float)$order->discount_amount,2)}}</td>
                               </tr>
                               <tr>
-                                 <th>Tax & Plateform Charge</th>
+                                 <th>Tax & Platform Charge</th>
                                  <td>{{number_format( (float)$order->tex+$order->platform_charges,2)}}</td>
                               </tr>
                               <tr>

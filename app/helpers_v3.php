@@ -86,7 +86,8 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
         'products.id as product_id',
         DB::raw('ROUND(product_rating,1) AS product_rating'),
         'primary_variant_name',
-        DB::Raw('IFNULL( cart_products.product_qty , 0 ) as cart_qty')
+        DB::Raw('IFNULL( cart_products.product_qty , 0 ) as cart_qty'),
+        "menu_id"
     )->get();
     
     return $product;
