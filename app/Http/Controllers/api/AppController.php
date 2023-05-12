@@ -4089,7 +4089,7 @@ class AppController extends Controller
 
                 if (isset($p['addons']))
                     foreach ($p['addons'] as $k => $a) {
-                        $OrderProductAddon = new OrderProductAddon($a);
+                        $OrderProductAddon = new OrderProductAddon((array) $a);
                         $order_products->order_product_addons()->save($OrderProductAddon);
                     }
             }
