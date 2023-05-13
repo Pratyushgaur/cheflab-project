@@ -408,7 +408,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         DB::raw('ROUND(product_rating,1) AS product_rating'),
         'dis',
         'chili_level',
-        'primary_variant_name'
+        'primary_variant_name',
+        'products.menu_id'
     )
         ->get();
     //dd($product->toArray());
@@ -449,7 +450,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     'chili_level'          => $p['chili_level'],
                     'cuisines'             => $p['cuisinesName'],
                     'categorie'            => $p['categorieName'],
-                    'cart_qty'             => $qty
+                    'cart_qty'             => $qty,
+                    'menu_id'              => $p['menu_id']
                 ];
                 if ($with_restaurant_name) {
                     $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
