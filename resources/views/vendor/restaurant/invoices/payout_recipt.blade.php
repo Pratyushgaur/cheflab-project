@@ -214,7 +214,7 @@
                   <td>
                      <div class="invoice-title">
                         <div class="invoice_logo">
-                           <h6 style="font-size:11px;">{{public_path('commonarea/logo.png')}}<img src="{{public_path('commonarea/logo.png')}}"  alt="BTS" style="width:100px;"> </h6>
+                           <h6 style="font-size:11px;">{{asset('commonarea/logo.png')}}<img src="{{asset('commonarea/logo.png')}}" style="width:100px;"> </h6>
                         </div>
 
                      </div>
