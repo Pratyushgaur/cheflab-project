@@ -263,7 +263,7 @@ class MisController extends Controller
         $data = file_get_contents($path);
         $image = 'data:image/' . $type .';base64,'.base64_encode($data);
         //$image = base64_encode(file_get_contents( $path ));
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true , 'isRemoteEnabled' => true])->loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout', 'image'));
+        $pdf = PDF::loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout', 'image'));
         return $pdf->download('settlement_receipt_'.$id.'.pdf');
     }
     
