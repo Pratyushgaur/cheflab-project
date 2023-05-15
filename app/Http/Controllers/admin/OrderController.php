@@ -315,7 +315,7 @@ class OrderController extends Controller
                 $order_generated =  '<button class="btn btn-xs btn-danger">Failed</button>';
             }
             if($v['payment_status'] == '0' && $v['order_generated'] == '0' || $v['payment_status'] == '1' && $v['order_generated'] == '0'){
-                $orderGenButton = '<a href="#" class="btn btn-xs btn-success generateOrder" data-id="'.$v['id'].'">Generate Order</a>';
+                $orderGenButton = '<a href="javascript:void(0)" class="btn btn-xs btn-success generateOrder" data-id="'.$v['id'].'">Generate Order</a>';
             }
             $trhtml.='<tr><td>'.$i.'</td><td><a>'.$data->customer_name.'</a></td><td>'.$v['transaction_id'].'</td><td>'.$payment_status.'</td><td>'.$order_generated.'</td><td>'.$v['order_generate_error'].'</td><td>'.$orderGenButton.'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td></tr>';
             $i++;
@@ -452,7 +452,7 @@ class OrderController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'" ><i class="fa fa-eye"></i></a>';
+                    $btn = '<a target="_blank" href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'" ><i class="fa fa-eye"></i></a>';
                     if($data->pdf_url){
                         $btn .= '<a href="'. asset("$data->pdf_url").'" download><i class="fa fa-print"></i></a>';
                     }else{
@@ -484,7 +484,7 @@ class OrderController extends Controller
                             return '<span class="badge badge-success">Preparing</span>';
                         }
                         if ($data->order_status == 'ready_to_dispatch') {
-                            return '<span class="badge badge-success">Ready To Dispatch</span>';
+                            return '<span class="badge badge-warning">Ready To Dispatch</span>';
                         }
                         if ($data->order_status == 'dispatched') {
                             return '<span class="badge badge-warning">Dispatched</span>';
