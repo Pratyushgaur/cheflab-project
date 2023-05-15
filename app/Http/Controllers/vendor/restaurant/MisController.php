@@ -259,7 +259,7 @@ class MisController extends Controller
         $vendorData =  Vendors::find(Auth::guard('vendor')->user()->id);
         $payout = Vendor_payout_detail::where('vendor_payout_details.id', $id)->join('vendor_order_statements','vendor_payout_details.vendor_order_statements','=','vendor_order_statements.id')->select('vendor_payout_details.*','vendor_order_statements.start_date','vendor_order_statements.end_date','vendor_cancel_deduction')->first();
         $image = base64_encode(file_get_contents(public_path('commonarea/logo.png') ));
-        $pdf = PDF::loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout', 'image')->setOptions(['defaultFont' => 'sans-serif']));
+        $pdf = PDF::loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout', 'image'));
         return $pdf->download('settlement_receipt_'.$id.'.pdf');
     }
     
