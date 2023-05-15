@@ -261,7 +261,7 @@ class MisController extends Controller
         $path = asset('commonarea/logo.png');
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
-        $image = 'data:image/' . $type .';base64,'.base64_encode($data);
+        return $image = 'data:image/' . $type .';base64,'.base64_encode($data);
         //$image = base64_encode(file_get_contents( $path ));
         $pdf = PDF::loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout', 'image'));
         return $pdf->download('settlement_receipt_'.$id.'.pdf');
