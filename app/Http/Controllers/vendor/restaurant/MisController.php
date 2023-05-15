@@ -258,7 +258,7 @@ class MisController extends Controller
         $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
         $vendorData =  Vendors::find(Auth::guard('vendor')->user()->id);
         $payout = Vendor_payout_detail::where('vendor_payout_details.id', $id)->join('vendor_order_statements','vendor_payout_details.vendor_order_statements','=','vendor_order_statements.id')->select('vendor_payout_details.*','vendor_order_statements.start_date','vendor_order_statements.end_date','vendor_cancel_deduction')->first();
-        $pdf = PDF::loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout'));
+        $pdf = PDF::setOptions(['isPhpEnabled' => true])->loadView('vendor.restaurant.invoices.payout_recipt',  compact('adminDetail', 'vendorData', 'payout'));
         return $pdf->download('settlement_receipt_'.$id.'.pdf');
     }
     
