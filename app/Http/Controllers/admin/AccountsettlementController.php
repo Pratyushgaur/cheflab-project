@@ -34,7 +34,7 @@ class AccountsettlementController extends Controller
         if ($request->ajax()) {
 
          
-            $data = Vendors::select('vendor_order_statements.*','vendors.id as vendor_id','vendors.status','vendors.name','bank_details.bank_name','bank_details.account_no','vendors.pancard_number','bank_details.ifsc','bank_details.holder_name')->leftJoin('bank_details','vendors.id','=','bank_details.vendor_id')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id');
+            $data = Vendors::select('vendor_order_statements.*','vendors.id as vendor_id','vendors.status','vendors.name','vendors.pancard_number')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id');
            
 
             if (!empty($start_time) && !empty($end_time)) {
@@ -170,7 +170,8 @@ class AccountsettlementController extends Controller
         
         $id = $_GET['id'];
         $data = Vendor_order_statement::where(['id'=> $id, 'pay_status'=> 0])->first();
-        return view('admin.account-vendor.paymentsuccess',compact('id','data'));
+        $bank = \App\Models\BankDetail::where('vendor_id','=',$data->vendor_id)->select('holder_name','account_no','ifsc','bank_name')->get();
+        return view('admin.account-vendor.paymentsuccess',compact('id','data','bank'));
     }
 
     public function payVendorPayment(Request $request)

@@ -927,8 +927,39 @@ class UserControllers extends Controller
             $user = $user->orWhere('mobile_number', 'like', '%' . $request->search . '%');
         }
         
-        $users = $user->paginate(15)->appends(request()->query());
+        $users = $user->paginate(100)->appends(request()->query());
         return view('admin/vendors/user_list', compact('users','keyword'));
+    }
+    public function get_data_table_of_user(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::latest()->select('id','name','email','mobile_number','wallet_amount','status');
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function ($data) {
+                    if($data->status == '1'){
+                        return '<a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="'.route('admin.user.inactive',['id'=>encrypt($data->id)]).'" title="Inactive">Active</a>';
+                    }else{
+                        return '<a href="javascript:void(0);" class="btn btn-danger btn-xs active-record"  data-alert-message="Are You Sure to Active this User" flash="User" data-action-url="'.route('admin.user.active',['id'=>encrypt($data->id)]).'" title="Active">Inactive</a>';
+                    }
+                    
+                })
+                ->addColumn('wallet', function ($data) {
+                    if($data->wallet_amount!=null){
+                        $wallet =  $data->wallet_amount;
+                    }else{
+                        $wallet =  '0';
+                    }
+                    return $wallet .= '&#8377;<br><a href="#" class="add_wallet" data-url="'.route('user.wallet.add',$data->id).'" data-name="'.$data->name.'" data-id="'.$data->id.'">Add</a>';
+                })
+                ->addColumn('action', function ($data) {
+                    return '<a target="_blank" href="'.route('admin.user.view',['id'=>encrypt($data->id)]).'"><i class="fa fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City" data-action-url="'.route('admin.user.delete',['id'=>encrypt($data->id)]).'" title="Delete"><i class="fa fa-trash"></i></a>';
+                })
+                ->rawColumns([ 'wallet', 'action', 'status'])
+                ->make(true);
+        }
+
     }
     public function add_wallet(Request $request ,$id)
     {

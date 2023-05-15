@@ -14,7 +14,7 @@
         <!-- Main content -->
         <section class="content">
             <div class="container-fluid">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-12 col-sm-12 col-lg-12">
                         <div class="card card-primary card-outline">
                             <div class="card-header">
@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="col-md-12">
                         <div class="card card-primary card-outline">
@@ -37,11 +37,10 @@
 
                             </div>
                             <div class="card-body pad table-responsive">
-                                <table id="users" class="table table-bordered table-hover dtr-inline datatable"
-                                       aria-describedby="example2_info" width="100%">
+                            <table id="example1" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
                                     <thead>
                                     <tr role="row">
-                                        <th class="text-center">Sr No.</th>
+                                        <th class="text-center">User id</th>
                                         <th> Name</th>
                                         <th>Email</th>
                                         <th>Mobile</th>
@@ -52,36 +51,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php $deliver_boy_type=config('custom_app_setting.deliver_boy_type');?>
-                                    @foreach($users as $k=>$user)
-                                        <tr>
-                                            <td>{{$k+1}}</td>
-                                            <td>{{$user->name}}</td>
-                                            <td>{{$user->email}}</td>
-                                            <td>{{$user->mobile_number}} <br>{{$user->alternative_number}}</td>
-                                            
-                                            <td><?php if($user->wallet_amount!=null){echo $user->wallet_amount;}else{echo '0';}; //front_end_currency($user->wallet_amount)?> &#8377;<br><a href="#" class="add_wallet" data-url="{{route('user.wallet.add',$user->id)}}" data-name="{{$user->name}}" data-id="{{$user->id}}">Add</a></td>
-                                            <td> 
-                                                @if($user->status == '1')
-                                                <!--<a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="{{route('admin.user.inactive',['id'=>encrypt($user->id)])}}" title="Inactive">Active</a>-->
-                                                <a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="{{route('admin.user.inactive',['id'=>encrypt($user->id)])}} " title="Inactive">Active</a>
-                                                @else
-                                                 <a href="javascript:void(0);" class="btn btn-danger btn-xs active-record"  data-alert-message="Are You Sure to Active this User" flash="User" data-action-url="{{route('admin.user.active',['id'=>encrypt($user->id)])}} " title="Active">Inactive</a>
-                                                @endif
-                                            </td>
-                                             <td>
-                                               <a href="{{route('admin.user.view',['id'=>encrypt($user->id)])}}"><i class="fa fa-eye"></i></a>
-                                               <a href="javascript:void(0);" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City" data-action-url="{{route('admin.user.delete',['id'=>encrypt($user->id)])}}" title="Delete"><i class="fa fa-trash"></i></a>
-                                            </td>
-
-
-                                        </tr>
-                                        @endforeach
+                                        <?php //$deliver_boy_type=config('custom_app_setting.deliver_boy_type');?>
+                                    
                                     </tbody>
 
                                 </table>
 
-                                {{ $users->links('vendor.pagination.bootstrap-4') }}
+                                
                             </div>
 
                         </div>
@@ -144,11 +120,34 @@
 
 <script type="text/javascript">
     $(document).ready(function(){
-        $('.add_wallet').click(function(){
+        let table = $('#example1').dataTable({
+            processing: true,
+            serverSide: true,
+            "lengthMenu": [[10 ,50, 100, 500, -1], [10 ,50, 100, 500, "Show All"]],
+            //ajax: "{{ route('admin.vendors.datatable') }}",
+            ajax: {
+                url: "{{ route('admin.users.datatable') }}"
+                // data: function (d) {
+                //     d.rolename = $('#filter_by_role').val()
+                // }
+
+            },
+            columns: [
+                {data: 'id', name: 'id'},
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'mobile_number', name: 'mobile_number'},
+                {data: 'wallet', name: 'wallet'},
+                {data: 'status', name: 'status', orderable: false, searchable: false},
+                {data: 'action', name: 'action', orderable: false, searchable: false},
+            ]
+        });
+        $(document).on('click','.add_wallet',function(){
             $('.modal-title').text($(this).attr('data-name'));
             $('#myForm').attr('action',$(this).attr('data-url'));
             $('#myModal').modal('show');
         })
+        
     })
 </script>
 @endsection

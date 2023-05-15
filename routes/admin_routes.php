@@ -275,6 +275,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     
     //users
     Route::get('users', [App\Http\Controllers\admin\UserControllers::class,'user_list'])->name('admin.user.list');
+    Route::get('users-datatable', [App\Http\Controllers\admin\UserControllers::class, 'get_data_table_of_user'])->name('admin.users.datatable');
     Route::post('users/add/wallet/{id}', [App\Http\Controllers\admin\UserControllers::class,'add_wallet'])->name('user.wallet.add');
     Route::post('users/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_inactive'])->name('admin.user.inactive');
     Route::post('users/active/{id}', [App\Http\Controllers\admin\UserControllers::class,'user_active'])->name('admin.user.active');
