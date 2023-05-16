@@ -38,7 +38,8 @@ class Cn_login extends Controller
             $request->session()->put([
                 '**^&%*$$username**$%#' => Auth::guard('admin')->user()->name,
                 '*$%&%*id**$%#' => Auth::guard('admin')->user()->id,
-                '**$%#email**^&%*' => Auth::guard('admin')->user()->email
+                '**$%#email**^&%*' => Auth::guard('admin')->user()->email,
+                'admin_login'      => 'yes'
             ]);
             if ($request->session()->has('**^&%*$$username**$%#', '*$%&%*id**$%#', '**$%#email**^&%*')) {
                 return redirect('admin/dashbord-admin')->with('message', 'Successfully Logged In!');
