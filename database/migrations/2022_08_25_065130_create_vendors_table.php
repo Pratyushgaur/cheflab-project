@@ -22,6 +22,8 @@ class CreateVendorsTable extends Migration
             $table->string('password');
             $table->date('dob')->nullable();
             $table->string('experience')->nullable();
+            $table->date('career_starting_date')->nullable();
+            
             $table->boolean('is_online')->default(1);
             $table->enum('vendor_type',['restaurant','chef']);
             $table->string('deal_categories',255);

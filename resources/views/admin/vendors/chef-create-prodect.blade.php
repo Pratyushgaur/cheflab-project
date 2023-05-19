@@ -144,7 +144,7 @@
                               </div>
                               <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Name of Product</label>
                                           <input type="text" name="product_name" class="form-control" data-rule-required="true" id="exampleInputEmail1" placeholder="Enter Product Name">
@@ -153,38 +153,21 @@
 
                                       </div>
                                     </div>
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                          <label for="exampleInputEmail1">Cuisines</label>
-                                          <select class="form-control select2" name="cuisines" style="width: 100%;">
-                                                @foreach($cuisines as $k =>$value)
-                                                  <option value="{{$value->id}}">{{$value->name}}</option>
-                                                @endforeach
-                                          </select>
-                                      </div>
-                                    </div>
+                                  
 
-
-                                    <div class="col-md-4">
-                                      <div class="form-group">
-                                        <label>Food Categories</label>
-                                        <select class="form-control select2" name="category" style="width: 100%;">
-                                          @foreach($categories as $k =>$value)
-                                          <option value="{{$value->id}}">{{$value->name}}</option>
-                                          @endforeach
-                                        </select>
-                                      </div>
-                                    </div>
-
-
-
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                       <div class="form-group">
                                           <label for="exampleInputEmail1">Product Description</label>
                                           <textarea class="form-control" name="dis" ></textarea>
                                       </div>
                                     </div>
-
+                                    <div class="col-md-3">
+                                      <div class="form-group">
+                                          <label for="exampleInputEmail1">Primary Variant Name *</label>
+                                          <input type="text" name="primary_varinat_name" class="form-control" data-rule-required="true" id="exampleInputEmail1" placeholder="Enter Primary Variant Name">
+                                          
+                                      </div>
+                                    </div>
                                     <div class="col-md-3">
                                       <div class="form-group">
 
@@ -214,16 +197,7 @@
                                       </div>
                                     </div>
 
-                                <div class="col-md-3 mb-3">
-                                    <label>Preparation Time</label>
-                                    <div class="input-group">
-                                        {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),null,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','reuired']) }}
-
-                                        @if ($errors->has('preparation_time'))
-                                            <span class="ms-text-danger"><strong>{{ $errors->first('preparation_time') }}</strong></span>
-                                        @endif
-                                    </div>
-                                </div>
+                                
 
                                     <div class="col-md-3">
                                       <div class="form-group">
@@ -293,21 +267,31 @@
 
                                     </div> -->
                                  </div>
-                                    <div class="col-sm-3">
-                                        <div>
-                                          <label for="">Product Image </label>
+                                 <div class="col-md-3 mb-3">
+                                    <label>Preparation Time</label>
+                                    <div class="input-group">
+                                        {{ Form::select('preparation_time', config('custom_app_setting.product_preparation_time'),null,['class' => 'form-control', 'placeholder' => 'Select Preparation Time ','reuired']) }}
 
-                                        </div>
-                                        <div class="image-upload">
+                                        @if ($errors->has('preparation_time'))
+                                            <span class="ms-text-danger"><strong>{{ $errors->first('preparation_time') }}</strong></span>
+                                        @endif
+                                    </div>
+                                </div>
+                                  <div class="col-sm-3">
+                                      <div>
+                                        <label for="">Product Image </label>
 
-                                            <label for="file-input">
-                                                <div class="upload-icon">
-                                                    <img class="icon" src="{{asset('add-image.png')}}">
-                                                </div>
-                                            </label>
-                                            <input id="file-input" type="file" name="product_image"/>
+                                      </div>
+                                      <div class="image-upload">
 
-                                        </div>
+                                          <label for="file-input">
+                                              <div class="upload-icon">
+                                                  <img class="icon" src="{{asset('add-image.png')}}">
+                                              </div>
+                                          </label>
+                                          <input id="file-input" type="file" name="product_image"/>
+
+                                      </div>
 
                                   </div>
                                 </div>
