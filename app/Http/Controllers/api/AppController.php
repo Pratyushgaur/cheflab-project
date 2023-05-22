@@ -956,7 +956,8 @@ class AppController extends Controller
                     'primary_variant_name',
                     'start_time',
                     'end_time',
-                    DB::raw('if(available,false,true)  as isClosed')
+                    DB::raw('if(available,false,true)  as isClosed'),
+                    'products.menu_id'
                 );
                 $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
                 $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
@@ -1003,6 +1004,7 @@ class AppController extends Controller
                                 'vendor_food_type'     => $p['vendor_food_type'],
                                 'fssai_lic_no'         => $p['fssai_lic_no'],
                                 'cart_qty'             => $qty,
+                                'menu_id'              => $p['menu_id'],
                                 'cuisines'         => $dealCuisines
                             ]; //'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
