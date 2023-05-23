@@ -249,7 +249,7 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
 
             $cart_sub_toatl_amount =0; $wallet_amount = 0;
-            $u                     = User::select('wallet_amount')->find($request->user_id);
+            $u = User::select('wallet_amount')->find($request->user_id);
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
@@ -326,7 +326,7 @@ class CartApiController extends Controller
                     $r[$i]['variants'] = $p['variants'];
                     if ($p['addons'] != '') {
                         $addons        = explode(',', $p['addons']);
-                        $productAddons = \App\Models\Addons::select('id', 'addon', 'price')->whereIn('addons.id', $addons)->get()->toArray();
+                        $productAddons = \App\Models\Addons::select('id as addon_id', 'addon as addon_name', 'price as addon_price')->whereIn('addons.id', $addons)->get()->toArray();
                         foreach ($productAddons as $akey => $avalue) {
                             $exist = CartProduct::where('cart_id', '=', $cart_id)->where('product_id', '=', $p['product_id'])
                                 ->leftJoin('cart_product_addons', 'cart_products.id', '=', 'cart_product_addons.cart_product_id')
@@ -334,7 +334,7 @@ class CartApiController extends Controller
                             if (!empty($exist)) {
 
                                 $productAddons[$akey]['added'] = true;
-                                $productAddons[$akey]['qty']   = $exist->addon_qty;
+                                $productAddons[$akey]['addon_qty']   = $exist->addon_qty;
                                 $cart_sub_toatl_amount    +=  ($exist->addon_qty*$productAddons[$akey]['price']);
 
                             } else {
