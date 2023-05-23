@@ -335,7 +335,7 @@ class CartApiController extends Controller
 
                                 $productAddons[$akey]['added'] = true;
                                 $productAddons[$akey]['addon_qty']   = $exist->addon_qty;
-                                $cart_sub_toatl_amount    +=  ($exist->addon_qty*$productAddons[$akey]['price']);
+                                $cart_sub_toatl_amount    +=  ($exist->addon_qty*$productAddons[$akey]['addon_price']);
 
                             } else {
                                 $productAddons[$akey]['added'] = false;
