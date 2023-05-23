@@ -330,7 +330,7 @@ class CartApiController extends Controller
                         foreach ($productAddons as $akey => $avalue) {
                             $exist = CartProduct::where('cart_id', '=', $cart_id)->where('product_id', '=', $p['product_id'])
                                 ->leftJoin('cart_product_addons', 'cart_products.id', '=', 'cart_product_addons.cart_product_id')
-                                ->where('cart_product_addons.addon_id', '=', $avalue['id'])->first();
+                                ->where('cart_product_addons.addon_id', '=', $avalue['addon_id'])->first();
                             if (!empty($exist)) {
 
                                 $productAddons[$akey]['added'] = true;
