@@ -3889,8 +3889,7 @@ class AppController extends Controller
     {
         try {
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
-            //if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
-            if($request->entity == 'event' &&  $request->event == 'payment.authorized' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
+            if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
                  $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
                  $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
                  $pendingOrder->exists();
