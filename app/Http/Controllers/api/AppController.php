@@ -3887,6 +3887,11 @@ class AppController extends Controller
 
     public function razorpaySuccessRes(Request $request)
     {
+        $webhook_error  =  new \App\Models\WebhookErrors;
+        $webhook_error->message = 'request call';
+        $webhook_error->request_data = json_encode($request->all());
+        $webhook_error->save();
+        die;
         try {
             //&& $request->payload->payment->entity->notes->payment_for == 'order'
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
