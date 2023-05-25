@@ -283,6 +283,7 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                 //console.log(permissionStatus.state); // granted, denied, prompt
                 var audio = document.getElementById("beep__hover");
                 audio.play();
+                console.log('generated');
                 permissionStatus.onchange = function(){
                     console.log("Permission changed to " + this.state);
                 }
