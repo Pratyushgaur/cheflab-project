@@ -171,12 +171,19 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
     $(document).ready(function () {
         //document.getElementById('mybtn').click();
-        setInterval(function () {
-            //$("#beep__hover").attr('muted',false);
-            var audio = document.getElementById("beep__hover");
+        var permission = navigator.permissions.query("microphone");
+        if (permission.state === "granted") {
+            alert('granted');
+        } else {
+            alert('No granted');
+            
+        }
+        // setInterval(function () {
+        //     //$("#beep__hover").attr('muted',false);
+        //     var audio = document.getElementById("beep__hover");
 
-            audio.play();
-        }, 10000);
+        //     audio.play();
+        // }, 10000);
 
        
         
