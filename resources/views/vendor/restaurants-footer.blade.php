@@ -175,7 +175,9 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         if (permission.state === "granted") {
             alert('granted');
         } else {
-            alert('No granted');
+            navigator.permissions.request("microphone");
+
+            //alert('No granted');
             
         }
         // setInterval(function () {
