@@ -172,12 +172,9 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
     $(document).ready(function () {
         //document.getElementById('mybtn').click();
         
-        // setInterval(function () {
-        //     //$("#beep__hover").attr('muted',false);
-        //     var audio = document.getElementById("beep__hover");
-
-        //     audio.play();
-        // }, 10000);
+        setInterval(function () {
+            check();
+        }, 10000);
 
        
         
@@ -261,7 +258,7 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
         function permissionForMicrophone() {
             navigator.mediaDevices.getUserMedia( { audio: true, video: false } )
             .then( ( stream ) => {
-                    alert('Permitted');
+                
             },
             e => {
                    
@@ -287,9 +284,22 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                 toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" href="#">View</a>', payload.notification.title,);
 
             }
+            
             var audio = document.getElementById("beep__hover");
             audio.play();
         });
+        function check() {
+            navigator.permissions.query({ name: 'microphone' }
+                ).then(function(permissionStatus){
+
+                console.log(permissionStatus.state); // granted, denied, prompt
+
+                permissionStatus.onchange = function(){
+                    console.log("Permission changed to " + this.state);
+                }
+
+            })
+        }
     });
 </script>
 
