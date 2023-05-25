@@ -277,18 +277,8 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                 toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" href="#">View</a>', payload.notification.title,);
 
             }
-            navigator.permissions.query({ name: 'microphone' }
-                ).then(function(permissionStatus){
-
-                //console.log(permissionStatus.state); // granted, denied, prompt
-                var audio = document.getElementById("beep__hover");
-                audio.play();
-                console.log('generated');
-                permissionStatus.onchange = function(){
-                    console.log("Permission changed to " + this.state);
-                }
-
-            })
+            var audio = document.getElementById("beep__hover");
+            audio.play();
             
         });
         
