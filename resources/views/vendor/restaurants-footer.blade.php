@@ -171,13 +171,6 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
     $(document).ready(function () {
         //document.getElementById('mybtn').click();
-        
-        setInterval(function () {
-            check();
-        }, 10000);
-
-       
-        
         toastr.options =
             {
                 "closeButton": false,
@@ -284,22 +277,20 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                 toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" href="#">View</a>', payload.notification.title,);
 
             }
-            
-            var audio = document.getElementById("beep__hover");
-            audio.play();
-        });
-        function check() {
             navigator.permissions.query({ name: 'microphone' }
                 ).then(function(permissionStatus){
 
-                console.log(permissionStatus.state); // granted, denied, prompt
-
+                //console.log(permissionStatus.state); // granted, denied, prompt
+                var audio = document.getElementById("beep__hover");
+                audio.play();
                 permissionStatus.onchange = function(){
                     console.log("Permission changed to " + this.state);
                 }
 
             })
-        }
+            
+        });
+        
     });
 </script>
 
