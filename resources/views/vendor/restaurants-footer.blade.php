@@ -171,15 +171,7 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 
     $(document).ready(function () {
         //document.getElementById('mybtn').click();
-        var permission = navigator.permissions.query("microphone");
-        if (permission.state === "granted") {
-            alert('granted');
-        } else {
-            navigator.permissions.request("microphone");
-
-            //alert('No granted');
-            
-        }
+        
         // setInterval(function () {
         //     //$("#beep__hover").attr('muted',false);
         //     var audio = document.getElementById("beep__hover");
@@ -266,7 +258,19 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
             });
         }
 
+        function permissionForMicrophone() {
+            navigator.mediaDevices.getUserMedia( { audio: true, video: false } )
+            .then( ( stream ) => {
+                    alert('Permitted');
+            },
+            e => {
+                   
+            } );
+                
+        }
+
         initFirebaseMessagingRegistration();
+        permissionForMicrophone();
 
         messaging.onMessage((payload) => {
             console.log(payload);
