@@ -8,7 +8,7 @@
 <!-- MODALS -->
 <!-- Quick bar -->
 <iframe src="assets/img/emos/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>
-<audio id="beep__hover" muted   autoplay>
+<audio id="beep__hover"    autoplay>
   <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/mp3">
 </audio>
 <!-- <audio id="beep__hover" controls  style="display:none;">
@@ -172,7 +172,7 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
     $(document).ready(function () {
         //document.getElementById('mybtn').click();
         setInterval(function () {
-            $("#beep__hover").attr('muted',false);
+            //$("#beep__hover").attr('muted',false);
             var audio = document.getElementById("beep__hover");
 
             audio.play();
