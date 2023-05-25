@@ -8,7 +8,7 @@
 <!-- MODALS -->
 <!-- Quick bar -->
 <iframe src="assets/img/emos/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>
-<audio id="beep__hover"    autoplay>
+<audio id="beep__hover"   >
   <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/mp3">
 </audio>
 <!-- <audio id="beep__hover" controls  style="display:none;">
