@@ -48,11 +48,12 @@
 
         </ul>
       </li>
+      @if(Auth::guard('vendor')->user()->vendor_type == 'restaurant')
       <li class="menu-item">
-      <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menu Catalogue</span>
+        <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menu Catalogue</span>
         </a>
       </li>
-
+      @endif
       <li class="menu-item">
         <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/product*') ? 'active' : '' }}" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="product"> <span><i class="nav-icon fa fa-fire fs-16"></i>Products </span>
         </a>
@@ -125,7 +126,7 @@
       </li>
 
         <li class="menu-item ">
-            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Restaurant Rating/Review</span></a>
+            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>{{ucfirst(Auth::guard('vendor')->user()->vendor_type)}} Rating/Review</span></a>
         </li>
 
         <li class="menu-item ">
