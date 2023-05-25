@@ -7,11 +7,15 @@
 
 <!-- MODALS -->
 <!-- Quick bar -->
-<audio id="beep__hover" controls  style="display:none;">
+<iframe src="assets/img/emos/silence.mp3" type="audio/mp3" allow="autoplay" id="audio" style="display:none"></iframe>
+<audio id="beep__hover" muted   autoplay>
+  <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/mp3">
+</audio>
+<!-- <audio id="beep__hover" controls  style="display:none;">
   <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/ogg">
   <source src="{{asset('fcm_notification_sound.mp3')}}" type="audio/mpeg">
   Your browser does not support the audio element.
-</audio>
+</audio> -->
 <aside id="ms-quick-bar" class="ms-quick-bar fixed ms-d-block-lg">
     <ul class="nav nav-tabs ms-quick-bar-list" role="tablist"></ul>
     <div class="ms-configure-qa" data-toggle="tooltip" data-placement="left" title="Configure Quick Access"></div>
@@ -166,6 +170,16 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
 <script>
 
     $(document).ready(function () {
+        //document.getElementById('mybtn').click();
+        setInterval(function () {
+            $("#beep__hover").attr('muted',false);
+            var audio = document.getElementById("beep__hover");
+
+            audio.play();
+        }, 10000);
+
+       
+        
         toastr.options =
             {
                 "closeButton": false,
