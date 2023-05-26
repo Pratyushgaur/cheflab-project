@@ -1006,6 +1006,7 @@ class AppController extends Controller
                                 'fssai_lic_no'         => $p['fssai_lic_no'],
                                 'cart_qty'             => $qty,
                                 'menu_id'              => $p['menu_id'],
+                                'vendor_ratings'       => $p['vendor_ratings'],
                                 'cuisines'         => $dealCuisines
                             ]; //'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
