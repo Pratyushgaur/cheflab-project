@@ -957,7 +957,8 @@ class AppController extends Controller
                     'start_time',
                     'end_time',
                     DB::raw('if(available,false,true)  as isClosed'),
-                    'products.menu_id'
+                    'products.menu_id',
+                    DB::raw('ROUND(vendor_ratings,1) AS vendor_ratings')
                 );
                 $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
                 $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
