@@ -70,6 +70,10 @@ class AppController extends Controller
                     ];
                 }
             }
+            $ProfileVisitUsers = new \App\Models\ProfileVisitUsers;
+            $ProfileVisitUsers->vendor_id = $request->vendor_id;
+            $ProfileVisitUsers->user_id = request()->user()->id;
+            $ProfileVisitUsers->save();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
@@ -142,13 +146,12 @@ class AppController extends Controller
 
                 ], 401);
             }
-            $vendor =  get_restaurant_near_me_v3($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id, $request->offset, $request->limit);
-            $vendor->orderBy('vendor_ratings',"DESC");
-            $vendor = $vendor->get();
+            return $product =  topRatedProducts_v2($request->lat, $request->lng, request()->user()->id, $request->offset, $request->limit);
+            
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => $vendor
+                'response' => $product
 
             ], 200);
             
@@ -221,6 +224,40 @@ class AppController extends Controller
                 ->where(['vendor_type' => '1', 'blog_for' => '0'])
                 ->get();
             $reponce =  promotionRowSetup($Blogs, $request, request()->user()->id);
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $reponce
+
+            ], 200);
+            
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+    public function geMostViewVendors(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat'            => 'required|numeric',
+                    'lng'            => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $reponce = mostViewVendors($request->lat,$request->lng,request()->user()->id);
+            $reponce = (count($reponce) >= 5) ? $reponce : [];
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',

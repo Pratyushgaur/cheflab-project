@@ -43,4 +43,18 @@ class Order extends Model
     {
         return $this->belongsToMany(Deliver_boy::class,'rider_assign_orders','order_id','rider_id')->withPivot('action','cancel_reason','otp');
     }
+    public static function  tryOnesMoreVendors($userid ,$limit , $vendorType ,$lat ,$lng){
+        $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(vendors.lat))) ";
+
+        $order = Order::where(["orders.user_id"=>$userid,'order_status' => 'completed','vendors.vendor_type' => $vendorType ,'vendors.status' => 1 ,'vendors.is_online' => 1]);
+        $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+        $order = $order->orderBy('orders.id','DESC');
+        $order = $order->limit($limit);
+        $order = $order->groupBy('orders.vendor_id');
+        $order = $order->selectRaw("ROUND({$select}) AS distance");
+        $order = $order->having('distance', '<=', config('custom_app_setting.near_by_distance'));
+        $order = $order->addSelect(\DB::raw('ROUND(vendor_ratings,1) AS vendor_ratings'),\DB::raw('CONCAT("' . asset('vendors') . '/", vendors.image) AS image'),'vendors.id as vendor_id','vendors.name as vendor_name');
+        return $order->get();
+
+    }
 }
