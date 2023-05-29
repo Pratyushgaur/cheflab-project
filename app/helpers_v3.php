@@ -145,8 +145,7 @@ function get_restaurant_near_me_v3($lat, $lng, $where = [], $current_user_id, $o
         'banner_image',
         'deal_cuisines'
     );
-
-    if (!empty($limit) && !empty($offset)){
+    if ($limit != ''){
         $vendors->offset($offset)->limit($limit);
     }
 
