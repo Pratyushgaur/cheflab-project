@@ -138,7 +138,7 @@ class OrderController extends Controller
     {
 
         // orderDeliverd($id);
-        createPdf($id);
+        //createPdf($id);
         $order               = Order::find($id);
         if($order->order_status == 'preparing'){
             $order->order_status = 'ready_to_dispatch';
