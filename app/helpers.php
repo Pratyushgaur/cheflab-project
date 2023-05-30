@@ -1841,7 +1841,7 @@ function updateDriverLatLngFromFcm()
         if (!empty($ids)) {
             $database = app('firebase.database');
             foreach ($ids as $key => $value) {
-                $reference = $database->getReference('locations')->getChild($value)->getvalue();
+                $reference = $database->getReference('testingLocation')->getChild($value)->getvalue();
                 if (!empty($reference)) {
                     $deliverBoy = \App\Models\Deliver_boy::where('id', '=', $reference['driver_id'])->where('is_online', '=', '1')->first();
                     if (!empty($deliverBoy)) {
