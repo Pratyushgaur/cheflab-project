@@ -272,5 +272,101 @@ class AppController extends Controller
             ], 500);
         }
     }
+    public function getRestaurantSearchData(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'keyword'    => 'required',
+                    'search_for' => 'required',
+                    'offset'     => 'required|numeric',
+                    'lat'        => 'required|numeric',
+                    'lng'        => 'required|numeric',
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            //
+
+            if ($request->search_for == 'restaurant') {
+                $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id, null, null, [], 'yes')
+                    ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service', 'start_time', 'end_time', 'table_service')
+                    ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                foreach ($data as $key => $value) {
+                    $data[$key]->next_available = next_available_day($value->id);
+                }
+            } elseif ($request->search_for == 'dishes') {
+                $user_id = request()->user()->id;
+                $select  = "6371 * acos(cos(radians(" . $request->lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $request->lng . ")) + sin(radians(" . $request->lat . ")) * sin(radians(vendors.lat))) ";
+                $product = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%')->where('vendors.status','=','1')->where('vendors.is_online','=','1')->where('available', 1);
+                $product->join('vendors', 'products.userId', '=', 'vendors.id');
+                $product = $product->leftJoin('user_product_like', function ($join) use ($user_id) {
+                    $join->on('products.id', '=', 'user_product_like.product_id');
+                    $join->where('user_product_like.user_id', '=', $user_id);
+                });
+                $product->leftJoin('vendor_order_time', function ($join) {
+                    $join->on('vendor_order_time.vendor_id', '=', 'vendors.id')
+                        ->where('vendor_order_time.day_no', '=', Carbon::now()->dayOfWeek)
+                        ->where('start_time', '<=', mysql_time())
+                        ->where('end_time', '>', mysql_time())
+                        ->where('available', '=', 1);
+                });
+                $product->where(DB::raw("ROUND({$select})") ,'<=', config('custom_app_setting.near_by_distance'));
+                $product = $product->Select(
+                    DB::raw('products.userId as vendor_id'),
+                    'preparation_time',
+                    'chili_level',
+                    'type',
+                    'products.id as product_id',
+                    'products.dis as description',
+                    'products.product_name',
+                    'product_price',
+                    'customizable',
+                     DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+                    'product_rating',
+                    'primary_variant_name',
+                    'products.menu_id',
+                    'vendors.name as restaurantName',
+                    DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like')
+                );
+                $data = $product->get();
+                $cart = \App\Models\Cart::where('user_id', $user_id)->first();
+                if (count($data->toArray())) {
+                    foreach ($data as $i => $p) {
+                        $qty = 0;
+                        if (isset($cart->id) && $cart->id != '') {
+                            $cart_p = \App\Models\CartProduct::where('cart_id', $cart->id)->where('product_id', $p['product_id'])->selectRaw('SUM(product_qty) as product_qty,id')->groupBy('product_id')->first();
+                            if (isset($cart_p->product_qty)) {
+                                $qty          = $cart_p->product_qty;
+                            }
+                        }
+                        $data[$i]['cart_qty'] = $qty;
+                    }
+                }
+                
+            } else {
+                $data = [];
+            }
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $data
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 
 }

@@ -6,3 +6,4 @@
  Route::post('getRestauantMasterBlog', [App\Http\Controllers\api\v3\AppController::class, 'getRestauantMasterBlog']);
  Route::post('getopRatedProducts', [App\Http\Controllers\api\v3\AppController::class, 'getTopRatedProducts']);
  Route::post('geMostViewVendors', [App\Http\Controllers\api\v3\AppController::class, 'geMostViewVendors']);
+ Route::post('search-data', [App\Http\Controllers\api\v3\AppController::class, 'getRestaurantSearchData']);
