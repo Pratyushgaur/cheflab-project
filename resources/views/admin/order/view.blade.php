@@ -37,7 +37,7 @@
                      <div class="row invoice-info">
                         <div class="col-sm-6 invoice-col">
                            <h5 class="text"><b>Order ID #{{$order->order_id}}</b></h5>
-                           <p><i class="fa fa-calendar-o pr-2" aria-hidden="true"></i> {{ date('d M Y h:s',strtotime($order->created_at)) }}</p>
+                           <p><i class="fa fa-calendar-o pr-2" aria-hidden="true"></i> {{ date('d M Y h:i',strtotime($order->created_at)) }}</p>
                            <p><b class="text-dark"><i class="fa fa-home" aria-hidden="true"></i>  Restaurant: </b> <span class="text-primary ml-1">{{ ucwords($vendor->name) }}</span></p>
                            <p><b class="text-dark"><i class="fa fa-circle" aria-hidden="true"></i>  Send Cutlery: </b> <span class="text-primary ml-1">@if($order->send_cutlery){{"Yes"}}@else {{"No"}} @endif</span></p>
                            <p><b class="text-dark"><i class="fa fa-envelope" aria-hidden="true"></i>  Chef message: </b> <span class="text-primary ml-1">{{$order->chef_message}}</span></p>
