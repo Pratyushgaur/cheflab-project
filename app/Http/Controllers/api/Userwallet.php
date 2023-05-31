@@ -40,6 +40,40 @@ class Userwallet extends Controller
             ], 500);
         }
     }
+    public function temp_recharge(Request $request)
+    {
+        try {
+            $validateUser = Validator::make($request->all(), 
+            [
+                'user_id' => 'required|numeric',
+                'amount' => 'required|numeric'
+            ]);
+            if($validateUser->fails()){
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'=>$validateUser->errors()->all()
+                    
+                ], 401);
+            }
+            $WalletGatewayTransactions = new \App\Models\WalletGatewayTransactions;
+            $WalletGatewayTransactions->user_id = $request->user_id;
+            $WalletGatewayTransactions->amount = $request->amount;
+            $WalletGatewayTransactions->save();
+            $id = $WalletGatewayTransactions->id;
+            $transaction =rand(10000,99999).$id;
+            \App\Models\WalletGatewayTransactions::where('id','=',$id)->update(['transaction_id' => $transaction]);
+            return response()->json([
+                'status' => true,
+                'transaction_id'=>$transaction
+            ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error' => $th->getMessage()
+            ], 500);
+        }
+    }
     public function Recharge(Request $request){
         try {
             $validateUser = Validator::make($request->all(), 
