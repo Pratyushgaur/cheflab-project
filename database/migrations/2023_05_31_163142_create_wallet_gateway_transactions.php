@@ -20,6 +20,8 @@ class CreateWalletGatewayTransactions extends Migration
             $table->string('transaction_id',255);
             $table->decimal('amount',8,2)->default('0');
             $table->enum('payment_status',["0","1","2"])->default('0')->comment('0=pending,1=success,2=failed');
+            $table->enum('wallet_update',["0","1"])->default('0')->comment('0=pending wallet update user,1=update wallet update user');
+            $table->text('gateway_response')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

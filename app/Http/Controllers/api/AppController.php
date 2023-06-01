@@ -3893,7 +3893,6 @@ class AppController extends Controller
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
                  $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
                  $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
-                 $pendingOrder->exists();
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
                     $pendingOrder->update(['payment_status'=>'1']);
@@ -3930,6 +3929,30 @@ class AppController extends Controller
                     $webhook_error->save();
                     echo 'Invalid Transaction id';
     
+                }
+            }elseif($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'wallet'){
+                $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
+                $pendingWallet = \App\Models\WalletGatewayTransactions::where("transaction_id",'=',$transactionId);
+                if($pendingWallet->exists()){
+                    $requestData = $pendingWallet->first();
+                    $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                    $UserWalletTransactions->user_id = $requestData->user_id;
+                    $UserWalletTransactions->amount = $requestData->amount;
+                    $UserWalletTransactions->narration = "Recharge";
+                    $UserWalletTransactions->transaction_id = $transactionId;
+                    
+                    $UserWalletTransactions->save();
+                    //
+                    $users = User::where('id', '=', $requestData->user_id)->select('wallet_amount')->first();
+                    $total = $requestData->amount + $users->wallet_amount;
+                    $update = User::where('id', '=', $requestData->user_id)->update(['wallet_amount' => $total]);
+                    \App\Models\WalletGatewayTransactions::where("transaction_id",'=',$transactionId)->update(['wallet_update'=>'1','payment_status' =>'1','gateway_response' => json_encode($request->all())]);
+                }else{
+                    $webhook_error  =  new \App\Models\WebhookErrors;
+                    $webhook_error->message = 'Invalid Transaction id';
+                    $webhook_error->request_data = json_encode($request->all());
+                    $webhook_error->save();
+                    echo 'Invalid Transaction id';
                 }
             }else{
                 $webhook_error  =  new \App\Models\WebhookErrors;
