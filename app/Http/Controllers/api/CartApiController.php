@@ -129,6 +129,8 @@ class CartApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+            if (!Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available"], 406);
             global $cart_id;
             try {
                 DB::beginTransaction();
@@ -525,6 +527,8 @@ class CartApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+            if (!Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available"  ], 406);
 //            dd($request->all());
             global $cart_id;
             try {
