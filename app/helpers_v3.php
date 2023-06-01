@@ -265,7 +265,7 @@ function mostViewVendors($lat ,$lng ,$userid)
         \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'),
         \DB::raw("ROUND({$select}) AS distance")
     );
-    $vendors =  $vendors->get();
+    return $vendors =  $vendors->get();
     
 
 }
