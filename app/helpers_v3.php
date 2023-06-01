@@ -241,6 +241,8 @@ function mostViewVendors($lat ,$lng ,$userid)
     $vendors->where('available', 1);
     $vendors->groupBy('profile_visit_users.vendor_id');
     $vendors->orderBy(DB::raw('count(profile_visit_users.id)'),"DESC");
+    $vendors->limit(10);
+
     $vendors->select(
         'vendor_type',
         'start_time',
@@ -263,6 +265,7 @@ function mostViewVendors($lat ,$lng ,$userid)
         \DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_like'),
         \DB::raw("ROUND({$select}) AS distance")
     );
-    return $vendors->get();
+    $vendors =  $vendors->get();
+    
 
 }

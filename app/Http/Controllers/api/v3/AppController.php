@@ -111,6 +111,20 @@ class AppController extends Controller
             $vendor =  get_restaurant_near_me_v3($request->lat, $request->lng, ['vendor_type' => 'restaurant'], request()->user()->id, $request->offset, $request->limit);
             $vendor->orderBy('vendor_ratings',"DESC");
             $vendor = $vendor->get();
+            foreach ($vendor as $key => $value) {
+                if ($value->banner_image != '') {
+                    $banners = @json_decode(@$value->banner_image);
+                    if (is_array($banners))
+                        $urlbanners = array_map(function ($banner) {
+                            return URL::to('vendor-banner/') . '/' . $banner;
+                        }, $banners);
+                    else
+                        $urlbanners = [];
+                    $resturant[$key]->banner_image = $urlbanners;
+                }
+                $vendor[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                $vendor[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+            }
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
@@ -257,7 +271,24 @@ class AppController extends Controller
                 ], 401);
             }
             $reponce = mostViewVendors($request->lat,$request->lng,request()->user()->id);
-            $reponce = (count($reponce) >= 5) ? $reponce : [];
+            if(count($reponce) >= 5){
+                foreach ($reponce as $key => $value) {
+                    if ($value->banner_image != '') {
+                        $banners = @json_decode(@$value->banner_image);
+                        if (is_array($banners))
+                            $urlbanners = array_map(function ($banner) {
+                                return URL::to('vendor-banner/') . '/' . $banner;
+                            }, $banners);
+                        else
+                            $urlbanners = [];
+                        $resturant[$key]->banner_image = $urlbanners;
+                    }
+                    $reponce[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                    $reponce[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                }
+            }else{
+                $reponce = [];
+            }
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
