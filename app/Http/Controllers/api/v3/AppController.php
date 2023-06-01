@@ -120,7 +120,7 @@ class AppController extends Controller
                         }, $banners);
                     else
                         $urlbanners = [];
-                    $resturant[$key]->banner_image = $urlbanners;
+                    $vendor[$key]->banner_image = $urlbanners;
                 }
                 $vendor[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                 $vendor[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
@@ -281,7 +281,7 @@ class AppController extends Controller
                             }, $banners);
                         else
                             $urlbanners = [];
-                        $resturant[$key]->banner_image = $urlbanners;
+                        $reponce[$key]->banner_image = $urlbanners;
                     }
                     $reponce[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                     $reponce[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
