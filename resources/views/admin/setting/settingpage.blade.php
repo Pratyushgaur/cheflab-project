@@ -516,45 +516,83 @@
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header">
-                      <h3 class="card-title">Change Password </h3>
+                      <h3 class="card-title">Payment gateway setup </h3>
                       
                     </div>
                     <div class="card-body pad table-responsive">
-                      <form id="restaurant-form" action="{{route('admin.globle.change_password')}}" method="post" enctype="multipart/form-data">
+                      <!-- <form id="restaurant-form" action="{{route('admin.globle.change_password')}}" method="post" enctype="multipart/form-data"> -->
                         <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                        <div class="card card-default">
-                            <div class="card-header">
-                                <h3 class="card-title text-bold" >Change Admin Panel Password to access</h3>
-                            </div>
-                            <div class="card-body">
-                              <div class="error">
-                                @if($errors->any())
-                                    {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
-                                @endif
-                              </div>
-                              <div class="row">
-                                <div class="col-md-12">
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Old Password<span class="text-danger">*</span></label>
-                                    <input type="password" value="" name="old_password" class="form-control"  id="exampleInputEmail1" placeholder="Enter Old Password" required>
-                                    
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">New Password <span class="text-danger">*</span></label>
-                                    <input type="password" value="" name="new_password" class="form-control"  id="exampleInputEmail1" placeholder="Enter New Password" required>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Confirm Password <span class="text-danger">*</span></label>
-                                    <input type="password" value="" name="confirm_password" class="form-control"  id="exampleInputEmail1" placeholder="Enter Confirm Password" required>
-                                  </div>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <div class="card card-default">
+                                <div class="card-header">
+                                    <h3 class="card-title text-bold" >CashFree credentials setup</h3>
                                 </div>
-                              </div>
+                                <div class="card-body">
+                                  <div class="error">
+                                    @if($errors->any())
+                                        {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                    @endif
+                                  </div>
+                                  <form action="{{route('admin.globle.setting.cashfree.setup')}}">
+                                    <div class="row">
+                                      <div class="col-md-12">
+                                        <div class="form-group">
+                                          <label for="exampleInputEmail1">App Id<span class="text-danger">*</span></label>
+                                          <input type="text"  name="cashfree_app_id" class="form-control"  id="exampleInputEmail1" placeholder="Enter App Id" value="{{$data->cashfree_app_id}}" required>
+                                          
+                                        </div>
+                                        <div class="form-group">
+                                          <label for="exampleInputEmail1">Secret key <span class="text-danger">*</span></label>
+                                          <input type="text"  name="cashfree_secret_key" class="form-control"  id="exampleInputEmail1" placeholder="Secret Key" value="{{$data->cashfree_secret_key}}" required>
+                                        </div>
+                                        <div class="form-group">
+                                          <input type="submit" class="btn btn-success" value="Save">
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
                             </div>
-                        </div>
-                         <div class="card-footer">
-                            <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button>
                           </div>
-                      </form>
+                          <div class="col-md-6">
+                            <div class="card card-default">
+                                  <div class="card-header">
+                                      <h3 class="card-title text-bold" >RazorPay Credentials setup</h3>
+                                  </div>
+                                  <div class="card-body">
+                                    <div class="error">
+                                      @if($errors->any())
+                                          {!! implode('', $errors->all('<div class="alert alert-danger">:message</div>')) !!}
+                                      @endif
+                                    </div>
+                                    <form action="{{route('admin.globle.setting.razorpay.setup')}}">
+                                      <div class="row">
+                                        <div class="col-md-12">
+                                          <div class="form-group">
+                                            <label for="exampleInputEmail1">RAZOR KEY<span class="text-danger">*</span></label>
+                                            <input type="text"  name="razorpay_key" class="form-control"  id="exampleInputEmail1" placeholder="Enter App Id" value="{{$data->razorpay_key}}" required>
+                                            
+                                          </div>
+                                          <div class="form-group">
+                                            <label for="exampleInputEmail1">RAZOR SECRET <span class="text-danger">*</span></label>
+                                            <input type="text" name="razorpay_key_secret_key" class="form-control"  id="exampleInputEmail1" placeholder="Secret Key" value="{{$data->razorpay_secret_key}}" required>
+                                          </div>
+                                          <div class="form-group">
+                                            <input type="submit" class="btn btn-success" value="Save">
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                        
+                         <div class="card-footer">
+                            <!-- <button class="btn btn-success" ><i class="fa fa-save"></i>Update </button> -->
+                          </div>
+                      <!-- </form> -->
                     </div>
 
                   </div>

@@ -25,9 +25,6 @@ class CreateAdminMasters extends Migration
             $table->text('aboutus');
             $table->string('delivery_charges_fix');
             $table->string('delivery_charges_per_km');
-            //            $table->string('max_cod_amount')->comment('if order more then this then disable COD');
-            //            $table->string('max_preparation_time')->comment('max preparation time');
-
             $table->string('company_name');
             $table->string('logo');
             $table->string('favicon');
@@ -46,6 +43,10 @@ class CreateAdminMasters extends Migration
             $table->string('driver_app_current_version', 20);
             $table->string('driver_app_force_update', 20);
             $table->string('driver_app_soft_update', 20);
+            $table->string('razorpay_key', 255)->nullble();
+            $table->string('razorpay_secret_key', 255)->nullble();
+            $table->string('cashfree_app_id', 255)->nullble();
+            $table->string('cashfree_secret_key', 255)->nullble();
             $table->softDeletes();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

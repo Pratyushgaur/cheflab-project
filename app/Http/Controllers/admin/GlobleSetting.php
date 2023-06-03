@@ -42,6 +42,7 @@ class GlobleSetting extends Controller
         } */
         $id = '1';
         $data = AdminMasters::findOrFail($id);
+        //dd($data->toArray());
         return view('admin/setting/settingpage',compact('data'));
     }
     public function delivery_charge(){
@@ -523,7 +524,6 @@ class GlobleSetting extends Controller
        return redirect()->route('admin.dashboard')->with('message', 'Product Active Successfully');
     }
     
-
     public function changePassword(Request $request)
     {
         $this->validate($request, [
@@ -545,5 +545,29 @@ class GlobleSetting extends Controller
 
 
     }
+
+    public function razorpay_setup(Request $request)
+    {
+        $this->validate($request, [
+            'razorpay_key' => 'required',
+            'razorpay_key_secret_key' => 'required'
+        ]);
+        AdminMasters::where('id','=',1)->update(['razorpay_key' => $request->razorpay_key ,'razorpay_secret_key' =>$request->razorpay_key_secret_key]);
+        
+        $admin = \App\Models\Superadmin::findOrfail(1);
+        return \Redirect::back()->with(['message' => 'Successfully']);
+    }
+    public function cashfree_setup(Request $request)
+    {
+        $this->validate($request, [
+            'cashfree_app_id' => 'required',
+            'cashfree_secret_key' => 'required'
+        ]);
+        AdminMasters::where('id','=',1)->update(['cashfree_app_id' => $request->cashfree_app_id ,'cashfree_secret_key' =>$request->cashfree_secret_key]);
+        
+        $admin = \App\Models\Superadmin::findOrfail(1);
+        return \Redirect::back()->with(['message' => 'Successfully']);
+    }
+    
     
 }

@@ -229,6 +229,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('globle-social-media-edit/{id}', [App\Http\Controllers\admin\GlobleSetting::class, 'fun_edit_socialmedia'])->name('admin.social.mediaedit');
     Route::post('globle-social-media-update', [App\Http\Controllers\admin\GlobleSetting::class,'social_media_update'])->name('admin.globle.socialmedia_update');
     Route::get('globle-product-active', [App\Http\Controllers\admin\GlobleSetting::class,'product_active'])->name('admin.globle.productactive');
+    Route::get('globle-razorpay-setup', [App\Http\Controllers\admin\GlobleSetting::class,'razorpay_setup'])->name('admin.globle.setting.razorpay.setup');
+    Route::get('globle-cashfree-setup', [App\Http\Controllers\admin\GlobleSetting::class,'cashfree_setup'])->name('admin.globle.setting.cashfree.setup');
+    
     //Route::get('vendor-products-active/{id}', [App\Http\Controllers\admin\ProductController::class, 'activeProduct'])->name('admin.appblock.list');
     // Contant Managemnt
     Route::get('content-menegement-user', [App\Http\Controllers\admin\Contantmanagement::class,'index'])->name('admin.user.contentmanagement');
