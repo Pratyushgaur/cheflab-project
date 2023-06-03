@@ -330,8 +330,22 @@ class AppController extends Controller
                 $data = get_restaurant_near_me($request->lat, $request->lng, ['vendor_type' => 'restaurant'], $request->user()->id, null, null, [], 'yes')
                     ->addSelect('review_count', 'deal_cuisines', 'fssai_lic_no', 'banner_image', 'vendor_food_type', 'table_service', 'start_time', 'end_time', 'table_service')
                     ->where('name', 'like', '%' . $request->keyword . '%')->skip($request->offset)->take(10)->get();
+                // foreach ($data as $key => $value) {
+                //     $data[$key]->next_available = next_available_day($value->id);
+                // }
                 foreach ($data as $key => $value) {
-                    $data[$key]->next_available = next_available_day($value->id);
+                    if ($value->banner_image != '') {
+                        $banners = @json_decode(@$value->banner_image);
+                        if (is_array($banners))
+                            $urlbanners = array_map(function ($banner) {
+                                return URL::to('vendor-banner/') . '/' . $banner;
+                            }, $banners);
+                        else
+                            $urlbanners = [];
+                        $data[$key]->banner_image = $urlbanners;
+                    }
+                    $data[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
+                    $data[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
                 }
             } elseif ($request->search_for == 'dishes') {
                 $user_id = request()->user()->id;
