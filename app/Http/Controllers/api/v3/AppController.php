@@ -346,6 +346,8 @@ class AppController extends Controller
                     }
                     $data[$key]->cuisines       = \App\Models\Cuisines::whereIn('cuisines.id', explode(',', $value->deal_cuisines))->pluck('name');
                     $data[$key]->categories       = \App\Models\Catogory_master::whereIn('id', explode(',', $value->deal_categories))->pluck('name');
+                    $data[$key]->next_available = next_available_day($value->id);
+
                 }
             } elseif ($request->search_for == 'dishes') {
                 $user_id = request()->user()->id;
