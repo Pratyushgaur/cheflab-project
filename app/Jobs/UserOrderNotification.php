@@ -39,5 +39,6 @@ class UserOrderNotification implements ShouldQueue
     public function handle()
     {
         sendUserAppNotification($this->title,$this->body,$this->token,array('type'=>$this->type,'data'=>array('data'=>$this->data)));
+        var_dump("Yes done send notification");
     }
 }
