@@ -357,7 +357,7 @@ class AppController extends Controller
                 $orderdata->update(['order_status' => 'dispatched', 'pickup_time' => mysql_date_time()]);
                 orderDeliverd($request->order_row_id);
                 $user = \App\Models\User::where('id', '=', $orderdata->first()->user_id)->select('fcm_token')->first();
-                if (!empty($user)) {
+                if (count($user) > 0) {
                     if ($user->fcm_token != '') {
                         //xsendUserAppNotification('Order dispated from restaurant ',"Your Order has been Dispatched",$user->fcm_token,array('type'=>4,'data'=>array('data'=>array())));
                         $data = orderDetailForUser($request->order_row_id);
