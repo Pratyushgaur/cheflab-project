@@ -1168,7 +1168,7 @@ function next_available_day($vendor_id, $return_obj = false)
             $days[5] = "friday";
             $days[6] = "saturday";
 
-            return $days[$next_available_day->day_no] . ' at ' . front_end_time($next_available_day->start_time);
+            return $days[$next_available_day->day_no] . ' ' . front_end_time($next_available_day->start_time);
         }
     else
         return null;
