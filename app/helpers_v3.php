@@ -67,6 +67,12 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
         $join->where('carts.user_id','=',$user_id);
 
     });
+    $product = $product->leftJoin('vendor_offers', function ($join)  {
+            $join->on('products.userId', '=', 'vendor_offers.vendor_id');
+            $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
+            $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+    });
+    
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
     //    dd($product->get()->toArray());
@@ -87,7 +93,16 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
         DB::raw('ROUND(product_rating,1) AS product_rating'),
         'primary_variant_name',
         DB::Raw('IFNULL( cart_products.product_qty , 0 ) as cart_qty'),
-        "menu_id"
+        "menu_id",
+        DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
+        DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+        DB::raw('
+        (CASE 
+            WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
+                ELSE `product_price`
+            END) as after_offer_price'
+        )
+
     )->get();
     
     return $product;

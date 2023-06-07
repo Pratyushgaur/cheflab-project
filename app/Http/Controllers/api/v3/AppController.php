@@ -365,6 +365,11 @@ class AppController extends Controller
                         ->where('end_time', '>', mysql_time())
                         ->where('available', '=', 1);
                 });
+                $product = $product->leftJoin('vendor_offers', function ($join)  {
+                        $join->on('products.userId', '=', 'vendor_offers.vendor_id');
+                        $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
+                        $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                });
                 $product->where(DB::raw("ROUND({$select})") ,'<=', config('custom_app_setting.near_by_distance'));
                 $product = $product->Select(
                     DB::raw('products.userId as vendor_id'),
@@ -381,7 +386,15 @@ class AppController extends Controller
                     'primary_variant_name',
                     'products.menu_id',
                     'vendors.name as restaurantName',
-                    DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like')
+                    DB::raw('if(user_product_like.user_id is not null, true, false)  as is_like'),
+                    DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
+                    DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+                    DB::raw('
+                    (CASE 
+                        WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
+                            ELSE `product_price`
+                        END) as after_offer_price'
+                    )
                 );
                 $data = $product->get();
                 $cart = \App\Models\Cart::where('user_id', $user_id)->first();

@@ -99,13 +99,19 @@
         <a href="{{route('restaurant.coupon.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Coupons</span>
         </a>
       </li>
-      <hr>
+
+      
+      <li class="menu-item">
+        <a href="{{route('restaurant.offers.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Offer's</span>
+        </a>
+      </li>
+      
 @if(\Auth::guard('vendor')->user()->table_service==1)
         <li class="menu-item">
             <a href="{{route('restaurant.dineout.index')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Dining</span>
             </a>
         </li>
-        <hr>
+        
 @endif
         <li class="menu-item ">
         <a href="{{route('notification.view')}}" class=""> <span><i class="nav-icon fa fa-bell fs-16 "></i>Notification</span>
