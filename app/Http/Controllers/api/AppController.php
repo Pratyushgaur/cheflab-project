@@ -779,7 +779,25 @@ class AppController extends Controller
                     $data  = ['addons' => $addon];
                 }
 
-                $v = Variant::select('variant_name', 'variant_price', 'id')->where('product_id', $request->product_id)->get();
+                $v = Variant::where('product_id', $request->product_id)->join('products','variants.product_id','=','products.id');
+                $v = $v->leftJoin('vendor_offers', function ($join)  {
+                        $join->on('products.userId', '=', 'vendor_offers.vendor_id');
+                        $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
+                        $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                });
+                $v->select(
+                            'variant_name', 'variant_price', 'variants.id',
+                            DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
+                            DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+                            DB::raw('
+                            (CASE 
+                                WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
+                                    ELSE `product_price`
+                                END) as after_offer_price'
+                            )
+
+                );
+                $v =$v->get();
                 $variantAdded = Cart::where('user_id', '=', $user_id)->join('cart_products', 'carts.id', '=', 'cart_products.cart_id')->join('cart_product_variants', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')->where('cart_products.product_id', '=', $request->product_id)->select('variant_id', 'variant_qty')->get();
                 $variantIds = $variantAdded->pluck('variant_id')->toArray();
                 $variantQtys = $variantAdded->pluck('variant_qty')->toArray();
