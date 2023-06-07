@@ -258,33 +258,49 @@ class CartApiController extends Controller
             $pro      = Product_master::select('cart_products.product_qty', 'products.product_name', 'products.product_image', 'products.category', 'products.menu_id',
                 'products.dis', 'products.type', 'products.product_price', 'products.customizable', 'products.product_for', 'products.product_rating', 'products.cuisines',
                 'products.addons', 'variants.id as variant_id', 'variants.*', 'addons',
-                'cart_product_variants.*', 'products.id as product_id'
+                'cart_product_variants.*', 'products.id as product_id',
 //                'cart_products.id as cart_product_id', 'cart_product_addons.id as cart_product_addon_id', 'cart_product_variants.id as cart_product_variant_id'
+                DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
+                DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+                DB::raw('
+                (CASE 
+                    WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
+                        ELSE `product_price`
+                    END) as after_offer_price'
+                )
             )
                 ->where('products.status', 1)->where('products.product_approve', 1)
                 ->join('cart_products', 'products.id', 'cart_products.product_id')
                 ->where('cart_products.cart_id', $cart_id)
                 ->leftJoin('variants', 'products.id', 'variants.product_id')
                 ->leftJoin('cart_product_variants', 'variants.id', 'cart_product_variants.variant_id')
+                ->leftJoin('vendor_offers', function ($join)  {
+                        $join->on('products.userId', '=', 'vendor_offers.vendor_id');
+                        $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
+                        $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                })
                 ->get()->toArray();
             $responce = [];
 
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '' && !isset($responce[$product['product_id']])) {
 
-                    $responce[$product['product_id']]['product_id']     = $product['product_id'];
-                    $responce[$product['product_id']]['product_name']   = $product['product_name'];
-                    $responce[$product['product_id']]['product_qty']    = $product['product_qty'];
-                    $responce[$product['product_id']]['product_image']  = asset('products') . '/' . $product['product_image'];
-                    $responce[$product['product_id']]['category']       = $product['category'];
-                    $responce[$product['product_id']]['menu_id']        = $product['menu_id'];
-                    $responce[$product['product_id']]['dis']            = $product['dis'];
-                    $responce[$product['product_id']]['type']           = $product['type'];
-                    $responce[$product['product_id']]['product_price']  = $product['product_price'];
-                    $responce[$product['product_id']]['customizable']   = $product['customizable'];
-                    $responce[$product['product_id']]['product_for']    = $product['product_for'];
-                    $responce[$product['product_id']]['product_rating'] = $product['product_rating'];
-                    $responce[$product['product_id']]['addons']         = $product['addons'];
+                    $responce[$product['product_id']]['product_id']         = $product['product_id'];
+                    $responce[$product['product_id']]['product_name']       = $product['product_name'];
+                    $responce[$product['product_id']]['product_qty']        = $product['product_qty'];
+                    $responce[$product['product_id']]['product_image']      = asset('products') . '/' . $product['product_image'];
+                    $responce[$product['product_id']]['category']           = $product['category'];
+                    $responce[$product['product_id']]['menu_id']            = $product['menu_id'];
+                    $responce[$product['product_id']]['dis']                = $product['dis'];
+                    $responce[$product['product_id']]['type']               = $product['type'];
+                    $responce[$product['product_id']]['product_price']      = $product['product_price'];
+                    $responce[$product['product_id']]['offer_id']           = $product['offer_id'];
+                    $responce[$product['product_id']]['offer_persentage']   = $product['offer_persentage'];
+                    $responce[$product['product_id']]['after_offer_price']  = $product['after_offer_price'];
+                    $responce[$product['product_id']]['customizable']       = $product['customizable'];
+                    $responce[$product['product_id']]['product_for']        = $product['product_for'];
+                    $responce[$product['product_id']]['product_rating']     = $product['product_rating'];
+                    $responce[$product['product_id']]['addons']             = $product['addons'];
 
                     $variants = Variant::where('product_id', '=', $product['product_id'])->select('variant_name', 'variant_price', 'id as variant_id')->get();
                     if (isset($variants[0]))//if product have variants
