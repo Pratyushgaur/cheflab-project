@@ -313,7 +313,14 @@ class CartApiController extends Controller
                             if (!empty($exist)) {//if product have variants get and add qty and price
 //                                echo "$cart_sub_toatl_amount    += ".$vvalue['variant_price']." -----------";
 //                                echo "<br/>$cart_sub_toatl_amount+ $exist->variant_qty*".$vvalue['variant_price'];
-                                $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
+                                if($product['offer_id'] == '0'){
+                                    $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
+
+                                }else{
+                                    $varintPrice = $vvalue['variant_price']-$vvalue['variant_price']/100*$product['offer_persentage'];
+                                    $cart_sub_toatl_amount    += ($varintPrice*$product['product_qty']);
+
+                                }
 //                                echo "=$cart_sub_toatl_amount";
                                 $variants[$vkey]['added'] = true;
 //                            $variants[$vkey]['qty'] = $exist->product_qty;
@@ -323,9 +330,14 @@ class CartApiController extends Controller
                                 $variants[$vkey]['added'] = false;
                             }
                         }
-                    else {//product have no variants
-//                        dd("sdfs");
-                        $cart_sub_toatl_amount    += ($product['product_price']*$product['product_qty']);
+                    else {
+                        if($product['offer_id'] == '0'){
+                            $cart_sub_toatl_amount    += ($product['product_price']*$product['product_qty']);
+
+                        }else{
+                            $cart_sub_toatl_amount    += ($product['after_offer_price']*$product['product_qty']);
+
+                        }
                     }
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price'] = $product['variant_price'];
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
