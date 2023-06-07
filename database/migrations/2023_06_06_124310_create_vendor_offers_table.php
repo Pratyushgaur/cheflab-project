@@ -20,7 +20,7 @@ class CreateVendorOffersTable extends Migration
             $table->string('offer_persentage')->default("0");
             $table->date('from_date');
             $table->date('to_date');
-            $table->enum('status',["0","1"]);
+            $table->enum('status',["0","1"])->default("0");
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
