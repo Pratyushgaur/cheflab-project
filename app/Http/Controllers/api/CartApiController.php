@@ -321,13 +321,20 @@ class CartApiController extends Controller
                                     $cart_sub_toatl_amount    += ($varintPrice*$product['product_qty']);
 
                                 }
-//                                echo "=$cart_sub_toatl_amount";
                                 $variants[$vkey]['added'] = true;
-//                            $variants[$vkey]['qty'] = $exist->product_qty;
                                 $variants[$vkey]['qty'] = $exist->variant_qty;
 
                             } else {
                                 $variants[$vkey]['added'] = false;
+                            }
+                            $variants[$vkey]['offer_id']         = $product['offer_id'];
+                            $variants[$vkey]['offer_persentage'] = $product['offer_persentage'];
+                            if($product['offer_id'] != '0'){
+                                $variants[$vkey]['after_offer_price'] = $vvalue['variant_price']-$vvalue['variant_price']/100*$product['offer_persentage'];
+
+                            }else{
+                                $variants[$vkey]['after_offer_price'] = $vvalue['variant_price'];
+
                             }
                         }
                     else {
