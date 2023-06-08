@@ -791,8 +791,8 @@ class AppController extends Controller
                             DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
                             DB::raw('
                             (CASE 
-                                WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
-                                    ELSE `product_price`
+                                WHEN vendor_offers.id IS NOT NULL THEN `variant_price`-`variant_price`/100*vendor_offers.offer_persentage
+                                    ELSE `variant_price`
                                 END) as after_offer_price'
                             )
 
