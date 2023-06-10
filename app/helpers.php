@@ -408,7 +408,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
         DB::raw('ROUND(product_rating,1) AS product_rating'),
         'dis',
         'chili_level',
-        'primary_variant_name'
+        'primary_variant_name',
+        'products.menu_id'
     )
         ->get();
     //dd($product->toArray());
@@ -449,7 +450,8 @@ function get_product_with_variant_and_addons($product_where = [], $user_id = '',
                     'chili_level'          => $p['chili_level'],
                     'cuisines'             => $p['cuisinesName'],
                     'categorie'            => $p['categorieName'],
-                    'cart_qty'             => $qty
+                    'cart_qty'             => $qty,
+                    'menu_id'              => $p['menu_id']
                 ];
                 if ($with_restaurant_name) {
                     $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
@@ -833,25 +835,28 @@ function get_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_objec
 
     // $select  = "( 3959 * acos( cos( radians($lat) ) * cos( radians( vendors.lat ) ) * cos( radians( vendors.long ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( vendors.lat ) ) ) ) ";
     $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(vendors.lat)) * cos(radians(vendors.long) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(vendors.lat))) ";
-    $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1']);
+    $vendors = \App\Models\Vendors::where(['vendors.status' => '1', 'is_all_setting_done' => '1', 'vendors.is_online' => 1]);
     //$vendors = $vendors->selectRaw("ROUND({$select},1) AS distance")->addSelect("vendors.id");
     $vendors = $vendors->selectRaw("ROUND({$select}) AS distance")->addSelect("vendors.id");
     $vendors->having('distance', '<=', config('custom_app_setting.near_by_distance'));
-    $vendors->where("vendors.is_all_setting_done", 1)
-        ->where('vendors.status', 1)->where('vendors.is_online', 1);
-    if ($group_by)
-        //$vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
+    if ($group_by){
         $vendors->withCount(['products as product_count'])->having('product_count', '>', 0);
-
-    if (empty($where))
+    }
+        //$vendors->join('products as p', 'p.userId', '=', 'vendors.id')->addSelect('p.userId', DB::raw('COUNT(*) as product_count'))->groupBy('p.userId')->having('product_count', '>', 0);
+    if (empty($where)){
         $vendors->where($where);
+    }
+        
     if ($return_query_object) {
-        if ($offset != null && $limit != null)
+        if ($offset != null && $limit != null){
             return $vendors->offset($offset)->limit($limit);
-        else
+        }else{
             return $vendors;
-    } else
+        }
+    } else{
         return $vendors->orderBy('vendors.id', 'desc')->pluck('id');
+
+    }
 }
 
 function get_active_time_restaurant_ids_near_me($lat, $lng, $where = [], $return_query_object = false, $offset = null, $limit = null, $group_by = true)
@@ -1836,7 +1841,7 @@ function updateDriverLatLngFromFcm()
         if (!empty($ids)) {
             $database = app('firebase.database');
             foreach ($ids as $key => $value) {
-                $reference = $database->getReference('locations')->getChild($value)->getvalue();
+                $reference = $database->getReference('testingLocation')->getChild($value)->getvalue();
                 if (!empty($reference)) {
                     $deliverBoy = \App\Models\Deliver_boy::where('id', '=', $reference['driver_id'])->where('is_online', '=', '1')->first();
                     if (!empty($deliverBoy)) {
@@ -2229,3 +2234,5 @@ function getVendorByIdForApp($lat=null,$lng=null,$vendorId,$current_user_id)
     $vendors->next_available = next_available_day($vendors->id);
     return $vendors;
 }
+// *************** recreation v3 code ******************//
+@require_once 'helpers_v3.php';

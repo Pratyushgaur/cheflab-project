@@ -17,7 +17,7 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (session()->has('**^&%*$$username**$%#','*$%&%*id**$%#')  && Auth::guard('admin')->user()) {
+        if (session()->has('**^&%*$$username**$%#','*$%&%*id**$%#','admin_login')  && Auth::guard('admin')->user()) {
              return $next($request);
         }else{
             Auth::logout();

@@ -12,7 +12,7 @@ class Vendors extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    protected $fillable = ['table_service','password_change_otp','auto_accept_prepration_time'];
+    protected $fillable = ['table_service','password_change_otp','auto_accept_prepration_time','career_starting_date'];
 
     public function vendor_order_time()
     {

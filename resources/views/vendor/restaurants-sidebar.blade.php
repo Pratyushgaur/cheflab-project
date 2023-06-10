@@ -48,11 +48,12 @@
 
         </ul>
       </li>
+      @if(Auth::guard('vendor')->user()->vendor_type == 'restaurant')
       <li class="menu-item">
-      <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menu Catalogue</span>
+        <a href="{{route('restaurant.menu.list')}}" class="{{ Request::routeIs('restaurant.menu.list') ? 'active' : '' }}"> <span><i class="fa fa-archive fs-16"></i>Menu Catalogue</span>
         </a>
       </li>
-
+      @endif
       <li class="menu-item">
         <a href="#" class="has-chevron {{ request()->is('vendor/restaurant/product*') ? 'active' : '' }}" data-toggle="collapse" data-target="#product" aria-expanded="false" aria-controls="product"> <span><i class="nav-icon fa fa-fire fs-16"></i>Products </span>
         </a>
@@ -98,13 +99,19 @@
         <a href="{{route('restaurant.coupon.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Coupons</span>
         </a>
       </li>
-      <hr>
+
+      
+      <li class="menu-item">
+        <a href="{{route('restaurant.offers.list')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Offer's</span>
+        </a>
+      </li>
+      
 @if(\Auth::guard('vendor')->user()->table_service==1)
         <li class="menu-item">
             <a href="{{route('restaurant.dineout.index')}}"> <span><i class="nav-icon fa fa-gift fs-16"></i>Dining</span>
             </a>
         </li>
-        <hr>
+        
 @endif
         <li class="menu-item ">
         <a href="{{route('notification.view')}}" class=""> <span><i class="nav-icon fa fa-bell fs-16 "></i>Notification</span>
@@ -125,7 +132,7 @@
       </li>
 
         <li class="menu-item ">
-            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>Restaurant Rating/Review</span></a>
+            <a href="{{route('restaurant.vendor.reviews')}}" class=""> <span> <i class="material-icons">chat</i>{{ucfirst(Auth::guard('vendor')->user()->vendor_type)}} Rating/Review</span></a>
         </li>
 
         <li class="menu-item ">

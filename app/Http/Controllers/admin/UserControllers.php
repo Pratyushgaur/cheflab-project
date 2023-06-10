@@ -342,63 +342,80 @@ class UserControllers extends Controller
     {
 
         $this->validate($request, [
-            'restourant_name'   => 'required',
-            'email'             => 'required|unique:vendors,email',
-            'pincode'           => 'required',
-            'phone'             => 'required|unique:vendors,mobile',
-            'experience'        => 'required',
-            'dob'               => 'required',
-            'deal_categories'   => 'required',
-            'deal_cuisines'     => 'required',
-            'address'           => 'required',
-            'password'          => 'required',
-            'confirm_password'  => 'required',
-            'vendor_commission' => 'required',
-            'start_time.*'      => 'nullable|date_format:H:i',
-            'end_time.*'        => 'nullable|date_format:H:i',
-            'available.*'       => [ 'nullable', 'between:0,1', new VendorOrderTimeRule($request) ],
-            'lat'               => 'required',
-            'long'              => 'required',
+            'restourant_name'       => 'required',
+            'email'                 => 'required|unique:vendors,email',
+            'pincode'               => 'required',
+            'phone'                 => 'required',
+            'career_starting_date'  => 'required',
+            'dob'                   => 'required',
+            'deal_categories'       => 'required',
+            'deal_cuisines'         => 'required',
+            'address'               => 'required',
+            'password'              => 'required',
+            'confirm_password'      => 'required',
+            'vendor_commission'     => 'required',
+            'start_time.*'          => 'nullable|date_format:H:i',
+            'end_time.*'            => 'nullable|date_format:H:i',
+            'available.*'           => [ 'nullable', 'between:0,1', new VendorOrderTimeRule($request) ],
+            'lat'                   => 'required',
+            'long'                  => 'required',
+            'platform_fee'          => 'required',
+            
         ]);
-        $vendors                      = new Vendors;
-        $vendors->name                = $request->restourant_name;
-        $vendors->email               = $request->email;
-        $vendors->dob                 = $request->dob;
-        $vendors->experience          = $request->experience;
-        $vendors->address             = $request->address;
-        $vendors->deal_categories     = implode(',', $request->deal_categories);
-        $vendors->deal_cuisines       = implode(',', $request->deal_cuisines);
-        $vendors->password            = Hash::make($request->password);
-        $vendors->vendor_type         = 'chef';
-        $vendors->mobile              = $request->phone;
-        $vendors->speciality          = implode(',', $request->speciality);
-        $vendors->pincode             = $request->pincode;
-        $vendors->address             = $request->address;
-        $vendors->tax                 = $request->tax;
-        $vendors->bio                 = $request->bio;
-        $vendors->is_all_setting_done = 1;
-        $vendors->lat                 = $request->lat;
-        $vendors->long                = $request->long;
+        
+        $vendors                        = new Vendors;
+        $vendors->name                  = $request->restourant_name;
+        $vendors->email                 = $request->email;
+        $vendors->dob                   = $request->dob;
+        $vendors->experience            = $request->experience;
+        $vendors->career_starting_date  = $request->career_starting_date;
+        $vendors->address               = $request->address;
+        $vendors->deal_categories       = implode(',', $request->deal_categories);
+        $vendors->deal_cuisines         = implode(',', $request->deal_cuisines);
+        $vendors->password              = Hash::make($request->password);
+        $vendors->vendor_type           = 'chef';
+        $vendors->mobile                = $request->phone;
+        $vendors->alt_mobile            = $request->alt_phone;
+        $vendors->speciality            = $request->speciality;
+        $vendors->pincode               = $request->pincode;
+        $vendors->address               = $request->address;
+        $vendors->tax                   = $request->tax;
+        $vendors->bio                   = $request->bio;
+        $vendors->is_all_setting_done   = 1;
+        $vendors->lat                   = $request->lat;
+        $vendors->long                  = $request->long;
+        $vendors->fssai_lic_no          = $request->fssai_lic_no;
+        $vendors->platform_fee          = $request->platform_fee;
+        
+        
         if ($request->has('image')) {
-            $filename = time() . '-profile-' . rand(100, 999) . '.' . $request->image->extension();
+            $filename = time() . '-chef-logo-profile-' . rand(100, 999) . '.' . $request->image->extension();
             $request->image->move(public_path('vendors'), $filename);
             // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
             $vendors->image = $filename;
         }/*else{
             $vendors->image  = 'default_chef_image.jpg';
         }*/
+        if ($request->has('profile_image')) {
+            $filename = time() . '-chef-profile-profile-' . rand(100, 999) . '.' . $request->profile_image->extension();
+            $request->profile_image->move(public_path('vendors'), $filename);
+            // $filePath = $request->file('image')->storeAs('public/vendor_image',$filename);
+            $vendors->profile_image = $filename;
+        }
+        
         if ($request->has('fassai_image')) {
-            $filename = time() . '-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
+            $filename = time() . '-chef-document-' . rand(100, 999) . '.' . $request->fassai_image->extension();
             $request->fassai_image->move(public_path('vendor-documents'), $filename);
             $vendors->licence_image = $filename;
         }
+       
         if ($request->has('other_document')) {
             $filename = time() . '-other-document-' . rand(100, 999) . '.' . $request->other_document->extension();
             $request->other_document->move(public_path('vendor-documents'), $filename);
             $vendors->other_document_image = $filename;
             $vendors->other_document       = $request->other_document_name;
         }
-
+        
         $vendors->save();
         //
         foreach ($request->start_time as $key => $val) {
@@ -420,7 +437,24 @@ class UserControllers extends Controller
                 ];
         }
         Order_time::insert($data);
+        if($request->bank_name!='' && $request->holder_name!='' && $request->account_no!='' && $request->ifsc!=''){
+            $bankdetail = new BankDetail;
+            $bankdetail->vendor_id = $vendors->id;
+            $bankdetail->bank_name = $request->bank_name;      
+            $bankdetail->holder_name = $request->holder_name;
+            $bankdetail->account_no = $request->account_no;
 
+            if ($request->has('cancel_check')) {
+                $filename = time() . '-check-' . rand(100, 999) . '.' . $request->cancel_check->extension();
+                $request->cancel_check->move(public_path('vendor-documents'), $filename);
+                $files               = $filename;
+                // echo '<pre>'; print_r($files);die;
+                $bankdetail->cancel_check = $files;
+            }
+
+            $bankdetail->ifsc = $request->ifsc;
+            $bankdetail->save();
+        }
 
         return redirect()->route('admin.chef.create')->with('message', 'Vendor Registration Successfully');
 
@@ -927,8 +961,39 @@ class UserControllers extends Controller
             $user = $user->orWhere('mobile_number', 'like', '%' . $request->search . '%');
         }
         
-        $users = $user->paginate(15)->appends(request()->query());
+        $users = $user->paginate(100)->appends(request()->query());
         return view('admin/vendors/user_list', compact('users','keyword'));
+    }
+    public function get_data_table_of_user(Request $request)
+    {
+        if ($request->ajax()) {
+            $data = User::latest()->select('id','name','email','mobile_number','wallet_amount','status');
+            return Datatables::of($data)
+                ->addIndexColumn()
+                ->addColumn('status', function ($data) {
+                    if($data->status == '1'){
+                        return '<a href="javascript:void(0);" class="btn btn-success btn-xs inactive-record" data-alert-message="Are You Sure to Inactive this User" flash="User" data-action-url="'.route('admin.user.inactive',['id'=>encrypt($data->id)]).'" title="Inactive">Active</a>';
+                    }else{
+                        return '<a href="javascript:void(0);" class="btn btn-danger btn-xs active-record"  data-alert-message="Are You Sure to Active this User" flash="User" data-action-url="'.route('admin.user.active',['id'=>encrypt($data->id)]).'" title="Active">Inactive</a>';
+                    }
+                    
+                })
+                ->addColumn('wallet', function ($data) {
+                    if($data->wallet_amount!=null){
+                        $wallet =  $data->wallet_amount;
+                    }else{
+                        $wallet =  '0';
+                    }
+                    return $wallet .= '&#8377;<br><a href="#" class="add_wallet" data-url="'.route('user.wallet.add',$data->id).'" data-name="'.$data->name.'" data-id="'.$data->id.'">Add</a>';
+                })
+                ->addColumn('action', function ($data) {
+                    return '<a target="_blank" href="'.route('admin.user.view',['id'=>encrypt($data->id)]).'"><i class="fa fa-eye"></i></a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Category" flash="City" data-action-url="'.route('admin.user.delete',['id'=>encrypt($data->id)]).'" title="Delete"><i class="fa fa-trash"></i></a>';
+                })
+                ->rawColumns([ 'wallet', 'action', 'status'])
+                ->make(true);
+        }
+
     }
     public function add_wallet(Request $request ,$id)
     {

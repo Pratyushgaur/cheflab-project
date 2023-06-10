@@ -198,8 +198,8 @@
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Cooking Exp <span class="text-danger">*</span></label>
-                                        <input type="number" name="experience" class="form-control"  id="" placeholder="Enter Cooking Experence ">
+                                        <label for="exampleInputEmail1">Career  start date<span class="text-danger">*</span></label>
+                                        <input type="date" name="career_starting_date" class="form-control"  id="" placeholder="Enter Career Start date">
                                     </div>
                                   </div>
                                   <div class="col-md-3">
@@ -208,16 +208,22 @@
                                         <input type="text" name="pincode" class="form-control"  id="" placeholder="Enter Pincode">
                                     </div>
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Phone <span class="text-danger">*</span></label>
                                         <input type="text" name="phone" class="form-control"  id="" placeholder="Enter Mobile Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-3">
+                                        <div class="form-group">
+                                        <label for="exampleInputEmail1">Alternate Mobile Number</label>
+                                        <input type="text" name="alt_phone" class="form-control" id="" placeholder="Enter Alternate Mobile Number">
+                                        </div>
+                                    </div>
                                   <div class="col-md-12">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Deal With Categories <span class="text-danger">*</span></label>
-                                          <select name="deal_categories[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                          <select name="deal_categories[]" class="select2 " multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
                                               @foreach($categories as $k =>$v)
                                               <option value="{{$v->id}}">{{$v->name}}</option>
                                               @endforeach
@@ -227,7 +233,7 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Deal With Cuisines <span class="text-danger">*</span></label>
-                                        <select name="deal_cuisines[]" class="select2" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
+                                        <select name="deal_cuisines[]" class="select2 deals_with_cuisines" multiple="multiple" data-placeholder="Select Deal Cuisines" style="width: 100%;">
                                             @foreach($cuisines as $k =>$v)
                                             <option value="{{$v->id}}">{{$v->name}}</option>
                                             @endforeach
@@ -237,14 +243,14 @@
                                   <div class="col-md-12">
                                     <div class="form-group">
                                           <label for="exampleInputEmail1">Speciality <span class="text-danger">*</span></label>
-                                          <select name="speciality[]" class="select2" multiple="multiple" data-placeholder="Select Deal Categories" style="width: 100%;">
+                                          <select name="speciality" class="select2"  data-placeholder="Select Deal Categories" style="width: 100%;">
                                               @foreach($cuisines as $k =>$v)
                                               <option value="{{$v->id}}">{{$v->name}}</option>
                                               @endforeach
                                             </select>
                                       </div>
                                   </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3">
                                       <div class="form-group">
 
                                           <label for="exampleInputEmail1"> Food Type</label><br>
@@ -263,7 +269,7 @@
                                           </div>
                                       </div>
                                     </div>
-                                  <div class="col-md-4">
+                                  <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Address <span class="text-danger">*</span></label>
                                         <input type="text" name="address" class="form-control"  id="" placeholder="Enter Chef Address">
@@ -275,6 +281,12 @@
                                         <input type="text" name="fssai_lic_no" class="form-control"  id="" placeholder="Enter FSSAI licence Number">
                                     </div>
                                   </div>
+                                  <div class="col-md-3">
+                                        <div class="form-group">
+                                        <label for="exampleInputEmail1">Vendor Platform Fee <span class="text-danger">*</span></label>
+                                        <input type="text" name="platform_fee" value="" class="form-control" id="platform_fee" placeholder="Enter Plat Form Fee" required>
+                                        </div>
+                                    </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Password <span class="text-danger">*</span></label>
@@ -289,7 +301,7 @@
                                   </div>
                                   <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1">Vendor Commission Persentage <span class="text-danger">*</span></label>
+                                        <label for="exampleInputEmail1">Commission Persentage <span class="text-danger">*</span></label>
                                         <input type="text" name="vendor_commission" class="form-control"  id="" placeholder="Enter Commission">
                                     </div>
                                   </div>
@@ -399,6 +411,48 @@
 
 
                           </div>
+                           <div class="card card-default">
+                                <div class="card-header">
+                                    <h3 class="card-title text-bold">Bank Information</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                        <label>Bank name</label>
+                                        <input type="text" name="bank_name" class="form-control" id="" placeholder="Enter Bank Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                        <label>Account Holder name</label>
+                                        <input type="text" name="holder_name" class="form-control" id="" placeholder="Enter FSSAI licence Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                        <label>Account Number </label>
+                                        <input type="text" name="account_no" class="form-control" placeholder="Account Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                        <label>IFSC Code </label>
+                                        <input type="text" name="ifsc" class="form-control" placeholder="IFSC Code">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form-group">
+                                        <label>Cancel Cheque</label>
+                                        <input type="file" name="cancel_check" class="form-control" placeholder="Cancel Check">
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <!-- div row -->
+                                </div>
+
+
+                            </div>
                           <!-- time setup -->
                           <div class="card card-default">
                               <div class="card-header">
@@ -820,7 +874,12 @@
                   minlength: 10,
                   maxlength: 10,
                   number: true,
-                  remote: '{{route("admin.vendor.mobilecheck")}}',
+                  //remote: '{{route("admin.vendor.mobilecheck")}}',
+              },
+              alt_phone: {
+                minlength: 10,
+                maxlength: 10,
+                number: true,
               },
               pincode: {
                   required: true,
@@ -1070,6 +1129,12 @@ longitudeField.value = lng;
                     }
                 });
             });
+            // $('.deals_with_cuisines').change(function(){
+                
+            // })
+            // $(document).on('change','.deals_with_cuisines',function(){
+            //     console.log($(this).text());
+            // })
         })(jQuery);
     </script>
 @endsection

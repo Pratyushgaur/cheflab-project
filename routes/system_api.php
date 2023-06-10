@@ -115,6 +115,8 @@
  // User Rechar
  Route::post('get-user-wallet', [App\Http\Controllers\api\Userwallet::class, 'getUserwallet']);
  Route::post('recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'Recharge']);
+ Route::post('temp-recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'temp_recharge']);
+ Route::post('check-recharge-wallet', [App\Http\Controllers\api\Userwallet::class, 'check_recharge']);
  Route::post('user-all-transaction', [App\Http\Controllers\api\Userwallet::class, 'allTransactions']);
  // Try once
  Route::post('get-user-tryonce', [App\Http\Controllers\api\AppController::class, 'getTryonce']);

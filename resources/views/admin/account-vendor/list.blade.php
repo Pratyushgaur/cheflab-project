@@ -71,10 +71,10 @@
                                     <th class="text-center">S. No.</th>
                                     <th>Vendor Name</th>
                                     <th>Vendor Amount</th>
-                                    <th>Vendor’s Bank Name</th>
+                                    <!-- <th>Vendor’s Bank Name</th>
                                     <th>Vendor’s Bank Account Name</th>
                                     <th>Bank Account Number</th>
-                                    <th>IFSC Code </th>
+                                    <th>IFSC Code </th> -->
                                     <th>Start Date - H:M:S</th>
                                     <th>End Date - H:M:S </th>
                                     <th>UTR</th>
@@ -178,10 +178,10 @@ $('#reportrange').daterangepicker({
           {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'name', name: 'name'},
             {data: 'total', name: 'total'},
-            {data: 'bank_name', name: 'bank_name'},
-            {data: 'holder_name', name: 'holder_name'},
-            {data: 'account_no', name: 'account_no'},
-            {data: 'ifsc', name: 'ifsc'},
+            // {data: 'bank_name', name: 'bank_name'},
+            // {data: 'holder_name', name: 'holder_name'},
+            // {data: 'account_no', name: 'account_no'},
+            // {data: 'ifsc', name: 'ifsc'},
             {data: 'start_date', name: 'start_date'},
             {data: 'end_date', name: 'end_date'},
             {data: 'bank_utr_number', name: 'bank_utr_number'},

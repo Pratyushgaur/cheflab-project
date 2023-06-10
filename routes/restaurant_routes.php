@@ -72,6 +72,14 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::post('coupon/inactive', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'inActive'])->name('restaurant.coupon.inactive');
             Route::post('coupon/active', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class,'Active'])->name('restaurant.coupon.active');
             Route::get('coupon-datecheck/{id}', [App\Http\Controllers\vendor\restaurant\VendorCoupon::class, 'checkCouponDate'])->name('restaurant.coupon.datechke');
+            
+            // offers
+            Route::get('offer', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'index'])->name('restaurant.offers.list');
+            Route::get('offer-list', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'get_data_table_of_offer'])->name('restaurant.offer.data');
+            Route::get('offer-create', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'create_offer'])->name('restaurant.offer.create');
+            Route::post('offer-store', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'store_offer'])->name('restaurant.offer.store');
+                  
+
             // vendor globle setting
             Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_time'])->name('restaurant.globleseting.ordertime');
             Route::post('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store'])->name('restaurant.ordertime.store');

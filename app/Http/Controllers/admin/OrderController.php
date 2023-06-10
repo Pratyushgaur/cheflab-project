@@ -315,7 +315,7 @@ class OrderController extends Controller
                 $order_generated =  '<button class="btn btn-xs btn-danger">Failed</button>';
             }
             if($v['payment_status'] == '0' && $v['order_generated'] == '0' || $v['payment_status'] == '1' && $v['order_generated'] == '0'){
-                $orderGenButton = '<a href="#" class="btn btn-xs btn-success generateOrder" data-id="'.$v['id'].'">Generate Order</a>';
+                $orderGenButton = '<a href="javascript:void(0)" class="btn btn-xs btn-success generateOrder" data-id="'.$v['id'].'">Generate Order</a>';
             }
             $trhtml.='<tr><td>'.$i.'</td><td><a>'.$data->customer_name.'</a></td><td>'.$v['transaction_id'].'</td><td>'.$payment_status.'</td><td>'.$order_generated.'</td><td>'.$v['order_generate_error'].'</td><td>'.$orderGenButton.'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td></tr>';
             $i++;
@@ -452,7 +452,7 @@ class OrderController extends Controller
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('action-js', function($data){
-                    $btn = '<a href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'" ><i class="fa fa-eye"></i></a>';
+                    $btn = '<a target="_blank" href="'. route("admin.order.view",Crypt::encryptString($data->id)) .'" ><i class="fa fa-eye"></i></a>';
                     if($data->pdf_url){
                         $btn .= '<a href="'. asset("$data->pdf_url").'" download><i class="fa fa-print"></i></a>';
                     }else{
@@ -484,7 +484,7 @@ class OrderController extends Controller
                             return '<span class="badge badge-success">Preparing</span>';
                         }
                         if ($data->order_status == 'ready_to_dispatch') {
-                            return '<span class="badge badge-success">Ready To Dispatch</span>';
+                            return '<span class="badge badge-warning">Ready To Dispatch</span>';
                         }
                         if ($data->order_status == 'dispatched') {
                             return '<span class="badge badge-warning">Dispatched</span>';
@@ -545,7 +545,7 @@ class OrderController extends Controller
             $vendor = Vendors::findOrFail($vendor_id);
             $users = User::findOrFail($user_id);
             $coupon = \App\Models\Coupon::find($order->coupon_id);
-            $rider = \App\Models\RiderAssignOrders::where('order_id',$id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->select('deliver_boy.name','mobile','rider_assign_orders.rider_id','action','deliver_boy.image','cancel_reason')->get();
+            $rider = \App\Models\RiderAssignOrders::where('order_id',$id)->join('deliver_boy','rider_assign_orders.rider_id','=','deliver_boy.id')->select('deliver_boy.name','mobile','rider_assign_orders.rider_id','action','deliver_boy.image','cancel_reason','rider_assign_orders.id as rider_assign_order_id')->get();
             return view('admin.order.view',compact('order','product','vendor','users','coupon','rider'));
         } catch (\Exception $e) {
             return dd($e->getMessage());
@@ -739,5 +739,47 @@ class OrderController extends Controller
                // ->rawColumns(['status']) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
         }
+    }
+
+    public function removeRiderFromAssign($id)
+    {
+        $rider = \App\Models\RiderAssignOrders::findOrFail($id);
+        if($rider->action == 3) {
+            return redirect()->back()->withErrors('message', 'Order Delivered By this Driver');
+        }
+        if($rider->action == 1 || $rider->action == 4){
+            $order = Orders::findOrFail($rider->order_id);
+            $order->accepted_driver_id = null;
+            $order->save();
+        }
+        $rider->delete();
+        $OrderActionLogs  = new \App\Models\OrderActionLogs;
+        $OrderActionLogs->orderid = $rider->order_id;
+        $OrderActionLogs->action = 'Rider Removed by admin in rider assign table';
+        $OrderActionLogs->rider_id = $rider->rider_id;
+        $OrderActionLogs->save();
+        return redirect()->back()->with('message', 'Rider Remove Success');
+                
+                    
+        
+
+    }
+    public function add_no_rider_assing($id)
+    {
+        $order = Orders::findOrFail($id);
+        $noRiderAssignOrders = new \App\Models\NoRiderAssignOrders;
+        $noRiderAssignOrders->order_id  = $id;
+        $noRiderAssignOrders->status = '0';
+        $noRiderAssignOrders->save();
+        //
+        $OrderActionLogs  = new \App\Models\OrderActionLogs;
+        $OrderActionLogs->orderid =  $id;
+        $OrderActionLogs->action = 'No Rider assign entry by admin';
+        $OrderActionLogs->save();
+        return redirect()->route('admin.order.dashboard.status','no_rider_assign')->with('message', 'Success');
+                
+                    
+        
+
     }
 }

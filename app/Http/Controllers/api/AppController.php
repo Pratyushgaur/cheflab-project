@@ -779,7 +779,25 @@ class AppController extends Controller
                     $data  = ['addons' => $addon];
                 }
 
-                $v = Variant::select('variant_name', 'variant_price', 'id')->where('product_id', $request->product_id)->get();
+                $v = Variant::where('product_id', $request->product_id)->join('products','variants.product_id','=','products.id');
+                $v = $v->leftJoin('vendor_offers', function ($join)  {
+                        $join->on('products.userId', '=', 'vendor_offers.vendor_id');
+                        $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
+                        $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                });
+                $v->select(
+                            'variant_name', 'variant_price', 'variants.id',
+                            DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
+                            DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+                            DB::raw('
+                            (CASE 
+                                WHEN vendor_offers.id IS NOT NULL THEN `variant_price`-`variant_price`/100*vendor_offers.offer_persentage
+                                    ELSE `variant_price`
+                                END) as after_offer_price'
+                            )
+
+                );
+                $v =$v->get();
                 $variantAdded = Cart::where('user_id', '=', $user_id)->join('cart_products', 'carts.id', '=', 'cart_products.cart_id')->join('cart_product_variants', 'cart_products.id', '=', 'cart_product_variants.cart_product_id')->where('cart_products.product_id', '=', $request->product_id)->select('variant_id', 'variant_qty')->get();
                 $variantIds = $variantAdded->pluck('variant_id')->toArray();
                 $variantQtys = $variantAdded->pluck('variant_qty')->toArray();
@@ -874,7 +892,6 @@ class AppController extends Controller
                 }
             } elseif ($request->search_for == 'dishes') {
                 $user_id = request()->user()->id;
-                //$data = get_product_with_variant_and_addons([['product_name', 'like', '%' . $request->keyword . '%'], ['products.status', '=', '1'], ['product_for', '=', '3']], $user_id, '', '', true);
                  $product_ids = Product_master::where('products.status', '=', '1')->where('products.product_approve', '=', '1')->where('product_for', '=', '3')->where('product_name', 'LIKE', '%' . $request->keyword . '%')->where('vendors.status','=','1')->where('vendors.is_online','=','1')->where('available', 1)
                         
                 ->skip($request->offset)->take(5)
@@ -956,7 +973,9 @@ class AppController extends Controller
                     'primary_variant_name',
                     'start_time',
                     'end_time',
-                    DB::raw('if(available,false,true)  as isClosed')
+                    DB::raw('if(available,false,true)  as isClosed'),
+                    'products.menu_id',
+                    DB::raw('ROUND(vendor_ratings,1) AS vendor_ratings')
                 );
                 $product = $product->addSelect(\DB::raw('if(user_vendor_like.user_id is not null, true, false)  as is_vendor_like'));
                 $product = $product->addSelect('vendors.name as restaurantName', 'vendors.image as vendor_image', 'vendors.profile_image as vendor_profile_image', 'banner_image', 'review_count', 'deal_cuisines', 'fssai_lic_no', 'vendor_food_type', 'table_service');
@@ -1003,6 +1022,8 @@ class AppController extends Controller
                                 'vendor_food_type'     => $p['vendor_food_type'],
                                 'fssai_lic_no'         => $p['fssai_lic_no'],
                                 'cart_qty'             => $qty,
+                                'menu_id'              => $p['menu_id'],
+                                'vendor_ratings'       => $p['vendor_ratings'],
                                 'cuisines'         => $dealCuisines
                             ]; //'start_time','end_time',DB::raw('if(available,false,true)  as isClosed'fssai_lic_no
                             $variant[$p['product_id']]['restaurantName'] = $p['restaurantName'];
@@ -1744,6 +1765,8 @@ class AppController extends Controller
                     'products.*.addons.*.addon_qty'   => 'numeric|nullable',
                     'products.*.addons.*.addon_price' => 'numeric|nullable',
                     'products.*.addons.*.addon_name'  => 'string|nullable',
+                    'products.*.variants'             => 'required',
+
                 ]
 
             );
@@ -1977,8 +2000,8 @@ class AppController extends Controller
                     'products.*.product_qty'  => 'required|numeric',
                     'products.*.product_name' => 'required|string',
 
-                    'products.*.variants.*.variant_id'    => 'numeric|nullable',
-                    'products.*.variants.*.variant_qty'   => 'numeric|nullable',
+                    'products.*.variants.*.variant_id'    => 'numeric|nullable|required',
+                    'products.*.variants.*.variant_qty'   => 'numeric|nullable|required',
                     'products.*.variants.*.variant_price' => 'numeric|nullable',
                     'products.*.variants.*.variant_name'  => 'string|nullable',
 
@@ -1986,6 +2009,8 @@ class AppController extends Controller
                     'products.*.addons.*.addon_qty'   => 'numeric|nullable',
                     'products.*.addons.*.addon_price' => 'numeric|nullable',
                     'products.*.addons.*.addon_name'  => 'string|nullable',
+                    'products.*.variants'           => 'required',
+
                 ]
 
             );
@@ -1993,6 +2018,7 @@ class AppController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+            
             global $cart_id;
             try {
                 DB::beginTransaction();
@@ -3885,7 +3911,6 @@ class AppController extends Controller
             if($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'order' ){
                  $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
                  $pendingOrder = \App\Models\PendingPaymentOrders::where("transaction_id",'=',$transactionId);
-                 $pendingOrder->exists();
                 if($pendingOrder->exists()){
                     $requestData = $pendingOrder->first();
                     $pendingOrder->update(['payment_status'=>'1']);
@@ -3922,6 +3947,30 @@ class AppController extends Controller
                     $webhook_error->save();
                     echo 'Invalid Transaction id';
     
+                }
+            }elseif($request->entity == 'event' &&  $request->event == 'payment.captured' && $request['payload']['payment']['entity']['notes']['transaction_for'] == 'wallet'){
+                $transactionId =  $request['payload']['payment']['entity']['notes']['order_transaction_id'];
+                $pendingWallet = \App\Models\WalletGatewayTransactions::where("transaction_id",'=',$transactionId);
+                if($pendingWallet->exists()){
+                    $requestData = $pendingWallet->first();
+                    $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+                    $UserWalletTransactions->user_id = $requestData->user_id;
+                    $UserWalletTransactions->amount = $requestData->amount;
+                    $UserWalletTransactions->narration = "Recharge";
+                    $UserWalletTransactions->transaction_id = $transactionId;
+                    
+                    $UserWalletTransactions->save();
+                    //
+                    $users = User::where('id', '=', $requestData->user_id)->select('wallet_amount')->first();
+                    $total = $requestData->amount + $users->wallet_amount;
+                    $update = User::where('id', '=', $requestData->user_id)->update(['wallet_amount' => $total]);
+                    \App\Models\WalletGatewayTransactions::where("transaction_id",'=',$transactionId)->update(['wallet_update'=>'1','payment_status' =>'1','gateway_response' => json_encode($request->all())]);
+                }else{
+                    $webhook_error  =  new \App\Models\WebhookErrors;
+                    $webhook_error->message = 'Invalid Transaction id';
+                    $webhook_error->request_data = json_encode($request->all());
+                    $webhook_error->save();
+                    echo 'Invalid Transaction id';
                 }
             }else{
                 $webhook_error  =  new \App\Models\WebhookErrors;
@@ -4037,17 +4086,20 @@ class AppController extends Controller
             $Order                    = new Order((array) $insertData);
             $Order->saveOrFail();
             $order_id = $Order->id;
-            if($request->coupon_id != '' || $request->coupon_id != '0'){
-                $coupon = \App\Models\Coupon::where('id','=',$request->coupon_id)->first();
-                if(!empty($coupon)){
-                    $couponHistory = new \App\Models\CouponHistory;
-                    $couponHistory->user_Id  = $request->user_id;
-                    $couponHistory->coupon_name  = $coupon->name;
-                    $couponHistory->code  = $coupon->code;
-                    $couponHistory->coupon_id  = $request->coupon_id;
-                    $couponHistory->save();
+            if(isset($request->coupon_id)){
+                if($request->coupon_id != '' || $request->coupon_id != '0'){
+                    $coupon = \App\Models\Coupon::where('id','=',$request->coupon_id)->first();
+                    if(!empty($coupon)){
+                        $couponHistory = new \App\Models\CouponHistory;
+                        $couponHistory->user_Id  = $request->user_id;
+                        $couponHistory->coupon_name  = $coupon->name;
+                        $couponHistory->code  = $coupon->code;
+                        $couponHistory->coupon_id  = $request->coupon_id;
+                        $couponHistory->save();
+                    }
                 }
             }
+            
             foreach ($request->products as $k => $p) {
                 $p = (array) $p;
                 $checkcustomizable = Product_master::where('products.id', '=', $p['product_id'])->select('customizable')->first();
@@ -4081,7 +4133,7 @@ class AppController extends Controller
 
                 if (isset($p['addons']))
                     foreach ($p['addons'] as $k => $a) {
-                        $OrderProductAddon = new OrderProductAddon($a);
+                        $OrderProductAddon = new OrderProductAddon((array) $a);
                         $order_products->order_product_addons()->save($OrderProductAddon);
                     }
             }

@@ -129,6 +129,8 @@ class CartApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+            if (!Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available"], 406);
             global $cart_id;
             try {
                 DB::beginTransaction();
@@ -249,40 +251,56 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
 
             $cart_sub_toatl_amount =0; $wallet_amount = 0;
-            $u                     = User::select('wallet_amount')->find($request->user_id);
+            $u = User::select('wallet_amount')->find($request->user_id);
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
 
             $pro      = Product_master::select('cart_products.product_qty', 'products.product_name', 'products.product_image', 'products.category', 'products.menu_id',
                 'products.dis', 'products.type', 'products.product_price', 'products.customizable', 'products.product_for', 'products.product_rating', 'products.cuisines',
                 'products.addons', 'variants.id as variant_id', 'variants.*', 'addons',
-                'cart_product_variants.*', 'products.id as product_id'
+                'cart_product_variants.*', 'products.id as product_id',
 //                'cart_products.id as cart_product_id', 'cart_product_addons.id as cart_product_addon_id', 'cart_product_variants.id as cart_product_variant_id'
+                DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
+                DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+                DB::raw('
+                (CASE 
+                    WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
+                        ELSE `product_price`
+                    END) as after_offer_price'
+                )
             )
                 ->where('products.status', 1)->where('products.product_approve', 1)
                 ->join('cart_products', 'products.id', 'cart_products.product_id')
                 ->where('cart_products.cart_id', $cart_id)
                 ->leftJoin('variants', 'products.id', 'variants.product_id')
                 ->leftJoin('cart_product_variants', 'variants.id', 'cart_product_variants.variant_id')
+                ->leftJoin('vendor_offers', function ($join)  {
+                        $join->on('products.userId', '=', 'vendor_offers.vendor_id');
+                        $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
+                        $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                })
                 ->get()->toArray();
             $responce = [];
 
             foreach ($pro as $k => $product) {
                 if ($product['product_id'] != '' && !isset($responce[$product['product_id']])) {
 
-                    $responce[$product['product_id']]['product_id']     = $product['product_id'];
-                    $responce[$product['product_id']]['product_name']   = $product['product_name'];
-                    $responce[$product['product_id']]['product_qty']    = $product['product_qty'];
-                    $responce[$product['product_id']]['product_image']  = asset('products') . '/' . $product['product_image'];
-                    $responce[$product['product_id']]['category']       = $product['category'];
-                    $responce[$product['product_id']]['menu_id']        = $product['menu_id'];
-                    $responce[$product['product_id']]['dis']            = $product['dis'];
-                    $responce[$product['product_id']]['type']           = $product['type'];
-                    $responce[$product['product_id']]['product_price']  = $product['product_price'];
-                    $responce[$product['product_id']]['customizable']   = $product['customizable'];
-                    $responce[$product['product_id']]['product_for']    = $product['product_for'];
-                    $responce[$product['product_id']]['product_rating'] = $product['product_rating'];
-                    $responce[$product['product_id']]['addons']         = $product['addons'];
+                    $responce[$product['product_id']]['product_id']         = $product['product_id'];
+                    $responce[$product['product_id']]['product_name']       = $product['product_name'];
+                    $responce[$product['product_id']]['product_qty']        = $product['product_qty'];
+                    $responce[$product['product_id']]['product_image']      = asset('products') . '/' . $product['product_image'];
+                    $responce[$product['product_id']]['category']           = $product['category'];
+                    $responce[$product['product_id']]['menu_id']            = $product['menu_id'];
+                    $responce[$product['product_id']]['dis']                = $product['dis'];
+                    $responce[$product['product_id']]['type']               = $product['type'];
+                    $responce[$product['product_id']]['product_price']      = $product['product_price'];
+                    $responce[$product['product_id']]['offer_id']           = $product['offer_id'];
+                    $responce[$product['product_id']]['offer_persentage']   = $product['offer_persentage'];
+                    $responce[$product['product_id']]['after_offer_price']  = $product['after_offer_price'];
+                    $responce[$product['product_id']]['customizable']       = $product['customizable'];
+                    $responce[$product['product_id']]['product_for']        = $product['product_for'];
+                    $responce[$product['product_id']]['product_rating']     = $product['product_rating'];
+                    $responce[$product['product_id']]['addons']             = $product['addons'];
 
                     $variants = Variant::where('product_id', '=', $product['product_id'])->select('variant_name', 'variant_price', 'id as variant_id')->get();
                     if (isset($variants[0]))//if product have variants
@@ -295,19 +313,38 @@ class CartApiController extends Controller
                             if (!empty($exist)) {//if product have variants get and add qty and price
 //                                echo "$cart_sub_toatl_amount    += ".$vvalue['variant_price']." -----------";
 //                                echo "<br/>$cart_sub_toatl_amount+ $exist->variant_qty*".$vvalue['variant_price'];
-                                $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
-//                                echo "=$cart_sub_toatl_amount";
+                                if($product['offer_id'] == '0'){
+                                    $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
+
+                                }else{
+                                    $varintPrice = $vvalue['variant_price']-$vvalue['variant_price']/100*$product['offer_persentage'];
+                                    $cart_sub_toatl_amount    += ($varintPrice*$product['product_qty']);
+
+                                }
                                 $variants[$vkey]['added'] = true;
-//                            $variants[$vkey]['qty'] = $exist->product_qty;
                                 $variants[$vkey]['qty'] = $exist->variant_qty;
 
                             } else {
                                 $variants[$vkey]['added'] = false;
                             }
+                            $variants[$vkey]['offer_id']         = $product['offer_id'];
+                            $variants[$vkey]['offer_persentage'] = $product['offer_persentage'];
+                            if($product['offer_id'] != '0'){
+                                $variants[$vkey]['after_offer_price'] = $vvalue['variant_price']-$vvalue['variant_price']/100*$product['offer_persentage'];
+
+                            }else{
+                                $variants[$vkey]['after_offer_price'] = $vvalue['variant_price'];
+
+                            }
                         }
-                    else {//product have no variants
-//                        dd("sdfs");
-                        $cart_sub_toatl_amount    += ($product['product_price']*$product['product_qty']);
+                    else {
+                        if($product['offer_id'] == '0'){
+                            $cart_sub_toatl_amount    += ($product['product_price']*$product['product_qty']);
+
+                        }else{
+                            $cart_sub_toatl_amount    += ($product['after_offer_price']*$product['product_qty']);
+
+                        }
                     }
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_price'] = $product['variant_price'];
                     //     $responce[$product['product_id']]['variants'][$product['variant_id']]['variant_qty']   = $product['variant_qty'];
@@ -326,16 +363,16 @@ class CartApiController extends Controller
                     $r[$i]['variants'] = $p['variants'];
                     if ($p['addons'] != '') {
                         $addons        = explode(',', $p['addons']);
-                        $productAddons = \App\Models\Addons::select('id', 'addon', 'price')->whereIn('addons.id', $addons)->get()->toArray();
+                        $productAddons = \App\Models\Addons::select('id as addon_id', 'addon as addon_name', 'price as addon_price')->whereIn('addons.id', $addons)->get()->toArray();
                         foreach ($productAddons as $akey => $avalue) {
                             $exist = CartProduct::where('cart_id', '=', $cart_id)->where('product_id', '=', $p['product_id'])
                                 ->leftJoin('cart_product_addons', 'cart_products.id', '=', 'cart_product_addons.cart_product_id')
-                                ->where('cart_product_addons.addon_id', '=', $avalue['id'])->first();
+                                ->where('cart_product_addons.addon_id', '=', $avalue['addon_id'])->first();
                             if (!empty($exist)) {
 
                                 $productAddons[$akey]['added'] = true;
-                                $productAddons[$akey]['qty']   = $exist->addon_qty;
-                                $cart_sub_toatl_amount    +=  ($exist->addon_qty*$productAddons[$akey]['price']);
+                                $productAddons[$akey]['addon_qty']   = $exist->addon_qty;
+                                $cart_sub_toatl_amount    +=  ($exist->addon_qty*$productAddons[$akey]['addon_price']);
 
                             } else {
                                 $productAddons[$akey]['added'] = false;
@@ -525,6 +562,8 @@ class CartApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
+            if (!Vendors::is_avaliavle($request->vendor_id))
+                    return response()->json(['status' => False, 'error' => "Vendor not available"  ], 406);
 //            dd($request->all());
             global $cart_id;
             try {
