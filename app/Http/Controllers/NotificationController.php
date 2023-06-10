@@ -119,7 +119,7 @@ class NotificationController extends Controller
             //$allToken = Deliver_boy::where('status' , 1)->where('token', '!=' , '')->join('delivery_boy_tokens', 'deliver_boy.id', '=', 'delivery_boy_tokens.rider_id')->select('deliver_boy.id','delivery_boy_tokens.token')->orderBy('id','desc')->get()->pluck('token')->chunk(300);
 
         }else{
-            $topicId = "ChefLab_User_Testing";
+            $topicId = "ChefLab_User";
             $to = "User";
 
             //$allToken = User::where('status' , 1)->where('fcm_token', '!=' , '')->orderBy('id','desc')->get()->pluck('fcm_token')->chunk(300);
