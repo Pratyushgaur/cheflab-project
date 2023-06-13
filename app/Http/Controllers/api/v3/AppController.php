@@ -462,4 +462,58 @@ class AppController extends Controller
         }
     }
 
+    function getRestaurantDetailByFoodtype(Request $request){
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'vendor_id' => 'required|numeric',
+                    'food_type' => 'required|in:veg,non_veg,eggs'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+
+
+            $category = VendorMenus::where(['vendor_id' => $request->vendor_id])->select('menuName', 'id')->get();
+            $data     = [];
+            $dk       = 0;
+            foreach ($category as $key => $value) {
+                $product_where = ['products.status' => '1', 'product_for' => '3', 'type' => $request->food_type, 'menu_id' => $value->id];
+                $product       = get_product_with_variant_and_addons_v3(
+                    $product_where,
+                    request()->user()->id,
+                    null,
+                    null,
+                    $with_restaurant_name = true,
+                    $is_chefleb_product = false,
+                    $where_vendor_in = null,
+                    null,
+                    null,
+                    $return_total_count = false
+                );
+                $data[$key] = array('menuName' => $value->menuName, 'id' => $value->id, 'products' => $product);
+
+            }
+
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $data
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }
+

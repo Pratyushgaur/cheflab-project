@@ -8,3 +8,4 @@
  Route::post('geMostViewVendors', [App\Http\Controllers\api\v3\AppController::class, 'geMostViewVendors']);
  Route::post('search-data', [App\Http\Controllers\api\v3\AppController::class, 'getRestaurantSearchData']);
  Route::post('search-RestaurantDetail-Page', [App\Http\Controllers\api\v3\AppController::class, 'searchRestaurantDetailPage']);
+ Route::post('getRestaurantDetailByFoodtype', [App\Http\Controllers\api\v3\AppController::class, 'getRestaurantDetailByFoodtype']);
