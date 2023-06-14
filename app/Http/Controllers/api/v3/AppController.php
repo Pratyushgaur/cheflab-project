@@ -515,5 +515,43 @@ class AppController extends Controller
             ], 500);
         }
     }
+
+    public function getAllLikeProducts(Request $request){
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'lat' => 'required|numeric',
+                    'lng' => 'required|numeric'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $product_ids = UserProductLike::where('user_id', $request->user()->id)->pluck('product_id');
+            if(!empty($product_ids)){
+                $data = get_product_with_variant_and_addons_v3(['product_for' => '3'], request()->user()->id, '', '', false,false,null,null,null,false,$product_ids);
+
+            }else{
+                $data = [];
+            }
+            return response()->json([
+                'status'   => true,
+                'message'  => 'Data Get Successfully',
+                'response' => $data
+
+            ], 200);
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
 }
 
