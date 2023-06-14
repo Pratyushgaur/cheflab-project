@@ -78,6 +78,8 @@ class OrderController extends Controller
             event(new OrderCancelDriverEmitEvent($order, $order->accepted_driver_id));
         }
         orderCancelByVendor($id);
+        $data = orderDetailForUser($id);
+        \App\Jobs\UserOrderNotification::dispatch('Order Cancelled By Restaurant', 'Hello User. Your Order id #'.$order->order_id.' is Cancelled By Restaurant.', $user->fcm_token, 7, $data);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'cancelled_by_vendor',
