@@ -79,7 +79,7 @@ class OrderController extends Controller
         }
         orderCancelByVendor($id);
         $data = orderDetailForUser($id);
-        \App\Jobs\UserOrderNotification::dispatch('Order Cancelled By Restaurant', 'Hello User. Your Order id #'.$order->order_id.' is Cancelled By Restaurant.', $user->fcm_token, 7, $data);
+        \App\Jobs\UserOrderNotification::dispatch('Order Cancelled By Restaurant', 'Your Order id #'.$order->order_id.' is Cancelled By Restaurant.', $user->fcm_token, 7, $data);
         return response()->json([
             'status'       => 'success',
             'order_status' => 'cancelled_by_vendor',

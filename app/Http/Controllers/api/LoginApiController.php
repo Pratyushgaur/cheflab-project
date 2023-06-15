@@ -216,7 +216,7 @@ class LoginApiController extends Controller
                 Http::get($url);
                 return response()->json([
                     'status' => true,
-                    'message' => 'Otp Send Successfully',
+                    'message' => 'Otp Sent Successfully',
                     'otp' => $otp
                 ], 200);
             } else {
@@ -471,7 +471,7 @@ class LoginApiController extends Controller
                 Http::get($url);
                 return response()->json([
                     'status' => true,
-                    'message' => 'Otp Send Successfully',
+                    'message' => 'Otp Sent Successfully',
                     'otp' => $otp
                 ], 200);
             } else {
@@ -481,7 +481,7 @@ class LoginApiController extends Controller
                 Http::get($url);
                 return response()->json([
                     'status' => true,
-                    'message' => 'Otp Send Successfully',
+                    'message' => 'Otp Sent Successfully',
                     'otp' => $otp
                 ], 200);
             }
