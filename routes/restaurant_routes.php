@@ -78,7 +78,10 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
             Route::get('offer-list', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'get_data_table_of_offer'])->name('restaurant.offer.data');
             Route::get('offer-create', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'create_offer'])->name('restaurant.offer.create');
             Route::post('offer-store', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'store_offer'])->name('restaurant.offer.store');
-                  
+            Route::get('offer-edit/{id}', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'editOffer'])->name('restaurant.offer.edit');
+            Route::post('offer-update/{id}', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'updateOffer'])->name('restaurant.offer.update');
+            Route::get('offer-delete/{id}', [App\Http\Controllers\vendor\restaurant\OfferController::class, 'delete'])->name('restaurant.offer.delete');
+            
 
             // vendor globle setting
             Route::get('globle/ordertime', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'order_time'])->name('restaurant.globleseting.ordertime');

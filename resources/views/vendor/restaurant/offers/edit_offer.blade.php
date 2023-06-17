@@ -61,7 +61,7 @@
               <li class="breadcrumb-item"><a href="#"><i class="material-icons">home</i> Home</a></li>
               <li class="breadcrumb-item"><a href="#">Offer</a></li>
               <li class="breadcrumb-item" aria-current="page"><a href="{{route('restaurant.menu.list')}}">Menu Catalogue</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Create Offer</li>
+              <li class="breadcrumb-item active" aria-current="page">Edit Offer</li>
               
 
             </ol>
@@ -70,10 +70,10 @@
         <div class="col-xl-12 col-md-12">
           <div class="ms-panel ms-panel-fh">
             <div class="ms-panel-header">
-              <h6>Create New  Offer</h6>
+              <h6>Edit Offer</h6>
             </div>
             <div class="ms-panel-body">
-              <form class=" clearfix " id="coupon-form" action="{{route('restaurant.offer.store')}}"  method="post" enctype="multipart/form-data">
+              <form class=" clearfix " id="coupon-form" action="{{route('restaurant.offer.update',$VendorOffers->id)}}"  method="post" enctype="multipart/form-data">
               @csrf
               
               @if ($errors->any())
@@ -85,7 +85,7 @@
                     <div class="col-xl-3 col-md-12 mb-3">
                       <label for="validationCustom10">Offer Persentage</label>
                         <div class="input-group">
-                          <input type="text" name="offer_persentage" class="form-control"  id="exampleInputEmail1" placeholder="Offer %">
+                          <input type="text" value="{{$VendorOffers->offer_persentage}}" name="offer_persentage" class="form-control"  id="exampleInputEmail1" placeholder="Offer %">
                         
                         </div>
                         <span class="name_error text-danger"></span>
@@ -101,7 +101,7 @@
                       <label for="validationCustom10">From</label>
                         <div class="input-group">
                         <div class="input-group date" id="reservationdate1" data-target-input="nearest">
-                              <input type="date" name="from_date" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                              <input type="date" value="{{$VendorOffers->from_date}}" name="from_date" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                         </div>
                         <span class="from_error text-danger"></span>
                         </div>
@@ -111,7 +111,7 @@
                       <label for="validationCustom10">To</label>
                         <div class="input-group">
                         <div class="input-group date" id="reservationdate1" data-target-input="nearest">
-                            <input type="date" name="end_date" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                            <input type="date" value="{{$VendorOffers->to_date}}" name="end_date" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                             
                         </div>
                         <span class="to_error text-danger"></span>

@@ -34,7 +34,7 @@
                         <th scope="col">Offer</th>
                         <th scope="col">From</th>
                         <th scope="col">To</th>
-                        <th scope="col">Status</th>
+                        <!-- <th scope="col">Status</th> -->
                         <th scope="col">Duration</th>
                         <th scope="col">Action</th>
                         
@@ -69,7 +69,7 @@
             {data: 'offer_persentage', name: 'offer_persentage'},
             {data: 'from_date', name: 'from_date'},
             {data: 'to_date', name: 'to_date'},
-            {data: 'status', name: 'status',orderable: false ,searchable: false},
+            //{data: 'status', name: 'status',orderable: false ,searchable: false},
             {data: 'expired', name: 'expired',orderable: false ,searchable: false},
             
             {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
@@ -119,6 +119,13 @@
       $(this).removeClass('couponON');
       $(this).addClass('couponOff');
   });
+  $(document).on('click','.delete-offer',function(){
+    if(confirm("Are You Sure")){
+      return true;
+    }else{
+      return false;
+    }
+  })
   })(jQuery);
 </script>
 @endsection
