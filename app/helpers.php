@@ -1681,6 +1681,7 @@ function orderDetailForUser($order_id)
         $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', '=', $v['order_product_id'])->select('variant_name', 'variant_price', 'variant_qty')->first();
         if (!empty($OrderProductVariant)) {
             $products[$k]['variant'] = $OrderProductVariant;
+            $products[$k]['product_price'] = $OrderProductVariant->variant_price;
         }
         if (!empty($OrderProductAddon->toArray())) {
             $products[$k]['addons'] = $OrderProductAddon;

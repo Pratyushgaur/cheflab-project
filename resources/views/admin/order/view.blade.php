@@ -92,7 +92,20 @@
                               </tr>
                            </thead>
                            <tbody>
-                              @foreach($product as $val)       
+                              @foreach($product as $val) 
+                              
+                              <?php 
+                                 $OrderProductVariant = $val->variant;
+                                 if (!empty($val->variant) && $val->customizable == 'true') {
+                                     $unit_price = $OrderProductVariant->variant_price;
+                                     $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
+                                 } else {
+                                     $unit_price = @(@$product->product_price);
+                                     $price      = $product->product_price*$product->product_qty;
+                                 }
+
+                                 ?>
+                              ?> 
                               <tr>
                                  <td>
                                     <div class="media media--sm">
@@ -116,7 +129,7 @@
                                              </div>
                                              <div class="font-size-sm text-body">
                                                 <span>Rate : </span>
-                                                <span class="font-weight-bold">{{ $val['product_price'] }} * ({{$val['product_qty']}})</span>
+                                                <span class="font-weight-bold">{{ $unit_price }} * ({{$val['product_qty']}})</span>
                                              </div>
                                              
                                           </div>
@@ -131,7 +144,7 @@
                                        <br>
                                     @endforeach
                                  </td>
-                                 <td>{{ $val['product_price'] * $val['product_qty']+$addontotal }}</td>
+                                 <td>{{ $price+$addontotal }}</td>
                               </tr>
                               @endforeach
                            </tbody>
