@@ -100,8 +100,8 @@
                                      $unit_price = $OrderProductVariant->variant_price;
                                      $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
                                  } else {
-                                     $unit_price = @(@$product->product_price);
-                                     $price      = $product->product_price*$product->product_qty;
+                                     $unit_price = @(@$val->product_price);
+                                     $price      = $val->product_price*$val->product_qty;
                                  }
 
                                  ?>
