@@ -94,18 +94,18 @@
                            <tbody>
                               @foreach($product as $val) 
                               
-                              <?php 
-                                 $OrderProductVariant = $val->variant;
-                                 if (!empty($val->variant) && $val->customizable == 'true') {
-                                     $unit_price = $OrderProductVariant->variant_price;
-                                     $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
-                                 } else {
-                                     $unit_price = @(@$val->product_price);
-                                     $price      = $val->product_price*$val->product_qty;
-                                 }
+                                 <?php 
+                                    $OrderProductVariant = $val->variant;
+                                    if (!empty($val->variant) && $val->customizable == 'true') {
+                                       $unit_price = $OrderProductVariant->variant_price;
+                                       $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
+                                    } else {
+                                       $unit_price = @(@$val->product_price);
+                                       $price      = $val->product_price*$val->product_qty;
+                                    }
 
-                                 ?>
-                              ?> 
+                                    
+                                 ?> 
                               <tr>
                                  <td>
                                     <div class="media media--sm">
