@@ -1739,7 +1739,6 @@ class AppController extends Controller
                     'pincode'          => 'required|string',
                     'lat'              => 'required|string',
                     'long'             => 'required|string',
-
                     'total_amount'    => 'required|numeric',
                     'gross_amount'    => 'required|numeric',
                     'net_amount'      => 'required|numeric',
@@ -1814,6 +1813,12 @@ class AppController extends Controller
                 if(isset($request->gateway_response) && is_array($request->gateway_response)){
                     $insertData['gateway_response'] = serialize($request->gateway_response);
                 }
+                if(isset($request->offer_id)){
+                    $offer = \App\Models\VendorOffers::find($request->offer_id);
+                    if(empty($offer)){
+                        return response()->json(['status' => False, 'error' => "Invalid Offer id"], 500);
+                    }
+                }
                 $Order                    = new Order($insertData);
                 $Order->saveOrFail();
                 $order_id = $Order->id;
@@ -1843,14 +1848,14 @@ class AppController extends Controller
                     if (!empty($checkcustomizable)) {
                         if ($checkcustomizable->customizable == 'false') {
                             $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->orderBy('variants.id', 'ASC')->first();
-                            $v = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $p['product_qty']);
+                            $v = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $p['product_price'], 'variant_qty' => $p['product_qty']);
                             $orderProductVariant = new OrderProductVariant($v);
                             $order_products->order_product_variants()->save($orderProductVariant);
                         } else {
                             if (isset($p['variants']))
                                 foreach ($p['variants'] as $k => $v) {
                                     $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->where('id', '=', $v['variant_id'])->first();
-                                    $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $v['variant_qty']);
+                                    $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' =>$v['variant_price'], 'variant_qty' => $v['variant_qty']);
                                     $orderProductVariant = new OrderProductVariant($varint_array);
                                     $order_products->order_product_variants()->save($orderProductVariant);
                                 }
@@ -4116,14 +4121,14 @@ class AppController extends Controller
                 if (!empty($checkcustomizable)) {
                     if ($checkcustomizable['customizable'] == 'false') {
                         $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->orderBy('variants.id', 'ASC')->first();
-                        $v = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $p['product_qty']);
+                        $v = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $p['product_price'], 'variant_qty' => $p['product_qty']);
                         $orderProductVariant = new OrderProductVariant($v);
                         $order_products->order_product_variants()->save($orderProductVariant);
                     } else {
                         if (isset($p['variants']))
                             foreach ($p['variants'] as $k => $v) {
                                 $variants = \App\Models\Variant::where('product_id', '=', $p['product_id'])->where('id', '=', $v->variant_id)->first();
-                                $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' => $variants->variant_price, 'variant_qty' => $v->variant_qty);
+                                $varint_array = array('variant_id' => $variants->id, 'order_product_id' => $orderProductId, 'variant_name' => $variants->variant_name, 'variant_price' =>$v['variant_price'], 'variant_qty' => $v->variant_qty);
                                 $orderProductVariant = new OrderProductVariant($varint_array);
                                 $order_products->order_product_variants()->save($orderProductVariant);
                             }
