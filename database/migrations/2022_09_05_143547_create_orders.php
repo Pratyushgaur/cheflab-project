@@ -34,6 +34,10 @@ class CreateOrders extends Migration
             $table->enum('wallet_apply', ['0', '1'])->default('0')->comment('0= no and 1 =yes');
             $table->float('wallet_cut', 8, 2)->default(0);
             $table->float('discount_amount', 6, 2)->default(0);
+            $table->unsignedBigInteger('offer_id')->nullable();
+            $table->string('offer_name',255)->nullable();
+            $table->string('offer_percentage',100)->nullable();
+            $table->string('offer_duration',255)->nullable();
             $table->unsignedBigInteger('coupon_id')->nullable()->default(null);
             $table->enum('payment_type', ['COD', 'Online'])->default('COD');
             $table->enum('payment_status', ['paid', 'pending'])->default('pending');
