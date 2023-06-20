@@ -250,7 +250,7 @@ class CartApiController extends Controller
             if (!$e)
                 return response()->json(['status' => false, 'error' => 'Cart does not exists.'], 401);
 
-            $cart_sub_toatl_amount =0; $wallet_amount = 0;
+            $cart_sub_toatl_amount =0; $wallet_amount = 0;$saving_amount = 0;
             $u = User::select('wallet_amount')->find($request->user_id);
             if (isset($u->wallet_amount))
                 $wallet_amount = $u->wallet_amount;
@@ -319,6 +319,10 @@ class CartApiController extends Controller
                                 }else{
                                     $varintPrice = $vvalue['variant_price']-$vvalue['variant_price']/100*$product['offer_persentage'];
                                     $cart_sub_toatl_amount    += ($varintPrice*$product['product_qty']);
+                                    $actual    = ($vvalue['variant_price']*$product['product_qty']);
+                                    $dif = $actual-$varintPrice*$product['product_qty'];
+                                    $saving_amount +=$dif;
+
 
                                 }
                                 $variants[$vkey]['added'] = true;
@@ -343,6 +347,10 @@ class CartApiController extends Controller
 
                         }else{
                             $cart_sub_toatl_amount    += ($product['after_offer_price']*$product['product_qty']);
+                            $actual    = ($product['product_price']*$product['product_qty']);
+                            $dif = $actual-($product['product_price']*$product['product_qty']);
+                            $saving_amount +=$dif;
+
 
                         }
                     }
@@ -426,6 +434,7 @@ class CartApiController extends Controller
                                      'message'  => 'Data Get Successfully',
                                      'response' => ["cart_id"        => $cart_id,
                                                     'cart_sub_toatl_amount'=>$cart_sub_toatl_amount,
+                                                    'saving_amount'=>$saving_amount,
                                                     "cart"             => $r,
                                                     "vendor"           => $vendors,
                                                     'wallet_amount'    => $wallet_amount,
