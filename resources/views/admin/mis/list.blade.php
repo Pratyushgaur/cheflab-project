@@ -180,7 +180,7 @@
                   return '18';
            }},
            {data: function(data, type, row){
-                  return data.delivery_charge*18/100;
+                  return data.exclusive_delivery_charge*18/100;
            }},
 
            {data: 'delivery_charge', name: 'delivery_charge'},

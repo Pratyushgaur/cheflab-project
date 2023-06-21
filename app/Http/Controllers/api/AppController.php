@@ -3939,10 +3939,10 @@ class AppController extends Controller
                         
                     }else{
                         $this->pendingOrderUpdate(['transaction_id'=>$transactionId],["order_generated"=>"1"]);
-                        $user = User::find($data->user_id);
-                        if($user->fcm_token!=''){
-                            sendUserAppNotification('Order Placed',"Your Order Place Successfully.",$user->fcm_token,array('type'=>'Payment_confirm','data'=>array('order_id'=>$response['order_id'])));
-                        }
+                        // $user = User::find($data->user_id);
+                        // if($user->fcm_token!=''){
+                        //     sendUserAppNotification('Order Placed',"Your Order Place Successfully.",$user->fcm_token,array('type'=>'Payment_confirm','data'=>array('order_id'=>$response['order_id'])));
+                        // }
     
                     }
                 }else{
