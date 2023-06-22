@@ -74,10 +74,11 @@ class AppController extends Controller
             $ProfileVisitUsers->vendor_id = $request->vendor_id;
             $ProfileVisitUsers->user_id = request()->user()->id;
             $ProfileVisitUsers->save();
+            $vendorsOnline = \App\Models\Vendors::where('id','=',$request->vendor_id)->select('is_online')->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => array('products' => $catData, 'coupons' => $coupon)
+                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online)
 
             ], 200);
         } catch (Throwable $th) {
