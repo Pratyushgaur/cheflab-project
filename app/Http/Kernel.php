@@ -55,11 +55,20 @@ class Kernel extends HttpKernel
         'isVendor' => [
             \App\Http\Middleware\isVendor::class,
         ],
+        'isAppVendor' => [
+            \App\Http\Middleware\isAppVendor::class,
+        ],
         'isChef' => [
             \App\Http\Middleware\isChef::class,
         ],
         'isRestaurant' => [
             \App\Http\Middleware\isRestaurant::class,
+        ],
+        'isAppRestaurant' => [
+            \App\Http\Middleware\isAppRestaurant::class,
+        ],
+        'IsAppVendorDoneSettingsMiddleware' => [
+            \App\Http\Middleware\IsAppVendorDoneSettingsMiddleware::class,
         ],
         'IsVendorDoneSettingsMiddleware' => [
             \App\Http\Middleware\IsVendorDoneSettingsMiddleware::class,

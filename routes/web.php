@@ -93,3 +93,12 @@ Route::get('payment', [\App\Http\Controllers\vendor\restaurant\PaytmController::
 Route::post('payment/status', [\App\Http\Controllers\vendor\restaurant\PaytmController::class,'paymentCallback']);
 
 
+// vendor app route
+Route::group([ 'prefix' => 'app'], function () {
+   
+    Route::get('vendor/login', [\App\Http\Controllers\app\LoginController::class,'index']);
+    Route::post('check-login-on-vendor', [ App\Http\Controllers\app\LoginController::class, 'login' ])->name('app.action.vendor.login');
+    @require_once 'app_restaurant_routes.php';
+});
+
+route::post('vendor/app/test/login',[App\Http\Controllers\app\LoginController::class, 'login_test' ]);
