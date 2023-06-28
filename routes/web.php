@@ -101,4 +101,4 @@ Route::group([ 'prefix' => 'app'], function () {
     @require_once 'app_restaurant_routes.php';
 });
 
-route::post('vendor/app/test/login',[App\Http\Controllers\app\LoginController::class, 'login_test' ]);
+Route::post('vendor/app/test/login',[App\Http\Controllers\app\LoginController::class, 'login_test' ]);
