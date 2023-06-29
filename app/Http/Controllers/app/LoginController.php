@@ -68,10 +68,14 @@ class LoginController extends Controller
             return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
         }
         try {
-            $VendorAppToken  = new \App\Models\VendorAppTokens;
-            $VendorAppToken->vendor_id = $request->vendor_id;
-            $VendorAppToken->token = $request->token;
-            $VendorAppToken->save();
+            $check = \App\Models\VendorAppTokens::where('vendor_id','=',$request->vendor_id)->where('token','=',$request->token)->exists();
+            if(!$check){
+                $VendorAppToken  = new \App\Models\VendorAppTokens;
+                $VendorAppToken->vendor_id = $request->vendor_id;
+                $VendorAppToken->token = $request->token;
+                $VendorAppToken->save();
+            }
+            
             return response()->json(['status' => true, 'response' =>"Success"], 200);
             
 
