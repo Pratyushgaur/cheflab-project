@@ -56,54 +56,31 @@ class LoginController extends Controller
 
     } 
 
-    public function login_test(Request $request)
+    public function registerToken(Request $request)
     {
-        $request->validate([
-            'email' => 'required',
-            'password' => 'required',
+        
+        $validateUser = Validator::make($request->all(), [
+            'vendor_id' => 'required',
+            'token' => 'required',
         ]);
-        if(Auth::guard('vendor')->attempt(array('email' =>$request->email,'password' => $request->password))){  
-            if ($request->remember === null) {
-                setcookie('login_email', $request->email, 100);
-                setcookie('login_password', $request->password, 100);
-            } else {
-                setcookie('login_email', $request->email, time() + 60 * 60 * 24 * 10);
-                setcookie('login_password', $request->password, time() + 60 * 60 * 24 * 10);
-            }
-            $request->session()->put([
-                '*$%&%*id**$%#' => Auth::guard('vendor')->user()->id,
-            ]);
+        if ($validateUser->fails()) {
+            $error = $validateUser->errors();
+            return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+        }
+        try {
+            $VendorAppToken  = new \App\Models\VendorAppTokens;
+            $VendorAppToken->vendor_id = $request->vendor_id;
+            $VendorAppToken->token = $request->token;
+            $VendorAppToken->save();
+            return response()->json(['status' => true, 'response' =>"Success"], 200);
             
-            if ($request->session()->has('*$%&%*id**$%#')) {
-                
-                
-                return response()->json(['status' => true, 'response' =>'succes'], 200);
 
-                        
-                // if (Auth::guard('vendor')->user()->vendor_type == 'restaurant') {
-                //    return redirect()->route('app.restaurant.dashboard');
-                // } 
-                // elseif(Auth::guard('vendor')->user()->vendor_type == 'chef') {
-                    
-                //     return redirect()->route('chef.dashboard')->with('message', 'Successfully Logged In!');
-                // }
-                
-                //return redirect('admin/dashbord-admin')->with('message', 'Successfully Logged In!');
-            } else {
-                  
-                return response()->json([
-                    'status' => false,
-                    'error'  => "invalid"
-                ], 500); 
-            }
-            
-            
-        }else{
-            //return \Redirect::back()->with('error', 'You have Provide Wrong Credentials');   
+        } catch (PDOException $e) {
+           
             return response()->json([
-                'status' => true,
-                'error'  => "You have Provide Wrong Credentials"
-            ], 500); 
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
         }
 
     } 
