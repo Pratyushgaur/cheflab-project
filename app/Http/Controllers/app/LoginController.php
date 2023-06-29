@@ -36,7 +36,7 @@ class LoginController extends Controller
             if ($request->session()->has('*$%&%*id**$%#')) {
                 
                 if (Auth::guard('vendor')->user()->vendor_type == 'restaurant') {
-                   return redirect()->route('app.restaurant.dashboard');
+                   return redirect()->route('app.restaurant.dashboard',Auth::guard('vendor')->user()->id);
                 } 
                 // elseif(Auth::guard('vendor')->user()->vendor_type == 'chef') {
                     

@@ -96,7 +96,7 @@ Route::post('payment/status', [\App\Http\Controllers\vendor\restaurant\PaytmCont
 // vendor app route
 Route::group([ 'prefix' => 'app'], function () {
    
-    Route::get('vendor/login', [\App\Http\Controllers\app\LoginController::class,'index']);
+    Route::get('vendor/login', [\App\Http\Controllers\app\LoginController::class,'index'])->name('app.vendor.login');
     Route::post('check-login-on-vendor', [ App\Http\Controllers\app\LoginController::class, 'login' ])->name('app.action.vendor.login');
     @require_once 'app_restaurant_routes.php';
 });
