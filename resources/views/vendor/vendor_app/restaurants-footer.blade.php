@@ -189,98 +189,98 @@ https://medium.com/geekculture/laravel-tutorial-push-notification-with-firebase-
                 "showMethod": "fadeIn",
                 "hideMethod": "fadeOut"
             }
-        if ('serviceWorker' in navigator) {
-            window.addEventListener("load", function () {
-                // navigator.serviceWorker.register("firebase-messaging-sw.js");
-                {{--alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
-                {{--                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js')}}");--}}
-                navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js'}}");
-            });
+        // if ('serviceWorker' in navigator) {
+        //     window.addEventListener("load", function () {
+        //         // navigator.serviceWorker.register("firebase-messaging-sw.js");
+        //         {{--alert("{{URL::to('/').'/firebase-messaging-sw.js'}}");--}}
+        //         {{--                navigator.serviceWorker.register("{{URL::to('/firebase-messaging-sw.js')}}");--}}
+        //         navigator.serviceWorker.register("{{URL::to('/').'/firebase-messaging-sw.js'}}");
+        //     });
 
-            window.addEventListener('flutter-first-frame', function () {
-                navigator.serviceWorker.register('flutter_service_worker.js');
-                {{--                navigator.serviceWorker.register('{{URL::to("/")}}flutter_service_worker.js');--}}
-            });
-        }
+        //     window.addEventListener('flutter-first-frame', function () {
+        //         navigator.serviceWorker.register('flutter_service_worker.js');
+        //         {{--                navigator.serviceWorker.register('{{URL::to("/")}}flutter_service_worker.js');--}}
+        //     });
+        // }
         // Your web app's Firebase configuration
-        var firebaseConfig = {
+        // var firebaseConfig = {
 
-            // apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
-            // authDomain: "chef-leb.firebaseapp.com",
-            // databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
-            // projectId: "chef-leb",
-            // storageBucket: "chef-leb.appspot.com",
-            // messagingSenderId: "307095509147",
-            // appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
-            // measurementId: "G-8Y9V6YWCWD"
-            // //
-            apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
-            authDomain: "cheflab-user.firebaseapp.com",
-            databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
-            projectId: "cheflab-user",
-            storageBucket: "cheflab-user.appspot.com",
-            messagingSenderId: "180746879110",
-            appId: "1:180746879110:web:8440a4aab32734182e5107",
-            measurementId: "G-CGNPVL7FKZ"
-        };
+        //     // apiKey: "AIzaSyB_ym9qT9oWdc25CMIjXJVX-Ku6XhrwhnA",
+        //     // authDomain: "chef-leb.firebaseapp.com",
+        //     // databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
+        //     // projectId: "chef-leb",
+        //     // storageBucket: "chef-leb.appspot.com",
+        //     // messagingSenderId: "307095509147",
+        //     // appId: "1:307095509147:web:c382e5e84230f9a27f8e3e",
+        //     // measurementId: "G-8Y9V6YWCWD"
+        //     // //
+        //     apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
+        //     authDomain: "cheflab-user.firebaseapp.com",
+        //     databaseURL: "https://chef-leb-default-rtdb.firebaseio.com",
+        //     projectId: "cheflab-user",
+        //     storageBucket: "cheflab-user.appspot.com",
+        //     messagingSenderId: "180746879110",
+        //     appId: "1:180746879110:web:8440a4aab32734182e5107",
+        //     measurementId: "G-CGNPVL7FKZ"
+        // };
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        //firebase.initializeApp(firebaseConfig);
 
-        const messaging = firebase.messaging();
+        // const messaging = firebase.messaging();
 
-        function initFirebaseMessagingRegistration() {
-            messaging.requestPermission().then(function () {
-                return messaging.getToken()
-            }).then(function (token) {
+        // function initFirebaseMessagingRegistration() {
+        //     messaging.requestPermission().then(function () {
+        //         return messaging.getToken()
+        //     }).then(function (token) {
 
-                axios.post("{{ route('fcmToken_vendor') }}", {
-                    _method: "PATCH",
-                    token
-                }).then(({data}) => {
-                    console.log(data);
-                }).catch(({response: {data}}) => {
-                    console.error(data)
-                })
+        //         axios.post("{{ route('fcmToken_vendor') }}", {
+        //             _method: "PATCH",
+        //             token
+        //         }).then(({data}) => {
+        //             console.log(data);
+        //         }).catch(({response: {data}}) => {
+        //             console.error(data)
+        //         })
 
-            }).catch(function (err) {
+        //     }).catch(function (err) {
 
-                console.log(`Token Error :: ${err}`);
-            });
-        }
+        //         console.log(`Token Error :: ${err}`);
+        //     });
+        // }
 
-        function permissionForMicrophone() {
-            navigator.mediaDevices.getUserMedia( { audio: true, video: false } )
-            .then( ( stream ) => {
+        // function permissionForMicrophone() {
+        //     navigator.mediaDevices.getUserMedia( { audio: true, video: false } )
+        //     .then( ( stream ) => {
                 
-            },
-            e => {
+        //     },
+        //     e => {
                    
-            } );
+        //     } );
                 
-        }
+        // }
 
-        initFirebaseMessagingRegistration();
-        permissionForMicrophone();
+        // initFirebaseMessagingRegistration();
+        // permissionForMicrophone();
 
-        messaging.onMessage((payload) => {
-            console.log(payload);
-            new Notification(payload.notification.title, {body: payload.notification.body});
-            if (payload.data.link === void 0) {
-                toastr.info(payload.notification.title, payload.notification.body);
+        // messaging.onMessage((payload) => {
+        //     console.log(payload);
+        //     new Notification(payload.notification.title, {body: payload.notification.body});
+        //     if (payload.data.link === void 0) {
+        //         toastr.info(payload.notification.title, payload.notification.body);
 
-            } else {
-                toastr.options.onclick = function () {
-                    var win = window.open(payload.data.link);
-                    console.log('clicked');
-                }
+        //     } else {
+        //         toastr.options.onclick = function () {
+        //             var win = window.open(payload.data.link);
+        //             console.log('clicked');
+        //         }
 
-                toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" href="#">View</a>', payload.notification.title,);
+        //         toastr.info(payload.notification.body + ' <br/><a class="btn-dark btn-sm" style="float: right;padding: 14px !important;" href="#">View</a>', payload.notification.title,);
 
-            }
-            var audio = document.getElementById("beep__hover");
-            audio.play();
+        //     }
+        //     var audio = document.getElementById("beep__hover");
+        //     audio.play();
             
-        });
+        // });
         
     });
 </script>
