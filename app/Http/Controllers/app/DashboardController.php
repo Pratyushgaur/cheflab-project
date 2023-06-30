@@ -12,6 +12,9 @@ use App\Models\Vendors;
 use App\Models\Product_master;
 use App\Models\Order;
 use App\Events\OrderSendToPrepareEvent;
+use App\Events\OrderReadyToDispatchEvent;
+
+
 
 class DashboardController extends Controller
 {
