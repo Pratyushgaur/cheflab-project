@@ -5,7 +5,9 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Auth;
+
 class isVendorLoginAuth
+
 {
     /**
      * Handle an incoming request.
@@ -16,9 +18,13 @@ class isVendorLoginAuth
      */
     public function handle(Request $request, Closure $next)
     {
-        
+       
         if (Auth::guard('vendor')->check()) {
             if (Auth::guard('vendor')->user()->vendor_type == 'restaurant') {
+                if($request->route()->getName() == 'app.vendor.login'){
+                     return redirect()->route('app.restaurant.dashboard',Auth::guard('vendor')->user()->id); 
+
+                }
                 return redirect()->route('restaurant.dashboard'); 
             } elseif(Auth::guard('vendor')->user()->vendor_type == 'chef') {
                return redirect()->route('chef.dashboard');
