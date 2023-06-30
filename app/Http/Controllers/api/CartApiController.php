@@ -427,7 +427,7 @@ class CartApiController extends Controller
             if($request->lat != '' && $request->lng != ''){
                 $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
             }else{
-                $deliveryCharge = 40;
+                $deliveryCharge = 0;
             }
 
             return response()->json(['status'   => true,
