@@ -12,6 +12,7 @@
 
     ?>
             @forelse ($orders as $key => $order)
+                {{$order->order_status}}
                     <?php $orderProducts  = \App\Models\OrderProduct::where('order_id','=',$order->id)->get(); ?>
                     <?php $coupon  = \App\Models\Coupon::where('id','=',$order->coupon_id)->first(); ?>
                 <div class="card border-{{$status_class[$order->order_status]}} mb-3" style="">
