@@ -207,5 +207,12 @@
                     </div>
                 </div>
                 @empty
-                <h4 class="text-center">No Order Found</h4>
+                <div class="card mb-3">
+                    <div class="card-body text-success" style="padding-top: 0px; padding-bottom: 0px;">
+                        <img src="{{URL::TO('no_order_found.jpg')}}" alt="">
+                        <h4 class="text-center">No Order Found</h4>
+                    </div>
+                    
+                </div>
+                
                 @endforelse
