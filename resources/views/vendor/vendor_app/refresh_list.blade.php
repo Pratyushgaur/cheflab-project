@@ -15,7 +15,7 @@
                 
                     <?php $orderProducts  = \App\Models\OrderProduct::where('order_id','=',$order->id)->get(); ?>
                     <?php $coupon  = \App\Models\Coupon::where('id','=',$order->coupon_id)->first(); ?>
-                <div class="card border-{{$status_class[$order->order_status]}} mb-3" style="">
+                <div class="card border-{{$status_class[$order->order_status]}} mb-3 order_container_{{$order->id}}" style="">
                     <div class="card-header bg-transparent border-success text-center"><b>#{{$order->order_id}}</b></div>
                     <div class="card-body text-success" style="padding-top: 0px; padding-bottom: 0px;">
                         <h5 class="card-title text-center">{{$order->customer_name}}</h5>
@@ -173,7 +173,7 @@
                                 <button data-toggle="modal" data-target="#modal-7" onclick="preparation_form('{{route('restaurant.order.preparing',[$order->id])}}',{{$order->id}})" class="btn btn-block btn-success" style="border-radius:10px;">Accept</button>
                             </div>
                             <div class="col-xs-6 col-md-6">
-                                <button class="btn btn-block btn-danger" style="border-radius:10px;">Reject</button>
+                                <button class="btn btn-block btn-danger " onclick="reject_order({{$order->id}})" style="border-radius:10px;">Reject</button>
                             </div>
                             @endif
                             @if($order->order_status == 'preparing')

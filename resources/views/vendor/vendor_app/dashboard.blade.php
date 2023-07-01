@@ -182,6 +182,42 @@
             })
             
         }
+        function reject_order(orderid){
+            Swal.fire({
+                title: 'Do you want to Reject This Order',
+                
+                showCancelButton: true,
+                confirmButtonText: 'Save',
+                }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '{{route('app.restaurant.order.reject')}}',
+                        type: 'post',
+                        cache: false,
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                            "order_id": orderid
+                        },
+                        success: function (data) {
+                            console.log(data.status);
+                            if(data.status == true){
+                                Swal.fire('Great job!',data.message,'success');
+                                $(".order_container_"+orderid+"").remove();
+
+                            }else{
+                                Swal.fire({icon: 'error',title: 'Oops...',text: data.error,})
+                            }
+                            
+                        },
+                        error: function (xhr, textStatus, thrownError) {
+                            // toastr.info('Something went wrong', 'Info');
+                        }
+                    });
+                } 
+            })
+            
+        }
     </script>
 @endpush
 

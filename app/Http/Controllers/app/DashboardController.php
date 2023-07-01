@@ -13,8 +13,7 @@ use App\Models\Product_master;
 use App\Models\Order;
 use App\Events\OrderSendToPrepareEvent;
 use App\Events\OrderReadyToDispatchEvent;
-
-
+use App\Events\OrderCancelDriverEmitEvent;
 
 class DashboardController extends Controller
 {
@@ -66,6 +65,34 @@ class DashboardController extends Controller
 
         }
         
+    }
+    
+    public function order_vendor_reject(Request $request)
+    {
+        $id = $request->order_id;
+        $order               = Order::find($id);
+        $order->order_status = 'cancelled_by_vendor';
+        $order->save();
+        \App\Models\OrderActionLogs::create(['orderid'=> $id,'action' => 'Order Rejected by vendor']);
+
+        $user                = \App\Models\User::find($order->user_id);
+        $user->wallet_amount = $user->wallet_amount + $order->net_amount;
+        $user->save();
+        $UserWalletTransactions = new \App\Models\UserWalletTransactions;
+        $UserWalletTransactions->user_id = $order->user_id;
+        $UserWalletTransactions->amount = $order->net_amount;
+        $UserWalletTransactions->transaction_id = $order->order_id;
+        $UserWalletTransactions->narration = "Refund";
+        $UserWalletTransactions->save();
+        if ($order->accepted_driver_id != null) {
+            event(new OrderCancelDriverEmitEvent($order, $order->accepted_driver_id));
+        }
+        orderCancelByVendor($id);
+        $data = orderDetailForUser($id);
+        \App\Jobs\UserOrderNotification::dispatch('Order Cancelled By Restaurant', 'Your Order id #'.$order->order_id.' is Cancelled By Restaurant.', $user->fcm_token, 7, $data);
+        
+        return array('status'=> true, 'message' => "#$order->order_id Order Cancelled.");
+
     }
     public function refresh_list(Request $request)
     {

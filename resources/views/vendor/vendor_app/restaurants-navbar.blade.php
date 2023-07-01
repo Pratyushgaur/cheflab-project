@@ -9,7 +9,7 @@
 
 
         <div class="logo-sn logo-sm ms-d-block-sm">
-            <a class="pl-0 ml-0 text-center navbar-brand mr-0" href="{{route("app.restaurant.dashboard",Auth::guard('vendor')->user()->id)}}"><img src="{{ asset('commonarea') }}/logo.png" style="height: 70px;" alt="logo"> </a>
+            <a class="pl-0 ml-0 text-center navbar-brand mr-0" href="{{route("app.restaurant.dashboard",Auth::guard('vendor')->user()->id)}}"><img src="{{ asset('commonarea') }}/logo.png" style="height: 40px;" alt="logo"> </a>
         </div>
 
 
