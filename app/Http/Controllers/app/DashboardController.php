@@ -20,11 +20,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {   
-        
-        
-        $orders = Order::where('vendor_id', Auth::guard('vendor')->user()->id)->whereNotIn('order_status', ['pending','cancelled_by_customer_before_confirmed'])->orderBy('id','desc')->skip(0)->take(10)->get();
-        $users = [];
-        return view('vendor.vendor_app.dashboard',compact('orders','users'));
+        return view('vendor.vendor_app.dashboard');
     }
     public function order_preparing(Request $request )
     {
@@ -70,5 +66,11 @@ class DashboardController extends Controller
 
         }
         
+    }
+    public function refresh_list(Request $request)
+    {
+        $orders = Order::where('vendor_id', Auth::guard('vendor')->user()->id)->whereNotIn('order_status', ['pending','cancelled_by_customer_before_confirmed'])->orderBy('id','desc')->skip(0)->take(10)->get();
+        return view('vendor.vendor_app.refresh_list',compact('orders'));
+
     }
 }
