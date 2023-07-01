@@ -67,7 +67,14 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="modal-8" tabindex="-1" role="dialog" aria-labelledby="modal-7" data-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content product_viewer">
+                
+            </div>
+            
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
@@ -216,6 +223,13 @@
                     });
                 } 
             })
+            
+        }
+        function viewProduct(orderid){
+            
+            var html = $('.product_container_'+orderid+'').html();
+            console.log(html);
+            $(".product_viewer").html(html);
             
         }
     </script>

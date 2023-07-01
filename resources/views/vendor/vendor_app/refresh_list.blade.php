@@ -31,10 +31,10 @@
                         <p class="card-text otp_block_{{$order->id}}" style="@if($order->order_status != 'ready_to_dispatch')display:none; @endif"><b>Pickup OTP</b>  {{$order->pickup_otp}} </p>
 
             
-                        <button class="btn btn-block " style="border:1px solid black; color:#333;" type="button" data-toggle="collapse" data-target="#collapseExample_{{$key}}" aria-expanded="false" aria-controls="collapseExample_{{$key}}">
+                        <button class="btn btn-block " data-toggle="modal" data-target="#modal-8" onclick="viewProduct('{{$order->id}}')" style="border:1px solid black; color:#333;" type="button"  aria-expanded="false" aria-controls="collapseExample_{{$key}}">
                             View Products
                         </button>
-                        <div class="collapse" id="collapseExample_{{$key}}">
+                        <div  id="" style="display:none;" class="product_container_{{$order->id}}">
                             @foreach($orderProducts as $okey => $ovalue)
                                 <?php 
                                     $Product_master = \App\Models\Product_master::withTrashed()->find($ovalue->product_id);
@@ -102,6 +102,7 @@
                                 </div>
                                 
                             @endforeach
+                            
                             <div class="card card-body" style="padding-bottom: 0px; padding-top: 5px;">
                                 <div class="row">
                                     <div class="col-xl-12 col-md-12">
@@ -162,6 +163,10 @@
                                     </div>
                                     
                                 </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                                
                             </div>
                         </div>
                     </div>
