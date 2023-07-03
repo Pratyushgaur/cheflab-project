@@ -9,6 +9,7 @@ $breadcrumb[] = ["name"  => "Items",
 
 $product_approve = config('custom_app_setting.product_approve');
 $product_status = config('custom_app_setting.product_status');
+$btn = '';
 ?>
 @extends('vendor.restaurants-layout')
 @section('main-content')
@@ -102,7 +103,7 @@ $product_status = config('custom_app_setting.product_status');
                                                     }
                                                     if($product->status == 2){
                                                         $btn = '';
-                                                    }
+                                                    }   
                                                     echo $btn;
                                                 ?>
                                                 <?php 
