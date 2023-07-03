@@ -47,6 +47,7 @@ Route::get('check-login-for-admin', function(){
 //////////////////////////////////////vendor route ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 Route::view('vendor/login', 'vendor/login')->name('vendor.login')->middleware(isVendorLoginAuth::class);
+//Route::view('vendor/vendor_app/login2/', 'vendor/vendor_app/login2')->name('vendor.login')->middleware(isVendorLoginAuth::class);
 Route::get('check-login-on-vendor', function(){
     return view('vendor/login');
 });
@@ -96,7 +97,9 @@ Route::post('payment/status', [\App\Http\Controllers\vendor\restaurant\PaytmCont
 // vendor app route
 Route::group([ 'prefix' => 'app'], function () {
    
-    Route::get('vendor/login', [\App\Http\Controllers\app\LoginController::class,'index'])->name('app.vendor.login')->middleware(isVendorLoginAuth::class);
+    Route::get('vendor/login',function(){
+        return view("vendor/vendor_app/login2");
+    })->name('app.vendor.login')->middleware(isVendorLoginAuth::class);
     Route::post('check-login-on-vendor', [ App\Http\Controllers\app\LoginController::class, 'login' ])->name('app.action.vendor.login');
     Route::get('vendor-logout', function () {
         Auth::guard('vendor')->logout();
