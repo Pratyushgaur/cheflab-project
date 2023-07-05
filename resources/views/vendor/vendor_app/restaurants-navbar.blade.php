@@ -18,7 +18,7 @@
 
             <div class="ms-toggler ms-d-block-sm pr-0 ms-nav-toggler" >
                  <!-- <a href="#" ><b class="flaticon-shut-down mr-2" ></b></a> -->
-                 <a class="media fs-14 p-2" href="{{route('vendor.app.logout')}}"> <span><i class="flaticon-shut-down mr-2"></i> Logout</span>
+                 <a class="media fs-14 p-2" href="{{route('vendor.app.logout',Auth::guard('vendor')->user()->id)}}"> <span><i class="flaticon-shut-down mr-2"></i> Logout</span>
                             </a>
             </div>
             

@@ -101,7 +101,7 @@ Route::group([ 'prefix' => 'app'], function () {
         return view("vendor/vendor_app/login2");
     })->name('app.vendor.login')->middleware(isVendorLoginAuth::class);
     Route::post('check-login-on-vendor', [ App\Http\Controllers\app\LoginController::class, 'login' ])->name('app.action.vendor.login');
-    Route::get('vendor-logout', function () {
+    Route::get('vendor-logout/{id}', function () {
         Auth::guard('vendor')->logout();
         return redirect()->route('app.vendor.login');
     })->name('vendor.app.logout');
@@ -109,3 +109,6 @@ Route::group([ 'prefix' => 'app'], function () {
 });
 
 Route::post('vendor/app/test/login',[App\Http\Controllers\app\LoginController::class, 'login_test' ]);
+Route::get('/not',function(){
+    sendVendorAppNotification("test noti","tst",["eGYVhavQRfqi0Vy3svm0X0:APA91bE-EGKqi6RLYQMCzSFctXVfrATWtdP3xEDLbgnuaCI2WgqYz6zfdXLX8jzz77wgYFUvVNEcYWvmBAKtYPdg1EIjP7oywTNh3F4u3pc0RD-ibPftC0zpjZq5AC4yKED5mwVFWns9"]);
+});

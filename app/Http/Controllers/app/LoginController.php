@@ -88,6 +88,39 @@ class LoginController extends Controller
         }
 
     } 
+    public function deleterToken(Request $request)
+    {
+        
+        $validateUser = Validator::make($request->all(), [
+            'vendor_id' => 'required',
+            'token' => 'required',
+        ]);
+        if ($validateUser->fails()) {
+            $error = $validateUser->errors();   
+            return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
+        }
+        try {
+            $check = \App\Models\VendorAppTokens::where('vendor_id','=',$request->vendor_id)->where('token','=',$request->token);
+            if($check->exists()){
+                $check->delete();
+                return response()->json(['status' => true, 'response' =>"Success"], 200);
+
+            }else{
+                return response()->json(['status' => false, 'error' =>"No Token Found"], 401);
+
+            }
+            
+            
+
+        } catch (PDOException $e) {
+           
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+
+    } 
 
     
 }

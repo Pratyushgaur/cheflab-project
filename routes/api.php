@@ -43,6 +43,7 @@ Route::post('get-ios-update-version', [\App\Http\Controllers\api\LoginApiControl
 
 Route::post('send-notification', [App\Http\Controllers\api\AppController::class, 'sendNotification']);
 Route::post("vendor-token-register",[App\Http\Controllers\app\LoginController::class, 'registerToken']);
+Route::post("vendor-token-delete",[App\Http\Controllers\app\LoginController::class, 'deleterToken']);
 @require_once 'rider_routes.php';
 
 // vi call
