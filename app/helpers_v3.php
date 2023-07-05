@@ -71,6 +71,8 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
             $join->on('products.userId', '=', 'vendor_offers.vendor_id');
             $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
             $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+            $join->whereDate('vendor_offers.deleted_at','=',null);
+            $join->whereDate('vendor_offers.status','=',"1");
     });
     
     if ($order_by_column != '' && $order_by_order != '')
