@@ -46,6 +46,10 @@ class OrderSendNotificationListener
         ));
         $token []= $vendor->fcm_token;
         $res = sendNotification('New Order',"You have received new Order #" . $event->order_id . ' from ' . $customer->name,$token,['msg_type' => 'info','link' => $event->clickUrl]);
+        $tokensApp = \App\Models\VendorAppTokens::where('vendor_id','=',"1")->pluck('token');
+        if(!empty($tokensApp)){
+                $res = sendVendorAppNotification('New Order',"You have received new Order #" . $event->order_id . ' from ' . $customer->name,$tokensApp,null);
+        }
 
         //automatice send for prepration
         //order_status ===>'confirmed' to 'preparing'

@@ -1332,6 +1332,95 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
     return true;
 }
 
+// function sendVendorAppNotification($title, $body, $token, $sound = 'fcm_notification_sound')
+// {
+    
+//     $server_key = env('FIREBASE_SERVER_KEY');
+//     $url = "https://fcm.googleapis.com/fcm/send";
+//     $notification = array('title' => $title, 'body' => $body, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "cheLab_Vendor_channel");
+//     //$arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high');
+//     $arrayToSend = array('to' => "/topics/ChefLab_Vendor_Testing", 'notification' => $notification, 'priority' => 'high', 'data' => []);
+
+//     $fields = json_encode($arrayToSend);
+    
+//     $json = json_encode($arrayToSend);
+//     $headers = array();
+//     $headers[] = 'Content-Type: application/json';
+//     $headers[] = 'Authorization: key=' . $server_key;
+//     $ch = curl_init();
+//     curl_setopt($ch, CURLOPT_URL, $url);
+//     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+//     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+//     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+//     //Send the request
+//     return $response = curl_exec($ch);
+//     //Close request
+//     if ($response === FALSE) {
+//         die('FCM Send Error: ' . curl_error($ch));
+//     }
+//     curl_close($ch);
+//     return true;
+// }
+
+// function sendVendorAppNotification($title, $body, $topicId, $data = null ,$sound=null ,$image=null)
+// {
+    
+//     $server_key = env('FIREBASE_SERVER_KEY');
+//     $headers = [
+//         'Authorization' => 'key=' . $server_key,
+//         'Content-Type'  => 'application/json',
+//     ];
+//     $url = "https://fcm.googleapis.com/fcm/send";
+//     $notification = array('title' => $title, 'body' => $body, 'sound' => 'fcm_notification_sound',  'image' => $image, 'badge' => '1', "android_channel_id" => "cheLab_Vendor_channel");
+//     $arrayToSend = array('to' => "/topics/$topicId", 'notification' => $notification, 'priority' => 'high', 'data' => $data);
+//     $fields = json_encode($arrayToSend);
+//     $client = new Client();
+//     try {
+//         $request = $client->post($url, [
+//             'headers' => $headers,
+//             "body" => $fields,
+//         ]);
+//         $response = $request->getBody();
+//         //return $response;
+//     } catch (Exception $e) {
+//         return $e;
+//     }
+// }
+function sendVendorAppNotification($title, $body, $token, $data = null, $sound = 'fcm_notification_sound', $image = null)
+{
+    
+    $server_key = env('FIREBASE_SERVER_KEY');
+    $url = "https://fcm.googleapis.com/fcm/send";
+    $notification = array('title' => $title, 'body' => $body, 'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "cheLab_Vendor_channel");
+    $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
+    //dd($arrayToSend);
+    $fields = json_encode($arrayToSend);
+    
+    $json = json_encode($arrayToSend);
+    $headers = array();
+    $headers[] = 'Content-Type: application/json';
+    $headers[] = 'Authorization: key=' . $server_key;
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+    //Send the request
+    return $response = curl_exec($ch);
+    //Close request
+    if ($response === FALSE) {
+        die('FCM Send Error: ' . curl_error($ch));
+    }
+    curl_close($ch);
+    return true;
+}
+
 function sendUserAppNotification($title, $body, $token, $data = null)
 {
     $tokens[] = $token;
