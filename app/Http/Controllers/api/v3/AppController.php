@@ -370,6 +370,8 @@ class AppController extends Controller
                         $join->on('products.userId', '=', 'vendor_offers.vendor_id');
                         $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
                         $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                        $join->where('vendor_offers.deleted_at','=',null);
+                        $join->where('vendor_offers.status','=',"1");
                 });
                 $product->where(DB::raw("ROUND({$select})") ,'<=', config('custom_app_setting.near_by_distance'));
                 $product = $product->Select(

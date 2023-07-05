@@ -784,6 +784,9 @@ class AppController extends Controller
                         $join->on('products.userId', '=', 'vendor_offers.vendor_id');
                         $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
                         $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                        $join->where('vendor_offers.deleted_at','=',null);
+                        $join->where('vendor_offers.status','=',"1");
+                        
                 });
                 $v->select(
                             'variant_name', 'variant_price', 'variants.id',
@@ -1818,6 +1821,9 @@ class AppController extends Controller
                     if(empty($offer)){
                         return response()->json(['status' => False, 'error' => "Invalid Offer id"], 500);
                     }
+                    // $insertData['offer_id'] = $request->offer_id;
+                    // $insertData['offer_percentage'] = $offer->offer_persentage;
+                    // $insertData['offer_duration'] = $offer->from_date . '-'. $offer->to_date ;
                 }
                 $Order                    = new Order($insertData);
                 $Order->saveOrFail();
@@ -4086,6 +4092,15 @@ class AppController extends Controller
             // $insertData['delivery_charge'] = intval($request->delivery_charge);
             if(isset($request->gateway_response) && is_array($request->gateway_response)){
                 $request->gateway_response = serialize($request->gateway_response);
+            }
+            if(isset($request->offer_id)){
+                $offer = \App\Models\VendorOffers::find($request->offer_id);
+                if(empty($offer)){
+                    DB::rollBack();
+                    return array('status'=>false,'error' => 'Invalid Offer id') ;
+                }
+                //$request->offer_percentage = $offer->offer_persentage;
+                //$request->offer_duration= $offer->from_date . '-'. $offer->to_date ;
             }
             $insertData = $request;
             $Order                    = new Order((array) $insertData);
