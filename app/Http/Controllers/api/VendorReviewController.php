@@ -110,7 +110,8 @@ class VendorReviewController extends Controller
                 ], 401);
             }
             //return Vendors::select('name')->withCount(['products as ps_count'])->having('ps_count', '>', 0)->get();            ;
-            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id)->orderBy('vendor_ratings','DESC');
+            $review = get_restaurant_near_me($request->lat,$request->lng,['vendor_type'=>'restaurant'],$request->user()->id);
+            //->orderBy('vendor_ratings','DESC');
             $review = $review->offset($request->offset)->limit($request->limit);
             $data = $review->get();
             $baseurl = URL::to('vendor-banner/') . '/';
