@@ -16,19 +16,22 @@
                     <?php $orderProducts  = \App\Models\OrderProduct::where('order_id','=',$order->id)->get(); ?>
                     <?php $coupon  = \App\Models\Coupon::where('id','=',$order->coupon_id)->first(); ?>
                 <div class="card border-{{$status_class[$order->order_status]}} mb-3 order_container_{{$order->id}}" style="">
-                    <div class="card-header bg-transparent border-success text-center"><b>#{{$order->order_id}}</b></div>
+                    <div class="card-header bg-transparent border-success text-center">
+                        <div class="otp_block_{{$order->id}}" style="width:60px; height:60px; border:1px solid black; position:absolute; @if($order->order_status != 'ready_to_dispatch')display:none; @endif">OTP <br> <b class="text-danger">2022</b></div>
+                        <b>#{{$order->order_id}}</b>
+                    </div>
                     <div class="card-body text-success" style="padding-top: 0px; padding-bottom: 0px;">
                         <h5 class="card-title text-center">{{$order->customer_name}}</h5>
                         
                         <h5 class="text-right text-success">Rs.{{number_format( $order->net_amount,2)}}</h5>
                         <p class="card-text"><b>Order Date</b> <br> {{date('d-M-Y h:i A')}}.</p>
-                        <p class="card-text"><b>Landmark address</b> <br> {{$order->delivery_address}}.</p>
+                        <!-- <p class="card-text"><b>Landmark address</b> <br> {{$order->delivery_address}}.</p> -->
                         @if($order->chef_message!='')
-                        <p class="card-text"><b>Message to Chef</b> <br> {{strtoupper($order->chef_message)}}.</p>
+                        <p class="card-text"><b>Message to Chef </b><br> <b class=" text-danger">{{strtoupper($order->chef_message)}}.</b> </p>
                         @endif
-                        <p class="card-text"><b>Send Cutlery</b> @if($order->send_cutlery == '1')Yes @else No @endif </p>
+                        <p class="card-text "><b>Send Cutlery - </b>  <b class="text-danger">@if($order->send_cutlery == '1')Yes @else No @endif</b> </p>
                         
-                        <p class="card-text otp_block_{{$order->id}}" style="@if($order->order_status != 'ready_to_dispatch')display:none; @endif"><b>Pickup OTP</b>  {{$order->pickup_otp}} </p>
+                        <!-- <p class="card-text otp_block_{{$order->id}}" style="@if($order->order_status != 'ready_to_dispatch')display:none; @endif"><b>Pickup OTP - </b> <b class="text-danger ">{{$order->pickup_otp}}</b>   </p> -->
 
             
                         <button class="btn btn-block " data-toggle="modal" data-target="#modal-8" onclick="viewProduct('{{$order->id}}')" style="border:1px solid black; color:#333;" type="button"  aria-expanded="false" aria-controls="collapseExample_{{$key}}">
@@ -115,7 +118,7 @@
 
                                                 
                                             </tr>
-                                            <tr>
+                                            <!-- <tr>
                                                 <th width="70%">
                                                     Tax & charge
                                                 </th>
@@ -158,7 +161,7 @@
                                                 <th width="30%" style="text-align:right;"><h6><?php echo number_format( $order->net_amount,2);?></h6></th>
 
                                                 
-                                            </tr>
+                                            </tr> -->
                                         </table>
                                     </div>
                                     
