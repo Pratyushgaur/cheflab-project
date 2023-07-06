@@ -38,133 +38,59 @@
                             View Products
                         </button>
                         <div  id="" style="display:none;" class="product_container_{{$order->id}}">
-                            @foreach($orderProducts as $okey => $ovalue)
-                                <?php 
-                                    $Product_master = \App\Models\Product_master::withTrashed()->find($ovalue->product_id);
-                                    $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $ovalue->id)->first();
-                                    
-                                ?>
-                                <div class="card card-body" style="border-bottom:1px solid black;">
-                                    <div class="row">
-                                        <div class="col-xl-12 col-md-12">
-                                            <h6 class="text-center">{{$Product_master->product_name}}</h6>
-                                            <?php 
-                                            if (!empty($OrderProductVariant) && $Product_master->customizable == 'true'){
-                                                ?>
-                                                    <p class="text-center">{{$OrderProductVariant->variant_name}}</p>
-                                                <?php
-                                                $unit_price = $OrderProductVariant->variant_price;
-                                                $price      = $OrderProductVariant->variant_price*$OrderProductVariant->variant_qty;
-                                            }else{
-                                                $unit_price = @(@$ovalue->product_price);
-                                                $price      = $ovalue->product_price*$ovalue->product_qty;
-                                            }
-                                            ?>
-                                            
-                                        </div>
-                                        <div class="col-xl-12 col-md-12">
-                                            <table class="table">
-                                                <tr>
-                                                    <th width="70%">
-                                                        Price -{{number_format($unit_price,2)}} <br>
-                                                        Qty - {{$ovalue->product_qty}} <br>
-                                                        
-                                                    </th>
-                                                    <th width="30%" style="text-align:right;"><h6>{{number_format($price,2)}}</h6></th>
-                                                </tr>
-                                                <?php 
-                                                    $addons=\App\Models\OrderProductAddon::join('addons','addons.id','order_product_addons.addon_id')->where('order_product_id',$ovalue->id)->get();
-                                                    if(isset($addons[0])){
-                                                        foreach ($addons as $k1=>$addon)
-                                                            if(isset($addon->addon) && $addon->addon!=''){
-                                                                $price = $price+$addon->addon_price;
-                                                                ?>
-                                                                
-                                                                <tr>
-                                                                    <th width="70%">
-                                                                        Addon : <br>{{$addon->addon }}
-                                                                    </th>
-                                                                    <th width="30%" style="text-align:right;"><h6>{{(number_format($addon->addon_price,2))}}</h6></th>
-
-                                                                    
-                                                                </tr>
-                                                                <?php
-                                                            }
-                                                    }
-                                                ?>
-                                                <tr>
-                                                    <th width="70%">
-                                                        Total
-                                                    </th>
-                                                    <th width="30%" style="text-align:right;"><h6>{{number_format($price,2)}}</h6></th>
-                                                </tr>
-                                                
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                            @endforeach
-                            
-                            <div class="card card-body" style="padding-bottom: 0px; padding-top: 5px;">
+                            <div class="card card-body">
                                 <div class="row">
+                                            
                                     <div class="col-xl-12 col-md-12">
                                         <table class="table">
-                                            <tr>
-                                                <th width="70%">
-                                                    Item-Total
-                                                </th>
-                                                <th width="30%" style="text-align:right;"><h6>{{number_format($order->total_amount,2)}}</h6></th>
+                                            @foreach($orderProducts as $okey => $ovalue)
+                                                <?php 
+                                                    $Product_master = \App\Models\Product_master::withTrashed()->find($ovalue->product_id);
+                                                    $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $ovalue->id)->first();
+                                                    
+                                                ?>
+                                                    
+                                                            
+                                                                <tr>
+                                                                    <th style="width:30%;" style="text-align:left;"><h6>{{$ovalue->product_qty}} <i class="fa fa-times"></i></h6></th>
 
-                                                
-                                            </tr>
-                                            <!-- <tr>
-                                                <th width="70%">
-                                                    Tax & charge
-                                                </th>
-                                                <th width="30%" style="text-align:right;"><h6><?php echo number_format( (float)$order->tex+$order->platform_charges,2);?></h6></th>
+                                                                    <th style="width:70%;" style="text-align:left;">
+                                                                        {{$Product_master->product_name}} <br>
+                                                                        <?php 
+                                                                        if (!empty($OrderProductVariant) && $Product_master->customizable == 'true'){
+                                                                            echo '('.$OrderProductVariant->variant_name.')';
+                                                                        }
+                                                                        ?>
+                                                                    </th>
+                                                                </tr>
+                                                                <?php 
+                                                                    $addons=\App\Models\OrderProductAddon::join('addons','addons.id','order_product_addons.addon_id')->where('order_product_id',$ovalue->id)->get();
+                                                                    if(isset($addons[0])){
+                                                                        foreach ($addons as $k1=>$addon)
+                                                                            if(isset($addon->addon) && $addon->addon!=''){
+                                                                                
+                                                                                ?>
+                                                                                
+                                                                                <tr>
+                                                                                    <th style="width:30%;" style="text-align:left;"><h6>1 <i class="fa fa-times"></i></h6></th>
 
+                                                                                    <th width="70%">
+                                                                                        Addon : <br>{{$addon->addon }}
+                                                                                    </th>
+                                                                                    
+                                                                                    
+                                                                                </tr>
+                                                                                <?php
+                                                                            }
+                                                                    }
+                                                                ?>
+                                                            
+                                                    
                                                 
-                                            </tr>
-                                            <tr>
-                                                <th width="70%">
-                                                    Delivery Charge 
-                                                </th>
-                                                <th width="30%" style="text-align:right;"><h6><?php echo number_format( $order->delivery_charge,2);?></h6></th>
-
                                                 
-                                            </tr>
-                                            @if(!empty($coupon))
-                                            <tr>
-                                                <th width="70%">
-                                                    Discount <br>Coupon Applied <span class="text-success">({{$coupon->name}})</span>
-                                                </th>
-                                                <th width="30%" style="text-align:right;"><h6><?php echo number_format( $order->discount_amount,2);?></h6></th>
-
-                                                
-                                            </tr>
-                                            @endif
-                                            @if($order->wallet_apply)
-                                            <tr>
-                                                <th width="70%">
-                                                    Wallet Cut
-                                                </th>
-                                                <th width="30%" style="text-align:right;"><h6><?php echo number_format( $order->wallet_cut,2);?></h6></th>
-
-                                                
-                                            </tr>
-                                            @endif
-                                            <tr>
-                                                <th width="70%">
-                                                    Net-Amount
-                                                </th>
-                                                <th width="30%" style="text-align:right;"><h6><?php echo number_format( $order->net_amount,2);?></h6></th>
-
-                                                
-                                            </tr> -->
+                                            @endforeach
                                         </table>
                                     </div>
-                                    
                                 </div>
                             </div>
                             <div class="modal-footer">
