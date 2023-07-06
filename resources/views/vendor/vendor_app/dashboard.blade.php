@@ -209,7 +209,8 @@
                         success: function (data) {
                             console.log(data.status);
                             if(data.status == true){
-                                Swal.fire('Great job!',data.message,'success');
+                                //Swal.fire('Rejected !',data.message,'success');
+                                Swal.fire(data.message);
                                 $(".order_container_"+orderid+"").remove();
 
                             }else{
