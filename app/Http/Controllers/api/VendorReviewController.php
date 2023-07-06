@@ -130,6 +130,12 @@ class VendorReviewController extends Controller
                 $data[$key]->banner_image   = $urlbanners;
                 $data[$key]->next_available = next_available_day($value->id);
             }
+            if($request->user()->id == '4'){
+                $TestingTables = new \App\Models\TestingTables;
+                $TestingTables->limit_no = $request->limit;
+                $TestingTables->offset_no = $request->offset;
+                $TestingTables->save();
+            }
             return response()->json([
                 'status' => true,
                 'message'=>'Data Get Successfully',
