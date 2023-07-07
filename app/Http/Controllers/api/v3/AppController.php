@@ -384,7 +384,7 @@ class AppController extends Controller
                     'products.product_name',
                     'product_price',
                     'customizable',
-                     //DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+                     DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
                     'product_rating',
                     'primary_variant_name',
                     'products.menu_id',
@@ -397,12 +397,6 @@ class AppController extends Controller
                         WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
                             ELSE `product_price`
                         END) as after_offer_price'
-                    ),
-                    DB::raw('
-                    (CASE 
-                        WHEN product_image IS NOT NULL THEN CONCAT("' . asset('products') . '/", product_image)
-                            ELSE `product_image`
-                        END) as product_image'
                     )
                 );
                 $data = $product->get();
