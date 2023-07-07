@@ -89,7 +89,7 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
         'product_price',
         'dis',
         'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+        DB::raw('IFNULL(CONCAT("' . asset('products') . '/", product_image),null) AS image'),
         'dis as description',
         'products.id as product_id',
         DB::raw('ROUND(product_rating,1) AS product_rating'),
@@ -99,11 +99,12 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
         DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
         DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
         DB::raw('
-        (CASE 
-            WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
-                ELSE `product_price`
-            END) as after_offer_price'
+            (CASE 
+                WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
+                    ELSE `product_price`
+                END) as after_offer_price'
         )
+    
 
     )->get();
     
@@ -210,7 +211,7 @@ function topRatedProducts_v2($lat, $lng, $user_id, $offset, $limit){
         'product_price',
         'dis',
         'customizable',
-        DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+        DB::raw('IFNULL(CONCAT("' . asset('products') . '/", product_image),null) AS image'),
         'dis as description',
         DB::raw('ROUND(product_rating,2) AS product_rating'),
         'primary_variant_name',

@@ -384,7 +384,7 @@ class AppController extends Controller
                     'products.product_name',
                     'product_price',
                     'customizable',
-                     DB::raw('CONCAT("' . asset('products') . '/", product_image) AS image'),
+                    DB::raw('IFNULL(CONCAT("' . asset('products') . '/", product_image),null) AS image'),
                     'product_rating',
                     'primary_variant_name',
                     'products.menu_id',
