@@ -17,7 +17,7 @@
                     <?php $coupon  = \App\Models\Coupon::where('id','=',$order->coupon_id)->first(); ?>
                 <div class="card border-{{$status_class[$order->order_status]}} mb-3 order_container_{{$order->id}}" style="">
                     <div class="card-header bg-transparent border-success text-center">
-                        <div class="otp_block_{{$order->id}}" style="width:60px; height:60px; border:1px solid black; position:absolute; @if($order->order_status != 'ready_to_dispatch')display:none; @endif">OTP <br> <b class="text-danger">2022</b></div>
+                        <div class="otp_block_{{$order->id}}" style="width:60px; height:60px; border:1px solid black; position:absolute; @if($order->order_status != 'ready_to_dispatch')display:none; @endif">OTP <br> <b class="text-danger">{{$order->pickup_otp}}</b></div>
                         <b>#{{$order->order_id}}</b>
                     </div>
                     <div class="card-body text-success" style="padding-top: 0px; padding-bottom: 0px;">
