@@ -722,7 +722,9 @@ class UserControllers extends Controller
                 ->addIndexColumn()
                 ->addColumn('action-js', function ($data) {
                     $btn = '<a href="' . route("admin.chef.productedit", Crypt::encryptString($data->id)) . '" class="edit btn btn-warning btn-xs"><i class="fa fa-edit"></i></a>
-                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" ><i class="fa fa-trash"></i></a> ';
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs delete-record" data-alert-message="Are You Sure to Delete this Product" flash="City"  data-action-url="" title="Delete" ><i class="fa fa-trash"></i></a>
+                            <a href="javascript:void(0);" data-id="' . Crypt::encryptString($data->id) . '" class="btn btn-danger btn-xs remove-image"   title="Remove Product Image" ><i class="fa fa-image"></i></a>
+                             ';
                     return $btn;
                 })
                 ->addColumn('product_image', function ($data) {
@@ -750,6 +752,22 @@ class UserControllers extends Controller
                 ->rawColumns([ 'date','status' ])
                 ->rawColumns([ 'action-js', 'product_image','status' ]) // if you want to add two action coloumn than you need to add two coloumn add in array like this
                 ->make(true);
+        }
+    }
+    function vendor_product_image_remove (Request $request) {
+        $id         = Crypt::decryptString($request->id);
+        $product = \App\Models\Product_master::where('id','=',$id)->first();
+        if($product->product_image != null){
+            if(file_exists(public_path().'/products/'.$product->product_image)){
+                unlink(public_path().'/products/'.$product->product_image);
+                \App\Models\Product_master::where('id','=',$id)->update(['product_image' =>null]);
+                return array('success' => true ,'message' => 'Successfully Removed');
+            }else{
+                return array('success' => false ,'error_message' => 'No file Exist');
+            }
+        }else{
+            array('success' => false ,'error_message' => 'Image is Already Removed');
+
         }
     }
     public function order_list(Request $request, $id){

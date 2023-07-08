@@ -239,7 +239,52 @@
              {data: 'action-js', name: 'action-js', orderable: false, searchable: false},
          ]
      });
-     
+     $(document).on('click','.remove-image',function(){
+      
+      Swal.fire({
+            title: 'Are you sure?',
+            text: "Are You sure To remove Image",
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#28a745',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+              var id = $(this).attr('data-id');
+              
+              //
+              $.ajaxSetup({
+                  headers: {
+                      'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                  }
+              });
+
+              $.ajax({
+                  url: "{{route('admin.chef.product.image.delete')}}",
+                  type: 'POST',
+                  // dataType: "JSON",
+                  data: {
+                      "id": id,
+                  },
+                  success: function (response)
+                  {
+                      console.log(response);
+                      if (response.success == true) {
+                        Swal.fire({icon: 'success',title: 'Good',text: response.message, footer: ''});
+                        $('#example').DataTable().ajax.reload();
+                      } else {
+                        Swal.fire({icon: 'error',title: 'Oops...',text: response.error_message, footer: ''});
+                      }
+                  },
+                  error: function(xhr) {
+                  console.log(xhr.responseText); 
+                  
+                }
+              });
+
+            }
+        })
+     })
     $('#customizable').change(function(){
         if ($(this).val() == 'true') {
           $('.custmization-block').show();

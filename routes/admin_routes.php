@@ -57,6 +57,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     Route::get('vendors-chef-productlists/{id}', [App\Http\Controllers\admin\UserControllers::class, 'product_list'])->name('admin.chef.productlists');
     Route::get('vendors-order-list/{id}', [App\Http\Controllers\admin\UserControllers::class, 'order_list'])->name('admin.user.orderlist');
     Route::get('vendors-chef-productedit/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_product_edit'])->name('admin.chef.productedit');
+    Route::post('vendors-chef-productImageDelete', [App\Http\Controllers\admin\UserControllers::class, 'vendor_product_image_remove'])->name('admin.chef.product.image.delete');
     // categoryies
     Route::get('category', [App\Http\Controllers\admin\Category::class, 'index'])->name('admin.category.create');
     Route::post('category', [App\Http\Controllers\admin\Category::class, 'store_catogory'])->name('admin.category.store');
