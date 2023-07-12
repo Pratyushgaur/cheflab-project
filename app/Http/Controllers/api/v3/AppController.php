@@ -399,6 +399,7 @@ class AppController extends Controller
                         END) as after_offer_price'
                     )
                 );
+                $product = $product->skip($request->offset)->take(5);
                 $data = $product->get();
                 $cart = \App\Models\Cart::where('user_id', $user_id)->first();
                 if (count($data->toArray())) {
