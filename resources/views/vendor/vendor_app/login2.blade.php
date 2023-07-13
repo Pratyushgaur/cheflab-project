@@ -135,7 +135,7 @@ body {
     @csrf
     
     <div class="avatar">
-      <img src="{{URL::TO("")}}/commonarea/logo.png" alt="avatar">
+      <img src="{{URL::TO("")}}/192x192.jpg" alt="avatar">
     </div>
       <h5 style="text-align:center;letter-spacing:3px;padding-top:2px;margin-top: 0px;">Vendor Login</h5>
       <div class="form-item">
