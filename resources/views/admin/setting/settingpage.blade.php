@@ -318,6 +318,14 @@
                                       
                                     </div>
                                   </div>
+                                  <div class="col-md-6 " style="">
+                                    <div class="form-group">
+                                      <label for="exampleInputEmail1">Minimum Order Amount Required</label>
+                                      
+                                      <input type="number" name="minimum_order_amount" class="form-control" value="{{$data->minimum_order_amount}}"  id="" placeholder="Enter Minimum Order Amount">
+                                      
+                                    </div>
+                                  </div>
                                   
 
 

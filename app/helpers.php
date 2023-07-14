@@ -2124,61 +2124,68 @@ function orderDeliverd($id)
     
     $deduction =  $admin_commision + $tax_on_commission + $total_convenience_fee;
 
-    $ordercommision = array(
-        'is_approve' => 1,
-        'is_cancel' => 0,
-        'is_coupon' => $is_coupon,
-        'coupon_amount' => $discount_amount,
-        'vendor_id' => $order->vendor_id,
-        'order_id' => $order->id,
-        'vendor_commision' => 0,
-        'admin_commision' => $admin_commision,
-        'tax_on_commission' => $tax_on_commission,
-        'net_amount' => $net_amount,
-        'gross_revenue' => $gross_revenue,
-        'additions' => 0,
-        'deductions' => $deduction,
-        'net_receivables' => $vendor_sattlement_amount,
-        'convenience_amount' => $convenience_fee_amount,
-        'convenience_tax' => $tax_on_convenience,
-        'total_convenience_fee' => $total_convenience_fee,
-        'addition_tax' => 0,
-        'admin_tax' => 0,
-        'tax' => 18,
-        'tax_amount' => $tax,
-        'admin_amount' => 0,
-        'vendor_cancel_charge' => 0,
-        'platform_fee' => $plateform_fee,
-        'vendor_commission_percentage'=> $vendorData->commission,
-        'order_date' => date('Y-m-d H:i:s'),
-        'created_at' => date('Y-m-d H:i:s'),
-        'updated_at' => date('Y-m-d H:i:s')
-
-    );
-    
-    OrderCommision::create($ordercommision);
-
-    $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
-    $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
-    $statementData = Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
-    // echo '<pre>';print_r($statementData->paid_amount);die;
-    if ($statementData) {
-        $total = ($statementData->paid_amount + $vendor_sattlement_amount);
-        $updateData = ([
-            'paid_amount' => $total
-        ]);
-        return Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
-    } else {
-        $createData = array(
+    $check =OrderCommision::where("order_id","=",$order->id)->exists();
+    if (!$check) {
+        $ordercommision = array(
+            'is_approve' => 1,
+            'is_cancel' => 0,
+            'is_coupon' => $is_coupon,
+            'coupon_amount' => $discount_amount,
             'vendor_id' => $order->vendor_id,
-            'paid_amount' => $vendor_sattlement_amount,
-            'vendor_cancel_deduction' => 0,
-            'start_date' => $current_start_date,
-            'end_date' => $current_end_date
+            'order_id' => $order->id,
+            'vendor_commision' => 0,
+            'admin_commision' => $admin_commision,
+            'tax_on_commission' => $tax_on_commission,
+            'net_amount' => $net_amount,
+            'gross_revenue' => $gross_revenue,
+            'additions' => 0,
+            'deductions' => $deduction,
+            'net_receivables' => $vendor_sattlement_amount,
+            'convenience_amount' => $convenience_fee_amount,
+            'convenience_tax' => $tax_on_convenience,
+            'total_convenience_fee' => $total_convenience_fee,
+            'addition_tax' => 0,
+            'admin_tax' => 0,
+            'tax' => 18,
+            'tax_amount' => $tax,
+            'admin_amount' => 0,
+            'vendor_cancel_charge' => 0,
+            'platform_fee' => $plateform_fee,
+            'vendor_commission_percentage'=> $vendorData->commission,
+            'order_date' => date('Y-m-d H:i:s'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+    
         );
-
-        return Vendor_order_statement::create($createData);
+        
+        OrderCommision::create($ordercommision);
+    
+        $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
+        $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+        $statementData = Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
+        // echo '<pre>';print_r($statementData->paid_amount);die;
+        if ($statementData) {
+            $total = ($statementData->paid_amount + $vendor_sattlement_amount);
+            $updateData = ([
+                'paid_amount' => $total
+            ]);
+            return Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first()->update($updateData);
+        } else {
+            $createData = array(
+                'vendor_id' => $order->vendor_id,
+                'paid_amount' => $vendor_sattlement_amount,
+                'vendor_cancel_deduction' => 0,
+                'start_date' => $current_start_date,
+                'end_date' => $current_end_date
+            );
+    
+            return Vendor_order_statement::create($createData);
+        }    
+    }else{
+        return false;
     }
+
+    
 }
 function generateIncentive(){
     $drivers =  \App\Models\Orders::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('accepted_driver_id','!=','')->select('accepted_driver_id')->distinct()->get()->pluck('accepted_driver_id');
