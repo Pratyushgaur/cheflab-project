@@ -250,7 +250,7 @@ class MisController extends Controller
             //     ->make(true);
 
 
-              $data =   \App\models\VendorMonthlyInvoices::where('vendor_id','=',\Auth::guard('vendor')->user()->id)->orderBy('id','desc')->get();
+              $data =   \App\Models\VendorMonthlyInvoices::where('vendor_id','=',\Auth::guard('vendor')->user()->id)->orderBy('id','desc')->get();
               return  Datatables::of($data)->addIndexColumn()
               ->addColumn('action-js', function ($data) {
                     $btn = '<a href="'.route('restaurant.mis.print.invoice',$data->id).'" class="btn btn-primary">Download</a>';
