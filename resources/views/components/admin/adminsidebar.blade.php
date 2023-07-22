@@ -287,11 +287,25 @@
 
 					</li>
 					<li class="nav-item">
+
+						<div class="dropdown pl-1 pb-2">
+							<a href="#" class="px-3" data-toggle="dropdown"> <i class="far fa-circle nav-icon"></i> Invoices <i class="fas fa-angle-down right pl-2"></i></a>
+							<div class="dropdown-menu custombox pl-3">
+								<a class="dropdown-item" href="{{ route('admin.account.vendor.invoices.generate') }}">								
+									<p class="mb-0"><i class="fa fa-arrow-right  nav-icon" style="font-size:12px;"></i>  Generate</p>
+							   </a>
+							   <a class="dropdown-item" href="{{ route('admin.account.mis.invoices') }}">								
+									<p class="mb-0 "><i class="fa fa-arrow-right  nav-icon"  style="font-size:12px;"></i>  Invoices List</p>
+							   </a>
+							</div>
+						</div>
+					</li>
+					<!-- <li class="nav-item">
 						<a href="{{ route('admin.account.mis.invoices') }}" class="nav-link">
 						  <i class="fa fa-arrow-right  nav-icon"></i>
 						  <p>Invoices</p>
 						</a>
-					</li>
+					</li> -->
 				</ul>
 			</li>
 			<li class="nav-item has-treeview">

@@ -8,6 +8,8 @@ use App\Models\OrderProduct;
 use App\Models\Product_master;
 use App\Models\Vendor_payout_detail;
 use App\Models\OrderCommision;
+use App\Models\VendorMonthlyInvoices;
+
 use App\Models\User;
 use App\Models\Coupon;
 use Illuminate\Support\Facades\Crypt;
@@ -284,55 +286,138 @@ class AccountmisController extends Controller
         return view('admin.mis.monthly_invoice');
     }
 
-    public function monthly_invoice_list(Request $request)
-    {
+    // public function monthly_invoice_list(Request $request)
+    // {
 
+    //     if ($request->ajax()) {
+
+    //         $data = MonthlyInvoice::select('monthly_invoices.*', 'vendors.name')->join('vendors', 'monthly_invoices.vendor_id', '=', 'vendors.id');
+
+    //         if (!empty($start_time) && !empty($end_time)) {
+    //             $data = $data->whereBetween('monthly_invoices.created_at', [$start_time, $end_time]);
+    //         }
+    //         $data = $data->get();
+
+    //         return Datatables::of($data)
+
+    //             ->addIndexColumn()
+    //             ->addColumn('action', function ($data) {
+    //                 $btn = '<a class="btn btn-xs btn-danger" href="' . asset("$data->invoice_file") . '" download>Download Invoice</a>';
+    //                 return $btn;
+    //             })
+    //             ->addColumn('month_year', function ($data) {
+    //                 $strtotimedata = strtotime($data->month_year);
+    //                 $month_year = date("M - Y", $strtotimedata);
+    //                 return $month_year;
+    //             })
+    //             ->rawColumns(['action','month_year'])
+    //             ->make(true);
+    //     }
+    // }
+
+    function monthly_invoice_list(Request $request){
         if ($request->ajax()) {
+           // return $request->month;
+           $statement =   \App\Models\OrderCommision::whereMonth('order_commisions.created_at','=',$request->month)->whereYear('order_commisions.created_at', '=', $request->year);
+           $statement =   $statement->join('vendors','order_commisions.vendor_id','=','vendors.id');
+           $statement =   $statement->groupBy('vendor_id');
+           $statement =  $statement->select('vendors.name',\DB::raw('SUM(gross_revenue) as gross_revenue_total'),\DB::raw('SUM(admin_commision) as admin_commision_total'),\DB::raw('sum(tax_on_commission) as tax_on_commission_total'),\DB::raw('sum(convenience_amount) as convenience_amount_total'),\DB::raw('sum(convenience_tax) as convenience_tax_total'),\DB::raw('sum(net_receivables) as net_receivables_total'));
+           $order = $statement->get();
+           
 
-            $data = MonthlyInvoice::select('monthly_invoices.*', 'vendors.name')->join('vendors', 'monthly_invoices.vendor_id', '=', 'vendors.id');
 
-            if (!empty($start_time) && !empty($end_time)) {
-                $data = $data->whereBetween('monthly_invoices.created_at', [$start_time, $end_time]);
-            }
-            $data = $data->get();
+           return Datatables::of($order)->addIndexColumn()
+            ->addColumn('action', function ($order) {
+                $btn = '<a class="btn btn-xs btn-success" style="color:#fff;">Generate Invoice</a>';
+                return $btn;
+            })
+            
+            
+            ->rawColumns(['action','net_amount'])
+            ->make(true);
 
-            return Datatables::of($data)
 
-                ->addIndexColumn()
-                ->addColumn('action', function ($data) {
-                    $btn = '<a class="btn btn-xs btn-danger" href="' . asset("$data->invoice_file") . '" download>Download Invoice</a>';
-                    return $btn;
-                })
-                ->addColumn('month_year', function ($data) {
-                    $strtotimedata = strtotime($data->month_year);
-                    $month_year = date("M - Y", $strtotimedata);
-                    return $month_year;
-                })
-                ->rawColumns(['action','month_year'])
-                ->make(true);
+
+            // $order = Orders::whereMonth('orders.created_at', '=', $request->month)->whereYear('orders.created_at', '=', $request->year);
+            // $order = $order->join('vendors','orders.vendor_id','=','vendors.id');
+            // $order = $order->select('vendors.name',\DB::raw('SUM(net_amount) as net_am'),\DB::raw('SUM(total_amount) as item_total'));
+            // $order = $order->groupBy('orders.vendor_id');
+            // $order = $order->orderBy(\DB::raw('SUM(net_amount)'),'DESC');
+            // $order = $order->get();
+            // return Datatables::of($order)->addIndexColumn()
+            // ->addColumn('action', function ($order) {
+            //     $btn = '<a class="btn btn-xs btn-success" style="color:#fff;">Generate Invoice</a>';
+            //     return $btn;
+            // })
+            // ->addColumn('net_amount', function ($order) {
+               
+            //     return number_format($order->net_am,2);
+            // })
+            // ->rawColumns(['action','net_amount'])
+            // ->make(true);
         }
     }
+    function generateBulkInvoice(Request $request){
+        try {
+            $this->validate($request, 
+                [
+                'month' => ['required'],
+                'year' => ['required']
+                ]
+        
+            );
 
+            $statement =   \App\Models\OrderCommision::whereMonth('order_commisions.created_at','=',$request->month)->whereYear('order_commisions.created_at', '=', $request->year);
+            $statement =   $statement->join('vendors','order_commisions.vendor_id','=','vendors.id');
+            $statement =   $statement->groupBy('vendor_id');
+            $statement =   $statement->select('vendors.id','vendors.name',\DB::raw('SUM(gross_revenue) as gross_revenue_total'),\DB::raw('SUM(admin_commision) as admin_commision_total'),\DB::raw('sum(tax_on_commission) as tax_on_commission_total'),\DB::raw('sum(convenience_amount) as convenience_amount_total'),\DB::raw('sum(convenience_tax) as convenience_tax_total'),\DB::raw('sum(net_receivables) as net_receivables_total'));
+            $order = $statement->get();
+
+            foreach ($order as $key => $value) {
+                if(!VendorMonthlyInvoices::where('year','=',$request->year)->where('month','=',$request->month)->where('vendor_id','=',$value->id)->exists()){
+                    $VendorMonthlyInvoices = new \App\Models\VendorMonthlyInvoices;
+                    $VendorMonthlyInvoices->vendor_id = $value->id;
+                    $VendorMonthlyInvoices->year = $request->year;
+                    $VendorMonthlyInvoices->month = $request->month;
+                    $VendorMonthlyInvoices->invoice_number = "CL/".$request->month.'-'.$request->year.'/'.getInvoiceNumber();
+                    $VendorMonthlyInvoices->gross_revenue = $value->gross_revenue_total;
+                    $VendorMonthlyInvoices->vendor_commission = $value->admin_commision_total;
+                    $VendorMonthlyInvoices->commission_gst = $value->tax_on_commission_total;
+                    $VendorMonthlyInvoices->convenience_fee = $value->convenience_amount_total;
+                    $VendorMonthlyInvoices->convenience_fee_gst = $value->convenience_tax_total;
+                    $VendorMonthlyInvoices->final_amount = $value->net_receivables_total;
+                    $VendorMonthlyInvoices->save();
+                }
+            }
+            return redirect()->route('admin.account.vendor.invoices.generate')->with('message', 'Invoice Generated Successfully');
+
+
+
+        } catch (\Exception $e) {
+            return dd($e->getMessage());
+        }
+    }
     public function genrate_invoice(Request $request)
     {
 
-        $vendorData = Vendors::get();
+        //$vendorData = Vendors::get();
+        $vendorData = Vendors::find(1);
 
         // $scheduleTime =\Carbon\Carbon::createFromTimestampUTC($request->datepicker)->diffInSeconds();
         // $month = gmdate("m", $scheduleTime);
         // $year = gmdate("Y", $scheduleTime);
         // $monthYear = gmdate("M - Y", $scheduleTime);
 
-        $month = 02;
+        $month = 03;
         $year = 2023;
-        $monthYear = "Jan - 2023";
+        $monthYearData = "March - 2023";
 
 
-        $totalAmount = Orders::where(['vendor_id' => $vendorData->id, 'order_status' => "dispatched"])->whereMonth('created_at', '=', $month)->whereYear('created_at', '=', $year)->get()->sum('total_amount');
+        $totalAmount = Orders::where(['vendor_id' => $vendorData->id, 'order_status' => "completed"])->whereMonth('created_at', '=', $month)->whereYear('created_at', '=', $year)->get()->sum('total_amount');
 
         $adminDetail = AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
 
-        $vendorDetail = Vendors::where(['vendor_id' => $vendorData->id])->select('vendors.name', 'vendors.owner_name', 'vendors.email', 'vendors.mobile', 'vendors.pincode', 'vendors.address', 'vendors.fssai_lic_no', 'vendors.gst_no', 'vendors.commission')->first();
+        $vendorDetail = $vendorData;//Vendors::where(['vendor_id' => $vendorData->id])->select('vendors.name', 'vendors.owner_name', 'vendors.email', 'vendors.mobile', 'vendors.pincode', 'vendors.address', 'vendors.fssai_lic_no', 'vendors.gst_no', 'vendors.commission')->first();
 
         $commission = ($totalAmount * $vendorDetail->commission) / 100;
 
@@ -343,6 +428,7 @@ class AccountmisController extends Controller
         $totalAdminCommission = $commission + $sgst + $cgst;
 
         $invoiceName = rand(9999, 99999) . $vendorData->id . '.pdf';
+        return view('admin.pdf.monthly_invoice',compact('adminDetail', 'vendorDetail', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'invoiceNo','vendorData','monthYearData'));
         $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.monthly_invoice', compact('adminDetail', 'vendorDetail', 'commission', 'sgst', 'cgst', 'totalAdminCommission', 'monthYear', 'invoiceNo'));
 
         $pdf->save(public_path('uploads/invoices/' . $invoiceName));
@@ -357,5 +443,10 @@ class AccountmisController extends Controller
         $pdfData->month_year = $monthYear;
         $pdfData->save();
         return true;
+    }
+
+    function create_invoice(){
+        return view('admin.mis.create_new_invoice');
+
     }
 }

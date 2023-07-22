@@ -1270,6 +1270,16 @@ function getOrderId()
     }
     return str_pad(1 + $id, 8, "0", STR_PAD_LEFT);
 }
+function getInvoiceNumber()
+{
+    $order = \App\Models\VendorMonthlyInvoices::orderBy('id', 'DESC');
+    if ($order->exists()) {
+        $id = $order->first()->id;
+    } else {
+        $id = 0;
+    }
+    return str_pad(1 + $id, 6, "0", STR_PAD_LEFT);
+}
 
 function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
 {

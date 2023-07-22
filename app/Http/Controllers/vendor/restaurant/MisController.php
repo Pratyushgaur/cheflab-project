@@ -227,29 +227,43 @@ class MisController extends Controller
         $vendorId = Auth::guard('vendor')->user()->id;
         if ($request->ajax()) {
 
-            $data = MonthlyInvoice::where('monthly_invoices.vendor_id', $vendorId);
- 
-            $data = $data->get();
-            // echo '<pre>';print_r($data);die;
-            return Datatables::of($data)
-                ->addIndexColumn()
-                ->addColumn('action-js', function ($data) {
-                    $btn = '<a class="btn btn-xs btn-danger invoice_btn" href="' . asset("$data->invoice_file") . '" download=""><i class="fa fa-download" aria-hidden="true"></i>
-                     Invoice</a>';
+            // $data = MonthlyInvoice::where('monthly_invoices.vendor_id', $vendorId);
+            // $data = $data->get();
+            // return Datatables::of($data)
+            //     ->addIndexColumn()
+            //     ->addColumn('action-js', function ($data) {
+            //         $btn = '<a class="btn btn-xs btn-danger invoice_btn" href="' . asset("$data->invoice_file") . '" download=""><i class="fa fa-download" aria-hidden="true"></i>
+            //          Invoice</a>';
+            //         return $btn;
+            //     })
+            //     ->addColumn('month_year', function ($data) {
+            //         $strtotimedata = strtotime($data->month_year);
+            //         $month_year = date("M - Y", $strtotimedata);
+            //         return $month_year;
+            //     })
+
+
+
+            //     ->rawColumns(['month_year', 'action-js'])
+
+
+            //     ->make(true);
+
+
+              $data =   \App\models\VendorMonthlyInvoices::where('vendor_id','=',\Auth::guard('vendor')->user()->id)->orderBy('id','desc')->get();
+              return  Datatables::of($data)->addIndexColumn()
+              ->addColumn('action-js', function ($data) {
+                    $btn = '<a href="'.route('restaurant.mis.print.invoice',$data->id).'" class="btn btn-primary">Download</a>';
                     return $btn;
                 })
                 ->addColumn('month_year', function ($data) {
-                    $strtotimedata = strtotime($data->month_year);
-                    $month_year = date("M - Y", $strtotimedata);
-                    return $month_year;
+                    return $month_name = date("F", mktime(0, 0, 0, $data->month, 10));
                 })
-
-
-
                 ->rawColumns(['month_year', 'action-js'])
 
 
                 ->make(true);
+
         }
    
     }
@@ -262,6 +276,16 @@ class MisController extends Controller
         return $pdf->download('settlement_receipt_'.$id.'.pdf');
     }
     
+     function print_invoice($id) {
+        $invoice = \App\models\VendorMonthlyInvoices::where('id','=',$id)->first();
+        $vendorDetail = Vendors::find($invoice->vendor_id);
+        $vendorData =$vendorDetail;
+        $monthYearData =  date("F", mktime(0, 0, 0, $invoice->month, 10)).'-'.$invoice->year;
+        $adminDetail = \App\models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
+        return view('vendor.restaurant.pdf.monthly_invoice',compact('adminDetail', 'vendorDetail','monthYearData','vendorData','invoice'));
+
+        
+    }
 
     
 
