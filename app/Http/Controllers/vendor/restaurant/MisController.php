@@ -277,7 +277,7 @@ class MisController extends Controller
     }
     
      function print_invoice($id) {
-        $invoice = \App\models\VendorMonthlyInvoices::where('id','=',$id)->first();
+        $invoice = \App\Models\VendorMonthlyInvoices::where('id','=',$id)->first();
         $vendorDetail = Vendors::find($invoice->vendor_id);
         $vendorData =$vendorDetail;
         $monthYearData =  date("F", mktime(0, 0, 0, $invoice->month, 10)).'-'.$invoice->year;

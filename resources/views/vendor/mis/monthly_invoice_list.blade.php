@@ -74,7 +74,7 @@
                 name: 'DT_RowIndex'
             },
             {
-                data: 'id',
+                data: 'invoice_number',
                 name: 'invoice_number'
             },
             {
