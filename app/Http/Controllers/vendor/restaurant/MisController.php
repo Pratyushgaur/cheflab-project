@@ -281,7 +281,7 @@ class MisController extends Controller
         $vendorDetail = Vendors::find($invoice->vendor_id);
         $vendorData =$vendorDetail;
         $monthYearData =  date("F", mktime(0, 0, 0, $invoice->month, 10)).'-'.$invoice->year;
-        $adminDetail = \App\models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
+        $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
         return view('vendor.restaurant.pdf.monthly_invoice',compact('adminDetail', 'vendorDetail','monthYearData','vendorData','invoice'));
 
         
