@@ -257,7 +257,7 @@ class MisController extends Controller
                     return $btn;
                 })
                 ->addColumn('month_year', function ($data) {
-                    return $month_name = date("F", mktime(0, 0, 0, $data->month, 10));
+                    return $month_name = date("F", mktime(0, 0, 0, $data->month, 10)).'-'.$data->year;
                 })
                 ->rawColumns(['month_year', 'action-js'])
 
