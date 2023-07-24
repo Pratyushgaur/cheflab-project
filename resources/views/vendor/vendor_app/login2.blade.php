@@ -146,6 +146,10 @@ body {
         <label for="password">Password</label>
        <input type="password" name="password" class="is-input" placeholder="Password" id="password">
       </div>
+      <!-- <div class="form-item">
+        <label for="chek_1"><input type="checkbox" name="remember" id="chek_1" class="" > Renenver ne</label>
+       
+      </div> -->
       <div class="form-item">
         <button type="submit" class="button is-button">Sign in</button>
       </div>
