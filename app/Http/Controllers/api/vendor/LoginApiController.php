@@ -37,6 +37,7 @@ class LoginApiController extends Controller
                  return response()->json([
                     'status' => true,
                     'message' => "Successfully Login",
+                    'vendor_id' => $vendor->id,
                     'token' => $token
 
                 ], 200);

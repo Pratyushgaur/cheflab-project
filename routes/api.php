@@ -82,3 +82,11 @@ Route::post('system-api/send-notification', [App\Http\Controllers\api\AppControl
 Route::group(['middleware' => 'auth:sanctum','prefix' => 'system-api/v3'], function () {
     @require_once 'system_api_v3.php';
 });
+
+
+// vendor app routes
+Route::group(['prefix' => 'vendor-api'], function () {
+    @require_once 'vendor_api.php';
+   
+
+});
