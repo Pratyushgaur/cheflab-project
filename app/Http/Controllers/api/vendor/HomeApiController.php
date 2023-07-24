@@ -18,6 +18,33 @@ class HomeApiController extends Controller
         try {
             
             $orders = Order::where('vendor_id', $request->user()->id)->whereNotIn('order_status', ['pending','cancelled_by_customer_before_confirmed','cancelled_by_customer_after_confirmed','cancelled_by_customer_during_prepare','cancelled_by_customer_after_disptch','cancelled_by_vendor','completed','dispatched'])->orderBy('id','desc')->skip(0)->take(20)->get();
+            foreach($orders as $key =>$value){
+                $orderProduct = \App\Models\OrderProduct::where('order_id','=',$value->id)->get();
+                $product_array = [];
+                foreach ($orderProduct as $okey => $ovalue) {
+                    $Product_master = \App\Models\Product_master::withTrashed()->find($ovalue->product_id);
+                    $OrderProductVariant = \App\Models\OrderProductVariant::where('order_product_id', $ovalue->id)->first();
+                    $addons=\App\Models\OrderProductAddon::join('addons','addons.id','order_product_addons.addon_id')->where('order_product_id',$ovalue->id)->get();
+                    $addonArray = [];
+                    if(isset($addons[0])){
+                        foreach ($addons as $k1=>$addon)
+                            if(isset($addon->addon) && $addon->addon!=''){
+                             $addonArray[] = array('name' =>$addon->addon,'qty' =>1 );
+                            }
+                    }
+                    $product_array[] = array(
+                        'product_name' => $Product_master->product_name,
+                        'custmizable' => $Product_master->customizable,
+                        'variant_name' => $OrderProductVariant->variant_name,
+                        'qty' => $ovalue->product_qty,
+                        'addons' => $addonArray
+                    );
+                
+                }
+                $orders[$key]->products = $product_array;
+                $orders[$key]->order_date = date('d-M-Y h:i A',strtotime($orders[$key]->created_at));
+                 
+            }
             $admin_masters  = AdminMasters::select('max_preparation_time')->find(config('custom_app_setting.admin_master_id'));
             
             //
