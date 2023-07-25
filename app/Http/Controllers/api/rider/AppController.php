@@ -366,7 +366,7 @@ class AppController extends Controller
                 }
                 $tokensApp = \App\Models\VendorAppTokens::where('vendor_id','=',$orderdata->first()->vendor_id)->pluck('token');
                 if(!empty($tokensApp)){
-                        $res = sendVendorAppNotification('Order Dispatched',"Your Order is dispatched",$tokensApp,null);
+                        $res = sendVendorAppNotification('Order Dispatched',"Your Order is dispatched",$tokensApp,null,'fcm_notification_sound',null,null,null);
                 }
 
                 $order = RiderAssignOrders::where('rider_assign_orders.id', '=', $request->rider_assign_order_id);

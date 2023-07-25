@@ -1399,12 +1399,12 @@ function sendNotification($title, $body, $token, $data = null, $sound = 'default
 //         return $e;
 //     }
 // }
-function sendVendorAppNotification($title, $body, $token, $data = null, $sound = 'fcm_notification_sound', $image = null)
+function sendVendorAppNotification($title, $body, $token, $data = null, $sound = 'fcm_notification_sound', $image = null ,$android_channel_id = 'cheLab_Vendor_channel')
 {
     
     $server_key = env('FIREBASE_SERVER_KEY');
     $url = "https://fcm.googleapis.com/fcm/send";
-    $notification = array('title' => $title, 'body' => $body, 'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => "cheLab_Vendor_channel");
+    $notification = array('title' => $title, 'body' => $body, 'image' => $image, 'sound' => $sound, 'badge' => '1', "android_channel_id" => $android_channel_id);
     $arrayToSend = array('registration_ids' => $token, 'notification' => $notification, 'priority' => 'high', 'data' => $data);
     //dd($arrayToSend);
     $fields = json_encode($arrayToSend);
