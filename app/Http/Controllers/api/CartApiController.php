@@ -433,20 +433,26 @@ class CartApiController extends Controller
                         $total = $total+$tax_amount+$admin_setting->platform_charges;
                         if($total >= $admin_setting->minimum_order_amount){
                             $deliveryCharge = 0;
+                            $deliveryCharge_2 = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+
                         }else{
                             $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                            $deliveryCharge_2 = $deliveryCharge;
 
                         }
 
                     }else{
                         $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                        $deliveryCharge_2 = $deliveryCharge;
                     }
                 }else{
                     $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                    $deliveryCharge_2 = $deliveryCharge;
                 }
                 
             }else{
                 $deliveryCharge = 0;
+                $deliveryCharge_2 = 0;
             }
 
             return response()->json(['status'   => true,
@@ -461,6 +467,7 @@ class CartApiController extends Controller
                                                     'platform_charges' => @$admin_setting->platform_charges,
                                                     'tax'              => 5,
                                                     'delivery_charge'  => $deliveryCharge,
+                                                    'delivery_charge_2'  => $deliveryCharge_2,
                                                     'address'          => $address,
                                                     'free_delivery'    => $admin_setting->free_delivery,
                                                     'minimum_order_amount'=> $admin_setting->minimum_order_amount
