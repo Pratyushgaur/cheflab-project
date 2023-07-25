@@ -364,6 +364,10 @@ class AppController extends Controller
                         \App\Jobs\UserOrderNotification::dispatch('Out for delivery', 'Delivery Partner is on their way. They will reach you shortly.', $user->fcm_token, 4, $data);
                     }
                 }
+                $tokensApp = \App\Models\VendorAppTokens::where('vendor_id','=',$orderdata->first()->vendor_id)->pluck('token');
+                if(!empty($tokensApp)){
+                        $res = sendVendorAppNotification('Order Dispatched',"Your Order is dispatched",$tokensApp,null);
+                }
 
                 $order = RiderAssignOrders::where('rider_assign_orders.id', '=', $request->rider_assign_order_id);
                 $order = $order->join('orders', 'rider_assign_orders.order_id', '=', 'orders.id');
