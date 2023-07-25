@@ -399,7 +399,7 @@ class CartApiController extends Controller
             } else
                 $r = [];
 
-            $admin_setting = AdminMasters::select('max_cod_amount','platform_charges')->find(config('custom_app_setting.admin_master_id'));
+            $admin_setting = AdminMasters::select('max_cod_amount','platform_charges','free_delivery','minimum_order_amount')->find(config('custom_app_setting.admin_master_id'));
 
             $vendors = get_restaurant_near_me('','',['vendors.id'=>$cart_users->vendor_id],$request->user()->id)
                 ->get();
@@ -425,7 +425,26 @@ class CartApiController extends Controller
             $address = DeliveryAddress::where(['user_id'=>$request->user_id,'primary_key'=>'1'])->select('id','house_no','reach','contact_no','address_type','lat','long','primary_key')->get();
             // calculate delivery charge
             if($request->lat != '' && $request->lng != ''){
-                $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                if($admin_setting->free_delivery == '1'){
+                    if(isset($request->discount_amount) && is_numeric($request->discount_amount)){
+                        //$tax = \App\Models\Vendors::where('id','=',$cart_users->vendor_id)->select('tax')->first();
+                        $tax_amount = $cart_sub_toatl_amount*5/100;
+                        $total  =$cart_sub_toatl_amount-$request->discount_amount;
+                        $total = $total+$tax_amount+$admin_setting->platform_charges;
+                        if($total >= $admin_setting->minimum_order_amount){
+                            $deliveryCharge = 0;
+                        }else{
+                            $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+
+                        }
+
+                    }else{
+                        $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                    }
+                }else{
+                    $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                }
+                
             }else{
                 $deliveryCharge = 0;
             }
@@ -442,7 +461,9 @@ class CartApiController extends Controller
                                                     'platform_charges' => @$admin_setting->platform_charges,
                                                     'tax'              => 5,
                                                     'delivery_charge'  => $deliveryCharge,
-                                                    'address'          => $address
+                                                    'address'          => $address,
+                                                    'free_delivery'    => $admin_setting->free_delivery,
+                                                    'minimum_order_amount'=> $admin_setting->minimum_order_amount
                                      ]
             ], 200);
         } catch (Throwable $th) {
