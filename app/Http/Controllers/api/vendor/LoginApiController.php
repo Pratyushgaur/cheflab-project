@@ -38,6 +38,7 @@ class LoginApiController extends Controller
                     'status' => true,
                     'message' => "Successfully Login",
                     'vendor_id' => $vendor->id,
+                    'name' => $vendor->name,
                     'token' => $token
 
                 ], 200);
