@@ -31,6 +31,8 @@ class CreateAdminMasters extends Migration
             $table->string('app_run');
             $table->text('app_close_reason')->nullable()->comment('This message will shown when applicatio closed by admin');
             $table->integer('minimum_order_amount')->default(0);
+            $table->string('free_delivery',10)->default("0");
+            
             $table->text('goofle_map_key');
             $table->text('razorpay_publish_key');
             $table->text('dine_out_reject_reason');

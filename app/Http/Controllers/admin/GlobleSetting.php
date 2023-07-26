@@ -176,6 +176,7 @@ class GlobleSetting extends Controller
         $general->app_run = $request->app_run;
         $general->app_close_reason = $request->reason_close;
         $general->minimum_order_amount = $request->minimum_order_amount;
+        $general->free_delivery = $request->free_delivery;
         if($request->has('logo')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->logo->extension();
             $request->logo->move(public_path('logo'),$filename);

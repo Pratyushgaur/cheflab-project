@@ -319,12 +319,27 @@
                                     </div>
                                   </div>
                                   <div class="col-md-6 " style="">
-                                    <div class="form-group">
-                                      <label for="exampleInputEmail1">Minimum Order Amount Required</label>
-                                      
-                                      <input type="number" name="minimum_order_amount" class="form-control" value="{{$data->minimum_order_amount}}"  id="" placeholder="Enter Minimum Order Amount">
-                                      
-                                    </div>
+                                      <div class="row">
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                          <label for="exampleInputEmail1">Free Delivery</label>
+
+                                            <select name="free_delivery" id="" class="form-control">
+                                              <option value="0" @if($data->free_delivery == '0') selected @endif>OFF</option>
+                                              <option value="1" @if($data->free_delivery == '1') selected @endif>ON</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="exampleInputEmail1">Minimum Order Amount Required</label>
+                                            
+                                            <input type="number" name="minimum_order_amount" class="form-control" value="{{$data->minimum_order_amount}}"  id="" placeholder="Enter Minimum Order Amount" required>
+                                            
+                                          </div>
+                                        </div>
+                                      </div>
+                                    
                                   </div>
                                   
 
