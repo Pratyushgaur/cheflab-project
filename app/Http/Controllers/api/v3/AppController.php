@@ -56,6 +56,7 @@ class AppController extends Controller
 
                 ], 401);
             }
+            $admin_setting = AdminMasters::select('free_delivery','minimum_order_amount')->find(config('custom_app_setting.admin_master_id'));
             $category = VendorMenus::select('menuName', 'vendor_menus.id')->where('vendor_menus.vendor_id', '=', $request->vendor_id)->where('status', '=', "1")->orderBy('vendor_menus.position', 'ASC')->get();
             $date    = today()->format('Y-m-d');
             $coupon  = Coupon::where('vendor_id', '=', $request->vendor_id)->where('status', '=', 1)->where('from', '<=', $date)->where('to', '>=', $date)->select('*')->get();
@@ -78,7 +79,7 @@ class AppController extends Controller
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online)
+                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online ,'free_delivery' => $admin_setting->free_delivery,'minimum_order_amount' =>$admin_setting->minimum_order_amount)
 
             ], 200);
         } catch (Throwable $th) {
