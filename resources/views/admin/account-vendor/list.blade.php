@@ -15,43 +15,59 @@
           <!-- Main content -->
           <section class="content">
             <div class="container-fluid">
-            <div class="row">
+              <div class="row">
                 <div class="col-md-12">
                   <div class="card card-primary card-outline">
                       <div class="card-header">
-                      <form id="member_filter" enctype="multipart/form-data"> 
+                        <form id="member_filter" enctype="multipart/form-data"> 
                           <div class="row">
-                          
-                          <div class="col-md-4">
-                              <input type="hidden" class="form-control" name="datePicker" id="datePicker"  placeholder="Date" required value="" autocomplete="off" >
-                                <div   id="reportrange"  style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                                  <i class="fa fa-calendar"></i>&nbsp;
-                                  <span >{{ date('F D, Y') }}</span> <i class="fa fa-caret-down"></i>
-                                </div>
+
+                            <div class="col-md-3">
+                              <select name="" id="select_year" class="form-control" onChange="getWeekDetailByYearMonth();">
+                                <option value="">Select Year</option>
+                                <?php 
+                                  for($i=2023;$i <= 2030; $i++){
+                                    echo '<option value="'.$i.'">'.$i.'</option>';
+                                  }
+                                ?>
+                              </select>
                             </div>
+                            <div class="col-md-2">
+                              <select name="" id="filter-by-month" class="form-control" onChange="getWeekDetailByYearMonth();">
+                                  <option value="">Select Month</option>
+                                  <option value="01">Jan</option>
+                                  <option value="02">Feb</option>
+                                  <option value="03">March</option>
+                                  <option value="04">April</option>
+                                  <option value="05">May</option>
+                                  <option value="06">Jun</option>
+                                  <option value="07">July</option>
+                                  <option value="08">Aug</option>
+                                  <option value="09">Sep</option>
+                                  <option value="10">Oct</option>
+                                  <option value="11">Nov</option>
+                                  <option value="12">Dec</option>
+                                  
+                                </select>  
+                            </div>
+                            <div class="col-md-4">
+                              <select name="" id="filter-by-week" class="form-control">
+                                  <option value="">Select Week</option>
+                                  
+                                  
+                                </select>  
+                            </div>
+                            <div class="col-md-2">
+                              <button type="button" onClick="getSearchView();" class="btn btn-primary">Search</button>
+                            </div>
+                            
                            
-                            <div class="col-md-3" id="filter_yester" style="display:none;">
-                                <input type="date" class="form-con">
-                            </div>
-                            <div class="col-3 mt-0 mb-3">
-                                <div class="exportbtn text-end d-flex">
-                                  <!-- <button type="submit" class="me-2 btn btn-info text-white rounded-0 px-4 py-2">
-                                  Apply
-                                  </button> -->
-                                  <button type="button" onclick="getSearchView();" class="me-2 btn btn-info text-white rounded-0 px-4 py-2">Apply</button>
-                                  &nbsp;
-                                           <button type="button" class="btn btn-info text-white rounded-0 px-4 py-2" class="clearbtn" onclick="clearfilter()">
-                                          Clear
-                                          </button>
-                                </div>
-                            </div>              
+                                        
                             </div>
                           </div>
                         </form>
-                          
-                      
-                  </div>
-                </div>
+                      </div>
+                    </div>
               </div>
               <div class="row">
                 <div class="col-md-12"> 
@@ -168,10 +184,7 @@ $('#reportrange').daterangepicker({
         ajax:{
             url:"{{ route('admin.account.vendor.data') }}",
             data: function (d) {
-                d.status = $('#filter-by-status').val(),
-                d.role = $('#filter-by-role').val(),
-                d.vendor = $('#filter-by-vendor').val()
-                d.datePicker = $('#datePicker').val()
+                d.week = $('#filter-by-week').val()
             }
         },
         columns: [
@@ -207,6 +220,34 @@ $('#reportrange').daterangepicker({
    $('#datePicker').val('');
    $('#member_filter')[0].reset();
    table.DataTable().ajax.reload(null, false);
+  }
+  function getWeekDetailByYearMonth(){
+    var month = $("#filter-by-month").val();
+    var year = $("#select_year").val();
+    if(month!='' && year!=""){
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+
+      $.ajax({
+          url: "{{route('admin.account.mis.getWeek')}}",
+          type: 'POST',
+          data: {
+              "month": month,
+              "year": year
+          },
+          success: function (response)
+          {
+              $("#filter-by-week").html(response);
+          },
+          error: function(xhr) {
+          console.log(xhr.responseText); 
+          
+        }
+      });
+    }
   }
 
   

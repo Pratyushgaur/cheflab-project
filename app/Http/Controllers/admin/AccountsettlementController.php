@@ -33,21 +33,22 @@ class AccountsettlementController extends Controller
        
         if ($request->ajax()) {
 
-         
+          if($request->week == ''){
+            $data = [];
+          }else{
+            $dates = explode('&',$request->week);
             $data = Vendors::select('vendor_order_statements.*','vendors.id as vendor_id','vendors.status','vendors.name','vendors.pancard_number')->join('vendor_order_statements','vendors.id','=','vendor_order_statements.vendor_id');
-           
-
-            if (!empty($start_time) && !empty($end_time)) {
-                $data = $data->whereBetween('vendor_order_statements.created_at', [$start_time, $end_time]);
-            }
-    
-           $data = $data->get();
+            $data = $data->where('vendor_order_statements.start_date', date('Y-m-d',strtotime($dates[0])));
+            $data = $data->where('vendor_order_statements.end_date', date('Y-m-d',strtotime($dates[1])));
+            $data = $data->get();
+          }
+            
 
             return Datatables::of($data)
                 ->addIndexColumn()
                 ->addColumn('status', function($data){
                     if ($data->pay_status == 0) {
-                        $btn = '<a class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess").'?id='.$data->id.'">Pay</a>';
+                        $btn = '<a target="_blank" class="btn btn-xs btn-danger" href="'. route("admin.account.vendor.vendorPaymentSuccess").'?id='.$data->id.'">Pay</a>';
                     }else{
                         $btn = '<a href="#" class="btn btn-xs btn-success" >Success</a>';
                     } 
@@ -62,11 +63,11 @@ class AccountsettlementController extends Controller
                     return $total;
                 }) 
                 ->addColumn('start_date', function($data){
-                    $start_date = date('d-m-Y', strtotime($data->start_date));
+                    $start_date = date('d-M-Y', strtotime($data->start_date));
                      return $start_date;
                  }) 
                  ->addColumn('end_date', function($data){
-                    $end_date = date('d-m-Y', strtotime($data->end_date));
+                    $end_date = date('d-M-Y', strtotime($data->end_date));
                      return $end_date;
                  })   
                    

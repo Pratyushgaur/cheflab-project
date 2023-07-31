@@ -318,17 +318,31 @@ class AccountmisController extends Controller
     function monthly_invoice_list(Request $request){
         if ($request->ajax()) {
            // return $request->month;
+           $month = $request->month;
+           $year = $request->year;
            $statement =   \App\Models\OrderCommision::whereMonth('order_commisions.created_at','=',$request->month)->whereYear('order_commisions.created_at', '=', $request->year);
            $statement =   $statement->join('vendors','order_commisions.vendor_id','=','vendors.id');
-           $statement =   $statement->groupBy('vendor_id');
-           $statement =  $statement->select('vendors.name',\DB::raw('SUM(gross_revenue) as gross_revenue_total'),\DB::raw('SUM(admin_commision) as admin_commision_total'),\DB::raw('sum(tax_on_commission) as tax_on_commission_total'),\DB::raw('sum(convenience_amount) as convenience_amount_total'),\DB::raw('sum(convenience_tax) as convenience_tax_total'),\DB::raw('sum(net_receivables) as net_receivables_total'));
+           
+           $statement =  $statement->leftJoin('vendor_monthly_invoices', function ($join) use ($month,$year) {
+                            $join->on('order_commisions.vendor_id', '=', 'vendor_monthly_invoices.vendor_id');
+                            $join->where('vendor_monthly_invoices.month', '=', $month);
+                            $join->where('vendor_monthly_invoices.year', '=', $year);
+                        });
+           $statement =   $statement->groupBy('order_commisions.vendor_id');
+           $statement =  $statement->select('vendors.name',\DB::raw('SUM(order_commisions.gross_revenue) as gross_revenue_total'),\DB::raw('SUM(admin_commision) as admin_commision_total'),\DB::raw('sum(tax_on_commission) as tax_on_commission_total'),\DB::raw('sum(convenience_amount) as convenience_amount_total'),\DB::raw('sum(convenience_tax) as convenience_tax_total'),\DB::raw('sum(net_receivables) as net_receivables_total'),'vendor_monthly_invoices.id as vendor_monthly_invoices_id');
            $order = $statement->get();
            
 
 
            return Datatables::of($order)->addIndexColumn()
             ->addColumn('action', function ($order) {
-                $btn = '<a class="btn btn-xs btn-success" style="color:#fff;">Generate Invoice</a>';
+                if($order->vendor_monthly_invoices_id == null){
+                    $btn = '<a class="btn btn-xs btn-danger" style="color:#fff;">Pending</a>';
+
+                }else{
+                    $btn = '<a target="_blank" href="'.route("admin.account.vendor.invoices.print",$order->vendor_monthly_invoices_id).'" class="btn btn-xs btn-success" style="color:#fff;">View Invoice</a>';
+
+                }
                 return $btn;
             })
             
@@ -448,5 +462,49 @@ class AccountmisController extends Controller
     function create_invoice(){
         return view('admin.mis.create_new_invoice');
 
+    }
+    function getWeeks(Request $request) {
+        $currentDate  =  \Carbon\Carbon::parse("01-$request->month-$request->year");
+        $currentMonth = $currentDate->month;
+        $firstDayOfMonth = Carbon::createFromDate($currentDate->year, $currentMonth, 1);
+        $lastDayOfMonth = $firstDayOfMonth->copy()->endOfMonth();
+        $weeks = [];
+        $html = '<option value="">Select Week Slot</option>';
+        while ($firstDayOfMonth->lte($lastDayOfMonth)) {
+            $startOfWeek = $firstDayOfMonth->copy()->startOfWeek();
+            $endOfWeek = $firstDayOfMonth->copy()->endOfWeek();
+    
+            // $weeks[] = [
+            //     'start_date' => $startOfWeek->toDateString(),
+            //     'end_date' => $endOfWeek->toDateString(),
+            // ];
+            $html .= '<option value="'.$startOfWeek->format('d-m-Y').'&'.$endOfWeek->format('d-m-Y').'">'.$startOfWeek->format('d-M-Y').' TO ' .$endOfWeek->format('d-M-Y').'</option>';
+    
+            // Move to the next week
+            $firstDayOfMonth->addWeek();
+        }
+        return $html;
+    }
+    function weekOfMonth($date) {
+
+        $firstOfMonth = strtotime(date("Y-m-01", $date));
+        $lastWeekNumber = (int)date("W", $date);
+        $firstWeekNumber = (int)date("W", $firstOfMonth);
+        if (12 === (int)date("m", $date)) {
+            if (1 == $lastWeekNumber) {
+                $lastWeekNumber = (int)date("W", ($date - (7*24*60*60))) + 1;
+            }
+        } elseif (1 === (int)date("m", $date) and 1 < $firstWeekNumber) {
+            $firstWeekNumber = 0;
+        }
+        return $lastWeekNumber - $firstWeekNumber + 1;
+    }
+    function printInvoice($id){
+        $invoice = \App\Models\VendorMonthlyInvoices::where('id','=',$id)->first();
+        $vendorDetail = Vendors::find($invoice->vendor_id);
+        $vendorData =$vendorDetail;
+        $monthYearData =  date("F", mktime(0, 0, 0, $invoice->month, 10)).'-'.$invoice->year;
+        $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno')->first();
+        return view('vendor.restaurant.pdf.monthly_invoice',compact('adminDetail', 'vendorDetail','monthYearData','vendorData','invoice'));
     }
 }

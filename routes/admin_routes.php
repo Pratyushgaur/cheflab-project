@@ -293,13 +293,14 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
     // Account  Management
     Route::get('account-settlement/mis', [App\Http\Controllers\admin\AccountmisController::class, 'index'])->name('admin.account.mis.list');
     Route::get('order-list-data', [App\Http\Controllers\admin\AccountmisController::class, 'get_data_table_of_order'])->name('admin.account.order.data');   
-
+    Route::post('account-settlement/getWeeks', [App\Http\Controllers\admin\AccountmisController::class, 'getWeeks'])->name('admin.account.mis.getWeek');
     Route::post('get-account-status-update', [App\Http\Controllers\admin\AccountmisController::class, 'status_update'])->name('admin.account.status.update'); 
 
     Route::get('order/account-generate-invoice/{id}', [App\Http\Controllers\admin\AccountmisController::class, 'invoiceorder'])->name('admin.account.order.invoice');
     Route::get('account-settlement/mis-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'monthly_invoice'])->name('admin.account.mis.invoices');
     Route::get('account-settlement/mis-month-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'monthly_invoice_list'])->name('admin.account.month.invoice');
     Route::get('account-settlement/mis-create-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'create_invoice'])->name('admin.account.vendor.invoices.generate');
+    Route::get('account-settlement/mis-invoice/print/{id}', [App\Http\Controllers\admin\AccountmisController::class, 'printInvoice'])->name('admin.account.vendor.invoices.print');
     // Route::post('account-settlement/mis-genrate-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'genrate_invoice'])->name('admin.mis.genrate.invoice');
      Route::get('account-settlement/mis-genrate-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'genrate_invoice'])->name('admin.mis.genrate.invoice');
      Route::post('account-settlement/mis-genrate-bulk-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'generateBulkInvoice'])->name('admin.mis.genrate.bulk.invoice');
