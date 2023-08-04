@@ -286,4 +286,7 @@ function mostViewVendors($lat ,$lng ,$userid)
     return $vendors =  $vendors->get();
     
 
+}   
+function checkAccess($name,$role_id){
+    return \App\Models\Permissions::where(['role_id' =>$role_id,'menu_name'=>$name])->exists();
 }
