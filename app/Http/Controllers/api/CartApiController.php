@@ -454,24 +454,25 @@ class CartApiController extends Controller
                 $deliveryCharge = 0;
                 $deliveryCharge_2 = 0;
             }
-
+            $responce = ["cart_id"        => $cart_id,
+                        'cart_sub_toatl_amount'=>$cart_sub_toatl_amount,
+                        'saving_amount'=>$saving_amount,
+                        "cart"             => $r,
+                        "vendor"           => $vendors,
+                        'wallet_amount'    => $wallet_amount,
+                        'max_cod_amount'   => @$admin_setting->max_cod_amount,
+                        'platform_charges' => @$admin_setting->platform_charges,
+                        'tax'              => 5,
+                        'delivery_charge'  => $deliveryCharge,
+                        'delivery_charge_2'  => $deliveryCharge_2,
+                        'address'          => $address,
+                        'free_delivery'    => $admin_setting->free_delivery,
+                        'minimum_order_amount'=> $admin_setting->minimum_order_amount
+                        ];
+            \App\Models\CartApiLogs::create(['userId' =>request()->user()->id,'api_request_log' => json_encode($request->all()) ,'api_response_log' => json_encode($responce)]);
             return response()->json(['status'   => true,
                                      'message'  => 'Data Get Successfully',
-                                     'response' => ["cart_id"        => $cart_id,
-                                                    'cart_sub_toatl_amount'=>$cart_sub_toatl_amount,
-                                                    'saving_amount'=>$saving_amount,
-                                                    "cart"             => $r,
-                                                    "vendor"           => $vendors,
-                                                    'wallet_amount'    => $wallet_amount,
-                                                    'max_cod_amount'   => @$admin_setting->max_cod_amount,
-                                                    'platform_charges' => @$admin_setting->platform_charges,
-                                                    'tax'              => 5,
-                                                    'delivery_charge'  => $deliveryCharge,
-                                                    'delivery_charge_2'  => $deliveryCharge_2,
-                                                    'address'          => $address,
-                                                    'free_delivery'    => $admin_setting->free_delivery,
-                                                    'minimum_order_amount'=> $admin_setting->minimum_order_amount
-                                     ]
+                                     'response' => $responce
             ], 200);
         } catch (Throwable $th) {
             return response()->json(['status' => False, 'error' => $th->getTrace()], 500);
