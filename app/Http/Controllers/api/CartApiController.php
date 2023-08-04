@@ -430,7 +430,7 @@ class CartApiController extends Controller
                         //$tax = \App\Models\Vendors::where('id','=',$cart_users->vendor_id)->select('tax')->first();
                         $tax_amount = $cart_sub_toatl_amount*5/100;
                         $total  =$cart_sub_toatl_amount-$request->discount_amount;
-                        $total = $total+$tax_amount+$admin_setting->platform_charges;
+                        //$total = $total+$tax_amount+$admin_setting->platform_charges;
                         if($total >= $admin_setting->minimum_order_amount){
                             $deliveryCharge = 0;
                             $deliveryCharge_2 = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
