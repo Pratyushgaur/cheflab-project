@@ -34,6 +34,8 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
   Route::post('vendors/product/delete', [App\Http\Controllers\admin\ProductController::class, 'soft_delete'])->name('admin.product.ajax.delete');
   Route::post('vendors/inactive/{id}', [App\Http\Controllers\admin\UserControllers::class, 'vendor_inactive'])->name('admin.vendors.inactive');
   Route::post('vendors/active/{id}', [App\Http\Controllers\admin\UserControllers::class, 'vendor_active'])->name('admin.vendors.active');
+  Route::post('vendors/update/order_minimum_amount', [App\Http\Controllers\admin\UserControllers::class, 'order_minimum_amount'])->name('admin.vendor.update_price');
+  
   //
   Route::get('vendors-view/{id}', [App\Http\Controllers\admin\UserControllers::class, 'view_vendor'])->name('admin.vendor.view');
   Route::get('vendors-chef-product/{id}', [App\Http\Controllers\admin\UserControllers::class, 'chef_product'])->name('admin.cherf.product');

@@ -192,6 +192,27 @@
 
 
         </section>
+        <div id="charge-model" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                <div class="modal-header">
+                    
+                    <h4 class="modal-title">Minimum Item values for free delivery</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" value="" class="order_value_vendor_id">
+                    <input type="number" value="" class="order_amount form-control" >
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success update-minimum-order" >Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+                </div>
+
+            </div>
+        </div>
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
@@ -355,5 +376,32 @@
                 },
             }); 
         }
+        function vendorMinimumOrder(amount,id) {
+           $(".order_amount").val(amount);
+           $(".order_value_vendor_id").val(id);
+            $("#charge-model").modal('show');
+        }
+        $(".update-minimum-order").click(function (){
+            var vendorid = $(".order_value_vendor_id").val();
+            var order_amount = $(".order_amount").val();
+            if(order_amount!=''){
+                $.ajax({  
+                    'headers': {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    url :"{{ route('admin.vendor.update_price') }}",  
+                    method:"POST",  
+                    data:{'vendorid':vendorid,'order_amount':order_amount},
+                    success: function(res){ 
+                        if(res.success){
+                            //reload_table();
+                            $("#charge-model").modal('hide');
+                        }
+                        
+                    },
+                });
+            }
+            
+        })
     </script>
 @endsection

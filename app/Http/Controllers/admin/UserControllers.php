@@ -150,6 +150,7 @@ class UserControllers extends Controller
                         $btn .= '<a class="dropdown-item text-info" href="' . route('admin.chef.editchef', Crypt::encryptString($data->id)) . '"><i class="fas fa-edit"></i> Edit Chef</a><a class="dropdown-item text-danger" href="' . route('admin.chefproduct.view', Crypt::encryptString($data->id)) . '"><i class="fa-solid fa-bowl-food"></i>Add/View  Product</a>';
                     }
                     $btn .= '<button class="dropdown-item text-info" onClick="loginVendor(`' . $data->id . '`)"><i class="fas fa-key"></i> Login</a>';
+                    $btn .= '<button class="dropdown-item text-info" onClick="vendorMinimumOrder(`' . $data->fee_delivery_minimum_amount . '`,`' . $data->id . '`)"><i class="fas fa-rupee-sign"></i> Minimum order Amount</a>';
 
                     $btn .= '</div>
                                 </li>
@@ -1230,5 +1231,12 @@ class UserControllers extends Controller
         return redirect()->back()->with('message', 'User Added Successfully');
 
 
+    }
+    function order_minimum_amount(Request $request) {
+        $id = $request->vendorid;
+        $order_amount = $request->order_amount;
+        Vendors::where('id', '=', $id)->limit(1)->update(['fee_delivery_minimum_amount' => $order_amount]);
+        return \Response::json(['error' => false, 'success' => true, 'message' => 'Update Successfully'], 200);
+        
     }
 }
