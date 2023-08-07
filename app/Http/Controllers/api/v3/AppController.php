@@ -79,7 +79,7 @@ class AppController extends Controller
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online ,'free_delivery' => $vendorsOnline->free_delivery,'minimum_order_amount' =>$vendorsOnline->fee_delivery_minimum_amount)
+                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online ,'free_delivery' => $vendorsOnline->free_delivery,'minimum_order_amount' => (int) $vendorsOnline->fee_delivery_minimum_amount)
 
             ], 200);
         } catch (Throwable $th) {
