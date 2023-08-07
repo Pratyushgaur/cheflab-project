@@ -1088,7 +1088,9 @@ function get_restaurant_near_me($lat, $lng, $where = [], $current_user_id, $offs
         'table_service',
         'vendors.id as vendor_id',
         'banner_image',
-        'deal_cuisines'
+        'deal_cuisines',
+        'vendors.free_delivery',
+        'vendors.fee_delivery_minimum_amount',
     );
 
     if (!empty($limit) && !empty($offset))

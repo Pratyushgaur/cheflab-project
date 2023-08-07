@@ -57,6 +57,7 @@ class CreateVendorsTable extends Migration
             $table->integer('auto_accept_prepration_time')->default(0)->comment('auto accepted prepration time which define in create order');
             $table->string('password_change_otp')->nullable();
             $table->decimal('platform_fee',8,2)->unsigned()->default(0.0);
+            $table->string('free_delivery',10)->default("0");
             $table->decimal('fee_delivery_minimum_amount',8,2)->unsigned()->default(0.0)->comment('Free delivery  minimum order amount');
             $table->softDeletes();
             $table->timestamps();

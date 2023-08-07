@@ -466,8 +466,8 @@ class CartApiController extends Controller
                         'delivery_charge'  => $deliveryCharge,
                         'delivery_charge_2'  => $deliveryCharge_2,
                         'address'          => $address,
-                        'free_delivery'    => $admin_setting->free_delivery,
-                        'minimum_order_amount'=> $admin_setting->minimum_order_amount
+                        'free_delivery'    => $vendors->free_delivery,
+                        'minimum_order_amount'=> $vendors->fee_delivery_minimum_amount
                         ];
             \App\Models\CartApiLogs::create(['userId' =>request()->user()->id,'api_request_log' => json_encode($request->all()) ,'api_response_log' => json_encode($responce)]);
             return response()->json(['status'   => true,

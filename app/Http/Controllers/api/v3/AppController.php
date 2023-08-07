@@ -75,11 +75,11 @@ class AppController extends Controller
             $ProfileVisitUsers->vendor_id = $request->vendor_id;
             $ProfileVisitUsers->user_id = request()->user()->id;
             $ProfileVisitUsers->save();
-            $vendorsOnline = \App\Models\Vendors::where('id','=',$request->vendor_id)->select('is_online')->first();
+            $vendorsOnline = \App\Models\Vendors::where('id','=',$request->vendor_id)->select('is_online','free_delivery','fee_delivery_minimum_amount')->first();
             return response()->json([
                 'status'   => true,
                 'message'  => 'Data Get Successfully',
-                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online ,'free_delivery' => $admin_setting->free_delivery,'minimum_order_amount' =>$admin_setting->minimum_order_amount)
+                'response' => array('products' => $catData, 'coupons' => $coupon ,'is_online' => $vendorsOnline->is_online ,'free_delivery' => $vendorsOnline->free_delivery,'minimum_order_amount' =>$vendorsOnline->fee_delivery_minimum_amount)
 
             ], 200);
         } catch (Throwable $th) {

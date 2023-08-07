@@ -188,6 +188,11 @@ class GlobleSetting extends Controller
             $general->favicon  = $filename;
         }
         $general->save();
+        if($request->free_delivery == '1'){
+            \App\Models\Vendors::where('fee_delivery_minimum_amount','>','0')->update(['free_delivery'=> $request->free_delivery]);
+        }else{
+            \App\Models\Vendors::query()->update(['free_delivery'=> $request->free_delivery]);
+        }
         return redirect()->route('admin.globle.setting')->with('message', 'Update Successfully');
     }
     public function storePrivacy(Request $request){
