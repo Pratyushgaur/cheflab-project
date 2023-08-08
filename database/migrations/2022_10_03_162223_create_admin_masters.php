@@ -32,6 +32,8 @@ class CreateAdminMasters extends Migration
             $table->text('app_close_reason')->nullable()->comment('This message will shown when applicatio closed by admin');
             $table->integer('minimum_order_amount')->default(0);
             $table->string('free_delivery',10)->default("0");
+            $table->string('free_delivery_criteria',10)->default("5")->comment("this is criteria for under km free delivery");
+            $table->string('charge_after_criteria',10)->default("8")->comment("this is out of criteria charge of per km");
             
             $table->text('goofle_map_key');
             $table->text('razorpay_publish_key');

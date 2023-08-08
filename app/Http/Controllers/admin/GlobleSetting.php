@@ -175,7 +175,9 @@ class GlobleSetting extends Controller
         $general->order_limit_amout = $request->order_limit_amout;
         $general->app_run = $request->app_run;
         $general->app_close_reason = $request->reason_close;
-        $general->minimum_order_amount = $request->minimum_order_amount;
+        $general->free_delivery_criteria = $request->free_delivery_criteria;
+        $general->charge_after_criteria = $request->charge_after_criteria;
+        //$general->minimum_order_amount = $request->minimum_order_amount;
         $general->free_delivery = $request->free_delivery;
         if($request->has('logo')){
             $filename = time().'-document-'.rand(100,999).'.'.$request->logo->extension();

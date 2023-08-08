@@ -399,7 +399,7 @@ class CartApiController extends Controller
             } else
                 $r = [];
 
-            $admin_setting = AdminMasters::select('max_cod_amount','platform_charges','free_delivery','minimum_order_amount')->find(config('custom_app_setting.admin_master_id'));
+            $admin_setting = AdminMasters::select('max_cod_amount','platform_charges','free_delivery','minimum_order_amount','free_delivery_criteria','charge_after_criteria')->find(config('custom_app_setting.admin_master_id'));
 
             $vendors = get_restaurant_near_me('','',['vendors.id'=>$cart_users->vendor_id],$request->user()->id)
                 ->get();
@@ -467,7 +467,9 @@ class CartApiController extends Controller
                         'delivery_charge_2'  => $deliveryCharge_2,
                         'address'          => $address,
                         'free_delivery'    => $vendors->free_delivery,
-                        'minimum_order_amount'=> $vendors->fee_delivery_minimum_amount
+                        'minimum_order_amount'=> $vendors->fee_delivery_minimum_amount,
+                        'free_delivery_criteria'=> $admin_setting->free_delivery_criteria,
+                        'charge_after_criteria'=> $admin_setting->charge_after_criteria,
                         ];
             \App\Models\CartApiLogs::create(['userId' =>request()->user()->id,'api_request_log' => json_encode($request->all()) ,'api_response_log' => json_encode($responce)]);
             return response()->json(['status'   => true,

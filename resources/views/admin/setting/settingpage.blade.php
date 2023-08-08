@@ -332,9 +332,17 @@
                                         </div>
                                         <div class="col-md-6">
                                           <div class="form-group">
-                                            <label for="exampleInputEmail1">Minimum Order Amount Required</label>
+                                            <label for="exampleInputEmail1">Free Delivery criteria in Km</label>
                                             
-                                            <input type="number" name="minimum_order_amount" class="form-control" value="{{$data->minimum_order_amount}}"  id="" placeholder="Enter Minimum Order Amount" required>
+                                            <input type="number" name="free_delivery_criteria" class="form-control" value="{{$data->free_delivery_criteria}}"  id="" placeholder="Enter number in km" required>
+                                            
+                                          </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                          <div class="form-group">
+                                            <label for="exampleInputEmail1">Charge of per Km after out of criteria</label>
+                                            
+                                            <input type="number" name="charge_after_criteria" class="form-control" value="{{$data->charge_after_criteria}}"  id="" placeholder="Enter Amount for per Km out of Criteria" required>
                                             
                                           </div>
                                         </div>
