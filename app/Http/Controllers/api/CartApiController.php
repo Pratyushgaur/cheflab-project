@@ -432,8 +432,21 @@ class CartApiController extends Controller
                         $total  =$cart_sub_toatl_amount-$request->discount_amount;
                         //$total = $total+$tax_amount+$admin_setting->platform_charges;
                         if($total >= $admin_setting->minimum_order_amount){
-                            $deliveryCharge = 0;
-                            $deliveryCharge_2 = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                            if(isset($request->delivery_check)){
+                                $distance = getDrivingDistance($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                                if(round($distance) > round($admin_setting->free_delivery_criteria)){
+                                    $remaining = round($distance)-round($admin_setting->free_delivery_criteria);
+                                    $charge = $admin_setting->charge_after_criteria*$remaining;
+                                }else{
+                                    $charge = 0;
+                                }
+                                $deliveryCharge = $charge;
+                                $deliveryCharge_2 = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng,$distance);
+                            }else{
+                                $deliveryCharge = 0;
+                                $deliveryCharge_2 = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);
+                            }
+                            
 
                         }else{
                             $deliveryCharge = userToVendorDeliveryCharge($vendors->lat,$vendors->long,$request->lat,$request->lng);

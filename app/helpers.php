@@ -1283,9 +1283,11 @@ function getInvoiceNumber()
     return str_pad(1 + $id, 6, "0", STR_PAD_LEFT);
 }
 
-function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng)
+function userToVendorDeliveryCharge($userLat, $userLng, $vendorLat, $vendorLng ,$distance =null)
 {
-    $distance = getDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
+    if($distance == null){
+        $distance = getDrivingDistance($userLat, $userLng, $vendorLat, $vendorLng);
+    }
     //$distance = 3.9;
     $distance = floatval($distance);
     //$distance = 10;
