@@ -467,7 +467,7 @@ class CartApiController extends Controller
                 $deliveryCharge = 0;
                 $deliveryCharge_2 = 0;
             }
-            $charge = $deliveryCharge;
+            
             $responce = ["cart_id"        => $cart_id,
                         'cart_sub_toatl_amount'=>$cart_sub_toatl_amount,
                         'saving_amount'=>$saving_amount,
@@ -484,7 +484,7 @@ class CartApiController extends Controller
                         'minimum_order_amount'=> $vendors->fee_delivery_minimum_amount,
                         'free_delivery_criteria'=> $admin_setting->free_delivery_criteria,
                         'charge_after_criteria'=> $admin_setting->charge_after_criteria,
-                        'distance'             => $charge
+                        'distance'             => $distance
                         ];
             \App\Models\CartApiLogs::create(['userId' =>request()->user()->id,'api_request_log' => json_encode($request->all()) ,'api_response_log' => json_encode($responce)]);
             return response()->json(['status'   => true,
