@@ -467,6 +467,7 @@ class CartApiController extends Controller
                 $deliveryCharge = 0;
                 $deliveryCharge_2 = 0;
             }
+            $charge = $deliveryCharge;
             $responce = ["cart_id"        => $cart_id,
                         'cart_sub_toatl_amount'=>$cart_sub_toatl_amount,
                         'saving_amount'=>$saving_amount,
