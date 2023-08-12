@@ -239,7 +239,7 @@ class CartApiController extends Controller
                 $error = $validateUser->errors();
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
-            $distance = '';
+            $distance = 'null now';
             $cart_users = Cart::select('user_id', 'vendor_id', 'id')->where('user_id', $request->user_id)->first();
 
             if (!isset($cart_users->id))
