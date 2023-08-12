@@ -240,6 +240,7 @@ class CartApiController extends Controller
                 return response()->json(['status' => false, 'error' => $validateUser->errors()->all()], 401);
             }
             $distance = '';
+            $total = '';
             $cart_users = Cart::select('user_id', 'vendor_id', 'id')->where('user_id', $request->user_id)->first();
 
             if (!isset($cart_users->id))
@@ -484,7 +485,8 @@ class CartApiController extends Controller
                         'minimum_order_amount'=> $vendors->fee_delivery_minimum_amount,
                         'free_delivery_criteria'=> $admin_setting->free_delivery_criteria,
                         'charge_after_criteria'=> $admin_setting->charge_after_criteria,
-                        'distance'             => $distance
+                        'distance'             => $distance,
+                        'total'                => $total
                         ];
             \App\Models\CartApiLogs::create(['userId' =>request()->user()->id,'api_request_log' => json_encode($request->all()) ,'api_response_log' => json_encode($responce)]);
             return response()->json(['status'   => true,
