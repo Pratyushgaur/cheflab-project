@@ -1019,4 +1019,77 @@ class AppController extends Controller
     //         ], 500);
     //     }
     // }
+
+
+    // multiple order manage 
+    public function home2(Request $request)
+    {
+        try {
+            $validateUser = Validator::make(
+                $request->all(),
+                [
+                    'user_id' => 'required|numeric|exists:deliver_boy,id'
+                ]
+            );
+            if ($validateUser->fails()) {
+                $error = $validateUser->errors();
+                return response()->json([
+                    'status' => false,
+                    'error'  => $validateUser->errors()->all()
+
+                ], 401);
+            }
+            $data = Deliver_boy::where('id', '=', $request->user_id)->select('name', 'email', 'username', 'mobile', 'is_online', \DB::raw('CONCAT("' . asset('dliver-boy') . '/", image) AS image'))->first();
+            //$order = RiderAssignOrders::where(['rider_id' =>$request->user_id])->orWhere(['rider_id' =>$request->user_id,'action' =>'1'])->whereNotIn('action', ['pending', 'cancelled_by_customer_before_confirmed']);->orderBy('rider_assign_orders.id','desc')->limit(1);
+            $order = RiderAssignOrders::where(['rider_id' => $request->user_id])->whereNotIn('action', ['2', '5', '3', '6'])->orderBy('rider_assign_orders.id', 'desc');
+            $order = $order->join('orders', 'rider_assign_orders.order_id', '=', 'orders.id');
+            $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
+            $order = $order->select('vendors.name as vendor_name', 'vendors.address as vendor_address', 'orders.order_status', 'orders.customer_name', 'orders.delivery_address', DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'), 'action', 'distance', 'earning', 'orders.id as order_row_id', 'orders.order_id', 'rider_assign_orders.id as rider_assign_order_id', 'otp');
+            $order = $order->addSelect('vendors.mobile as vendor_mobile', 'vendors.lat as vendor_lat', 'vendors.long as vendor_lng', 'orders.lat as customer_lat', 'orders.long as customer_lng', 'orders.mobile_number as customer_mobile', 'net_amount', 'avoid_ring_bell', 'leave_at_door', 'avoid_calling', 'direction_to_reach', 'direction_instruction');
+
+            if ($order->exists()) {
+                $orders = $order->get();
+                $busy = false;
+                foreach ($orders as $key => $value) {
+                    if($value->action == '0'){
+                        $orders[$key]->expected_earninig = $value->earning;
+                        $orders[$key]->trip_distance = $value->distance;
+                        //$orders[$key]->busy = $value->distance;
+                        $busy = false;
+                    }else{
+                        $products = OrderProduct::where('order_id', '=', $value->order_row_id)->join('products', 'order_products.product_id', '=', 'products.id')->leftJoin('order_product_variants', 'order_products.id', '=', 'order_product_variants.order_product_id')->select('order_products.product_name', 'order_products.product_qty', 'order_product_variants.variant_name', 'products.type', 'order_products.id as order_product_row_id', 'products.customizable')->get();
+                        foreach ($products as $pkey => $pvalue) {
+                            if ($pvalue->customizable == 'false') {
+                                $products[$pkey]->variant_name = '';
+                            }
+                            $addons = \App\Models\OrderProductAddon::where('order_product_id', '=', $pvalue->order_product_row_id)->select('addon_name', 'addon_price', 'addon_qty')->get();
+                            $products[$pkey]->addons = $addons;
+                        }
+                        $orders[$key]->products = $products;
+                    }
+                }
+                
+
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => ['orders' => $orders, 'busy' => $busy, 'profile' => $data]
+
+                ], 200);
+            } else {
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Data Get Successfully',
+                    'response' => ['orders' => null, 'busy' => false, 'profile' => $data]
+
+                ], 200);
+            }
+        } catch (Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], 500);
+        }
+    }
+
 }
