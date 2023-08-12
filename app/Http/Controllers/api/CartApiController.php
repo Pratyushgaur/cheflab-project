@@ -432,7 +432,7 @@ class CartApiController extends Controller
                         $tax_amount = $cart_sub_toatl_amount*5/100;
                         $total  =$cart_sub_toatl_amount-$request->discount_amount;
                         //$total = $total+$tax_amount+$admin_setting->platform_charges;
-                        if($total >= $admin_setting->minimum_order_amount){
+                        if($total >= $vendors->fee_delivery_minimum_amount){
                             if(isset($request->delivery_check)){
                                 $distance = getDrivingDistance($vendors->lat,$vendors->long,$request->lat,$request->lng);
                                 if(round($distance) > round($admin_setting->free_delivery_criteria)){
@@ -485,8 +485,7 @@ class CartApiController extends Controller
                         'minimum_order_amount'=> $vendors->fee_delivery_minimum_amount,
                         'free_delivery_criteria'=> $admin_setting->free_delivery_criteria,
                         'charge_after_criteria'=> $admin_setting->charge_after_criteria,
-                        'distance'             => $distance,
-                        'total'                => $total
+                        'distance'             => $distance
                         ];
             \App\Models\CartApiLogs::create(['userId' =>request()->user()->id,'api_request_log' => json_encode($request->all()) ,'api_response_log' => json_encode($responce)]);
             return response()->json(['status'   => true,
