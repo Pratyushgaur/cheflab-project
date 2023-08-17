@@ -946,7 +946,7 @@ function get_delivery_boy_near_me($lat, $lng, $order_id)
 function orderAssignToDeliveryBoy($lat, $lng, $order)
 {
     $order_dt = \App\Models\Orders::where('id','=',$order->id)->first();
-    if($order_dt->user_id == "9543"){
+    if($order_dt->user_id == "4"){
         $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
         $boy = \App\Models\Deliver_boy::where(['id' => 70]);
         $boy = $boy->where('lat', '!=', '');
@@ -2123,7 +2123,6 @@ function orderDeliverd($id)
     $is_coupon = 0;
     $discount_amount = 0;
     if ($order->coupon_id != null) {
-            
         $couponData = Coupon::where(['id' => $order->coupon_id, 'status' => 1])->first();
        
         if ($couponData->create_by == "admin") {
