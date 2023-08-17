@@ -945,19 +945,33 @@ function get_delivery_boy_near_me($lat, $lng, $order_id)
 
 function orderAssignToDeliveryBoy($lat, $lng, $order)
 {
-    $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order->id, 'action' => '2'])->orWhereIn('action', ["0", "1", "4"])->get()->pluck('rider_id')->toArray();
-    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
-    $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
-    $boy = $boy->where('lat', '!=', '');
-    $boy = $boy->where('lng', '!=', '');
-    if (!empty($riders)) {
-        $boy = $boy->whereNotIn('id', $riders);
+    $order_dt = \App\Models\Orders::where('id','=',$order->id)->first();
+    if($order_dt->user_id == "9543"){
+        $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
+        $boy = \App\Models\Deliver_boy::where(['id' => 70]);
+        $boy = $boy->where('lat', '!=', '');
+        $boy = $boy->where('lng', '!=', '');
+        $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+        $boy = $boy->orderBy('distance', 'ASC');
+        $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
+        $boy = $boy->limit(1);
+        return $boy->first();
+    }else{
+        $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order->id, 'action' => '2'])->orWhereIn('action', ["0", "1", "4"])->get()->pluck('rider_id')->toArray();
+        $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
+        $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
+        $boy = $boy->where('lat', '!=', '');
+        $boy = $boy->where('lng', '!=', '');
+        if (!empty($riders)) {
+            $boy = $boy->whereNotIn('id', $riders);
+        }
+        $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+        $boy = $boy->orderBy('distance', 'ASC');
+        $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
+        $boy = $boy->limit(1);
+        return $boy->first();
     }
-    $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
-    $boy = $boy->orderBy('distance', 'ASC');
-    $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
-    $boy = $boy->limit(1);
-    return $boy->first();
+    
 }
 function calculateRiderCharge($riderToRestaurantDistance, $vendorLat, $vendorLng, $orderlat, $orderLng)
 {
@@ -2166,16 +2180,16 @@ function orderDeliverd($id)
             'vendor_cancel_charge' => 0,
             'platform_fee' => $plateform_fee,
             'vendor_commission_percentage'=> $vendorData->commission,
-            'order_date' => date('Y-m-d H:i:s'),
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
+            'order_date' => date('Y-m-d H:i:s',strtotime($order->created_at)),
+            'created_at' => date('Y-m-d H:i:s',strtotime($order->created_at)),
+            'updated_at' => date('Y-m-d H:i:s',strtotime($order->created_at))
     
         );
         
         OrderCommision::create($ordercommision);
     
-        $current_start_date = \Carbon\Carbon::now()->startOfWeek()->format('Y-m-d');
-        $current_end_date = \Carbon\Carbon::now()->endOfWeek()->format('Y-m-d');
+        $current_start_date = \Carbon\Carbon::parse($order->created_at)->startOfWeek()->format('Y-m-d');
+        $current_end_date = \Carbon\Carbon::parse($order->created_at)->endOfWeek()->format('Y-m-d');
         $statementData = Vendor_order_statement::where(['vendor_id' => $order->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->first();
         // echo '<pre>';print_r($statementData->paid_amount);die;
         if ($statementData) {
