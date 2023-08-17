@@ -945,15 +945,16 @@ function get_delivery_boy_near_me($lat, $lng, $order_id)
 
 function orderAssignToDeliveryBoy($lat, $lng, $order)
 {
-    $order_dt = \App\Models\Orders::where('id','=',$order->id)->first();
+   // $order_dt = \App\Models\Orders::where('id','=',)->first();
+    $order_dt = Orders::where('id',$order->id)->first();
     if($order_dt->user_id == "4"){
-        $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
+       // $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
         $boy = \App\Models\Deliver_boy::where(['id' => 70]);
-        $boy = $boy->where('lat', '!=', '');
-        $boy = $boy->where('lng', '!=', '');
-        $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
-        $boy = $boy->orderBy('distance', 'ASC');
-        $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
+        //$boy = $boy->where('lat', '!=', '');
+        //$boy = $boy->where('lng', '!=', '');
+       // $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+        //$boy = $boy->orderBy('distance', 'ASC');
+        //$boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
         $boy = $boy->limit(1);
         return $boy->first();
     }else{
