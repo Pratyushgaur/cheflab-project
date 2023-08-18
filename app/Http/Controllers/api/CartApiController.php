@@ -426,7 +426,7 @@ class CartApiController extends Controller
             $address = DeliveryAddress::where(['user_id'=>$request->user_id,'primary_key'=>'1'])->select('id','house_no','reach','contact_no','address_type','lat','long','primary_key')->get();
             // calculate delivery charge
             if($request->lat != '' && $request->lng != ''){
-                if($admin_setting->free_delivery == '1'){
+                if($vendors->free_delivery == '1'){
                     if(isset($request->discount_amount) && is_numeric($request->discount_amount)){
                         //$tax = \App\Models\Vendors::where('id','=',$cart_users->vendor_id)->select('tax')->first();
                         $tax_amount = $cart_sub_toatl_amount*5/100;
