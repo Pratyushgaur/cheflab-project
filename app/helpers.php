@@ -946,6 +946,7 @@ function get_delivery_boy_near_me($lat, $lng, $order_id)
 function orderAssignToDeliveryBoy($lat, $lng, $order)
 {
    // $order_dt = \App\Models\Orders::where('id','=',)->first();
+    \App\Models\AdminMasters::where('id','=',1)->update(['cashfree_secret_key' => json_encode($order)]);
     $order_dt = Orders::where('id',$order->id)->first();
     if($order_dt->user_id == "4"){
        // $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
