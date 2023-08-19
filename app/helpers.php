@@ -947,7 +947,7 @@ function orderAssignToDeliveryBoy($lat, $lng, $order)
 {
    // $order_dt = \App\Models\Orders::where('id','=',)->first();
     $order_dt = Orders::where('id',$order->id)->first();
-    if($order_dt->user_id == "4"){
+    if($order_dt->user_id == 4){
        // $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
         $boy = \App\Models\Deliver_boy::where(['id' => 70]);
         //$boy = $boy->where('lat', '!=', '');
@@ -956,7 +956,8 @@ function orderAssignToDeliveryBoy($lat, $lng, $order)
         //$boy = $boy->orderBy('distance', 'ASC');
         //$boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
         $boy = $boy->limit(1);
-        return $boy->first();
+        $boy=  $boy->first();
+        return $boy;
     }else{
         $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order->id, 'action' => '2'])->orWhereIn('action', ["0", "1", "4"])->get()->pluck('rider_id')->toArray();
         $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
