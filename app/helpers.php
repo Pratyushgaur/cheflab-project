@@ -942,6 +942,27 @@ function get_delivery_boy_near_me($lat, $lng, $order_id)
     $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
     return $boy->get();
 }
+function get_multi_delivery_boy_near_me($lat, $lng, $order_id)
+{
+    $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order_id, 'action' => '2'])->select("rider_id")->distinct()->get()->pluck('rider_id')->toArray();
+    $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
+    $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
+    $boy = $boy->leftJoin('rider_assign_orders', function ($join) {
+        $join->on('deliver_boy.id', '=', 'rider_assign_orders.rider_id')
+        ->whereIn('rider_assign_orders.action', ["1","4","3"]);
+    });
+    $boy = $boy->where('lat', '!=', '');
+    $boy = $boy->where('lng', '!=', '');
+    if (!empty($riders)) {
+        $boy = $boy->whereNotIn('deliver_boy.id', $riders);
+    }
+    $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*")->addSelect(\DB::raw("count(rider_assign_orders.id) as running_order"));
+
+    $boy = $boy->orderBy('distance', 'ASC');
+    $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
+    $boy = $boy->groupBy("deliver_boy.id");
+    return $boy->get();
+}
 
 function orderAssignToDeliveryBoy($lat, $lng, $order)
 {
@@ -949,7 +970,7 @@ function orderAssignToDeliveryBoy($lat, $lng, $order)
     $order_dt = Orders::where('id',$order->id)->first();
     if($order_dt->user_id == 4){
        // $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
-        $boy = \App\Models\Deliver_boy::where(['id' => 70]);
+        $boy = \App\Models\Deliver_boy::where(['id' => 72]);
         //$boy = $boy->where('lat', '!=', '');
         //$boy = $boy->where('lng', '!=', '');
        // $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
