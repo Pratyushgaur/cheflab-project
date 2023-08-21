@@ -239,7 +239,9 @@
             </tbody>
          </table>
          <?php
-         $currentDate = date('Y-m-d');
+         $currentDate = "01-".$invoice->month.'-'.$invoice->year;
+         $currentDate =$carbon = \Carbon\Carbon::parse($currentDate)->addMonth()->format('d-m-Y');
+         //Carbon('2016-08-31'); 
          $invoiceNo = rand(99999, 999999);
          ?>
 
