@@ -196,7 +196,9 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
   Route::post('orders/dashboard/no_rider_assign/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshNo_rider_assign'])->name('admin.order.dashboard.no_rider_assign');
   Route::post('orders/dashboard/fail_order_generate/data', [App\Http\Controllers\admin\OrderController::class, 'autoRefreshFail_order_generate'])->name('admin.order.dashboard.fail_order_generate');
   Route::post('orders/dashboard/nearbyRider/data', [App\Http\Controllers\admin\OrderController::class, 'nearByDriver'])->name('admin.order.dashboard.nearbyRiderData');
+  Route::post('orders/dashboard/nearbyMultiRider/data', [App\Http\Controllers\admin\OrderController::class, 'nearByMultiDriver'])->name('admin.order.dashboard.nearbyMultiRiderData');
   Route::get('orders/assignToRider', [App\Http\Controllers\admin\OrderController::class, 'assignToRider'])->name('admin.order.dashboard.assignOrder');
+  Route::get('orders/multiple/assignToRider', [App\Http\Controllers\admin\OrderController::class, 'assignToRiderMultiple'])->name('admin.order.dashboard.assignOrder.multiple');
   Route::post('orders/dashboard/SuccessPayment/create/order', [App\Http\Controllers\admin\OrderController::class, 'generateSuccessPaymentOrder'])->name('admin.order.dashboard.generateSuccessPaymentOrder');
   Route::get('admin/orders/rider/remove/{id}', [App\Http\Controllers\admin\OrderController::class, 'removeRiderFromAssign'])->name('admin.orders.rider.remove');
   Route::get('admin/orders/add/no_rider_assign/{id}', [App\Http\Controllers\admin\OrderController::class, 'add_no_rider_assing'])->name('admin.order.assign_no_rider');

@@ -271,7 +271,7 @@ class OrderController extends Controller
         $trhtml = '';
         $i=1;
         foreach($order as $k =>$v){ 
-            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td><td><a href="#" data-vendorlat="'.$v["vendorlat"].'" data-vendorlong="'.$v["vendorlong"].'" data-order_id="'.$v["id"].'" class="btn btn-success btn-sm find-rider">Find Rider</a></td>';
+            $trhtml.='<tr><td>'.$i.'</td><td><a target="_blank" href="'.route("admin.order.view",Crypt::encryptString($v['id'])).'">'.$v['order_id'].'</a></td><td>'.$v['name'].'</td><td>'.$v['mobile'].'-'.$v['alt_mobile'].'</td><td>'.$v['customer_name'].'</td><td>'.date('d M Y h:i:s A',strtotime($v['created_at'])).'</td><td ><a href="#" data-vendorlat="'.$v["vendorlat"].'" data-vendorlong="'.$v["vendorlong"].'" data-order_id="'.$v["id"].'" class="btn btn-success btn-xs find-rider">Find Rider</a></td><td><a href="#" data-vendorlat="'.$v["vendorlat"].'" data-vendorlong="'.$v["vendorlong"].'" data-order_id="'.$v["id"].'" class="btn btn-danger btn-xs find-rider-2">Find Rider</a></td>';
             $i++;
         }
         $html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">
@@ -283,6 +283,7 @@ class OrderController extends Controller
                             <th>Vendor Mobile</th>
                             <th>Customer Name</th>
                             <th>Order Date</th>
+                            <th>Find Rider</th>
                             <th>Find Rider</th>
                         </tr>
                     </thead>
@@ -379,9 +380,50 @@ class OrderController extends Controller
             return $th;
         }
     }
+    function assignToRiderMultiple(Request $request){
+        try {
+            if(!\App\Models\RiderAssignOrders::where('order_id','=',$request->order_id)->whereIn('action',["0","1","3"])->exists()){
+                //if(!\App\Models\RiderAssignOrders::where('rider_id','=',$request->id)->whereIn('action',['0','1','4'])->exists()){
+                    $order = Orders::findOrFail($request->order_id);
+                    $vendor = \App\Models\Vendors::findOrFail($order->vendor_id);
+                    $charges = calculateRiderCharge($request->distance,$vendor->lat,$vendor->long,$order->lat,$order->long);
+                    $riderAssign = new \App\Models\RiderAssignOrders(array('rider_id' => $request->id, 'order_id' => $request->order_id,'earning'=>$charges['charges'],'distance'=>$charges['resToUserDistance'],'total_ride_distance'=>$charges['totalDistance']));
+                    $riderAssign->saveOrFail();
+                    $token = \App\Models\DeliveryBoyTokens::where('rider_id','=',$request->id)->orderBy('id','desc')->get()->pluck('token');
+                    if(!empty($token)){
+                        $riderAssign = $riderAssign->join('orders','rider_assign_orders.order_id','=','orders.id');
+                        $riderAssign = $riderAssign->join('vendors','orders.vendor_id','=','vendors.id');
+                        $riderAssign = $riderAssign->select('vendors.name as vendor_name','vendors.address as vendor_address','orders.order_status','orders.customer_name','orders.delivery_address',\DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'),'action','orders.id as order_row_id','orders.order_id','rider_assign_orders.id as rider_assign_order_id','otp');
+                        $riderAssign = $riderAssign->first();
+                        $riderAssign->expected_earninig = $charges['charges'];
+                        $riderAssign->trip_distance = $charges['resToUserDistance'];
+                        //
+                        $title = 'New Delivery Request';
+                        $body = "Vendor address:".$vendor->address.' Deliver to :'.$order->delivery_address;
+                        $res = sendNotification($title,$body,$token,array('type'=>1,'data'=>$riderAssign),'notify_sound');
+                        
+                    }
+                    \App\Models\NoRiderAssignOrders::where('order_id','=',$request->order_id)->update(['status'=>'1']);
+                    return redirect()->back()->with('message', 'Order Assing To the Driver');
+                // }else{  
+                //     return redirect()->back()->withErrors('message', 'Rider ALready Busy');
+                // }
+            }else{
+                return redirect()->back()->withErrors('message', 'Order Already Assinged to any driver');
+            }
+            
+        } catch (\Throwable $th) {
+            return $th;
+        }
+    }
     function nearByDriver(Request $request){
         updateDriverLatLngFromFcm();
         $drivers = get_delivery_boy_near_me($request->lat,$request->lng,$request->orderid );
+        return $drivers;
+    }
+    function nearByMultiDriver(Request $request){
+        updateDriverLatLngFromFcm();
+        $drivers = get_multi_delivery_boy_near_me($request->lat,$request->lng,$request->orderid );
         return $drivers;
     }
     public function generateSuccessPaymentOrder(Request $request)
@@ -744,10 +786,10 @@ class OrderController extends Controller
     public function removeRiderFromAssign($id)
     {
         $rider = \App\Models\RiderAssignOrders::findOrFail($id);
-        if($rider->action == 3) {
+        if($rider->action == 3 || $rider->action == 4) {
             return redirect()->back()->withErrors('message', 'Order Delivered By this Driver');
         }
-        if($rider->action == 1 || $rider->action == 4){
+        if($rider->action == 1){
             $order = Orders::findOrFail($rider->order_id);
             $order->accepted_driver_id = null;
             $order->save();

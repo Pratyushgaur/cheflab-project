@@ -172,6 +172,41 @@
         }
       }); 
     });
+    $(document).on('click','.find-rider-2',function(){
+      $('.md-container').html('<div class="loader" style="margin:auto !important"></div>');
+      var lat = $(this).attr('data-vendorlat');
+      var lng = $(this).attr('data-vendorlong');
+      var orderid = $(this).attr('data-order_id');
+      var url = "{{route('admin.order.dashboard.nearbyMultiRiderData')}}";
+      $('#myModal').modal('show');
+      $.ajaxSetup({
+          headers: {
+              'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+      });
+      $.ajax({
+        type: "POST",
+        url: url,
+        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        data: { "_token": "{{ csrf_token() }}","lat":lat,"lng":lng,"orderid":orderid },
+        success: function(response){
+          console.log(response);
+          if(response.length > 0){
+            var html = '<table id="users" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%">';
+            html += '<thead><tr><th>Name</th><th>Distance</th><th>Mobile</th><th>Running</th><th>Assign</th></tr></thead>';
+            html += '<tbody>';
+            for(i=0;i<response.length;i++){
+              html+= '<tr><td>'+response[i].name+'</td><td>'+response[i].distance+' KM</td><td>'+response[i].mobile+'</td><td>'+response[i].running_order+'</td><td><a href="{{route("admin.order.dashboard.assignOrder.multiple")}}?id='+response[i].id+'&order_id='+orderid+'&distance='+response[i].distance+'" class="btn btn-xs btn-success ">Assign Order</a></td></tr>';
+            }
+            html += '</tbody>';
+            html += '</table>';
+            $('.md-container').html(html);
+          }else{
+            $('.md-container').html('<h3>No Rider Found</h3>');
+          }
+        }
+      }); 
+    });
 
     $(document).on('click','.generateOrder',function(){
       var id  =$(this).attr('data-id');
