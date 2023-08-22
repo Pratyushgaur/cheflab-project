@@ -949,7 +949,7 @@ function get_multi_delivery_boy_near_me($lat, $lng, $order_id)
     $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
     $boy = $boy->leftJoin('rider_assign_orders', function ($join) {
         $join->on('deliver_boy.id', '=', 'rider_assign_orders.rider_id')
-        ->whereIn('rider_assign_orders.action', ["1","4","3"]);
+        ->whereIn('rider_assign_orders.action', ["0","1","4"]);
     });
     $boy = $boy->where('lat', '!=', '');
     $boy = $boy->where('lng', '!=', '');
