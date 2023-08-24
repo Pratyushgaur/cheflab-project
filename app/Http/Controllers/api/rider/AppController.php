@@ -61,7 +61,7 @@ class AppController extends Controller
             $order = RiderAssignOrders::where(['rider_id' => $request->user_id])->whereNotIn('action', ['2', '5', '3', '6'])->orderBy('rider_assign_orders.id', 'desc')->limit(1);
             $order = $order->join('orders', 'rider_assign_orders.order_id', '=', 'orders.id');
             $order = $order->join('vendors', 'orders.vendor_id', '=', 'vendors.id');
-            $order = $order->select('vendors.name as vendor_name', 'vendors.address as vendor_address', 'orders.order_status', 'orders.customer_name', 'orders.delivery_address', DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'), 'action', 'distance', 'earning', 'orders.id as order_row_id', 'orders.order_id', 'rider_assign_orders.id as rider_assign_order_id', 'otp');
+            $order = $order->select('vendors.name as vendor_name', 'vendors.address as vendor_address', 'orders.order_status', 'orders.customer_name', 'orders.delivery_address','orders.landmark_address', DB::raw('if(rider_assign_orders.action = "1", "accepted", "pending")  as rider_status'), 'action', 'distance', 'earning', 'orders.id as order_row_id', 'orders.order_id', 'rider_assign_orders.id as rider_assign_order_id', 'otp');
             if ($order->exists()) {
                 if ($order->first()->action == '0') {
                     $order = $order->first();
