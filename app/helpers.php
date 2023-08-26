@@ -969,16 +969,19 @@ function orderAssignToDeliveryBoy($lat, $lng, $order)
    // $order_dt = \App\Models\Orders::where('id','=',)->first();
     $order_dt = Orders::where('id',$order->id)->first();
     if($order_dt->user_id == 4){
-       // $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
-        $boy = \App\Models\Deliver_boy::where(['id' => 72]);
-        //$boy = $boy->where('lat', '!=', '');
-        //$boy = $boy->where('lng', '!=', '');
-       // $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
-        //$boy = $boy->orderBy('distance', 'ASC');
-        //$boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
+        $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order->id, 'action' => '2'])->get()->pluck('rider_id')->toArray();
+        $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
+        $boy = \App\Models\Deliver_boy::where(['deliver_boy.status' => '1', 'is_online' => '1']);
+        $boy = $boy->where('lat', '!=', '');
+        $boy = $boy->where('lng', '!=', '');
+        if (!empty($riders)) {
+            $boy = $boy->whereNotIn('id', $riders);
+        }
+        $boy = $boy->selectRaw("ROUND({$select}) AS distance")->addSelect("deliver_boy.*");
+        $boy = $boy->orderBy('distance', 'ASC');
+        $boy = $boy->having('distance', '<=', config('custom_app_setting.near_by_driver_distance'));
         $boy = $boy->limit(1);
-        $boy=  $boy->first();
-        return $boy;
+        return $boy->first();
     }else{
         $riders = \App\Models\RiderAssignOrders::where(['order_id' => $order->id, 'action' => '2'])->orWhereIn('action', ["0", "1", "4"])->get()->pluck('rider_id')->toArray();
         $select  = "6371 * acos(cos(radians(" . $lat . ")) * cos(radians(deliver_boy.lat)) * cos(radians(deliver_boy.lng) - radians(" . $lng . ")) + sin(radians(" . $lat . ")) * sin(radians(deliver_boy.lat))) ";
