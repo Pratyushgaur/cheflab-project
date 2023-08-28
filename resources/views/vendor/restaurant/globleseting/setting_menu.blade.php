@@ -57,6 +57,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="card">
+                    <div <?php echo (request()->route()->getName()=='restaurant.globleseting.products.display_setting') ? 'class="card-header" aria-expanded="true"' : 'class="card-header collapsed" aria-expanded="false"' ?> data-toggle="collapse" role="button" data-target="#collapseOne4"  aria-controls="collapseOne">
+                        <span>Product Setting</span>
+                    </div>
+
+                    <div id="collapseOne4" class="{{ (request()->route()->getName()=='restaurant.globleseting.products.display_setting') ? 'collapse show' : 'collapse' }}" data-parent="#accordionExample1">
+                        <div class="card-body">
+                            <li><a href="{{route('restaurant.globleseting.products.display_setting')}}" class="">Product Display</a></li>
+                        </div>
+                    </div>
+                </div>
 
 
 

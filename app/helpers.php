@@ -1831,7 +1831,7 @@ function orderDetailForUser($order_id)
         }
     }
     $order['products'] = $products;
-
+    $order['invoice_url'] = route('order.view.for.app',$order_id);
     if ($order['accepted_driver_id'] != null) {
         $riderAssign = \App\Models\RiderAssignOrders::where(['rider_id' => $order['accepted_driver_id']])->whereNotIn('action', ['2', '5'])->orderBy('rider_assign_orders.id', 'desc')->limit(1);
         if ($riderAssign->exists()) {

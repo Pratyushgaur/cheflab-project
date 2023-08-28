@@ -3,7 +3,6 @@
 use App\Http\Middleware\isVendorLoginAuth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-
 Route::get('/check-queue-work', function() {
     return exec('ps -aux | grep queue:work');
 });
@@ -109,6 +108,4 @@ Route::group([ 'prefix' => 'app'], function () {
 });
 
 Route::post('vendor/app/test/login',[App\Http\Controllers\app\LoginController::class, 'login_test' ]);
-Route::get('/not',function(){
-    sendVendorAppNotification("test noti","tst",["eGYVhavQRfqi0Vy3svm0X0:APA91bE-EGKqi6RLYQMCzSFctXVfrATWtdP3xEDLbgnuaCI2WgqYz6zfdXLX8jzz77wgYFUvVNEcYWvmBAKtYPdg1EIjP7oywTNh3F4u3pc0RD-ibPftC0zpjZq5AC4yKED5mwVFWns9"]);
-});
+Route::get('view-invoice/{orderid}',[App\Http\Controllers\api\AppController::class, 'view_order_invoice'])->name('order.view.for.app');

@@ -1729,7 +1729,7 @@ class AppController extends Controller
         // echo "hello";die;
         //        date_default_timezone_set(config('app.timezone'));
         // return '#'.str_pad(1 + 100, 8, "0", STR_PAD_LEFT);
-        \App\Models\OrderRequestLogs::create(['serialize_data'=>serialize($request->all())]);
+        \App\Models\OrderRequestLogs::create(['serialize_data'=>serialize($request->all())]);  
         try {
             $validateUser = Validator::make(
                 $request->all(),
@@ -4208,6 +4208,34 @@ class AppController extends Controller
                 'error'  => $th->getMessage()
             ], 500);
         }
+    }
+
+    function view_order_invoice($id)  {
+        $order = \App\Models\Orders::where('id', $id)->first();
+
+        $vendor = \App\Models\Vendors::findOrFail($order->vendor_id);
+        $users = \App\Models\User::findOrFail($order->user_id);
+        $orderProduct = \App\Models\OrderProduct::where(['order_id' => $id])->get();
+        $orderProductAmount = \App\Models\OrderProduct::where(['order_id' => $id])->sum('product_price');
+        $adminDetail = \App\Models\AdminMasters::select('admin_masters.email', 'admin_masters.phone', 'admin_masters.suport_phone', 'admin_masters.office_addres', 'admin_masters.gstno', 'admin_masters.cin_no', 'admin_masters.fssai_no')->first();
+        $taxAmount = ($order->tex / 2);
+        $totalAmount = $orderProductAmount + $taxAmount;
+        $invoiceName = rand(9999, 99999) . $id . time(). '.pdf';
+        $invoiceNumber =  date('dmY',strtotime($order->created_at)). $id;
+        $currentDate = date('Y-m-d H:m:s',strtotime($order->created_at));
+        $allTotalAmount =  $totalAmount + $order->delivery_charge + $order->platform_charges;
+        $netTotalAmount =   $order->net_amount - $order->discount_amount;
+        return view('admin.pdf.pdf_document',compact('order', 'vendor', 'users', 'orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount', 'invoiceNumber', 'currentDate', 'adminDetail', 'allTotalAmount', 'netTotalAmount'));
+        // $pdf = \PDF::chunkLoadView('<html-separator/>', 'admin.pdf.pdf_document', compact('order', 'vendor', 'users', 'orderProduct', 'orderProductAmount', 'taxAmount', 'totalAmount', 'invoiceNumber', 'currentDate', 'adminDetail', 'allTotalAmount', 'netTotalAmount'));
+
+        // $pdf->save(public_path('uploads/invoices/' . $invoiceName));
+        // $url = 'uploads/invoices/' . $invoiceName;
+
+        //$pdfUrl = Orders::where('id', '=', $id)->first();
+
+
+        $order->pdf_url = $url;
+        $order->save();
     }
 
 }

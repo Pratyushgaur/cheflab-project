@@ -122,6 +122,73 @@ class GlobleSetting extends Controller
         return view('vendor.restaurant.globleseting.ordertime', compact('VendorOrderTime'));
     }
 
+    function product_display_setting(Request $request){
+        $table_service  = BankDetail::where('vendor_id', Auth::guard('vendor')->user()->id)->first();
+        $products = \App\Models\Product_master::select('products.id','products.product_name','products.product_image','products.product_price','products.type','products.created_at','vendor_product_unavailablities.id as vendor_product_unavailablities_id','next_available');
+        $products = $products->leftJoin('vendor_product_unavailablities', function ($join) {
+                        $join->on('products.id', '=', 'vendor_product_unavailablities.product_id');
+                        $join->where('vendor_product_unavailablities.vendor_id', '=', Auth::guard('vendor')->user()->id);
+                        $join->whereDate('vendor_product_unavailablities.next_available', '>', mysql_date_time());
+                    });
+        $products = $products->where('product_for','3')->where('status','1')->where('product_approve' ,"1")->where('userId',\Auth::guard('vendor')->user()->id)->get();
+       
+        $check = \App\Models\VendorOrderTime::where('vendor_id', '=', Auth::guard('vendor')->user()->id)->exists();
+        if($check){
+            $day =  \Carbon\Carbon::now()->dayOfWeek;
+            $date =  \Carbon\Carbon::now()->addDay(1);
+            if($day == 6){
+                $day = 0;
+            }else{
+                $day++;
+            }
+             
+            $exit = false;
+            while($exit == false){
+                $next_available_day = \App\Models\VendorOrderTime::where('day_no', '=', $day)->where('vendor_id', '=', Auth::guard('vendor')->user()->id)->orderBy('start_time', 'ASC')->get();
+                if(!empty($next_available_day)){$exit = true;}
+                if($day == 6){$day = 0;}else{$day++;}
+                if($exit == false){
+                    $date =\Carbon\Carbon::parse($date)->addDay(1);
+                }   
+            }
+        }else{
+            $next_available_day = [];
+            $date = '';
+        }
+        
+        return view('vendor.restaurant.globleseting.product_display_setting', compact('products','next_available_day','date'));
+
+    }
+    function store_product_display_setting(Request $request)  {
+        
+        if($request->availabe_selector == '0'){
+            $next_available_date =  \Carbon\Carbon::parse($request->date_of_available)->format("Y-m-d").' '.$request->slot;
+        }elseif($request->availabe_selector == '1'){
+             $next_available_date = \Carbon\Carbon::parse($request->next_available_date)->format("Y-m-d").' '.$request->next_available_time.":00";
+        }
+        if(!empty($request->productIds)){
+            foreach ($request->productIds as $key => $value) {
+                $obj = new \App\Models\VendorProductUnavailablities;
+                $obj->vendor_id = Auth::guard('vendor')->user()->id;
+                $obj->product_id = $value;
+                $obj->next_available = $next_available_date;
+                $obj->save();
+            }
+           return  redirect()->route('restaurant.globleseting.products.display_setting')->with('poup_success', 'Product Setting update Successfully');
+
+        }else{
+            return redirect()->route('restaurant.globleseting.products.display_setting')->with('notice', 'No Product Ids Found');
+            
+        }
+       
+
+        
+    }
+    function delete_product_display_setting($id) {
+        \App\Models\VendorProductUnavailablities::where('product_id' ,'=',$id)->where('vendor_id','=',Auth::guard('vendor')->user()->id)->delete();
+        return redirect()->route('restaurant.globleseting.products.display_setting')->with('poup_success', 'Product is available now');
+
+    }
     public function time_delete(Request $request)
     {
         try {

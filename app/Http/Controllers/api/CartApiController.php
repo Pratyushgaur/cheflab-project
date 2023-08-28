@@ -263,6 +263,8 @@ class CartApiController extends Controller
 //                'cart_products.id as cart_product_id', 'cart_product_addons.id as cart_product_addon_id', 'cart_product_variants.id as cart_product_variant_id'
                 DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
                 DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+                DB::Raw('IFNULL( vendor_product_unavailablities.id , 0 ) as vendor_product_unavailablities_id'),
+                'vendor_product_unavailablities.next_available',
                 DB::raw('
                 (CASE 
                     WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
@@ -279,6 +281,10 @@ class CartApiController extends Controller
                         $join->on('products.userId', '=', 'vendor_offers.vendor_id');
                         $join->whereDate('vendor_offers.from_date','<=',date('Y-m-d'));
                         $join->whereDate('vendor_offers.to_date','>=',date('Y-m-d'));
+                })
+                ->leftJoin('vendor_product_unavailablities', function ($join) {
+                    $join->on('products.id', '=', 'vendor_product_unavailablities.product_id');
+                    $join->whereDate('vendor_product_unavailablities.next_available', '>', mysql_date_time());
                 })
                 ->get()->toArray();
             $responce = [];
@@ -297,6 +303,8 @@ class CartApiController extends Controller
                     $responce[$product['product_id']]['product_price']      = $product['product_price'];
                     $responce[$product['product_id']]['offer_id']           = $product['offer_id'];
                     $responce[$product['product_id']]['offer_persentage']   = $product['offer_persentage'];
+                    $responce[$product['product_id']]['vendor_product_unavailablities_id']   = $product['vendor_product_unavailablities_id'];
+                    $responce[$product['product_id']]['next_available']     = $product['next_available'];
                     $responce[$product['product_id']]['after_offer_price']  = $product['after_offer_price'];
                     $responce[$product['product_id']]['customizable']       = $product['customizable'];
                     $responce[$product['product_id']]['product_for']        = $product['product_for'];
@@ -311,9 +319,7 @@ class CartApiController extends Controller
                                 ->where('cart_product_variants.variant_id', '=', $vvalue['variant_id'])
                                 ->first();
 
-                            if (!empty($exist)) {//if product have variants get and add qty and price
-//                                echo "$cart_sub_toatl_amount    += ".$vvalue['variant_price']." -----------";
-//                                echo "<br/>$cart_sub_toatl_amount+ $exist->variant_qty*".$vvalue['variant_price'];
+                            if (!empty($exist)) {
                                 if($product['offer_id'] == '0'){
                                     $cart_sub_toatl_amount    += ($vvalue['variant_price']*$product['product_qty']);
 

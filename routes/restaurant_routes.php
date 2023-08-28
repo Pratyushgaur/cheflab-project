@@ -151,6 +151,10 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
 
             Route::get('globle/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'bank_details'])->name('restaurant.globleseting.bank_details');
             Route::post('globle/bank', [App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'save_bank_details'])->name('restaurant.globleseting.save_bank_details');
+            
+            Route::get('globle/products/display-setting',[App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'product_display_setting'])->name('restaurant.globleseting.products.display_setting');
+            Route::post('globle/products/display-setting',[App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'store_product_display_setting'])->name('restaurant.globleseting.products.display_setting.store');
+            Route::get('globle/products/display-setting/delete/{id}',[App\Http\Controllers\vendor\restaurant\GlobleSetting::class, 'delete_product_display_setting'])->name('restaurant.globleseting.products.display_setting.delete.entry');
 
             Route::get('razorpay', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'razorpay'])->name('razorpay');
             Route::post('razorpaypayment', [App\Http\Controllers\vendor\restaurant\RazorpayRestaurantController::class, 'payment'])->name('payment');

@@ -74,6 +74,11 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
             $join->where('vendor_offers.deleted_at','=',null);
             $join->where('vendor_offers.status','=',"1");
     });
+
+    $product = $product->leftJoin('vendor_product_unavailablities', function ($join) {
+        $join->on('products.id', '=', 'vendor_product_unavailablities.product_id');
+        $join->whereDate('vendor_product_unavailablities.next_available', '>', mysql_date_time());
+    });
     
     if ($order_by_column != '' && $order_by_order != '')
         $product->orderBy($order_by_column, $order_by_order);
@@ -98,12 +103,15 @@ function get_product_with_variant_and_addons_v3($product_where = [], $user_id = 
         "menu_id",
         DB::Raw('IFNULL( vendor_offers.id , 0 ) as offer_id'),
         DB::Raw('IFNULL( vendor_offers.offer_persentage , 0 ) as offer_persentage'),
+        DB::Raw('IFNULL( vendor_product_unavailablities.id , 0 ) as vendor_product_unavailablities_id'),
+        'vendor_product_unavailablities.next_available',
         DB::raw('
             (CASE 
                 WHEN vendor_offers.id IS NOT NULL THEN product_price-product_price/100*vendor_offers.offer_persentage
                     ELSE `product_price`
                 END) as after_offer_price'
-        )
+    ),
+    
     
 
     )->get();
