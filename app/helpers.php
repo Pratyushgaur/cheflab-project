@@ -2169,7 +2169,8 @@ function orderDeliverd($id)
     $plateform_fee = $order->platform_charges;  //5%
     $admin_commision = $gross_revenue*($vendorData->commission)/100;     //9%
     $tax_on_commission = ($admin_commision * 18) / 100;
-    $convenience_fee_amount = ($gross_revenue - $admin_commision)*($payout->convenience_fee)/100;
+    //$convenience_fee_amount = ($gross_revenue - $admin_commision)*($payout->convenience_fee)/100;
+    $convenience_fee_amount = $gross_revenue *$payout->convenience_fee/100;
     $tax_on_convenience = ($convenience_fee_amount * 18)/100;
     $total_convenience_fee = $convenience_fee_amount + $tax_on_convenience;
     $net_amount = ($gross_revenue - $admin_commision);
@@ -2239,6 +2240,96 @@ function orderDeliverd($id)
     }
 
     
+}
+function orderMultipleUpdate()
+{
+    
+         
+    $orders = Orders::whereDate('created_at','>=','2023-08-28')->where('order_status','=','completed')->get();
+    foreach ($orders as $key => $order) {
+        $vendorData = Vendors::where('id', $order->vendor_id)->first();
+        $payout = Paymentsetting::first();
+
+        $gross_revenue = $order->total_amount;
+
+        $is_coupon = 0;
+        $discount_amount = 0;
+        if ($order->coupon_id != null) {
+            $couponData = Coupon::where(['id' => $order->coupon_id, 'status' => 1])->first();
+        
+            if ($couponData->create_by == "admin") {
+                $is_coupon = 1;
+                $discount_amount = 0;
+            } else if ($couponData->create_by == "vendor") {
+                $is_coupon = 2;
+                $discount_amount = $order->discount_amount;
+                
+                $gross_revenue = $gross_revenue - $discount_amount;
+                
+            }
+        }
+
+
+        //$tax = ($gross_revenue * $order->tex)/100;     //5%
+        $tax = $order->tex;    //5%
+        $plateform_fee = $order->platform_charges;  //5%
+        $admin_commision = $gross_revenue*($vendorData->commission)/100;     //9%
+        $tax_on_commission = ($admin_commision * 18) / 100;
+        //$convenience_fee_amount = ($gross_revenue - $admin_commision)*($payout->convenience_fee)/100;
+        $convenience_fee_amount = $gross_revenue *$payout->convenience_fee/100;
+        $tax_on_convenience = ($convenience_fee_amount * 18)/100;
+        $total_convenience_fee = $convenience_fee_amount + $tax_on_convenience;
+        $net_amount = ($gross_revenue - $admin_commision);
+        $vendor_sattlement_amount = ($gross_revenue - $admin_commision - $tax_on_commission - $total_convenience_fee);
+        
+        $deduction =  $admin_commision + $tax_on_commission + $total_convenience_fee;
+        $ordercommision = array(
+            'is_approve' => 1,
+            'is_cancel' => 0,
+            'is_coupon' => $is_coupon,
+            'coupon_amount' => $discount_amount,
+            //'vendor_id' => $order->vendor_id,
+            //'order_id' => $order->id,
+            'vendor_commision' => 0,
+            'admin_commision' => $admin_commision,
+            'tax_on_commission' => $tax_on_commission,
+            'net_amount' => $net_amount,
+            'gross_revenue' => $gross_revenue,
+            'additions' => 0,
+            'deductions' => $deduction,
+            'net_receivables' => $vendor_sattlement_amount,
+            'convenience_amount' => $convenience_fee_amount,
+            'convenience_tax' => $tax_on_convenience,
+            'total_convenience_fee' => $total_convenience_fee,
+            'addition_tax' => 0,
+            'admin_tax' => 0,
+            'tax' => 18,
+            'tax_amount' => $tax,
+            'admin_amount' => 0,
+            'vendor_cancel_charge' => 0,
+            'platform_fee' => $plateform_fee,
+            'vendor_commission_percentage'=> $vendorData->commission,
+            'order_date' => date('Y-m-d H:i:s',strtotime($order->created_at)),
+            'created_at' => date('Y-m-d H:i:s',strtotime($order->created_at)),
+            'updated_at' => date('Y-m-d H:i:s',strtotime($order->created_at))
+    
+        );
+        OrderCommision::where('order_id','=',$order->id)->update($ordercommision);
+
+
+    }
+    $vendors = Orders::whereDate('created_at','>=','2023-08-28')->where('order_status','=','completed')->distinct()->select('vendor_id')->get();
+    $current_start_date = "2023-08-28";
+    $current_end_date = "2023-09-03";
+    foreach ($vendors as $key => $v) {
+        $sum = OrderCommision::where('vendor_id','=',$v->vendor_id)->whereDate('created_at','>=','2023-08-28')->where('is_cancel',0)->sum('net_receivables');
+        $statementData = Vendor_order_statement::where(['vendor_id' => $v->vendor_id, 'start_date' => $current_start_date, 'end_date' => $current_end_date])->update(
+            [
+                'paid_amount' => $sum
+            ]
+        );
+
+    }
 }
 function generateIncentive(){
     $drivers =  \App\Models\Orders::whereBetween('created_at', [Carbon::now()->subWeek()->startOfWeek(), Carbon::now()->subWeek()->endOfWeek()])->where('accepted_driver_id','!=','')->select('accepted_driver_id')->distinct()->get()->pluck('accepted_driver_id');
