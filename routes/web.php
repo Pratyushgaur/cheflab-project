@@ -9,6 +9,10 @@ Route::get('/check-queue-work', function() {
 Route::get('/queue-work', function() {
     return exec('nohup php artisan queue:work --daemon &');
 });
+Route::get('testing-order/{id}',function($id){
+    return $result =  orderMultipleUpdate();
+    dd($result->toArray());
+});
 Route::get('dashbord', [App\Http\Controllers\vendor\restaurant\DashboardController::class, 'index'])->name('restaurant.dashboard');
 Route::get('/clear-cache', function() {
     Artisan::call('view:clear');
