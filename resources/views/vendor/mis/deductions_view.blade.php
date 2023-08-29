@@ -28,20 +28,21 @@
                                 <table class="table table-borderless mb-0">
                                     <tbody>
                                         <tr>
-                                            <td>Tax On Commission</td>
-                                            <td class="text-right"><b>₹{{ number_format($tax_on_commission,2) }}</b></td>
+                                            <td>Convenience fee</td>
+                                            <td class="text-right"><b>₹{{ number_format($total_convenience_fee,2) }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </td>
+                            
                         </tr> 
                         <tr>
                             <td>
                                 <table class="table table-borderless mb-0">
                                     <tbody>
                                         <tr>
-                                            <td>Convenience fee</td>
-                                            <td class="text-right"><b>₹{{ number_format($total_convenience_fee,2) }}</b></td>
+                                            <td>Tax </td>
+                                            <td class="text-right"><b>₹{{ number_format($tax_on_commission,2) }}</b></td>
                                         </tr>
                                     </tbody>
                                 </table>

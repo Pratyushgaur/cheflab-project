@@ -47,18 +47,24 @@ class MisController extends Controller
     public function renvenue_ajax(Request $request)
     {
 
-        $vendorId = Auth::guard('vendor')->user()->id;
 
+        $vendorId = Auth::guard('vendor')->user()->id;
+      
         $date = explode('/', $request->start_date);
+        // return $start_date = \Carbon\Carbon::parse($date[0]->format("Y-m-d");
+        // $end_date =  \Carbon\Carbon::parse($date[1])->subWeek()->endOfWeek()->addDay(1)->format("Y-m-d");
         $start_date = date('Y-m-d', strtotime($date[0]));
         $end_date = date('Y-m-d', strtotime($date[1]));
+        $end_date = \Carbon\Carbon::parse($end_date)->addDay(1)->format('Y-m-d');
+        $admin_commision = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel','=',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('admin_commision');
+        $tax_on_commission = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('tax_on_commission');
+        $total_convenience_fee = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('total_convenience_fee');
+        $cancel_by_vendor = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('vendor_cancel_charge');
 
-        $admin_commision = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('admin_commision');
-        $tax_on_commission = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('tax_on_commission');
-        $total_convenience_fee = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('total_convenience_fee');
-        $cancel_by_vendor = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('vendor_cancel_charge');
+        
 
-        $deductions = $admin_commision + $tax_on_commission + $total_convenience_fee  + $cancel_by_vendor ;
+
+        //$deductions = $admin_commision + $tax_on_commission + $total_convenience_fee  + $cancel_by_vendor ;
 
 
 
@@ -66,16 +72,19 @@ class MisController extends Controller
 
         
 
-        $order_sum = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('gross_revenue');
+        $order_sum = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('gross_revenue');
+        $total_convenience_fee = $order_sum*0.02;
+        $tax_on_commission = ($admin_commision+$total_convenience_fee)*0.18;
+        $deductions = $admin_commision + $tax_on_commission + $total_convenience_fee - $cancel_by_vendor;
         // echo '<pre>'; print_r($order_sum);die;
 
-        $order_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->count();
+        $order_count = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->count();
         //  echo '<pre>';print_r($order_count);die;
-        $additions_count = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('additions');
+        $additions_count = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('additions');
 
 
 
-        $admin_discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 1])->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('coupon_amount');
+        $admin_discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 1])->where('is_cancel',0)->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('coupon_amount');
 
         // $vendor_discount_sum = OrderCommision::where(['vendor_id'=> $vendorId, 'is_coupon'=> 2])->whereBetween('order_commisions.order_date', [$start_date, $end_date])->sum('coupon_amount');
 
@@ -88,7 +97,8 @@ class MisController extends Controller
 
         
 
-        $net_receivables = ($order_sum + $admin_discount_sum) - ($admin_amount + $tax_amount + $convenience_amount  + $calceled_order);
+        //$net_receivables = ($order_sum + $admin_discount_sum) - ($admin_amount + $tax_amount + $convenience_amount  + $calceled_order);
+        $net_receivables  =$order_sum-$deductions;
 
         $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->whereBetween('vendor_payout_details.created_at', [$start_date, $end_date])->sum('amount');
 
@@ -109,13 +119,16 @@ class MisController extends Controller
         $vendorId = Auth::guard('vendor')->user()->id;
         $vendorData = Vendors::where('id', $vendorId)->first();
         $paymentSetting = Paymentsetting::first();
-
-        $admin_commision = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('admin_commision');
-        $tax_on_commission = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('tax_on_commission');
-        $total_convenience_fee = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('total_convenience_fee');
+        //  $request->end_date = \Carbon\Carbon::parse($request->end_date)->addDay(1)->format('Y-m-d');
+        
+        $gross = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel','=',0)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('gross_revenue');
+        $admin_commision = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel','=',0)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('admin_commision');
+        //$tax_on_commission = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel','=',0)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('tax_on_commission');
+        //$total_convenience_fee = OrderCommision::where('vendor_id', $vendorId)->where('is_cancel','=',0)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('total_convenience_fee');
         $cancel_by_vendor = OrderCommision::where('vendor_id', $vendorId)->whereBetween('order_commisions.order_date', [$request->start_date, $request->end_date])->sum('vendor_cancel_charge');
-
-        $total = $admin_commision + $tax_on_commission + $total_convenience_fee + $cancel_by_vendor;
+        $total_convenience_fee = $gross*0.02;
+        $tax_on_commission = ($admin_commision+$total_convenience_fee)*0.18;
+        $total = $admin_commision + $tax_on_commission + $total_convenience_fee - $cancel_by_vendor;
         return view('vendor.mis.deductions_view', compact('admin_commision', 'tax_on_commission', 'total_convenience_fee', 'cancel_by_vendor', 'total'));
         
 

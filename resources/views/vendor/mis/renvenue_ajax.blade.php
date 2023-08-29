@@ -23,7 +23,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="mb-4 col-sm-6 col-lg-4 mb-4">
+                  <!-- <div class="mb-4 col-sm-6 col-lg-4 mb-4">
                     <div class="card h-100">
                       <div class="card-body">
                         <div class="d-flex align-items-center justify-content-between">
@@ -46,7 +46,7 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="mb-4 col-sm-6 col-lg-4 mb-4">
                     <div class="card h-100">
                       <div class="card-body">
@@ -56,7 +56,7 @@
                             <p class="subtitle text-sm text-muted mb-0">Deductions</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
-                          C
+                          B
                           </div>
                         </div>
                       </div>
@@ -77,10 +77,10 @@
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
                             <h4 class="fw-normal text-dark">₹{{ number_format($net_receivables,2) }}</h4>
-                            <p class="subtitle text-sm text-muted mb-0">Net receivable[A+B-C]</p>
+                            <p class="subtitle text-sm text-muted mb-0">Net receivable[A-B=C]</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
-                          D
+                          C
                           </div>
                         </div>
                       </div>
