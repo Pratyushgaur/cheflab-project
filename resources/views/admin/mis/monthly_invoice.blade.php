@@ -15,47 +15,13 @@
           <!-- Main content -->
           <section class="content">
             <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12">
-                  <div class="card card-primary card-outline">
-                      <div class="card-header">
-                      <form id="member_filter" enctype="multipart/form-data"> 
-                          <div class="row">
-                          
-                            <div class="col-md-4">
-                            <input type="text" class="form-control" name="start_date" value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday 1 week')) }}" placeholder="" id="datePicker">
-                               
-                            </div>
-                           
-                            <div class="col-md-3" id="filter_yester" style="display:none;">
-                                <input type="date" class="form-con">
-                            </div>
-                            <div class="col-3 mt-0 mb-3">
-                                <div class="exportbtn text-end d-flex">
-                                  <!-- <button type="submit" class="me-2 btn btn-info text-white rounded-0 px-4 py-2">
-                                  Apply
-                                  </button> -->
-                                  <button type="button" onclick="getSearchView();" class="me-2 btn btn-info text-white rounded-0 px-4 py-2">Apply</button>
-                                  &nbsp;
-                                           <button type="button" class="btn btn-info text-white rounded-0 px-4 py-2" class="clearbtn" onclick="clearfilter()">
-                                          Clear
-                                          </button>
-                                </div>
-                            </div>              
-                            </div>
-                          </div>
-                        </form>
-                          
-                      
-                  </div>
-                </div>
-              </div>
+              
               <div class="row">
                 <div class="col-md-12"> 
                   <div class="card card-primary card-outline">
                     
                     <div class="card-header card-header d-flex justify-content-between clear-both">
-                      <h3 class="card-title">Create Monthly Invoice</h3>
+                      <h3 class="card-title">Generated Monthly Invoice</h3>
                     </div>
                     <div class="card-body pad table-responsive">
                         <table id="example" class="table table-bordered table-hover dtr-inline datatable" aria-describedby="example2_info" width="100%"> 
@@ -63,10 +29,14 @@
                                   <tr role="row">
                                     <th class="text-center">S. No.</th>
                                     <th>Vendor Name</th>
-                                    <th>Invoice Number</th>
-                                    <th>Total Commission</th>
-                                    <th>Month-Year</th>
-                                    <th>Action </th>
+                                    <th>Year-month</th>
+                                    <th>InvoiceNo.</th>
+                                    <th>Gross Amount</th>
+                                    <th>Vendor Commision</th>
+                                    <th>convenience fee</th>
+                                    <th>convenience fee gst</th>
+                                    <th>final_amount</th>
+                                    <th>Generate</th>
                                   </tr>
                             </thead>
                             
@@ -138,30 +108,28 @@ $(function() {
   // $(function () {
     let table = $('#example').dataTable({        
        
-        dom: 'Bfrtip',
-        buttons: [
-          { extend: 'excel', className: 'btn-info',title: 'Account-vendor' }
-        ],
-        processing: true,
-        serverSide: true,
-        // buttons: true,
-        ajax:{
-            url:"{{ route('admin.account.month.invoice') }}",
-            data: function (d) {
-                d.status = $('#filter-by-status').val(),
-                d.role = $('#filter-by-role').val(),
-                d.vendor = $('#filter-by-vendor').val()
-                d.datePicker = $('#datePicker').val()
-            }
-        },
-        columns: [
-          {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-            {data: 'name', name: 'name'},
-            {data: 'invoice_number', name: 'invoice_number'},
-            {data: 'total_amount', name: 'total_amount'},
-            {data: 'month_year', name: 'month_year'},
-            {data: 'action', name: 'action'},
-        ]
+       processing: true,
+       serverSide: true,
+       // buttons: true,
+       ajax:{
+           url:"{{ route('admin.account.month.invoice.generated.list') }}",
+           data: function (d) {
+               d.month = $('#filter-by-month').val(),
+               d.year = $('#filter-by-year').val()
+           }
+       },
+       columns: [
+         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+           {data: 'vendor_name', name: 'name'},
+           {data: 'year_mnth', name: 'year_mnth'},
+           {data: 'invoice_number', name: 'invoice_number'},
+           {data: 'gross_revenue', name: 'gross_revenue'},
+           {data: 'vendor_commission', name: 'vendor_commission'},
+           {data: 'convenience_fee', name: 'convenience_fee'},
+           {data: 'convenience_fee_gst', name: 'convenience_fee_gst'},
+           {data: 'final_amount', name: 'final_amount'},
+           {data: 'created_at', name: 'created_at'},
+       ]
     });
     // table.buttons().container()
         // .appendTo( '#example_wrapper .col-md-6:eq(0)' );

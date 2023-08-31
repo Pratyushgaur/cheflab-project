@@ -40,8 +40,20 @@ class MisController extends Controller
         $additions_count = OrderCommision::where('vendor_id', $vendorId)->sum('additions');
         $deductions = OrderCommision::where('vendor_id', $vendorId)->sum('deductions');
         $net_receivables = OrderCommision::where('vendor_id', $vendorId)->sum('net_receivables');
-
-        return view('vendor.mis.renvenue', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables'));
+        $date = "01-".date("m").'-'.date("Y");
+        $currentDate  =  \Carbon\Carbon::parse($date);
+        $currentMonth = $currentDate->month;
+        $firstDayOfMonth = \Carbon\Carbon::createFromDate($currentDate->year, $currentMonth, 1);
+        $lastDayOfMonth = $firstDayOfMonth->copy()->endOfMonth();
+        while ($firstDayOfMonth->lte($lastDayOfMonth)) {
+            $startOfWeek = $firstDayOfMonth->copy()->startOfWeek();
+            $endOfWeek = $firstDayOfMonth->copy()->endOfWeek();
+            $end  = $endOfWeek->format('d-m-Y');
+            $start = $startOfWeek->format('d-m-Y');
+            break;
+        }
+        
+        return view('vendor.mis.renvenue', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables','end','start'));
     }
 
     public function renvenue_ajax(Request $request)
@@ -50,7 +62,7 @@ class MisController extends Controller
 
         $vendorId = Auth::guard('vendor')->user()->id;
       
-        $date = explode('/', $request->start_date);
+        $date = explode('&', $request->start_date);
         // return $start_date = \Carbon\Carbon::parse($date[0]->format("Y-m-d");
         // $end_date =  \Carbon\Carbon::parse($date[1])->subWeek()->endOfWeek()->addDay(1)->format("Y-m-d");
         $start_date = date('Y-m-d', strtotime($date[0]));
@@ -100,9 +112,31 @@ class MisController extends Controller
         //$net_receivables = ($order_sum + $admin_discount_sum) - ($admin_amount + $tax_amount + $convenience_amount  + $calceled_order);
         $net_receivables  =$order_sum-$deductions;
 
-        $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->whereBetween('vendor_payout_details.created_at', [$start_date, $end_date])->sum('amount');
+        $your_settlement = Vendor_payout_detail::where('vendor_id', $vendorId)->sum('amount');
 
         return view('vendor.mis.renvenue_ajax', compact('order_sum', 'order_count', 'additions_count', 'deductions', 'net_receivables', 'your_settlement', 'start_date', 'end_date','admin_discount_sum'));
+    }
+    function getWeeks(Request $request) {
+        $currentDate  =  \Carbon\Carbon::parse("01-$request->month-$request->year");
+        $currentMonth = $currentDate->month;
+        $firstDayOfMonth = \Carbon\Carbon::createFromDate($currentDate->year, $currentMonth, 1);
+        $lastDayOfMonth = $firstDayOfMonth->copy()->endOfMonth();
+        $weeks = [];
+        $html = '';
+        while ($firstDayOfMonth->lte($lastDayOfMonth)) {
+            $startOfWeek = $firstDayOfMonth->copy()->startOfWeek();
+            $endOfWeek = $firstDayOfMonth->copy()->endOfWeek();
+    
+            // $weeks[] = [
+            //     'start_date' => $startOfWeek->toDateString(),
+            //     'end_date' => $endOfWeek->toDateString(),
+            // ];
+            $html .= '<option value="'.$startOfWeek->format('d-m-Y').'&'.$endOfWeek->format('d-m-Y').'">'.$startOfWeek->format('d-M-Y').' TO ' .$endOfWeek->format('d-M-Y').'</option>';
+    
+            // Move to the next week
+            $firstDayOfMonth->addWeek();
+        }
+        return $html;
     }
     public function addition_view(Request $request)
     {
@@ -152,13 +186,14 @@ class MisController extends Controller
             $dateSedule = $request->datePicker;
 
             if (isset($dateSedule)) {
-                $packagetime = explode('/', $dateSedule);
+                $packagetime = explode('&', $dateSedule);
                 $start_time = $packagetime[0];
                 $end_time = $packagetime[1];
             }
 
+
             if (!empty($start_time) && !empty($end_time)) {
-                $data = $data->whereBetween('order_commisions.order_date', [$start_time, $end_time]);
+                $data = $data->whereBetween('order_commisions.order_date', [date('Y-m-d',strtotime($start_time)), date('Y-m-d',strtotime('+1 day',strtotime($end_time)))]);
             }
 
 
@@ -189,8 +224,12 @@ class MisController extends Controller
                     } 
                     return $net_receivables;
                 })
+                ->addColumn('order_date', function ($data) {
+                    
+                    return date('d-M-Y h:i A',strtotime($data->order_date));
+                })
                 
-
+                
 
                 ->rawColumns(['status', 'action-js'])
 

@@ -19,14 +19,14 @@
             </div>
           </div>
         </div>
-        <div class="col-4">
+        <!-- <div class="col-4">
           <div class="card">
             <div class="card-body p-4">
               <h5 class="mb-3">Additions</h5>
               <h6 class="text-danger">₹ {{ $order->additions }}</h6>
             </div>
           </div>
-        </div>
+        </div> -->
         <div class="col-4">
           <div class="card">
             <div class="card-body p-4">
@@ -35,10 +35,6 @@
             </div>
           </div>
         </div>
-
-      </div>
-
-      <div class="row">
         <div class="col-4">
           <div class="card">
             <div class="card-body p-4">
@@ -48,6 +44,8 @@
           </div>
         </div>
       </div>
+
+      
 
       <div class="card mt-5">
         <div class="card-body">

@@ -371,6 +371,17 @@ class AccountmisController extends Controller
             // ->make(true);
         }
     }
+    function generated_invoice_list(Request $request){
+        if ($request->ajax()) {
+           $order = VendorMonthlyInvoices::join('vendors','vendor_monthly_invoices.vendor_id','=','vendors.id')->select('vendors.name as vendor_name','vendor_monthly_invoices.*')->get();
+           return Datatables::of($order)->addIndexColumn()
+           ->addColumn('year_mnth', function ($order) {
+               
+                return $order->month.'-'.$order->year;
+            })->make(true);
+
+        }
+    }
     function generateBulkInvoice(Request $request){
         try {
             $this->validate($request, 

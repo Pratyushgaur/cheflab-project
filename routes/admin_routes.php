@@ -304,6 +304,7 @@ Route::group(['middleware' => ['isAdmin'], 'prefix' => 'admin'], function () {
   Route::get('order/account-generate-invoice/{id}', [App\Http\Controllers\admin\AccountmisController::class, 'invoiceorder'])->name('admin.account.order.invoice');
   Route::get('account-settlement/mis-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'monthly_invoice'])->name('admin.account.mis.invoices');
   Route::get('account-settlement/mis-month-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'monthly_invoice_list'])->name('admin.account.month.invoice');
+  Route::get('account-settlement/mis-month-invoice/generated', [App\Http\Controllers\admin\AccountmisController::class, 'generated_invoice_list'])->name('admin.account.month.invoice.generated.list');
   Route::get('account-settlement/mis-create-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'create_invoice'])->name('admin.account.vendor.invoices.generate');
   Route::get('account-settlement/mis-invoice/print/{id}', [App\Http\Controllers\admin\AccountmisController::class, 'printInvoice'])->name('admin.account.vendor.invoices.print');
   // Route::post('account-settlement/mis-genrate-invoice', [App\Http\Controllers\admin\AccountmisController::class, 'genrate_invoice'])->name('admin.mis.genrate.invoice');

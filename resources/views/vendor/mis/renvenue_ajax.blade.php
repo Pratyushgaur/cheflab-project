@@ -101,7 +101,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                           <div>
                             <h4 class="fw-normal text-dark">₹{{ number_format($your_settlement,2) }}</h4>
-                            <p class="subtitle text-sm text-muted mb-0">Your Settlements (Bank UTRs)</p>
+                            <p class="subtitle text-sm text-muted mb-0">Overall Settlements (Bank UTRs)</p>
                           </div>
                           <div class="flex-shrink-0 ms-3 symbol_box">
                           G

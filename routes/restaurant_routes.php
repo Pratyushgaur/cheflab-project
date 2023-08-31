@@ -218,5 +218,6 @@ Route::group(['middleware' => ['isVendor'], 'prefix' => 'vendor'], function () {
         Route::get('mis/order-monthly-invoice-list-data', [App\Http\Controllers\vendor\restaurant\MisController::class, 'monthly_invoice_list_data'])->name('restaurant.mis.monthly_invoice_list_data');
 
         Route::get('mis/monthly-invoice/print/{id}', [App\Http\Controllers\vendor\restaurant\MisController::class, 'print_invoice'])->name('restaurant.mis.print.invoice');
+        Route::get('mis/vendor/getWeekByMnth/', [App\Http\Controllers\vendor\restaurant\MisController::class, 'getWeeks'])->name('restaurant.mis.week.get');
     });
 });

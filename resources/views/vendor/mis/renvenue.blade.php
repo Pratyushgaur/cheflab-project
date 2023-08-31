@@ -21,32 +21,69 @@
     <form action="{{ route('restaurant.mis.order.export') }}" enctype="multipart/form-data">
       <input type="hidden" name="id" id="vendorId" value="{{ Auth::guard('vendor')->user()->id }}">
       <div class="row align-items-center">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <div class="form-group mb-0">
             <div class="row align-items-center">
-              <div class="col-3">
-                <lable><b>Weekly Date: </b></lable>
-              </div>
-              <div class="col-md-9 px-md-0">
-              
-                              <input type="hidden" class="form-control" name="start_date" id="datePicker"  placeholder="Date" required value="{{ date('Y-m-d', strtotime('this week')) }} / {{ date('Y-m-d', strtotime('sunday')) }}" autocomplete="off" >
-                                <div   id="reportrange"  style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                                  <i class="fa fa-calendar"></i>&nbsp;
-                                  <span >{{ date('F D, Y') }}</span> <i class="fa fa-caret-down"></i>
-                                </div>
-                             
-              </div>
+               <div class="col-md-2 " >
+                <label for="">Select Year</label>
+                <select name="" id="select_year" class="form-control" onChange="getWeek();">
+                    <option value="">Select Year</option>
+                    <?php 
+                      for($i=2023;$i <= 2030; $i++){
+                        if($i == date("Y")){
+                          $selected = 'selected';
+                        }else{
+                          $selected = '';
+
+                        }
+                        echo '<option value="'.$i.'" '.$selected.'>'.$i.'</option>';
+                      }
+                    ?>
+                </select>
+               </div>
+               <div class="col-md-3 " >
+                <label for="">Select Month</label>
+                  <select name="" id="filter-by-month" class="form-control" onChange="getWeek();">
+                    <option value="">Select Month</option>
+                    <option value="01" @if(date('m') == '01') selected @endif>Jan</option>
+                    <option value="02" @if(date('m') == '02') selected @endif>Feb</option>
+                    <option value="03" @if(date('m') == '03') selected @endif>March</option>
+                    <option value="04" @if(date('m') == '04') selected @endif>April</option>
+                    <option value="05" @if(date('m') == '05') selected @endif>May</option>
+                    <option value="06" @if(date('m') == '06') selected @endif>Jun</option>
+                    <option value="07" @if(date('m') == '07') selected @endif>July</option>
+                    <option value="08" @if(date('m') == '08') selected @endif>Aug</option>
+                    <option value="09" @if(date('m') == '09') selected @endif>Sep</option>
+                    <option value="10" @if(date('m') == '10') selected @endif>Oct</option>
+                    <option value="11" @if(date('m') == '11') selected @endif>Nov</option>
+                    <option value="12" @if(date('m') == '12') selected @endif>Dec</option>
+                    
+                  </select>  
+               </div>
+               <div class="col-md-4 " >
+                  <label for="">Select Week</label>
+                  <select name="" id="filter-by-week" class="form-control" onChange="filter_date()">
+                      <option value="<?php echo date('d-m-Y',strtotime($start)).'&'.date('d-m-Y',strtotime($end)); ?>"><?php echo date('d-M-Y',strtotime($start)).' TO '.date('d-M-Y',strtotime($end)); ?></option>
+                      
+                  </select>
+               </div>
+               <!-- <div class="col-md-3 " >
+                
+                  <div class="filter_btn" style="margin-top:25px;">
+                    <a href="javascript:void(0);" class="btn mt-0 btn-sm btn-primary" onclick="filter_date()"><small>Filter</small></a>
+                  </div>
+               </div> -->
             </div>
           </div>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <div class="filter_btn">
-            <a href="javascript:void(0);" class="btn mt-0 btn-sm" onclick="filter_date()"><small>Filter</small></a>
+            <a href="javascript:void(0);" class="btn mt-0 btn-sm btn-primary" onclick="filter_date()"><small>Filter</small></a>
           </div>
-        </div>
+        </div> -->
         <div class="col-md-3">
           <div class="download_btn text-right">
-            <button type="submit" class="btn mt-0">Download CSV</button>
+            <!-- <button type="submit" class="btn mt-0">Download CSV</button> -->
           </div>
         </div>
       </div>
@@ -78,10 +115,10 @@
                 <th scope="col">S.No.</th>
                 <th scope="col">Order ID</th>
                 <th scope="col">Order Date</th>
-                <th scope="col">Payment Method</th>
+                
                 <th scope="col">Gross Revenue</th>
                 <th scope="col">Net Receivable</th>
-                <th scope="col">Payment Status</th>
+               
                 <th scope="col">Status</th>
                 <th scope="col">Action</th>
               </tr>
@@ -122,8 +159,12 @@
 <script>
  $(function() {
 
-var start = moment().subtract(29, 'days');
-var end = moment();
+//var start = moment().subtract(29, 'days');
+var start = moment().startOf('week').subtract(6,'days');
+var end = moment().endOf('week').subtract(6, 'days');
+//var end = moment().endOf('week');
+//alert(end.format('MMMM D, YYYY'));
+//var end = moment();
 
 function cb(start, end) {
     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -135,81 +176,22 @@ $('#reportrange').daterangepicker({
     endDate: end,
     ranges: {
        'Today': [moment(), moment()],
-       'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      //  'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      //  'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+      //  'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'Last Week':[moment().startOf('week').subtract(6,'days'),moment().endOf('week').subtract(6, 'days')],
        'This Month': [moment().startOf('month'), moment().endOf('month')],
        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
     }
 }, cb);
  
 });
-  var start_date = $('#datePicker').val();
-  revenue_ajax(start_date);
+  getWeek();
+  //revenue_ajax(start_date);
 
 
-
-  let table = $('#example').dataTable({
-
-    dom: 'Bfrtip',
-    buttons: [{
-      extend: 'excel',
-      className: 'btn-info'
-    }],
-    processing: true,
-    serverSide: true,
-    // buttons: true,
-    ajax: {
-      url: "{{ route('restaurant.mis.order.data') }}",
-      data: function(d) {
-        d.status = $('#filter-by-status').val(),
-          d.role = $('#filter-by-role').val(),
-          d.vendor = $('#filter-by-vendor').val()
-        d.datePicker = $('#datepicker').val()
-        d.vendorId = $('#vendorId').val()
-      }
-    },
-    columns: [{
-        data: 'DT_RowIndex',
-        name: 'DT_RowIndex'
-      },
-      {
-        data: 'order_id',
-        name: 'order_id'
-      },
-      {
-        data: 'order_date',
-        name: 'order_date'
-      },
-      {
-        data: 'payment_type',
-        name: 'payment_type'
-      },
-      {
-        data: 'gross_revenue',
-        name: 'gross_revenue'
-      },
-      {
-        data: 'net_receivables',
-        name: 'net_receivables'
-      },
-      {
-        data: 'payment_status',
-        name: 'payment_status'
-      },
-      {
-        data: 'status',
-        name: 'status'
-      },
-      {
-        data: 'action-js',
-        name: 'action-js'
-      },
-    ]
-  });
-
-
-  function revenue_ajax(start_date) {
+  function revenue_ajax() {
+    var week = $('#filter-by-week').val();
     $.ajax({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -218,7 +200,7 @@ $('#reportrange').daterangepicker({
       method: "POST",
       data: {
         "_token": "{{ csrf_token() }}",
-        "start_date": start_date
+        "start_date": week
       },
       success: function(res) {
         $('.revenue_ajax').html(res);
@@ -279,6 +261,24 @@ $('#reportrange').daterangepicker({
 
   }
 
+  function getWeek(){
+    
+    $.ajax({
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "{{ route('restaurant.mis.week.get') }}",
+      method: "GET",
+      data: {
+        'year':$("#select_year").val(),'month':$("#filter-by-month").val()
+      },
+      success: function(res) {
+        $('#filter-by-week').html(res);
+        revenue_ajax();
+      }
+    });
+  }
+
   function settlements(){
           $('#renvenue .modal-content').html('');
           $.ajax({  
@@ -294,5 +294,63 @@ $('#reportrange').daterangepicker({
               } 
           });
       }
+</script>
+<script>
+  
+  let table = $('#example').dataTable({
+    
+    dom: 'Bfrtip',
+    buttons: [{
+      extend: 'excel',
+      className: 'btn-info'
+    }],
+    processing: true,
+    serverSide: true,
+    paging: false,
+    // buttons: true,
+    ajax: {
+      headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: "{{ route('restaurant.mis.order.data') }}",
+      
+      data: function(d) {
+        d.status = $('#filter-by-status').val(),
+        d.role = $('#filter-by-role').val(),
+        d.vendor = $('#filter-by-vendor').val()
+        d.datePicker = $('#filter-by-week').val()
+        d.vendorId = $('#vendorId').val()
+      }
+    },
+    columns: [{
+        data: 'DT_RowIndex',
+        name: 'DT_RowIndex'
+      },
+      {
+        data: 'order_id',
+        name: 'order_id'
+      },
+      {
+        data: 'order_date',
+        name: 'order_date'
+      },
+      {
+        data: 'gross_revenue',
+        name: 'gross_revenue'
+      },
+      {
+        data: 'net_receivables',
+        name: 'net_receivables'
+      },
+      {
+        data: 'status',
+        name: 'status'
+      },
+      {
+        data: 'action-js',
+        name: 'action-js'
+      },
+    ]
+  });
 </script>
 @endpush
