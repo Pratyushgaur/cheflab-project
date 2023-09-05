@@ -321,14 +321,14 @@ class AccountmisController extends Controller
            $month = $request->month;
            $year = $request->year;
            $statement =   \App\Models\OrderCommision::whereMonth('order_commisions.created_at','=',$request->month)->whereYear('order_commisions.created_at', '=', $request->year);
-           $statement =   $statement->join('vendors','order_commisions.vendor_id','=','vendors.id');
-           
+           $statement =  $statement->join('vendors','order_commisions.vendor_id','=','vendors.id');
            $statement =  $statement->leftJoin('vendor_monthly_invoices', function ($join) use ($month,$year) {
                             $join->on('order_commisions.vendor_id', '=', 'vendor_monthly_invoices.vendor_id');
                             $join->where('vendor_monthly_invoices.month', '=', $month);
                             $join->where('vendor_monthly_invoices.year', '=', $year);
                         });
-           $statement =   $statement->groupBy('order_commisions.vendor_id');
+           $statement =  $statement->where('is_cancel',0);
+           $statement =  $statement->groupBy('order_commisions.vendor_id');
            $statement =  $statement->select('vendors.name',\DB::raw('SUM(order_commisions.gross_revenue) as gross_revenue_total'),\DB::raw('SUM(admin_commision) as admin_commision_total'),\DB::raw('sum(tax_on_commission) as tax_on_commission_total'),\DB::raw('sum(convenience_amount) as convenience_amount_total'),\DB::raw('sum(convenience_tax) as convenience_tax_total'),\DB::raw('sum(net_receivables) as net_receivables_total'),'vendor_monthly_invoices.id as vendor_monthly_invoices_id');
            $order = $statement->get();
            
