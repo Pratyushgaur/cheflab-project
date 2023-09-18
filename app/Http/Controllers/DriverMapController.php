@@ -8,7 +8,7 @@ class DriverMapController extends Controller
 {
     public function index()
     {
-        return view('admin.drivers.map');
+        return view('admin.drivers.map2');
     }
 
     public function getDriver(Deliver_boy $driver)
