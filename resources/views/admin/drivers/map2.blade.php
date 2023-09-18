@@ -3,16 +3,33 @@
 @section('page-style')
     <style type="text/css">
         
-        #map { height: 500px; }
+        
+        #map {
+				width: 100%;
+				height: 100%;
+				
+			}
+			#mapContainer {
+				height: 100vh;
+			}
     </style>
-    
-    
-@endsection
-@section('js_section')
+
+    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap&key=AIzaSyDZTUlYkGTFzOHrzqU3Am_bXUNSQIxoURw" defer></script>
     <script src="https://www.gstatic.com/firebasejs/3.2.0/firebase.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        $(document).ready(function(){
+        var data = {};
+        var d = [];
+        var final = [];
+          @foreach($driver as $Key =>$value)
+            //data  = ;
+            d.push({drivername:'{{$value->name}}',driverId:'{{$value->id}}',driver_mob:'{{$value->mobile}}'});
+            
+            
+          @endforeach 
+          
+                
+                console.log(d);
             const firebaseConfig = {
                 apiKey: "AIzaSyC0XTAcHDhk-YzguedH8yjg4hkRRNoi94k",
                 authDomain: "cheflab-user.firebaseapp.com",
@@ -25,12 +42,10 @@
             };
             // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
-            
             const database = firebase.database();
             let c_markers = {};
             //c_markers = {"1002":{driver_id:1,lat:2}};
             let driverid;
-        
             let map;
             function initMap() {
                 map = new google.maps.Map(document.getElementById("map"), {
@@ -42,6 +57,8 @@
                     snapshot.forEach(element => {
                         if(element.val().driver_id){
                             var uniqueId =element.val().driver_id;
+                            var driverdata = d.find(o => o.driverId === uniqueId);
+                            
                             if (!c_markers[uniqueId] || !c_markers[uniqueId].setPosition) {
                                 if(element.val().driver_have_order == "1"){
                                     url = "http://maps.google.com/mapfiles/ms/icons/red-dot.png";
@@ -59,9 +76,12 @@
                                         //scaledSize: new google.maps.Size(40, 40),
                                     }
                                 });
-                                var infowindow = new google.maps.InfoWindow();
-                                infowindow.setContent(element.val().driver_id);
-                                infowindow.open(map, planeIcon);
+                                if(driverdata !=undefined){
+                                    var infowindow = new google.maps.InfoWindow();
+                                    infowindow.setContent(driverdata.drivername);
+                                    infowindow.open(map, planeIcon);
+                                }
+                                
                                 c_markers[uniqueId] = planeIcon;
                             }else{
                                 c_markers[uniqueId].setPosition({lat:element.val().lat,lng:element.val().long});
@@ -76,11 +96,14 @@
                     
                 });
             }
+           
             window.initMap = initMap;
-        })
+            
+        
         
         
     </script>
+    
 @endsection
 @section('content')
     <div class="content-wrapper">
