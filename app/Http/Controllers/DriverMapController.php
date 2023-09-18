@@ -8,7 +8,8 @@ class DriverMapController extends Controller
 {
     public function index()
     {
-        return view('admin.drivers.map2');
+        $driver = Deliver_boy::select('name','mobile','id')->get();
+        return view('admin.drivers.map2',compact('driver'));
     }
 
     public function getDriver(Deliver_boy $driver)
